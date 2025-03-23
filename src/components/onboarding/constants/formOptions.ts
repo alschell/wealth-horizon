@@ -105,6 +105,35 @@ export const AGGREGATORS = [
   "Yardi"
 ];
 
+// Also export INSTITUTIONS for ManualEntrySection
+export const INSTITUTIONS = [
+  "Addepar",
+  "Bank of America",
+  "Barclays",
+  "BlackRock",
+  "BNP Paribas",
+  "Charles Schwab",
+  "Citibank",
+  "Credit Suisse",
+  "Deutsche Bank",
+  "Fidelity",
+  "Goldman Sachs",
+  "HSBC",
+  "J.P. Morgan",
+  "Julius Baer",
+  "LGT Bank",
+  "Morgan Stanley",
+  "Northern Trust",
+  "Pictet",
+  "Raymond James",
+  "Rothschild & Co",
+  "State Street",
+  "TD Ameritrade",
+  "UBS",
+  "Vanguard",
+  "Wells Fargo"
+].sort();
+
 // Account types
 export const ACCOUNT_TYPES = [
   "Investment",

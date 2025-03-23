@@ -53,3 +53,29 @@ export const CURRENCIES = [
   "HKD - Hong Kong Dollar",
   "SGD - Singapore Dollar"
 ].sort();
+
+// Aggregators - Adding this to match the imports
+export const AGGREGATORS = [
+  "Addepar",
+  "Allvue",
+  "Backstop Solutions",
+  "Black Diamond",
+  "Canoe Intelligence",
+  "Clearwater Analytics",
+  "Dynamo Software",
+  "Eze Castle",
+  "FactSet",
+  "FIS",
+  "FundCount",
+  "Ledgex",
+  "Masttro",
+  "Mirador",
+  "PCR",
+  "Pitchbook",
+  "SEI Archway",
+  "Solovis",
+  "SS&C Advent",
+  "SS&C Geneva",
+  "Tamarac",
+  "Yardi"
+].sort();

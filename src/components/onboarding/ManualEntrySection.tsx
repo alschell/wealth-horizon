@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { toast } from "@/components/ui/use-toast";
 import { Plus, Trash2, Wallet } from "lucide-react";
 import { CustomSearchableSelect } from "@/components/ui/custom-searchable-select";
-import { INSTITUTIONS, ACCOUNT_TYPES, CURRENCIES } from "./constants/formOptions";
+import { INSTITUTIONS, ACCOUNT_TYPES, CURRENCIES } from "@/utils/financialDataConstants";
 import FileUploader from "@/components/FileUploader";
 
 interface ManualEntrySectionProps {

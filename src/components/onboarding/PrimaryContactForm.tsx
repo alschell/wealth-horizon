@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "@/components/ui/use-toast";
 import { motion } from "framer-motion";
 import { ArrowRight, ArrowLeft, UserRound } from "lucide-react";
 
@@ -21,7 +21,30 @@ const PrimaryContactForm = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Just update and continue for testing purposes
+    // Validation
+    const requiredFields: (keyof PrimaryContactInfo)[] = ['firstName', 'lastName', 'position', 'email', 'phone'];
+    const missingFields = requiredFields.filter(field => !formData[field]);
+    
+    if (missingFields.length > 0) {
+      toast({
+        title: "Missing information",
+        description: `Please complete all required fields.`,
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      toast({
+        title: "Invalid email",
+        description: "Please enter a valid email address.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     updatePrimaryContactInfo(formData);
     setCurrentStep(2); // Move to address step
   };
@@ -48,56 +71,58 @@ const PrimaryContactForm = () => {
       <Card className="p-6 md:p-8 shadow-sm">
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="flex items-center gap-3 mb-2">
-            <UserRound className="h-7 w-7 text-gray-600" />
+            <UserRound className="h-7 w-7 text-blue-600" />
             <h2 className="text-2xl font-bold">Primary Contact Information</h2>
           </div>
           <p className="text-gray-500">
             Please provide details for the main point of contact at your family office.
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <motion.div 
-              custom={0}
-              variants={itemVariants}
-              initial="hidden"
-              animate="visible"
-              className="space-y-2"
-            >
-              <Label htmlFor="firstName">First Name*</Label>
-              <Input
-                id="firstName"
-                name="firstName"
-                value={formData.firstName}
-                onChange={handleInputChange}
-                placeholder="John"
-                className="h-11"
-              />
-            </motion.div>
+          <div className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <motion.div 
+                custom={0}
+                variants={itemVariants}
+                initial="hidden"
+                animate="visible"
+                className="space-y-2"
+              >
+                <Label htmlFor="firstName">First Name*</Label>
+                <Input
+                  id="firstName"
+                  name="firstName"
+                  value={formData.firstName}
+                  onChange={handleInputChange}
+                  placeholder="John"
+                  className="h-11"
+                />
+              </motion.div>
 
-            <motion.div 
-              custom={1}
-              variants={itemVariants}
-              initial="hidden"
-              animate="visible"
-              className="space-y-2"
-            >
-              <Label htmlFor="lastName">Last Name*</Label>
-              <Input
-                id="lastName"
-                name="lastName"
-                value={formData.lastName}
-                onChange={handleInputChange}
-                placeholder="Smith"
-                className="h-11"
-              />
-            </motion.div>
+              <motion.div 
+                custom={1}
+                variants={itemVariants}
+                initial="hidden"
+                animate="visible"
+                className="space-y-2"
+              >
+                <Label htmlFor="lastName">Last Name*</Label>
+                <Input
+                  id="lastName"
+                  name="lastName"
+                  value={formData.lastName}
+                  onChange={handleInputChange}
+                  placeholder="Smith"
+                  className="h-11"
+                />
+              </motion.div>
+            </div>
 
             <motion.div 
               custom={2}
               variants={itemVariants}
               initial="hidden"
               animate="visible"
-              className="space-y-2 col-span-full"
+              className="space-y-2"
             >
               <Label htmlFor="position">Position/Title*</Label>
               <Input
@@ -110,42 +135,44 @@ const PrimaryContactForm = () => {
               />
             </motion.div>
 
-            <motion.div 
-              custom={3}
-              variants={itemVariants}
-              initial="hidden"
-              animate="visible"
-              className="space-y-2"
-            >
-              <Label htmlFor="email">Email Address*</Label>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                value={formData.email}
-                onChange={handleInputChange}
-                placeholder="john.smith@example.com"
-                className="h-11"
-              />
-            </motion.div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <motion.div 
+                custom={3}
+                variants={itemVariants}
+                initial="hidden"
+                animate="visible"
+                className="space-y-2"
+              >
+                <Label htmlFor="email">Email Address*</Label>
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  placeholder="john.smith@example.com"
+                  className="h-11"
+                />
+              </motion.div>
 
-            <motion.div 
-              custom={4}
-              variants={itemVariants}
-              initial="hidden"
-              animate="visible"
-              className="space-y-2"
-            >
-              <Label htmlFor="phone">Phone Number*</Label>
-              <Input
-                id="phone"
-                name="phone"
-                value={formData.phone}
-                onChange={handleInputChange}
-                placeholder="+1 (555) 123-4567"
-                className="h-11"
-              />
-            </motion.div>
+              <motion.div 
+                custom={4}
+                variants={itemVariants}
+                initial="hidden"
+                animate="visible"
+                className="space-y-2"
+              >
+                <Label htmlFor="phone">Phone Number*</Label>
+                <Input
+                  id="phone"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleInputChange}
+                  placeholder="+1 (555) 123-4567"
+                  className="h-11"
+                />
+              </motion.div>
+            </div>
           </div>
 
           <div className="pt-4 border-t">

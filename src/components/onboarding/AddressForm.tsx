@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card } from "@/components/ui/card";
 import { toast } from "@/components/ui/use-toast";
 import { motion } from "framer-motion";
-import { ArrowRight, ArrowLeft } from "lucide-react";
+import { ArrowRight, ArrowLeft, MapPin } from "lucide-react";
 
 // Sort the arrays alphabetically
 const COUNTRIES = [
@@ -61,7 +61,7 @@ const AddressForm = () => {
     }
     
     updateAddressInfo(formData);
-    setCurrentStep(2); // Move to identity verification step
+    setCurrentStep(3); // Move to legal documents step
   };
 
   const itemVariants = {
@@ -85,14 +85,15 @@ const AddressForm = () => {
     >
       <Card className="p-6 md:p-8 shadow-sm">
         <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="space-y-2">
-            <h2 className="text-2xl font-bold">Residential Address</h2>
-            <p className="text-gray-500">
-              Please provide your current residential address.
-            </p>
+          <div className="flex items-center gap-3 mb-2">
+            <MapPin className="h-7 w-7 text-blue-600" />
+            <h2 className="text-2xl font-bold">Address Information</h2>
           </div>
+          <p className="text-gray-500">
+            Please provide the current address for your family office.
+          </p>
 
-          <div className="grid grid-cols-1 gap-6">
+          <div className="space-y-6">
             <motion.div 
               custom={0}
               variants={itemVariants}
@@ -111,7 +112,7 @@ const AddressForm = () => {
               />
             </motion.div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <motion.div 
                 custom={1}
                 variants={itemVariants}
@@ -142,19 +143,21 @@ const AddressForm = () => {
                   value={formData.state || ""}
                   onValueChange={(value) => handleSelectionChange("state", value)}
                 >
-                  <SelectTrigger className="h-11">
+                  <SelectTrigger className="h-11 bg-white">
                     <SelectValue placeholder="Select state" />
                   </SelectTrigger>
-                  <SelectContent className="max-h-[300px] overflow-y-auto">
+                  <SelectContent className="max-h-[300px] overflow-y-auto z-50 bg-white">
                     {US_STATES.map((state) => (
-                      <SelectItem key={state} value={state}>
+                      <SelectItem key={state} value={state} className="cursor-pointer">
                         {state}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               </motion.div>
+            </div>
 
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <motion.div 
                 custom={3}
                 variants={itemVariants}
@@ -185,12 +188,12 @@ const AddressForm = () => {
                   value={formData.country || ""}
                   onValueChange={(value) => handleSelectionChange("country", value)}
                 >
-                  <SelectTrigger className="h-11">
+                  <SelectTrigger className="h-11 bg-white">
                     <SelectValue placeholder="Select country" />
                   </SelectTrigger>
-                  <SelectContent className="max-h-[300px] overflow-y-auto">
+                  <SelectContent className="max-h-[300px] overflow-y-auto z-50 bg-white">
                     {COUNTRIES.map((country) => (
-                      <SelectItem key={country} value={country}>
+                      <SelectItem key={country} value={country} className="cursor-pointer">
                         {country}
                       </SelectItem>
                     ))}
@@ -210,7 +213,7 @@ const AddressForm = () => {
                 variant="outline"
                 size="lg" 
                 className="rounded-lg"
-                onClick={() => setCurrentStep(0)}
+                onClick={() => setCurrentStep(1)}
               >
                 <ArrowLeft className="mr-2 h-4 w-4" />
                 Back

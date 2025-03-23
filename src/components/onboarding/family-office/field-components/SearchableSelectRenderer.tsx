@@ -38,7 +38,6 @@ const SearchableSelectRenderer: React.FC<SearchableSelectRendererProps> = ({
           className="flex h-11 w-full items-center justify-between rounded-md border border-input bg-white px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer"
           aria-expanded={open}
           aria-haspopup="listbox"
-          onClick={() => setOpen(!open)}
         >
           {value ? value : placeholder || `Select ${label.toLowerCase()}`}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />

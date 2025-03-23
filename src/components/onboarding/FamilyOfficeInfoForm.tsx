@@ -40,7 +40,8 @@ const FamilyOfficeInfoForm = () => {
             description="Please provide the details of your family office entity for KYC verification."
           />
 
-          <div className="flex flex-col space-y-6">
+          <div className="space-y-6">
+            {/* Full width field */}
             <FormFieldItem
               index={0}
               label="Family Office Name"
@@ -51,88 +52,97 @@ const FamilyOfficeInfoForm = () => {
               required
               type="text"
             />
+            
+            {/* Two column layout for related fields */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <FormFieldItem
+                index={1}
+                label="Legal Entity Type"
+                name="legalEntityType"
+                value={formData.legalEntityType}
+                onChange={handleFieldChange}
+                type="searchableSelect"
+                options={LEGAL_ENTITY_TYPES}
+                required
+              />
 
-            <FormFieldItem
-              index={1}
-              label="Legal Entity Type"
-              name="legalEntityType"
-              value={formData.legalEntityType}
-              onChange={handleFieldChange}
-              type="searchableSelect"
-              options={LEGAL_ENTITY_TYPES}
-              required
-            />
-
-            <FormFieldItem
-              index={2}
-              label="Jurisdiction"
-              name="jurisdiction"
-              value={formData.jurisdiction}
-              onChange={handleFieldChange}
-              type="searchableSelect"
-              options={JURISDICTIONS}
-              required
-            />
-
-            <FormFieldItem
-              index={3}
-              label="Registration Number"
-              name="registrationNumber"
-              value={formData.registrationNumber}
-              onChange={handleFieldChange}
-              placeholder="e.g., LLC-12345678"
-            />
-
-            <FormFieldItem
-              index={4}
-              label="Tax ID Number"
-              name="taxId"
-              value={formData.taxId}
-              onChange={handleFieldChange}
-              placeholder="e.g., 12-3456789"
-              required
-            />
-
-            <FormFieldItem
-              index={5}
-              label="Year Established"
-              name="yearEstablished"
-              value={formData.yearEstablished}
-              onChange={handleFieldChange}
-              placeholder="e.g., 2015"
-              type="number"
-              minValue={1900}
-              maxValue={new Date().getFullYear()}
-            />
-
-            <FormFieldItem
-              index={6}
-              label="Email Address"
-              name="email"
-              value={formData.email}
-              onChange={handleFieldChange}
-              placeholder="office@smithfamilyoffice.com"
-              type="email"
-              required
-            />
-
-            <FormFieldItem
-              index={7}
-              label="Phone Number"
-              name="phone"
-              value={formData.phone}
-              onChange={handleFieldChange}
-              placeholder="+1 (555) 123-4567"
-            />
-
-            <FormFieldItem
-              index={8}
-              label="Website"
-              name="website"
-              value={formData.website}
-              onChange={handleFieldChange}
-              placeholder="https://smithfamilyoffice.com"
-            />
+              <FormFieldItem
+                index={2}
+                label="Jurisdiction"
+                name="jurisdiction"
+                value={formData.jurisdiction}
+                onChange={handleFieldChange}
+                type="searchableSelect"
+                options={JURISDICTIONS}
+                required
+              />
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <FormFieldItem
+                index={3}
+                label="Registration Number"
+                name="registrationNumber"
+                value={formData.registrationNumber}
+                onChange={handleFieldChange}
+                placeholder="e.g., LLC-12345678"
+              />
+              
+              <FormFieldItem
+                index={4}
+                label="Tax ID Number"
+                name="taxId"
+                value={formData.taxId}
+                onChange={handleFieldChange}
+                placeholder="e.g., 12-3456789"
+                required
+              />
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <FormFieldItem
+                index={5}
+                label="Year Established"
+                name="yearEstablished"
+                value={formData.yearEstablished}
+                onChange={handleFieldChange}
+                placeholder="e.g., 2015"
+                type="number"
+                minValue={1900}
+                maxValue={new Date().getFullYear()}
+              />
+              
+              <FormFieldItem
+                index={6}
+                label="Email Address"
+                name="email"
+                value={formData.email}
+                onChange={handleFieldChange}
+                placeholder="office@smithfamilyoffice.com"
+                type="email"
+                required
+              />
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <FormFieldItem
+                index={7}
+                label="Phone Number"
+                name="phone"
+                value={formData.phone}
+                onChange={handleFieldChange}
+                placeholder="+1 (555) 123-4567"
+              />
+              
+              <FormFieldItem
+                index={8}
+                label="Website"
+                name="website"
+                value={formData.website}
+                onChange={handleFieldChange}
+                placeholder="https://smithfamilyoffice.com"
+              />
+            </div>
           </div>
 
           <FormFooter onSubmit={handleSubmit} />

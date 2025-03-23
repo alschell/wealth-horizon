@@ -44,16 +44,37 @@ const SearchableSelectField = ({
       </Label>
       <Popover>
         <PopoverTrigger asChild>
-          <button
-            type="button"
-            className="flex h-11 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1 cursor-pointer"
+          <div
             id={id}
+            className="flex h-11 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1 cursor-pointer"
+            role="combobox"
+            aria-expanded="false"
+            aria-haspopup="listbox"
+            tabIndex={0}
+            onClick={(e) => {
+              // Prevent default to avoid any browser-specific handling
+              e.preventDefault();
+              // Find the closest popover trigger and click it programmatically
+              const triggerElement = e.currentTarget.closest('[data-state]');
+              if (triggerElement) {
+                triggerElement.click();
+              }
+            }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                const triggerElement = e.currentTarget.closest('[data-state]');
+                if (triggerElement) {
+                  triggerElement.click();
+                }
+              }
+            }}
           >
             <span className="text-left truncate">
               {value || placeholder}
             </span>
             <ChevronsUpDown className="h-4 w-4 shrink-0 opacity-50 ml-2" />
-          </button>
+          </div>
         </PopoverTrigger>
         <PopoverContent 
           className="w-full p-0" 

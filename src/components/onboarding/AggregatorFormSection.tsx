@@ -94,10 +94,10 @@ const AggregatorFormSection = ({
               value={aggregatorInfo.aggregatorName || ""}
               onValueChange={handleAggregatorNameChange}
             >
-              <SelectTrigger className="h-11">
+              <SelectTrigger className="h-11" id="aggregatorName">
                 <SelectValue placeholder="Select your aggregator" />
               </SelectTrigger>
-              <SelectContent className="max-h-[300px] overflow-y-auto">
+              <SelectContent position="popper" className="max-h-[300px] overflow-y-auto">
                 {AGGREGATORS.map((aggregator) => (
                   <SelectItem key={aggregator} value={aggregator}>
                     {aggregator}

@@ -88,14 +88,16 @@ const FormFieldItem: React.FC<FormFieldItemProps> = ({
         return (
           <Popover>
             <PopoverTrigger asChild>
-              <button
-                type="button"
-                className="flex h-11 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              <div
+                className="flex h-11 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer"
                 role="combobox"
+                aria-expanded="false"
+                aria-haspopup="listbox"
+                tabIndex={0}
               >
                 {value ? value : placeholder || `Select ${label.toLowerCase()}`}
                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-              </button>
+              </div>
             </PopoverTrigger>
             <PopoverContent className="w-full p-0" align="start">
               <Command>

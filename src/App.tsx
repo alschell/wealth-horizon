@@ -10,25 +10,28 @@ import NotFound from "./pages/NotFound";
 import Onboarding from "./pages/Onboarding";
 import Dashboard from "./pages/Dashboard";
 
+// Create a client
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <OnboardingProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<LandingPage />} />
-            <Route path="/onboarding/*" element={<Onboarding />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </OnboardingProvider>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <OnboardingProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<LandingPage />} />
+              <Route path="/onboarding/*" element={<Onboarding />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </OnboardingProvider>
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+}
 
 export default App;

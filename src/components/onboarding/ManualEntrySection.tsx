@@ -5,11 +5,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Card } from "@/components/ui/card";
 import { toast } from "@/components/ui/use-toast";
-import { Plus, Trash2, Wallet } from "lucide-react";
+import { Plus, Wallet } from "lucide-react";
 import FileUploader from "@/components/FileUploader";
 import { INSTITUTIONS, CURRENCIES } from "@/utils/financialDataConstants";
+import AccountCard from "./AccountCard";
 
 interface ManualEntrySectionProps {
   financialAccounts: FinancialAccountInfo[];
@@ -98,23 +98,12 @@ const ManualEntrySection = ({
           <h3 className="font-medium">Added Financial Accounts</h3>
           <div className="space-y-2">
             {financialAccounts.map((account, index) => (
-              <Card key={index} className="p-3 flex justify-between items-center">
-                <div>
-                  <p className="font-medium">{account.accountName}</p>
-                  <p className="text-sm text-gray-500">
-                    {account.institution} • {account.accountType.charAt(0).toUpperCase() + account.accountType.slice(1)}
-                    {account.approximateValue ? ` • ~${account.approximateValue} ${account.currency}` : ''}
-                  </p>
-                </div>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => removeFinancialAccount(index)}
-                  className="text-gray-500 hover:text-red-500"
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
-              </Card>
+              <AccountCard 
+                key={index}
+                account={account}
+                index={index}
+                onRemove={() => removeFinancialAccount(index)}
+              />
             ))}
           </div>
         </div>

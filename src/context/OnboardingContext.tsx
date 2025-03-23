@@ -67,6 +67,26 @@ export type BeneficialOwnerInfo = {
   documents: File[];
 };
 
+// Add the missing types
+export type PersonalInfo = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  dateOfBirth: string;
+  nationality: string;
+  taxResidency?: string;
+  taxId?: string;
+};
+
+export type IdentityVerification = {
+  documentType: "passport" | "drivingLicense" | "nationalId";
+  documentNumber: string;
+  issueDate: string;
+  expiryDate: string;
+  documentFiles: File[];
+};
+
 export type OnboardingData = {
   familyOfficeInfo: FamilyOfficeInfo;
   primaryContactInfo: PrimaryContactInfo;
@@ -75,6 +95,9 @@ export type OnboardingData = {
   aggregatorInfo: AggregatorInfo;
   financialAccounts: FinancialAccountInfo[];
   beneficialOwners: BeneficialOwnerInfo[];
+  // Add the missing properties
+  personalInfo: PersonalInfo;
+  identityVerification: IdentityVerification;
   completed: boolean;
 };
 
@@ -116,6 +139,22 @@ const defaultOnboardingData: OnboardingData = {
   },
   financialAccounts: [],
   beneficialOwners: [],
+  // Add default values for the new properties
+  personalInfo: {
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    dateOfBirth: "",
+    nationality: "",
+  },
+  identityVerification: {
+    documentType: "passport",
+    documentNumber: "",
+    issueDate: "",
+    expiryDate: "",
+    documentFiles: [],
+  },
   completed: false,
 };
 
@@ -130,6 +169,9 @@ type OnboardingContextType = {
   removeFinancialAccount: (index: number) => void;
   addBeneficialOwner: (owner: BeneficialOwnerInfo) => void;
   removeBeneficialOwner: (index: number) => void;
+  // Add the missing methods
+  updatePersonalInfo: (info: PersonalInfo) => void;
+  updateIdentityVerification: (info: IdentityVerification) => void;
   setOnboardingCompleted: () => void;
   currentStep: number;
   setCurrentStep: (step: number) => void;
@@ -190,6 +232,15 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
     }));
   };
 
+  // Add the missing methods implementations
+  const updatePersonalInfo = (info: PersonalInfo) => {
+    setOnboardingData((prev) => ({ ...prev, personalInfo: info }));
+  };
+
+  const updateIdentityVerification = (info: IdentityVerification) => {
+    setOnboardingData((prev) => ({ ...prev, identityVerification: info }));
+  };
+
   const setOnboardingCompleted = () => {
     setOnboardingData((prev) => ({ ...prev, completed: true }));
   };
@@ -212,6 +263,8 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
         removeFinancialAccount,
         addBeneficialOwner,
         removeBeneficialOwner,
+        updatePersonalInfo,
+        updateIdentityVerification,
         setOnboardingCompleted,
         currentStep,
         setCurrentStep,

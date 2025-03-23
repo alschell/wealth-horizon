@@ -28,8 +28,9 @@ const SelectFieldRenderer: React.FC<SelectFieldRendererProps> = ({
       </SelectTrigger>
       <SelectContent 
         position="popper" 
-        className="max-h-[300px] overflow-y-auto w-full z-50 bg-white"
+        className="max-h-[300px] overflow-y-auto z-50 bg-white"
         sideOffset={4}
+        avoidCollisions={true}
       >
         {options.map((option) => (
           <SelectItem key={option} value={option} className="cursor-pointer">

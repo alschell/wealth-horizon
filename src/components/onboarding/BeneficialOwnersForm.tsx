@@ -231,12 +231,16 @@ const BeneficialOwnersForm = () => {
                   value={newOwner.relationship}
                   onValueChange={(value) => handleOwnerSelectionChange("relationship", value)}
                 >
-                  <SelectTrigger className="h-11">
+                  <SelectTrigger id="relationship" className="h-11 bg-white">
                     <SelectValue placeholder="Select relationship" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent 
+                    className="z-50 bg-white"
+                    sideOffset={4}
+                    avoidCollisions={true}
+                  >
                     {RELATIONSHIPS.map((relationship) => (
-                      <SelectItem key={relationship} value={relationship}>
+                      <SelectItem key={relationship} value={relationship} className="cursor-pointer">
                         {relationship}
                       </SelectItem>
                     ))}
@@ -265,12 +269,16 @@ const BeneficialOwnersForm = () => {
                   value={newOwner.nationality}
                   onValueChange={(value) => handleOwnerSelectionChange("nationality", value)}
                 >
-                  <SelectTrigger className="h-11">
+                  <SelectTrigger id="nationality" className="h-11 bg-white">
                     <SelectValue placeholder="Select nationality" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent 
+                    className="z-50 bg-white"
+                    sideOffset={4}
+                    avoidCollisions={true}
+                  >
                     {NATIONALITIES.map((nationality) => (
-                      <SelectItem key={nationality} value={nationality}>
+                      <SelectItem key={nationality} value={nationality} className="cursor-pointer">
                         {nationality}
                       </SelectItem>
                     ))}

@@ -143,10 +143,14 @@ const AddressForm = () => {
                   value={formData.state || ""}
                   onValueChange={(value) => handleSelectionChange("state", value)}
                 >
-                  <SelectTrigger className="h-11 bg-white">
+                  <SelectTrigger id="state" className="h-11 bg-white">
                     <SelectValue placeholder="Select state" />
                   </SelectTrigger>
-                  <SelectContent className="max-h-[300px] overflow-y-auto z-50 bg-white">
+                  <SelectContent 
+                    className="max-h-[300px] overflow-y-auto z-50 bg-white"
+                    sideOffset={4}
+                    avoidCollisions={true}
+                  >
                     {US_STATES.map((state) => (
                       <SelectItem key={state} value={state} className="cursor-pointer">
                         {state}
@@ -188,10 +192,14 @@ const AddressForm = () => {
                   value={formData.country || ""}
                   onValueChange={(value) => handleSelectionChange("country", value)}
                 >
-                  <SelectTrigger className="h-11 bg-white">
+                  <SelectTrigger id="country" className="h-11 bg-white">
                     <SelectValue placeholder="Select country" />
                   </SelectTrigger>
-                  <SelectContent className="max-h-[300px] overflow-y-auto z-50 bg-white">
+                  <SelectContent 
+                    className="max-h-[300px] overflow-y-auto z-50 bg-white"
+                    sideOffset={4}
+                    avoidCollisions={true}
+                  >
                     {COUNTRIES.map((country) => (
                       <SelectItem key={country} value={country} className="cursor-pointer">
                         {country}

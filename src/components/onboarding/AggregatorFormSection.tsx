@@ -94,12 +94,17 @@ const AggregatorFormSection = ({
               value={aggregatorInfo.aggregatorName || ""}
               onValueChange={handleAggregatorNameChange}
             >
-              <SelectTrigger className="h-11" id="aggregatorName">
+              <SelectTrigger id="aggregatorName" className="h-11 bg-white">
                 <SelectValue placeholder="Select your aggregator" />
               </SelectTrigger>
-              <SelectContent position="popper" className="max-h-[300px] overflow-y-auto">
+              <SelectContent 
+                position="popper" 
+                className="max-h-[300px] overflow-y-auto z-50 bg-white"
+                sideOffset={4}
+                avoidCollisions={true}
+              >
                 {AGGREGATORS.map((aggregator) => (
-                  <SelectItem key={aggregator} value={aggregator}>
+                  <SelectItem key={aggregator} value={aggregator} className="cursor-pointer">
                     {aggregator}
                   </SelectItem>
                 ))}

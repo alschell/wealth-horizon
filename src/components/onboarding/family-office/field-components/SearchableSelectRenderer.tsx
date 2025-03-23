@@ -33,20 +33,24 @@ const SearchableSelectRenderer: React.FC<SearchableSelectRendererProps> = ({
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <button
-          type="button"
-          className="flex h-11 w-full items-center justify-between rounded-md border border-input bg-white px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer"
+        <div
+          className="flex h-11 w-full items-center justify-between rounded-md border border-input bg-white px-3 py-2 text-sm ring-offset-background focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 cursor-pointer"
+          onClick={() => setOpen(true)}
+          role="combobox"
           aria-expanded={open}
           aria-haspopup="listbox"
         >
-          {value ? value : placeholder || `Select ${label.toLowerCase()}`}
+          <span className="text-left truncate">
+            {value ? value : placeholder || `Select ${label.toLowerCase()}`}
+          </span>
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-        </button>
+        </div>
       </PopoverTrigger>
       <PopoverContent 
         className="w-full p-0 z-50 bg-white"
         align="start" 
         sideOffset={4}
+        avoidCollisions={true}
       >
         <Command>
           <CommandInput placeholder={`Search ${label.toLowerCase()}...`} />

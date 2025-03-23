@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -94,6 +93,22 @@ const FormFieldItem: React.FC<FormFieldItemProps> = ({
                 aria-expanded="false"
                 aria-haspopup="listbox"
                 tabIndex={0}
+                onClick={(e) => {
+                  e.preventDefault();
+                  const triggerElement = e.currentTarget.closest('[data-state]') as HTMLElement;
+                  if (triggerElement) {
+                    triggerElement.click();
+                  }
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    const triggerElement = e.currentTarget.closest('[data-state]') as HTMLElement;
+                    if (triggerElement) {
+                      triggerElement.click();
+                    }
+                  }
+                }}
               >
                 {value ? value : placeholder || `Select ${label.toLowerCase()}`}
                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />

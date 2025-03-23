@@ -55,7 +55,7 @@ const SearchableSelectField = ({
               // Prevent default to avoid any browser-specific handling
               e.preventDefault();
               // Find the closest popover trigger and click it programmatically
-              const triggerElement = e.currentTarget.closest('[data-state]');
+              const triggerElement = e.currentTarget.closest('[data-state]') as HTMLElement;
               if (triggerElement) {
                 triggerElement.click();
               }
@@ -63,7 +63,7 @@ const SearchableSelectField = ({
             onKeyDown={(e) => {
               if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
-                const triggerElement = e.currentTarget.closest('[data-state]');
+                const triggerElement = e.currentTarget.closest('[data-state]') as HTMLElement;
                 if (triggerElement) {
                   triggerElement.click();
                 }

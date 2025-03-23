@@ -8,27 +8,7 @@ import FormFieldItem from "./family-office/FormFieldItem";
 import { toast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
-
-// Define constant options for selects
-const LEGAL_ENTITY_TYPES = [
-  "Limited Liability Company (LLC)",
-  "Corporation",
-  "Partnership",
-  "Trust",
-  "Foundation",
-  "S Corporation",
-  "Limited Partnership (LP)",
-  "Joint Venture",
-  "Other"
-];
-
-const JURISDICTIONS = [
-  "United States", "United Kingdom", "Switzerland", "Singapore", 
-  "Hong Kong", "Cayman Islands", "British Virgin Islands", "Luxembourg",
-  "Bermuda", "Liechtenstein", "Jersey", "Guernsey", "Isle of Man",
-  "Bahamas", "Barbados", "Panama", "Monaco", "United Arab Emirates",
-  "Canada", "Australia", "New Zealand", "Germany", "France", "Italy", "Spain"
-];
+import { LEGAL_ENTITY_TYPES, JURISDICTIONS } from "./constants/formOptions";
 
 const FamilyOfficeInfoForm = () => {
   const { onboardingData, updateFamilyOfficeInfo, setCurrentStep } = useOnboarding();

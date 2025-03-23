@@ -31,7 +31,7 @@ const SelectField = ({
   return (
     <div className="space-y-2">
       <Label htmlFor={id}>
-        {label}{required && "*"}
+        {label}{required && <span className="text-red-500">*</span>}
       </Label>
       <Select
         value={value || ""}
@@ -45,13 +45,15 @@ const SelectField = ({
         </SelectTrigger>
         <SelectContent 
           position="popper" 
-          className="bg-white z-50"
-          sideOffset={4}
+          className="bg-white border shadow-md z-50"
+          sideOffset={8}
+          align="start"
         >
           {options.map((option) => (
             <SelectItem 
               key={option} 
               value={option}
+              className="hover:bg-slate-100 cursor-pointer"
             >
               {option}
             </SelectItem>

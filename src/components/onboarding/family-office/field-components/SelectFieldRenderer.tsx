@@ -28,7 +28,7 @@ const SelectFieldRenderer: React.FC<SelectFieldRendererProps> = ({
   };
 
   return (
-    <Select value={value} onValueChange={handleSelectChange}>
+    <Select value={value || ""} onValueChange={handleSelectChange}>
       <SelectTrigger 
         id={`select-${name}`}
         className="h-11 w-full bg-white"
@@ -36,14 +36,15 @@ const SelectFieldRenderer: React.FC<SelectFieldRendererProps> = ({
         <SelectValue placeholder={placeholder || `Select option`} />
       </SelectTrigger>
       <SelectContent 
-        className="bg-white z-50"
+        className="bg-white border shadow-lg"
         position="popper" 
-        sideOffset={4}
+        sideOffset={8}
       >
         {options.map((option) => (
           <SelectItem 
             key={option} 
             value={option}
+            className="hover:bg-slate-100 cursor-pointer"
           >
             {option}
           </SelectItem>

@@ -34,14 +34,15 @@ const DocumentTypeField = ({ value, onChange }: DocumentTypeFieldProps) => {
         </SelectTrigger>
         <SelectContent 
           position="popper" 
-          className="z-50 bg-white"
-          sideOffset={4}
+          className="bg-white border shadow-md z-50"
+          sideOffset={8}
+          align="start"
         >
-          <SelectItem value="incorporation">Certificate of Incorporation</SelectItem>
-          <SelectItem value="registration">Business Registration</SelectItem>
-          <SelectItem value="taxCertificate">Tax Certificate</SelectItem>
-          <SelectItem value="ownership">Ownership Structure</SelectItem>
-          <SelectItem value="other">Other Legal Document</SelectItem>
+          <SelectItem value="incorporation" className="hover:bg-slate-100 cursor-pointer">Certificate of Incorporation</SelectItem>
+          <SelectItem value="registration" className="hover:bg-slate-100 cursor-pointer">Business Registration</SelectItem>
+          <SelectItem value="taxCertificate" className="hover:bg-slate-100 cursor-pointer">Tax Certificate</SelectItem>
+          <SelectItem value="ownership" className="hover:bg-slate-100 cursor-pointer">Ownership Structure</SelectItem>
+          <SelectItem value="other" className="hover:bg-slate-100 cursor-pointer">Other Legal Document</SelectItem>
         </SelectContent>
       </Select>
     </motion.div>

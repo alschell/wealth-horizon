@@ -43,7 +43,7 @@ const SearchableSelectField = ({
   return (
     <div className="space-y-2">
       <Label htmlFor={id}>
-        {label}{required && "*"}
+        {label}{required && <span className="text-red-500">*</span>}
       </Label>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
@@ -55,21 +55,27 @@ const SearchableSelectField = ({
             aria-label={`Select ${label}`}
             className="h-11 w-full justify-between text-left font-normal bg-white border"
             type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              setOpen(!open);
+            }}
           >
-            <span className="truncate">
-              {value || placeholder}
-            </span>
+            {value ? (
+              <span className="truncate">{value}</span>
+            ) : (
+              <span className="truncate text-muted-foreground">{placeholder}</span>
+            )}
             <ChevronsUpDown className="h-4 w-4 shrink-0 opacity-50 ml-2" />
           </Button>
         </PopoverTrigger>
         <PopoverContent 
-          className="w-full p-0 bg-white z-50" 
+          className="w-[var(--radix-popover-trigger-width)] p-0 bg-white border shadow-md" 
           align="start"
-          sideOffset={4}
-          avoidCollisions={true}
+          side="bottom"
+          sideOffset={8}
         >
-          <Command>
-            <CommandInput placeholder={`Search ${label.toLowerCase()}...`} />
+          <Command className="bg-white">
+            <CommandInput placeholder={`Search ${label.toLowerCase()}...`} className="h-9" />
             <CommandEmpty>No {label.toLowerCase()} found.</CommandEmpty>
             <CommandGroup className="max-h-[300px] overflow-y-auto">
               {options.map((option) => {
@@ -82,6 +88,7 @@ const SearchableSelectField = ({
                       onChange(optionValue);
                       setOpen(false);
                     }}
+                    className="hover:bg-slate-100 aria-selected:bg-slate-100 cursor-pointer"
                   >
                     <Check
                       className={cn(

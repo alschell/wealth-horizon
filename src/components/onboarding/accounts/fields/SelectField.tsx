@@ -42,7 +42,7 @@ const SelectField = ({
         </SelectTrigger>
         <SelectContent 
           position="popper" 
-          className="max-h-[300px] overflow-y-auto"
+          className="max-h-[300px] overflow-y-auto bg-white"
           sideOffset={8}
         >
           {options.map((option) => (

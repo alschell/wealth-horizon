@@ -40,7 +40,7 @@ const FamilyOfficeInfoForm = () => {
             description="Please provide the details of your family office entity for KYC verification."
           />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-6">
             <FormFieldItem
               index={0}
               label="Family Office Name"
@@ -50,7 +50,6 @@ const FamilyOfficeInfoForm = () => {
               placeholder="Smith Family Office LLC"
               required
               type="text"
-              className="col-span-full"
             />
 
             <FormFieldItem

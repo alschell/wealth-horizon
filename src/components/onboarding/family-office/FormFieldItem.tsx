@@ -23,6 +23,7 @@ interface FormFieldItemProps {
   options?: string[];
   minValue?: number;
   maxValue?: number;
+  className?: string; // Add className prop to the interface
 }
 
 export const formItemVariants = {
@@ -49,6 +50,7 @@ const FormFieldItem: React.FC<FormFieldItemProps> = ({
   options = [],
   minValue,
   maxValue,
+  className, // Include className in function parameters
 }) => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange(name, e.target.value);
@@ -168,7 +170,7 @@ const FormFieldItem: React.FC<FormFieldItemProps> = ({
       variants={formItemVariants}
       initial="hidden"
       animate="visible"
-      className="space-y-2"
+      className={cn("space-y-2", className)} // Apply className to the container
     >
       <Label htmlFor={name}>
         {label}

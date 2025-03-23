@@ -3,9 +3,29 @@ import React from "react";
 import { FinancialAccountInfo } from "@/context/OnboardingContext";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { 
+  Select, 
+  SelectContent, 
+  SelectItem, 
+  SelectTrigger, 
+  SelectValue 
+} from "@/components/ui/select";
+import { 
+  Command, 
+  CommandEmpty, 
+  CommandGroup, 
+  CommandInput, 
+  CommandItem 
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Check, ChevronsUpDown } from "lucide-react";
+import { cn } from "@/lib/utils";
 import FileUploader from "@/components/FileUploader";
-import { INSTITUTIONS, CURRENCIES } from "@/utils/financialDataConstants";
+import { INSTITUTIONS, CURRENCIES, ACCOUNT_TYPES } from "@/utils/financialDataConstants";
 
 interface AccountFormFieldsProps {
   account: FinancialAccountInfo;
@@ -20,10 +40,6 @@ const AccountFormFields = ({
   onSelectionChange,
   onStatementsSelected
 }: AccountFormFieldsProps) => {
-  // Sort institutions and currencies alphabetically
-  const sortedInstitutions = [...INSTITUTIONS].sort();
-  const sortedCurrencies = [...CURRENCIES].sort();
-  
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div className="space-y-2 md:col-span-2">
@@ -40,41 +56,82 @@ const AccountFormFields = ({
       
       <div className="space-y-2">
         <Label htmlFor="institution">Institution*</Label>
-        <Select
-          value={account.institution}
-          onValueChange={(value) => onSelectionChange("institution", value)}
-        >
-          <SelectTrigger className="h-11">
-            <SelectValue placeholder="Select institution" />
-          </SelectTrigger>
-          <SelectContent>
-            {sortedInstitutions.map((institution) => (
-              <SelectItem key={institution} value={institution}>
-                {institution}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <Popover>
+          <PopoverTrigger asChild>
+            <div
+              className="flex h-11 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1 cursor-pointer"
+              id="institution"
+            >
+              {account.institution || "Select institution"}
+              <ChevronsUpDown className="h-4 w-4 shrink-0 opacity-50" />
+            </div>
+          </PopoverTrigger>
+          <PopoverContent className="w-full p-0" align="start">
+            <Command>
+              <CommandInput placeholder="Search institution..." />
+              <CommandEmpty>No institution found.</CommandEmpty>
+              <CommandGroup>
+                {INSTITUTIONS.map((institution) => (
+                  <CommandItem
+                    key={institution}
+                    value={institution}
+                    onSelect={() => onSelectionChange("institution", institution)}
+                    className="cursor-pointer"
+                  >
+                    <Check
+                      className={cn(
+                        "mr-2 h-4 w-4",
+                        account.institution === institution ? "opacity-100" : "opacity-0"
+                      )}
+                    />
+                    {institution}
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            </Command>
+          </PopoverContent>
+        </Popover>
       </div>
       
       <div className="space-y-2">
         <Label htmlFor="accountType">Account Type*</Label>
-        <Select
-          value={account.accountType}
-          onValueChange={(value) => onSelectionChange("accountType", value)}
-        >
-          <SelectTrigger className="h-11">
-            <SelectValue placeholder="Select account type" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="broker">Brokerage Account</SelectItem>
-            <SelectItem value="cash">Cash Account</SelectItem>
-            <SelectItem value="custody">Custody Account</SelectItem>
-            <SelectItem value="investment">Investment Fund</SelectItem>
-            <SelectItem value="portfolio">Investment Portfolio</SelectItem>
-            <SelectItem value="other">Other</SelectItem>
-          </SelectContent>
-        </Select>
+        <Popover>
+          <PopoverTrigger asChild>
+            <div
+              className="flex h-11 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1 cursor-pointer"
+              id="accountType"
+            >
+              {account.accountType ? 
+                account.accountType.charAt(0).toUpperCase() + account.accountType.slice(1) 
+                : "Select account type"}
+              <ChevronsUpDown className="h-4 w-4 shrink-0 opacity-50" />
+            </div>
+          </PopoverTrigger>
+          <PopoverContent className="w-full p-0" align="start">
+            <Command>
+              <CommandInput placeholder="Search account type..." />
+              <CommandEmpty>No account type found.</CommandEmpty>
+              <CommandGroup>
+                {ACCOUNT_TYPES.map((type) => (
+                  <CommandItem
+                    key={type}
+                    value={type}
+                    onSelect={() => onSelectionChange("accountType", type)}
+                    className="cursor-pointer"
+                  >
+                    <Check
+                      className={cn(
+                        "mr-2 h-4 w-4",
+                        account.accountType === type ? "opacity-100" : "opacity-0"
+                      )}
+                    />
+                    {type.charAt(0).toUpperCase() + type.slice(1)}
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            </Command>
+          </PopoverContent>
+        </Popover>
       </div>
       
       <div className="space-y-2">
@@ -91,21 +148,44 @@ const AccountFormFields = ({
       
       <div className="space-y-2">
         <Label htmlFor="currency">Primary Currency</Label>
-        <Select
-          value={account.currency}
-          onValueChange={(value) => onSelectionChange("currency", value)}
-        >
-          <SelectTrigger className="h-11">
-            <SelectValue placeholder="Select currency" />
-          </SelectTrigger>
-          <SelectContent>
-            {sortedCurrencies.map((currency) => (
-              <SelectItem key={currency} value={currency.split(" - ")[0]}>
-                {currency}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <Popover>
+          <PopoverTrigger asChild>
+            <div
+              className="flex h-11 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1 cursor-pointer"
+              id="currency"
+            >
+              {account.currency || "Select currency"}
+              <ChevronsUpDown className="h-4 w-4 shrink-0 opacity-50" />
+            </div>
+          </PopoverTrigger>
+          <PopoverContent className="w-full p-0" align="start">
+            <Command>
+              <CommandInput placeholder="Search currency..." />
+              <CommandEmpty>No currency found.</CommandEmpty>
+              <CommandGroup>
+                {CURRENCIES.map((currency) => {
+                  const code = currency.split(" - ")[0];
+                  return (
+                    <CommandItem
+                      key={currency}
+                      value={currency}
+                      onSelect={() => onSelectionChange("currency", code)}
+                      className="cursor-pointer"
+                    >
+                      <Check
+                        className={cn(
+                          "mr-2 h-4 w-4",
+                          account.currency === code ? "opacity-100" : "opacity-0"
+                        )}
+                      />
+                      {currency}
+                    </CommandItem>
+                  );
+                })}
+              </CommandGroup>
+            </Command>
+          </PopoverContent>
+        </Popover>
       </div>
       
       <div className="space-y-2">

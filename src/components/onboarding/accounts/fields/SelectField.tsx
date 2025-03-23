@@ -37,16 +37,16 @@ const SelectField = ({
         value={value || ""}
         onValueChange={onChange}
       >
-        <SelectTrigger className="h-11" id={id}>
+        <SelectTrigger className="h-11 w-full bg-white" id={id}>
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
         <SelectContent 
           position="popper" 
-          className="max-h-[300px] overflow-y-auto bg-white"
-          sideOffset={8}
+          className="max-h-[300px] overflow-y-auto z-50 bg-white"
+          sideOffset={4}
         >
           {options.map((option) => (
-            <SelectItem key={option} value={option}>
+            <SelectItem key={option} value={option} className="cursor-pointer">
               {option}
             </SelectItem>
           ))}

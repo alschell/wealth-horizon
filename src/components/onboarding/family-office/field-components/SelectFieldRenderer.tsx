@@ -23,16 +23,16 @@ const SelectFieldRenderer: React.FC<SelectFieldRendererProps> = ({
 
   return (
     <Select value={value} onValueChange={handleSelectChange}>
-      <SelectTrigger className="h-11">
+      <SelectTrigger className="h-11 w-full bg-white">
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent 
         position="popper" 
-        className="max-h-[300px] overflow-y-auto w-full bg-white"
-        sideOffset={8}
+        className="max-h-[300px] overflow-y-auto w-full z-50 bg-white"
+        sideOffset={4}
       >
         {options.map((option) => (
-          <SelectItem key={option} value={option}>
+          <SelectItem key={option} value={option} className="cursor-pointer">
             {option}
           </SelectItem>
         ))}

@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -26,15 +26,19 @@ const DocumentTypeField = ({ value, onChange }: DocumentTypeFieldProps) => {
         value={value}
         onValueChange={(value: DocumentType) => onChange(value)}
       >
-        <SelectTrigger className="h-11">
+        <SelectTrigger className="h-11 bg-white">
           <SelectValue placeholder="Select document type" />
         </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="incorporation">Certificate of Incorporation</SelectItem>
-          <SelectItem value="registration">Business Registration</SelectItem>
-          <SelectItem value="taxCertificate">Tax Certificate</SelectItem>
-          <SelectItem value="ownership">Ownership Structure</SelectItem>
-          <SelectItem value="other">Other Legal Document</SelectItem>
+        <SelectContent 
+          position="popper" 
+          className="z-50 bg-white"
+          sideOffset={4}
+        >
+          <SelectItem value="incorporation" className="cursor-pointer">Certificate of Incorporation</SelectItem>
+          <SelectItem value="registration" className="cursor-pointer">Business Registration</SelectItem>
+          <SelectItem value="taxCertificate" className="cursor-pointer">Tax Certificate</SelectItem>
+          <SelectItem value="ownership" className="cursor-pointer">Ownership Structure</SelectItem>
+          <SelectItem value="other" className="cursor-pointer">Other Legal Document</SelectItem>
         </SelectContent>
       </Select>
     </motion.div>

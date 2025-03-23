@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { 
   Command, 
@@ -37,18 +37,20 @@ const SearchableSelectField = ({
   onChange,
   extractValue = (option) => option
 }: SearchableSelectFieldProps) => {
+  const [open, setOpen] = useState(false);
+
   return (
     <div className="space-y-2">
       <Label htmlFor={id}>
         {label}{required && "*"}
       </Label>
-      <Popover>
+      <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <button
             id={id}
             type="button"
-            className="flex h-11 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1"
-            aria-expanded="false"
+            className="flex h-11 w-full items-center justify-between rounded-md border border-input bg-white px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1 cursor-pointer"
+            aria-expanded={open}
             aria-haspopup="listbox"
           >
             <span className="text-left truncate">
@@ -58,9 +60,9 @@ const SearchableSelectField = ({
           </button>
         </PopoverTrigger>
         <PopoverContent 
-          className="w-full p-0" 
+          className="w-full p-0 z-50 bg-white" 
           align="start"
-          sideOffset={8}
+          sideOffset={4}
         >
           <Command>
             <CommandInput placeholder={`Search ${label.toLowerCase()}...`} />
@@ -72,7 +74,10 @@ const SearchableSelectField = ({
                   <CommandItem
                     key={option}
                     value={option}
-                    onSelect={() => onChange(optionValue)}
+                    onSelect={() => {
+                      onChange(optionValue);
+                      setOpen(false);
+                    }}
                     className="cursor-pointer"
                   >
                     <Check

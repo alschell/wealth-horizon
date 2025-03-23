@@ -2,11 +2,11 @@
 import { useState } from "react";
 import { AggregatorInfo } from "@/context/OnboardingContext";
 import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { motion } from "framer-motion";
 import { AGGREGATORS } from "@/utils/financialDataConstants";
+import AggregatorCredentialsSection from "./AggregatorCredentialsSection";
 
 interface AggregatorFormSectionProps {
   aggregatorInfo: AggregatorInfo;
@@ -108,33 +108,11 @@ const AggregatorFormSection = ({
           </div>
 
           {aggregatorInfo.aggregatorName && (
-            <div className="space-y-4">
-              <Label htmlFor="username">Username or API Key ID</Label>
-              <Input
-                id="username"
-                name="username"
-                value={aggregatorInfo.aggregatorCredentials?.username || ""}
-                onChange={handleCredentialsChange}
-                placeholder="Enter your username or API key identifier"
-                className="h-11"
-              />
-              
-              <Label htmlFor="apiKey">API Key (optional)</Label>
-              <Input
-                id="apiKey"
-                name="apiKey"
-                type="password"
-                value={aggregatorInfo.aggregatorCredentials?.apiKey || ""}
-                onChange={handleCredentialsChange}
-                placeholder="Enter your API key if applicable"
-                className="h-11"
-              />
-              
-              <p className="text-sm text-gray-500 mt-2">
-                We'll use these credentials to securely connect to your {aggregatorInfo.aggregatorName} account.
-                Your credentials are encrypted and stored securely.
-              </p>
-            </div>
+            <AggregatorCredentialsSection 
+              aggregatorInfo={aggregatorInfo}
+              handleCredentialsChange={handleCredentialsChange}
+              itemVariants={itemVariants}
+            />
           )}
         </motion.div>
       )}

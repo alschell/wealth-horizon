@@ -1,5 +1,5 @@
 
-import { Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { useOnboarding } from "@/context/OnboardingContext";
 import Layout from "@/components/Layout";
@@ -12,10 +12,16 @@ import DataSourceForm from "@/components/onboarding/DataSourceForm";
 import BeneficialOwnersForm from "@/components/onboarding/BeneficialOwnersForm";
 import ReviewStep from "@/components/onboarding/ReviewStep";
 import AnimatedTransition from "@/components/AnimatedTransition";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 
 const Onboarding = () => {
   const { currentStep, setCurrentStep } = useOnboarding();
   const location = useLocation();
+  const navigate = useNavigate();
+
+  // Define the total number of steps
+  const totalSteps = 7;
 
   // Sync route with current step
   useEffect(() => {
@@ -29,6 +35,51 @@ const Onboarding = () => {
     else if (path === "/onboarding/review") setCurrentStep(6);
     else if (path === "/onboarding") setCurrentStep(0);
   }, [location.pathname, setCurrentStep]);
+
+  // Navigation functions
+  const handleNext = () => {
+    if (currentStep < totalSteps - 1) {
+      const nextStep = currentStep + 1;
+      setCurrentStep(nextStep);
+      navigateToStep(nextStep);
+    }
+  };
+
+  const handlePrevious = () => {
+    if (currentStep > 0) {
+      const prevStep = currentStep - 1;
+      setCurrentStep(prevStep);
+      navigateToStep(prevStep);
+    }
+  };
+
+  const navigateToStep = (step: number) => {
+    switch (step) {
+      case 0:
+        navigate("/onboarding/family-office");
+        break;
+      case 1:
+        navigate("/onboarding/primary-contact");
+        break;
+      case 2:
+        navigate("/onboarding/address");
+        break;
+      case 3:
+        navigate("/onboarding/legal-documents");
+        break;
+      case 4:
+        navigate("/onboarding/data-source");
+        break;
+      case 5:
+        navigate("/onboarding/beneficial-owners");
+        break;
+      case 6:
+        navigate("/onboarding/review");
+        break;
+      default:
+        navigate("/onboarding/family-office");
+    }
+  };
 
   // Render the current step component
   const renderCurrentStep = () => {
@@ -53,22 +104,34 @@ const Onboarding = () => {
   };
 
   return (
-    <Layout className="min-h-screen py-12 bg-gradient-to-b from-blue-50/30 to-white">
+    <Layout className="min-h-screen py-12 bg-gradient-to-b from-purple-50/30 to-white">
       <OnboardingHeader />
-      <AnimatedTransition>
-        {renderCurrentStep()}
-      </AnimatedTransition>
+      
+      <div className="max-w-3xl mx-auto">
+        <AnimatedTransition>
+          {renderCurrentStep()}
+        </AnimatedTransition>
 
-      <Routes>
-        <Route path="/" element={<Navigate to="/onboarding/family-office" />} />
-        <Route path="/family-office" element={<FamilyOfficeInfoForm />} />
-        <Route path="/primary-contact" element={<PrimaryContactForm />} />
-        <Route path="/address" element={<AddressForm />} />
-        <Route path="/legal-documents" element={<LegalDocumentsForm />} />
-        <Route path="/data-source" element={<DataSourceForm />} />
-        <Route path="/beneficial-owners" element={<BeneficialOwnersForm />} />
-        <Route path="/review" element={<ReviewStep />} />
-      </Routes>
+        {/* Navigation buttons */}
+        <div className="flex justify-between mt-8 px-4">
+          <Button 
+            variant="outline" 
+            onClick={handlePrevious}
+            className="flex items-center gap-2"
+            disabled={currentStep === 0}
+          >
+            <ArrowLeft className="h-4 w-4" /> Previous
+          </Button>
+          
+          <Button 
+            onClick={handleNext}
+            className="flex items-center gap-2 bg-purple-600 hover:bg-purple-700"
+            disabled={currentStep === totalSteps - 1}
+          >
+            {currentStep === totalSteps - 1 ? 'Complete' : 'Next'} <ArrowRight className="h-4 w-4" />
+          </Button>
+        </div>
+      </div>
     </Layout>
   );
 };

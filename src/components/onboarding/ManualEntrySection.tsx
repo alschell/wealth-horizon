@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { FinancialAccountInfo } from "@/context/OnboardingContext";
 import { AccountForm, AccountList } from "./accounts";
+import { Card } from "@/components/ui/card";
 
 interface ManualEntrySectionProps {
   financialAccounts: FinancialAccountInfo[];
@@ -15,15 +16,21 @@ const ManualEntrySection = ({
   removeFinancialAccount 
 }: ManualEntrySectionProps) => {
   return (
-    <div className="space-y-4 mt-4">
+    <div className="space-y-6 mt-4">
       {/* List of added accounts */}
-      <AccountList 
-        accounts={financialAccounts} 
-        onRemoveAccount={removeFinancialAccount} 
-      />
+      {financialAccounts.length > 0 && (
+        <Card className="p-4 shadow-sm bg-white">
+          <AccountList 
+            accounts={financialAccounts} 
+            onRemoveAccount={removeFinancialAccount} 
+          />
+        </Card>
+      )}
       
       {/* Add new account form */}
-      <AccountForm onAddAccount={addFinancialAccount} />
+      <Card className="p-4 shadow-sm bg-white">
+        <AccountForm onAddAccount={addFinancialAccount} />
+      </Card>
     </div>
   );
 };

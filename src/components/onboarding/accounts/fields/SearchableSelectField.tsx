@@ -1,6 +1,7 @@
 
 import React, { useState } from "react";
 import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 import { 
   Command, 
   CommandEmpty, 
@@ -46,25 +47,25 @@ const SearchableSelectField = ({
       </Label>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
-          <div
+          <Button
             id={id}
-            className="flex h-11 w-full items-center justify-between rounded-md border border-input bg-white px-3 py-2 text-sm ring-offset-background focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 cursor-pointer"
-            onClick={() => setOpen(true)}
+            variant="outline"
             role="combobox"
             aria-expanded={open}
-            aria-haspopup="listbox"
+            aria-label={`Select ${label}`}
+            className="h-11 w-full justify-between text-left font-normal bg-white"
+            type="button"
           >
-            <span className="text-left truncate">
+            <span className="truncate">
               {value || placeholder}
             </span>
             <ChevronsUpDown className="h-4 w-4 shrink-0 opacity-50 ml-2" />
-          </div>
+          </Button>
         </PopoverTrigger>
         <PopoverContent 
-          className="w-full p-0 z-50 bg-white" 
+          className="w-full p-0 bg-white z-50" 
           align="start"
           sideOffset={4}
-          avoidCollisions={true}
         >
           <Command>
             <CommandInput placeholder={`Search ${label.toLowerCase()}...`} />

@@ -26,14 +26,16 @@ const DocumentTypeField = ({ value, onChange }: DocumentTypeFieldProps) => {
         value={value}
         onValueChange={(value: DocumentType) => onChange(value)}
       >
-        <SelectTrigger id="documentType" className="h-11 bg-white">
+        <SelectTrigger 
+          id="documentType" 
+          className="h-11 bg-white border border-input"
+        >
           <SelectValue placeholder="Select document type" />
         </SelectTrigger>
         <SelectContent 
           position="popper" 
-          className="z-50 bg-white"
+          className="z-50 bg-white max-h-[300px] overflow-y-auto"
           sideOffset={4}
-          avoidCollisions={true}
         >
           <SelectItem value="incorporation" className="cursor-pointer">Certificate of Incorporation</SelectItem>
           <SelectItem value="registration" className="cursor-pointer">Business Registration</SelectItem>

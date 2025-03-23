@@ -1,19 +1,18 @@
 
 import React, { useState } from "react";
 import { useOnboarding, AggregatorInfo, FinancialAccountInfo } from "@/context/OnboardingContext";
-import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
 import { motion } from "framer-motion";
-import { ArrowRight, ArrowLeft, BarChart4, Wallet, Upload } from "lucide-react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { CustomSelect } from "@/components/ui/custom-select";
-import { AGGREGATORS } from "./constants/formOptions";
-import ManualEntrySection from "./ManualEntrySection";
-import FileUploadSection from "./FileUploadSection";
+
+import {
+  AggregatorSection,
+  DataSourceTabs,
+  DataSourceFormNavigation,
+  DataSourceFormHeader
+} from "./data-source";
 
 const DataSourceForm = () => {
   const { 
@@ -35,25 +34,6 @@ const DataSourceForm = () => {
       usesAggregator: value === "yes",
       aggregatorName: value === "no" ? undefined : aggregatorInfo.aggregatorName,
       aggregatorCredentials: value === "no" ? undefined : aggregatorInfo.aggregatorCredentials
-    });
-  };
-
-  const handleAggregatorNameChange = (name: string) => {
-    setAggregatorInfo({
-      ...aggregatorInfo,
-      aggregatorName: name,
-      aggregatorCredentials: { username: "" }
-    });
-  };
-
-  const handleCredentialsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setAggregatorInfo({
-      ...aggregatorInfo,
-      aggregatorCredentials: {
-        ...aggregatorInfo.aggregatorCredentials!,
-        [name]: value
-      }
     });
   };
 
@@ -105,13 +85,7 @@ const DataSourceForm = () => {
     >
       <Card className="p-6 md:p-8 shadow-sm">
         <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="flex items-center gap-3 mb-2">
-            <BarChart4 className="h-7 w-7 text-blue-600" />
-            <h2 className="text-2xl font-bold">Financial Data Source</h2>
-          </div>
-          <p className="text-gray-500">
-            Please tell us how you'd like to provide your financial information.
-          </p>
+          <DataSourceFormHeader />
 
           <div className="space-y-4">
             <Label>Does your family office currently use a financial data aggregator?</Label>
@@ -138,111 +112,28 @@ const DataSourceForm = () => {
           {/* Conditional content based on aggregator usage */}
           {aggregatorInfo.usesAggregator && (
             <div className="space-y-6 border p-4 rounded-md mt-4">
-              <div className="space-y-4">
-                <Label htmlFor="aggregatorName">Select your aggregator</Label>
-                <CustomSelect
-                  id="aggregatorName"
-                  label=""
-                  value={aggregatorInfo.aggregatorName || ""}
-                  onChange={handleAggregatorNameChange}
-                  placeholder="Select your aggregator"
-                  options={AGGREGATORS}
-                />
-              </div>
-
-              {aggregatorInfo.aggregatorName && (
-                <div className="space-y-4 border-t pt-4">
-                  <h3 className="font-medium text-gray-700">Aggregator Credentials</h3>
-                  <div className="space-y-2">
-                    <Label htmlFor="username">Username / API Key</Label>
-                    <Input
-                      id="username"
-                      name="username"
-                      value={aggregatorInfo.aggregatorCredentials?.username || ""}
-                      onChange={handleCredentialsChange}
-                      placeholder="Enter your aggregator username"
-                      className="h-11"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="apiKey">API Secret (optional)</Label>
-                    <Input
-                      id="apiKey"
-                      name="apiKey"
-                      type="password"
-                      value={aggregatorInfo.aggregatorCredentials?.apiKey || ""}
-                      onChange={handleCredentialsChange}
-                      placeholder="Enter your aggregator API secret"
-                      className="h-11"
-                    />
-                  </div>
-                  <p className="text-sm text-gray-500 mt-2">
-                    Credentials are encrypted and securely stored. We only use them to sync your financial data.
-                  </p>
-                </div>
-              )}
+              <AggregatorSection 
+                aggregatorInfo={aggregatorInfo}
+                setAggregatorInfo={setAggregatorInfo}
+              />
             </div>
           )}
 
           {!aggregatorInfo.usesAggregator && (
             <div className="space-y-6 border p-4 rounded-md">
-              <Tabs 
-                defaultValue="manual" 
-                value={dataSourceMethod}
-                onValueChange={(value) => setDataSourceMethod(value as "manual" | "upload")}
-                className="w-full"
-              >
-                <TabsList className="grid grid-cols-2 w-full mb-4">
-                  <TabsTrigger value="manual" className="text-center py-2">
-                    <Wallet className="h-4 w-4 mr-2" />
-                    Manual Entry
-                  </TabsTrigger>
-                  <TabsTrigger value="upload" className="text-center py-2">
-                    <Upload className="h-4 w-4 mr-2" />
-                    Upload Files
-                  </TabsTrigger>
-                </TabsList>
-                
-                <TabsContent value="manual">
-                  <ManualEntrySection 
-                    financialAccounts={financialAccounts}
-                    addFinancialAccount={handleAddAccount}
-                    removeFinancialAccount={handleRemoveAccount}
-                  />
-                </TabsContent>
-                
-                <TabsContent value="upload">
-                  <FileUploadSection 
-                    uploadedFiles={uploadedFiles}
-                    handleBulkFilesSelected={handleBulkFilesSelected}
-                  />
-                </TabsContent>
-              </Tabs>
+              <DataSourceTabs 
+                dataSourceMethod={dataSourceMethod}
+                setDataSourceMethod={setDataSourceMethod}
+                financialAccounts={financialAccounts}
+                handleAddAccount={handleAddAccount}
+                handleRemoveAccount={handleRemoveAccount}
+                uploadedFiles={uploadedFiles}
+                handleBulkFilesSelected={handleBulkFilesSelected}
+              />
             </div>
           )}
 
-          <div className="pt-4 border-t">
-            <div className="flex justify-between">
-              <Button 
-                type="button" 
-                variant="outline"
-                size="lg" 
-                className="rounded-lg text-gray-700"
-                onClick={() => setCurrentStep(3)}
-              >
-                <ArrowLeft className="mr-2 h-4 w-4" />
-                Back
-              </Button>
-              <Button 
-                type="submit" 
-                size="lg" 
-                className="rounded-lg bg-blue-600 hover:bg-blue-700 text-white"
-              >
-                Continue
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </div>
-          </div>
+          <DataSourceFormNavigation onBack={() => setCurrentStep(3)} />
         </form>
       </Card>
     </motion.div>

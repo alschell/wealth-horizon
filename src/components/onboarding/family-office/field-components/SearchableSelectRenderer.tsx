@@ -25,8 +25,8 @@ const SearchableSelectRenderer: React.FC<SearchableSelectRendererProps> = ({
 }) => {
   const [open, setOpen] = useState(false);
   
-  const handleSelectChange = (newValue: string) => {
-    onChange(name, newValue);
+  const handleSelectChange = (selectedValue: string) => {
+    onChange(name, selectedValue);
     setOpen(false);
   };
 
@@ -38,7 +38,7 @@ const SearchableSelectRenderer: React.FC<SearchableSelectRendererProps> = ({
           role="combobox"
           aria-expanded={open}
           aria-label={`Select ${label}`}
-          className="h-11 w-full justify-between bg-white border border-input font-normal"
+          className="h-11 w-full justify-between bg-white border font-normal"
           type="button"
         >
           <span className="truncate text-left">
@@ -51,6 +51,7 @@ const SearchableSelectRenderer: React.FC<SearchableSelectRendererProps> = ({
         className="w-full p-0 bg-white z-50"
         align="start" 
         sideOffset={4}
+        avoidCollisions={true}
       >
         <Command>
           <CommandInput placeholder={`Search ${label.toLowerCase()}...`} />
@@ -61,7 +62,6 @@ const SearchableSelectRenderer: React.FC<SearchableSelectRendererProps> = ({
                 key={option}
                 value={option}
                 onSelect={() => handleSelectChange(option)}
-                className="cursor-pointer"
               >
                 <Check
                   className={cn(

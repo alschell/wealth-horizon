@@ -28,20 +28,20 @@ const DocumentTypeField = ({ value, onChange }: DocumentTypeFieldProps) => {
       >
         <SelectTrigger 
           id="documentType" 
-          className="h-11 bg-white border border-input"
+          className="h-11 bg-white"
         >
           <SelectValue placeholder="Select document type" />
         </SelectTrigger>
         <SelectContent 
           position="popper" 
-          className="z-50 bg-white max-h-[300px] overflow-y-auto"
+          className="z-50 bg-white"
           sideOffset={4}
         >
-          <SelectItem value="incorporation" className="cursor-pointer">Certificate of Incorporation</SelectItem>
-          <SelectItem value="registration" className="cursor-pointer">Business Registration</SelectItem>
-          <SelectItem value="taxCertificate" className="cursor-pointer">Tax Certificate</SelectItem>
-          <SelectItem value="ownership" className="cursor-pointer">Ownership Structure</SelectItem>
-          <SelectItem value="other" className="cursor-pointer">Other Legal Document</SelectItem>
+          <SelectItem value="incorporation">Certificate of Incorporation</SelectItem>
+          <SelectItem value="registration">Business Registration</SelectItem>
+          <SelectItem value="taxCertificate">Tax Certificate</SelectItem>
+          <SelectItem value="ownership">Ownership Structure</SelectItem>
+          <SelectItem value="other">Other Legal Document</SelectItem>
         </SelectContent>
       </Select>
     </motion.div>

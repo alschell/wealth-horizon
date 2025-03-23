@@ -53,7 +53,7 @@ const SearchableSelectField = ({
             role="combobox"
             aria-expanded={open}
             aria-label={`Select ${label}`}
-            className="h-11 w-full justify-between text-left font-normal bg-white"
+            className="h-11 w-full justify-between text-left font-normal bg-white border"
             type="button"
           >
             <span className="truncate">
@@ -66,6 +66,7 @@ const SearchableSelectField = ({
           className="w-full p-0 bg-white z-50" 
           align="start"
           sideOffset={4}
+          avoidCollisions={true}
         >
           <Command>
             <CommandInput placeholder={`Search ${label.toLowerCase()}...`} />
@@ -81,7 +82,6 @@ const SearchableSelectField = ({
                       onChange(optionValue);
                       setOpen(false);
                     }}
-                    className="cursor-pointer"
                   >
                     <Check
                       className={cn(

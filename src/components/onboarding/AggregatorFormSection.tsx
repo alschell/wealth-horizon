@@ -86,7 +86,7 @@ const AggregatorFormSection = ({
           variants={itemVariants}
           initial="hidden"
           animate="visible"
-          className="space-y-6 border p-4 rounded-lg"
+          className="space-y-6 border p-4 rounded-lg mt-4"
         >
           <div className="space-y-4">
             <Label htmlFor="aggregatorName">Select your aggregator</Label>
@@ -94,17 +94,19 @@ const AggregatorFormSection = ({
               value={aggregatorInfo.aggregatorName || ""}
               onValueChange={handleAggregatorNameChange}
             >
-              <SelectTrigger id="aggregatorName" className="h-11 bg-white">
+              <SelectTrigger 
+                id="aggregatorName" 
+                className="h-11 bg-white"
+              >
                 <SelectValue placeholder="Select your aggregator" />
               </SelectTrigger>
               <SelectContent 
                 position="popper" 
-                className="max-h-[300px] overflow-y-auto z-50 bg-white"
+                className="z-50 bg-white max-h-[300px] overflow-y-auto"
                 sideOffset={4}
-                avoidCollisions={true}
               >
                 {AGGREGATORS.map((aggregator) => (
-                  <SelectItem key={aggregator} value={aggregator} className="cursor-pointer">
+                  <SelectItem key={aggregator} value={aggregator}>
                     {aggregator}
                   </SelectItem>
                 ))}

@@ -58,13 +58,14 @@ const AccountFormFields = ({
         <Label htmlFor="institution">Institution*</Label>
         <Popover>
           <PopoverTrigger asChild>
-            <div
+            <button
+              type="button"
               className="flex h-11 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1 cursor-pointer"
               id="institution"
             >
               {account.institution || "Select institution"}
               <ChevronsUpDown className="h-4 w-4 shrink-0 opacity-50" />
-            </div>
+            </button>
           </PopoverTrigger>
           <PopoverContent className="w-full p-0" align="start">
             <Command>
@@ -97,7 +98,8 @@ const AccountFormFields = ({
         <Label htmlFor="accountType">Account Type*</Label>
         <Popover>
           <PopoverTrigger asChild>
-            <div
+            <button
+              type="button"
               className="flex h-11 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1 cursor-pointer"
               id="accountType"
             >
@@ -105,7 +107,7 @@ const AccountFormFields = ({
                 account.accountType.charAt(0).toUpperCase() + account.accountType.slice(1) 
                 : "Select account type"}
               <ChevronsUpDown className="h-4 w-4 shrink-0 opacity-50" />
-            </div>
+            </button>
           </PopoverTrigger>
           <PopoverContent className="w-full p-0" align="start">
             <Command>
@@ -150,13 +152,14 @@ const AccountFormFields = ({
         <Label htmlFor="currency">Primary Currency</Label>
         <Popover>
           <PopoverTrigger asChild>
-            <div
+            <button
+              type="button"
               className="flex h-11 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1 cursor-pointer"
               id="currency"
             >
               {account.currency || "Select currency"}
               <ChevronsUpDown className="h-4 w-4 shrink-0 opacity-50" />
-            </div>
+            </button>
           </PopoverTrigger>
           <PopoverContent className="w-full p-0" align="start">
             <Command>

@@ -23,7 +23,7 @@ interface FormFieldItemProps {
   options?: string[];
   minValue?: number;
   maxValue?: number;
-  className?: string; // Add className prop to the interface
+  className?: string;
 }
 
 export const formItemVariants = {
@@ -50,7 +50,7 @@ const FormFieldItem: React.FC<FormFieldItemProps> = ({
   options = [],
   minValue,
   maxValue,
-  className, // Include className in function parameters
+  className,
 }) => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange(name, e.target.value);
@@ -74,7 +74,7 @@ const FormFieldItem: React.FC<FormFieldItemProps> = ({
             <SelectTrigger className="h-11">
               <SelectValue placeholder={placeholder || `Select ${label.toLowerCase()}`} />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent position="popper" className="max-h-[300px] overflow-y-auto w-full">
               {options.map((option) => (
                 <SelectItem key={option} value={option}>
                   {option}
@@ -89,6 +89,7 @@ const FormFieldItem: React.FC<FormFieldItemProps> = ({
           <Popover>
             <PopoverTrigger asChild>
               <button
+                type="button"
                 className="flex h-11 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                 role="combobox"
               >
@@ -170,7 +171,7 @@ const FormFieldItem: React.FC<FormFieldItemProps> = ({
       variants={formItemVariants}
       initial="hidden"
       animate="visible"
-      className={cn("space-y-2", className)} // Apply className to the container
+      className={cn("space-y-2", className)}
     >
       <Label htmlFor={name}>
         {label}

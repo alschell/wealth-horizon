@@ -10,9 +10,26 @@ import { toast } from "@/components/ui/use-toast";
 import { motion } from "framer-motion";
 import { ArrowRight, ArrowLeft } from "lucide-react";
 
-const COUNTRIES = ["United States", "United Kingdom", "Canada", "Germany", "France", "Switzerland", "Italy", "Spain", "Netherlands", "Sweden", "Norway", "Denmark", "Australia", "New Zealand", "Japan", "China", "India", "Brazil", "Mexico", "South Africa"];
+// Sort the arrays alphabetically
+const COUNTRIES = [
+  "Australia", "Brazil", "Canada", "China", "Denmark", "France", 
+  "Germany", "India", "Italy", "Japan", "Mexico", "Netherlands", 
+  "New Zealand", "Norway", "South Africa", "Spain", "Sweden", 
+  "Switzerland", "United Kingdom", "United States"
+].sort();
 
-const US_STATES = ["Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"];
+const US_STATES = [
+  "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", 
+  "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Idaho", 
+  "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", 
+  "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", 
+  "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", 
+  "New Hampshire", "New Jersey", "New Mexico", "New York", 
+  "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", 
+  "Pennsylvania", "Rhode Island", "South Carolina", "South Dakota", 
+  "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", 
+  "West Virginia", "Wisconsin", "Wyoming"
+].sort();
 
 const AddressForm = () => {
   const { onboardingData, updateAddressInfo, setCurrentStep } = useOnboarding();
@@ -122,13 +139,13 @@ const AddressForm = () => {
               >
                 <Label htmlFor="state">State/Province</Label>
                 <Select
-                  value={formData.state}
+                  value={formData.state || ""}
                   onValueChange={(value) => handleSelectionChange("state", value)}
                 >
                   <SelectTrigger className="h-11">
                     <SelectValue placeholder="Select state" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="max-h-[300px] overflow-y-auto">
                     {US_STATES.map((state) => (
                       <SelectItem key={state} value={state}>
                         {state}
@@ -165,13 +182,13 @@ const AddressForm = () => {
               >
                 <Label htmlFor="country">Country*</Label>
                 <Select
-                  value={formData.country}
+                  value={formData.country || ""}
                   onValueChange={(value) => handleSelectionChange("country", value)}
                 >
                   <SelectTrigger className="h-11">
                     <SelectValue placeholder="Select country" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="max-h-[300px] overflow-y-auto">
                     {COUNTRIES.map((country) => (
                       <SelectItem key={country} value={country}>
                         {country}

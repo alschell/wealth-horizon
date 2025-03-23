@@ -91,13 +91,13 @@ const AggregatorFormSection = ({
           <div className="space-y-4">
             <Label htmlFor="aggregatorName">Select your aggregator</Label>
             <Select
-              value={aggregatorInfo.aggregatorName}
+              value={aggregatorInfo.aggregatorName || ""}
               onValueChange={handleAggregatorNameChange}
             >
               <SelectTrigger className="h-11">
                 <SelectValue placeholder="Select your aggregator" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="max-h-[300px] overflow-y-auto">
                 {AGGREGATORS.map((aggregator) => (
                   <SelectItem key={aggregator} value={aggregator}>
                     {aggregator}

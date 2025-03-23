@@ -40,7 +40,11 @@ const SelectField = ({
         <SelectTrigger className="h-11" id={id}>
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
-        <SelectContent position="popper" className="max-h-[300px] overflow-y-auto">
+        <SelectContent 
+          position="popper" 
+          className="max-h-[300px] overflow-y-auto"
+          sideOffset={8}
+        >
           {options.map((option) => (
             <SelectItem key={option} value={option}>
               {option}

@@ -1,8 +1,7 @@
 
 import { useState } from "react";
 import { FinancialAccountInfo } from "@/context/OnboardingContext";
-import AccountForm from "./AccountForm";
-import AccountList from "./AccountList";
+import { AccountForm, AccountList } from "./accounts";
 
 interface ManualEntrySectionProps {
   financialAccounts: FinancialAccountInfo[];

@@ -1,16 +1,25 @@
 
 import React, { createContext, useContext, useState, ReactNode } from "react";
 
-// Define types for KYC data
-export type PersonalInfo = {
-  firstName: string;
-  lastName: string;
+// Define types for Family Office KYC data
+export type FamilyOfficeInfo = {
+  officeName: string;
+  legalEntityType: string;
+  registrationNumber: string;
+  taxId: string;
+  yearEstablished: string;
+  jurisdiction: string;
   email: string;
   phone: string;
-  dateOfBirth: string;
-  nationality: string;
-  taxResidency: string;
-  taxId: string;
+  website: string;
+};
+
+export type PrimaryContactInfo = {
+  firstName: string;
+  lastName: string;
+  position: string;
+  email: string;
+  phone: string;
 };
 
 export type AddressInfo = {
@@ -21,11 +30,11 @@ export type AddressInfo = {
   country: string;
 };
 
-export type IdentityVerification = {
-  documentType: "passport" | "drivingLicense" | "nationalId";
+export type LegalDocuments = {
+  documentType: "incorporation" | "registration" | "taxCertificate" | "ownership" | "other";
   documentNumber: string;
   issueDate: string;
-  expiryDate: string;
+  expiryDate?: string;
   documentFiles: File[];
 };
 
@@ -38,44 +47,56 @@ export type AggregatorInfo = {
   };
 };
 
-export type ManualAccountInfo = {
+export type FinancialAccountInfo = {
   accountName: string;
   institution: string;
-  accountType: string;
+  accountType: "cash" | "portfolio" | "investment" | "custody" | "broker" | "other";
+  accountSubtype?: string;
   currency: string;
-  balance: string;
+  approximateValue?: string;
   statements: File[];
 };
 
-export type EntityInfo = {
-  entityName: string;
-  entityType: string;
-  jurisdiction: string;
-  registrationNumber: string;
+export type BeneficialOwnerInfo = {
+  firstName: string;
+  lastName: string;
+  relationship: string;
+  ownershipPercentage: string;
+  nationality: string;
+  dateOfBirth: string;
   documents: File[];
 };
 
 export type OnboardingData = {
-  personalInfo: PersonalInfo;
+  familyOfficeInfo: FamilyOfficeInfo;
+  primaryContactInfo: PrimaryContactInfo;
   addressInfo: AddressInfo;
-  identityVerification: IdentityVerification;
+  legalDocuments: LegalDocuments;
   aggregatorInfo: AggregatorInfo;
-  manualAccounts: ManualAccountInfo[];
-  entities: EntityInfo[];
+  financialAccounts: FinancialAccountInfo[];
+  beneficialOwners: BeneficialOwnerInfo[];
   completed: boolean;
 };
 
 // Set default empty values
 const defaultOnboardingData: OnboardingData = {
-  personalInfo: {
-    firstName: "",
-    lastName: "",
+  familyOfficeInfo: {
+    officeName: "",
+    legalEntityType: "",
+    registrationNumber: "",
+    taxId: "",
+    yearEstablished: "",
+    jurisdiction: "",
     email: "",
     phone: "",
-    dateOfBirth: "",
-    nationality: "",
-    taxResidency: "",
-    taxId: "",
+    website: "",
+  },
+  primaryContactInfo: {
+    firstName: "",
+    lastName: "",
+    position: "",
+    email: "",
+    phone: "",
   },
   addressInfo: {
     streetAddress: "",
@@ -84,31 +105,31 @@ const defaultOnboardingData: OnboardingData = {
     postalCode: "",
     country: "",
   },
-  identityVerification: {
-    documentType: "passport",
+  legalDocuments: {
+    documentType: "incorporation",
     documentNumber: "",
     issueDate: "",
-    expiryDate: "",
     documentFiles: [],
   },
   aggregatorInfo: {
     usesAggregator: false,
   },
-  manualAccounts: [],
-  entities: [],
+  financialAccounts: [],
+  beneficialOwners: [],
   completed: false,
 };
 
 type OnboardingContextType = {
   onboardingData: OnboardingData;
-  updatePersonalInfo: (info: PersonalInfo) => void;
+  updateFamilyOfficeInfo: (info: FamilyOfficeInfo) => void;
+  updatePrimaryContactInfo: (info: PrimaryContactInfo) => void;
   updateAddressInfo: (info: AddressInfo) => void;
-  updateIdentityVerification: (info: IdentityVerification) => void;
+  updateLegalDocuments: (info: LegalDocuments) => void;
   updateAggregatorInfo: (info: AggregatorInfo) => void;
-  addManualAccount: (account: ManualAccountInfo) => void;
-  removeManualAccount: (index: number) => void;
-  addEntity: (entity: EntityInfo) => void;
-  removeEntity: (index: number) => void;
+  addFinancialAccount: (account: FinancialAccountInfo) => void;
+  removeFinancialAccount: (index: number) => void;
+  addBeneficialOwner: (owner: BeneficialOwnerInfo) => void;
+  removeBeneficialOwner: (index: number) => void;
   setOnboardingCompleted: () => void;
   currentStep: number;
   setCurrentStep: (step: number) => void;
@@ -121,47 +142,51 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
   const [onboardingData, setOnboardingData] = useState<OnboardingData>(defaultOnboardingData);
   const [currentStep, setCurrentStep] = useState(0);
 
-  const updatePersonalInfo = (info: PersonalInfo) => {
-    setOnboardingData((prev) => ({ ...prev, personalInfo: info }));
+  const updateFamilyOfficeInfo = (info: FamilyOfficeInfo) => {
+    setOnboardingData((prev) => ({ ...prev, familyOfficeInfo: info }));
+  };
+
+  const updatePrimaryContactInfo = (info: PrimaryContactInfo) => {
+    setOnboardingData((prev) => ({ ...prev, primaryContactInfo: info }));
   };
 
   const updateAddressInfo = (info: AddressInfo) => {
     setOnboardingData((prev) => ({ ...prev, addressInfo: info }));
   };
 
-  const updateIdentityVerification = (info: IdentityVerification) => {
-    setOnboardingData((prev) => ({ ...prev, identityVerification: info }));
+  const updateLegalDocuments = (info: LegalDocuments) => {
+    setOnboardingData((prev) => ({ ...prev, legalDocuments: info }));
   };
 
   const updateAggregatorInfo = (info: AggregatorInfo) => {
     setOnboardingData((prev) => ({ ...prev, aggregatorInfo: info }));
   };
 
-  const addManualAccount = (account: ManualAccountInfo) => {
+  const addFinancialAccount = (account: FinancialAccountInfo) => {
     setOnboardingData((prev) => ({
       ...prev,
-      manualAccounts: [...prev.manualAccounts, account],
+      financialAccounts: [...prev.financialAccounts, account],
     }));
   };
 
-  const removeManualAccount = (index: number) => {
+  const removeFinancialAccount = (index: number) => {
     setOnboardingData((prev) => ({
       ...prev,
-      manualAccounts: prev.manualAccounts.filter((_, i) => i !== index),
+      financialAccounts: prev.financialAccounts.filter((_, i) => i !== index),
     }));
   };
 
-  const addEntity = (entity: EntityInfo) => {
+  const addBeneficialOwner = (owner: BeneficialOwnerInfo) => {
     setOnboardingData((prev) => ({
       ...prev,
-      entities: [...prev.entities, entity],
+      beneficialOwners: [...prev.beneficialOwners, owner],
     }));
   };
 
-  const removeEntity = (index: number) => {
+  const removeBeneficialOwner = (index: number) => {
     setOnboardingData((prev) => ({
       ...prev,
-      entities: prev.entities.filter((_, i) => i !== index),
+      beneficialOwners: prev.beneficialOwners.filter((_, i) => i !== index),
     }));
   };
 
@@ -178,14 +203,15 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
     <OnboardingContext.Provider
       value={{
         onboardingData,
-        updatePersonalInfo,
+        updateFamilyOfficeInfo,
+        updatePrimaryContactInfo,
         updateAddressInfo,
-        updateIdentityVerification,
+        updateLegalDocuments,
         updateAggregatorInfo,
-        addManualAccount,
-        removeManualAccount,
-        addEntity,
-        removeEntity,
+        addFinancialAccount,
+        removeFinancialAccount,
+        addBeneficialOwner,
+        removeBeneficialOwner,
         setOnboardingCompleted,
         currentStep,
         setCurrentStep,

@@ -4,10 +4,12 @@ import { useEffect } from "react";
 import { useOnboarding } from "@/context/OnboardingContext";
 import Layout from "@/components/Layout";
 import OnboardingHeader from "@/components/OnboardingHeader";
-import PersonalInfoForm from "@/components/onboarding/PersonalInfoForm";
+import FamilyOfficeInfoForm from "@/components/onboarding/FamilyOfficeInfoForm";
+import PrimaryContactForm from "@/components/onboarding/PrimaryContactForm";
 import AddressForm from "@/components/onboarding/AddressForm";
-import IdentityVerificationForm from "@/components/onboarding/IdentityVerificationForm";
+import LegalDocumentsForm from "@/components/onboarding/LegalDocumentsForm";
 import DataSourceForm from "@/components/onboarding/DataSourceForm";
+import BeneficialOwnersForm from "@/components/onboarding/BeneficialOwnersForm";
 import ReviewStep from "@/components/onboarding/ReviewStep";
 import AnimatedTransition from "@/components/AnimatedTransition";
 
@@ -18,11 +20,13 @@ const Onboarding = () => {
   // Sync route with current step
   useEffect(() => {
     const path = location.pathname;
-    if (path === "/onboarding/personal-info") setCurrentStep(0);
-    else if (path === "/onboarding/address") setCurrentStep(1);
-    else if (path === "/onboarding/verification") setCurrentStep(2);
-    else if (path === "/onboarding/data-source") setCurrentStep(3);
-    else if (path === "/onboarding/review") setCurrentStep(4);
+    if (path === "/onboarding/family-office") setCurrentStep(0);
+    else if (path === "/onboarding/primary-contact") setCurrentStep(1);
+    else if (path === "/onboarding/address") setCurrentStep(2);
+    else if (path === "/onboarding/legal-documents") setCurrentStep(3);
+    else if (path === "/onboarding/data-source") setCurrentStep(4);
+    else if (path === "/onboarding/beneficial-owners") setCurrentStep(5);
+    else if (path === "/onboarding/review") setCurrentStep(6);
     else if (path === "/onboarding") setCurrentStep(0);
   }, [location.pathname, setCurrentStep]);
 
@@ -30,17 +34,21 @@ const Onboarding = () => {
   const renderCurrentStep = () => {
     switch (currentStep) {
       case 0:
-        return <PersonalInfoForm />;
+        return <FamilyOfficeInfoForm />;
       case 1:
-        return <AddressForm />;
+        return <PrimaryContactForm />;
       case 2:
-        return <IdentityVerificationForm />;
+        return <AddressForm />;
       case 3:
-        return <DataSourceForm />;
+        return <LegalDocumentsForm />;
       case 4:
+        return <DataSourceForm />;
+      case 5:
+        return <BeneficialOwnersForm />;
+      case 6:
         return <ReviewStep />;
       default:
-        return <Navigate to="/onboarding/personal-info" />;
+        return <Navigate to="/onboarding/family-office" />;
     }
   };
 
@@ -52,11 +60,13 @@ const Onboarding = () => {
       </AnimatedTransition>
 
       <Routes>
-        <Route path="/" element={<Navigate to="/onboarding/personal-info" />} />
-        <Route path="/personal-info" element={<PersonalInfoForm />} />
+        <Route path="/" element={<Navigate to="/onboarding/family-office" />} />
+        <Route path="/family-office" element={<FamilyOfficeInfoForm />} />
+        <Route path="/primary-contact" element={<PrimaryContactForm />} />
         <Route path="/address" element={<AddressForm />} />
-        <Route path="/verification" element={<IdentityVerificationForm />} />
+        <Route path="/legal-documents" element={<LegalDocumentsForm />} />
         <Route path="/data-source" element={<DataSourceForm />} />
+        <Route path="/beneficial-owners" element={<BeneficialOwnersForm />} />
         <Route path="/review" element={<ReviewStep />} />
       </Routes>
     </Layout>

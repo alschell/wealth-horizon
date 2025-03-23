@@ -20,8 +20,9 @@ export default {
 		},
 		extend: {
 			fontFamily: {
-				sans: ['SF Pro Display', 'Inter', 'system-ui', 'sans-serif'],
-				display: ['SF Pro Display', 'Inter', 'system-ui', 'sans-serif'],
+				sans: ['"Inter"', 'SF Pro Display', 'system-ui', 'sans-serif'],
+				display: ['"Inter"', 'SF Pro Display', 'system-ui', 'sans-serif'],
+				heading: ['"Inter"', 'SF Pro Display', 'system-ui', 'sans-serif'],
 			},
 			colors: {
 				border: 'hsl(var(--border))',

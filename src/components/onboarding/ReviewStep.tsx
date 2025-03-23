@@ -7,7 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "@/components/ui/use-toast";
 import { motion } from "framer-motion";
-import { ArrowLeft, CheckCircle2, Edit, ArrowRight, FileText } from "lucide-react";
+import { ArrowLeft, CheckCircle2, Edit, ArrowRight, FileText, Building2, UserRound, MapPin, ScrollText, BarChart4, Users } from "lucide-react";
 
 const ReviewStep = () => {
   const navigate = useNavigate();
@@ -30,7 +30,7 @@ const ReviewStep = () => {
       
       toast({
         title: "Onboarding completed",
-        description: "Your information has been successfully submitted.",
+        description: "Your family office information has been successfully submitted.",
       });
       
       // Navigate to dashboard
@@ -71,12 +71,12 @@ const ReviewStep = () => {
           <div className="space-y-2">
             <h2 className="text-2xl font-bold">Review Your Information</h2>
             <p className="text-gray-500">
-              Please review your information before final submission.
+              Please review your family office information before final submission.
             </p>
           </div>
 
           <div className="space-y-6">
-            {/* Personal Information */}
+            {/* Family Office Information */}
             <motion.div 
               custom={0}
               variants={fadeInUpVariants}
@@ -85,7 +85,10 @@ const ReviewStep = () => {
               className="space-y-3"
             >
               <div className="flex items-center justify-between">
-                <h3 className="text-lg font-medium">Personal Information</h3>
+                <div className="flex items-center gap-2">
+                  <Building2 className="h-5 w-5 text-blue-600" />
+                  <h3 className="text-lg font-medium">Family Office Information</h3>
+                </div>
                 <Button 
                   variant="ghost" 
                   size="sm" 
@@ -98,43 +101,55 @@ const ReviewStep = () => {
               </div>
               <Card>
                 <CardContent className="p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <p className="text-sm text-gray-500">Full Name</p>
-                    <p className="font-medium">{onboardingData.personalInfo.firstName} {onboardingData.personalInfo.lastName}</p>
+                  <div className="col-span-full">
+                    <p className="text-sm text-gray-500">Family Office Name</p>
+                    <p className="font-medium">{onboardingData.familyOfficeInfo.officeName}</p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500">Email</p>
-                    <p className="font-medium">{onboardingData.personalInfo.email}</p>
+                    <p className="text-sm text-gray-500">Legal Entity Type</p>
+                    <p className="font-medium">{onboardingData.familyOfficeInfo.legalEntityType}</p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500">Phone</p>
-                    <p className="font-medium">{onboardingData.personalInfo.phone}</p>
+                    <p className="text-sm text-gray-500">Jurisdiction</p>
+                    <p className="font-medium">{onboardingData.familyOfficeInfo.jurisdiction}</p>
                   </div>
-                  <div>
-                    <p className="text-sm text-gray-500">Date of Birth</p>
-                    <p className="font-medium">{onboardingData.personalInfo.dateOfBirth}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-500">Nationality</p>
-                    <p className="font-medium">{onboardingData.personalInfo.nationality}</p>
-                  </div>
-                  {onboardingData.personalInfo.taxResidency && (
+                  {onboardingData.familyOfficeInfo.registrationNumber && (
                     <div>
-                      <p className="text-sm text-gray-500">Tax Residency</p>
-                      <p className="font-medium">{onboardingData.personalInfo.taxResidency}</p>
+                      <p className="text-sm text-gray-500">Registration Number</p>
+                      <p className="font-medium">{onboardingData.familyOfficeInfo.registrationNumber}</p>
                     </div>
                   )}
-                  {onboardingData.personalInfo.taxId && (
+                  <div>
+                    <p className="text-sm text-gray-500">Tax ID</p>
+                    <p className="font-medium">{onboardingData.familyOfficeInfo.taxId}</p>
+                  </div>
+                  {onboardingData.familyOfficeInfo.yearEstablished && (
                     <div>
-                      <p className="text-sm text-gray-500">Tax ID</p>
-                      <p className="font-medium">{onboardingData.personalInfo.taxId}</p>
+                      <p className="text-sm text-gray-500">Year Established</p>
+                      <p className="font-medium">{onboardingData.familyOfficeInfo.yearEstablished}</p>
+                    </div>
+                  )}
+                  <div>
+                    <p className="text-sm text-gray-500">Email</p>
+                    <p className="font-medium">{onboardingData.familyOfficeInfo.email}</p>
+                  </div>
+                  {onboardingData.familyOfficeInfo.phone && (
+                    <div>
+                      <p className="text-sm text-gray-500">Phone</p>
+                      <p className="font-medium">{onboardingData.familyOfficeInfo.phone}</p>
+                    </div>
+                  )}
+                  {onboardingData.familyOfficeInfo.website && (
+                    <div>
+                      <p className="text-sm text-gray-500">Website</p>
+                      <p className="font-medium">{onboardingData.familyOfficeInfo.website}</p>
                     </div>
                   )}
                 </CardContent>
               </Card>
             </motion.div>
 
-            {/* Address Information */}
+            {/* Primary Contact */}
             <motion.div 
               custom={1}
               variants={fadeInUpVariants}
@@ -143,12 +158,60 @@ const ReviewStep = () => {
               className="space-y-3"
             >
               <div className="flex items-center justify-between">
-                <h3 className="text-lg font-medium">Address Information</h3>
+                <div className="flex items-center gap-2">
+                  <UserRound className="h-5 w-5 text-blue-600" />
+                  <h3 className="text-lg font-medium">Primary Contact</h3>
+                </div>
                 <Button 
                   variant="ghost" 
                   size="sm" 
                   className="text-blue-600"
                   onClick={() => handleEdit(1)}
+                >
+                  <Edit className="h-4 w-4 mr-1" />
+                  Edit
+                </Button>
+              </div>
+              <Card>
+                <CardContent className="p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="col-span-full">
+                    <p className="text-sm text-gray-500">Name</p>
+                    <p className="font-medium">{onboardingData.primaryContactInfo.firstName} {onboardingData.primaryContactInfo.lastName}</p>
+                  </div>
+                  <div className="col-span-full">
+                    <p className="text-sm text-gray-500">Position</p>
+                    <p className="font-medium">{onboardingData.primaryContactInfo.position}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-500">Email</p>
+                    <p className="font-medium">{onboardingData.primaryContactInfo.email}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-500">Phone</p>
+                    <p className="font-medium">{onboardingData.primaryContactInfo.phone}</p>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            {/* Address Information */}
+            <motion.div 
+              custom={2}
+              variants={fadeInUpVariants}
+              initial="hidden"
+              animate="visible"
+              className="space-y-3"
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <MapPin className="h-5 w-5 text-blue-600" />
+                  <h3 className="text-lg font-medium">Address Information</h3>
+                </div>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="text-blue-600"
+                  onClick={() => handleEdit(2)}
                 >
                   <Edit className="h-4 w-4 mr-1" />
                   Edit
@@ -165,21 +228,24 @@ const ReviewStep = () => {
               </Card>
             </motion.div>
 
-            {/* Identity Verification */}
+            {/* Legal Documents */}
             <motion.div 
-              custom={2}
+              custom={3}
               variants={fadeInUpVariants}
               initial="hidden"
               animate="visible"
               className="space-y-3"
             >
               <div className="flex items-center justify-between">
-                <h3 className="text-lg font-medium">Identity Verification</h3>
+                <div className="flex items-center gap-2">
+                  <ScrollText className="h-5 w-5 text-blue-600" />
+                  <h3 className="text-lg font-medium">Legal Documents</h3>
+                </div>
                 <Button 
                   variant="ghost" 
                   size="sm" 
                   className="text-blue-600"
-                  onClick={() => handleEdit(2)}
+                  onClick={() => handleEdit(3)}
                 >
                   <Edit className="h-4 w-4 mr-1" />
                   Edit
@@ -191,27 +257,37 @@ const ReviewStep = () => {
                     <div>
                       <p className="text-sm text-gray-500">Document Type</p>
                       <p className="font-medium capitalize">
-                        {onboardingData.identityVerification.documentType.replace(/([A-Z])/g, ' $1').trim()}
+                        {onboardingData.legalDocuments.documentType === "incorporation" 
+                          ? "Certificate of Incorporation" 
+                          : onboardingData.legalDocuments.documentType === "registration"
+                          ? "Business Registration"
+                          : onboardingData.legalDocuments.documentType === "taxCertificate"
+                          ? "Tax Certificate"
+                          : onboardingData.legalDocuments.documentType === "ownership"
+                          ? "Ownership Structure"
+                          : "Other Legal Document"}
                       </p>
                     </div>
                     <div>
                       <p className="text-sm text-gray-500">Document Number</p>
-                      <p className="font-medium">{onboardingData.identityVerification.documentNumber}</p>
+                      <p className="font-medium">{onboardingData.legalDocuments.documentNumber}</p>
                     </div>
                     <div>
                       <p className="text-sm text-gray-500">Issue Date</p>
-                      <p className="font-medium">{onboardingData.identityVerification.issueDate}</p>
+                      <p className="font-medium">{onboardingData.legalDocuments.issueDate}</p>
                     </div>
-                    <div>
-                      <p className="text-sm text-gray-500">Expiry Date</p>
-                      <p className="font-medium">{onboardingData.identityVerification.expiryDate}</p>
-                    </div>
+                    {onboardingData.legalDocuments.expiryDate && (
+                      <div>
+                        <p className="text-sm text-gray-500">Expiry Date</p>
+                        <p className="font-medium">{onboardingData.legalDocuments.expiryDate}</p>
+                      </div>
+                    )}
                   </div>
                   
                   <div>
                     <p className="text-sm text-gray-500 mb-2">Uploaded Documents</p>
                     <div className="flex flex-wrap gap-2">
-                      {onboardingData.identityVerification.documentFiles.map((file, index) => (
+                      {onboardingData.legalDocuments.documentFiles.map((file, index) => (
                         <div key={index} className="flex items-center bg-gray-100 rounded-lg px-3 py-1.5">
                           <FileText className="h-3.5 w-3.5 text-blue-600 mr-1.5" />
                           <span className="text-sm truncate max-w-[150px]">{file.name}</span>
@@ -223,21 +299,24 @@ const ReviewStep = () => {
               </Card>
             </motion.div>
 
-            {/* Data Source */}
+            {/* Financial Data Source */}
             <motion.div 
-              custom={3}
+              custom={4}
               variants={fadeInUpVariants}
               initial="hidden"
               animate="visible"
               className="space-y-3"
             >
               <div className="flex items-center justify-between">
-                <h3 className="text-lg font-medium">Financial Data Source</h3>
+                <div className="flex items-center gap-2">
+                  <BarChart4 className="h-5 w-5 text-blue-600" />
+                  <h3 className="text-lg font-medium">Financial Data Source</h3>
+                </div>
                 <Button 
                   variant="ghost" 
                   size="sm" 
                   className="text-blue-600"
-                  onClick={() => handleEdit(3)}
+                  onClick={() => handleEdit(4)}
                 >
                   <Edit className="h-4 w-4 mr-1" />
                   Edit
@@ -265,16 +344,16 @@ const ReviewStep = () => {
                     <div className="space-y-3">
                       <p className="font-medium">Manual Financial Information</p>
                       
-                      {onboardingData.manualAccounts.length > 0 && (
+                      {onboardingData.financialAccounts.length > 0 && (
                         <div>
-                          <p className="text-sm text-gray-500 mb-2">Added Accounts ({onboardingData.manualAccounts.length})</p>
+                          <p className="text-sm text-gray-500 mb-2">Added Financial Accounts ({onboardingData.financialAccounts.length})</p>
                           <div className="space-y-2">
-                            {onboardingData.manualAccounts.map((account, index) => (
+                            {onboardingData.financialAccounts.map((account, index) => (
                               <div key={index} className="border rounded-lg p-3">
                                 <p className="font-medium">{account.accountName}</p>
                                 <p className="text-sm text-gray-500">
-                                  {account.institution} • {account.accountType}
-                                  {account.balance ? ` • ${account.balance} ${account.currency}` : ''}
+                                  {account.institution} • {account.accountType.charAt(0).toUpperCase() + account.accountType.slice(1)}
+                                  {account.approximateValue ? ` • ~${account.approximateValue} ${account.currency}` : ''}
                                 </p>
                                 {account.statements.length > 0 && (
                                   <div className="mt-1.5 flex items-center gap-1.5">
@@ -290,36 +369,80 @@ const ReviewStep = () => {
                         </div>
                       )}
                       
-                      {onboardingData.entities.length > 0 && (
-                        <div>
-                          <p className="text-sm text-gray-500 mb-2">Added Legal Entities ({onboardingData.entities.length})</p>
-                          <div className="space-y-2">
-                            {onboardingData.entities.map((entity, index) => (
-                              <div key={index} className="border rounded-lg p-3">
-                                <p className="font-medium">{entity.entityName}</p>
-                                <p className="text-sm text-gray-500">
-                                  {entity.entityType}
-                                  {entity.jurisdiction ? ` • ${entity.jurisdiction}` : ''}
-                                  {entity.registrationNumber ? ` • ${entity.registrationNumber}` : ''}
-                                </p>
-                                {entity.documents.length > 0 && (
-                                  <div className="mt-1.5 flex items-center gap-1.5">
-                                    <FileText className="h-3.5 w-3.5 text-blue-600" />
-                                    <span className="text-xs text-gray-500">
-                                      {entity.documents.length} document{entity.documents.length !== 1 ? 's' : ''} uploaded
-                                    </span>
-                                  </div>
-                                )}
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                      
-                      {onboardingData.manualAccounts.length === 0 && onboardingData.entities.length === 0 && (
-                        <p className="text-sm text-gray-500">No accounts or entities added yet.</p>
+                      {onboardingData.financialAccounts.length === 0 && (
+                        <p className="text-sm text-gray-500">No financial accounts added yet.</p>
                       )}
                     </div>
+                  )}
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            {/* Beneficial Owners */}
+            <motion.div 
+              custom={5}
+              variants={fadeInUpVariants}
+              initial="hidden"
+              animate="visible"
+              className="space-y-3"
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Users className="h-5 w-5 text-blue-600" />
+                  <h3 className="text-lg font-medium">Beneficial Owners</h3>
+                </div>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="text-blue-600"
+                  onClick={() => handleEdit(5)}
+                >
+                  <Edit className="h-4 w-4 mr-1" />
+                  Edit
+                </Button>
+              </div>
+              <Card>
+                <CardContent className="p-4 space-y-4">
+                  {onboardingData.beneficialOwners.length > 0 ? (
+                    <div className="space-y-3">
+                      <div className="space-y-3">
+                        {onboardingData.beneficialOwners.map((owner, index) => (
+                          <div key={index} className="border rounded-lg p-3">
+                            <p className="font-medium">{owner.firstName} {owner.lastName}</p>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-1">
+                              <p className="text-sm text-gray-500">
+                                <span className="text-gray-600 font-medium">Relationship:</span> {owner.relationship}
+                              </p>
+                              {owner.ownershipPercentage && (
+                                <p className="text-sm text-gray-500">
+                                  <span className="text-gray-600 font-medium">Ownership:</span> {owner.ownershipPercentage}%
+                                </p>
+                              )}
+                              {owner.nationality && (
+                                <p className="text-sm text-gray-500">
+                                  <span className="text-gray-600 font-medium">Nationality:</span> {owner.nationality}
+                                </p>
+                              )}
+                              {owner.dateOfBirth && (
+                                <p className="text-sm text-gray-500">
+                                  <span className="text-gray-600 font-medium">Date of Birth:</span> {owner.dateOfBirth}
+                                </p>
+                              )}
+                            </div>
+                            {owner.documents.length > 0 && (
+                              <div className="mt-1.5 flex items-center gap-1.5">
+                                <FileText className="h-3.5 w-3.5 text-blue-600" />
+                                <span className="text-xs text-gray-500">
+                                  {owner.documents.length} document{owner.documents.length !== 1 ? 's' : ''} uploaded
+                                </span>
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ) : (
+                    <p className="text-sm text-gray-500">No beneficial owners added.</p>
                   )}
                 </CardContent>
               </Card>
@@ -336,7 +459,7 @@ const ReviewStep = () => {
               <div>
                 <p className="font-medium">Data Privacy & Sharing Consent</p>
                 <p className="text-sm text-gray-500">
-                  By submitting, you consent to our processing of your information according to our privacy policy.
+                  By submitting, you consent to our processing of your family office information according to our privacy policy.
                   Your data will be securely stored and only shared with third-parties with your explicit permission.
                 </p>
               </div>
@@ -348,7 +471,7 @@ const ReviewStep = () => {
                 variant="outline"
                 size="lg" 
                 className="rounded-lg"
-                onClick={() => setCurrentStep(3)}
+                onClick={() => setCurrentStep(5)}
                 disabled={isSubmitting}
               >
                 <ArrowLeft className="mr-2 h-4 w-4" />

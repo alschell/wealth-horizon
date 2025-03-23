@@ -1,16 +1,15 @@
 
 import { useState } from "react";
-import { useOnboarding, AggregatorInfo, ManualAccountInfo, EntityInfo } from "@/context/OnboardingContext";
+import { useOnboarding, AggregatorInfo, FinancialAccountInfo } from "@/context/OnboardingContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { toast } from "@/components/ui/use-toast";
 import { motion } from "framer-motion";
-import { ArrowRight, ArrowLeft, Plus, Trash2 } from "lucide-react";
+import { ArrowRight, ArrowLeft, Plus, Trash2, Wallet, BarChart4 } from "lucide-react";
 import FileUploader from "@/components/FileUploader";
 
 const AGGREGATORS = [
@@ -37,28 +36,32 @@ const CURRENCIES = [
 ];
 
 const ACCOUNT_TYPES = [
-  "Checking",
-  "Savings",
-  "Brokerage",
-  "Retirement",
-  "Investment",
-  "Custodial",
-  "Trust",
-  "Corporate",
-  "Credit Card",
-  "Loan"
+  "cash",
+  "portfolio",
+  "investment",
+  "custody",
+  "broker",
+  "other"
 ];
 
-const ENTITY_TYPES = [
-  "Corporation",
-  "Limited Liability Company (LLC)",
-  "Partnership",
-  "Trust",
-  "Foundation",
-  "Family Investment Vehicle",
-  "Holding Company",
-  "Private Investment Company",
-  "Special Purpose Vehicle (SPV)",
+const INSTITUTIONS = [
+  "JP Morgan",
+  "Goldman Sachs",
+  "Credit Suisse",
+  "UBS",
+  "Morgan Stanley",
+  "Bank of America",
+  "Citibank",
+  "HSBC",
+  "BNP Paribas",
+  "Deutsche Bank",
+  "Barclays",
+  "Wells Fargo",
+  "Northern Trust",
+  "State Street",
+  "Pictet",
+  "Julius Baer",
+  "Lombard Odier",
   "Other"
 ];
 
@@ -66,32 +69,22 @@ const DataSourceForm = () => {
   const { 
     onboardingData, 
     updateAggregatorInfo, 
-    addManualAccount,
-    removeManualAccount,
-    addEntity,
-    removeEntity,
+    addFinancialAccount,
+    removeFinancialAccount,
     setCurrentStep 
   } = useOnboarding();
   
   const [aggregatorInfo, setAggregatorInfo] = useState<AggregatorInfo>(onboardingData.aggregatorInfo);
-  const [manualAccounts, setManualAccounts] = useState<ManualAccountInfo[]>(onboardingData.manualAccounts);
-  const [entities, setEntities] = useState<EntityInfo[]>(onboardingData.entities);
+  const [financialAccounts, setFinancialAccounts] = useState<FinancialAccountInfo[]>(onboardingData.financialAccounts);
   
-  const [newAccount, setNewAccount] = useState<ManualAccountInfo>({
+  const [newAccount, setNewAccount] = useState<FinancialAccountInfo>({
     accountName: "",
     institution: "",
-    accountType: "",
+    accountType: "cash",
+    accountSubtype: "",
     currency: "",
-    balance: "",
+    approximateValue: "",
     statements: []
-  });
-  
-  const [newEntity, setNewEntity] = useState<EntityInfo>({
-    entityName: "",
-    entityType: "",
-    jurisdiction: "",
-    registrationNumber: "",
-    documents: []
   });
 
   // Handle aggregator radio selection
@@ -133,7 +126,7 @@ const DataSourceForm = () => {
   };
 
   // Handle account selection changes
-  const handleAccountSelectionChange = (field: keyof ManualAccountInfo, value: string) => {
+  const handleAccountSelectionChange = (field: keyof FinancialAccountInfo, value: string) => {
     setNewAccount({
       ...newAccount,
       [field]: value
@@ -161,17 +154,18 @@ const DataSourceForm = () => {
     }
 
     // Add account
-    const updatedAccounts = [...manualAccounts, newAccount];
-    setManualAccounts(updatedAccounts);
-    addManualAccount(newAccount);
+    const updatedAccounts = [...financialAccounts, newAccount];
+    setFinancialAccounts(updatedAccounts);
+    addFinancialAccount(newAccount);
 
     // Reset form
     setNewAccount({
       accountName: "",
       institution: "",
-      accountType: "",
+      accountType: "cash",
+      accountSubtype: "",
       currency: "",
-      balance: "",
+      approximateValue: "",
       statements: []
     });
 
@@ -183,73 +177,9 @@ const DataSourceForm = () => {
 
   // Remove account
   const handleRemoveAccount = (index: number) => {
-    const updatedAccounts = manualAccounts.filter((_, i) => i !== index);
-    setManualAccounts(updatedAccounts);
-    removeManualAccount(index);
-  };
-
-  // Handle new entity input
-  const handleNewEntityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setNewEntity({
-      ...newEntity,
-      [name]: value
-    });
-  };
-
-  // Handle entity selection changes
-  const handleEntitySelectionChange = (field: keyof EntityInfo, value: string) => {
-    setNewEntity({
-      ...newEntity,
-      [field]: value
-    });
-  };
-
-  // Handle entity documents
-  const handleEntityDocumentsSelected = (files: File[]) => {
-    setNewEntity({
-      ...newEntity,
-      documents: files
-    });
-  };
-
-  // Add new entity
-  const handleAddEntity = () => {
-    // Validation
-    if (!newEntity.entityName || !newEntity.entityType) {
-      toast({
-        title: "Missing information",
-        description: "Please fill in all required entity fields.",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    // Add entity
-    const updatedEntities = [...entities, newEntity];
-    setEntities(updatedEntities);
-    addEntity(newEntity);
-
-    // Reset form
-    setNewEntity({
-      entityName: "",
-      entityType: "",
-      jurisdiction: "",
-      registrationNumber: "",
-      documents: []
-    });
-
-    toast({
-      title: "Entity added",
-      description: `${newEntity.entityName} has been added successfully.`
-    });
-  };
-
-  // Remove entity
-  const handleRemoveEntity = (index: number) => {
-    const updatedEntities = entities.filter((_, i) => i !== index);
-    setEntities(updatedEntities);
-    removeEntity(index);
+    const updatedAccounts = financialAccounts.filter((_, i) => i !== index);
+    setFinancialAccounts(updatedAccounts);
+    removeFinancialAccount(index);
   };
 
   // Form submission
@@ -267,10 +197,10 @@ const DataSourceForm = () => {
         return;
       }
     } else {
-      if (manualAccounts.length === 0 && entities.length === 0) {
+      if (financialAccounts.length === 0) {
         toast({
           title: "Missing information",
-          description: "Please add at least one account or entity.",
+          description: "Please add at least one financial account.",
           variant: "destructive"
         });
         return;
@@ -280,8 +210,8 @@ const DataSourceForm = () => {
     // Save data
     updateAggregatorInfo(aggregatorInfo);
     
-    // Move to review step
-    setCurrentStep(4);
+    // Move to beneficial owners step
+    setCurrentStep(5);
   };
 
   const itemVariants = {
@@ -305,12 +235,13 @@ const DataSourceForm = () => {
     >
       <Card className="p-6 md:p-8 shadow-sm">
         <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="space-y-2">
+          <div className="flex items-center gap-3 mb-2">
+            <BarChart4 className="h-7 w-7 text-blue-600" />
             <h2 className="text-2xl font-bold">Financial Data Source</h2>
-            <p className="text-gray-500">
-              Please tell us how you'd like to provide your financial information.
-            </p>
           </div>
+          <p className="text-gray-500">
+            Please tell us how you'd like to provide your financial information.
+          </p>
 
           <motion.div 
             custom={0}
@@ -319,7 +250,7 @@ const DataSourceForm = () => {
             animate="visible"
             className="space-y-4"
           >
-            <Label>Do you currently use a financial data aggregator?</Label>
+            <Label>Does your family office currently use a financial data aggregator?</Label>
             <RadioGroup
               value={aggregatorInfo.usesAggregator ? "yes" : "no"}
               onValueChange={handleAggregatorSelection}
@@ -328,13 +259,13 @@ const DataSourceForm = () => {
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="yes" id="aggregator-yes" />
                 <Label htmlFor="aggregator-yes" className="cursor-pointer">
-                  Yes, I use a financial data aggregator
+                  Yes, we use a financial data aggregator
                 </Label>
               </div>
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="no" id="aggregator-no" />
                 <Label htmlFor="aggregator-no" className="cursor-pointer">
-                  No, I'll provide my financial information manually
+                  No, we'll provide our financial information manually
                 </Label>
               </div>
             </RadioGroup>
@@ -406,261 +337,160 @@ const DataSourceForm = () => {
               animate="visible"
               className="space-y-6 border p-4 rounded-lg"
             >
-              <Tabs defaultValue="accounts" className="w-full">
-                <TabsList className="w-full mb-4">
-                  <TabsTrigger value="accounts" className="flex-1">Accounts</TabsTrigger>
-                  <TabsTrigger value="entities" className="flex-1">Legal Entities</TabsTrigger>
-                </TabsList>
-                
-                <TabsContent value="accounts" className="space-y-6">
-                  {/* List of added accounts */}
-                  {manualAccounts.length > 0 && (
-                    <div className="space-y-3">
-                      <h3 className="font-medium">Added Accounts</h3>
-                      <div className="space-y-2">
-                        {manualAccounts.map((account, index) => (
-                          <Card key={index} className="p-3 flex justify-between items-center">
-                            <div>
-                              <p className="font-medium">{account.accountName}</p>
-                              <p className="text-sm text-gray-500">
-                                {account.institution} • {account.accountType}
-                                {account.balance ? ` • ${account.balance} ${account.currency}` : ''}
-                              </p>
-                            </div>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              onClick={() => handleRemoveAccount(index)}
-                              className="text-gray-500 hover:text-red-500"
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </Card>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                  
-                  {/* Add new account form */}
-                  <div className="space-y-4">
-                    <h3 className="font-medium">Add a new account</h3>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="accountName">Account Name*</Label>
-                        <Input
-                          id="accountName"
-                          name="accountName"
-                          value={newAccount.accountName}
-                          onChange={handleNewAccountChange}
-                          placeholder="e.g., Primary Checking"
-                          className="h-11"
-                        />
-                      </div>
-                      
-                      <div className="space-y-2">
-                        <Label htmlFor="institution">Institution*</Label>
-                        <Input
-                          id="institution"
-                          name="institution"
-                          value={newAccount.institution}
-                          onChange={handleNewAccountChange}
-                          placeholder="e.g., JP Morgan Chase"
-                          className="h-11"
-                        />
-                      </div>
-                      
-                      <div className="space-y-2">
-                        <Label htmlFor="accountType">Account Type*</Label>
-                        <Select
-                          value={newAccount.accountType}
-                          onValueChange={(value) => handleAccountSelectionChange("accountType", value)}
+              {/* List of added accounts */}
+              {financialAccounts.length > 0 && (
+                <div className="space-y-3">
+                  <h3 className="font-medium">Added Financial Accounts</h3>
+                  <div className="space-y-2">
+                    {financialAccounts.map((account, index) => (
+                      <Card key={index} className="p-3 flex justify-between items-center">
+                        <div>
+                          <p className="font-medium">{account.accountName}</p>
+                          <p className="text-sm text-gray-500">
+                            {account.institution} • {account.accountType.charAt(0).toUpperCase() + account.accountType.slice(1)}
+                            {account.approximateValue ? ` • ~${account.approximateValue} ${account.currency}` : ''}
+                          </p>
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleRemoveAccount(index)}
+                          className="text-gray-500 hover:text-red-500"
                         >
-                          <SelectTrigger className="h-11">
-                            <SelectValue placeholder="Select account type" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {ACCOUNT_TYPES.map((type) => (
-                              <SelectItem key={type} value={type}>
-                                {type}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      
-                      <div className="space-y-2">
-                        <Label htmlFor="currency">Currency</Label>
-                        <Select
-                          value={newAccount.currency}
-                          onValueChange={(value) => handleAccountSelectionChange("currency", value)}
-                        >
-                          <SelectTrigger className="h-11">
-                            <SelectValue placeholder="Select currency" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {CURRENCIES.map((currency) => (
-                              <SelectItem key={currency} value={currency.split(" - ")[0]}>
-                                {currency}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      
-                      <div className="space-y-2">
-                        <Label htmlFor="balance">Balance</Label>
-                        <Input
-                          id="balance"
-                          name="balance"
-                          value={newAccount.balance}
-                          onChange={handleNewAccountChange}
-                          placeholder="e.g., 150000"
-                          type="number"
-                          min="0"
-                          step="0.01"
-                          className="h-11"
-                        />
-                      </div>
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label>Account Statements</Label>
-                      <FileUploader
-                        accept="application/pdf,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-                        multiple={true}
-                        maxSize={10}
-                        onFilesSelected={handleStatementsSelected}
-                        existingFiles={newAccount.statements}
-                        label="Upload Account Statements (PDF, CSV, Excel)"
-                      />
-                    </div>
-                    
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={handleAddAccount}
-                      className="mt-2"
-                    >
-                      <Plus className="h-4 w-4 mr-2" />
-                      Add Account
-                    </Button>
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </Card>
+                    ))}
                   </div>
-                </TabsContent>
+                </div>
+              )}
+              
+              {/* Add new account form */}
+              <div className="space-y-4">
+                <div className="flex items-center gap-2">
+                  <Wallet className="h-5 w-5 text-blue-500" />
+                  <h3 className="font-medium">Add a new financial account</h3>
+                </div>
                 
-                <TabsContent value="entities" className="space-y-6">
-                  {/* List of added entities */}
-                  {entities.length > 0 && (
-                    <div className="space-y-3">
-                      <h3 className="font-medium">Added Legal Entities</h3>
-                      <div className="space-y-2">
-                        {entities.map((entity, index) => (
-                          <Card key={index} className="p-3 flex justify-between items-center">
-                            <div>
-                              <p className="font-medium">{entity.entityName}</p>
-                              <p className="text-sm text-gray-500">
-                                {entity.entityType} • {entity.jurisdiction || 'No jurisdiction specified'}
-                              </p>
-                            </div>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              onClick={() => handleRemoveEntity(index)}
-                              className="text-gray-500 hover:text-red-500"
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </Card>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                  
-                  {/* Add new entity form */}
-                  <div className="space-y-4">
-                    <h3 className="font-medium">Add a new legal entity</h3>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="entityName">Entity Name*</Label>
-                        <Input
-                          id="entityName"
-                          name="entityName"
-                          value={newEntity.entityName}
-                          onChange={handleNewEntityChange}
-                          placeholder="e.g., Family Holdings LLC"
-                          className="h-11"
-                        />
-                      </div>
-                      
-                      <div className="space-y-2">
-                        <Label htmlFor="entityType">Entity Type*</Label>
-                        <Select
-                          value={newEntity.entityType}
-                          onValueChange={(value) => handleEntitySelectionChange("entityType", value)}
-                        >
-                          <SelectTrigger className="h-11">
-                            <SelectValue placeholder="Select entity type" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {ENTITY_TYPES.map((type) => (
-                              <SelectItem key={type} value={type}>
-                                {type}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      
-                      <div className="space-y-2">
-                        <Label htmlFor="jurisdiction">Jurisdiction</Label>
-                        <Input
-                          id="jurisdiction"
-                          name="jurisdiction"
-                          value={newEntity.jurisdiction}
-                          onChange={handleNewEntityChange}
-                          placeholder="e.g., Delaware, USA"
-                          className="h-11"
-                        />
-                      </div>
-                      
-                      <div className="space-y-2">
-                        <Label htmlFor="registrationNumber">Registration Number</Label>
-                        <Input
-                          id="registrationNumber"
-                          name="registrationNumber"
-                          value={newEntity.registrationNumber}
-                          onChange={handleNewEntityChange}
-                          placeholder="e.g., LLC-12345"
-                          className="h-11"
-                        />
-                      </div>
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label>Entity Documents</Label>
-                      <FileUploader
-                        accept="application/pdf,image/*"
-                        multiple={true}
-                        maxSize={10}
-                        onFilesSelected={handleEntityDocumentsSelected}
-                        existingFiles={newEntity.documents}
-                        label="Upload Entity Documents (Registration, Structure)"
-                      />
-                    </div>
-                    
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={handleAddEntity}
-                      className="mt-2"
-                    >
-                      <Plus className="h-4 w-4 mr-2" />
-                      Add Entity
-                    </Button>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2 md:col-span-2">
+                    <Label htmlFor="accountName">Account Name*</Label>
+                    <Input
+                      id="accountName"
+                      name="accountName"
+                      value={newAccount.accountName}
+                      onChange={handleNewAccountChange}
+                      placeholder="e.g., Main Investment Portfolio at UBS"
+                      className="h-11"
+                    />
                   </div>
-                </TabsContent>
-              </Tabs>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="institution">Institution*</Label>
+                    <Select
+                      value={newAccount.institution}
+                      onValueChange={(value) => handleAccountSelectionChange("institution", value)}
+                    >
+                      <SelectTrigger className="h-11">
+                        <SelectValue placeholder="Select institution" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {INSTITUTIONS.map((institution) => (
+                          <SelectItem key={institution} value={institution}>
+                            {institution}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="accountType">Account Type*</Label>
+                    <Select
+                      value={newAccount.accountType}
+                      onValueChange={(value) => handleAccountSelectionChange("accountType", value)}
+                    >
+                      <SelectTrigger className="h-11">
+                        <SelectValue placeholder="Select account type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="cash">Cash Account</SelectItem>
+                        <SelectItem value="portfolio">Investment Portfolio</SelectItem>
+                        <SelectItem value="custody">Custody Account</SelectItem>
+                        <SelectItem value="broker">Brokerage Account</SelectItem>
+                        <SelectItem value="investment">Investment Fund</SelectItem>
+                        <SelectItem value="other">Other</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="accountSubtype">Account Subtype (optional)</Label>
+                    <Input
+                      id="accountSubtype"
+                      name="accountSubtype"
+                      value={newAccount.accountSubtype || ""}
+                      onChange={handleNewAccountChange}
+                      placeholder="e.g., Managed Account, Private Equity"
+                      className="h-11"
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="currency">Primary Currency</Label>
+                    <Select
+                      value={newAccount.currency}
+                      onValueChange={(value) => handleAccountSelectionChange("currency", value)}
+                    >
+                      <SelectTrigger className="h-11">
+                        <SelectValue placeholder="Select currency" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {CURRENCIES.map((currency) => (
+                          <SelectItem key={currency} value={currency.split(" - ")[0]}>
+                            {currency}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="approximateValue">Approximate Value</Label>
+                    <Input
+                      id="approximateValue"
+                      name="approximateValue"
+                      value={newAccount.approximateValue || ""}
+                      onChange={handleNewAccountChange}
+                      placeholder="e.g., 10,000,000"
+                      type="text"
+                      className="h-11"
+                    />
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <Label>Account Statements (optional)</Label>
+                  <FileUploader
+                    accept="application/pdf,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                    multiple={true}
+                    maxSize={10}
+                    onFilesSelected={handleStatementsSelected}
+                    existingFiles={newAccount.statements}
+                    label="Upload Account Statements (PDF, CSV, Excel)"
+                  />
+                </div>
+                
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={handleAddAccount}
+                  className="mt-2"
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add Account
+                </Button>
+              </div>
             </motion.div>
           )}
 
@@ -674,7 +504,7 @@ const DataSourceForm = () => {
                 variant="outline"
                 size="lg" 
                 className="rounded-lg"
-                onClick={() => setCurrentStep(2)}
+                onClick={() => setCurrentStep(3)}
               >
                 <ArrowLeft className="mr-2 h-4 w-4" />
                 Back
@@ -684,7 +514,7 @@ const DataSourceForm = () => {
                 size="lg" 
                 className="rounded-lg hover:shadow-md transition-shadow"
               >
-                Review
+                Continue
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </div>

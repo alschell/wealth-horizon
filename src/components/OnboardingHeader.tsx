@@ -6,11 +6,13 @@ const OnboardingHeader = () => {
   const { currentStep } = useOnboarding();
 
   const steps = [
-    { name: "Personal Info", number: 1 },
-    { name: "Address", number: 2 },
-    { name: "Verification", number: 3 },
-    { name: "Data Source", number: 4 },
-    { name: "Review", number: 5 },
+    { name: "Family Office", number: 1 },
+    { name: "Primary Contact", number: 2 },
+    { name: "Address", number: 3 },
+    { name: "Legal Documents", number: 4 },
+    { name: "Financial Data", number: 5 },
+    { name: "Beneficial Owners", number: 6 },
+    { name: "Review", number: 7 },
   ];
 
   return (
@@ -18,7 +20,7 @@ const OnboardingHeader = () => {
       <div className="flex flex-col items-center">
         <h1 className="text-3xl font-bold mb-8">Wealth Horizon</h1>
         
-        <div className="hidden md:flex w-full max-w-4xl justify-between relative mb-2">
+        <div className="hidden md:flex w-full max-w-5xl justify-between relative mb-2">
           {steps.map((step, i) => (
             <div 
               key={step.number} 

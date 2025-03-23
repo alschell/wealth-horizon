@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useOnboarding, AggregatorInfo, FinancialAccountInfo } from "@/context/OnboardingContext";
 import { Button } from "@/components/ui/button";
@@ -25,30 +24,25 @@ const DataSourceForm = () => {
   const [dataSourceMethod, setDataSourceMethod] = useState<"manual" | "upload">("manual");
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
   
-  // Handle adding financial account
   const handleAddAccount = (account: FinancialAccountInfo) => {
     const updatedAccounts = [...financialAccounts, account];
     setFinancialAccounts(updatedAccounts);
     addFinancialAccount(account);
   };
 
-  // Handle removing financial account
   const handleRemoveAccount = (index: number) => {
     const updatedAccounts = financialAccounts.filter((_, i) => i !== index);
     setFinancialAccounts(updatedAccounts);
     removeFinancialAccount(index);
   };
 
-  // Handle bulk file upload
   const handleBulkFilesSelected = (files: File[]) => {
     setUploadedFiles(files);
   };
 
-  // Form submission
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Validate based on user selection
     if (aggregatorInfo.usesAggregator) {
       if (!aggregatorInfo.aggregatorName || !aggregatorInfo.aggregatorCredentials?.username) {
         toast({
@@ -80,10 +74,8 @@ const DataSourceForm = () => {
       // }
     }
     
-    // Save data
     updateAggregatorInfo(aggregatorInfo);
     
-    // Move to beneficial owners step
     setCurrentStep(5);
   };
 
@@ -109,8 +101,8 @@ const DataSourceForm = () => {
       <Card className="p-6 md:p-8 shadow-sm">
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="flex items-center gap-3 mb-2">
-            <BarChart4 className="h-7 w-7 text-gray-600" />
-            <h2 className="text-2xl font-bold">Financial Data Source</h2>
+            <BarChart4 className="h-7 w-7 text-gray-900" />
+            <h2 className="text-2xl font-bold text-gray-900">Financial Data Source</h2>
           </div>
           <p className="text-gray-500">
             Please tell us how you'd like to provide your financial information.
@@ -122,7 +114,6 @@ const DataSourceForm = () => {
             itemVariants={itemVariants}
           />
 
-          {/* Conditional content based on aggregator usage */}
           {!aggregatorInfo.usesAggregator && (
             <motion.div 
               custom={1}
@@ -175,7 +166,7 @@ const DataSourceForm = () => {
                 type="button" 
                 variant="outline"
                 size="lg" 
-                className="rounded-lg"
+                className="rounded-lg text-gray-700"
                 onClick={() => setCurrentStep(3)}
               >
                 <ArrowLeft className="mr-2 h-4 w-4" />
@@ -184,7 +175,7 @@ const DataSourceForm = () => {
               <Button 
                 type="submit" 
                 size="lg" 
-                className="rounded-lg bg-gray-700 hover:bg-gray-800 text-white hover:shadow-md transition-shadow"
+                className="rounded-lg bg-gray-900 hover:bg-gray-800 text-white"
               >
                 Continue
                 <ArrowRight className="ml-2 h-4 w-4" />

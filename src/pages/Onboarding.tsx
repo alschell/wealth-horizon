@@ -1,4 +1,3 @@
-
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { useOnboarding } from "@/context/OnboardingContext";
@@ -20,10 +19,8 @@ const Onboarding = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Define the total number of steps
   const totalSteps = 7;
 
-  // Sync route with current step
   useEffect(() => {
     const path = location.pathname;
     if (path === "/onboarding/family-office") setCurrentStep(0);
@@ -36,7 +33,6 @@ const Onboarding = () => {
     else if (path === "/onboarding") setCurrentStep(0);
   }, [location.pathname, setCurrentStep]);
 
-  // Navigation functions
   const handleNext = () => {
     if (currentStep < totalSteps - 1) {
       const nextStep = currentStep + 1;
@@ -81,7 +77,6 @@ const Onboarding = () => {
     }
   };
 
-  // Render the current step component
   const renderCurrentStep = () => {
     switch (currentStep) {
       case 0:
@@ -104,7 +99,7 @@ const Onboarding = () => {
   };
 
   return (
-    <Layout className="min-h-screen py-12 bg-gradient-to-b from-blue-50/30 to-white">
+    <Layout className="min-h-screen py-12 bg-gradient-to-b from-gray-50/30 to-white">
       <OnboardingHeader />
       
       <div className="max-w-3xl mx-auto">
@@ -112,21 +107,19 @@ const Onboarding = () => {
           {renderCurrentStep()}
         </AnimatedTransition>
 
-        {/* Navigation buttons */}
         <div className="flex justify-between mt-8 px-4">
           <Button 
             variant="outline" 
             onClick={handlePrevious}
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 text-gray-700"
             disabled={currentStep === 0}
           >
-            <ArrowLeft className="h-4 w-4 text-gray-600" /> Previous
+            <ArrowLeft className="h-4 w-4" /> Previous
           </Button>
           
           <Button 
             onClick={handleNext}
-            className="flex items-center gap-2"
-            variant="blue"
+            className="flex items-center gap-2 bg-gray-900 hover:bg-gray-800 text-white"
             disabled={currentStep === totalSteps - 1}
           >
             {currentStep === totalSteps - 1 ? 'Complete' : 'Next'} <ArrowRight className="h-4 w-4" />

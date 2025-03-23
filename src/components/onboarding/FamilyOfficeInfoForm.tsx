@@ -94,7 +94,7 @@ const FamilyOfficeInfoForm = () => {
       <Card className="p-6 md:p-8 shadow-sm">
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="flex items-center gap-3 mb-2">
-            <Building2 className="h-7 w-7 text-blue-600" />
+            <Building2 className="h-7 w-7 text-blue-500" />
             <h2 className="text-2xl font-bold">Family Office Information</h2>
           </div>
           <p className="text-gray-500">
@@ -291,6 +291,7 @@ const FamilyOfficeInfoForm = () => {
               <Button 
                 type="submit" 
                 size="lg" 
+                variant="blue"
                 className="rounded-lg hover:shadow-md transition-shadow"
               >
                 Continue

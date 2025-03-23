@@ -19,13 +19,13 @@ const AccountCard = ({ account, onRemove, index }: AccountCardProps) => {
       case "cash":
         return <Banknote className="h-5 w-5 text-blue-500" />;
       case "portfolio":
-        return <PiggyBank className="h-5 w-5 text-purple-500" />;
+        return <PiggyBank className="h-5 w-5 text-blue-500" />;
       case "custody":
-        return <Wallet className="h-5 w-5 text-green-500" />;
+        return <Wallet className="h-5 w-5 text-blue-500" />;
       case "broker":
-        return <CreditCard className="h-5 w-5 text-orange-500" />;
+        return <CreditCard className="h-5 w-5 text-blue-500" />;
       case "investment":
-        return <Coins className="h-5 w-5 text-yellow-500" />;
+        return <Coins className="h-5 w-5 text-blue-500" />;
       default:
         return <Wallet className="h-5 w-5 text-gray-500" />;
     }

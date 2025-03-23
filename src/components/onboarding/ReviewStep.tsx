@@ -86,13 +86,13 @@ const ReviewStep = () => {
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <Building2 className="h-5 w-5 text-blue-600" />
+                  <Building2 className="h-5 w-5 text-blue-500" />
                   <h3 className="text-lg font-medium">Family Office Information</h3>
                 </div>
                 <Button 
                   variant="ghost" 
                   size="sm" 
-                  className="text-blue-600"
+                  className="text-blue-500"
                   onClick={() => handleEdit(0)}
                 >
                   <Edit className="h-4 w-4 mr-1" />
@@ -159,13 +159,13 @@ const ReviewStep = () => {
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <UserRound className="h-5 w-5 text-blue-600" />
+                  <UserRound className="h-5 w-5 text-blue-500" />
                   <h3 className="text-lg font-medium">Primary Contact</h3>
                 </div>
                 <Button 
                   variant="ghost" 
                   size="sm" 
-                  className="text-blue-600"
+                  className="text-blue-500"
                   onClick={() => handleEdit(1)}
                 >
                   <Edit className="h-4 w-4 mr-1" />
@@ -204,13 +204,13 @@ const ReviewStep = () => {
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <MapPin className="h-5 w-5 text-blue-600" />
+                  <MapPin className="h-5 w-5 text-blue-500" />
                   <h3 className="text-lg font-medium">Address Information</h3>
                 </div>
                 <Button 
                   variant="ghost" 
                   size="sm" 
-                  className="text-blue-600"
+                  className="text-blue-500"
                   onClick={() => handleEdit(2)}
                 >
                   <Edit className="h-4 w-4 mr-1" />
@@ -238,13 +238,13 @@ const ReviewStep = () => {
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <ScrollText className="h-5 w-5 text-blue-600" />
+                  <ScrollText className="h-5 w-5 text-blue-500" />
                   <h3 className="text-lg font-medium">Legal Documents</h3>
                 </div>
                 <Button 
                   variant="ghost" 
                   size="sm" 
-                  className="text-blue-600"
+                  className="text-blue-500"
                   onClick={() => handleEdit(3)}
                 >
                   <Edit className="h-4 w-4 mr-1" />
@@ -309,13 +309,13 @@ const ReviewStep = () => {
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <BarChart4 className="h-5 w-5 text-blue-600" />
+                  <BarChart4 className="h-5 w-5 text-blue-500" />
                   <h3 className="text-lg font-medium">Financial Data Source</h3>
                 </div>
                 <Button 
                   variant="ghost" 
                   size="sm" 
-                  className="text-blue-600"
+                  className="text-blue-500"
                   onClick={() => handleEdit(4)}
                 >
                   <Edit className="h-4 w-4 mr-1" />
@@ -388,13 +388,13 @@ const ReviewStep = () => {
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <Users className="h-5 w-5 text-blue-600" />
+                  <Users className="h-5 w-5 text-blue-500" />
                   <h3 className="text-lg font-medium">Beneficial Owners</h3>
                 </div>
                 <Button 
                   variant="ghost" 
                   size="sm" 
-                  className="text-blue-600"
+                  className="text-blue-500"
                   onClick={() => handleEdit(5)}
                 >
                   <Edit className="h-4 w-4 mr-1" />
@@ -454,7 +454,7 @@ const ReviewStep = () => {
           <div className="space-y-4">
             <div className="flex items-start space-x-3">
               <div className="p-1 mt-1 rounded-full bg-blue-50">
-                <CheckCircle2 className="h-5 w-5 text-blue-600" />
+                <CheckCircle2 className="h-5 w-5 text-blue-500" />
               </div>
               <div>
                 <p className="font-medium">Data Privacy & Sharing Consent</p>
@@ -479,7 +479,8 @@ const ReviewStep = () => {
               </Button>
               <Button 
                 type="button" 
-                size="lg" 
+                size="lg"
+                variant="blue"
                 className="rounded-lg hover:shadow-md transition-shadow"
                 onClick={handleSubmit}
                 disabled={isSubmitting}

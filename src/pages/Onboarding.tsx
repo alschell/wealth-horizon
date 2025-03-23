@@ -104,7 +104,7 @@ const Onboarding = () => {
   };
 
   return (
-    <Layout className="min-h-screen py-12 bg-gradient-to-b from-purple-50/30 to-white">
+    <Layout className="min-h-screen py-12 bg-gradient-to-b from-blue-50/30 to-white">
       <OnboardingHeader />
       
       <div className="max-w-3xl mx-auto">
@@ -125,7 +125,8 @@ const Onboarding = () => {
           
           <Button 
             onClick={handleNext}
-            className="flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white"
+            className="flex items-center gap-2"
+            variant="blue"
             disabled={currentStep === totalSteps - 1}
           >
             {currentStep === totalSteps - 1 ? 'Complete' : 'Next'} <ArrowRight className="h-4 w-4" />

@@ -20,6 +20,10 @@ const AccountFormFields = ({
   onSelectionChange,
   onStatementsSelected
 }: AccountFormFieldsProps) => {
+  // Sort institutions and currencies alphabetically
+  const sortedInstitutions = [...INSTITUTIONS].sort();
+  const sortedCurrencies = [...CURRENCIES].sort();
+  
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div className="space-y-2 md:col-span-2">
@@ -44,7 +48,7 @@ const AccountFormFields = ({
             <SelectValue placeholder="Select institution" />
           </SelectTrigger>
           <SelectContent>
-            {INSTITUTIONS.map((institution) => (
+            {sortedInstitutions.map((institution) => (
               <SelectItem key={institution} value={institution}>
                 {institution}
               </SelectItem>
@@ -63,11 +67,11 @@ const AccountFormFields = ({
             <SelectValue placeholder="Select account type" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="cash">Cash Account</SelectItem>
-            <SelectItem value="portfolio">Investment Portfolio</SelectItem>
-            <SelectItem value="custody">Custody Account</SelectItem>
             <SelectItem value="broker">Brokerage Account</SelectItem>
+            <SelectItem value="cash">Cash Account</SelectItem>
+            <SelectItem value="custody">Custody Account</SelectItem>
             <SelectItem value="investment">Investment Fund</SelectItem>
+            <SelectItem value="portfolio">Investment Portfolio</SelectItem>
             <SelectItem value="other">Other</SelectItem>
           </SelectContent>
         </Select>
@@ -95,7 +99,7 @@ const AccountFormFields = ({
             <SelectValue placeholder="Select currency" />
           </SelectTrigger>
           <SelectContent>
-            {CURRENCIES.map((currency) => (
+            {sortedCurrencies.map((currency) => (
               <SelectItem key={currency} value={currency.split(" - ")[0]}>
                 {currency}
               </SelectItem>

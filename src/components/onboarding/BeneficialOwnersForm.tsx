@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useOnboarding, BeneficialOwnerInfo } from "@/context/OnboardingContext";
 import { Button } from "@/components/ui/button";
@@ -11,21 +10,42 @@ import { motion } from "framer-motion";
 import { ArrowRight, ArrowLeft, Plus, Trash2, Users } from "lucide-react";
 import FileUploader from "@/components/FileUploader";
 
-const NATIONALITIES = ["United States", "United Kingdom", "Canada", "Germany", "France", "Switzerland", "Italy", "Spain", "Netherlands", "Sweden", "Norway", "Denmark", "Australia", "New Zealand", "Japan", "China", "India", "Brazil", "Mexico", "South Africa"];
+const NATIONALITIES = [
+  "Australia", 
+  "Brazil", 
+  "Canada", 
+  "China", 
+  "Denmark", 
+  "France", 
+  "Germany", 
+  "India", 
+  "Italy", 
+  "Japan", 
+  "Mexico", 
+  "Netherlands", 
+  "New Zealand", 
+  "Norway", 
+  "South Africa", 
+  "Spain", 
+  "Sweden", 
+  "Switzerland", 
+  "United Kingdom", 
+  "United States"
+].sort();
 
 const RELATIONSHIPS = [
-  "Family Member", 
-  "Trustee", 
-  "Director", 
-  "Shareholder", 
   "Beneficiary",
-  "Settlor",
-  "Protector",
-  "Limited Partner",
+  "Director", 
+  "Family Member", 
   "General Partner",
   "Investment Advisor",
-  "Other"
-];
+  "Limited Partner",
+  "Other",
+  "Protector",
+  "Settlor",
+  "Shareholder", 
+  "Trustee"
+].sort();
 
 const BeneficialOwnersForm = () => {
   const { 
@@ -47,7 +67,6 @@ const BeneficialOwnersForm = () => {
     documents: []
   });
 
-  // Handle new owner input
   const handleNewOwnerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setNewOwner({
@@ -56,7 +75,6 @@ const BeneficialOwnersForm = () => {
     });
   };
 
-  // Handle owner selection changes
   const handleOwnerSelectionChange = (field: keyof BeneficialOwnerInfo, value: string) => {
     setNewOwner({
       ...newOwner,
@@ -64,7 +82,6 @@ const BeneficialOwnersForm = () => {
     });
   };
 
-  // Handle owner documents
   const handleDocumentsSelected = (files: File[]) => {
     setNewOwner({
       ...newOwner,
@@ -72,9 +89,7 @@ const BeneficialOwnersForm = () => {
     });
   };
 
-  // Add new owner
   const handleAddOwner = () => {
-    // Validation
     if (!newOwner.firstName || !newOwner.lastName || !newOwner.relationship) {
       toast({
         title: "Missing information",
@@ -84,12 +99,10 @@ const BeneficialOwnersForm = () => {
       return;
     }
 
-    // Add owner
     const updatedOwners = [...beneficialOwners, newOwner];
     setBeneficialOwners(updatedOwners);
     addBeneficialOwner(newOwner);
 
-    // Reset form
     setNewOwner({
       firstName: "",
       lastName: "",
@@ -106,17 +119,15 @@ const BeneficialOwnersForm = () => {
     });
   };
 
-  // Remove owner
   const handleRemoveOwner = (index: number) => {
     const updatedOwners = beneficialOwners.filter((_, i) => i !== index);
     setBeneficialOwners(updatedOwners);
     removeBeneficialOwner(index);
   };
 
-  // Form submission
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setCurrentStep(6); // Move to review step
+    setCurrentStep(6);
   };
 
   const itemVariants = {
@@ -148,7 +159,6 @@ const BeneficialOwnersForm = () => {
             Please add details of all beneficial owners with significant control or ownership interest (typically 25% or more).
           </p>
 
-          {/* List of added beneficial owners */}
           {beneficialOwners.length > 0 && (
             <motion.div 
               custom={0}
@@ -181,7 +191,6 @@ const BeneficialOwnersForm = () => {
             </motion.div>
           )}
           
-          {/* Add new beneficial owner form */}
           <motion.div 
             custom={1}
             variants={itemVariants}

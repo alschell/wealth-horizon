@@ -3,53 +3,53 @@
 
 export const AGGREGATORS = [
   "Addepar", 
+  "Archway", 
   "Canoe", 
   "Eton Solutions", 
   "Flanks", 
-  "Mirador",
-  "PCR", 
+  "Institutional Capital",
   "Masttro", 
-  "Archway", 
-  "Institutional Capital"
-];
+  "Mirador",
+  "PCR"
+].sort();
 
 export const CURRENCIES = [
-  "USD - US Dollar", 
-  "EUR - Euro", 
-  "GBP - British Pound", 
-  "CHF - Swiss Franc", 
-  "JPY - Japanese Yen", 
   "AUD - Australian Dollar", 
   "CAD - Canadian Dollar", 
-  "CNY - Chinese Yuan"
-];
+  "CHF - Swiss Franc", 
+  "CNY - Chinese Yuan",
+  "EUR - Euro", 
+  "GBP - British Pound", 
+  "JPY - Japanese Yen", 
+  "USD - US Dollar" 
+].sort();
 
 export const ACCOUNT_TYPES = [
-  "cash",
-  "portfolio",
-  "investment",
-  "custody",
   "broker",
-  "other"
-];
+  "cash",
+  "custody",
+  "investment",
+  "other",
+  "portfolio"
+].sort();
 
 export const INSTITUTIONS = [
-  "JP Morgan",
-  "Goldman Sachs",
-  "Credit Suisse",
-  "UBS",
-  "Morgan Stanley",
   "Bank of America",
-  "Citibank",
-  "HSBC",
-  "BNP Paribas",
-  "Deutsche Bank",
   "Barclays",
-  "Wells Fargo",
-  "Northern Trust",
-  "State Street",
-  "Pictet",
+  "BNP Paribas",
+  "Citibank",
+  "Credit Suisse",
+  "Deutsche Bank",
+  "Goldman Sachs",
+  "HSBC",
+  "JP Morgan",
   "Julius Baer",
   "Lombard Odier",
-  "Other"
-];
+  "Morgan Stanley",
+  "Northern Trust",
+  "Other",
+  "Pictet",
+  "State Street",
+  "UBS",
+  "Wells Fargo"
+].sort();

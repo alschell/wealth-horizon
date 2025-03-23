@@ -1,12 +1,17 @@
-import { useState } from "react";
+
+import React, { useState } from "react";
 import { useOnboarding, AggregatorInfo, FinancialAccountInfo } from "@/context/OnboardingContext";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
 import { motion } from "framer-motion";
 import { ArrowRight, ArrowLeft, BarChart4, Wallet, Upload } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import AggregatorFormSection from "./AggregatorFormSection";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { CustomSelect } from "@/components/ui/custom-select";
+import { AGGREGATORS } from "./constants/formOptions";
 import ManualEntrySection from "./ManualEntrySection";
 import FileUploadSection from "./FileUploadSection";
 
@@ -24,6 +29,34 @@ const DataSourceForm = () => {
   const [dataSourceMethod, setDataSourceMethod] = useState<"manual" | "upload">("manual");
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
   
+  const handleAggregatorSelection = (value: string) => {
+    setAggregatorInfo({
+      ...aggregatorInfo,
+      usesAggregator: value === "yes",
+      aggregatorName: value === "no" ? undefined : aggregatorInfo.aggregatorName,
+      aggregatorCredentials: value === "no" ? undefined : aggregatorInfo.aggregatorCredentials
+    });
+  };
+
+  const handleAggregatorNameChange = (name: string) => {
+    setAggregatorInfo({
+      ...aggregatorInfo,
+      aggregatorName: name,
+      aggregatorCredentials: { username: "" }
+    });
+  };
+
+  const handleCredentialsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setAggregatorInfo({
+      ...aggregatorInfo,
+      aggregatorCredentials: {
+        ...aggregatorInfo.aggregatorCredentials!,
+        [name]: value
+      }
+    });
+  };
+
   const handleAddAccount = (account: FinancialAccountInfo) => {
     const updatedAccounts = [...financialAccounts, account];
     setFinancialAccounts(updatedAccounts);
@@ -52,43 +85,15 @@ const DataSourceForm = () => {
         });
         return;
       }
-    } else if (dataSourceMethod === "manual") {
-      // Allow skipping validation for testing purposes
-      // if (financialAccounts.length === 0) {
-      //   toast({
-      //     title: "Missing information",
-      //     description: "Please add at least one financial account.",
-      //     variant: "destructive"
-      //   });
-      //   return;
-      // }
-    } else if (dataSourceMethod === "upload") {
-      // Allow skipping validation for testing purposes
-      // if (uploadedFiles.length === 0) {
-      //   toast({
-      //     title: "Missing information",
-      //     description: "Please upload at least one file.",
-      //     variant: "destructive"
-      //   });
-      //   return;
-      // }
     }
     
     updateAggregatorInfo(aggregatorInfo);
+    setCurrentStep(5); // Move to beneficial owners step
     
-    setCurrentStep(5);
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 10 },
-    visible: (i: number) => ({
-      opacity: 1,
-      y: 0,
-      transition: {
-        delay: i * 0.1,
-        duration: 0.3,
-      },
-    }),
+    toast({
+      title: "Information saved",
+      description: "Financial data source information has been saved successfully.",
+    });
   };
 
   return (
@@ -101,27 +106,86 @@ const DataSourceForm = () => {
       <Card className="p-6 md:p-8 shadow-sm">
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="flex items-center gap-3 mb-2">
-            <BarChart4 className="h-7 w-7 text-gray-900" />
-            <h2 className="text-2xl font-bold text-gray-900">Financial Data Source</h2>
+            <BarChart4 className="h-7 w-7 text-blue-600" />
+            <h2 className="text-2xl font-bold">Financial Data Source</h2>
           </div>
           <p className="text-gray-500">
             Please tell us how you'd like to provide your financial information.
           </p>
 
-          <AggregatorFormSection 
-            aggregatorInfo={aggregatorInfo} 
-            setAggregatorInfo={setAggregatorInfo}
-            itemVariants={itemVariants}
-          />
+          <div className="space-y-4">
+            <Label>Does your family office currently use a financial data aggregator?</Label>
+            <RadioGroup
+              value={aggregatorInfo.usesAggregator ? "yes" : "no"}
+              onValueChange={handleAggregatorSelection}
+              className="flex flex-col space-y-2"
+            >
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="yes" id="aggregator-yes" />
+                <Label htmlFor="aggregator-yes" className="cursor-pointer">
+                  Yes, we use a financial data aggregator
+                </Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="no" id="aggregator-no" />
+                <Label htmlFor="aggregator-no" className="cursor-pointer">
+                  No, we'll provide our financial information directly
+                </Label>
+              </div>
+            </RadioGroup>
+          </div>
+
+          {/* Conditional content based on aggregator usage */}
+          {aggregatorInfo.usesAggregator && (
+            <div className="space-y-6 border p-4 rounded-md mt-4">
+              <div className="space-y-4">
+                <Label htmlFor="aggregatorName">Select your aggregator</Label>
+                <CustomSelect
+                  id="aggregatorName"
+                  label=""
+                  value={aggregatorInfo.aggregatorName || ""}
+                  onChange={handleAggregatorNameChange}
+                  placeholder="Select your aggregator"
+                  options={AGGREGATORS}
+                />
+              </div>
+
+              {aggregatorInfo.aggregatorName && (
+                <div className="space-y-4 border-t pt-4">
+                  <h3 className="font-medium text-gray-700">Aggregator Credentials</h3>
+                  <div className="space-y-2">
+                    <Label htmlFor="username">Username / API Key</Label>
+                    <Input
+                      id="username"
+                      name="username"
+                      value={aggregatorInfo.aggregatorCredentials?.username || ""}
+                      onChange={handleCredentialsChange}
+                      placeholder="Enter your aggregator username"
+                      className="h-11"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="apiKey">API Secret (optional)</Label>
+                    <Input
+                      id="apiKey"
+                      name="apiKey"
+                      type="password"
+                      value={aggregatorInfo.aggregatorCredentials?.apiKey || ""}
+                      onChange={handleCredentialsChange}
+                      placeholder="Enter your aggregator API secret"
+                      className="h-11"
+                    />
+                  </div>
+                  <p className="text-sm text-gray-500 mt-2">
+                    Credentials are encrypted and securely stored. We only use them to sync your financial data.
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
 
           {!aggregatorInfo.usesAggregator && (
-            <motion.div 
-              custom={1}
-              variants={itemVariants}
-              initial="hidden"
-              animate="visible"
-              className="space-y-6 border p-4 rounded-lg"
-            >
+            <div className="space-y-6 border p-4 rounded-md">
               <Tabs 
                 defaultValue="manual" 
                 value={dataSourceMethod}
@@ -154,13 +218,10 @@ const DataSourceForm = () => {
                   />
                 </TabsContent>
               </Tabs>
-            </motion.div>
+            </div>
           )}
 
           <div className="pt-4 border-t">
-            <p className="text-sm text-gray-500 mb-6">
-              Fields marked with * are required.
-            </p>
             <div className="flex justify-between">
               <Button 
                 type="button" 
@@ -175,7 +236,7 @@ const DataSourceForm = () => {
               <Button 
                 type="submit" 
                 size="lg" 
-                className="rounded-lg bg-gray-900 hover:bg-gray-800 text-white"
+                className="rounded-lg bg-blue-600 hover:bg-blue-700 text-white"
               >
                 Continue
                 <ArrowRight className="ml-2 h-4 w-4" />

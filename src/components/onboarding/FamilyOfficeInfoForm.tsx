@@ -1,34 +1,71 @@
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { useOnboarding, FamilyOfficeInfo } from "@/context/OnboardingContext";
 import { Card } from "@/components/ui/card";
-import { motion } from "framer-motion";
-import { Building } from "lucide-react";
-import FormFieldItem from "./family-office/FormFieldItem";
-import { toast } from "@/components/ui/use-toast";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
+import { toast } from "@/components/ui/use-toast";
+import { motion } from "framer-motion";
+import { Building, ArrowRight } from "lucide-react";
+import { CustomSearchableSelect } from "@/components/ui/custom-searchable-select";
 import { LEGAL_ENTITY_TYPES, JURISDICTIONS } from "./constants/formOptions";
 
 const FamilyOfficeInfoForm = () => {
   const { onboardingData, updateFamilyOfficeInfo, setCurrentStep } = useOnboarding();
   const [formData, setFormData] = useState<FamilyOfficeInfo>(onboardingData.familyOfficeInfo);
+  const [errors, setErrors] = useState<Partial<Record<keyof FamilyOfficeInfo, string>>>({});
 
-  const handleFieldChange = (name: keyof FamilyOfficeInfo, value: string) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+    
+    // Clear error when field is edited
+    if (errors[name as keyof FamilyOfficeInfo]) {
+      setErrors({ ...errors, [name]: undefined });
+    }
+  };
+
+  const handleSelectChange = (field: keyof FamilyOfficeInfo, value: string) => {
+    setFormData({ ...formData, [field]: value });
+    
+    // Clear error when field is edited
+    if (errors[field]) {
+      setErrors({ ...errors, [field]: undefined });
+    }
+  };
+
+  const validateForm = () => {
+    const newErrors: Partial<Record<keyof FamilyOfficeInfo, string>> = {};
+    const requiredFields: (keyof FamilyOfficeInfo)[] = [
+      'officeName', 
+      'legalEntityType', 
+      'jurisdiction', 
+      'taxId'
+    ];
+    
+    requiredFields.forEach(field => {
+      if (!formData[field]) {
+        newErrors[field] = 'This field is required';
+      }
+    });
+    
+    // Email validation if provided
+    if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = 'Please enter a valid email address';
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Validation
-    const requiredFields: (keyof FamilyOfficeInfo)[] = ['officeName', 'legalEntityType', 'jurisdiction', 'taxId'];
-    const missingFields = requiredFields.filter(field => !formData[field]);
-    
-    if (missingFields.length > 0) {
+    if (!validateForm()) {
       toast({
-        title: "Missing information",
-        description: `Please complete all required fields.`,
+        title: "Form validation failed",
+        description: "Please check the form for errors.",
         variant: "destructive",
       });
       return;
@@ -36,6 +73,11 @@ const FamilyOfficeInfoForm = () => {
     
     updateFamilyOfficeInfo(formData);
     setCurrentStep(1); // Move to primary contact step
+    
+    toast({
+      title: "Information saved",
+      description: "Family office information has been saved successfully.",
+    });
   };
 
   return (
@@ -57,105 +99,143 @@ const FamilyOfficeInfoForm = () => {
           </p>
 
           <div className="space-y-6">
-            {/* Full width field */}
-            <FormFieldItem
-              index={0}
-              label="Family Office Name"
-              name="officeName"
-              value={formData.officeName}
-              onChange={handleFieldChange}
-              placeholder="Smith Family Office LLC"
-              required
-              type="text"
-            />
+            {/* Family Office Name */}
+            <div className="space-y-2">
+              <Label htmlFor="officeName">
+                Family Office Name<span className="text-red-500 ml-1">*</span>
+              </Label>
+              <Input
+                id="officeName"
+                name="officeName"
+                value={formData.officeName}
+                onChange={handleInputChange}
+                placeholder="Smith Family Office LLC"
+                className={`h-11 ${errors.officeName ? 'border-red-500' : ''}`}
+              />
+              {errors.officeName && (
+                <p className="text-red-500 text-sm mt-1">{errors.officeName}</p>
+              )}
+            </div>
             
             {/* Two column layout for related fields */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <FormFieldItem
-                index={1}
+              <CustomSearchableSelect
+                id="legalEntityType"
                 label="Legal Entity Type"
-                name="legalEntityType"
                 value={formData.legalEntityType}
-                onChange={handleFieldChange}
-                type="searchableSelect"
+                onChange={(value) => handleSelectChange('legalEntityType', value)}
+                placeholder="Select legal entity type"
                 options={LEGAL_ENTITY_TYPES}
                 required
+                className={errors.legalEntityType ? 'error' : ''}
               />
 
-              <FormFieldItem
-                index={2}
+              <CustomSearchableSelect
+                id="jurisdiction"
                 label="Jurisdiction"
-                name="jurisdiction"
                 value={formData.jurisdiction}
-                onChange={handleFieldChange}
-                type="searchableSelect"
+                onChange={(value) => handleSelectChange('jurisdiction', value)}
+                placeholder="Select jurisdiction"
                 options={JURISDICTIONS}
                 required
+                className={errors.jurisdiction ? 'error' : ''}
               />
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <FormFieldItem
-                index={3}
-                label="Registration Number"
-                name="registrationNumber"
-                value={formData.registrationNumber}
-                onChange={handleFieldChange}
-                placeholder="e.g., LLC-12345678"
-              />
+              <div className="space-y-2">
+                <Label htmlFor="registrationNumber">
+                  Registration Number
+                </Label>
+                <Input
+                  id="registrationNumber"
+                  name="registrationNumber"
+                  value={formData.registrationNumber}
+                  onChange={handleInputChange}
+                  placeholder="e.g., LLC-12345678"
+                  className="h-11"
+                />
+              </div>
               
-              <FormFieldItem
-                index={4}
-                label="Tax ID Number"
-                name="taxId"
-                value={formData.taxId}
-                onChange={handleFieldChange}
-                placeholder="e.g., 12-3456789"
-                required
-              />
+              <div className="space-y-2">
+                <Label htmlFor="taxId">
+                  Tax ID Number<span className="text-red-500 ml-1">*</span>
+                </Label>
+                <Input
+                  id="taxId"
+                  name="taxId"
+                  value={formData.taxId}
+                  onChange={handleInputChange}
+                  placeholder="e.g., 12-3456789"
+                  className={`h-11 ${errors.taxId ? 'border-red-500' : ''}`}
+                />
+                {errors.taxId && (
+                  <p className="text-red-500 text-sm mt-1">{errors.taxId}</p>
+                )}
+              </div>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <FormFieldItem
-                index={5}
-                label="Year Established"
-                name="yearEstablished"
-                value={formData.yearEstablished}
-                onChange={handleFieldChange}
-                placeholder="e.g., 2015"
-                type="text"
-              />
+              <div className="space-y-2">
+                <Label htmlFor="yearEstablished">
+                  Year Established
+                </Label>
+                <Input
+                  id="yearEstablished"
+                  name="yearEstablished"
+                  value={formData.yearEstablished}
+                  onChange={handleInputChange}
+                  placeholder="e.g., 2015"
+                  className="h-11"
+                />
+              </div>
               
-              <FormFieldItem
-                index={6}
-                label="Email"
-                name="email"
-                value={formData.email}
-                onChange={handleFieldChange}
-                placeholder="office@example.com"
-                type="email"
-              />
+              <div className="space-y-2">
+                <Label htmlFor="email">
+                  Email
+                </Label>
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  placeholder="office@example.com"
+                  className={`h-11 ${errors.email ? 'border-red-500' : ''}`}
+                />
+                {errors.email && (
+                  <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+                )}
+              </div>
               
-              <FormFieldItem
-                index={7}
-                label="Phone"
-                name="phone"
-                value={formData.phone}
-                onChange={handleFieldChange}
-                placeholder="+1 (555) 123-4567"
-                type="text"
-              />
+              <div className="space-y-2">
+                <Label htmlFor="phone">
+                  Phone
+                </Label>
+                <Input
+                  id="phone"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleInputChange}
+                  placeholder="+1 (555) 123-4567"
+                  className="h-11"
+                />
+              </div>
             </div>
             
-            <FormFieldItem
-              index={8}
-              label="Website"
-              name="website"
-              value={formData.website}
-              onChange={handleFieldChange}
-              placeholder="https://www.example.com"
-              type="text"
-            />
+            <div className="space-y-2">
+              <Label htmlFor="website">
+                Website
+              </Label>
+              <Input
+                id="website"
+                name="website"
+                value={formData.website}
+                onChange={handleInputChange}
+                placeholder="https://www.example.com"
+                className="h-11"
+              />
+            </div>
           </div>
 
           <div className="pt-4 border-t">
@@ -166,7 +246,7 @@ const FamilyOfficeInfoForm = () => {
               <Button 
                 type="submit" 
                 size="lg" 
-                className="rounded-lg hover:shadow-md transition-shadow"
+                className="rounded-lg hover:shadow-md transition-shadow bg-blue-600 hover:bg-blue-700 text-white"
               >
                 Continue
                 <ArrowRight className="ml-2 h-4 w-4" />

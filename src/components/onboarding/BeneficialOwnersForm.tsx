@@ -1,62 +1,20 @@
-import { useState } from "react";
+
+import React, { useState } from "react";
 import { useOnboarding, BeneficialOwnerInfo } from "@/context/OnboardingContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card } from "@/components/ui/card";
 import { toast } from "@/components/ui/use-toast";
 import { motion } from "framer-motion";
-import { ArrowRight, ArrowLeft, Plus, Trash2, Users } from "lucide-react";
+import { ArrowRight, ArrowLeft, Users, Plus, Trash2 } from "lucide-react";
+import { CustomSearchableSelect } from "@/components/ui/custom-searchable-select";
+import { COUNTRIES } from "./constants/formOptions";
 import FileUploader from "@/components/FileUploader";
 
-const NATIONALITIES = [
-  "Australia", 
-  "Brazil", 
-  "Canada", 
-  "China", 
-  "Denmark", 
-  "France", 
-  "Germany", 
-  "India", 
-  "Italy", 
-  "Japan", 
-  "Mexico", 
-  "Netherlands", 
-  "New Zealand", 
-  "Norway", 
-  "South Africa", 
-  "Spain", 
-  "Sweden", 
-  "Switzerland", 
-  "United Kingdom", 
-  "United States"
-].sort();
-
-const RELATIONSHIPS = [
-  "Beneficiary",
-  "Director", 
-  "Family Member", 
-  "General Partner",
-  "Investment Advisor",
-  "Limited Partner",
-  "Other",
-  "Protector",
-  "Settlor",
-  "Shareholder", 
-  "Trustee"
-].sort();
-
 const BeneficialOwnersForm = () => {
-  const { 
-    onboardingData, 
-    addBeneficialOwner,
-    removeBeneficialOwner,
-    setCurrentStep 
-  } = useOnboarding();
-  
-  const [beneficialOwners, setBeneficialOwners] = useState<BeneficialOwnerInfo[]>(onboardingData.beneficialOwners);
-  
+  const { onboardingData, addBeneficialOwner, removeBeneficialOwner, setCurrentStep } = useOnboarding();
+  const [owners, setOwners] = useState<BeneficialOwnerInfo[]>(onboardingData.beneficialOwners);
   const [newOwner, setNewOwner] = useState<BeneficialOwnerInfo>({
     firstName: "",
     lastName: "",
@@ -66,43 +24,37 @@ const BeneficialOwnersForm = () => {
     dateOfBirth: "",
     documents: []
   });
+  const [errors, setErrors] = useState<Partial<Record<keyof BeneficialOwnerInfo, string>>>({});
 
-  const handleNewOwnerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setNewOwner({
-      ...newOwner,
-      [name]: value
-    });
-  };
-
-  const handleOwnerSelectionChange = (field: keyof BeneficialOwnerInfo, value: string) => {
-    setNewOwner({
-      ...newOwner,
-      [field]: value
-    });
-  };
-
-  const handleDocumentsSelected = (files: File[]) => {
-    setNewOwner({
-      ...newOwner,
-      documents: files
-    });
-  };
-
-  const handleAddOwner = () => {
-    if (!newOwner.firstName || !newOwner.lastName || !newOwner.relationship) {
-      toast({
-        title: "Missing information",
-        description: "Please fill in all required owner fields.",
-        variant: "destructive"
-      });
-      return;
+    setNewOwner({ ...newOwner, [name]: value });
+    
+    // Clear error when field is edited
+    if (errors[name as keyof BeneficialOwnerInfo]) {
+      setErrors({ ...errors, [name]: undefined });
     }
+  };
 
-    const updatedOwners = [...beneficialOwners, newOwner];
-    setBeneficialOwners(updatedOwners);
-    addBeneficialOwner(newOwner);
+  const handleSelectChange = (field: keyof BeneficialOwnerInfo, value: string) => {
+    setNewOwner({ ...newOwner, [field]: value });
+    
+    // Clear error when field is edited
+    if (errors[field]) {
+      setErrors({ ...errors, [field]: undefined });
+    }
+  };
 
+  const handleFilesSelected = (files: File[]) => {
+    setNewOwner({ ...newOwner, documents: files });
+    
+    // Clear error when field is edited
+    if (errors.documents) {
+      setErrors({ ...errors, documents: undefined });
+    }
+  };
+
+  const resetForm = () => {
     setNewOwner({
       firstName: "",
       lastName: "",
@@ -112,34 +64,77 @@ const BeneficialOwnersForm = () => {
       dateOfBirth: "",
       documents: []
     });
+    setErrors({});
+  };
 
+  const validateForm = () => {
+    const newErrors: Partial<Record<keyof BeneficialOwnerInfo, string>> = {};
+    const requiredFields: (keyof BeneficialOwnerInfo)[] = [
+      'firstName', 
+      'lastName', 
+      'relationship', 
+      'ownershipPercentage',
+      'nationality'
+    ];
+    
+    requiredFields.forEach(field => {
+      if (!newOwner[field]) {
+        newErrors[field] = 'This field is required';
+      }
+    });
+    
+    // Validate percentage
+    if (newOwner.ownershipPercentage) {
+      const percentage = parseFloat(newOwner.ownershipPercentage);
+      if (isNaN(percentage) || percentage < 0 || percentage > 100) {
+        newErrors.ownershipPercentage = 'Please enter a valid percentage between 0 and 100';
+      }
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleAddOwner = () => {
+    if (!validateForm()) {
+      toast({
+        title: "Form validation failed",
+        description: "Please check the form for errors.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    const updatedOwners = [...owners, newOwner];
+    setOwners(updatedOwners);
+    addBeneficialOwner(newOwner);
+    
     toast({
       title: "Owner added",
-      description: `${newOwner.firstName} ${newOwner.lastName} has been added successfully.`
+      description: `${newOwner.firstName} ${newOwner.lastName} has been added as a beneficial owner.`,
     });
+    
+    resetForm();
   };
 
   const handleRemoveOwner = (index: number) => {
-    const updatedOwners = beneficialOwners.filter((_, i) => i !== index);
-    setBeneficialOwners(updatedOwners);
+    const updatedOwners = owners.filter((_, i) => i !== index);
+    setOwners(updatedOwners);
     removeBeneficialOwner(index);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setCurrentStep(6);
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 10 },
-    visible: (i: number) => ({
-      opacity: 1,
-      y: 0,
-      transition: {
-        delay: i * 0.1,
-        duration: 0.3,
-      },
-    }),
+    
+    // We'll allow users to continue even with no beneficial owners for the sake of our demo
+    // but you might want to require at least one in a real application
+    
+    setCurrentStep(6); // Move to review step
+    
+    toast({
+      title: "Information saved",
+      description: "Beneficial owner information has been saved successfully.",
+    });
   };
 
   return (
@@ -156,175 +151,173 @@ const BeneficialOwnersForm = () => {
             <h2 className="text-2xl font-bold">Beneficial Owners</h2>
           </div>
           <p className="text-gray-500">
-            Please add details of all beneficial owners with significant control or ownership interest (typically 25% or more).
+            Please provide information about individuals who own or control 25% or more of your entity.
           </p>
 
-          {beneficialOwners.length > 0 && (
-            <motion.div 
-              custom={0}
-              variants={itemVariants}
-              initial="hidden"
-              animate="visible"
-            >
-              <h3 className="font-medium mb-3">Added Beneficial Owners</h3>
-              <div className="space-y-2">
-                {beneficialOwners.map((owner, index) => (
-                  <Card key={index} className="p-3 flex justify-between items-center">
+          {/* List of existing owners */}
+          {owners.length > 0 && (
+            <div className="space-y-4">
+              <h3 className="font-medium text-gray-700">Current Beneficial Owners</h3>
+              
+              {owners.map((owner, index) => (
+                <div 
+                  key={index} 
+                  className="flex items-center justify-between p-4 border rounded-md bg-gray-50"
+                >
+                  <div className="flex items-center gap-3">
+                    <Users className="h-5 w-5 text-gray-500" />
                     <div>
                       <p className="font-medium">{owner.firstName} {owner.lastName}</p>
                       <p className="text-sm text-gray-500">
-                        {owner.relationship}
-                        {owner.ownershipPercentage ? ` • ${owner.ownershipPercentage}% ownership` : ''}
+                        {owner.relationship} · {owner.ownershipPercentage}% ownership · {owner.nationality}
                       </p>
                     </div>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleRemoveOwner(index)}
-                      className="text-gray-500 hover:text-red-500"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </Card>
-                ))}
-              </div>
-            </motion.div>
+                  </div>
+                  
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleRemoveOwner(index)}
+                    className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+              ))}
+            </div>
           )}
-          
-          <motion.div 
-            custom={1}
-            variants={itemVariants}
-            initial="hidden"
-            animate="visible"
-            className="space-y-4"
-          >
-            <h3 className="font-medium">Add a Beneficial Owner</h3>
+
+          {/* Form to add a new owner */}
+          <div className="space-y-6 border p-4 rounded-md">
+            <h3 className="font-medium flex items-center gap-2 text-gray-700">
+              <Plus className="h-5 w-5 text-gray-500" />
+              Add a Beneficial Owner
+            </h3>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="firstName">First Name*</Label>
+                <Label htmlFor="firstName">
+                  First Name<span className="text-red-500 ml-1">*</span>
+                </Label>
                 <Input
                   id="firstName"
                   name="firstName"
                   value={newOwner.firstName}
-                  onChange={handleNewOwnerChange}
+                  onChange={handleInputChange}
                   placeholder="John"
-                  className="h-11"
+                  className={`h-11 ${errors.firstName ? 'border-red-500' : ''}`}
                 />
+                {errors.firstName && (
+                  <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>
+                )}
               </div>
-              
+
               <div className="space-y-2">
-                <Label htmlFor="lastName">Last Name*</Label>
+                <Label htmlFor="lastName">
+                  Last Name<span className="text-red-500 ml-1">*</span>
+                </Label>
                 <Input
                   id="lastName"
                   name="lastName"
                   value={newOwner.lastName}
-                  onChange={handleNewOwnerChange}
+                  onChange={handleInputChange}
                   placeholder="Smith"
-                  className="h-11"
+                  className={`h-11 ${errors.lastName ? 'border-red-500' : ''}`}
                 />
+                {errors.lastName && (
+                  <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>
+                )}
               </div>
-              
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="relationship">Relationship*</Label>
-                <Select
+                <Label htmlFor="relationship">
+                  Relationship<span className="text-red-500 ml-1">*</span>
+                </Label>
+                <Input
+                  id="relationship"
+                  name="relationship"
                   value={newOwner.relationship}
-                  onValueChange={(value) => handleOwnerSelectionChange("relationship", value)}
-                >
-                  <SelectTrigger id="relationship" className="h-11 bg-white">
-                    <SelectValue placeholder="Select relationship" />
-                  </SelectTrigger>
-                  <SelectContent 
-                    className="z-50 bg-white"
-                    sideOffset={4}
-                    avoidCollisions={true}
-                  >
-                    {RELATIONSHIPS.map((relationship) => (
-                      <SelectItem key={relationship} value={relationship} className="cursor-pointer">
-                        {relationship}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                  onChange={handleInputChange}
+                  placeholder="e.g., Director, Shareholder"
+                  className={`h-11 ${errors.relationship ? 'border-red-500' : ''}`}
+                />
+                {errors.relationship && (
+                  <p className="text-red-500 text-sm mt-1">{errors.relationship}</p>
+                )}
               </div>
-              
+
               <div className="space-y-2">
-                <Label htmlFor="ownershipPercentage">Ownership Percentage</Label>
+                <Label htmlFor="ownershipPercentage">
+                  Ownership Percentage<span className="text-red-500 ml-1">*</span>
+                </Label>
                 <Input
                   id="ownershipPercentage"
                   name="ownershipPercentage"
                   value={newOwner.ownershipPercentage}
-                  onChange={handleNewOwnerChange}
+                  onChange={handleInputChange}
                   placeholder="e.g., 51"
-                  type="number"
-                  min="0"
-                  max="100"
-                  className="h-11"
+                  className={`h-11 ${errors.ownershipPercentage ? 'border-red-500' : ''}`}
                 />
+                {errors.ownershipPercentage && (
+                  <p className="text-red-500 text-sm mt-1">{errors.ownershipPercentage}</p>
+                )}
               </div>
-              
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <CustomSearchableSelect
+                id="nationality"
+                label="Nationality"
+                value={newOwner.nationality}
+                onChange={(value) => handleSelectChange('nationality', value)}
+                placeholder="Select nationality"
+                options={COUNTRIES}
+                required
+                className={errors.nationality ? 'error' : ''}
+              />
+
               <div className="space-y-2">
-                <Label htmlFor="nationality">Nationality</Label>
-                <Select
-                  value={newOwner.nationality}
-                  onValueChange={(value) => handleOwnerSelectionChange("nationality", value)}
-                >
-                  <SelectTrigger id="nationality" className="h-11 bg-white">
-                    <SelectValue placeholder="Select nationality" />
-                  </SelectTrigger>
-                  <SelectContent 
-                    className="z-50 bg-white"
-                    sideOffset={4}
-                    avoidCollisions={true}
-                  >
-                    {NATIONALITIES.map((nationality) => (
-                      <SelectItem key={nationality} value={nationality} className="cursor-pointer">
-                        {nationality}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="dateOfBirth">Date of Birth</Label>
+                <Label htmlFor="dateOfBirth">
+                  Date of Birth
+                </Label>
                 <Input
                   id="dateOfBirth"
                   name="dateOfBirth"
                   type="date"
                   value={newOwner.dateOfBirth}
-                  onChange={handleNewOwnerChange}
+                  onChange={handleInputChange}
                   className="h-11"
                 />
               </div>
             </div>
             
-            <div className="space-y-2">
-              <Label>Identity Documents</Label>
+            <div className="space-y-3">
+              <Label>Identification Documents</Label>
               <FileUploader
                 accept="application/pdf,image/*"
                 multiple={true}
                 maxSize={5}
-                onFilesSelected={handleDocumentsSelected}
+                onFilesSelected={handleFilesSelected}
                 existingFiles={newOwner.documents}
-                label="Upload Identity Documents (Passport, ID)"
+                label="Upload ID Documents"
               />
             </div>
             
             <Button
               type="button"
-              variant="outline"
               onClick={handleAddOwner}
-              className="mt-2"
+              className="mt-2 bg-blue-600 hover:bg-blue-700 text-white"
             >
               <Plus className="h-4 w-4 mr-2" />
-              Add Beneficial Owner
+              Add Owner
             </Button>
-          </motion.div>
+          </div>
 
           <div className="pt-4 border-t">
             <p className="text-sm text-gray-500 mb-6">
-              You must add all significant beneficial owners. If none apply, you can proceed without adding any.
+              Fields marked with <span className="text-red-500">*</span> are required.
             </p>
             <div className="flex justify-between">
               <Button 
@@ -340,9 +333,9 @@ const BeneficialOwnersForm = () => {
               <Button 
                 type="submit" 
                 size="lg" 
-                className="rounded-lg hover:shadow-md transition-shadow"
+                className="rounded-lg hover:shadow-md transition-shadow bg-blue-600 hover:bg-blue-700 text-white"
               >
-                Review
+                Continue
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </div>

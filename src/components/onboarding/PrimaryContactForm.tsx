@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { useOnboarding, PrimaryContactInfo } from "@/context/OnboardingContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,34 +12,50 @@ import { ArrowRight, ArrowLeft, UserRound } from "lucide-react";
 const PrimaryContactForm = () => {
   const { onboardingData, updatePrimaryContactInfo, setCurrentStep } = useOnboarding();
   const [formData, setFormData] = useState<PrimaryContactInfo>(onboardingData.primaryContactInfo);
+  const [errors, setErrors] = useState<Partial<Record<keyof PrimaryContactInfo, string>>>({});
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+    
+    // Clear error when field is edited
+    if (errors[name as keyof PrimaryContactInfo]) {
+      setErrors({ ...errors, [name]: undefined });
+    }
+  };
+
+  const validateForm = () => {
+    const newErrors: Partial<Record<keyof PrimaryContactInfo, string>> = {};
+    const requiredFields: (keyof PrimaryContactInfo)[] = [
+      'firstName', 
+      'lastName', 
+      'position', 
+      'email', 
+      'phone'
+    ];
+    
+    requiredFields.forEach(field => {
+      if (!formData[field]) {
+        newErrors[field] = 'This field is required';
+      }
+    });
+    
+    // Email validation
+    if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = 'Please enter a valid email address';
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Validation
-    const requiredFields: (keyof PrimaryContactInfo)[] = ['firstName', 'lastName', 'position', 'email', 'phone'];
-    const missingFields = requiredFields.filter(field => !formData[field]);
-    
-    if (missingFields.length > 0) {
+    if (!validateForm()) {
       toast({
-        title: "Missing information",
-        description: `Please complete all required fields.`,
-        variant: "destructive",
-      });
-      return;
-    }
-    
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
-      toast({
-        title: "Invalid email",
-        description: "Please enter a valid email address.",
+        title: "Form validation failed",
+        description: "Please check the form for errors.",
         variant: "destructive",
       });
       return;
@@ -47,18 +63,11 @@ const PrimaryContactForm = () => {
     
     updatePrimaryContactInfo(formData);
     setCurrentStep(2); // Move to address step
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 10 },
-    visible: (i: number) => ({
-      opacity: 1,
-      y: 0,
-      transition: {
-        delay: i * 0.1,
-        duration: 0.3,
-      },
-    }),
+    
+    toast({
+      title: "Information saved",
+      description: "Primary contact information has been saved successfully.",
+    });
   };
 
   return (
@@ -80,70 +89,63 @@ const PrimaryContactForm = () => {
 
           <div className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <motion.div 
-                custom={0}
-                variants={itemVariants}
-                initial="hidden"
-                animate="visible"
-                className="space-y-2"
-              >
-                <Label htmlFor="firstName">First Name*</Label>
+              <div className="space-y-2">
+                <Label htmlFor="firstName">
+                  First Name<span className="text-red-500 ml-1">*</span>
+                </Label>
                 <Input
                   id="firstName"
                   name="firstName"
                   value={formData.firstName}
                   onChange={handleInputChange}
                   placeholder="John"
-                  className="h-11"
+                  className={`h-11 ${errors.firstName ? 'border-red-500' : ''}`}
                 />
-              </motion.div>
+                {errors.firstName && (
+                  <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>
+                )}
+              </div>
 
-              <motion.div 
-                custom={1}
-                variants={itemVariants}
-                initial="hidden"
-                animate="visible"
-                className="space-y-2"
-              >
-                <Label htmlFor="lastName">Last Name*</Label>
+              <div className="space-y-2">
+                <Label htmlFor="lastName">
+                  Last Name<span className="text-red-500 ml-1">*</span>
+                </Label>
                 <Input
                   id="lastName"
                   name="lastName"
                   value={formData.lastName}
                   onChange={handleInputChange}
                   placeholder="Smith"
-                  className="h-11"
+                  className={`h-11 ${errors.lastName ? 'border-red-500' : ''}`}
                 />
-              </motion.div>
+                {errors.lastName && (
+                  <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>
+                )}
+              </div>
             </div>
 
-            <motion.div 
-              custom={2}
-              variants={itemVariants}
-              initial="hidden"
-              animate="visible"
-              className="space-y-2"
-            >
-              <Label htmlFor="position">Position/Title*</Label>
+            <div className="space-y-2">
+              <Label htmlFor="position">
+                Position/Title<span className="text-red-500 ml-1">*</span>
+              </Label>
               <Input
                 id="position"
                 name="position"
                 value={formData.position}
                 onChange={handleInputChange}
                 placeholder="e.g., Chief Investment Officer"
-                className="h-11"
+                className={`h-11 ${errors.position ? 'border-red-500' : ''}`}
               />
-            </motion.div>
+              {errors.position && (
+                <p className="text-red-500 text-sm mt-1">{errors.position}</p>
+              )}
+            </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <motion.div 
-                custom={3}
-                variants={itemVariants}
-                initial="hidden"
-                animate="visible"
-                className="space-y-2"
-              >
-                <Label htmlFor="email">Email Address*</Label>
+              <div className="space-y-2">
+                <Label htmlFor="email">
+                  Email Address<span className="text-red-500 ml-1">*</span>
+                </Label>
                 <Input
                   id="email"
                   name="email"
@@ -151,33 +153,35 @@ const PrimaryContactForm = () => {
                   value={formData.email}
                   onChange={handleInputChange}
                   placeholder="john.smith@example.com"
-                  className="h-11"
+                  className={`h-11 ${errors.email ? 'border-red-500' : ''}`}
                 />
-              </motion.div>
+                {errors.email && (
+                  <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+                )}
+              </div>
 
-              <motion.div 
-                custom={4}
-                variants={itemVariants}
-                initial="hidden"
-                animate="visible"
-                className="space-y-2"
-              >
-                <Label htmlFor="phone">Phone Number*</Label>
+              <div className="space-y-2">
+                <Label htmlFor="phone">
+                  Phone Number<span className="text-red-500 ml-1">*</span>
+                </Label>
                 <Input
                   id="phone"
                   name="phone"
                   value={formData.phone}
                   onChange={handleInputChange}
                   placeholder="+1 (555) 123-4567"
-                  className="h-11"
+                  className={`h-11 ${errors.phone ? 'border-red-500' : ''}`}
                 />
-              </motion.div>
+                {errors.phone && (
+                  <p className="text-red-500 text-sm mt-1">{errors.phone}</p>
+                )}
+              </div>
             </div>
           </div>
 
           <div className="pt-4 border-t">
             <p className="text-sm text-gray-500 mb-6">
-              Fields marked with * are required.
+              Fields marked with <span className="text-red-500">*</span> are required.
             </p>
             <div className="flex justify-between">
               <Button 
@@ -193,7 +197,7 @@ const PrimaryContactForm = () => {
               <Button 
                 type="submit" 
                 size="lg" 
-                className="rounded-lg hover:shadow-md transition-shadow"
+                className="rounded-lg hover:shadow-md transition-shadow bg-blue-600 hover:bg-blue-700 text-white"
               >
                 Continue
                 <ArrowRight className="ml-2 h-4 w-4" />

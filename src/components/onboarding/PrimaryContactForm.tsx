@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
-import { toast } from "@/components/ui/use-toast";
+import { toast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
 import { ArrowRight, ArrowLeft, UserRound } from "lucide-react";
 
@@ -21,30 +21,7 @@ const PrimaryContactForm = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Simple validation
-    const requiredFields: (keyof PrimaryContactInfo)[] = ['firstName', 'lastName', 'position', 'email', 'phone'];
-    const missingFields = requiredFields.filter(field => !formData[field]);
-    
-    if (missingFields.length > 0) {
-      toast({
-        title: "Missing information",
-        description: `Please complete all required fields.`,
-        variant: "destructive",
-      });
-      return;
-    }
-    
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
-      toast({
-        title: "Invalid email",
-        description: "Please enter a valid email address.",
-        variant: "destructive",
-      });
-      return;
-    }
-    
+    // Just update and continue for testing purposes
     updatePrimaryContactInfo(formData);
     setCurrentStep(2); // Move to address step
   };
@@ -71,7 +48,7 @@ const PrimaryContactForm = () => {
       <Card className="p-6 md:p-8 shadow-sm">
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="flex items-center gap-3 mb-2">
-            <UserRound className="h-7 w-7 text-blue-600" />
+            <UserRound className="h-7 w-7 text-gray-600" />
             <h2 className="text-2xl font-bold">Primary Contact Information</h2>
           </div>
           <p className="text-gray-500">

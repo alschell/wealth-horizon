@@ -29,9 +29,9 @@ const OnboardingHeader = () => {
               <div 
                 className={`w-10 h-10 rounded-full flex items-center justify-center font-medium 
                   ${i < currentStep 
-                    ? 'bg-purple-600 text-white' 
+                    ? 'bg-gray-700 text-white' 
                     : i === currentStep 
-                      ? 'bg-purple-100 text-purple-800 border-2 border-purple-600' 
+                      ? 'bg-gray-100 text-gray-800 border-2 border-gray-600' 
                       : 'bg-gray-100 text-gray-500'
                   } transition-all duration-300`}
               >
@@ -43,7 +43,7 @@ const OnboardingHeader = () => {
               </div>
               <span 
                 className={`mt-2 text-sm font-medium
-                  ${i <= currentStep ? 'text-purple-800' : 'text-gray-500'}`}
+                  ${i <= currentStep ? 'text-gray-800' : 'text-gray-500'}`}
               >
                 {step.name}
               </span>
@@ -53,7 +53,7 @@ const OnboardingHeader = () => {
           {/* Progress line */}
           <div className="absolute top-5 left-0 w-full h-0.5 bg-gray-100 -z-0">
             <div 
-              className="h-full bg-purple-600 transition-all duration-700 ease-in-out"
+              className="h-full bg-gray-700 transition-all duration-700 ease-in-out"
               style={{ width: `${(currentStep / (steps.length - 1)) * 100}%` }}
             ></div>
           </div>
@@ -68,7 +68,7 @@ const OnboardingHeader = () => {
           </div>
           <div className="w-full h-2 bg-gray-100 rounded-full mt-2">
             <div 
-              className="h-full bg-purple-600 rounded-full transition-all duration-700 ease-in-out"
+              className="h-full bg-gray-700 rounded-full transition-all duration-700 ease-in-out"
               style={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}
             ></div>
           </div>

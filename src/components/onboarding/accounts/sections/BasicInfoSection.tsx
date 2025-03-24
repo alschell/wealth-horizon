@@ -5,7 +5,7 @@ import {
   InputField, 
   SearchableSelectField 
 } from "../fields";
-import { INSTITUTIONS, ACCOUNT_TYPES } from "@/utils/constants";
+import { ACCOUNT_TYPES } from "@/utils/constants";
 
 interface BasicInfoSectionProps {
   account: FinancialAccountInfo;
@@ -20,7 +20,7 @@ const BasicInfoSection = ({
 }: BasicInfoSectionProps) => {
   return (
     <div className="space-y-4">
-      <div className="space-y-2 md:col-span-2">
+      <div className="space-y-2">
         <InputField
           id="accountName"
           label="Account Name"
@@ -32,27 +32,16 @@ const BasicInfoSection = ({
         />
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <SearchableSelectField
-          id="institution"
-          label="Institution"
-          value={account.institution}
-          placeholder="Select institution"
-          options={INSTITUTIONS.sort()}
-          required
-          onChange={(value) => onSelectionChange("institution", value)}
-          allowCustomValue={true}
-        />
-        
+      <div className="space-y-2">
         <SearchableSelectField
           id="accountType"
           label="Account Type"
-          value={account.accountType}
+          value={account.accountType || ""}
           placeholder="Select account type"
-          options={ACCOUNT_TYPES.sort()}
+          options={ACCOUNT_TYPES}
           required
-          onChange={(value) => onSelectionChange("accountType", value as any)}
-          extractValue={(type) => type.toLowerCase()}
+          onChange={(value) => onSelectionChange("accountType", value)}
+          allowCustomValue={true}
         />
       </div>
     </div>

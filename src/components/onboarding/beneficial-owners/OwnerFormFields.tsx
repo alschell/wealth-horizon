@@ -2,175 +2,117 @@
 import React from "react";
 import { UseFormReturn } from "react-hook-form";
 import { BeneficialOwnerInfo } from "@/context/OnboardingContext";
-import { 
-  InputField, 
-  SearchableSelectField,
-  DateField,
-  FileField 
-} from "@/components/onboarding/common";
-import { COUNTRIES } from "@/components/onboarding/constants";
-import {
-  FormField,
-  FormItem,
-  FormLabel,
-  FormControl,
-  FormMessage
-} from "@/components/ui/form";
+import { SelectField, InputField, DateField, FileField } from "@/components/onboarding/common/fields";
+import { Grid } from "@/components/onboarding/common/layouts";
 
-interface OwnerFormFieldsProps {
-  form: UseFormReturn<BeneficialOwnerInfo>;
+// Define the schema type for Zod validation
+type OwnerFormValues = {
+  firstName: string;
+  lastName: string;
+  relationship: string;
+  ownershipPercentage: string;
+  nationality: string;
+  dateOfBirth?: string;
+  documents?: any;
+};
+
+interface BeneficialOwnerFormFieldsProps {
+  form: UseFormReturn<OwnerFormValues>;
 }
 
-const OwnerFormFields: React.FC<OwnerFormFieldsProps> = ({ form }) => {
-  const { control, formState } = form;
+const BeneficialOwnerFormFields = ({ form }: BeneficialOwnerFormFieldsProps) => {
+  const { register, formState: { errors }, setValue, watch } = form;
+
+  // Relationship options
+  const relationshipOptions = [
+    "Director",
+    "Officer",
+    "Shareholder",
+    "Member",
+    "Partner",
+    "Trustee",
+    "Beneficiary",
+    "Manager",
+    "Authorized Signatory",
+    "Other"
+  ];
+
+  // Handle date change
+  const handleDateChange = (date?: Date) => {
+    setValue("dateOfBirth", date ? date.toISOString().split('T')[0] : "", { shouldValidate: true, shouldDirty: true });
+  };
+
+  // Handle file selection
+  const handleFilesSelected = (files: File[]) => {
+    setValue("documents", files, { shouldValidate: true, shouldDirty: true });
+  };
 
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <FormField
-          control={control}
-          name="firstName"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>First Name<span className="text-red-500 ml-1">*</span></FormLabel>
-              <FormControl>
-                <input
-                  className="flex h-11 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
-                  placeholder="John"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+      <Grid columns={2} gap={4}>
+        <InputField
+          id="firstName"
+          label="First Name"
+          required
+          error={errors.firstName?.message}
+          {...register("firstName")}
         />
+        <InputField
+          id="lastName"
+          label="Last Name"
+          required
+          error={errors.lastName?.message}
+          {...register("lastName")}
+        />
+      </Grid>
 
-        <FormField
-          control={control}
-          name="lastName"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Last Name<span className="text-red-500 ml-1">*</span></FormLabel>
-              <FormControl>
-                <input
-                  className="flex h-11 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
-                  placeholder="Smith"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+      <Grid columns={2} gap={4}>
+        <SelectField
+          id="relationship"
+          label="Relationship to Entity"
+          value={watch("relationship") || ""}
+          placeholder="Select relationship"
+          options={relationshipOptions}
+          required
+          error={errors.relationship?.message}
+          onChange={(value) => setValue("relationship", value, { shouldValidate: true })}
         />
-      </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <FormField
-          control={control}
-          name="relationship"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Relationship<span className="text-red-500 ml-1">*</span></FormLabel>
-              <FormControl>
-                <input
-                  className="flex h-11 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
-                  placeholder="e.g., Director, Shareholder"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+        <InputField
+          id="ownershipPercentage"
+          label="Ownership Percentage"
+          required
+          error={errors.ownershipPercentage?.message}
+          {...register("ownershipPercentage")}
         />
+      </Grid>
 
-        <FormField
-          control={control}
-          name="ownershipPercentage"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Ownership Percentage<span className="text-red-500 ml-1">*</span></FormLabel>
-              <FormControl>
-                <input
-                  className="flex h-11 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
-                  placeholder="e.g., 51"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+      <Grid columns={2} gap={4}>
+        <InputField
+          id="nationality"
+          label="Nationality"
+          required
+          error={errors.nationality?.message}
+          {...register("nationality")}
         />
-      </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <FormField
-          control={control}
-          name="nationality"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Nationality<span className="text-red-500 ml-1">*</span></FormLabel>
-              <FormControl>
-                <SearchableSelectField
-                  id="nationality"
-                  label=""
-                  value={field.value}
-                  onChange={field.onChange}
-                  placeholder="Select nationality"
-                  options={COUNTRIES}
-                  required={false}
-                  className="mt-0"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+        <DateField
+          label="Date of Birth"
+          value={watch("dateOfBirth") ? new Date(watch("dateOfBirth")) : undefined}
+          onChange={handleDateChange}
+          placeholder="Select date of birth"
         />
+      </Grid>
 
-        <FormField
-          control={control}
-          name="dateOfBirth"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Date of Birth</FormLabel>
-              <FormControl>
-                <DateField
-                  value={field.value ? new Date(field.value) : undefined}
-                  onChange={(date) => field.onChange(date ? date.toISOString() : "")}
-                  label=""
-                  placeholder="Select date of birth"
-                  className="mt-0"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-      </div>
-      
-      <FormField
-        control={control}
-        name="documents"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Identification Documents</FormLabel>
-            <FormControl>
-              <FileField
-                id="ownerDocuments"
-                label=""
-                files={field.value || []}
-                onFilesSelected={(files) => field.onChange(files)}
-                accept="application/pdf,image/*"
-                multiple={true}
-                maxSize={5}
-                className="mt-0"
-              />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
+      <FileField
+        id="documents"
+        label="Identity Documents"
+        accept=".pdf,.jpg,.jpeg,.png"
+        multiple={true}
+        maxSize={5}
+        existingFiles={watch("documents") || []}
+        onFilesSelected={handleFilesSelected}
       />
     </div>
   );
 };
 
-export default OwnerFormFields;
+export default BeneficialOwnerFormFields;

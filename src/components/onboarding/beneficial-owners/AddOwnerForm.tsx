@@ -41,7 +41,7 @@ const AddOwnerForm: React.FC<AddOwnerFormProps> = ({
   existingOwner,
   isEdit = false
 }) => {
-  const defaultValues: OwnerFormValues = existingOwner || {
+  const defaultValues: Partial<OwnerFormValues> = existingOwner || {
     firstName: "",
     lastName: "",
     relationship: "",

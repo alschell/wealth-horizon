@@ -23,7 +23,7 @@ const DocumentTypeField = ({ value, onChange }: DocumentTypeFieldProps) => {
     >
       <Label htmlFor="documentType">Document Type<span className="text-red-500 ml-1">*</span></Label>
       <Select
-        value={value}
+        value={value || ""}
         onValueChange={(value: DocumentType) => onChange(value)}
       >
         <SelectTrigger 

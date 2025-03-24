@@ -3,8 +3,8 @@ import React from "react";
 import { FinancialAccountInfo } from "@/types/onboarding";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import CustomSearchableSelect from "@/components/ui/custom-searchable-select";
-import CustomSelect from "@/components/ui/custom-select";
+import { CustomSearchableSelect } from "@/components/ui/custom-searchable-select";
+import { CustomSelect } from "@/components/ui/custom-select";
 import { ACCOUNT_TYPES } from "@/utils/constants/accountTypes";
 import { INSTITUTIONS } from "@/utils/constants/institutions";
 
@@ -69,13 +69,11 @@ const BasicInfoSection = ({
         </Label>
         <CustomSelect
           id="accountType"
+          label=""
           value={account.accountType || ""}
           onChange={(value) => onSelectionChange('accountType', value)}
           placeholder="Select account type"
-          options={ACCOUNT_TYPES.map(type => ({
-            value: type,
-            label: type.charAt(0).toUpperCase() + type.slice(1)
-          }))}
+          options={ACCOUNT_TYPES}
           className={`h-11 ${errors.accountType ? 'border-red-500' : ''}`}
         />
         {errors.accountType && (

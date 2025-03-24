@@ -13,7 +13,7 @@ export const useAccountFormState = ({ onAddAccount, initialAccount }: AccountFor
   const defaultAccount: FinancialAccountInfo = {
     accountName: '',
     institution: '',
-    accountType: '',
+    accountType: 'cash', // Changed from empty string to 'cash' to match the type
     legalEntity: '',
     legalEntityIdentifier: '',
     accountSubtype: '',

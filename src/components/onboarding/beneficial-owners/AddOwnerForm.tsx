@@ -6,7 +6,7 @@ import * as z from "zod";
 import { BeneficialOwnerInfo } from "@/context/OnboardingContext";
 import { UserPlus, Edit } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
-import BeneficialOwnerFormFields, { OwnerFormValues } from "./OwnerFormFields";
+import OwnerFormFields, { OwnerFormValues } from "./OwnerFormFields";
 import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 
@@ -32,7 +32,7 @@ const ownerSchema = z.object({
     }),
   nationality: z.string().min(1, { message: "Nationality is required" }),
   dateOfBirth: z.string().optional(),
-  documents: z.array(z.any()).optional()
+  documents: z.array(z.instanceof(File)).optional()
 });
 
 const AddOwnerForm: React.FC<AddOwnerFormProps> = ({
@@ -41,6 +41,7 @@ const AddOwnerForm: React.FC<AddOwnerFormProps> = ({
   existingOwner,
   isEdit = false
 }) => {
+  // Define strongly typed defaultValues
   const defaultValues: OwnerFormValues = existingOwner 
     ? {
         firstName: existingOwner.firstName || "",
@@ -94,7 +95,7 @@ const AddOwnerForm: React.FC<AddOwnerFormProps> = ({
             </div>
           </div>
 
-          <BeneficialOwnerFormFields form={form} />
+          <OwnerFormFields form={form} />
 
           <div className="pt-4 border-t">
             <p className="text-sm text-gray-500 mb-6">

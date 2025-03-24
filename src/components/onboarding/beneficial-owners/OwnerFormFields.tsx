@@ -90,7 +90,8 @@ const OwnerFormFields: React.FC<OwnerFormFieldsProps> = ({ form }) => {
               <FormControl>
                 <SelectField
                   id="relationship"
-                  options={relationshipOptions}
+                  options={relationshipOptions.map(opt => opt.value)}
+                  optionLabels={relationshipOptions.map(opt => opt.label)}
                   onChange={(value) => field.onChange(value)}
                   value={field.value}
                   placeholder="Select relationship"
@@ -134,7 +135,8 @@ const OwnerFormFields: React.FC<OwnerFormFieldsProps> = ({ form }) => {
               <FormControl>
                 <SelectField
                   id="nationality"
-                  options={COUNTRIES.map(country => ({ value: country, label: country }))}
+                  options={COUNTRIES}
+                  optionLabels={COUNTRIES}
                   onChange={(value) => field.onChange(value)}
                   value={field.value}
                   placeholder="Select nationality"

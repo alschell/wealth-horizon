@@ -62,7 +62,7 @@ const AccountForm: React.FC<AccountFormProps> = ({
           <LegalEntitySection
             account={newAccount}
             legalEntities={legalEntities}
-            onInputChange={handleLeiChange}
+            onInputChange={handleInputChange}
             onSelectionChange={handleSelectionChange}
           />
         </div>

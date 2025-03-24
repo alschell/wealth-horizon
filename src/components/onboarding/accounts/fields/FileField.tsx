@@ -7,13 +7,19 @@ interface FileFieldProps {
   files: File[];
   onFilesSelected: (files: File[]) => void;
   optional?: boolean;
+  accept?: string;
+  hint?: string;
+  multiple?: boolean;
 }
 
 const FileField: React.FC<FileFieldProps> = ({
   label,
   files,
   onFilesSelected,
-  optional = true
+  optional = true,
+  accept = "application/pdf,image/*",
+  hint = "Upload PDF documents or images (max 5MB per file)",
+  multiple = true
 }) => {
   const handleFilesChange = (newFiles: File[]) => {
     onFilesSelected(newFiles);
@@ -24,9 +30,9 @@ const FileField: React.FC<FileFieldProps> = ({
       id={`field-${label.toLowerCase().replace(/\s+/g, '-')}`}
       label={label}
       required={!optional}
-      accept="application/pdf,image/*"
-      multiple={true}
-      hint="Upload PDF documents or images (max 5MB per file)"
+      accept={accept}
+      multiple={multiple}
+      hint={hint}
       onFilesChange={handleFilesChange}
     />
   );

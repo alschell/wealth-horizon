@@ -54,7 +54,7 @@ const FamilyOfficeInfoForm = () => {
           <FormHeader 
             title="Family Office Information"
             description="Please provide the details of your family office entity for KYC verification."
-            icon={<Building2 className="h-7 w-7 text-[#86CEFA]" />}
+            icon={<Building2 className="h-7 w-7 text-black" />}
           />
           
           <div className="space-y-6">
@@ -88,7 +88,7 @@ const FamilyOfficeInfoForm = () => {
               <Button 
                 type="submit" 
                 size="lg" 
-                className="rounded-lg hover:shadow-md transition-shadow"
+                className="rounded-lg bg-black hover:bg-gray-800 text-white hover:shadow-md transition-shadow"
               >
                 Continue
                 <ArrowRight className="ml-2 h-4 w-4" />

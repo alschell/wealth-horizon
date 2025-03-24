@@ -38,11 +38,11 @@ const DocumentTypeField = ({ value, onChange }: DocumentTypeFieldProps) => {
           sideOffset={8}
           align="start"
         >
-          <SelectItem value="incorporation" className="hover:bg-slate-100 cursor-pointer">Certificate of Incorporation</SelectItem>
-          <SelectItem value="registration" className="hover:bg-slate-100 cursor-pointer">Business Registration</SelectItem>
-          <SelectItem value="taxCertificate" className="hover:bg-slate-100 cursor-pointer">Tax Certificate</SelectItem>
-          <SelectItem value="ownership" className="hover:bg-slate-100 cursor-pointer">Ownership Structure</SelectItem>
-          <SelectItem value="other" className="hover:bg-slate-100 cursor-pointer">Other Legal Document</SelectItem>
+          <SelectItem value="incorporation" className="hover:bg-gray-100 cursor-pointer">Certificate of Incorporation</SelectItem>
+          <SelectItem value="registration" className="hover:bg-gray-100 cursor-pointer">Business Registration</SelectItem>
+          <SelectItem value="taxCertificate" className="hover:bg-gray-100 cursor-pointer">Tax Certificate</SelectItem>
+          <SelectItem value="ownership" className="hover:bg-gray-100 cursor-pointer">Ownership Structure</SelectItem>
+          <SelectItem value="other" className="hover:bg-gray-100 cursor-pointer">Other Legal Document</SelectItem>
         </SelectContent>
       </Select>
     </motion.div>

@@ -31,7 +31,7 @@ const DataSourceFormNavigation = ({
         <Button 
           type="submit" 
           size="lg" 
-          className="rounded-lg bg-[#86CEFA] hover:bg-[#5ba8d6] text-white"
+          className="rounded-lg bg-black hover:bg-gray-800 text-white"
           disabled={isSubmitting}
         >
           {submitText}

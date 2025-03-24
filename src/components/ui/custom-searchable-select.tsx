@@ -120,8 +120,8 @@ const CustomSearchableSelect = ({
                     key={option}
                     role="option"
                     className={cn(
-                      "cursor-pointer select-none relative py-2 pl-10 pr-4 hover:bg-blue-50 text-black",
-                      value === option ? "bg-blue-50" : ""
+                      "cursor-pointer select-none relative py-2 pl-10 pr-4 hover:bg-gray-100 text-black",
+                      value === option ? "bg-gray-100" : ""
                     )}
                     onClick={() => {
                       onChange(option);
@@ -141,7 +141,7 @@ const CustomSearchableSelect = ({
               ) : (
                 allowCustomValue ? (
                   <li 
-                    className="cursor-pointer py-2 px-4 hover:bg-blue-50 text-black"
+                    className="cursor-pointer py-2 px-4 hover:bg-gray-100 text-black"
                     onClick={() => {
                       if (searchTerm) {
                         onChange(searchTerm);

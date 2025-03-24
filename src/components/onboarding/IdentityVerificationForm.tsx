@@ -10,22 +10,10 @@ import { toast } from "@/components/ui/use-toast";
 import { motion } from "framer-motion";
 import { ArrowRight, ArrowLeft } from "lucide-react";
 import FileUploader from "@/components/FileUploader";
-import { 
-  AlertDialog, 
-  AlertDialogAction, 
-  AlertDialogCancel, 
-  AlertDialogContent, 
-  AlertDialogDescription, 
-  AlertDialogFooter, 
-  AlertDialogHeader, 
-  AlertDialogTitle 
-} from "@/components/ui/alert-dialog";
 
 const IdentityVerificationForm = () => {
   const { onboardingData, updateIdentityVerification, setCurrentStep } = useOnboarding();
   const [formData, setFormData] = useState<IdentityVerification>(onboardingData.identityVerification);
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [fileToDeleteIndex, setFileToDeleteIndex] = useState<number | null>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -38,21 +26,6 @@ const IdentityVerificationForm = () => {
 
   const handleFilesSelected = (files: File[]) => {
     setFormData({ ...formData, documentFiles: files });
-  };
-
-  const handleFileDelete = (index: number) => {
-    setFileToDeleteIndex(index);
-    setIsDeleteDialogOpen(true);
-  };
-
-  const confirmDelete = () => {
-    if (fileToDeleteIndex !== null) {
-      const newFiles = [...formData.documentFiles];
-      newFiles.splice(fileToDeleteIndex, 1);
-      setFormData({ ...formData, documentFiles: newFiles });
-    }
-    setIsDeleteDialogOpen(false);
-    setFileToDeleteIndex(null);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -212,7 +185,6 @@ const IdentityVerificationForm = () => {
                 onFilesSelected={handleFilesSelected}
                 existingFiles={formData.documentFiles}
                 label="Upload Identification Documents"
-                onFileDelete={handleFileDelete}
               />
             </motion.div>
           </div>
@@ -244,26 +216,6 @@ const IdentityVerificationForm = () => {
           </div>
         </form>
       </Card>
-
-      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Confirm File Deletion</AlertDialogTitle>
-            <AlertDialogDescription>
-              Are you sure you want to delete this file? This action cannot be undone.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction 
-              onClick={confirmDelete} 
-              className="bg-red-500 hover:bg-red-600"
-            >
-              Delete
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </motion.div>
   );
 };

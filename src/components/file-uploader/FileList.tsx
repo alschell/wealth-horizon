@@ -31,10 +31,7 @@ const FileList: React.FC<FileListProps> = ({ files, onDeleteClick }) => {
             </div>
             <DeleteButton
               size="icon"
-              onClick={(e) => {
-                e.stopPropagation();
-                onDeleteClick(index);
-              }}
+              onClick={() => onDeleteClick(index)}
             />
           </Card>
         ))}

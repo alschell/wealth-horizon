@@ -1,8 +1,6 @@
 
 import React from "react";
 import { Label } from "@/components/ui/label";
-import { FileSpreadsheet, FileText, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import FileUploader from "@/components/FileUploader";
 
 interface FileUploadSectionProps {
@@ -14,12 +12,6 @@ const FileUploadSection = ({
   uploadedFiles,
   handleBulkFilesSelected
 }: FileUploadSectionProps) => {
-  const removeFile = (index: number) => {
-    const newFiles = [...uploadedFiles];
-    newFiles.splice(index, 1);
-    handleBulkFilesSelected(newFiles);
-  };
-
   return (
     <div className="space-y-6">
       <div className="space-y-4">

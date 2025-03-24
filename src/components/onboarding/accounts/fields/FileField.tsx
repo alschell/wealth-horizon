@@ -1,6 +1,5 @@
 
 import React from "react";
-import { Label } from "@/components/ui/label";
 import FileUploader from "@/components/FileUploader";
 
 interface FileFieldProps {
@@ -10,23 +9,22 @@ interface FileFieldProps {
   optional?: boolean;
 }
 
-const FileField = ({
+const FileField: React.FC<FileFieldProps> = ({
   label,
   files,
   onFilesSelected,
-  optional = false
-}: FileFieldProps) => {
+  optional = true
+}) => {
   return (
     <div className="space-y-2">
-      <Label>{label}{!optional && <span className="text-red-500 ml-1">*</span>}</Label>
       <FileUploader
-        label={`Upload ${label.toLowerCase()}`}
+        accept="application/pdf,image/*"
+        multiple={true}
+        maxSize={5}
         onFilesSelected={onFilesSelected}
         existingFiles={files}
+        label={label}
       />
-      {optional && (
-        <p className="text-xs text-gray-500 mt-1">This field is optional</p>
-      )}
     </div>
   );
 };

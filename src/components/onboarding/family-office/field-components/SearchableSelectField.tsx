@@ -67,11 +67,11 @@ const SearchableSelectField: React.FC<SearchableSelectFieldProps> = ({
           </Button>
         </PopoverTrigger>
         <PopoverContent 
-          className="w-[var(--radix-popover-trigger-width)] p-0 bg-white border shadow-md z-50" 
+          className="w-[var(--radix-popover-trigger-width)] p-0 bg-white border shadow-md z-[100]" 
           align="start"
           side="bottom"
           sideOffset={8}
-          avoidCollisions={false}
+          avoidCollisions={true}
         >
           <Command className="bg-white">
             <CommandInput placeholder={`Search ${label ? label.toLowerCase() : 'options'}...`} className="h-9" />

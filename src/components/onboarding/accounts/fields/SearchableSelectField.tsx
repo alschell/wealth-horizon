@@ -63,7 +63,7 @@ const SearchableSelectField = ({
 
   return (
     <div className="space-y-2">
-      <Label htmlFor={id}>
+      <Label htmlFor={id} className="text-black">
         {label}{required && <span className="text-red-500">*</span>}
       </Label>
       <Popover open={open} onOpenChange={setOpen}>
@@ -74,7 +74,7 @@ const SearchableSelectField = ({
             role="combobox"
             aria-expanded={open}
             aria-label={`Select ${label}`}
-            className="h-11 w-full justify-between text-left font-normal bg-white border"
+            className="h-11 w-full justify-between text-left font-normal bg-white border text-black"
             type="button"
             onClick={(e) => {
               e.preventDefault();
@@ -82,11 +82,11 @@ const SearchableSelectField = ({
             }}
           >
             {value ? (
-              <span className="truncate">{value}</span>
+              <span className="truncate text-black">{value}</span>
             ) : (
-              <span className="truncate text-muted-foreground">{placeholder}</span>
+              <span className="truncate text-gray-500">{placeholder}</span>
             )}
-            <ChevronsUpDown className="h-4 w-4 shrink-0 opacity-50 ml-2 text-[#86CEFA]" />
+            <ChevronsUpDown className="h-4 w-4 shrink-0 opacity-50 ml-2 text-black" />
           </Button>
         </PopoverTrigger>
         <PopoverContent 
@@ -99,18 +99,18 @@ const SearchableSelectField = ({
           <Command onKeyDown={handleKeyDown}>
             <CommandInput 
               placeholder={`Search ${label.toLowerCase()}...`} 
-              className="h-9"
+              className="h-9 text-black"
               value={inputValue}
               onValueChange={setInputValue}
             />
             <CommandEmpty>
               {allowCustomValue ? (
                 <div className="py-3 px-4 text-sm">
-                  <p>No results found.</p>
-                  <p className="font-medium text-[#86CEFA]">Press Enter to add "{inputValue}"</p>
+                  <p className="text-black">No results found.</p>
+                  <p className="font-medium text-black">Press Enter to add "{inputValue}"</p>
                 </div>
               ) : (
-                "No results found."
+                <span className="text-black">No results found.</span>
               )}
             </CommandEmpty>
             <CommandGroup className="max-h-[300px] overflow-y-auto">
@@ -121,11 +121,11 @@ const SearchableSelectField = ({
                     key={option}
                     value={option}
                     onSelect={() => handleSelect(option)}
-                    className="hover:bg-slate-100 aria-selected:bg-slate-100 cursor-pointer"
+                    className="hover:bg-slate-100 aria-selected:bg-slate-100 cursor-pointer text-black"
                   >
                     <Check
                       className={cn(
-                        "mr-2 h-4 w-4 text-[#86CEFA]",
+                        "mr-2 h-4 w-4 text-black",
                         value === optionValue ? "opacity-100" : "opacity-0"
                       )}
                     />

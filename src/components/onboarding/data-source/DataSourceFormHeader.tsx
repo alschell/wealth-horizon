@@ -9,7 +9,7 @@ const DataSourceFormHeader = () => {
         <BarChart4 className="h-7 w-7 text-black" />
         <h2 className="text-2xl font-bold text-black">Financial Data Source</h2>
       </div>
-      <p className="text-gray-500">
+      <p className="text-black">
         Please tell us how you'd like to provide your financial information.
       </p>
     </div>

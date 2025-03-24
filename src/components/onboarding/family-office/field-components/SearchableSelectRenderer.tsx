@@ -65,10 +65,10 @@ const SearchableSelectRenderer: React.FC<SearchableSelectRendererProps> = ({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-full justify-between h-11 bg-white border-input hover:bg-slate-50"
+          className="w-full justify-between h-11 bg-white border-input hover:bg-slate-50 text-black"
         >
           {value ? value : placeholder || `Select ${label || 'option'}`}
-          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50 text-black" /> {/* Added text-black */}
+          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50 text-black" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-full p-0 z-[999]" align="start">
@@ -77,16 +77,17 @@ const SearchableSelectRenderer: React.FC<SearchableSelectRendererProps> = ({
             placeholder={`Search ${label || 'options'}...`} 
             value={inputValue}
             onValueChange={handleInputChange}
+            className="text-black"
           />
           <CommandList>
             <CommandEmpty>
               {allowCustomValue ? (
                 <div className="py-3 px-4 text-sm">
-                  <p>No results found.</p>
-                  <p className="font-medium text-black">Press Enter to add "{inputValue}"</p> {/* Changed to black */}
+                  <p className="text-black">No results found.</p>
+                  <p className="font-medium text-black">Press Enter to add "{inputValue}"</p>
                 </div>
               ) : (
-                `No ${label || 'option'} found.`
+                <span className="text-black">`No ${label || 'option'} found.`</span>
               )}
             </CommandEmpty>
             <CommandGroup>
@@ -95,11 +96,11 @@ const SearchableSelectRenderer: React.FC<SearchableSelectRendererProps> = ({
                   key={option}
                   value={option}
                   onSelect={handleSelect}
-                  className="cursor-pointer"
+                  className="cursor-pointer text-black"
                 >
                   <Check
                     className={cn(
-                      "mr-2 h-4 w-4 text-black", /* Added text-black */
+                      "mr-2 h-4 w-4 text-black",
                       value === option ? "opacity-100" : "opacity-0"
                     )}
                   />

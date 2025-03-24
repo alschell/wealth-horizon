@@ -1,4 +1,3 @@
-
 import React from "react";
 import { useOnboarding } from "@/context/OnboardingContext";
 import { Button } from "@/components/ui/button";
@@ -20,11 +19,9 @@ const ReviewStep = () => {
       description: "Thank you for completing the onboarding process.",
     });
     
-    // In a real application, you would redirect to the dashboard or home page
     navigate("/");
   };
 
-  // Format date for display
   const formatDate = (dateString: string) => {
     if (!dateString) return "Not provided";
     
@@ -49,11 +46,10 @@ const ReviewStep = () => {
             <CheckCircle className="h-7 w-7 text-black" />
             <h2 className="text-2xl font-bold text-black">Review & Submit</h2>
           </div>
-          <p className="text-gray-500">
+          <p className="text-black">
             Please review your information before submitting your onboarding application.
           </p>
 
-          {/* Family Office Details */}
           <section className="space-y-3 border-b pb-4">
             <div className="flex justify-between items-center">
               <h3 className="text-lg font-semibold text-black">Family Office Details</h3>
@@ -63,31 +59,30 @@ const ReviewStep = () => {
                 className="text-black hover:text-gray-800"
                 onClick={() => setCurrentStep(0)}
               >
-                <Edit2 className="h-4 w-4 mr-1" />
+                <Edit2 className="h-4 w-4 mr-1 text-black" />
                 Edit
               </Button>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-y-2 gap-x-4 text-sm">
               <div>
-                <span className="font-medium text-gray-700">Office Name:</span>
-                <span className="ml-2">{onboardingData.familyOfficeInfo.officeName || "Not provided"}</span>
+                <span className="font-medium text-black">Office Name:</span>
+                <span className="ml-2 text-black">{onboardingData.familyOfficeInfo.officeName || "Not provided"}</span>
               </div>
               <div>
-                <span className="font-medium text-gray-700">Legal Entity Type:</span>
-                <span className="ml-2">{onboardingData.familyOfficeInfo.legalEntityType || "Not provided"}</span>
+                <span className="font-medium text-black">Legal Entity Type:</span>
+                <span className="ml-2 text-black">{onboardingData.familyOfficeInfo.legalEntityType || "Not provided"}</span>
               </div>
               <div>
-                <span className="font-medium text-gray-700">Jurisdiction:</span>
-                <span className="ml-2">{onboardingData.familyOfficeInfo.jurisdiction || "Not provided"}</span>
+                <span className="font-medium text-black">Jurisdiction:</span>
+                <span className="ml-2 text-black">{onboardingData.familyOfficeInfo.jurisdiction || "Not provided"}</span>
               </div>
               <div>
-                <span className="font-medium text-gray-700">Tax ID:</span>
-                <span className="ml-2">{onboardingData.familyOfficeInfo.taxId || "Not provided"}</span>
+                <span className="font-medium text-black">Tax ID:</span>
+                <span className="ml-2 text-black">{onboardingData.familyOfficeInfo.taxId || "Not provided"}</span>
               </div>
             </div>
           </section>
 
-          {/* Primary Contact */}
           <section className="space-y-3 border-b pb-4">
             <div className="flex justify-between items-center">
               <h3 className="text-lg font-semibold text-black">Primary Contact</h3>
@@ -97,7 +92,7 @@ const ReviewStep = () => {
                 className="text-black hover:text-gray-800"
                 onClick={() => setCurrentStep(1)}
               >
-                <Edit2 className="h-4 w-4 mr-1" />
+                <Edit2 className="h-4 w-4 mr-1 text-black" />
                 Edit
               </Button>
             </div>
@@ -123,7 +118,6 @@ const ReviewStep = () => {
             </div>
           </section>
 
-          {/* Address */}
           <section className="space-y-3 border-b pb-4">
             <div className="flex justify-between items-center">
               <h3 className="text-lg font-semibold text-black">Address</h3>
@@ -133,7 +127,7 @@ const ReviewStep = () => {
                 className="text-black hover:text-gray-800"
                 onClick={() => setCurrentStep(2)}
               >
-                <Edit2 className="h-4 w-4 mr-1" />
+                <Edit2 className="h-4 w-4 mr-1 text-black" />
                 Edit
               </Button>
             </div>
@@ -155,7 +149,6 @@ const ReviewStep = () => {
             </div>
           </section>
 
-          {/* Legal Documents */}
           <section className="space-y-3 border-b pb-4">
             <div className="flex justify-between items-center">
               <h3 className="text-lg font-semibold text-black">Legal Documents</h3>
@@ -165,7 +158,7 @@ const ReviewStep = () => {
                 className="text-black hover:text-gray-800"
                 onClick={() => setCurrentStep(3)}
               >
-                <Edit2 className="h-4 w-4 mr-1" />
+                <Edit2 className="h-4 w-4 mr-1 text-black" />
                 Edit
               </Button>
             </div>
@@ -189,7 +182,6 @@ const ReviewStep = () => {
             </div>
           </section>
 
-          {/* Financial Accounts */}
           <section className="space-y-3 border-b pb-4">
             <div className="flex justify-between items-center">
               <h3 className="text-lg font-semibold text-black">Financial Accounts</h3>
@@ -199,7 +191,7 @@ const ReviewStep = () => {
                 className="text-black hover:text-gray-800"
                 onClick={() => setCurrentStep(4)}
               >
-                <Edit2 className="h-4 w-4 mr-1" />
+                <Edit2 className="h-4 w-4 mr-1 text-black" />
                 Edit
               </Button>
             </div>
@@ -225,7 +217,6 @@ const ReviewStep = () => {
             )}
           </section>
 
-          {/* Beneficial Owners */}
           <section className="space-y-3">
             <div className="flex justify-between items-center">
               <h3 className="text-lg font-semibold text-black">Beneficial Owners</h3>
@@ -235,7 +226,7 @@ const ReviewStep = () => {
                 className="text-black hover:text-gray-800"
                 onClick={() => setCurrentStep(5)}
               >
-                <Edit2 className="h-4 w-4 mr-1" />
+                <Edit2 className="h-4 w-4 mr-1 text-black" />
                 Edit
               </Button>
             </div>
@@ -263,7 +254,7 @@ const ReviewStep = () => {
               className="rounded-lg"
               onClick={() => setCurrentStep(5)}
             >
-              <ArrowLeft className="mr-2 h-4 w-4" />
+              <ArrowLeft className="mr-2 h-4 w-4 text-black" />
               Back
             </Button>
             <Button 

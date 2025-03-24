@@ -19,7 +19,7 @@ const FormNavigation: React.FC<FormNavigationProps> = ({
   return (
     <div className="pt-4 border-t mt-6">
       {showRequiredFieldsNote && (
-        <p className="text-sm text-gray-500 mb-6">
+        <p className="text-sm text-black mb-6">
           Fields marked with * are required.
         </p>
       )}
@@ -32,13 +32,13 @@ const FormNavigation: React.FC<FormNavigationProps> = ({
           onClick={onBack}
           disabled={isSubmitting}
         >
-          <ArrowLeft className="mr-2 h-4 w-4" />
+          <ArrowLeft className="mr-2 h-4 w-4 text-black" />
           Back
         </Button>
         <Button 
           type="submit" 
           size="lg" 
-          className="rounded-lg bg-[#86CEFA] hover:bg-[#5ba8d6] hover:shadow-md transition-shadow"
+          className="rounded-lg bg-black hover:bg-gray-800 text-white hover:shadow-md transition-shadow"
           disabled={isSubmitting}
         >
           {submitText}

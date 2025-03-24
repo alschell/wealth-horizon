@@ -15,7 +15,7 @@ const FormHeader: React.FC<FormHeaderProps> = ({ icon, title, description }) => 
         <h2 className="text-2xl font-bold text-black">{title}</h2>
       </div>
       {description && (
-        <p className="text-gray-500">{description}</p>
+        <p className="text-black">{description}</p>
       )}
     </div>
   );

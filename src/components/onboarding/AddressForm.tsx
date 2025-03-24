@@ -85,10 +85,10 @@ const AddressForm = () => {
       <Card className="p-6 md:p-8 shadow-sm">
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="flex items-center gap-3 mb-2">
-            <MapPin className="h-7 w-7 text-[#86CEFA]" />
-            <h2 className="text-2xl font-bold text-[#86CEFA]">Address Information</h2>
+            <MapPin className="h-7 w-7 text-black" />
+            <h2 className="text-2xl font-bold text-black">Address Information</h2>
           </div>
-          <p className="text-gray-500">
+          <p className="text-black">
             Please provide the current address for your family office.
           </p>
 
@@ -171,7 +171,7 @@ const AddressForm = () => {
           </div>
 
           <div className="pt-4 border-t">
-            <p className="text-sm text-gray-500 mb-6">
+            <p className="text-sm text-black mb-6">
               Fields marked with <span className="text-red-500">*</span> are required.
             </p>
             <div className="flex justify-between">
@@ -182,13 +182,13 @@ const AddressForm = () => {
                 className="rounded-lg"
                 onClick={() => setCurrentStep(1)}
               >
-                <ArrowLeft className="mr-2 h-4 w-4" />
+                <ArrowLeft className="mr-2 h-4 w-4 text-black" />
                 Back
               </Button>
               <Button 
                 type="submit" 
                 size="lg" 
-                className="rounded-lg hover:shadow-md transition-shadow"
+                className="rounded-lg bg-black hover:bg-gray-800 text-white hover:shadow-md transition-shadow"
               >
                 Continue
                 <ArrowRight className="ml-2 h-4 w-4" />

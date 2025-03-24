@@ -21,9 +21,6 @@ const DocumentsSection = ({
         onFilesSelected={onStatementsSelected}
         optional={optional}
       />
-      {optional && (
-        <p className="text-xs text-gray-500 mt-1">This field is optional</p>
-      )}
     </div>
   );
 };

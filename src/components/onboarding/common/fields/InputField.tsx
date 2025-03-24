@@ -15,6 +15,8 @@ interface InputFieldProps {
   error?: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   className?: string;
+  maxLength?: number;
+  disabled?: boolean;
 }
 
 const InputField = ({
@@ -27,7 +29,9 @@ const InputField = ({
   required = false,
   error,
   onChange,
-  className
+  className,
+  maxLength,
+  disabled = false
 }: InputFieldProps) => {
   return (
     <div className={cn("space-y-2", className)}>
@@ -41,6 +45,8 @@ const InputField = ({
         onChange={onChange}
         placeholder={placeholder}
         type={type}
+        maxLength={maxLength}
+        disabled={disabled}
         className={cn("h-11", error ? "border-red-500" : "")}
       />
       {error && (

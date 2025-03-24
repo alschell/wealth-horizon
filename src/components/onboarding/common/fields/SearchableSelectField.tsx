@@ -28,6 +28,7 @@ interface SearchableSelectFieldProps {
   onChange: (value: string) => void;
   allowCustomValue?: boolean;
   className?: string;
+  disabled?: boolean;
 }
 
 const SearchableSelectField = ({
@@ -40,7 +41,8 @@ const SearchableSelectField = ({
   error,
   onChange,
   allowCustomValue = false,
-  className
+  className,
+  disabled = false
 }: SearchableSelectFieldProps) => {
   const [open, setOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
@@ -76,7 +78,7 @@ const SearchableSelectField = ({
       <Label htmlFor={id} className="text-black">
         {label}{required && <span className="text-red-500 ml-1">*</span>}
       </Label>
-      <Popover open={open} onOpenChange={setOpen}>
+      <Popover open={open} onOpenChange={disabled ? undefined : setOpen}>
         <PopoverTrigger asChild>
           <Button
             id={id}
@@ -86,13 +88,17 @@ const SearchableSelectField = ({
             aria-label={`Select ${label}`}
             className={cn(
               "h-11 w-full justify-between text-left font-normal bg-white border text-black",
-              error ? "border-red-500" : ""
+              error ? "border-red-500" : "",
+              disabled ? "opacity-70 cursor-not-allowed" : ""
             )}
             type="button"
             onClick={(e) => {
               e.preventDefault();
-              setOpen(!open);
+              if (!disabled) {
+                setOpen(!open);
+              }
             }}
+            disabled={disabled}
           >
             {value ? (
               <span className="truncate text-black text-left">{value}</span>

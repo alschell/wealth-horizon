@@ -27,7 +27,7 @@ const SearchableSelectField = ({
   onChange,
   extractValue = (option) => option,
   allowCustomValue = false,
-  disabled
+  disabled = false
 }: SearchableSelectFieldProps) => {
   return (
     <CommonSearchableSelectField

@@ -60,6 +60,7 @@ const AccountEntryForm: React.FC<AccountEntryFormProps> = ({
             legalEntities={legalEntities}
             onLegalEntityChange={handleLegalEntityChange}
             onLeiChange={handleLeiChange}
+            errors={errors}
           />
         </div>
         

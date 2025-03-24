@@ -1,15 +1,16 @@
 
 import React from "react";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { DatePicker } from "@/components/ui/date-picker";
+import { Input } from "@/components/ui/input";
+import DatePicker from "@/components/DatePicker";
 
 interface DocumentDetailsFieldsProps {
   documentNumber: string;
   issueDate: string;
-  expiryDate: string;
+  expiryDate?: string;
   onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onDateChange: (field: 'issueDate' | 'expiryDate', date?: Date) => void;
+  documentNumberRequired?: boolean;
 }
 
 const DocumentDetailsFields: React.FC<DocumentDetailsFieldsProps> = ({
@@ -17,39 +18,45 @@ const DocumentDetailsFields: React.FC<DocumentDetailsFieldsProps> = ({
   issueDate,
   expiryDate,
   onInputChange,
-  onDateChange
+  onDateChange,
+  documentNumberRequired = false
 }) => {
   return (
     <div className="space-y-4">
-      <div className="space-y-2">
-        <Label htmlFor="documentNumber" className="text-black">
-          Document Number<span className="text-red-500 ml-1">*</span>
-        </Label>
-        <Input
-          id="documentNumber"
-          name="documentNumber"
-          value={documentNumber}
-          onChange={onInputChange}
-          placeholder="Enter document number"
-          className="h-11"
-        />
-      </div>
-
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <DatePicker
-          label="Issue Date"
-          placeholder="Select issue date"
-          value={issueDate ? new Date(issueDate) : undefined}
-          onChange={(date) => onDateChange('issueDate', date)}
-          optional={false}
-        />
+        <div className="space-y-2">
+          <Label htmlFor="documentNumber">
+            Document Number
+            {documentNumberRequired && <span className="text-red-500 ml-1">*</span>}
+          </Label>
+          <Input
+            id="documentNumber"
+            name="documentNumber"
+            value={documentNumber}
+            onChange={onInputChange}
+            placeholder="Document ID/Reference Number"
+            className="w-full"
+          />
+        </div>
         
+        <div className="space-y-2">
+          <Label htmlFor="issueDate">Issue Date<span className="text-red-500 ml-1">*</span></Label>
+          <DatePicker
+            id="issueDate"
+            value={issueDate ? new Date(issueDate) : undefined}
+            onChange={(date) => onDateChange('issueDate', date)}
+            placeholder="Select issue date"
+          />
+        </div>
+      </div>
+      
+      <div className="space-y-2">
+        <Label htmlFor="expiryDate">Expiry Date <span className="text-gray-400 text-sm">(if applicable)</span></Label>
         <DatePicker
-          label="Expiry Date"
-          placeholder="Select expiry date"
+          id="expiryDate"
           value={expiryDate ? new Date(expiryDate) : undefined}
           onChange={(date) => onDateChange('expiryDate', date)}
-          optional={true}
+          placeholder="Select expiry date"
         />
       </div>
     </div>

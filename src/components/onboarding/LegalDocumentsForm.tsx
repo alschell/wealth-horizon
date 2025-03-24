@@ -10,7 +10,7 @@ import { DocumentTypeField, DocumentDetailsFields, DocumentUploadField } from ".
 import FormFooter from "./family-office/FormFooter";
 
 const LegalDocumentsForm = () => {
-  const { onboardingData, updateLegalDocuments } = useOnboarding();
+  const { onboardingData, updateLegalDocuments, setCurrentStep } = useOnboarding();
   const [legalDocuments, setLegalDocuments] = useState<LegalDocuments>(onboardingData.legalDocuments);
 
   const handleDocumentChange = (field: keyof LegalDocuments, value: string) => {
@@ -36,7 +36,18 @@ const LegalDocumentsForm = () => {
   };
 
   const handleSubmit = () => {
+    // Check if at least one document is uploaded
+    if (legalDocuments.documentFiles.length === 0) {
+      toast({
+        title: "Missing documents",
+        description: "Please upload at least one document to continue.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
     updateLegalDocuments(legalDocuments);
+    setCurrentStep(4); // Move to the next step (data source step)
 
     toast({
       title: "Information saved",
@@ -71,14 +82,8 @@ const LegalDocumentsForm = () => {
               expiryDate={legalDocuments.expiryDate}
               onInputChange={handleInputChange}
               onDateChange={handleDateChange}
+              documentNumberRequired={false}
             />
-            
-            {legalDocuments.documentFiles.length === 0 && (
-              <div className="text-center py-4 border rounded-lg bg-gray-50 mb-4">
-                <p className="text-gray-500">No legal documents added yet.</p>
-                <p className="text-sm text-gray-400 mt-1">Please add at least one document.</p>
-              </div>
-            )}
             
             <DocumentUploadField
               files={legalDocuments.documentFiles}

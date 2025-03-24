@@ -24,7 +24,6 @@ const AccountForm: React.FC<AccountFormProps> = ({
     errors,
     handleInputChange,
     handleSelectionChange,
-    getLegalEntities,
     handleFilesSelected,
     handleAddAccount
   } = useAccountFormState({ onAddAccount });
@@ -46,7 +45,6 @@ const AccountForm: React.FC<AccountFormProps> = ({
         <div className="space-y-2">
           <LegalEntitySection
             account={newAccount}
-            legalEntities={getLegalEntities()}
             onInputChange={handleInputChange}
             onSelectionChange={handleSelectionChange}
           />

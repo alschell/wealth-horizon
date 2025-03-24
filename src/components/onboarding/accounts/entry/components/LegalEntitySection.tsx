@@ -4,20 +4,28 @@ import { FinancialAccountInfo } from "@/types/onboarding";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import CustomSearchableSelect from "@/components/ui/custom-searchable-select";
+import { INSTITUTIONS } from "@/utils/constants";
+import { LEGAL_ENTITIES } from "../constants/legalEntityData";
 
 interface LegalEntitySectionProps {
   account: FinancialAccountInfo;
-  legalEntities: string[];
   onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onSelectionChange: (field: keyof FinancialAccountInfo, value: string) => void;
 }
 
 const LegalEntitySection = ({
   account,
-  legalEntities,
   onInputChange,
   onSelectionChange
 }: LegalEntitySectionProps) => {
+  // Get legal entities for the selected institution
+  const getLegalEntities = () => {
+    if (account.institution && LEGAL_ENTITIES[account.institution]) {
+      return LEGAL_ENTITIES[account.institution];
+    }
+    return [];
+  };
+
   return (
     <div className="space-y-4">
       <div className="space-y-2">
@@ -44,7 +52,7 @@ const LegalEntitySection = ({
           value={account.institution || ""}
           onChange={(value) => onSelectionChange('institution', value)}
           placeholder="Select institution"
-          options={legalEntities.sort()}
+          options={INSTITUTIONS}
           allowCustomValue={true}
           required={true}
         />
@@ -55,7 +63,7 @@ const LegalEntitySection = ({
           value={account.legalEntity || ""}
           onChange={(value) => onSelectionChange('legalEntity', value)}
           placeholder="Select legal entity"
-          options={legalEntities}
+          options={getLegalEntities()}
           allowCustomValue={true}
           required={true}
         />

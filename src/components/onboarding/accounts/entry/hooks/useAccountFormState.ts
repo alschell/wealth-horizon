@@ -56,38 +56,36 @@ export const useAccountFormState = ({ onAddAccount }: UseAccountFormStateProps) 
 
   // Handle selection change
   const handleSelectionChange = (field: keyof FinancialAccountInfo, value: string) => {
-    setNewAccount({ ...newAccount, [field]: value });
-    
     // Clear error when field is edited
     if (errors[field]) {
       setErrors({ ...errors, [field]: undefined });
     }
     
-    // If changing institution, reset legal entity
     if (field === "institution") {
-      if (newAccount.legalEntity) {
-        // Check if current legal entity belongs to new institution
-        const entitiesForInstitution = LEGAL_ENTITIES[value] || [];
-        if (!entitiesForInstitution.includes(newAccount.legalEntity)) {
-          setNewAccount(prev => ({ 
-            ...prev, 
-            institution: value,
-            legalEntity: "",
-            legalEntityIdentifier: ""
-          }));
-        }
+      // When institution changes, reset legal entity if it doesn't belong to this institution
+      const entitiesForInstitution = LEGAL_ENTITIES[value] || [];
+      
+      if (newAccount.legalEntity && !entitiesForInstitution.includes(newAccount.legalEntity)) {
+        setNewAccount(prev => ({ 
+          ...prev, 
+          institution: value,
+          legalEntity: "",
+          legalEntityIdentifier: ""
+        }));
       } else {
         setNewAccount(prev => ({ ...prev, institution: value }));
       }
-    }
-    
-    // If setting legal entity, also set legal entity identifier if available
-    if (field === "legalEntity" && LEI_MAPPING[value]) {
+    } else if (field === "legalEntity") {
+      // If setting legal entity, also set legal entity identifier if available
+      const lei = LEI_MAPPING[value];
       setNewAccount(prev => ({ 
         ...prev, 
         legalEntity: value,
-        legalEntityIdentifier: LEI_MAPPING[value] 
+        legalEntityIdentifier: lei || prev.legalEntityIdentifier
       }));
+    } else {
+      // Normal field update
+      setNewAccount(prev => ({ ...prev, [field]: value }));
     }
   };
 
@@ -97,11 +95,6 @@ export const useAccountFormState = ({ onAddAccount }: UseAccountFormStateProps) 
       return LEGAL_ENTITIES[newAccount.institution];
     }
     return [];
-  };
-
-  // Extract value from currency option (e.g., "USD - US Dollar" -> "USD")
-  const extractCurrencyCode = (currencyOption: string) => {
-    return currencyOption.split(" - ")[0];
   };
 
   // Handle file upload
@@ -115,7 +108,8 @@ export const useAccountFormState = ({ onAddAccount }: UseAccountFormStateProps) 
     const requiredFields: (keyof FinancialAccountInfo)[] = [
       'accountName', 
       'institution', 
-      'accountType'
+      'accountType',
+      'legalEntity'
     ];
     
     requiredFields.forEach(field => {
@@ -165,7 +159,6 @@ export const useAccountFormState = ({ onAddAccount }: UseAccountFormStateProps) 
     handleInputChange,
     handleSelectionChange,
     getLegalEntities,
-    extractCurrencyCode,
     handleFilesSelected,
     handleAddAccount
   };

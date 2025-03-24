@@ -1,33 +1,28 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Plus, X } from "lucide-react";
 
 interface FormActionsProps {
   onAddAccount: () => void;
-  onCancel?: () => void;
+  onCancel: () => void;
 }
 
 const FormActions = ({ onAddAccount, onCancel }: FormActionsProps) => {
   return (
-    <div className="flex justify-between items-center">
-      {onCancel && (
-        <Button
-          type="button"
-          variant="outline"
-          onClick={onCancel}
-          className="text-gray-500"
-        >
-          <X className="h-4 w-4 mr-2" />
-          Cancel
-        </Button>
-      )}
-      <Button
-        type="button"
-        onClick={onAddAccount}
-        className={onCancel ? "" : "ml-auto"}
+    <div className="flex justify-end space-x-3 pt-2">
+      <Button 
+        type="button" 
+        variant="outline" 
+        onClick={onCancel}
+        className="px-4"
       >
-        <Plus className="h-4 w-4 mr-2" />
+        Cancel
+      </Button>
+      <Button 
+        type="button" 
+        onClick={onAddAccount}
+        className="px-4 bg-black hover:bg-gray-800 text-white"
+      >
         Add Account
       </Button>
     </div>

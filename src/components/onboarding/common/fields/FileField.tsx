@@ -113,16 +113,18 @@ const FileField: React.FC<FileFieldProps> = ({
                   transition={{ duration: 0.2 }}
                   className="flex items-center justify-between bg-white p-2 rounded border text-left"
                 >
-                  <div className="flex items-center space-x-2 overflow-hidden">
+                  <div className="flex items-center space-x-2 overflow-hidden flex-grow mr-2">
                     <FileType className="h-5 w-5 text-blue-500 shrink-0" />
                     <span className="text-sm truncate max-w-[180px] md:max-w-xs">
                       {file.name}
                     </span>
                   </div>
-                  <DeleteButton 
-                    onClick={() => handleRemoveFileClick(index)}
-                    size="icon"
-                  />
+                  <div className="shrink-0">
+                    <DeleteButton 
+                      onClick={() => handleRemoveFileClick(index)}
+                      size="icon"
+                    />
+                  </div>
                 </motion.div>
               ))}
             </AnimatePresence>

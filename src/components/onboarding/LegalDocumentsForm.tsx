@@ -25,6 +25,9 @@ const LegalDocumentsForm = () => {
   const handleDateChange = (field: 'issueDate' | 'expiryDate', date?: Date) => {
     if (date) {
       handleDocumentChange(field, date.toISOString());
+    } else if (field === 'expiryDate') {
+      // Allow clearing the expiry date
+      handleDocumentChange(field, '');
     }
   };
 
@@ -54,7 +57,7 @@ const LegalDocumentsForm = () => {
           <FormHeader 
             icon={<File className="h-7 w-7 text-black" />}
             title="Legal Documents"
-            description="Please provide legal formation documents for your family office entity."
+            description="Please provide legal formation documents for your family office entity. Fields marked with <span className='text-red-500'>*</span> are required."
           />
 
           <div className="space-y-4 border p-4 rounded-md">

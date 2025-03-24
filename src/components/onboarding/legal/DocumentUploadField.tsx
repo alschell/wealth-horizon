@@ -1,7 +1,6 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { Label } from "@/components/ui/label";
 import { FileField } from "@/components/onboarding/common/fields";
 import { itemVariants } from "../common/AnimationVariants";
 
@@ -19,13 +18,6 @@ const DocumentUploadField = ({ files, onFilesSelected }: DocumentUploadFieldProp
       animate="visible"
       className="space-y-3"
     >
-      <div className="space-y-1">
-        <Label>Document Upload<span className="text-red-500 ml-1">*</span></Label>
-        <p className="text-sm text-gray-500">
-          Please upload scanned copies or PDF files of your legal documents.
-        </p>
-      </div>
-      
       <FileField
         id="legal-documents"
         label="Upload Legal Documents"

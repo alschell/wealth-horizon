@@ -22,7 +22,7 @@ const DocumentDetailsFields: React.FC<DocumentDetailsFieldsProps> = ({
   return (
     <div className="space-y-4">
       <div className="space-y-2">
-        <Label htmlFor="documentNumber">
+        <Label htmlFor="documentNumber" className="text-black">
           Document Number<span className="text-red-500 ml-1">*</span>
         </Label>
         <Input

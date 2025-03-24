@@ -23,10 +23,7 @@ const DocumentUploadSection: React.FC<DocumentUploadSectionProps> = ({
       className="space-y-3"
     >
       <div className="space-y-1">
-        <Label>Document Upload<span className="text-red-500 ml-1">*</span></Label>
-        <p className="text-sm text-gray-500">
-          Please upload scanned copies or high-quality photos of your identification document (front and back if applicable).
-        </p>
+        <Label className="text-black">Document Upload<span className="text-red-500 ml-1">*</span></Label>
       </div>
       
       <FileField

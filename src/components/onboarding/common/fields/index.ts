@@ -1,6 +1,16 @@
 
-export { default as InputField } from './InputField';
-export { default as SelectField } from './SelectField';
-export { default as SearchableSelectField } from './SearchableSelectField';
-export { default as DateField } from './DateField';
-export { default as FileField } from './FileField';
+import InputField from "./InputField";
+import SelectField from "./SelectField";
+import FileField from "./FileField";
+import DateField from "./DateField";
+import SearchableSelectField from "./SearchableSelectField";
+import SearchableSelect from "./SearchableSelect";
+
+export {
+  InputField,
+  SelectField,
+  FileField,
+  DateField,
+  SearchableSelectField,
+  SearchableSelect
+};

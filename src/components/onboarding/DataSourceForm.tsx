@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { AggregatorInfo, FinancialAccountInfo, useOnboarding } from "@/context/OnboardingContext";
 import { Card } from "@/components/ui/card";
@@ -129,21 +130,18 @@ const DataSourceForm = () => {
             </div>
           )}
           
-          <Tabs value={activeTab} className="w-full">
-            <TabsContent value="aggregator" className="mt-6 space-y-6">
+          {aggregatorInfo.usesAggregator && (
+            <div className="space-y-6">
               <AggregatorSection
                 aggregatorInfo={aggregatorInfo}
                 setAggregatorInfo={setAggregatorInfo}
               />
-            </TabsContent>
-            
-            <TabsContent value="manual" className="mt-6 space-y-6">
-              {/* Manual entry content is now inside the data source tabs */}
-            </TabsContent>
-          </Tabs>
+            </div>
+          )}
           
           <DataSourceFormNavigation
             onBack={() => setCurrentStep(3)}
+            onSubmit={handleSubmit} 
           />
         </form>
       </Card>

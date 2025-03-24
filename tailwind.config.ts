@@ -31,7 +31,7 @@ export default {
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
 				primary: {
-					DEFAULT: '#86CEFA',
+					DEFAULT: '#000000', // Changed to black
 					foreground: 'hsl(var(--primary-foreground))'
 				},
 				secondary: {
@@ -61,7 +61,7 @@ export default {
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
 					foreground: 'hsl(var(--sidebar-foreground))',
-					primary: '#86CEFA',
+					primary: '#000000', // Changed to black
 					'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
 					accent: 'hsl(var(--sidebar-accent))',
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
@@ -69,9 +69,9 @@ export default {
 					ring: 'hsl(var(--sidebar-ring))'
 				},
 				brand: {
-					DEFAULT: '#86CEFA',
-					light: '#a9dbfb',
-					dark: '#5ba8d6'
+					DEFAULT: '#000000', // Changed to black
+					light: '#333333', // Changed to dark gray
+					dark: '#000000' // Changed to black
 				},
 			},
 			borderRadius: {

@@ -11,13 +11,13 @@ interface FormHeaderProps {
 const FormHeader: React.FC<FormHeaderProps> = ({ 
   title, 
   description, 
-  icon = <Building2 className="h-7 w-7 text-[#86CEFA]" />
+  icon = <Building2 className="h-7 w-7 text-black" /> /* Changed to black */
 }) => {
   return (
     <>
       <div className="flex items-center gap-3 mb-2">
         {icon}
-        <h2 className="text-2xl font-bold text-[#86CEFA]">{title}</h2>
+        <h2 className="text-2xl font-bold text-black">{title}</h2> {/* Changed to black */}
       </div>
       {description && (
         <p className="text-gray-500 mb-6">{description}</p>

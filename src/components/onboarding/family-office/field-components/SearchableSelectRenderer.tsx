@@ -68,7 +68,7 @@ const SearchableSelectRenderer: React.FC<SearchableSelectRendererProps> = ({
           className="w-full justify-between h-11 bg-white border-input hover:bg-slate-50"
         >
           {value ? value : placeholder || `Select ${label || 'option'}`}
-          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50 text-black" /> {/* Added text-black */}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-full p-0 z-[999]" align="start">
@@ -83,7 +83,7 @@ const SearchableSelectRenderer: React.FC<SearchableSelectRendererProps> = ({
               {allowCustomValue ? (
                 <div className="py-3 px-4 text-sm">
                   <p>No results found.</p>
-                  <p className="font-medium text-[#86CEFA]">Press Enter to add "{inputValue}"</p>
+                  <p className="font-medium text-black">Press Enter to add "{inputValue}"</p> {/* Changed to black */}
                 </div>
               ) : (
                 `No ${label || 'option'} found.`
@@ -99,7 +99,7 @@ const SearchableSelectRenderer: React.FC<SearchableSelectRendererProps> = ({
                 >
                   <Check
                     className={cn(
-                      "mr-2 h-4 w-4",
+                      "mr-2 h-4 w-4 text-black", /* Added text-black */
                       value === option ? "opacity-100" : "opacity-0"
                     )}
                   />

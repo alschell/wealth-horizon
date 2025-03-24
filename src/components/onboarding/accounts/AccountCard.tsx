@@ -8,12 +8,12 @@ import { EditButton, DeleteButton } from "@/components/ui/action-buttons";
 
 interface AccountCardProps {
   account: FinancialAccountInfo;
-  onRemove: () => void;
-  onEdit: () => void;
   index: number;
+  onEdit: () => void;
+  onRemove: () => void;
 }
 
-const AccountCard = ({ account, onRemove, onEdit, index }: AccountCardProps) => {
+const AccountCard = ({ account, onEdit, onRemove, index }: AccountCardProps) => {
   // Function to get the appropriate icon based on account type
   const getAccountIcon = () => {
     switch (account.accountType) {

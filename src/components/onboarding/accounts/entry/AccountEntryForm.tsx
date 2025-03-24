@@ -1,26 +1,25 @@
 
 import React from "react";
 import { motion } from "framer-motion";
+import { UseAccountFormStateReturn } from "./hooks/form/types";
 import { FinancialAccountInfo } from "@/types/onboarding";
-import { useAccountFormState } from "./hooks/useAccountFormState";
-import FormHeader from "./components/FormHeader";
+import { Button } from "@/components/ui/button";
 import BasicInfoSection from "./components/BasicInfoSection";
 import LegalEntitySection from "./components/LegalEntitySection";
 import AccountDetailsSection from "./components/AccountDetailsSection";
-import FormActions from "./components/FormActions";
+import DocumentsSection from "./components/DocumentsSection";
+import FormHeader from "./components/FormHeader";
 
-interface AccountFormProps {
-  onAddAccount: (account: FinancialAccountInfo) => void;
-  accountToEdit?: FinancialAccountInfo;
+interface AccountEntryFormProps {
+  formState: UseAccountFormStateReturn;
   isEditing?: boolean;
-  onCancelEdit?: () => void;
+  onCancel?: () => void;
 }
 
-const AccountForm: React.FC<AccountFormProps> = ({
-  onAddAccount,
-  accountToEdit,
+const AccountEntryForm: React.FC<AccountEntryFormProps> = ({
+  formState,
   isEditing = false,
-  onCancelEdit
+  onCancel
 }) => {
   const {
     newAccount,
@@ -32,10 +31,7 @@ const AccountForm: React.FC<AccountFormProps> = ({
     handleLeiChange,
     handleFilesSelected,
     handleAddAccount
-  } = useAccountFormState({ 
-    onAddAccount,
-    initialAccount: accountToEdit 
-  });
+  } = formState;
 
   // Set form title based on editing state
   const formTitle = isEditing ? "Edit Financial Account" : "Add Financial Account";
@@ -49,7 +45,6 @@ const AccountForm: React.FC<AccountFormProps> = ({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className="bg-white rounded-lg shadow-sm border p-6"
     >
       <FormHeader 
         title={formTitle} 
@@ -84,16 +79,34 @@ const AccountForm: React.FC<AccountFormProps> = ({
           onSelectionChange={handleSelectionChange}
         />
         
-        {/* Form Actions */}
-        <FormActions
-          onAddAccount={handleAddAccount}
-          isEditing={isEditing}
-          buttonText={buttonText}
-          onCancelEdit={onCancelEdit}
+        {/* Documents Section */}
+        <DocumentsSection
+          account={newAccount}
+          onFilesSelected={handleFilesSelected}
         />
+        
+        {/* Form Actions */}
+        <div className="flex justify-between pt-4">
+          {onCancel && (
+            <Button 
+              type="button" 
+              variant="outline" 
+              onClick={onCancel}
+            >
+              Cancel
+            </Button>
+          )}
+          <Button 
+            type="button" 
+            onClick={handleAddAccount}
+            className={onCancel ? "" : "ml-auto"}
+          >
+            {buttonText}
+          </Button>
+        </div>
       </form>
     </motion.div>
   );
 };
 
-export default AccountForm;
+export default AccountEntryForm;

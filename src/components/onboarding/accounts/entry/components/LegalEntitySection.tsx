@@ -1,103 +1,59 @@
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { FinancialAccountInfo } from "@/types/onboarding";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import CustomSearchableSelect from "@/components/ui/custom-searchable-select";
-import { LEI_MAPPING } from "../../constants/leiMappings";
+import { 
+  InputField, 
+  SearchableSelectField 
+} from "@/components/onboarding/common/fields";
 
 interface LegalEntitySectionProps {
   account: FinancialAccountInfo;
   legalEntities: Record<string, string[]>;
-  onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onSelectionChange: (field: keyof FinancialAccountInfo, value: string) => void;
+  onLegalEntityChange: (value: string) => void;
+  onLeiChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const LegalEntitySection = ({
+const LegalEntitySection: React.FC<LegalEntitySectionProps> = ({
   account,
   legalEntities,
-  onInputChange,
-  onSelectionChange
-}: LegalEntitySectionProps) => {
-  const [filteredLegalEntities, setFilteredLegalEntities] = useState<string[]>([]);
-  const [isLeiFromMapping, setIsLeiFromMapping] = useState(false);
-
-  useEffect(() => {
-    // Get the legal entities for the selected institution
-    if (account.institution && legalEntities && legalEntities[account.institution]) {
-      setFilteredLegalEntities(legalEntities[account.institution]);
-    } else {
-      setFilteredLegalEntities([]);
+  onLegalEntityChange,
+  onLeiChange
+}) => {
+  // Get legal entity options based on the selected institution
+  const getLegalEntityOptions = () => {
+    if (account.institution && legalEntities[account.institution]) {
+      return legalEntities[account.institution];
     }
-
-    // Check if the current LEI is from mapping
-    if (account.legalEntity && LEI_MAPPING[account.legalEntity] === account.legalEntityIdentifier) {
-      setIsLeiFromMapping(true);
-    } else {
-      setIsLeiFromMapping(false);
-    }
-  }, [account.institution, account.legalEntity, account.legalEntityIdentifier, legalEntities]);
-
-  // Function to handle legal entity selection
-  const handleLegalEntityChange = (value: string) => {
-    onSelectionChange('legalEntity', value);
-    
-    // If we have an LEI mapping for this entity, auto-fill it
-    if (value && LEI_MAPPING[value]) {
-      onSelectionChange('legalEntityIdentifier', LEI_MAPPING[value]);
-    }
+    return [];
   };
 
   return (
     <div className="space-y-4">
-      <div className="space-y-2">
-        <Label htmlFor="legalEntityIdentifier" className="flex items-center">
-          Legal Entity Identifier (LEI)
-          <span className="text-red-500 ml-1">*</span>
-        </Label>
-        <Input
-          id="legalEntityIdentifier"
-          name="legalEntityIdentifier"
-          value={account.legalEntityIdentifier || ""}
-          onChange={onInputChange}
-          placeholder="Enter LEI (e.g., 7H6GLXDRUGQFU57RNE97)"
-          className="h-11"
-          readOnly={isLeiFromMapping}
-        />
-      </div>
+      <h3 className="text-lg font-medium">Legal Entity Information</h3>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label htmlFor="institution" className="flex items-center">
-            Institution
-            <span className="text-red-500 ml-1">*</span>
-          </Label>
-          <CustomSearchableSelect
-            id="institution"
-            label=""
-            value={account.institution || ""}
-            onChange={(value) => onSelectionChange('institution', value)}
-            placeholder="Select or enter institution"
-            options={Object.keys(legalEntities)}
-            className="h-11"
-          />
-        </div>
+        <SearchableSelectField
+          id="legalEntity"
+          label="Legal Entity"
+          value={account.legalEntity || ""}
+          placeholder="Select legal entity"
+          options={getLegalEntityOptions()}
+          required={false}
+          onChange={onLegalEntityChange}
+          allowCustomValue={true}
+          disabled={!account.institution}
+        />
         
-        <div className="space-y-2">
-          <Label htmlFor="legalEntity" className="flex items-center">
-            Legal Entity
-            <span className="text-red-500 ml-1">*</span>
-          </Label>
-          <CustomSearchableSelect
-            id="legalEntity"
-            label=""
-            value={account.legalEntity || ""}
-            onChange={handleLegalEntityChange}
-            placeholder="Select legal entity"
-            options={filteredLegalEntities}
-            className="h-11"
-          />
-        </div>
+        <InputField
+          id="legalEntityIdentifier"
+          label="Legal Entity Identifier (LEI)"
+          name="legalEntityIdentifier"
+          value={account.legalEntityIdentifier || ""}
+          onChange={onLeiChange}
+          placeholder="Enter 20-character LEI code"
+          required={false}
+          maxLength={20}
+        />
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React from "react";
 import { FinancialAccountInfo } from "@/context/OnboardingContext";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Upload, Wallet } from "lucide-react";
@@ -12,6 +12,7 @@ interface DataSourceTabsProps {
   financialAccounts: FinancialAccountInfo[];
   handleAddAccount: (account: FinancialAccountInfo) => void;
   handleRemoveAccount: (index: number) => void;
+  handleUpdateAccount: (index: number, account: FinancialAccountInfo) => void;
   uploadedFiles: File[];
   handleBulkFilesSelected: (files: File[]) => void;
 }
@@ -22,6 +23,7 @@ const DataSourceTabs = ({
   financialAccounts,
   handleAddAccount,
   handleRemoveAccount,
+  handleUpdateAccount,
   uploadedFiles,
   handleBulkFilesSelected
 }: DataSourceTabsProps) => {
@@ -48,6 +50,7 @@ const DataSourceTabs = ({
           financialAccounts={financialAccounts}
           addFinancialAccount={handleAddAccount}
           removeFinancialAccount={handleRemoveAccount}
+          updateFinancialAccount={handleUpdateAccount}
         />
       </TabsContent>
       

@@ -59,8 +59,9 @@ const ManualEntrySection: React.FC<ManualEntrySectionProps> = ({
             <AccountCard
               key={index}
               account={account}
+              index={index}
               onEdit={() => handleEditAccount(index)}
-              onDelete={() => removeFinancialAccount(index)}
+              onRemove={() => removeFinancialAccount(index)}
             />
           ))}
         </div>

@@ -1,9 +1,10 @@
+
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { useOnboarding } from "@/context/OnboardingContext";
 import Layout from "@/components/Layout";
 import OnboardingHeader from "@/components/OnboardingHeader";
-import FamilyOfficeInfoForm from "@/components/onboarding/FamilyOfficeInfoForm";
+import FamilyOfficeInfoForm from "@/components/onboarding/family-office/FamilyOfficeInfoForm";
 import PrimaryContactForm from "@/components/onboarding/PrimaryContactForm";
 import AddressForm from "@/components/onboarding/AddressForm";
 import LegalDocumentsForm from "@/components/onboarding/LegalDocumentsForm";

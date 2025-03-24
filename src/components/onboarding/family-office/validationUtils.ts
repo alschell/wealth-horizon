@@ -24,14 +24,16 @@ export const validateFamilyOfficeInfo = (formData: FamilyOfficeInfo): boolean =>
   }
   
   // Email validation
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(formData.email)) {
-    toast({
-      title: "Invalid email",
-      description: "Please enter a valid email address.",
-      variant: "destructive",
-    });
-    return false;
+  if (formData.email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      toast({
+        title: "Invalid email",
+        description: "Please enter a valid email address.",
+        variant: "destructive",
+      });
+      return false;
+    }
   }
   
   return true;

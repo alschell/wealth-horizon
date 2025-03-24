@@ -5,7 +5,7 @@ import FileUploader from "@/components/FileUploader";
 import { cn } from "@/lib/utils";
 
 interface FileFieldProps {
-  id: string;
+  id?: string;
   label: string;
   files: File[];
   onFilesSelected: (files: File[]) => void;
@@ -31,18 +31,19 @@ const FileField = ({
 }: FileFieldProps) => {
   return (
     <div className={cn("space-y-2", className)}>
-      <Label htmlFor={id}>
-        {label}{required && <span className="text-red-500 ml-1">*</span>}
-      </Label>
+      {label && (
+        <Label htmlFor={id}>
+          {label}{required && <span className="text-red-500 ml-1">*</span>}
+        </Label>
+      )}
       <div className={cn(error ? "border border-red-500 rounded-md p-1" : "")}>
         <FileUploader
-          id={id}
           accept={accept}
           multiple={multiple}
           maxSize={maxSize}
           onFilesSelected={onFilesSelected}
           existingFiles={files}
-          label={`Upload ${label.toLowerCase()}`}
+          label={`Upload ${label ? label.toLowerCase() : 'documents'}`}
         />
       </div>
       {error && (

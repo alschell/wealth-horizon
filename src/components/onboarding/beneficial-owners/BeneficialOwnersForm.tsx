@@ -27,6 +27,7 @@ const BeneficialOwnersForm: React.FC<BeneficialOwnersFormProps> = ({
   const [localOwners, setLocalOwners] = useState<BeneficialOwnerInfo[]>(owners);
   const [currentEditIndex, setCurrentEditIndex] = useState<number | null>(null);
   const [editingOwner, setEditingOwner] = useState<BeneficialOwnerInfo | null>(null);
+  const [showAddForm, setShowAddForm] = useState(false);
   
   const handleAddOwner = (newOwner: BeneficialOwnerInfo) => {
     if (currentEditIndex !== null) {
@@ -58,6 +59,9 @@ const BeneficialOwnersForm: React.FC<BeneficialOwnersFormProps> = ({
         description: `${newOwner.firstName} ${newOwner.lastName} has been added as a beneficial owner.`,
       });
     }
+    
+    // Hide the form after adding/editing
+    setShowAddForm(false);
   };
 
   const handleRemoveOwner = (index: number) => {
@@ -68,22 +72,24 @@ const BeneficialOwnersForm: React.FC<BeneficialOwnersFormProps> = ({
     if (currentEditIndex === index) {
       setCurrentEditIndex(null);
       setEditingOwner(null);
+      setShowAddForm(false);
     }
   };
   
   const handleEditOwner = (index: number) => {
     setCurrentEditIndex(index);
     setEditingOwner(localOwners[index]);
+    setShowAddForm(true);
   };
   
   const handleCancelEdit = () => {
     setCurrentEditIndex(null);
     setEditingOwner(null);
+    setShowAddForm(false);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
     onSubmit();
     
     toast({
@@ -110,13 +116,28 @@ const BeneficialOwnersForm: React.FC<BeneficialOwnersFormProps> = ({
             onEditOwner={handleEditOwner}
           />
 
+          {/* Button to show form when not editing */}
+          {!showAddForm && (
+            <div className="flex justify-center">
+              <button
+                type="button"
+                onClick={() => setShowAddForm(true)}
+                className="px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800 flex items-center"
+              >
+                <span className="mr-2">+</span> Add Beneficial Owner
+              </button>
+            </div>
+          )}
+
           {/* Form to add a new beneficial owner */}
-          <AddOwnerForm 
-            onAddOwner={handleAddOwner}
-            ownerToEdit={editingOwner}
-            isEditing={currentEditIndex !== null}
-            onCancelEdit={handleCancelEdit}
-          />
+          {showAddForm && (
+            <AddOwnerForm 
+              onAddOwner={handleAddOwner}
+              onCancel={handleCancelEdit}
+              existingOwner={editingOwner || undefined}
+              isEdit={currentEditIndex !== null}
+            />
+          )}
 
           <FormFooter onBack={onBack} />
         </form>

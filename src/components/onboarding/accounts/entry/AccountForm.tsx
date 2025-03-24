@@ -1,8 +1,7 @@
 
-import React, { useState } from "react";
+import React from "react";
 import { motion } from "framer-motion";
 import { FinancialAccountInfo } from "@/types/onboarding";
-import { INSTITUTIONS } from "@/utils/constants";
 import { useAccountFormState } from "./hooks/useAccountFormState";
 import FormHeader from "./components/FormHeader";
 import BasicInfoSection from "./components/BasicInfoSection";
@@ -37,7 +36,10 @@ const AccountForm: React.FC<AccountFormProps> = ({
       transition={{ duration: 0.3 }}
       className="bg-white rounded-lg shadow-sm border p-6"
     >
-      <FormHeader title="Add Financial Account" subtitle="Enter the details of your financial account" />
+      <FormHeader 
+        title="Add Financial Account" 
+        subtitle="Enter the details of your financial account" 
+      />
       
       <form className="space-y-6 mt-6">
         {/* Basic Info Section */}

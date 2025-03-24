@@ -14,6 +14,9 @@ const ManualEntrySection = ({
   addFinancialAccount,
   removeFinancialAccount
 }: ManualEntrySectionProps) => {
+  // Function to handle cancel, but since we're not navigating away, we can just do nothing
+  const handleCancel = () => {}; 
+
   return (
     <div className="space-y-6">
       {/* List of existing accounts */}
@@ -25,7 +28,7 @@ const ManualEntrySection = ({
       {/* Form to add a new account */}
       <AccountForm 
         onAddAccount={addFinancialAccount}
-        enableLegalEntityFields={true}
+        onCancel={handleCancel}
       />
     </div>
   );

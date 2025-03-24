@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import CustomSearchableSelect from "@/components/ui/custom-searchable-select";
 import { CURRENCIES, extractCurrencyCode } from "@/utils/constants/currencies";
+import DocumentsSection from "./DocumentsSection";
 
 interface AccountDetailsSectionProps {
   account: FinancialAccountInfo;
@@ -18,45 +19,59 @@ const AccountDetailsSection = ({
   account,
   onInputChange,
   onSelectionChange,
-  extractCurrencyCode: propExtractCurrencyCode
+  extractCurrencyCode: propExtractCurrencyCode,
+  onFilesSelected
 }: AccountDetailsSectionProps) => {
   const handleCurrencyChange = (value: string) => {
     const code = propExtractCurrencyCode ? propExtractCurrencyCode(value) : extractCurrencyCode(value);
     onSelectionChange('currency', code);
   };
 
+  const handleFilesSelected = (files: File[]) => {
+    if (onFilesSelected) {
+      onFilesSelected(files);
+    }
+  };
+
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label htmlFor="accountSubtype">
-            Account Subtype (optional)
-          </Label>
-          <Input
-            id="accountSubtype"
-            name="accountSubtype"
-            value={account.accountSubtype || ""}
-            onChange={onInputChange}
-            placeholder="e.g., Managed Account, Private Equity"
-            className="h-11"
-          />
-        </div>
-        
-        <div className="space-y-2">
-          <Label htmlFor="currency">
-            Primary Currency (optional)
-          </Label>
-          <CustomSearchableSelect
-            id="currency"
-            label=""
-            value={account.currency || ""}
-            onChange={handleCurrencyChange}
-            placeholder="Select currency"
-            options={CURRENCIES}
-            className="h-11"
-          />
-        </div>
+      <div className="space-y-2">
+        <Label htmlFor="accountSubtype">
+          Account Subtype (optional)
+        </Label>
+        <Input
+          id="accountSubtype"
+          name="accountSubtype"
+          value={account.accountSubtype || ""}
+          onChange={onInputChange}
+          placeholder="e.g., Managed Account, Private Equity"
+          className="h-11"
+        />
       </div>
+      
+      <div className="space-y-2">
+        <Label htmlFor="currency">
+          Primary Currency (optional)
+        </Label>
+        <CustomSearchableSelect
+          id="currency"
+          label=""
+          value={account.currency || ""}
+          onChange={handleCurrencyChange}
+          placeholder="Select currency"
+          options={CURRENCIES}
+          className="h-11"
+        />
+      </div>
+
+      {onFilesSelected && (
+        <div className="mt-4">
+          <DocumentsSection 
+            files={account.statements || []}
+            onStatementsSelected={handleFilesSelected}
+          />
+        </div>
+      )}
     </div>
   );
 };

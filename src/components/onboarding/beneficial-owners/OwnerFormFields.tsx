@@ -1,17 +1,14 @@
 
 import React from "react";
 import { UseFormReturn } from "react-hook-form";
-import { BeneficialOwnerInfo } from "@/context/OnboardingContext";
-import { 
-  SelectField, 
-  InputField, 
-  DateField, 
-  FileField 
-} from "@/components/onboarding/common/fields";
-import { FormItem } from "@/components/ui/form";
+import { InputField, SelectField } from "@/components/onboarding/common/fields";
+import { FileField } from "@/components/onboarding/accounts/fields";
+import { FormField, FormItem, FormControl, FormLabel, FormMessage } from "@/components/ui/form";
+import { FormSection } from "@/components/onboarding/common/layouts";
+import { Input } from "@/components/ui/input";
+import { COUNTRIES } from "@/components/onboarding/constants";
 
-// Define the schema type for Zod validation
-export type OwnerFormValues = {
+export interface OwnerFormValues {
   firstName: string;
   lastName: string;
   relationship: string;
@@ -19,128 +16,147 @@ export type OwnerFormValues = {
   nationality: string;
   dateOfBirth?: string;
   documents?: File[];
-};
+}
 
-interface BeneficialOwnerFormFieldsProps {
+interface OwnerFormFieldsProps {
   form: UseFormReturn<OwnerFormValues>;
 }
 
-const BeneficialOwnerFormFields = ({ form }: BeneficialOwnerFormFieldsProps) => {
-  const { register, formState: { errors }, setValue, watch } = form;
+const relationshipOptions = [
+  { value: "shareholder", label: "Shareholder" },
+  { value: "director", label: "Director" },
+  { value: "officer", label: "Officer" },
+  { value: "trustee", label: "Trustee" },
+  { value: "beneficiary", label: "Beneficiary" },
+  { value: "other", label: "Other" }
+];
 
-  // Relationship options
-  const relationshipOptions = [
-    "Director",
-    "Officer",
-    "Shareholder",
-    "Member",
-    "Partner",
-    "Trustee",
-    "Beneficiary",
-    "Manager",
-    "Authorized Signatory",
-    "Other"
-  ];
+const OwnerFormFields: React.FC<OwnerFormFieldsProps> = ({ form }) => {
+  const { control, setValue, watch } = form;
+  const documents = watch("documents") || [];
 
-  // Handle date change
-  const handleDateChange = (date?: Date) => {
-    setValue("dateOfBirth", date ? date.toISOString().split('T')[0] : "", { shouldValidate: true, shouldDirty: true });
-  };
-
-  // Handle file selection
+  // Function to handle file selection
   const handleFilesSelected = (files: File[]) => {
     setValue("documents", files, { shouldValidate: true, shouldDirty: true });
   };
 
   return (
-    <div className="space-y-6">
+    <FormSection>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <FormItem>
-          <InputField
-            id="firstName"
-            label="First Name"
-            name="firstName"
-            value={watch("firstName") || ""}
-            required
-            error={errors.firstName?.message}
-            onChange={(e) => setValue("firstName", e.target.value, { shouldValidate: true })}
-          />
-        </FormItem>
+        <FormField
+          control={control}
+          name="firstName"
+          render={({ field, fieldState }) => (
+            <FormItem>
+              <FormLabel>First Name*</FormLabel>
+              <FormControl>
+                <Input 
+                  placeholder="Enter first name" 
+                  {...field} 
+                  className={fieldState.error ? "border-red-500" : ""}
+                />
+              </FormControl>
+              {fieldState.error && <FormMessage>{fieldState.error.message}</FormMessage>}
+            </FormItem>
+          )}
+        />
 
-        <FormItem>
-          <InputField
-            id="lastName"
-            label="Last Name"
-            name="lastName"
-            value={watch("lastName") || ""}
-            required
-            error={errors.lastName?.message}
-            onChange={(e) => setValue("lastName", e.target.value, { shouldValidate: true })}
-          />
-        </FormItem>
+        <FormField
+          control={control}
+          name="lastName"
+          render={({ field, fieldState }) => (
+            <FormItem>
+              <FormLabel>Last Name*</FormLabel>
+              <FormControl>
+                <Input 
+                  placeholder="Enter last name" 
+                  {...field} 
+                  className={fieldState.error ? "border-red-500" : ""}
+                />
+              </FormControl>
+              {fieldState.error && <FormMessage>{fieldState.error.message}</FormMessage>}
+            </FormItem>
+          )}
+        />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <FormItem>
-          <SelectField
-            id="relationship"
-            label="Relationship to Entity"
-            value={watch("relationship") || ""}
-            placeholder="Select relationship"
-            options={relationshipOptions}
-            required
-            error={errors.relationship?.message}
-            onChange={(value) => setValue("relationship", value, { shouldValidate: true })}
-          />
-        </FormItem>
+        <FormField
+          control={control}
+          name="relationship"
+          render={({ field, fieldState }) => (
+            <FormItem>
+              <FormLabel>Relationship*</FormLabel>
+              <FormControl>
+                <SelectField
+                  id="relationship"
+                  options={relationshipOptions}
+                  onChange={(value) => field.onChange(value)}
+                  value={field.value}
+                  placeholder="Select relationship"
+                  error={fieldState.error?.message}
+                />
+              </FormControl>
+              {fieldState.error && <FormMessage>{fieldState.error.message}</FormMessage>}
+            </FormItem>
+          )}
+        />
 
-        <FormItem>
-          <InputField
-            id="ownershipPercentage"
-            label="Ownership Percentage"
-            name="ownershipPercentage"
-            value={watch("ownershipPercentage") || ""}
-            required
-            error={errors.ownershipPercentage?.message}
-            onChange={(e) => setValue("ownershipPercentage", e.target.value, { shouldValidate: true })}
-          />
-        </FormItem>
+        <FormField
+          control={control}
+          name="ownershipPercentage"
+          render={({ field, fieldState }) => (
+            <FormItem>
+              <FormLabel>Ownership Percentage*</FormLabel>
+              <FormControl>
+                <Input 
+                  type="number" 
+                  min="0" 
+                  max="100"
+                  placeholder="Enter percentage" 
+                  {...field} 
+                  className={fieldState.error ? "border-red-500" : ""}
+                />
+              </FormControl>
+              {fieldState.error && <FormMessage>{fieldState.error.message}</FormMessage>}
+            </FormItem>
+          )}
+        />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <FormItem>
-          <InputField
-            id="nationality"
-            label="Nationality"
-            name="nationality"
-            value={watch("nationality") || ""}
-            required
-            error={errors.nationality?.message}
-            onChange={(e) => setValue("nationality", e.target.value, { shouldValidate: true })}
-          />
-        </FormItem>
+        <FormField
+          control={control}
+          name="nationality"
+          render={({ field, fieldState }) => (
+            <FormItem>
+              <FormLabel>Nationality*</FormLabel>
+              <FormControl>
+                <SelectField
+                  id="nationality"
+                  options={COUNTRIES.map(country => ({ value: country, label: country }))}
+                  onChange={(value) => field.onChange(value)}
+                  value={field.value}
+                  placeholder="Select nationality"
+                  error={fieldState.error?.message}
+                />
+              </FormControl>
+              {fieldState.error && <FormMessage>{fieldState.error.message}</FormMessage>}
+            </FormItem>
+          )}
+        />
 
-        <FormItem>
-          <DateField
-            label="Date of Birth"
-            value={watch("dateOfBirth") ? new Date(watch("dateOfBirth")) : undefined}
-            onChange={handleDateChange}
-            placeholder="Select date of birth"
+        <div>
+          <FileField
+            label="Supporting Documents"
+            files={documents}
+            onFilesSelected={handleFilesSelected}
+            optional={true}
           />
-        </FormItem>
+        </div>
       </div>
-
-      <FileField
-        id="documents"
-        label="Identity Documents"
-        accept=".pdf,.jpg,.jpeg,.png"
-        multiple={true}
-        maxSize={5}
-        existingFiles={watch("documents") || []}
-        onFilesSelected={handleFilesSelected}
-      />
-    </div>
+    </FormSection>
   );
 };
 
-export default BeneficialOwnerFormFields;
+export default OwnerFormFields;

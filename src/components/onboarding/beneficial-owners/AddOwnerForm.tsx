@@ -4,11 +4,11 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { BeneficialOwnerInfo } from "@/context/OnboardingContext";
-import { FormHeader, FormSection, isValidPercentage } from "@/components/onboarding/common";
 import { UserPlus, Edit } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
 import BeneficialOwnerFormFields, { OwnerFormValues } from "./OwnerFormFields";
 import { Form } from "@/components/ui/form";
+import { Button } from "@/components/ui/button";
 
 interface AddOwnerFormProps {
   onAddOwner: (owner: BeneficialOwnerInfo) => void;
@@ -24,7 +24,10 @@ const ownerSchema = z.object({
   relationship: z.string().min(1, { message: "Relationship is required" }),
   ownershipPercentage: z.string()
     .min(1, { message: "Ownership percentage is required" })
-    .refine((val) => isValidPercentage(val), {
+    .refine((val) => {
+      const num = parseFloat(val);
+      return !isNaN(num) && num >= 0 && num <= 100;
+    }, {
       message: "Please enter a valid percentage (0-100)"
     }),
   nationality: z.string().min(1, { message: "Nationality is required" }),
@@ -38,15 +41,25 @@ const AddOwnerForm: React.FC<AddOwnerFormProps> = ({
   existingOwner,
   isEdit = false
 }) => {
-  const defaultValues: OwnerFormValues = existingOwner || {
-    firstName: "",
-    lastName: "",
-    relationship: "",
-    ownershipPercentage: "",
-    nationality: "",
-    dateOfBirth: "",
-    documents: []
-  };
+  const defaultValues: OwnerFormValues = existingOwner 
+    ? {
+        firstName: existingOwner.firstName || "",
+        lastName: existingOwner.lastName || "",
+        relationship: existingOwner.relationship || "",
+        ownershipPercentage: existingOwner.ownershipPercentage?.toString() || "",
+        nationality: existingOwner.nationality || "",
+        dateOfBirth: existingOwner.dateOfBirth || "",
+        documents: existingOwner.documents || []
+      }
+    : {
+        firstName: "",
+        lastName: "",
+        relationship: "",
+        ownershipPercentage: "",
+        nationality: "",
+        dateOfBirth: "",
+        documents: []
+      };
 
   const form = useForm<OwnerFormValues>({
     resolver: zodResolver(ownerSchema),
@@ -73,35 +86,34 @@ const AddOwnerForm: React.FC<AddOwnerFormProps> = ({
     <div className="bg-white rounded-md p-6 shadow-sm">
       <Form {...form}>
         <form onSubmit={onSubmit} className="space-y-6">
-          <FormHeader
-            icon={isEdit ? <Edit className="h-7 w-7" /> : <UserPlus className="h-7 w-7" />}
-            title={isEdit ? "Edit Beneficial Owner" : "Add Beneficial Owner"}
-            description="Provide details about individuals who own or control your entity."
-          />
+          <div className="flex items-center gap-3 mb-4">
+            {isEdit ? <Edit className="h-7 w-7" /> : <UserPlus className="h-7 w-7" />}
+            <div>
+              <h2 className="text-xl font-semibold">{isEdit ? "Edit Beneficial Owner" : "Add Beneficial Owner"}</h2>
+              <p className="text-gray-500">Provide details about individuals who own or control your entity.</p>
+            </div>
+          </div>
 
-          <FormSection>
-            <BeneficialOwnerFormFields form={form} />
-          </FormSection>
+          <BeneficialOwnerFormFields form={form} />
 
           <div className="pt-4 border-t">
             <p className="text-sm text-gray-500 mb-6">
               Fields marked with <span className="text-red-500">*</span> are required.
             </p>
             <div className="flex justify-end space-x-4">
-              <button
+              <Button
                 type="button"
-                className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+                variant="outline"
                 onClick={onCancel}
               >
                 Cancel
-              </button>
-              <button
+              </Button>
+              <Button
                 type="submit"
-                className="px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800"
                 disabled={isSubmitting || !isDirty}
               >
                 {isSubmitting ? "Saving..." : isEdit ? "Update Owner" : "Add Owner"}
-              </button>
+              </Button>
             </div>
           </div>
         </form>

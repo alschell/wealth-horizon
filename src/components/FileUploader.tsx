@@ -1,8 +1,19 @@
+
 import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { toast } from "@/components/ui/use-toast";
-import { Upload, X, FileText } from "lucide-react";
+import { Upload, Trash2, FileText } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface FileUploaderProps {
   accept?: string;
@@ -25,6 +36,8 @@ const FileUploader = ({
 }: FileUploaderProps) => {
   const [files, setFiles] = useState<File[]>(existingFiles);
   const [isDragging, setIsDragging] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [fileToDeleteIndex, setFileToDeleteIndex] = useState<number | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -98,16 +111,24 @@ const FileUploader = ({
     processFiles(droppedFiles);
   };
 
-  const removeFile = (index: number) => {
-    if (onFileDelete) {
-      onFileDelete(index);
-      return;
+  const handleDeleteClick = (index: number) => {
+    setFileToDeleteIndex(index);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const confirmDelete = () => {
+    if (fileToDeleteIndex !== null) {
+      if (onFileDelete) {
+        onFileDelete(fileToDeleteIndex);
+      } else {
+        const newFiles = [...files];
+        newFiles.splice(fileToDeleteIndex, 1);
+        setFiles(newFiles);
+        onFilesSelected(newFiles);
+      }
     }
-    
-    const newFiles = [...files];
-    newFiles.splice(index, 1);
-    setFiles(newFiles);
-    onFilesSelected(newFiles);
+    setIsDeleteDialogOpen(false);
+    setFileToDeleteIndex(null);
   };
 
   const openFileDialog = () => {
@@ -155,32 +176,54 @@ const FileUploader = ({
       {files.length > 0 && (
         <div className="space-y-2">
           <p className="text-sm font-medium">Uploaded Files</p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <div className="space-y-2">
             {files.map((file, index) => (
-              <Card key={`${file.name}-${index}`} className="flex items-center p-3 hover:shadow-md transition-shadow">
-                <div className="p-2 rounded-md bg-blue-50 mr-3">
-                  <FileText className="h-4 w-4 text-blue-600" />
-                </div>
-                <div className="flex-1 truncate">
-                  <p className="text-sm font-medium truncate">{file.name}</p>
-                  <p className="text-xs text-gray-500">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
+              <Card key={`${file.name}-${index}`} className="flex items-center justify-between p-3 hover:shadow-md transition-shadow">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 rounded-md bg-blue-50">
+                    <FileText className="h-4 w-4 text-blue-600" />
+                  </div>
+                  <div className="truncate">
+                    <p className="text-sm font-medium truncate">{file.name}</p>
+                    <p className="text-xs text-gray-500">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
+                  </div>
                 </div>
                 <Button
                   variant="ghost"
-                  size="icon"
-                  className="ml-2"
+                  size="sm"
                   onClick={(e) => {
                     e.stopPropagation();
-                    removeFile(index);
+                    handleDeleteClick(index);
                   }}
+                  className="text-red-500 hover:text-red-700 hover:bg-red-50"
                 >
-                  <X className="h-4 w-4" />
+                  <Trash2 className="h-4 w-4" />
                 </Button>
               </Card>
             ))}
           </div>
         </div>
       )}
+
+      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirm File Deletion</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete this file? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={confirmDelete} 
+              className="bg-red-500 hover:bg-red-600"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

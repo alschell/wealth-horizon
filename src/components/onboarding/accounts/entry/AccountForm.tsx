@@ -7,8 +7,8 @@ import FormHeader from "./components/FormHeader";
 import BasicInfoSection from "./components/BasicInfoSection";
 import LegalEntitySection from "./components/LegalEntitySection";
 import AccountDetailsSection from "./components/AccountDetailsSection";
-import DocumentsSection from "./components/DocumentsSection";
 import FormActions from "./components/FormActions";
+import { Wallet, Upload } from "lucide-react";
 
 interface AccountFormProps {
   onAddAccount: (account: FinancialAccountInfo) => void;
@@ -74,13 +74,6 @@ const AccountForm: React.FC<AccountFormProps> = ({
           account={newAccount}
           onInputChange={handleInputChange}
           onSelectionChange={handleSelectionChange}
-        />
-        
-        {/* Documents Section */}
-        <DocumentsSection
-          files={newAccount.statements || []}
-          onFilesSelected={handleFilesSelected}
-          optional={true}
         />
         
         {/* Form Actions */}

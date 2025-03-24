@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Label } from "@/components/ui/label";
-import { FileSpreadsheet, FileText, X } from "lucide-react";
+import { FileSpreadsheet, FileText, Upload, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import FileUploader from "@/components/FileUploader";
 

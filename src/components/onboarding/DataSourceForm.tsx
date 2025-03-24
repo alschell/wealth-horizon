@@ -6,13 +6,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "@/components/ui/use-toast";
 import { motion } from "framer-motion";
 import ManualEntrySection from "@/components/onboarding/ManualEntrySection";
+import FileUploadSection from "@/components/onboarding/FileUploadSection";
 import {
   DataSourceFormHeader,
   DataSourceFormNavigation,
   AggregatorSection,
-  DataSourceTabs
+  AggregatorRadioGroup
 } from "./data-source";
-import AggregatorRadioGroup from "./data-source/AggregatorRadioGroup";
 
 const DataSourceForm = () => {
   const {
@@ -91,15 +91,43 @@ const DataSourceForm = () => {
             handleAggregatorSelection={handleAggregatorSelection}
           />
           
-          <DataSourceTabs
-            dataSourceMethod={dataSourceMethod}
-            setDataSourceMethod={setDataSourceMethod}
-            financialAccounts={onboardingData.financialAccounts}
-            handleAddAccount={addFinancialAccount}
-            handleRemoveAccount={removeFinancialAccount}
-            uploadedFiles={uploadedFiles}
-            handleBulkFilesSelected={handleBulkFilesSelected}
-          />
+          {!aggregatorInfo.usesAggregator && (
+            <div className="space-y-6">
+              <Tabs 
+                defaultValue="manual" 
+                value={dataSourceMethod}
+                onValueChange={(value) => setDataSourceMethod(value as "manual" | "upload")}
+                className="w-full"
+              >
+                <TabsList className="grid grid-cols-2 w-full mb-4">
+                  <TabsTrigger value="manual" className="text-center py-2">
+                    <Wallet className="h-4 w-4 mr-2" />
+                    Manual Entry
+                  </TabsTrigger>
+                  <TabsTrigger value="upload" className="text-center py-2">
+                    <Upload className="h-4 w-4 mr-2" />
+                    Upload Files
+                  </TabsTrigger>
+                </TabsList>
+                
+                <TabsContent value="manual">
+                  <ManualEntrySection 
+                    financialAccounts={onboardingData.financialAccounts}
+                    addFinancialAccount={addFinancialAccount}
+                    removeFinancialAccount={removeFinancialAccount}
+                    updateFinancialAccount={updateFinancialAccount}
+                  />
+                </TabsContent>
+                
+                <TabsContent value="upload">
+                  <FileUploadSection 
+                    uploadedFiles={uploadedFiles}
+                    handleBulkFilesSelected={handleBulkFilesSelected}
+                  />
+                </TabsContent>
+              </Tabs>
+            </div>
+          )}
           
           <Tabs value={activeTab} className="w-full">
             <TabsContent value="aggregator" className="mt-6 space-y-6">
@@ -110,12 +138,7 @@ const DataSourceForm = () => {
             </TabsContent>
             
             <TabsContent value="manual" className="mt-6 space-y-6">
-              <ManualEntrySection
-                financialAccounts={onboardingData.financialAccounts}
-                addFinancialAccount={addFinancialAccount}
-                removeFinancialAccount={removeFinancialAccount}
-                updateFinancialAccount={updateFinancialAccount}
-              />
+              {/* Manual entry content is now inside the data source tabs */}
             </TabsContent>
           </Tabs>
           

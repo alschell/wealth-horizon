@@ -1,3 +1,4 @@
+
 import React from "react";
 import { FamilyOfficeInfo } from "@/context/OnboardingContext";
 import FormFieldItem from "../FormFieldItem";
@@ -15,6 +16,13 @@ const EntityDetailsSection: React.FC<EntityDetailsSectionProps> = ({
   onChange,
   errors
 }) => {
+  // Ensure "Other" is at the end of the legal entity types
+  const sortedLegalEntityTypes = [...LEGAL_ENTITY_TYPES].sort((a, b) => {
+    if (a === "Other") return 1;
+    if (b === "Other") return -1;
+    return a.localeCompare(b);
+  });
+
   return (
     <div className="space-y-4">
       <h3 className="text-lg font-medium text-black">Entity Details</h3>
@@ -27,7 +35,7 @@ const EntityDetailsSection: React.FC<EntityDetailsSectionProps> = ({
           value={formData.legalEntityType}
           onChange={onChange}
           type="searchableSelect"
-          options={LEGAL_ENTITY_TYPES}
+          options={sortedLegalEntityTypes}
           required={true}
           className={errors.legalEntityType ? 'error' : ''}
         />

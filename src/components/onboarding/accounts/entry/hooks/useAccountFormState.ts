@@ -3,6 +3,7 @@ import { useState } from "react";
 import { FinancialAccountInfo } from "@/types/onboarding";
 import { toast } from "@/components/ui/use-toast";
 import { LEI_MAPPING, LEGAL_ENTITIES } from "../constants/legalEntityData";
+import { INSTITUTIONS } from "@/utils/constants";
 
 interface UseAccountFormStateProps {
   onAddAccount: (account: FinancialAccountInfo) => void;
@@ -71,8 +72,8 @@ export const useAccountFormState = ({ onAddAccount }: UseAccountFormStateProps) 
           setNewAccount(prev => ({ 
             ...prev, 
             institution: value,
-            legalEntity: undefined,
-            legalEntityIdentifier: undefined
+            legalEntity: "",
+            legalEntityIdentifier: ""
           }));
         }
       } else {

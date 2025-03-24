@@ -37,18 +37,7 @@ const LegalEntitySection = ({
         </p>
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <CustomSearchableSelect
-          id="institution"
-          label="Institution"
-          value={account.institution || ""}
-          onChange={(value) => onSelectionChange('institution', value)}
-          placeholder="Select institution"
-          options={[]} // This will be filled by the parent component
-          allowCustomValue={true}
-          required={true}
-        />
-        
+      <div className="w-full">
         <CustomSearchableSelect
           id="legalEntity"
           label="Legal Entity"

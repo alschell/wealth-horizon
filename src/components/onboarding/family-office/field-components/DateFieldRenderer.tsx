@@ -32,6 +32,7 @@ const DateFieldRenderer: React.FC<DateFieldRendererProps> = ({
       value={value ? new Date(value) : undefined}
       onChange={handleDateChange}
       optional={!required}
+      className="w-full"
     />
   );
 };

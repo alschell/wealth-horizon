@@ -48,7 +48,7 @@ const SelectField = ({
           id={id} 
           className="h-11 w-full bg-white text-left"
         >
-          <SelectValue placeholder={placeholder} />
+          <SelectValue placeholder={placeholder} className="text-left" />
         </SelectTrigger>
         <SelectContent 
           position="popper" 

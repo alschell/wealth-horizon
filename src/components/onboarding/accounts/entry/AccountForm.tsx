@@ -1,46 +1,46 @@
 
-import React from "react";
+import React, { useState } from "react";
+import { motion } from "framer-motion";
 import { FinancialAccountInfo } from "@/types/onboarding";
+import { INSTITUTIONS } from "@/utils/constants";
+import { useAccountFormState } from "./hooks/useAccountFormState";
 import FormHeader from "./components/FormHeader";
-import FormActions from "./components/FormActions";
 import BasicInfoSection from "./components/BasicInfoSection";
 import LegalEntitySection from "./components/LegalEntitySection";
 import AccountDetailsSection from "./components/AccountDetailsSection";
 import DocumentsSection from "./components/DocumentsSection";
-import { useAccountFormState } from "./hooks/useAccountFormState";
+import FormActions from "./components/FormActions";
 
 interface AccountFormProps {
-  onAddAccount: (FinancialAccountInfo: FinancialAccountInfo) => void;
-  enableLegalEntityFields?: boolean;
+  onAddAccount: (account: FinancialAccountInfo) => void;
+  onCancel: () => void;
 }
 
-const AccountForm = ({ onAddAccount, enableLegalEntityFields = false }: AccountFormProps) => {
+const AccountForm: React.FC<AccountFormProps> = ({
+  onAddAccount,
+  onCancel
+}) => {
   const {
     newAccount,
     errors,
     handleInputChange,
     handleSelectionChange,
     getLegalEntities,
-    extractCurrencyCode,
     handleFilesSelected,
     handleAddAccount
   } = useAccountFormState({ onAddAccount });
 
   return (
-    <div className="space-y-6 border p-4 rounded-md">
-      <FormHeader />
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+      className="bg-white rounded-lg shadow-sm border p-6"
+    >
+      <FormHeader title="Add Financial Account" subtitle="Enter the details of your financial account" />
       
-      <div className="space-y-6">
-        {/* Place LEI section first for institutions */}
-        {enableLegalEntityFields && (
-          <LegalEntitySection
-            account={newAccount}
-            legalEntities={getLegalEntities()}
-            onInputChange={handleInputChange}
-            onSelectionChange={handleSelectionChange}
-          />
-        )}
-        
+      <form className="space-y-6 mt-6">
+        {/* Basic Info Section */}
         <BasicInfoSection
           account={newAccount}
           errors={errors}
@@ -48,22 +48,35 @@ const AccountForm = ({ onAddAccount, enableLegalEntityFields = false }: AccountF
           onSelectionChange={handleSelectionChange}
         />
         
+        {/* Legal Entity Section */}
+        <LegalEntitySection
+          account={newAccount}
+          legalEntities={getLegalEntities()}
+          onInputChange={handleInputChange}
+          onSelectionChange={handleSelectionChange}
+        />
+        
+        {/* Account Details Section */}
         <AccountDetailsSection
           account={newAccount}
           onInputChange={handleInputChange}
           onSelectionChange={handleSelectionChange}
-          extractCurrencyCode={extractCurrencyCode}
         />
         
+        {/* Documents Section */}
         <DocumentsSection
-          files={newAccount.statements}
+          files={newAccount.statements || []}
           onFilesSelected={handleFilesSelected}
           optional={true}
         />
-      </div>
-      
-      <FormActions onAddAccount={handleAddAccount} />
-    </div>
+        
+        {/* Form Actions */}
+        <FormActions
+          onAddAccount={handleAddAccount}
+          onCancel={onCancel}
+        />
+      </form>
+    </motion.div>
   );
 };
 

@@ -19,7 +19,7 @@ const FileUploadSection = ({
         
         <FileField
           id="financial-statements"
-          label="Upload Spreadsheets or PDFs"
+          label="Upload Files"
           required={false}
           accept=".xlsx,.xls,.csv,.pdf,application/pdf,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
           multiple={true}

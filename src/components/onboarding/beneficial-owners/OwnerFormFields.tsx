@@ -1,131 +1,111 @@
 
 import React from "react";
-import { Control, Controller, FieldErrors } from "react-hook-form";
-import { InputField, SearchableSelectField, DateField, FileField } from "../common/fields";
-import { OwnerFormValues, OwnerFormFieldsProps } from "./types";
-import { COUNTRIES } from "@/components/onboarding/constants";
+import { BeneficialOwnerInfo } from "@/context/OnboardingContext";
+import { 
+  InputField, 
+  DateField, 
+  FileField,
+  SearchableSelectField 
+} from "@/components/onboarding/common/fields";
+import { COUNTRIES } from "@/components/onboarding/constants/countries";
 
-const OwnerFormFields: React.FC<OwnerFormFieldsProps> = ({ 
-  control, 
-  errors,
-  onFilesSelected
+interface OwnerFormFieldsProps {
+  owner: BeneficialOwnerInfo;
+  onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onDateChange: (field: string, date?: Date) => void;
+  onFilesChange: (files: File[]) => void;
+  onNationalityChange: (value: string) => void;
+  errors: Record<string, string>;
+}
+
+const OwnerFormFields: React.FC<OwnerFormFieldsProps> = ({
+  owner,
+  onInputChange,
+  onDateChange,
+  onFilesChange,
+  onNationalityChange,
+  errors
 }) => {
   return (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Controller
+    <div className="space-y-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <InputField
+          id="firstName"
+          label="First Name"
           name="firstName"
-          control={control}
-          render={({ field }) => (
-            <InputField
-              id="firstName"
-              name="firstName"
-              label="First Name"
-              required
-              value={field.value}
-              onChange={field.onChange}
-              error={errors.firstName?.message as string}
-            />
-          )}
+          value={owner.firstName}
+          onChange={onInputChange}
+          required={true}
+          error={errors.firstName}
         />
         
-        <Controller
+        <InputField
+          id="lastName"
+          label="Last Name"
           name="lastName"
-          control={control}
-          render={({ field }) => (
-            <InputField
-              id="lastName"
-              name="lastName"
-              label="Last Name"
-              required
-              value={field.value}
-              onChange={field.onChange}
-              error={errors.lastName?.message as string}
-            />
-          )}
+          value={owner.lastName}
+          onChange={onInputChange}
+          required={true}
+          error={errors.lastName}
         />
       </div>
-
-      <Controller
-        name="relationship"
-        control={control}
-        render={({ field }) => (
-          <InputField
-            id="relationship"
-            name="relationship"
-            label="Relationship to Family Office"
-            required
-            value={field.value}
-            onChange={field.onChange}
-            placeholder="e.g., Shareholder, Director, Trustee"
-            error={errors.relationship?.message as string}
-          />
-        )}
-      />
-
-      <Controller
-        name="ownershipPercentage"
-        control={control}
-        render={({ field }) => (
-          <InputField
-            id="ownershipPercentage"
-            name="ownershipPercentage"
-            label="Ownership Percentage"
-            required
-            value={field.value}
-            onChange={field.onChange}
-            placeholder="e.g., 25.5"
-            type="number"
-            error={errors.ownershipPercentage?.message as string}
-            className="w-full"
-          />
-        )}
-      />
-
-      <Controller
-        name="nationality"
-        control={control}
-        render={({ field }) => (
-          <SearchableSelectField
-            id="nationality"
-            label="Nationality"
-            value={field.value}
-            onChange={field.onChange}
-            options={COUNTRIES}
-            required
-            placeholder="Select nationality"
-            error={errors.nationality?.message as string}
-            allowCustomValue={false}
-          />
-        )}
-      />
-
-      <Controller
-        name="dateOfBirth"
-        control={control}
-        render={({ field }) => (
-          <DateField
-            id="dateOfBirth"
-            label="Date of Birth"
-            required
-            value={field.value}
-            onChange={field.onChange}
-            placeholder="Select date of birth"
-            error={errors.dateOfBirth?.message as string}
-            closeOnSelect={true}
-          />
-        )}
-      />
-
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <InputField
+          id="relationship"
+          label="Relationship to Family Office"
+          name="relationship"
+          value={owner.relationship}
+          onChange={onInputChange}
+          required={true}
+          error={errors.relationship}
+        />
+        
+        <InputField
+          id="ownershipPercentage"
+          label="Ownership Percentage"
+          name="ownershipPercentage"
+          value={owner.ownershipPercentage}
+          onChange={onInputChange}
+          required={true}
+          error={errors.ownershipPercentage}
+        />
+      </div>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <SearchableSelectField
+          id="nationality"
+          label="Nationality"
+          value={owner.nationality}
+          onChange={onNationalityChange}
+          options={COUNTRIES.map(country => ({ label: country, value: country }))}
+          required={true}
+          error={errors.nationality}
+          placeholder="Select nationality"
+          allowCustomValue={false}
+        />
+        
+        <DateField
+          id="dateOfBirth"
+          label="Date of Birth"
+          value={owner.dateOfBirth ? new Date(owner.dateOfBirth) : undefined}
+          onChange={(date) => onDateChange("dateOfBirth", date)}
+          required={true}
+          error={errors.dateOfBirth}
+        />
+      </div>
+      
       <div className="mt-6">
         <FileField
           id="ownerDocuments"
           label="Identity Documents"
           accept="application/pdf,image/*"
-          onFilesChange={onFilesSelected}
           multiple={true}
-          hint="Upload passport, ID card, or other identity documents"
-          customDeleteButton={true}
+          hint="Upload proof of identity (passport, national ID, etc.)"
+          files={owner.documents}
+          onFilesChange={onFilesChange}
+          required={true}
+          error={errors.documents}
         />
       </div>
     </div>

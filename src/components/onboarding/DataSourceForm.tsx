@@ -49,8 +49,7 @@ const DataSourceForm = () => {
     setActiveTab(usesAggregator ? "aggregator" : "manual");
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = () => {
     updateAggregatorInfo(aggregatorInfo);
     
     setCurrentStep(5);
@@ -62,9 +61,20 @@ const DataSourceForm = () => {
   };
 
   const updateFinancialAccount = (index: number, updatedAccount: FinancialAccountInfo) => {
-    // Remove the old account and add the updated one
-    removeFinancialAccount(index);
-    addFinancialAccount(updatedAccount);
+    // Remove the old account and add the updated one at the same index
+    const accounts = [...onboardingData.financialAccounts];
+    accounts.splice(index, 1);
+    accounts.splice(index, 0, updatedAccount);
+    
+    // Remove all existing accounts from context
+    onboardingData.financialAccounts.forEach((_, i) => {
+      removeFinancialAccount(0); // Always remove the first one
+    });
+    
+    // Add all accounts back with the updated one
+    accounts.forEach(account => {
+      addFinancialAccount(account);
+    });
     
     toast({
       title: "Account updated",
@@ -84,7 +94,7 @@ const DataSourceForm = () => {
       className="w-full max-w-3xl mx-auto"
     >
       <Card className="p-6 md:p-8 shadow-sm">
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }} className="space-y-6">
           <DataSourceFormHeader />
           
           <AggregatorRadioGroup
@@ -142,7 +152,6 @@ const DataSourceForm = () => {
           <DataSourceFormNavigation
             onBack={() => setCurrentStep(3)}
             isSubmitting={false}
-            submitText="Continue"
           />
         </form>
       </Card>

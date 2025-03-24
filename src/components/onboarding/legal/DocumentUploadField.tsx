@@ -46,6 +46,13 @@ const DocumentUploadField = ({ files, onFilesSelected }: DocumentUploadFieldProp
       animate="visible"
       className="space-y-3"
     >
+      {files.length === 0 && (
+        <div className="text-center py-4 border rounded-lg bg-gray-50">
+          <p className="text-gray-500">No legal documents added yet.</p>
+          <p className="text-sm text-gray-400 mt-1">Please add at least one document.</p>
+        </div>
+      )}
+
       <FileField
         id="legal-documents"
         label="Upload Legal Documents"

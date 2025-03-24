@@ -5,13 +5,14 @@ import { motion } from "framer-motion";
 import OwnerFormFields from "./OwnerFormFields";
 import FormHeader from "./FormHeader";
 import FormFooter from "./FormFooter";
-import { useOnboarding, BeneficialOwner } from "@/context/OnboardingContext";
+import { useOnboarding } from "@/context/OnboardingContext";
+import { BeneficialOwnerInfo } from "@/types/onboarding";
 import { toast } from "@/components/ui/use-toast";
 
 interface AddOwnerFormProps {
-  onAddOwner: (owner: BeneficialOwner) => void;
+  onAddOwner: (owner: BeneficialOwnerInfo) => void;
   onBack: () => void;
-  initialData?: BeneficialOwner;
+  initialData?: BeneficialOwnerInfo;
   isEditing?: boolean;
 }
 
@@ -21,8 +22,9 @@ const AddOwnerForm: React.FC<AddOwnerFormProps> = ({
   initialData,
   isEditing = false,
 }) => {
-  const [ownerData, setOwnerData] = useState<BeneficialOwner>(
+  const [ownerData, setOwnerData] = useState<BeneficialOwnerInfo>(
     initialData || {
+      id: crypto.randomUUID(),
       firstName: "",
       lastName: "",
       relationship: "",
@@ -37,7 +39,7 @@ const AddOwnerForm: React.FC<AddOwnerFormProps> = ({
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
-    const requiredFields: (keyof BeneficialOwner)[] = [
+    const requiredFields = [
       "firstName",
       "lastName",
       "relationship",
@@ -47,7 +49,7 @@ const AddOwnerForm: React.FC<AddOwnerFormProps> = ({
     ];
 
     requiredFields.forEach((field) => {
-      if (!ownerData[field]) {
+      if (!ownerData[field as keyof BeneficialOwnerInfo]) {
         newErrors[field] = "This field is required";
       }
     });
@@ -131,14 +133,16 @@ const AddOwnerForm: React.FC<AddOwnerFormProps> = ({
     >
       <Card className="p-6 md:p-8 shadow-sm">
         <form onSubmit={handleSubmit} className="space-y-6">
-          <FormHeader
-            title={isEditing ? "Edit Beneficial Owner" : "Add Beneficial Owner"}
-            description={
-              isEditing
+          <div>
+            <h2 className="text-xl font-bold mb-2">
+              {isEditing ? "Edit Beneficial Owner" : "Add Beneficial Owner"}
+            </h2>
+            <p className="text-gray-500">
+              {isEditing
                 ? "Update the information for this beneficial owner."
-                : "Add details for each beneficial owner with 25% or more ownership."
-            }
-          />
+                : "Add details for each beneficial owner with 25% or more ownership."}
+            </p>
+          </div>
 
           <OwnerFormFields
             firstName={ownerData.firstName}

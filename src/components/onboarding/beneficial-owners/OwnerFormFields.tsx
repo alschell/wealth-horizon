@@ -149,6 +149,7 @@ const OwnerFormFields: React.FC<OwnerFormFieldsProps> = ({
           </Label>
           <SearchableSelectField
             id="nationality"
+            label="Nationality"
             value={nationality}
             placeholder="Select nationality"
             options={NATIONALITIES}
@@ -172,7 +173,7 @@ const OwnerFormFields: React.FC<OwnerFormFieldsProps> = ({
             Date of Birth<span className="text-red-500">*</span>
           </Label>
           <DatePicker
-            id="dateOfBirth"
+            label="Date of Birth"
             value={dateValue}
             onChange={onDateChange}
             className={`w-full ${errors.dateOfBirth ? "border-red-500" : ""}`}

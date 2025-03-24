@@ -142,9 +142,9 @@ const BeneficialOwnersForm: React.FC<BeneficialOwnersFormProps> = ({
         >
           <AddOwnerForm
             onAddOwner={handleAddOwner}
-            onCancel={handleCancelForm}
+            onBack={handleCancelForm}
             isEditing={editIndex !== null}
-            existingOwner={editIndex !== null ? owners[editIndex] : undefined}
+            initialData={editIndex !== null ? owners[editIndex] : undefined}
           />
         </motion.div>
       )}

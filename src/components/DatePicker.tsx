@@ -12,13 +12,26 @@ import {
 } from "@/components/ui/popover"
 
 interface DatePickerProps {
-  value?: Date
-  onChange?: (date?: Date) => void
-  label: string
-  optional?: boolean
+  id?: string;
+  value?: Date;
+  onChange?: (date?: Date) => void;
+  label: string;
+  placeholder?: string;
+  optional?: boolean;
+  disabled?: boolean;
+  className?: string;
 }
 
-export function DatePicker({ value, onChange, label, optional }: DatePickerProps) {
+export function DatePicker({ 
+  id,
+  value, 
+  onChange, 
+  label, 
+  placeholder,
+  optional = false,
+  disabled = false,
+  className 
+}: DatePickerProps) {
   const [open, setOpen] = React.useState(false);
 
   const handleSelect = (date?: Date) => {
@@ -27,18 +40,20 @@ export function DatePicker({ value, onChange, label, optional }: DatePickerProps
   };
 
   return (
-    <div className="grid gap-2">
+    <div className={cn("grid gap-2", className)}>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
+            id={id}
             variant={"outline"}
+            disabled={disabled}
             className={cn(
               "w-full h-11 justify-start text-left font-normal bg-white border-gray-300 hover:bg-gray-50 focus-visible:ring-black",
               !value && "text-muted-foreground"
             )}
           >
             <CalendarIcon className="mr-2 h-4 w-4 text-black" />
-            {value ? format(value, "PPP") : <span>{label}</span>}
+            {value ? format(value, "PPP") : <span>{placeholder || label}</span>}
           </Button>
         </PopoverTrigger>
         <PopoverContent 

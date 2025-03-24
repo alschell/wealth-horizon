@@ -13,16 +13,18 @@ import {
 import { Label } from "@/components/ui/label"
 
 interface DatePickerProps {
-  value?: Date
-  onChange?: (date?: Date) => void
-  label: string
-  placeholder?: string
-  optional?: boolean
-  disabled?: boolean
-  className?: string
+  id?: string;
+  value?: Date;
+  onChange?: (date?: Date) => void;
+  label: string;
+  placeholder?: string;
+  optional?: boolean;
+  disabled?: boolean;
+  className?: string;
 }
 
 export function DatePicker({ 
+  id,
   value, 
   onChange, 
   label, 
@@ -47,6 +49,7 @@ export function DatePicker({
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
+            id={id}
             variant={"outline"}
             disabled={disabled}
             className={cn(

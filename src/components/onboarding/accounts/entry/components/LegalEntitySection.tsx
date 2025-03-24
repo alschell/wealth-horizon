@@ -5,7 +5,7 @@ import { InputField, SearchableSelectField } from "@/components/onboarding/accou
 
 interface LegalEntitySectionProps {
   account: FinancialAccountInfo;
-  legalEntities: string[];
+  legalEntities: Record<string, string[]>;
   onLegalEntityChange: (value: string) => void;
   onLeiChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   errors?: Record<string, string>;
@@ -20,6 +20,11 @@ const LegalEntitySection: React.FC<LegalEntitySectionProps> = ({
 }) => {
   // Get all institutions from the mapping object
   const institutions = Object.keys(legalEntities).sort();
+  
+  // Get legal entities for the selected institution
+  const legalEntitiesList = account.institution && legalEntities[account.institution] 
+    ? legalEntities[account.institution] 
+    : [];
 
   const handleLegalEntitySelection = (value: string) => {
     onLegalEntityChange(value);
@@ -57,7 +62,7 @@ const LegalEntitySection: React.FC<LegalEntitySectionProps> = ({
           label="Legal Entity"
           value={account.legalEntity || ""}
           placeholder="Select legal entity"
-          options={legalEntities}
+          options={legalEntitiesList}
           onChange={handleLegalEntitySelection}
           allowCustomValue={true}
           required={false}

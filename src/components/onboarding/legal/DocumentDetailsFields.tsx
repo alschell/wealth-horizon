@@ -2,7 +2,7 @@
 import React from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import DatePicker from "@/components/DatePicker";
+import { DatePicker } from "@/components/ui/date-picker";
 
 interface DocumentDetailsFieldsProps {
   documentNumber: string;
@@ -46,6 +46,7 @@ const DocumentDetailsFields: React.FC<DocumentDetailsFieldsProps> = ({
             value={issueDate ? new Date(issueDate) : undefined}
             onChange={(date) => onDateChange('issueDate', date)}
             placeholder="Select issue date"
+            label="Issue Date"
           />
         </div>
       </div>
@@ -57,6 +58,7 @@ const DocumentDetailsFields: React.FC<DocumentDetailsFieldsProps> = ({
           value={expiryDate ? new Date(expiryDate) : undefined}
           onChange={(date) => onDateChange('expiryDate', date)}
           placeholder="Select expiry date"
+          label="Expiry Date"
         />
       </div>
     </div>

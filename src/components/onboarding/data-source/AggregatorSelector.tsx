@@ -18,6 +18,11 @@ const AggregatorSelector: React.FC<AggregatorSelectorProps> = ({
   handleAggregatorNameChange,
   handleCredentialsChange
 }) => {
+  // Wrapper function to adapt the onChange signature
+  const handleAggregatorChange = (name: string, value: string) => {
+    handleAggregatorNameChange(value);
+  };
+
   return (
     <motion.div 
       custom={1}
@@ -28,10 +33,10 @@ const AggregatorSelector: React.FC<AggregatorSelectorProps> = ({
     >
       <div className="space-y-2">
         <SearchableSelectField
-          id="aggregatorName"
+          name="aggregatorName"
           label="Aggregator"
           value={aggregatorInfo.aggregatorName || ""}
-          onChange={handleAggregatorNameChange}
+          onChange={handleAggregatorChange}
           placeholder="Select your aggregator"
           options={AGGREGATORS.sort()}
           allowCustomValue={true}

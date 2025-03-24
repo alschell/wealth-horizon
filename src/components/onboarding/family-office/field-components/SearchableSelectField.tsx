@@ -11,6 +11,7 @@ interface SearchableSelectFieldProps {
   options: string[];
   label: string;
   required?: boolean;
+  allowCustomValue?: boolean;
 }
 
 const SearchableSelectField: React.FC<SearchableSelectFieldProps> = ({
@@ -21,6 +22,7 @@ const SearchableSelectField: React.FC<SearchableSelectFieldProps> = ({
   options,
   label,
   required = false,
+  allowCustomValue = false,
 }) => {
   return (
     <div className="space-y-2">
@@ -34,6 +36,7 @@ const SearchableSelectField: React.FC<SearchableSelectFieldProps> = ({
         placeholder={placeholder}
         options={options}
         label={label}
+        allowCustomValue={allowCustomValue}
       />
     </div>
   );

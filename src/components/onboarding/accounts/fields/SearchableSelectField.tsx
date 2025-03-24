@@ -52,7 +52,7 @@ const SearchableSelectField = ({
     setInputValue("");
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (allowCustomValue && e.key === "Enter" && inputValue && !options.includes(inputValue)) {
       e.preventDefault();
       onChange(inputValue);
@@ -96,13 +96,12 @@ const SearchableSelectField = ({
           sideOffset={8}
           avoidCollisions={true}
         >
-          <Command className="bg-white">
+          <Command onKeyDown={handleKeyDown}>
             <CommandInput 
               placeholder={`Search ${label.toLowerCase()}...`} 
               className="h-9"
               value={inputValue}
               onValueChange={setInputValue}
-              onKeyDown={handleKeyDown}
             />
             <CommandEmpty>
               {allowCustomValue ? (

@@ -24,6 +24,7 @@ interface SearchableSelectRendererProps {
   placeholder?: string;
   options: string[];
   label?: string;
+  allowCustomValue?: boolean;
 }
 
 const SearchableSelectRenderer: React.FC<SearchableSelectRendererProps> = ({
@@ -32,14 +33,29 @@ const SearchableSelectRenderer: React.FC<SearchableSelectRendererProps> = ({
   onChange,
   placeholder,
   options,
-  label
+  label,
+  allowCustomValue = false
 }) => {
   const [open, setOpen] = useState(false);
+  const [inputValue, setInputValue] = useState("");
   const sortedOptions = [...options].sort((a, b) => a.localeCompare(b));
 
   const handleSelect = (currentValue: string) => {
     onChange(name, currentValue);
     setOpen(false);
+  };
+
+  const handleInputChange = (value: string) => {
+    setInputValue(value);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (allowCustomValue && e.key === "Enter" && inputValue && !options.includes(inputValue)) {
+      e.preventDefault();
+      onChange(name, inputValue);
+      setOpen(false);
+      setInputValue("");
+    }
   };
 
   return (
@@ -56,10 +72,23 @@ const SearchableSelectRenderer: React.FC<SearchableSelectRendererProps> = ({
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-full p-0 z-[999]" align="start">
-        <Command>
-          <CommandInput placeholder={`Search ${label || 'options'}...`} />
+        <Command onKeyDown={handleKeyDown}>
+          <CommandInput 
+            placeholder={`Search ${label || 'options'}...`} 
+            value={inputValue}
+            onValueChange={handleInputChange}
+          />
           <CommandList>
-            <CommandEmpty>No {label || 'option'} found.</CommandEmpty>
+            <CommandEmpty>
+              {allowCustomValue ? (
+                <div className="py-3 px-4 text-sm">
+                  <p>No results found.</p>
+                  <p className="font-medium text-[#86CEFA]">Press Enter to add "{inputValue}"</p>
+                </div>
+              ) : (
+                `No ${label || 'option'} found.`
+              )}
+            </CommandEmpty>
             <CommandGroup>
               {sortedOptions.map((option) => (
                 <CommandItem

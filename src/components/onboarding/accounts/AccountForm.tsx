@@ -81,8 +81,8 @@ const AccountForm = ({ onAddAccount }: AccountFormProps) => {
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2">
-        <Wallet className="h-5 w-5 text-gray-500" />
-        <h3 className="font-medium">Add a new financial account</h3>
+        <Wallet className="h-5 w-5 text-black" />
+        <h3 className="font-medium text-black">Add a new financial account</h3>
       </div>
       
       <AccountFormFields

@@ -1,59 +1,74 @@
 
 import React from "react";
 import { AggregatorInfo } from "@/context/OnboardingContext";
-import AggregatorRadioGroup from "./AggregatorRadioGroup";
-import AggregatorSelector from "./AggregatorSelector";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { AGGREGATORS } from "@/utils/financialDataConstants";
+import { SearchableSelectField } from "../accounts/fields";
 
 interface AggregatorSectionProps {
   aggregatorInfo: AggregatorInfo;
-  setAggregatorInfo: (info: AggregatorInfo) => void;
+  setAggregatorInfo: React.Dispatch<React.SetStateAction<AggregatorInfo>>;
 }
 
-const AggregatorSection = ({
+const AggregatorSection: React.FC<AggregatorSectionProps> = ({
   aggregatorInfo,
   setAggregatorInfo
-}: AggregatorSectionProps) => {
-  const handleAggregatorSelection = (value: string) => {
+}) => {
+  const handleAggregatorChange = (value: string) => {
     setAggregatorInfo({
       ...aggregatorInfo,
-      usesAggregator: value === "yes"
+      aggregatorName: value
     });
   };
 
-  const handleAggregatorNameChange = (value: string) => {
-    setAggregatorInfo({
-      ...aggregatorInfo,
-      aggregatorName: value,
-      aggregatorCredentials: { username: "" }
-    });
-  };
-
-  const handleCredentialsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleCredentialChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setAggregatorInfo({
       ...aggregatorInfo,
       aggregatorCredentials: {
-        ...aggregatorInfo.aggregatorCredentials!,
+        ...aggregatorInfo.aggregatorCredentials,
         [name]: value
       }
     });
   };
 
   return (
-    <>
-      <AggregatorRadioGroup 
-        usesAggregator={aggregatorInfo.usesAggregator} 
-        handleAggregatorSelection={handleAggregatorSelection} 
-      />
-
-      {aggregatorInfo.usesAggregator && (
-        <AggregatorSelector
-          aggregatorInfo={aggregatorInfo}
-          handleAggregatorNameChange={handleAggregatorNameChange}
-          handleCredentialsChange={handleCredentialsChange}
+    <div className="space-y-6">
+      <div className="space-y-3">
+        <Label className="text-black">Select your aggregator*</Label>
+        <SearchableSelectField
+          id="aggregator"
+          label="Aggregator"
+          value={aggregatorInfo.aggregatorName || ""}
+          placeholder="Select or enter your data aggregator"
+          options={AGGREGATORS}
+          onChange={handleAggregatorChange}
+          required
+          allowCustomValue={true}
         />
-      )}
-    </>
+      </div>
+
+      <div className="space-y-3">
+        <Label className="text-black">Username or Contact Email*</Label>
+        <Input
+          placeholder="Enter your username or contact email"
+          name="username"
+          value={aggregatorInfo.aggregatorCredentials?.username || ""}
+          onChange={handleCredentialChange}
+        />
+      </div>
+
+      <div className="space-y-3 mt-6">
+        <Label className="text-black">API Key (optional)</Label>
+        <Input
+          placeholder="Enter your API key if applicable"
+          name="apiKey"
+          value={aggregatorInfo.aggregatorCredentials?.apiKey || ""}
+          onChange={handleCredentialChange}
+        />
+      </div>
+    </div>
   );
 };
 

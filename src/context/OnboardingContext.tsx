@@ -1,5 +1,5 @@
+import React, { createContext, useState, useContext, ReactNode } from "react";
 
-import React, { createContext, useContext, useState, ReactNode } from "react";
 import { 
   OnboardingData, 
   OnboardingContextType,
@@ -28,6 +28,18 @@ export type {
   IdentityVerification,
   OnboardingData
 };
+
+export interface FinancialAccountInfo {
+  accountName: string;
+  institution: string;
+  accountType: "cash" | "portfolio" | "investment" | "custody" | "broker" | "checking" | "savings" | "brokerage" | "trust" | "retirement" | "private equity" | "hedge fund" | "venture capital" | "real estate" | "fixed income" | "credit" | "other";
+  accountSubtype?: string;
+  currency: string;
+  approximateValue: string;
+  statements: File[];
+  legalEntity?: string;
+  legalEntityIdentifier?: string;
+}
 
 const OnboardingContext = createContext<OnboardingContextType | undefined>(undefined);
 

@@ -21,9 +21,16 @@ const FinancialAccountsSection: React.FC<FinancialAccountsSectionProps> = ({
             <div key={index} className="p-3 bg-gray-50 rounded-md text-sm">
               <div className="font-medium text-black">{account.accountName}</div>
               <div className="text-black">
-                {account.institution} · {account.accountType}
+                {account.institution}
+                {account.legalEntity && ` · ${account.legalEntity}`}
+                {account.accountType && ` · ${account.accountType}`}
                 {account.currency && ` · ${account.currency}`}
               </div>
+              {account.legalEntityIdentifier && (
+                <div className="text-xs text-gray-500 mt-1">
+                  LEI: {account.legalEntityIdentifier}
+                </div>
+              )}
             </div>
           ))}
         </div>

@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useOnboarding, AggregatorInfo, FinancialAccountInfo } from "@/context/OnboardingContext";
 import { Card } from "@/components/ui/card";
@@ -88,7 +87,7 @@ const DataSourceForm = () => {
           <DataSourceFormHeader />
 
           <div className="space-y-4">
-            <Label>Does your family office currently use a financial data aggregator?</Label>
+            <Label className="text-black">Does your family office currently use a financial data aggregator?</Label>
             <RadioGroup
               value={aggregatorInfo.usesAggregator ? "yes" : "no"}
               onValueChange={handleAggregatorSelection}
@@ -96,13 +95,13 @@ const DataSourceForm = () => {
             >
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="yes" id="aggregator-yes" />
-                <Label htmlFor="aggregator-yes" className="cursor-pointer">
+                <Label htmlFor="aggregator-yes" className="cursor-pointer text-black">
                   Yes, we use a financial data aggregator
                 </Label>
               </div>
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="no" id="aggregator-no" />
-                <Label htmlFor="aggregator-no" className="cursor-pointer">
+                <Label htmlFor="aggregator-no" className="cursor-pointer text-black">
                   No, we'll provide our financial information directly
                 </Label>
               </div>
@@ -133,7 +132,31 @@ const DataSourceForm = () => {
             </div>
           )}
 
-          <DataSourceFormNavigation onBack={() => setCurrentStep(3)} />
+          <div className="pt-4 border-t">
+            <p className="text-sm text-gray-500 mb-6">
+              Fields marked with * are required.
+            </p>
+            <div className="flex justify-between">
+              <Button 
+                type="button" 
+                variant="outline"
+                size="lg" 
+                className="rounded-lg"
+                onClick={() => setCurrentStep(3)}
+              >
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                Back
+              </Button>
+              <Button 
+                type="submit" 
+                size="lg" 
+                className="rounded-lg bg-black hover:bg-gray-800 text-white hover:shadow-md transition-shadow"
+              >
+                Continue
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </div>
+          </div>
         </form>
       </Card>
     </motion.div>

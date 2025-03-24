@@ -1,112 +1,46 @@
-
 import React, { useState } from "react";
-import { useOnboarding, LegalDocuments } from "@/context/OnboardingContext";
+import { useOnboarding, LegalDocumentInfo } from "@/context/OnboardingContext";
 import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
 import { motion } from "framer-motion";
-import { ArrowRight, ArrowLeft, ScrollText } from "lucide-react";
-import { CustomSelect } from "@/components/ui/custom-select";
-import { DOCUMENT_TYPES } from "./constants/formOptions";
-import FileUploader from "@/components/FileUploader";
-import FormHeader from "./family-office/FormHeader";
-
-type DocumentType = "incorporation" | "registration" | "taxCertificate" | "ownership" | "other";
+import { File, ArrowRight, ArrowLeft } from "lucide-react";
+import FormHeader from "./common/FormHeader";
+import { DocumentTypeField, DocumentDetailsFields, DocumentUploadField } from "./legal";
+import FormFooter from "./family-office/FormFooter";
 
 const LegalDocumentsForm = () => {
   const { onboardingData, updateLegalDocuments, setCurrentStep } = useOnboarding();
-  const [formData, setFormData] = useState<LegalDocuments>(onboardingData.legalDocuments);
-  const [errors, setErrors] = useState<Partial<Record<keyof LegalDocuments, string>>>({});
+  const [legalDocuments, setLegalDocuments] = useState<LegalDocumentInfo[]>(onboardingData.legalDocuments);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-    
-    // Clear error when field is edited
-    if (errors[name as keyof LegalDocuments]) {
-      setErrors({ ...errors, [name]: undefined });
-    }
+  const handleDocumentChange = (index: number, field: keyof LegalDocumentInfo, value: string) => {
+    const updatedDocuments = [...legalDocuments];
+    updatedDocuments[index] = { ...updatedDocuments[index], [field]: value };
+    setLegalDocuments(updatedDocuments);
   };
 
-  const handleDocumentTypeChange = (value: string) => {
-    setFormData({ 
-      ...formData, 
-      documentType: value as DocumentType 
-    });
-    
-    // Clear error when field is edited
-    if (errors.documentType) {
-      setErrors({ ...errors, documentType: undefined });
-    }
+  const handleFilesSelected = (index: number, files: File[]) => {
+    const updatedDocuments = [...legalDocuments];
+    updatedDocuments[index] = { ...updatedDocuments[index], files: files };
+    setLegalDocuments(updatedDocuments);
   };
 
-  const handleFilesSelected = (files: File[]) => {
-    setFormData({ ...formData, documentFiles: files });
-    
-    // Clear error when field is edited
-    if (errors.documentFiles) {
-      setErrors({ ...errors, documentFiles: undefined });
-    }
+  const addDocumentForm = () => {
+    setLegalDocuments([...legalDocuments, { documentType: "", documentNumber: "", issueDate: "", expiryDate: "", files: [] }]);
   };
 
-  const validateForm = () => {
-    const newErrors: Partial<Record<keyof LegalDocuments, string>> = {};
-    const requiredFields: (keyof LegalDocuments)[] = [
-      'documentType', 
-      'documentNumber', 
-      'issueDate'
-    ];
-    
-    requiredFields.forEach(field => {
-      if (!formData[field]) {
-        newErrors[field] = 'This field is required';
-      }
-    });
-    
-    if (formData.documentFiles.length === 0) {
-      newErrors.documentFiles = 'Please upload at least one document';
-    }
-    
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+  const removeDocumentForm = (index: number) => {
+    const updatedDocuments = legalDocuments.filter((_, i) => i !== index);
+    setLegalDocuments(updatedDocuments);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!validateForm()) {
-      toast({
-        title: "Form validation failed",
-        description: "Please check the form for errors.",
-        variant: "destructive",
-      });
-      return;
-    }
-    
-    updateLegalDocuments(formData);
-    setCurrentStep(4); // Move to data source step
-    
+  const handleSubmit = () => {
+    updateLegalDocuments(legalDocuments);
+    setCurrentStep(4);
+
     toast({
       title: "Information saved",
-      description: "Legal documents have been saved successfully.",
+      description: "Legal documents information has been saved successfully.",
     });
-  };
-
-  // Extract document type labels for the select component
-  const documentTypeOptions = DOCUMENT_TYPES.map(doc => doc.label);
-  
-  // Map the label to the value when selecting an option
-  const getDocumentTypeValue = (label: string) => {
-    const docType = DOCUMENT_TYPES.find(doc => doc.label === label);
-    return docType ? docType.value as DocumentType : "other";
-  };
-  
-  // Map the value to the label for display
-  const getDocumentTypeLabel = (value: string) => {
-    const docType = DOCUMENT_TYPES.find(doc => doc.value === value);
-    return docType ? docType.label : "";
   };
 
   return (
@@ -119,116 +53,36 @@ const LegalDocumentsForm = () => {
       <Card className="p-6 md:p-8 shadow-sm">
         <form onSubmit={handleSubmit} className="space-y-6">
           <FormHeader 
+            icon={<File className="h-7 w-7 text-black" />}
             title="Legal Documents"
-            description="Please upload the legal documentation for your family office entity."
-            icon={<ScrollText className="h-7 w-7 text-[#86CEFA]" />}
+            description="Please provide legal formation documents for your family office entity."
           />
 
-          <div className="space-y-6">
-            <CustomSelect
-              id="documentType"
-              label="Document Type"
-              value={getDocumentTypeLabel(formData.documentType)}
-              onChange={(label) => handleDocumentTypeChange(getDocumentTypeValue(label))}
-              placeholder="Select document type"
-              options={documentTypeOptions}
-              required
-              className={errors.documentType ? 'error' : ''}
-            />
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="documentNumber">
-                  Document Number<span className="text-red-500 ml-1">*</span>
-                </Label>
-                <Input
-                  id="documentNumber"
-                  name="documentNumber"
-                  value={formData.documentNumber}
-                  onChange={handleInputChange}
-                  placeholder="Document identification number"
-                  className={`h-11 ${errors.documentNumber ? 'border-red-500' : ''}`}
-                />
-                {errors.documentNumber && (
-                  <p className="text-red-500 text-sm mt-1">{errors.documentNumber}</p>
-                )}
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="issueDate">
-                  Issue Date<span className="text-red-500 ml-1">*</span>
-                </Label>
-                <Input
-                  id="issueDate"
-                  name="issueDate"
-                  type="date"
-                  value={formData.issueDate}
-                  onChange={handleInputChange}
-                  className={`h-11 ${errors.issueDate ? 'border-red-500' : ''}`}
-                />
-                {errors.issueDate && (
-                  <p className="text-red-500 text-sm mt-1">{errors.issueDate}</p>
-                )}
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="expiryDate">
-                Expiry Date (if applicable)
-              </Label>
-              <Input
-                id="expiryDate"
-                name="expiryDate"
-                type="date"
-                value={formData.expiryDate || ""}
-                onChange={handleInputChange}
-                className="h-11"
+          {legalDocuments.map((document, index) => (
+            <div key={index} className="space-y-4 border p-4 rounded-md">
+              <DocumentTypeField
+                id={`documentType-${index}`}
+                value={document.documentType}
+                onChange={(value) => handleDocumentChange(index, "documentType", value)}
+                onRemove={() => removeDocumentForm(index)}
+              />
+              <DocumentDetailsFields
+                index={index}
+                document={document}
+                onChange={handleDocumentChange}
+              />
+              <DocumentUploadField
+                id={`documentFiles-${index}`}
+                files={document.files}
+                onFilesSelected={(files) => handleFilesSelected(index, files)}
               />
             </div>
+          ))}
 
-            <div className="space-y-3">
-              <Label>
-                Document Upload<span className="text-red-500 ml-1">*</span>
-              </Label>
-              <FileUploader
-                accept="application/pdf,image/*"
-                multiple={true}
-                maxSize={5}
-                onFilesSelected={handleFilesSelected}
-                existingFiles={formData.documentFiles}
-                label="Upload Legal Documents"
-              />
-              {errors.documentFiles && (
-                <p className="text-red-500 text-sm mt-1">{errors.documentFiles}</p>
-              )}
-            </div>
-          </div>
-
-          <div className="pt-4 border-t">
-            <p className="text-sm text-gray-500 mb-6">
-              Fields marked with <span className="text-red-500">*</span> are required.
-            </p>
-            <div className="flex justify-between">
-              <Button 
-                type="button" 
-                variant="outline"
-                size="lg" 
-                className="rounded-lg"
-                onClick={() => setCurrentStep(2)}
-              >
-                <ArrowLeft className="mr-2 h-4 w-4" />
-                Back
-              </Button>
-              <Button 
-                type="submit" 
-                size="lg" 
-                className="rounded-lg hover:shadow-md transition-shadow bg-[#86CEFA] hover:bg-[#6CBEFA] text-white"
-              >
-                Continue
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </div>
-          </div>
+          <FormFooter
+            onSubmit={handleSubmit}
+            isSubmitting={false}
+          />
         </form>
       </Card>
     </motion.div>

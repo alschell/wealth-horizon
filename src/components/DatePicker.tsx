@@ -26,11 +26,11 @@ export function DatePicker({ value, onChange, label, optional }: DatePickerProps
           <Button
             variant={"outline"}
             className={cn(
-              "w-full h-11 justify-start text-left font-normal bg-white border-gray-300 hover:bg-gray-50",
+              "w-full h-11 justify-start text-left font-normal bg-white border-gray-300 hover:bg-gray-50 focus-visible:ring-black",
               !value && "text-muted-foreground"
             )}
           >
-            <CalendarIcon className="mr-2 h-4 w-4 text-[#86CEFA]" />
+            <CalendarIcon className="mr-2 h-4 w-4 text-black" />
             {value ? format(value, "PPP") : <span>{label}</span>}
           </Button>
         </PopoverTrigger>

@@ -3,52 +3,69 @@
 
 // Institutions - Expanded list of top global financial institutions
 export const INSTITUTIONS = [
-  "Addepar",
   "Agricultural Bank of China",
   "Allianz",
-  "Ant Financial",
+  "American Express",
+  "ANZ Bank",
+  "Aon",
+  "Assicurazioni Generali",
+  "AXA",
+  "Bank Mandiri",
   "Bank of America",
   "Bank of China",
   "Bank of Communications",
   "Bank of Montreal",
   "Bank of New York Mellon",
+  "Banco Bilbao Vizcaya Argentaria (BBVA)",
+  "Banco Bradesco",
+  "Banco do Brasil",
+  "Banco Santander",
   "Barclays",
-  "BBVA",
   "BlackRock",
   "BNP Paribas",
+  "Brown Brothers Harriman",
   "Capital One",
   "Charles Schwab",
   "China Construction Bank",
   "China Life Insurance",
   "China Merchants Bank",
-  "Citi",
-  "Citizens Financial Group",
+  "CIMB Bank",
+  "Citigroup",
+  "Commerzbank",
   "Commonwealth Bank",
-  "Credit Agricole",
+  "Crédit Agricole",
   "Credit Suisse",
   "DBS Bank",
   "Deutsche Bank",
   "Everbright Bank",
   "Fannie Mae",
   "Fidelity Investments",
-  "Fifth Third Bancorp",
+  "Fifth Third Bank",
   "First Abu Dhabi Bank",
   "First Republic Bank",
+  "Franklin Templeton",
   "Goldman Sachs",
+  "Grupo Financiero Banorte",
   "Groupe BPCE",
   "Hang Seng Bank",
   "HDFC Bank",
   "HSBC",
   "ICBC",
   "ING Group",
+  "Invesco",
   "Intesa Sanpaolo",
   "Itaú Unibanco",
-  "J.P. Morgan",
+  "JP Morgan Chase",
   "Julius Baer",
   "KB Financial Group",
+  "KBC Bank",
   "LGT Bank",
+  "Liberty Mutual",
   "Lloyds Banking Group",
   "Macquarie Group",
+  "Marsh & McLennan",
+  "Mastercard",
+  "MetLife",
   "Mitsubishi UFJ Financial Group",
   "Mizuho Financial Group",
   "Morgan Stanley",
@@ -56,17 +73,19 @@ export const INSTITUTIONS = [
   "Nationwide Building Society",
   "NatWest Group",
   "Nomura Holdings",
+  "Nordea",
   "Northern Trust",
   "Oversea-Chinese Banking Corporation",
+  "Ping An Insurance",
   "PNC Financial Services",
   "Postal Savings Bank of China",
+  "Prudential Financial",
   "Qatar National Bank",
   "Rabobank",
   "Raymond James",
-  "Regions Financial Corporation",
+  "Regions Financial",
   "Rothschild & Co",
   "Royal Bank of Canada",
-  "Santander",
   "Scotiabank",
   "Shanghai Pudong Development Bank",
   "Shinhan Financial Group",
@@ -77,17 +96,18 @@ export const INSTITUTIONS = [
   "Sumitomo Mitsui Financial Group",
   "Suncorp Group",
   "Svenska Handelsbanken",
-  "TD Ameritrade",
   "TD Bank Group",
+  "TD Securities",
   "Truist Financial",
   "UBS",
   "UniCredit",
   "US Bancorp",
   "Vanguard Group",
+  "Visa",
   "Wells Fargo",
   "Westpac",
-  "Woori Financial Group"
-].sort();
+  "Zurich Insurance Group"
+];
 
 // Account types
 export const ACCOUNT_TYPES = [
@@ -108,7 +128,7 @@ export const ACCOUNT_TYPES = [
   "Fixed Income",
   "Credit",
   "Other"
-].sort();
+];
 
 // Currencies - Expanded list of global currencies with symbols
 export const CURRENCIES = [
@@ -142,7 +162,7 @@ export const CURRENCIES = [
   "MYR - Malaysian Ringgit",
   "CZK - Czech Koruna",
   "HUF - Hungarian Forint"
-].sort();
+];
 
 // Aggregators list
 export const AGGREGATORS = [
@@ -170,7 +190,7 @@ export const AGGREGATORS = [
   "Yardi",
   "Custom Solution",
   "Other"
-].sort();
+];
 
 // Countries - Comprehensive list of countries
 export const COUNTRIES = [
@@ -194,7 +214,7 @@ export const COUNTRIES = [
   "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Togo", "Tonga", "Trinidad and Tobago", "Tunisia", "Turkey", "Turkmenistan", 
   "Tuvalu", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United States", "Uruguay", "Uzbekistan", "Vanuatu", "Vatican City", 
   "Venezuela", "Vietnam", "Yemen", "Zambia", "Zimbabwe"
-].sort();
+];
 
 // Jurisdictions - Comprehensive list
 export const JURISDICTIONS = [
@@ -223,4 +243,4 @@ export const JURISDICTIONS = [
   "Texas (US)", "Thailand", "Togo", "Trinidad and Tobago", "Tunisia", "Turkey", "Turkmenistan", "Uganda", "Ukraine", "United Arab Emirates",
   "United Kingdom", "United States", "Uruguay", "Utah (US)", "Uzbekistan", "Vatican City", "Venezuela", "Vermont (US)", "Vietnam", "Virginia (US)",
   "Washington (US)", "West Virginia (US)", "Wisconsin (US)", "Wyoming (US)", "Yemen", "Yukon Territory (Canada)", "Zambia", "Zimbabwe"
-].sort();
+];

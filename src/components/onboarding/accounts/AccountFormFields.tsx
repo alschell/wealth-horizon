@@ -42,9 +42,10 @@ const AccountFormFields = ({
           label="Institution"
           value={account.institution}
           placeholder="Select institution"
-          options={INSTITUTIONS}
+          options={INSTITUTIONS.sort()}
           required
           onChange={(value) => onSelectionChange("institution", value)}
+          allowCustomValue={true}
         />
       </div>
       
@@ -54,7 +55,7 @@ const AccountFormFields = ({
           label="Account Type"
           value={account.accountType}
           placeholder="Select account type"
-          options={ACCOUNT_TYPES}
+          options={ACCOUNT_TYPES.sort()}
           required
           onChange={(value) => onSelectionChange("accountType", value as any)}
           extractValue={(type) => type.toLowerCase()}
@@ -78,7 +79,7 @@ const AccountFormFields = ({
           label="Primary Currency"
           value={account.currency}
           placeholder="Select currency"
-          options={CURRENCIES}
+          options={CURRENCIES.sort()}
           onChange={(value) => onSelectionChange("currency", value.split(" - ")[0])}
         />
       </div>

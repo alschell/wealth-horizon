@@ -13,6 +13,7 @@ interface SearchableSelectRendererProps {
   placeholder?: string;
   options: string[];
   label: string;
+  allowCustomValue?: boolean;
 }
 
 const SearchableSelectRenderer: React.FC<SearchableSelectRendererProps> = ({
@@ -22,12 +23,24 @@ const SearchableSelectRenderer: React.FC<SearchableSelectRendererProps> = ({
   placeholder,
   options,
   label,
+  allowCustomValue = false
 }) => {
   const [open, setOpen] = useState(false);
+  const [inputValue, setInputValue] = useState("");
   
   const handleSelectChange = (selectedValue: string) => {
     onChange(name, selectedValue);
     setOpen(false);
+    setInputValue("");
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (allowCustomValue && e.key === "Enter" && inputValue && !options.includes(inputValue)) {
+      e.preventDefault();
+      onChange(name, inputValue);
+      setOpen(false);
+      setInputValue("");
+    }
   };
 
   return (
@@ -52,7 +65,7 @@ const SearchableSelectRenderer: React.FC<SearchableSelectRendererProps> = ({
               {placeholder || `Select ${label.toLowerCase()}`}
             </span>
           )}
-          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50 text-[#86CEFA]" />
         </Button>
       </PopoverTrigger>
       <PopoverContent 
@@ -64,8 +77,23 @@ const SearchableSelectRenderer: React.FC<SearchableSelectRendererProps> = ({
         forceMount
       >
         <Command className="bg-white">
-          <CommandInput placeholder={`Search ${label.toLowerCase()}...`} className="h-9" />
-          <CommandEmpty>No {label.toLowerCase()} found.</CommandEmpty>
+          <CommandInput 
+            placeholder={`Search ${label.toLowerCase()}...`} 
+            className="h-9"
+            value={inputValue}
+            onValueChange={setInputValue}
+            onKeyDown={handleKeyDown}
+          />
+          <CommandEmpty>
+            {allowCustomValue ? (
+              <div className="py-3 px-4 text-sm">
+                <p>No {label.toLowerCase()} found.</p>
+                <p className="font-medium text-[#86CEFA]">Press Enter to add "{inputValue}"</p>
+              </div>
+            ) : (
+              `No ${label.toLowerCase()} found.`
+            )}
+          </CommandEmpty>
           <CommandGroup className="bg-white max-h-[300px] overflow-y-auto">
             {options.map((option) => (
               <CommandItem
@@ -76,7 +104,7 @@ const SearchableSelectRenderer: React.FC<SearchableSelectRendererProps> = ({
               >
                 <Check
                   className={cn(
-                    "mr-2 h-4 w-4",
+                    "mr-2 h-4 w-4 text-[#86CEFA]",
                     value === option ? "opacity-100" : "opacity-0"
                   )}
                 />

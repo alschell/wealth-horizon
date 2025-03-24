@@ -6,7 +6,6 @@ import { SearchableSelectField } from "@/components/onboarding/family-office/fie
 import { itemVariants } from "@/components/onboarding/common/AnimationVariants";
 import AggregatorCredentialsForm from "./AggregatorCredentialsForm";
 import { AggregatorInfo } from "@/context/OnboardingContext";
-import { Label } from "@/components/ui/label";
 
 interface AggregatorSelectorProps {
   aggregatorInfo: AggregatorInfo;
@@ -28,14 +27,14 @@ const AggregatorSelector: React.FC<AggregatorSelectorProps> = ({
       className="space-y-6 border p-4 rounded-lg mt-4"
     >
       <div className="space-y-2">
-        <Label>Select your aggregator:</Label>
         <SearchableSelectField
           id="aggregatorName"
           label="Aggregator"
           value={aggregatorInfo.aggregatorName || ""}
           onChange={handleAggregatorNameChange}
           placeholder="Select your aggregator"
-          options={AGGREGATORS}
+          options={AGGREGATORS.sort()}
+          allowCustomValue={true}
         />
       </div>
 

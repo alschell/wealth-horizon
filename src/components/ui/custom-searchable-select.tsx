@@ -13,6 +13,7 @@ interface CustomSearchableSelectProps {
   required?: boolean;
   onChange: (value: string) => void;
   className?: string;
+  allowCustomValue?: boolean;
 }
 
 const CustomSearchableSelect = ({
@@ -24,6 +25,7 @@ const CustomSearchableSelect = ({
   required = false,
   onChange,
   className,
+  allowCustomValue = false
 }: CustomSearchableSelectProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -57,6 +59,15 @@ const CustomSearchableSelect = ({
     };
   }, []);
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (allowCustomValue && e.key === "Enter" && searchTerm && !options.includes(searchTerm)) {
+      e.preventDefault();
+      onChange(searchTerm);
+      setIsOpen(false);
+      setSearchTerm("");
+    }
+  };
+
   return (
     <div className={cn("space-y-2", className)}>
       <Label htmlFor={id}>
@@ -67,7 +78,7 @@ const CustomSearchableSelect = ({
           type="button"
           id={id}
           onClick={() => setIsOpen(!isOpen)}
-          className="flex items-center justify-between w-full h-11 px-3 py-2 text-left bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          className="flex items-center justify-between w-full h-11 px-3 py-2 text-left bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#86CEFA] focus:border-[#86CEFA]"
           aria-haspopup="listbox"
           aria-expanded={isOpen}
         >
@@ -76,7 +87,7 @@ const CustomSearchableSelect = ({
           ) : (
             <span className="block truncate text-gray-500">{placeholder}</span>
           )}
-          <ChevronDown className="w-4 h-4 ml-2 text-gray-400" />
+          <ChevronDown className="w-4 h-4 ml-2 text-[#86CEFA]" />
         </button>
         
         {isOpen && (
@@ -86,7 +97,7 @@ const CustomSearchableSelect = ({
           >
             <div className="px-3 py-2 border-b border-gray-200">
               <div className="relative">
-                <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-[#86CEFA]" />
                 <input
                   ref={inputRef}
                   type="text"
@@ -95,6 +106,7 @@ const CustomSearchableSelect = ({
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   onClick={(e) => e.stopPropagation()}
+                  onKeyDown={handleKeyDown}
                 />
               </div>
             </div>
@@ -121,15 +133,30 @@ const CustomSearchableSelect = ({
                     <span className="block truncate">{option}</span>
                     {value === option && (
                       <span className="absolute inset-y-0 left-0 flex items-center pl-3">
-                        <Check className="w-4 h-4 text-blue-600" />
+                        <Check className="w-4 h-4 text-[#86CEFA]" />
                       </span>
                     )}
                   </li>
                 ))
               ) : (
-                <li className="px-4 py-2 text-sm text-gray-500">
-                  No results found
-                </li>
+                allowCustomValue ? (
+                  <li 
+                    className="cursor-pointer py-2 px-4 hover:bg-blue-50"
+                    onClick={() => {
+                      if (searchTerm) {
+                        onChange(searchTerm);
+                        setIsOpen(false);
+                        setSearchTerm("");
+                      }
+                    }}
+                  >
+                    <span className="text-sm text-gray-700">Create "{searchTerm}"</span>
+                  </li>
+                ) : (
+                  <li className="px-4 py-2 text-sm text-gray-500">
+                    No results found
+                  </li>
+                )
               )}
             </ul>
           </div>

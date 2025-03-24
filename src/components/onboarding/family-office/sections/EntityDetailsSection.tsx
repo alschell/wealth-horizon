@@ -17,7 +17,7 @@ const EntityDetailsSection: React.FC<EntityDetailsSectionProps> = ({
 }) => {
   return (
     <div className="space-y-4">
-      <h3 className="text-lg font-medium text-gray-900">Entity Details</h3>
+      <h3 className="text-lg font-medium text-[#86CEFA]">Entity Details</h3>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <FormFieldItem
@@ -39,7 +39,7 @@ const EntityDetailsSection: React.FC<EntityDetailsSectionProps> = ({
           value={formData.jurisdiction}
           onChange={onChange}
           type="searchableSelect"
-          options={JURISDICTIONS}
+          options={JURISDICTIONS.sort()}
           required={true}
           className={errors.jurisdiction ? 'error' : ''}
         />

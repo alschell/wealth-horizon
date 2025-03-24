@@ -30,11 +30,11 @@ export function DatePicker({ value, onChange, label, optional }: DatePickerProps
               !value && "text-muted-foreground"
             )}
           >
-            <CalendarIcon className="mr-2 h-4 w-4 text-brand" />
+            <CalendarIcon className="mr-2 h-4 w-4 text-[#86CEFA]" />
             {value ? format(value, "PPP") : <span>{label}</span>}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-auto p-0 bg-white shadow-lg rounded-md border" align="start">
+        <PopoverContent className="w-auto p-0 bg-white shadow-lg rounded-md border z-[999]" align="start" forceMount>
           <Calendar
             mode="single"
             selected={value}

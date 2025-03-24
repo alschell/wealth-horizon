@@ -109,8 +109,8 @@ const AccountForm = ({ onAddAccount }: AccountFormProps) => {
 
   return (
     <div className="space-y-6 border p-4 rounded-md">
-      <h3 className="font-medium flex items-center gap-2 text-gray-700">
-        <Wallet className="h-5 w-5 text-gray-500" />
+      <h3 className="font-medium flex items-center gap-2 text-[#86CEFA]">
+        <Wallet className="h-5 w-5 text-[#86CEFA]" />
         Add a new financial account
       </h3>
       
@@ -139,9 +139,10 @@ const AccountForm = ({ onAddAccount }: AccountFormProps) => {
             value={newAccount.institution}
             onChange={(value) => handleSelectionChange('institution', value)}
             placeholder="Select institution"
-            options={INSTITUTIONS}
+            options={INSTITUTIONS.sort()}
             required
             className={errors.institution ? 'error' : ''}
+            allowCustomValue={true}
           />
           
           <CustomSearchableSelect
@@ -150,7 +151,7 @@ const AccountForm = ({ onAddAccount }: AccountFormProps) => {
             value={newAccount.accountType.charAt(0).toUpperCase() + newAccount.accountType.slice(1)}
             onChange={(value) => handleSelectionChange('accountType', value.toLowerCase() as any)}
             placeholder="Select account type"
-            options={ACCOUNT_TYPES}
+            options={ACCOUNT_TYPES.sort()}
             required
             className={errors.accountType ? 'error' : ''}
           />
@@ -177,7 +178,7 @@ const AccountForm = ({ onAddAccount }: AccountFormProps) => {
             value={newAccount.currency}
             onChange={(value) => handleSelectionChange('currency', extractCurrencyCode(value))}
             placeholder="Select currency"
-            options={CURRENCIES}
+            options={CURRENCIES.sort()}
             className=""
           />
         </div>
@@ -211,7 +212,6 @@ const AccountForm = ({ onAddAccount }: AccountFormProps) => {
       
       <Button
         type="button"
-        variant="outline"
         onClick={handleAddAccount}
         className="mt-2"
       >

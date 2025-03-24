@@ -8,7 +8,6 @@ import { Card } from "@/components/ui/card";
 import { toast } from "@/components/ui/use-toast";
 import { motion } from "framer-motion";
 import { ArrowRight, ArrowLeft, MapPin } from "lucide-react";
-import { CustomSelect } from "@/components/ui/custom-select";
 import { CustomSearchableSelect } from "@/components/ui/custom-searchable-select";
 import { COUNTRIES, US_STATES } from "./constants/formOptions";
 
@@ -86,8 +85,8 @@ const AddressForm = () => {
       <Card className="p-6 md:p-8 shadow-sm">
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="flex items-center gap-3 mb-2">
-            <MapPin className="h-7 w-7 text-blue-600" />
-            <h2 className="text-2xl font-bold">Address Information</h2>
+            <MapPin className="h-7 w-7 text-[#86CEFA]" />
+            <h2 className="text-2xl font-bold text-[#86CEFA]">Address Information</h2>
           </div>
           <p className="text-gray-500">
             Please provide the current address for your family office.
@@ -129,13 +128,14 @@ const AddressForm = () => {
                 )}
               </div>
 
-              <CustomSelect
+              <CustomSearchableSelect
                 id="state"
                 label="State/Province"
                 value={formData.state}
                 onChange={(value) => handleSelectChange('state', value)}
                 placeholder="Select state"
-                options={US_STATES}
+                options={US_STATES.sort()}
+                allowCustomValue={true}
               />
             </div>
 
@@ -163,7 +163,7 @@ const AddressForm = () => {
                 value={formData.country}
                 onChange={(value) => handleSelectChange('country', value)}
                 placeholder="Select country"
-                options={COUNTRIES}
+                options={COUNTRIES.sort()}
                 required
                 className={errors.country ? 'error' : ''}
               />
@@ -188,7 +188,7 @@ const AddressForm = () => {
               <Button 
                 type="submit" 
                 size="lg" 
-                className="rounded-lg hover:shadow-md transition-shadow bg-blue-600 hover:bg-blue-700 text-white"
+                className="rounded-lg hover:shadow-md transition-shadow"
               >
                 Continue
                 <ArrowRight className="ml-2 h-4 w-4" />

@@ -26,6 +26,7 @@ interface SearchableSelectFieldProps {
   required?: boolean;
   onChange: (value: string) => void;
   extractValue?: (option: string) => string;
+  allowCustomValue?: boolean;
 }
 
 const SearchableSelectField = ({
@@ -36,9 +37,26 @@ const SearchableSelectField = ({
   options,
   required = false,
   onChange,
-  extractValue = (option) => option
+  extractValue = (option) => option,
+  allowCustomValue = false
 }: SearchableSelectFieldProps) => {
   const [open, setOpen] = useState(false);
+  const [inputValue, setInputValue] = useState("");
+
+  const handleSelect = (selectedValue: string) => {
+    onChange(extractValue(selectedValue));
+    setOpen(false);
+    setInputValue("");
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (allowCustomValue && e.key === "Enter" && inputValue && !options.includes(inputValue)) {
+      e.preventDefault();
+      onChange(inputValue);
+      setOpen(false);
+      setInputValue("");
+    }
+  };
 
   return (
     <div className="space-y-2">
@@ -65,7 +83,7 @@ const SearchableSelectField = ({
             ) : (
               <span className="truncate text-muted-foreground">{placeholder}</span>
             )}
-            <ChevronsUpDown className="h-4 w-4 shrink-0 opacity-50 ml-2" />
+            <ChevronsUpDown className="h-4 w-4 shrink-0 opacity-50 ml-2 text-[#86CEFA]" />
           </Button>
         </PopoverTrigger>
         <PopoverContent 
@@ -77,8 +95,23 @@ const SearchableSelectField = ({
           forceMount
         >
           <Command className="bg-white">
-            <CommandInput placeholder={`Search ${label.toLowerCase()}...`} className="h-9" />
-            <CommandEmpty>No {label.toLowerCase()} found.</CommandEmpty>
+            <CommandInput 
+              placeholder={`Search ${label.toLowerCase()}...`} 
+              className="h-9"
+              value={inputValue}
+              onValueChange={setInputValue}
+              onKeyDown={handleKeyDown}
+            />
+            <CommandEmpty>
+              {allowCustomValue ? (
+                <div className="py-3 px-4 text-sm">
+                  <p>No {label.toLowerCase()} found.</p>
+                  <p className="font-medium text-[#86CEFA]">Press Enter to add "{inputValue}"</p>
+                </div>
+              ) : (
+                `No ${label.toLowerCase()} found.`
+              )}
+            </CommandEmpty>
             <CommandGroup className="max-h-[300px] overflow-y-auto">
               {options.map((option) => {
                 const optionValue = extractValue(option);
@@ -86,15 +119,12 @@ const SearchableSelectField = ({
                   <CommandItem
                     key={option}
                     value={option}
-                    onSelect={() => {
-                      onChange(optionValue);
-                      setOpen(false);
-                    }}
+                    onSelect={() => handleSelect(option)}
                     className="hover:bg-slate-100 aria-selected:bg-slate-100 cursor-pointer"
                   >
                     <Check
                       className={cn(
-                        "mr-2 h-4 w-4",
+                        "mr-2 h-4 w-4 text-[#86CEFA]",
                         value === optionValue ? "opacity-100" : "opacity-0"
                       )}
                     />

@@ -36,7 +36,7 @@ const SelectFieldRenderer: React.FC<SelectFieldRendererProps> = ({
         <SelectValue placeholder={placeholder || `Select option`} />
       </SelectTrigger>
       <SelectContent 
-        className="bg-white border shadow-lg"
+        className="bg-white border shadow-lg z-[999]"
         position="popper" 
         sideOffset={8}
       >

@@ -120,7 +120,7 @@ const Onboarding = () => {
           
           <Button 
             onClick={handleNext}
-            className="flex items-center gap-2 bg-gray-900 hover:bg-gray-800 text-white"
+            className="flex items-center gap-2 text-white"
             disabled={currentStep === totalSteps - 1}
           >
             {currentStep === totalSteps - 1 ? 'Complete' : 'Next'} <ArrowRight className="h-4 w-4" />

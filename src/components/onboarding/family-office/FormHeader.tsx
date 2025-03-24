@@ -1,28 +1,23 @@
 
 import React from "react";
-import { Building2 } from "lucide-react";
 
 interface FormHeaderProps {
+  icon: React.ReactNode;
   title: string;
   description?: string;
-  icon?: React.ReactNode;
 }
 
-const FormHeader: React.FC<FormHeaderProps> = ({ 
-  title, 
-  description, 
-  icon = <Building2 className="h-7 w-7 text-black" />
-}) => {
+const FormHeader: React.FC<FormHeaderProps> = ({ icon, title, description }) => {
   return (
-    <>
+    <div className="mb-6">
       <div className="flex items-center gap-3 mb-2">
         {icon}
         <h2 className="text-2xl font-bold text-black">{title}</h2>
       </div>
       {description && (
-        <p className="text-black mb-6">{description}</p>
+        <p className="text-black">{description}</p>
       )}
-    </>
+    </div>
   );
 };
 

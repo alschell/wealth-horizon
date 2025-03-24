@@ -80,7 +80,7 @@ const PrimaryContactForm = () => {
       <Card className="p-6 md:p-8 shadow-sm">
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="flex items-center gap-3 mb-2">
-            <UserRound className="h-7 w-7 text-blue-600" />
+            <UserRound className="h-7 w-7 text-black" />
             <h2 className="text-2xl font-bold">Primary Contact Information</h2>
           </div>
           <p className="text-gray-500">
@@ -197,7 +197,7 @@ const PrimaryContactForm = () => {
               <Button 
                 type="submit" 
                 size="lg" 
-                className="rounded-lg hover:shadow-md transition-shadow bg-blue-600 hover:bg-blue-700 text-white"
+                className="rounded-lg hover:shadow-md transition-shadow bg-black hover:bg-gray-800 text-white"
               >
                 Continue
                 <ArrowRight className="ml-2 h-4 w-4" />

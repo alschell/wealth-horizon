@@ -9,6 +9,7 @@ import { Card } from "@/components/ui/card";
 import { toast } from "@/components/ui/use-toast";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
+import { DatePicker } from "@/components/ui/date-picker";
 
 const NATIONALITIES = ["United States", "United Kingdom", "Canada", "Germany", "France", "Switzerland", "Italy", "Spain", "Netherlands", "Sweden", "Norway", "Denmark", "Australia", "New Zealand", "Japan", "China", "India", "Brazil", "Mexico", "South Africa"];
 
@@ -23,6 +24,12 @@ const PersonalInfoForm = () => {
 
   const handleSelectionChange = (name: keyof PersonalInfo, value: string) => {
     setFormData({ ...formData, [name]: value });
+  };
+
+  const handleDateChange = (date?: Date) => {
+    if (date) {
+      setFormData({ ...formData, dateOfBirth: date.toISOString() });
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -67,6 +74,9 @@ const PersonalInfoForm = () => {
       },
     }),
   };
+
+  // Parse the ISO string to Date object for the DatePicker
+  const dateOfBirth = formData.dateOfBirth ? new Date(formData.dateOfBirth) : undefined;
 
   return (
     <motion.div
@@ -165,14 +175,12 @@ const PersonalInfoForm = () => {
               animate="visible"
               className="space-y-2"
             >
-              <Label htmlFor="dateOfBirth">Date of Birth*</Label>
-              <Input
-                id="dateOfBirth"
-                name="dateOfBirth"
-                type="date"
-                value={formData.dateOfBirth}
-                onChange={handleInputChange}
-                className="h-11"
+              <DatePicker
+                label="Date of Birth*"
+                value={dateOfBirth}
+                onChange={handleDateChange}
+                placeholder="Select date of birth"
+                className="w-full"
               />
             </motion.div>
 

@@ -36,7 +36,7 @@ const AggregatorSection: React.FC<AggregatorSectionProps> = ({
   return (
     <div className="space-y-6">
       <div className="space-y-3">
-        <Label className="text-black">Select your aggregator*</Label>
+        <Label className="text-black">Select your aggregator</Label>
         <div className="relative">
           <SearchableSelectField
             id="aggregator"
@@ -45,7 +45,6 @@ const AggregatorSection: React.FC<AggregatorSectionProps> = ({
             placeholder="Select or enter your data aggregator"
             options={AGGREGATORS}
             onChange={handleAggregatorChange}
-            required
             allowCustomValue={true}
           />
         </div>

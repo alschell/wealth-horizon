@@ -25,12 +25,15 @@ const DateFieldRenderer: React.FC<DateFieldRendererProps> = ({
     }
   };
 
+  // Parse the ISO string to Date object for the DatePicker
+  const dateValue = value ? new Date(value) : undefined;
+
   return (
-    <div className="space-y-2">
+    <div className="space-y-2 w-full">
       <DatePicker
         label={label}
         placeholder={placeholder || `Select ${label.toLowerCase()}`}
-        value={value ? new Date(value) : undefined}
+        value={dateValue}
         onChange={handleDateChange}
         optional={!required}
         className="w-full"

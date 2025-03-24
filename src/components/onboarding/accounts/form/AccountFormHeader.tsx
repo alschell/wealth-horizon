@@ -4,10 +4,10 @@ import { Wallet } from "lucide-react";
 
 const AccountFormHeader = () => {
   return (
-    <div className="flex items-center gap-2">
+    <h3 className="font-medium flex items-center gap-2 text-black">
       <Wallet className="h-5 w-5 text-black" />
-      <h3 className="font-medium text-black">Add a new financial account</h3>
-    </div>
+      Add a new financial account
+    </h3>
   );
 };
 

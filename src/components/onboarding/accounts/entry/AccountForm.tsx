@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import { FinancialAccountInfo } from "@/context/OnboardingContext";
+import { FinancialAccountInfo } from "@/types/onboarding";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -10,11 +10,83 @@ import { CustomSearchableSelect } from "@/components/ui/custom-searchable-select
 import { INSTITUTIONS, ACCOUNT_TYPES, CURRENCIES } from "@/utils/financialDataConstants";
 import FileUploader from "@/components/FileUploader";
 
+// Define legal entities for institutions (mapping)
+const LEGAL_ENTITIES = {
+  "JP Morgan Chase": [
+    "JPMORGAN CHASE BANK, N.A. NEW YORK",
+    "JP MORGAN SECURITIES LLC",
+    "J.P. MORGAN SECURITIES PLC",
+    "JPMORGAN ASSET MANAGEMENT (UK) LIMITED"
+  ],
+  "Goldman Sachs": [
+    "GOLDMAN SACHS BANK USA",
+    "GOLDMAN SACHS & CO. LLC",
+    "GOLDMAN SACHS INTERNATIONAL",
+    "GOLDMAN SACHS ASSET MANAGEMENT, L.P."
+  ],
+  "Morgan Stanley": [
+    "MORGAN STANLEY BANK, N.A.",
+    "MORGAN STANLEY & CO. LLC",
+    "MORGAN STANLEY SMITH BARNEY LLC",
+    "MORGAN STANLEY INVESTMENT MANAGEMENT INC."
+  ],
+  "Bank of America": [
+    "BANK OF AMERICA, N.A.",
+    "MERRILL LYNCH, PIERCE, FENNER & SMITH INCORPORATED",
+    "BofA SECURITIES, INC.",
+    "BANK OF AMERICA EUROPE DESIGNATED ACTIVITY COMPANY"
+  ],
+  "Wells Fargo": [
+    "WELLS FARGO BANK, N.A.",
+    "WELLS FARGO SECURITIES, LLC",
+    "WELLS FARGO CLEARING SERVICES, LLC",
+    "WELLS FARGO FUNDS MANAGEMENT, LLC"
+  ],
+  "Citigroup": [
+    "CITIBANK, N.A.",
+    "CITIGROUP GLOBAL MARKETS INC.",
+    "CITIGROUP GLOBAL MARKETS LIMITED",
+    "CITIGROUP GLOBAL MARKETS EUROPE AG"
+  ],
+  "UBS": [
+    "UBS AG",
+    "UBS FINANCIAL SERVICES INC.",
+    "UBS SECURITIES LLC",
+    "UBS ASSET MANAGEMENT (AMERICAS) INC."
+  ],
+  "Credit Suisse": [
+    "CREDIT SUISSE AG",
+    "CREDIT SUISSE SECURITIES (USA) LLC",
+    "CREDIT SUISSE INTERNATIONAL",
+    "CREDIT SUISSE ASSET MANAGEMENT, LLC"
+  ]
+};
+
+// Legal Entity Identifier mapping
+const LEI_MAPPING = {
+  "JPMORGAN CHASE BANK, N.A. NEW YORK": "7H6GLXDRUGQFU57RNE97",
+  "JP MORGAN SECURITIES LLC": "ZBUT11V806EZRVTWT807",
+  "J.P. MORGAN SECURITIES PLC": "K6Q0W1PS1L1O4IQL9C32",
+  "GOLDMAN SACHS BANK USA": "KD3XUN7C6T14HNAYLU76",
+  "GOLDMAN SACHS & CO. LLC": "FOR8UP27PHTHYVLBNG30",
+  "GOLDMAN SACHS INTERNATIONAL": "W22LROWP2IHZNBB6K528",
+  "MORGAN STANLEY BANK, N.A.": "IGJSJL3JD5P30I6NJZ34",
+  "MORGAN STANLEY & CO. LLC": "9R7GPTSO7KV3UQJZQ078",
+  "MORGAN STANLEY SMITH BARNEY LLC": "9ZSB5FLPO3FTM154YP34",
+  "BANK OF AMERICA, N.A.": "B4TYDEB6GKMZO031MB27",
+  "MERRILL LYNCH, PIERCE, FENNER & SMITH INCORPORATED": "8NAV47T0Y26Q178XCGN7",
+  "WELLS FARGO BANK, N.A.": "PBLD0EJDB5FWOLXP3B76",
+  "CITIBANK, N.A.": "E57ODZWZ7FF32TWEFA76",
+  "UBS AG": "BFM8T61CT2L1QCEMIK50",
+  "CREDIT SUISSE AG": "ANGGYXNX0JLX3X63JN86"
+};
+
 interface AccountFormProps {
   onAddAccount: (account: FinancialAccountInfo) => void;
+  enableLegalEntityFields?: boolean;
 }
 
-const AccountForm = ({ onAddAccount }: AccountFormProps) => {
+const AccountForm = ({ onAddAccount, enableLegalEntityFields = false }: AccountFormProps) => {
   const [newAccount, setNewAccount] = useState<FinancialAccountInfo>({
     accountName: "",
     institution: "",
@@ -35,6 +107,27 @@ const AccountForm = ({ onAddAccount }: AccountFormProps) => {
     if (errors[name as keyof FinancialAccountInfo]) {
       setErrors({ ...errors, [name]: undefined });
     }
+    
+    // If this is the legal entity identifier field, try to populate institution and legal entity
+    if (name === "legalEntityIdentifier" && value) {
+      for (const [entityName, entityLei] of Object.entries(LEI_MAPPING)) {
+        if (entityLei === value) {
+          // Find the institution this entity belongs to
+          for (const [instName, entities] of Object.entries(LEGAL_ENTITIES)) {
+            if ((entities as string[]).includes(entityName)) {
+              setNewAccount(prev => ({
+                ...prev,
+                institution: instName,
+                legalEntity: entityName,
+                legalEntityIdentifier: value
+              }));
+              break;
+            }
+          }
+          break;
+        }
+      }
+    }
   };
 
   // Handle selection change
@@ -45,6 +138,28 @@ const AccountForm = ({ onAddAccount }: AccountFormProps) => {
     if (errors[field]) {
       setErrors({ ...errors, [field]: undefined });
     }
+    
+    // If changing institution, reset legal entity
+    if (field === "institution") {
+      setNewAccount(prev => ({ ...prev, legalEntity: undefined }));
+    }
+    
+    // If setting legal entity, also set legal entity identifier if available
+    if (field === "legalEntity" && LEI_MAPPING[value]) {
+      setNewAccount(prev => ({ 
+        ...prev, 
+        legalEntity: value,
+        legalEntityIdentifier: LEI_MAPPING[value] 
+      }));
+    }
+  };
+
+  // Get legal entities for the selected institution
+  const getLegalEntities = () => {
+    if (newAccount.institution && LEGAL_ENTITIES[newAccount.institution]) {
+      return LEGAL_ENTITIES[newAccount.institution];
+    }
+    return [];
   };
 
   // Extract value from currency option (e.g., "USD - US Dollar" -> "USD")
@@ -109,8 +224,8 @@ const AccountForm = ({ onAddAccount }: AccountFormProps) => {
 
   return (
     <div className="space-y-6 border p-4 rounded-md">
-      <h3 className="font-medium flex items-center gap-2 text-[#86CEFA]">
-        <Wallet className="h-5 w-5 text-[#86CEFA]" />
+      <h3 className="font-medium flex items-center gap-2 text-black">
+        <Wallet className="h-5 w-5 text-black" />
         Add a new financial account
       </h3>
       
@@ -156,6 +271,34 @@ const AccountForm = ({ onAddAccount }: AccountFormProps) => {
             className={errors.accountType ? 'error' : ''}
           />
         </div>
+        
+        {enableLegalEntityFields && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <CustomSearchableSelect
+              id="legalEntity"
+              label="Legal Entity"
+              value={newAccount.legalEntity || ""}
+              onChange={(value) => handleSelectionChange('legalEntity', value)}
+              placeholder="Select legal entity"
+              options={getLegalEntities()}
+              allowCustomValue={true}
+            />
+            
+            <div className="space-y-2">
+              <Label htmlFor="legalEntityIdentifier">
+                Legal Entity Identifier (LEI)
+              </Label>
+              <Input
+                id="legalEntityIdentifier"
+                name="legalEntityIdentifier"
+                value={newAccount.legalEntityIdentifier || ""}
+                onChange={handleInputChange}
+                placeholder="e.g., 7H6GLXDRUGQFU57RNE97"
+                className="h-11"
+              />
+            </div>
+          </div>
+        )}
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">

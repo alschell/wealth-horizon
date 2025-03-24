@@ -1,6 +1,6 @@
 
 import React from "react";
-import { FinancialAccountInfo } from "@/context/OnboardingContext";
+import { FinancialAccountInfo } from "@/types/onboarding";
 import { AccountForm, AccountList } from "./accounts/entry";
 
 interface ManualEntrySectionProps {
@@ -23,7 +23,10 @@ const ManualEntrySection = ({
       />
       
       {/* Form to add a new account */}
-      <AccountForm onAddAccount={addFinancialAccount} />
+      <AccountForm 
+        onAddAccount={addFinancialAccount}
+        enableLegalEntityFields={true}
+      />
     </div>
   );
 };

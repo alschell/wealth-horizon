@@ -2,9 +2,9 @@
 import React from "react";
 import { FinancialAccountInfo } from "@/context/OnboardingContext";
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Trash2, CreditCard, Wallet, PiggyBank, Coins, Banknote, Edit } from "lucide-react";
+import { CreditCard, Wallet, PiggyBank, Coins, Banknote } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { EditButton, DeleteButton } from "@/components/ui/action-buttons";
 
 interface AccountCardProps {
   account: FinancialAccountInfo;
@@ -69,24 +69,14 @@ const AccountCard = ({ account, onRemove, onEdit, index }: AccountCardProps) => 
           </div>
         </div>
         <div className="flex gap-2">
-          <Button
-            variant="ghost"
+          <EditButton 
+            onClick={onEdit} 
             size="icon"
-            onClick={onEdit}
-            className="text-gray-500 hover:text-blue-500 hover:bg-blue-50"
-            aria-label={`Edit account ${account.accountName}`}
-          >
-            <Edit className="h-4 w-4" />
-          </Button>
-          <Button
-            variant="ghost"
+          />
+          <DeleteButton 
+            onClick={onRemove} 
             size="icon"
-            onClick={onRemove}
-            className="text-gray-500 hover:text-red-500 hover:bg-red-50"
-            aria-label={`Remove account ${account.accountName}`}
-          >
-            <Trash2 className="h-4 w-4" />
-          </Button>
+          />
         </div>
       </div>
     </Card>

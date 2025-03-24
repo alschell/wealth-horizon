@@ -3,7 +3,8 @@ import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { toast } from "@/components/ui/use-toast";
-import { Upload, Trash2, FileText } from "lucide-react";
+import { Upload, FileText } from "lucide-react";
+import { DeleteButton } from "@/components/ui/action-buttons";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -188,17 +189,13 @@ const FileUploader = ({
                     <p className="text-xs text-gray-500">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
                   </div>
                 </div>
-                <Button
-                  variant="ghost"
-                  size="sm"
+                <DeleteButton
+                  size="icon"
                   onClick={(e) => {
                     e.stopPropagation();
                     handleDeleteClick(index);
                   }}
-                  className="text-red-500 hover:text-red-700 hover:bg-red-50"
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
+                />
               </Card>
             ))}
           </div>

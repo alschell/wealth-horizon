@@ -44,3 +44,9 @@ export interface AddOwnerFormProps {
   isEditing?: boolean;
   existingOwner?: BeneficialOwnerInfo;
 }
+
+export interface OwnerFormFieldsProps {
+  control: any;
+  errors: any;
+  onFilesSelected: (files: File[]) => void;
+}

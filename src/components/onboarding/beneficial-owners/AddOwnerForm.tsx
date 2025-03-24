@@ -8,7 +8,6 @@ import { motion } from "framer-motion";
 import { nanoid } from "nanoid";
 import OwnerFormFields from "./OwnerFormFields";
 import { BeneficialOwnerInfo, OwnerFormValues, ownerSchema, AddOwnerFormProps } from "./types";
-import { fadeAnimation } from "../common/AnimationVariants";
 
 const AddOwnerForm: React.FC<AddOwnerFormProps> = ({
   onAddOwner,
@@ -53,7 +52,8 @@ const AddOwnerForm: React.FC<AddOwnerFormProps> = ({
 
   return (
     <motion.div
-      {...fadeAnimation}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
       className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm"
     >
       <div className="flex items-center justify-between mb-6">

@@ -9,7 +9,7 @@ import PrimaryContactForm from "@/components/onboarding/PrimaryContactForm";
 import AddressForm from "@/components/onboarding/AddressForm";
 import LegalDocumentsForm from "@/components/onboarding/LegalDocumentsForm";
 import DataSourceForm from "@/components/onboarding/DataSourceForm";
-import BeneficialOwnersForm from "@/components/onboarding/beneficial-owners/BeneficialOwnersForm";
+import BeneficialOwnersForm from "@/components/onboarding/BeneficialOwnersForm";
 import ReviewStep from "@/components/onboarding/ReviewStep";
 import AnimatedTransition from "@/components/AnimatedTransition";
 import { Button } from "@/components/ui/button";

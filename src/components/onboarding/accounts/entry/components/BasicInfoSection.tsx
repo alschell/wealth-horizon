@@ -4,17 +4,20 @@ import { FinancialAccountInfo } from "@/types/onboarding";
 import { 
   InputField, 
   SearchableSelectField 
-} from "../fields";
+} from "@/components/onboarding/common/fields";
 import { ACCOUNT_TYPES } from "@/utils/constants";
+import { AccountFormErrors } from "../hooks/form/types";
 
 interface BasicInfoSectionProps {
   account: FinancialAccountInfo;
+  errors?: AccountFormErrors;
   onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onSelectionChange: (field: keyof FinancialAccountInfo, value: string) => void;
 }
 
 const BasicInfoSection = ({
   account,
+  errors = {},
   onInputChange,
   onSelectionChange
 }: BasicInfoSectionProps) => {
@@ -29,6 +32,7 @@ const BasicInfoSection = ({
           onChange={onInputChange}
           placeholder="Enter account name"
           required={false}
+          error={errors.accountName}
         />
       </div>
       
@@ -40,6 +44,7 @@ const BasicInfoSection = ({
           placeholder="Select account type"
           options={ACCOUNT_TYPES}
           required={false}
+          error={errors.accountType}
           onChange={(value) => onSelectionChange("accountType", value)}
           allowCustomValue={true}
         />

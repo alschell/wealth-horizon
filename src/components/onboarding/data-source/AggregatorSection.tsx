@@ -3,7 +3,7 @@ import React from "react";
 import { AggregatorInfo } from "@/context/OnboardingContext";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { AGGREGATORS } from "@/utils/financialDataConstants";
+import { AGGREGATORS } from "@/components/onboarding/constants/aggregators";
 import { SearchableSelectField } from "../accounts/fields";
 
 interface AggregatorSectionProps {

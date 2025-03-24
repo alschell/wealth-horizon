@@ -1,11 +1,10 @@
-
 import React from "react";
 import { FinancialAccountInfo } from "@/types/onboarding";
 import { 
   InputField, 
   SearchableSelectField 
 } from "../fields";
-import { CURRENCIES } from "@/utils/constants";
+import { CURRENCIES } from "@/utils/constants/currencies";
 
 interface AccountDetailsSectionProps {
   account: FinancialAccountInfo;

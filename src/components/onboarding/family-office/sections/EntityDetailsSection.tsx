@@ -1,8 +1,8 @@
-
 import React from "react";
 import { FamilyOfficeInfo } from "@/context/OnboardingContext";
 import FormFieldItem from "../FormFieldItem";
-import { LEGAL_ENTITY_TYPES, JURISDICTIONS } from "@/components/onboarding/constants/formOptions";
+import { LEGAL_ENTITY_TYPES } from "@/components/onboarding/constants/legalEntities";
+import { JURISDICTIONS } from "@/components/onboarding/constants/jurisdictions";
 
 interface EntityDetailsSectionProps {
   formData: FamilyOfficeInfo;

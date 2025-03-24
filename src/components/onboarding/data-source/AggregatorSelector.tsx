@@ -1,7 +1,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { AGGREGATORS } from "@/utils/financialDataConstants";
+import { AGGREGATORS } from "@/components/onboarding/constants/aggregators";
 import { SearchableSelectField } from "@/components/onboarding/family-office/field-components";
 import { itemVariants } from "@/components/onboarding/common/AnimationVariants";
 import AggregatorCredentialsForm from "./AggregatorCredentialsForm";

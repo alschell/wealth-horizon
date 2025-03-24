@@ -59,6 +59,7 @@ export type FinancialAccountInfo = {
 };
 
 export type BeneficialOwnerInfo = {
+  id: string;
   firstName: string;
   lastName: string;
   relationship: string;

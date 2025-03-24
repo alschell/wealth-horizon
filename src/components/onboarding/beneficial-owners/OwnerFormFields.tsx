@@ -1,7 +1,7 @@
 
 import React from "react";
-import { UseFormRegister, FieldErrors, UseFormSetValue } from "react-hook-form";
-import { SearchableSelectField, InputField, SelectField, FileField } from "@/components/onboarding/common/fields";
+import { UseFormRegister, FieldErrors, UseFormSetValue, UseFormWatch } from "react-hook-form";
+import { InputField, SelectField, FileField } from "@/components/onboarding/common/fields";
 import { COUNTRIES } from "@/utils/constants/countries";
 import { OwnerFormValues } from "./types";
 
@@ -9,16 +9,18 @@ interface OwnerFormFieldsProps {
   register: UseFormRegister<OwnerFormValues>;
   errors: FieldErrors<OwnerFormValues>;
   setValue: UseFormSetValue<OwnerFormValues>;
-  formState: OwnerFormValues;
+  watch: UseFormWatch<OwnerFormValues>;
 }
 
 const OwnerFormFields = ({
   register,
   errors,
   setValue,
-  formState
+  watch
 }: OwnerFormFieldsProps) => {
-  // Convert country objects to string array for the SearchableSelectField
+  const formValues = watch();
+  
+  // Convert country objects to string array for the select field
   const countryOptions = COUNTRIES.map(country => country.name);
   
   return (
@@ -27,16 +29,20 @@ const OwnerFormFields = ({
         <InputField
           id="firstName"
           label="First Name"
+          name="firstName"
+          value={formValues.firstName || ""}
+          onChange={(e) => setValue("firstName", e.target.value)}
           error={errors.firstName?.message}
-          {...register("firstName")}
           required
         />
         
         <InputField
           id="lastName"
           label="Last Name"
+          name="lastName"
+          value={formValues.lastName || ""}
+          onChange={(e) => setValue("lastName", e.target.value)}
           error={errors.lastName?.message}
-          {...register("lastName")}
           required
         />
       </div>
@@ -55,7 +61,7 @@ const OwnerFormFields = ({
             "Beneficiary",
             "Other"
           ]}
-          value={formState.relationship || ""}
+          value={formValues.relationship || ""}
           onChange={(value) => setValue("relationship", value)}
           error={errors.relationship?.message}
           required
@@ -65,19 +71,21 @@ const OwnerFormFields = ({
           id="ownershipPercentage"
           label="Ownership Percentage"
           type="number"
+          name="ownershipPercentage"
+          value={formValues.ownershipPercentage || ""}
+          onChange={(e) => setValue("ownershipPercentage", e.target.value)}
           error={errors.ownershipPercentage?.message}
-          {...register("ownershipPercentage")}
           required
         />
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <SearchableSelectField
+        <SelectField
           id="nationality"
           label="Nationality"
           placeholder="Select nationality"
           options={countryOptions}
-          value={formState.nationality || ""}
+          value={formValues.nationality || ""}
           onChange={(value) => setValue("nationality", value)}
           error={errors.nationality?.message}
           required
@@ -87,8 +95,10 @@ const OwnerFormFields = ({
           id="dateOfBirth"
           label="Date of Birth"
           type="date"
+          name="dateOfBirth"
+          value={formValues.dateOfBirth || ""}
+          onChange={(e) => setValue("dateOfBirth", e.target.value)}
           error={errors.dateOfBirth?.message}
-          {...register("dateOfBirth")}
           required
         />
       </div>
@@ -97,7 +107,7 @@ const OwnerFormFields = ({
         id="documents"
         label="Identity Documents"
         accept=".pdf,.jpg,.jpeg,.png"
-        onChange={(files) => {
+        onFilesSelected={(files) => {
           setValue("documents", files);
         }}
         multiple

@@ -6,5 +6,5 @@ export interface OwnerFormValues {
   ownershipPercentage: string;
   nationality: string;
   dateOfBirth: string;
-  documents?: File[];
+  documents: File[];
 }

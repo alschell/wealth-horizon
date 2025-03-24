@@ -16,7 +16,7 @@ const ownerFormSchema = z.object({
   ownershipPercentage: z.string().min(1, "Ownership percentage is required"),
   nationality: z.string().min(1, "Nationality is required"),
   dateOfBirth: z.string().min(1, "Date of birth is required"),
-  documents: z.array(z.instanceof(File)).optional(),
+  documents: z.array(z.instanceof(File)).default([]),
 });
 
 interface AddOwnerFormProps {
@@ -53,8 +53,6 @@ const AddOwnerForm: React.FC<AddOwnerFormProps> = ({
     },
   });
 
-  const formState = watch();
-
   // Populate form with existing owner data if in edit mode
   useEffect(() => {
     if (isEdit && existingOwner) {
@@ -80,7 +78,7 @@ const AddOwnerForm: React.FC<AddOwnerFormProps> = ({
       ownershipPercentage: data.ownershipPercentage,
       nationality: data.nationality,
       dateOfBirth: data.dateOfBirth,
-      documents: data.documents || [],
+      documents: data.documents,
     };
     
     onAddOwner(newOwner);
@@ -98,7 +96,7 @@ const AddOwnerForm: React.FC<AddOwnerFormProps> = ({
           register={register}
           errors={errors}
           setValue={setValue}
-          formState={formState}
+          watch={watch}
         />
         
         <div className="flex justify-end space-x-4 pt-4">

@@ -1,8 +1,6 @@
 
 import React, { useState } from "react";
-import { useForm } from "react-hook-form";
 import { motion } from "framer-motion";
-import { useOnboarding } from "@/context/OnboardingContext";
 import { BeneficialOwnerInfo } from "@/types/onboarding";
 import { useToast } from "@/components/ui/use-toast";
 import {
@@ -18,16 +16,24 @@ import {
 import AddOwnerForm from "./AddOwnerForm";
 import OwnersList from "./OwnersList";
 
-const BeneficialOwnersForm = () => {
+interface BeneficialOwnersFormProps {
+  owners: BeneficialOwnerInfo[];
+  onAddOwner: (owner: BeneficialOwnerInfo) => void;
+  onRemoveOwner: (index: number) => void;
+  onSubmit: () => void;
+  onBack: () => void;
+}
+
+const BeneficialOwnersForm: React.FC<BeneficialOwnersFormProps> = ({
+  owners,
+  onAddOwner,
+  onRemoveOwner,
+  onSubmit,
+  onBack
+}) => {
   const { toast } = useToast();
-  const { 
-    beneficialOwners, 
-    setBeneficialOwners, 
-    goToNextStep, 
-    goToPreviousStep 
-  } = useOnboarding();
   
-  const [showForm, setShowForm] = useState(true);
+  const [showForm, setShowForm] = useState(false);
   const [editIndex, setEditIndex] = useState<number | null>(null);
   const [ownerToDelete, setOwnerToDelete] = useState<number | null>(null);
   
@@ -35,9 +41,8 @@ const BeneficialOwnersForm = () => {
   const handleAddOwner = (newOwner: BeneficialOwnerInfo) => {
     if (editIndex !== null) {
       // Update existing owner
-      const updatedOwners = [...beneficialOwners];
-      updatedOwners[editIndex] = newOwner;
-      setBeneficialOwners(updatedOwners);
+      const updatedOwner = newOwner;
+      onAddOwner(updatedOwner);
       
       toast({
         title: "Owner Updated",
@@ -45,7 +50,7 @@ const BeneficialOwnersForm = () => {
       });
     } else {
       // Add new owner
-      setBeneficialOwners([...beneficialOwners, newOwner]);
+      onAddOwner(newOwner);
       
       toast({
         title: "Owner Added",
@@ -67,10 +72,9 @@ const BeneficialOwnersForm = () => {
   // Function to confirm deletion of an owner
   const handleConfirmDelete = () => {
     if (ownerToDelete !== null) {
-      const updatedOwners = beneficialOwners.filter((_, index) => index !== ownerToDelete);
-      setBeneficialOwners(updatedOwners);
+      const deletedOwner = owners[ownerToDelete];
+      onRemoveOwner(ownerToDelete);
       
-      const deletedOwner = beneficialOwners[ownerToDelete];
       toast({
         title: "Owner Removed",
         description: `${deletedOwner.firstName} ${deletedOwner.lastName} has been removed from beneficial owners.`,
@@ -102,11 +106,11 @@ const BeneficialOwnersForm = () => {
       </div>
       
       {/* Display existing owners */}
-      {beneficialOwners.length > 0 && (
+      {owners.length > 0 && (
         <OwnersList
-          owners={beneficialOwners}
-          onEdit={handleEditOwner}
-          onDelete={(index) => setOwnerToDelete(index)}
+          owners={owners}
+          onEditOwner={handleEditOwner}
+          onRemoveOwner={(index) => setOwnerToDelete(index)}
         />
       )}
       
@@ -137,7 +141,7 @@ const BeneficialOwnersForm = () => {
             onAddOwner={handleAddOwner}
             onCancel={handleCancelForm}
             isEdit={editIndex !== null}
-            existingOwner={editIndex !== null ? beneficialOwners[editIndex] : undefined}
+            existingOwner={editIndex !== null ? owners[editIndex] : undefined}
           />
         </motion.div>
       )}
@@ -145,14 +149,14 @@ const BeneficialOwnersForm = () => {
       {/* Navigation buttons */}
       <div className="flex justify-between mt-8 pt-6 border-t">
         <button
-          onClick={goToPreviousStep}
+          onClick={onBack}
           className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-100 transition"
         >
           Previous
         </button>
         
         <button
-          onClick={goToNextStep}
+          onClick={onSubmit}
           className="px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800 transition"
         >
           Next

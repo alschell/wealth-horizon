@@ -1,6 +1,6 @@
 
 import React from "react";
-import FileUploader from "@/components/FileUploader";
+import { FileField as CommonFileField } from "@/components/onboarding/common/fields";
 
 interface FileFieldProps {
   label: string;
@@ -15,17 +15,20 @@ const FileField: React.FC<FileFieldProps> = ({
   onFilesSelected,
   optional = true
 }) => {
+  const handleFilesChange = (newFiles: File[]) => {
+    onFilesSelected(newFiles);
+  };
+
   return (
-    <div className="space-y-2">
-      <FileUploader
-        accept="application/pdf,image/*"
-        multiple={true}
-        maxSize={5}
-        onFilesSelected={onFilesSelected}
-        existingFiles={files}
-        label={label}
-      />
-    </div>
+    <CommonFileField
+      id={`field-${label.toLowerCase().replace(/\s+/g, '-')}`}
+      label={label}
+      required={!optional}
+      accept="application/pdf,image/*"
+      multiple={true}
+      hint="Upload PDF documents or images (max 5MB per file)"
+      onFilesChange={handleFilesChange}
+    />
   );
 };
 

@@ -1,6 +1,6 @@
 
 import React from "react";
-import { FileField } from "../fields";
+import { FileField } from "@/components/onboarding/common/fields";
 
 interface DocumentsSectionProps {
   files: File[];
@@ -16,10 +16,13 @@ const DocumentsSection = ({
   return (
     <div className="space-y-2">
       <FileField
+        id="account-statements"
         label="Account Statements"
-        files={files}
-        onFilesSelected={onStatementsSelected}
-        optional={optional}
+        required={!optional}
+        accept="application/pdf,image/*"
+        multiple={true}
+        hint="Upload your account statements in PDF or image format"
+        onFilesChange={onStatementsSelected}
       />
     </div>
   );

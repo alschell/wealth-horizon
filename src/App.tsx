@@ -18,8 +18,6 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <OnboardingProvider>
-          <Toaster />
-          <Sonner />
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<LandingPage />} />
@@ -28,6 +26,8 @@ function App() {
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
+          <Toaster />
+          <Sonner />
         </OnboardingProvider>
       </TooltipProvider>
     </QueryClientProvider>

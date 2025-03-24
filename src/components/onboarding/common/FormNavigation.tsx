@@ -6,14 +6,18 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 interface FormNavigationProps {
   onBack: () => void;
   showRequiredFieldsNote?: boolean;
+  isSubmitting?: boolean;
+  submitText?: string;
 }
 
 const FormNavigation: React.FC<FormNavigationProps> = ({ 
   onBack, 
-  showRequiredFieldsNote = true 
+  showRequiredFieldsNote = true,
+  isSubmitting = false,
+  submitText = "Continue"
 }) => {
   return (
-    <div className="pt-4 border-t">
+    <div className="pt-4 border-t mt-6">
       {showRequiredFieldsNote && (
         <p className="text-sm text-gray-500 mb-6">
           Fields marked with * are required.
@@ -26,6 +30,7 @@ const FormNavigation: React.FC<FormNavigationProps> = ({
           size="lg" 
           className="rounded-lg"
           onClick={onBack}
+          disabled={isSubmitting}
         >
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back
@@ -33,9 +38,10 @@ const FormNavigation: React.FC<FormNavigationProps> = ({
         <Button 
           type="submit" 
           size="lg" 
-          className="rounded-lg hover:shadow-md transition-shadow"
+          className="rounded-lg bg-[#86CEFA] hover:bg-[#5ba8d6] hover:shadow-md transition-shadow"
+          disabled={isSubmitting}
         >
-          Continue
+          {submitText}
           <ArrowRight className="ml-2 h-4 w-4" />
         </Button>
       </div>

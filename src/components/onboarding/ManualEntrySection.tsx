@@ -1,6 +1,6 @@
 
-import React, { useState } from "react";
-import { FinancialAccountInfo } from "@/context/OnboardingContext";
+import React from "react";
+import { FinancialAccountInfo } from "@/types/onboarding";
 import { AccountForm, AccountList } from "./accounts/entry";
 
 interface ManualEntrySectionProps {

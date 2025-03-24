@@ -1,6 +1,6 @@
 
 import React from "react";
-import { FinancialAccountInfo } from "@/context/OnboardingContext";
+import { FinancialAccountInfo } from "@/types/onboarding";
 import AccountCard from "./AccountCard";
 
 interface AccountListProps {

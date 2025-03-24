@@ -20,7 +20,7 @@ const FormHeader: React.FC<FormHeaderProps> = ({
         <h2 className="text-2xl font-bold text-[#86CEFA]">{title}</h2>
       </div>
       {description && (
-        <p className="text-gray-500">{description}</p>
+        <p className="text-gray-500 mb-6">{description}</p>
       )}
     </>
   );

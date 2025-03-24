@@ -8,7 +8,7 @@ interface InputFieldRendererProps {
   value: string;
   onChange: (name: string, value: string) => void;
   placeholder?: string;
-  type?: "text" | "email" | "number";
+  type?: "text" | "email" | "number" | "tel" | "url";
   minValue?: number;
   maxValue?: number;
 }
@@ -34,7 +34,7 @@ const InputFieldRenderer: React.FC<InputFieldRendererProps> = ({
       value={value}
       onChange={handleInputChange}
       placeholder={placeholder}
-      className="h-11"
+      className="h-11 bg-white"
       type={type}
       min={minValue}
       max={maxValue}

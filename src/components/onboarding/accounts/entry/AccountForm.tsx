@@ -58,6 +58,7 @@ const AccountForm = ({ onAddAccount, enableLegalEntityFields = false }: AccountF
         <DocumentsSection
           files={newAccount.statements}
           onFilesSelected={handleFilesSelected}
+          optional={true}
         />
       </div>
       

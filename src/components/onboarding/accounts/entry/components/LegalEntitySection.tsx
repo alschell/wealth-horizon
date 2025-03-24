@@ -19,8 +19,8 @@ const LegalEntitySection = ({
   onSelectionChange
 }: LegalEntitySectionProps) => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <div className="space-y-2 md:col-span-2">
+    <div className="space-y-4">
+      <div className="space-y-2">
         <Label htmlFor="legalEntityIdentifier">
           Legal Entity Identifier (LEI)<span className="text-red-500 ml-1">*</span>
         </Label>
@@ -37,16 +37,29 @@ const LegalEntitySection = ({
         </p>
       </div>
       
-      <CustomSearchableSelect
-        id="legalEntity"
-        label="Legal Entity"
-        value={account.legalEntity || ""}
-        onChange={(value) => onSelectionChange('legalEntity', value)}
-        placeholder="Select legal entity"
-        options={legalEntities}
-        allowCustomValue={true}
-        required={true}
-      />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <CustomSearchableSelect
+          id="institution"
+          label="Institution"
+          value={account.institution || ""}
+          onChange={(value) => onSelectionChange('institution', value)}
+          placeholder="Select institution"
+          options={[]} // This will be filled by the parent component
+          allowCustomValue={true}
+          required={true}
+        />
+        
+        <CustomSearchableSelect
+          id="legalEntity"
+          label="Legal Entity"
+          value={account.legalEntity || ""}
+          onChange={(value) => onSelectionChange('legalEntity', value)}
+          placeholder="Select legal entity"
+          options={legalEntities}
+          allowCustomValue={true}
+          required={true}
+        />
+      </div>
     </div>
   );
 };

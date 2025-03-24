@@ -61,9 +61,6 @@ export function DatePicker({
           />
         </PopoverContent>
       </Popover>
-      {optional && (
-        <p className="text-sm text-muted-foreground">Optional</p>
-      )}
     </div>
   )
 }

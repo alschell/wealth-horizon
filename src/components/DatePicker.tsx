@@ -45,12 +45,10 @@ export function DatePicker({ value, onChange, label, optional }: DatePickerProps
             onSelect={onChange}
             initialFocus
             className="rounded-md border shadow-md bg-white pointer-events-auto"
+            weekStartsOn={1}
           />
         </PopoverContent>
       </Popover>
-      {optional && (
-        <p className="text-sm text-muted-foreground">Optional</p>
-      )}
     </div>
   )
 }

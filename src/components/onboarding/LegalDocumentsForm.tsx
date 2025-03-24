@@ -23,6 +23,12 @@ const LegalDocumentsForm = () => {
     handleDocumentChange(name as keyof LegalDocuments, value);
   };
 
+  const handleDateChange = (field: 'issueDate' | 'expiryDate', date?: Date) => {
+    if (date) {
+      handleDocumentChange(field, date.toISOString());
+    }
+  };
+
   const handleFilesSelected = (files: File[]) => {
     setLegalDocuments({ ...legalDocuments, documentFiles: files });
   };
@@ -63,6 +69,7 @@ const LegalDocumentsForm = () => {
               issueDate={legalDocuments.issueDate}
               expiryDate={legalDocuments.expiryDate}
               onInputChange={handleInputChange}
+              onDateChange={handleDateChange}
             />
             
             <DocumentUploadField

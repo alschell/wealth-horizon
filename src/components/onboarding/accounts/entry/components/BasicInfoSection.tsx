@@ -3,7 +3,7 @@ import React from "react";
 import { FinancialAccountInfo } from "@/types/onboarding";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { CustomSearchableSelect } from "@/components/ui/custom-searchable-select";
+import CustomSearchableSelect from "@/components/ui/custom-searchable-select";
 import { INSTITUTIONS, ACCOUNT_TYPES } from "@/utils/constants";
 
 interface BasicInfoSectionProps {

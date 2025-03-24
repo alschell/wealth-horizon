@@ -7,7 +7,7 @@ import { Card } from "@/components/ui/card";
 import { toast } from "@/components/ui/use-toast";
 import { motion } from "framer-motion";
 import { ArrowRight, ArrowLeft, Users, Plus, Trash2 } from "lucide-react";
-import { CustomSearchableSelect } from "@/components/ui/custom-searchable-select";
+import CustomSearchableSelect from "@/components/ui/custom-searchable-select";
 import { COUNTRIES } from "./constants";
 import FileUploader from "@/components/FileUploader";
 
@@ -29,7 +29,6 @@ const BeneficialOwnersForm = () => {
     const { name, value } = e.target;
     setNewOwner({ ...newOwner, [name]: value });
     
-    // Clear error when field is edited
     if (errors[name as keyof BeneficialOwnerInfo]) {
       setErrors({ ...errors, [name]: undefined });
     }
@@ -38,7 +37,6 @@ const BeneficialOwnersForm = () => {
   const handleSelectChange = (field: keyof BeneficialOwnerInfo, value: string) => {
     setNewOwner({ ...newOwner, [field]: value });
     
-    // Clear error when field is edited
     if (errors[field]) {
       setErrors({ ...errors, [field]: undefined });
     }
@@ -47,7 +45,6 @@ const BeneficialOwnersForm = () => {
   const handleFilesSelected = (files: File[]) => {
     setNewOwner({ ...newOwner, documents: files });
     
-    // Clear error when field is edited
     if (errors.documents) {
       setErrors({ ...errors, documents: undefined });
     }
@@ -82,7 +79,6 @@ const BeneficialOwnersForm = () => {
       }
     });
     
-    // Validate percentage
     if (newOwner.ownershipPercentage) {
       const percentage = parseFloat(newOwner.ownershipPercentage);
       if (isNaN(percentage) || percentage < 0 || percentage > 100) {
@@ -125,10 +121,7 @@ const BeneficialOwnersForm = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // We'll allow users to continue even with no beneficial owners for the sake of our demo
-    // but you might want to require at least one in a real application
-    
-    setCurrentStep(6); // Move to review step
+    setCurrentStep(6);
     
     toast({
       title: "Information saved",
@@ -153,7 +146,6 @@ const BeneficialOwnersForm = () => {
             Please provide information about individuals who own or control 25% or more of your entity.
           </p>
 
-          {/* List of existing owners */}
           {owners.length > 0 && (
             <div className="space-y-4">
               <h3 className="font-medium text-gray-700">Current Beneficial Owners</h3>
@@ -186,7 +178,6 @@ const BeneficialOwnersForm = () => {
             </div>
           )}
 
-          {/* Form to add a new owner */}
           <div className="space-y-6 border p-4 rounded-md">
             <h3 className="font-medium flex items-center gap-2 text-gray-700">
               <Plus className="h-5 w-5 text-gray-500" />
@@ -346,4 +337,3 @@ const BeneficialOwnersForm = () => {
 };
 
 export default BeneficialOwnersForm;
-

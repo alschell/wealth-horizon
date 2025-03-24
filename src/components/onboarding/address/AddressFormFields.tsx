@@ -3,7 +3,7 @@ import React from "react";
 import { AddressInfo } from "@/types/onboarding";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { CustomSearchableSelect } from "@/components/ui/custom-searchable-select";
+import CustomSearchableSelect from "@/components/ui/custom-searchable-select";
 import { COUNTRIES } from "../constants";
 
 interface AddressFormFieldsProps {

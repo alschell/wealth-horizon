@@ -28,6 +28,9 @@ const SearchableSelectRenderer: React.FC<SearchableSelectRendererProps> = ({
   const [open, setOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
   
+  // Sort options alphabetically
+  const sortedOptions = [...options].sort((a, b) => a.localeCompare(b));
+  
   const handleSelectChange = (selectedValue: string) => {
     onChange(name, selectedValue);
     setOpen(false);
@@ -74,7 +77,6 @@ const SearchableSelectRenderer: React.FC<SearchableSelectRendererProps> = ({
         side="bottom" 
         sideOffset={8}
         avoidCollisions={true}
-        forceMount
       >
         <Command className="bg-white">
           <CommandInput 
@@ -95,7 +97,7 @@ const SearchableSelectRenderer: React.FC<SearchableSelectRendererProps> = ({
             )}
           </CommandEmpty>
           <CommandGroup className="bg-white max-h-[300px] overflow-y-auto">
-            {options.map((option) => (
+            {sortedOptions.map((option) => (
               <CommandItem
                 key={option}
                 value={option}

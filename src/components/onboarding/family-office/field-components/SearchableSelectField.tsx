@@ -25,7 +25,6 @@ interface SearchableSelectFieldProps {
   placeholder?: string;
   options: string[];
   required?: boolean;
-  extractValue?: (option: string) => string;
   allowCustomValue?: boolean;
 }
 
@@ -37,14 +36,16 @@ const SearchableSelectField: React.FC<SearchableSelectFieldProps> = ({
   placeholder,
   options,
   required = false,
-  extractValue = (option) => option,
   allowCustomValue = false
 }) => {
   const [open, setOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
 
+  // Sort options alphabetically
+  const sortedOptions = [...options].sort((a, b) => a.localeCompare(b));
+
   const handleSelect = (selectedValue: string) => {
-    onChange(extractValue(selectedValue));
+    onChange(selectedValue);
     setOpen(false);
     setInputValue("");
   };
@@ -90,7 +91,6 @@ const SearchableSelectField: React.FC<SearchableSelectFieldProps> = ({
           side="bottom"
           sideOffset={8}
           avoidCollisions={true}
-          forceMount
         >
           <Command className="bg-white">
             <CommandInput 
@@ -111,25 +111,22 @@ const SearchableSelectField: React.FC<SearchableSelectFieldProps> = ({
               )}
             </CommandEmpty>
             <CommandGroup className="max-h-[300px] overflow-y-auto">
-              {options.map((option) => {
-                const optionValue = extractValue(option);
-                return (
-                  <CommandItem
-                    key={option}
-                    value={option}
-                    onSelect={() => handleSelect(option)}
-                    className="hover:bg-slate-100 aria-selected:bg-slate-100 cursor-pointer"
-                  >
-                    <Check
-                      className={cn(
-                        "mr-2 h-4 w-4 text-[#86CEFA]",
-                        value === optionValue ? "opacity-100" : "opacity-0"
-                      )}
-                    />
-                    {option}
-                  </CommandItem>
-                );
-              })}
+              {sortedOptions.map((option) => (
+                <CommandItem
+                  key={option}
+                  value={option}
+                  onSelect={() => handleSelect(option)}
+                  className="hover:bg-slate-100 aria-selected:bg-slate-100 cursor-pointer"
+                >
+                  <Check
+                    className={cn(
+                      "mr-2 h-4 w-4 text-[#86CEFA]",
+                      value === option ? "opacity-100" : "opacity-0"
+                    )}
+                  />
+                  {option}
+                </CommandItem>
+              ))}
             </CommandGroup>
           </Command>
         </PopoverContent>

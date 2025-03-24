@@ -34,7 +34,7 @@ const DocumentTypeField = ({ value, onChange }: DocumentTypeFieldProps) => {
         </SelectTrigger>
         <SelectContent 
           position="popper" 
-          className="bg-white border shadow-md z-50"
+          className="bg-white border shadow-md z-[999]"
           sideOffset={8}
           align="start"
         >

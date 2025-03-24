@@ -44,7 +44,7 @@ export function DatePicker({ value, onChange, label, optional }: DatePickerProps
             selected={value}
             onSelect={onChange}
             initialFocus
-            className="rounded-md border shadow-md bg-white"
+            className="rounded-md border shadow-md bg-white pointer-events-auto"
           />
         </PopoverContent>
       </Popover>

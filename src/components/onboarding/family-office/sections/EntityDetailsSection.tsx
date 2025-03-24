@@ -39,9 +39,10 @@ const EntityDetailsSection: React.FC<EntityDetailsSectionProps> = ({
           value={formData.jurisdiction}
           onChange={onChange}
           type="searchableSelect"
-          options={JURISDICTIONS.sort()}
+          options={JURISDICTIONS}
           required={true}
           className={errors.jurisdiction ? 'error' : ''}
+          allowCustomValue={true}
         />
       </div>
       

@@ -43,6 +43,9 @@ const SearchableSelectField = ({
   const [open, setOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
 
+  // Sort options alphabetically
+  const sortedOptions = [...options].sort((a, b) => a.localeCompare(b));
+
   const handleSelect = (selectedValue: string) => {
     onChange(extractValue(selectedValue));
     setOpen(false);
@@ -104,15 +107,15 @@ const SearchableSelectField = ({
             <CommandEmpty>
               {allowCustomValue ? (
                 <div className="py-3 px-4 text-sm">
-                  <p>No {label.toLowerCase()} found.</p>
+                  <p>No results found.</p>
                   <p className="font-medium text-[#86CEFA]">Press Enter to add "{inputValue}"</p>
                 </div>
               ) : (
-                `No ${label.toLowerCase()} found.`
+                "No results found."
               )}
             </CommandEmpty>
             <CommandGroup className="max-h-[300px] overflow-y-auto">
-              {options.map((option) => {
+              {sortedOptions.map((option) => {
                 const optionValue = extractValue(option);
                 return (
                   <CommandItem

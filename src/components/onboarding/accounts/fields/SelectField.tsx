@@ -28,6 +28,9 @@ const SelectField = ({
   required = false,
   onChange
 }: SelectFieldProps) => {
+  // Sort options alphabetically
+  const sortedOptions = [...options].sort((a, b) => a.localeCompare(b));
+  
   return (
     <div className="space-y-2">
       <Label htmlFor={id}>
@@ -45,11 +48,11 @@ const SelectField = ({
         </SelectTrigger>
         <SelectContent 
           position="popper" 
-          className="bg-white border shadow-md z-50"
+          className="bg-white border shadow-md z-[999]"
           sideOffset={8}
           align="start"
         >
-          {options.map((option) => (
+          {sortedOptions.map((option) => (
             <SelectItem 
               key={option} 
               value={option}

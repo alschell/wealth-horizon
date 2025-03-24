@@ -23,6 +23,7 @@ interface FormFieldItemProps {
   minValue?: number;
   maxValue?: number;
   className?: string;
+  allowCustomValue?: boolean;
 }
 
 export const formItemVariants = {
@@ -50,6 +51,7 @@ const FormFieldItem: React.FC<FormFieldItemProps> = ({
   minValue,
   maxValue,
   className,
+  allowCustomValue = false,
 }) => {
   const renderField = () => {
     switch (type) {
@@ -73,6 +75,7 @@ const FormFieldItem: React.FC<FormFieldItemProps> = ({
             placeholder={placeholder || `Select ${label.toLowerCase()}`}
             options={options}
             label={label}
+            allowCustomValue={allowCustomValue}
           />
         );
 

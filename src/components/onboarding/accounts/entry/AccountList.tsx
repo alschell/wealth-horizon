@@ -1,8 +1,8 @@
 
 import React from "react";
-import { FinancialAccountInfo } from "@/context/OnboardingContext";
+import { FinancialAccountInfo } from "@/types/onboarding";
 import { Button } from "@/components/ui/button";
-import { Wallet, Trash2 } from "lucide-react";
+import { Wallet, Trash2, Edit } from "lucide-react";
 
 interface AccountListProps {
   accounts: FinancialAccountInfo[];
@@ -47,8 +47,9 @@ const AccountList = ({ accounts, onRemoveAccount, onEditAccount }: AccountListPr
               size="sm"
               onClick={() => onEditAccount(index)}
               className="text-blue-500 hover:text-blue-700 hover:bg-blue-50"
+              aria-label="Edit account"
             >
-              Edit
+              <Edit className="h-4 w-4" />
             </Button>
             <Button
               variant="ghost"

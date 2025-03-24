@@ -1,27 +1,41 @@
+import { useState, useEffect } from "react";
+import { FinancialAccountInfo } from "@/types/onboarding";
+import { LEGAL_ENTITIES } from "../constants/legalEntities";
+import { toast } from "@/components/ui/use-toast";
 
-import { useState } from 'react';
-import { FinancialAccountInfo } from '@/types/onboarding';
-import { toast } from '@/components/ui/use-toast';
-import { LEGAL_ENTITIES } from '../constants/legalEntities';
-
-interface AccountFormStateProps {
+interface UseAccountFormStateProps {
   onAddAccount: (account: FinancialAccountInfo) => void;
   initialAccount?: FinancialAccountInfo;
 }
 
-export const useAccountFormState = ({ onAddAccount, initialAccount }: AccountFormStateProps) => {
+export const useAccountFormState = ({ onAddAccount, initialAccount }: UseAccountFormStateProps) => {
+  // Initialize account state with default values or provided values
+  const [newAccount, setNewAccount] = useState<FinancialAccountInfo>(
+    initialAccount || {
+      accountName: "",
+      institution: "",
+      accountType: "cash", // Set a valid default value
+      legalEntity: "",
+      legalEntityIdentifier: "",
+      accountSubtype: "",
+      currency: "",
+      approximateValue: "", // Added missing property
+      statements: []
+    }
+  );
+
   const defaultAccount: FinancialAccountInfo = {
-    accountName: '',
-    institution: '',
-    accountType: 'cash', // Changed from empty string to 'cash' to match the type
-    legalEntity: '',
-    legalEntityIdentifier: '',
-    accountSubtype: '',
-    currency: '',
+    accountName: "",
+    institution: "",
+    accountType: "cash", // Changed from empty string to 'cash' to match the type
+    legalEntity: "",
+    legalEntityIdentifier: "",
+    accountSubtype: "",
+    currency: "",
+    approximateValue: "",
     statements: []
   };
 
-  const [newAccount, setNewAccount] = useState<FinancialAccountInfo>(initialAccount || defaultAccount);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   // Use the legal entities data

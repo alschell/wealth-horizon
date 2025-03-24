@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { FinancialAccountInfo } from "@/types/onboarding";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { CustomSearchableSelect } from "@/components/ui/custom-searchable-select";
+import CustomSearchableSelect from "@/components/ui/custom-searchable-select";
 import { LEI_MAPPING } from "../../constants/leiMappings";
 
 interface LegalEntitySectionProps {

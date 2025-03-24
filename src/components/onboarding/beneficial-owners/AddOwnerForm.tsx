@@ -1,125 +1,103 @@
-
 import React from "react";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { BeneficialOwnerInfo } from "@/context/OnboardingContext";
-import { UserPlus, Edit } from "lucide-react";
-import { toast } from "@/components/ui/use-toast";
-import OwnerFormFields, { OwnerFormValues } from "./OwnerFormFields";
-import { Form } from "@/components/ui/form";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import OwnerFormFields from "./OwnerFormFields";
 import { Button } from "@/components/ui/button";
+import { X } from "lucide-react";
+import { motion } from "framer-motion";
 
-interface AddOwnerFormProps {
-  onAddOwner: (owner: BeneficialOwnerInfo) => void;
-  onCancel: () => void;
-  existingOwner?: BeneficialOwnerInfo;
-  isEdit?: boolean;
+// Define the OwnerFormValues type explicitly
+export interface OwnerFormValues {
+  firstName: string;
+  lastName: string;
+  relationship: string;
+  ownershipPercentage: string;
+  nationality: string;
+  dateOfBirth?: string;
+  documents?: File[];
 }
 
-// Define the validation schema using zod
+// Create a schema that matches OwnerFormValues
 const ownerSchema = z.object({
-  firstName: z.string().min(1, { message: "First name is required" }),
-  lastName: z.string().min(1, { message: "Last name is required" }),
-  relationship: z.string().min(1, { message: "Relationship is required" }),
-  ownershipPercentage: z.string()
-    .min(1, { message: "Ownership percentage is required" })
-    .refine((val) => {
-      const num = parseFloat(val);
-      return !isNaN(num) && num >= 0 && num <= 100;
-    }, {
-      message: "Please enter a valid percentage (0-100)"
-    }),
-  nationality: z.string().min(1, { message: "Nationality is required" }),
+  firstName: z.string().min(1, "First name is required"),
+  lastName: z.string().min(1, "Last name is required"),
+  relationship: z.string().min(1, "Relationship is required"),
+  ownershipPercentage: z.string().min(1, "Ownership percentage is required"),
+  nationality: z.string().min(1, "Nationality is required"),
   dateOfBirth: z.string().optional(),
-  documents: z.array(z.instanceof(File)).optional()
+  documents: z.array(z.any()).optional()
 });
 
-const AddOwnerForm: React.FC<AddOwnerFormProps> = ({
-  onAddOwner,
-  onCancel,
-  existingOwner,
-  isEdit = false
-}) => {
-  // Define strongly typed defaultValues
-  const defaultValues: OwnerFormValues = existingOwner 
-    ? {
-        firstName: existingOwner.firstName || "",
-        lastName: existingOwner.lastName || "",
-        relationship: existingOwner.relationship || "",
-        ownershipPercentage: existingOwner.ownershipPercentage?.toString() || "",
-        nationality: existingOwner.nationality || "",
-        dateOfBirth: existingOwner.dateOfBirth || "",
-        documents: existingOwner.documents || []
-      }
-    : {
-        firstName: "",
-        lastName: "",
-        relationship: "",
-        ownershipPercentage: "",
-        nationality: "",
-        dateOfBirth: "",
-        documents: []
-      };
+interface AddOwnerFormProps {
+  onAddOwner: (owner: OwnerFormValues) => void;
+  onCancel?: () => void;
+  isVisible?: boolean;
+}
 
-  const form = useForm<OwnerFormValues>({
+const AddOwnerForm = ({ onAddOwner, onCancel, isVisible = true }: AddOwnerFormProps) => {
+  // Initialize form with explicit OwnerFormValues type
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+    reset,
+    watch
+  } = useForm<OwnerFormValues>({
     resolver: zodResolver(ownerSchema),
-    defaultValues,
-    mode: "onChange"
+    defaultValues: {
+      firstName: "",
+      lastName: "",
+      relationship: "",
+      ownershipPercentage: "",
+      nationality: "",
+      dateOfBirth: "",
+      documents: []
+    }
   });
 
-  const { handleSubmit, formState: { isSubmitting, isDirty } } = form;
+  const onSubmit = (data: OwnerFormValues) => {
+    onAddOwner(data);
+    reset(); // Reset the form after submission
+    onCancel?.();
+  };
 
-  const onSubmit = handleSubmit((data) => {
-    // Simulate async operation
-    setTimeout(() => {
-      onAddOwner(data as BeneficialOwnerInfo);
-      toast({
-        title: isEdit ? "Owner updated" : "Owner added",
-        description: isEdit 
-          ? `${data.firstName} ${data.lastName} has been updated.` 
-          : `${data.firstName} ${data.lastName} has been added.`,
-      });
-    }, 500);
-  });
+  if (!isVisible) {
+    return null;
+  }
 
   return (
-    <div className="bg-white rounded-md p-6 shadow-sm">
-      <Form {...form}>
-        <form onSubmit={onSubmit} className="space-y-6">
-          <div className="flex items-center gap-3 mb-4">
-            {isEdit ? <Edit className="h-7 w-7" /> : <UserPlus className="h-7 w-7" />}
-            <div>
-              <h2 className="text-xl font-semibold">{isEdit ? "Edit Beneficial Owner" : "Add Beneficial Owner"}</h2>
-              <p className="text-gray-500">Provide details about individuals who own or control your entity.</p>
-            </div>
-          </div>
-
-          <OwnerFormFields form={form} />
-
-          <div className="pt-4 border-t">
-            <p className="text-sm text-gray-500 mb-6">
-              Fields marked with <span className="text-red-500">*</span> are required.
-            </p>
-            <div className="flex justify-end space-x-4">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={onCancel}
-              >
-                Cancel
-              </Button>
-              <Button
-                type="submit"
-                disabled={isSubmitting || !isDirty}
-              >
-                {isSubmitting ? "Saving..." : isEdit ? "Update Owner" : "Add Owner"}
-              </Button>
-            </div>
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 10 }}
+      transition={{ duration: 0.2 }}
+      className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-500 bg-opacity-75 z-50"
+    >
+      <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-lg font-semibold text-gray-800">Add Beneficial Owner</h2>
+          <Button variant="ghost" size="icon" onClick={onCancel}>
+            <X className="h-4 w-4" />
+          </Button>
+        </div>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <OwnerFormFields
+            formState={watch()}
+            errors={errors}
+            register={register}
+            setValue={setValue}
+          />
+          <div className="flex justify-end space-x-2">
+            <Button variant="ghost" onClick={onCancel}>
+              Cancel
+            </Button>
+            <Button type="submit">Add Owner</Button>
           </div>
         </form>
-      </Form>
-    </div>
+      </div>
+    </motion.div>
   );
 };
 

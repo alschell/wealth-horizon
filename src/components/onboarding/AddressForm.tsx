@@ -82,10 +82,10 @@ const AddressForm = () => {
           <AddressFormHeader />
           
           <AddressFormFields 
-            formData={formData}
+            address={formData}
             errors={errors}
-            handleInputChange={handleInputChange}
-            handleSelectChange={handleSelectChange}
+            onInputChange={handleInputChange}
+            onSelectionChange={handleSelectChange}
           />
 
           <AddressFormNavigation hasErrors={Object.keys(errors).length > 0} />

@@ -1,3 +1,4 @@
+
 import React from "react";
 import { AddressInfo } from "@/types/onboarding";
 import { Input } from "@/components/ui/input";
@@ -7,12 +8,14 @@ import { COUNTRIES } from "../constants";
 
 interface AddressFormFieldsProps {
   address: AddressInfo;
+  errors?: Partial<Record<keyof AddressInfo, string>>;
   onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onSelectionChange: (field: keyof AddressInfo, value: string) => void;
 }
 
 const AddressFormFields = ({
   address,
+  errors = {},
   onInputChange,
   onSelectionChange
 }: AddressFormFieldsProps) => {
@@ -20,17 +23,20 @@ const AddressFormFields = ({
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
-          <Label htmlFor="addressLine1">
+          <Label htmlFor="streetAddress">
             Address Line 1
           </Label>
           <Input
-            id="addressLine1"
-            name="addressLine1"
-            value={address.addressLine1 || ""}
+            id="streetAddress"
+            name="streetAddress"
+            value={address.streetAddress || ""}
             onChange={onInputChange}
             placeholder="e.g., 123 Main St"
             className="h-11"
           />
+          {errors.streetAddress && (
+            <p className="text-sm text-red-500">{errors.streetAddress}</p>
+          )}
         </div>
 
         <div className="space-y-2">
@@ -61,20 +67,26 @@ const AddressFormFields = ({
             placeholder="e.g., New York"
             className="h-11"
           />
+          {errors.city && (
+            <p className="text-sm text-red-500">{errors.city}</p>
+          )}
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="region">
+          <Label htmlFor="state">
             Region/State
           </Label>
           <Input
-            id="region"
-            name="region"
-            value={address.region || ""}
+            id="state"
+            name="state"
+            value={address.state || ""}
             onChange={onInputChange}
             placeholder="e.g., NY"
             className="h-11"
           />
+          {errors.state && (
+            <p className="text-sm text-red-500">{errors.state}</p>
+          )}
         </div>
 
         <div className="space-y-2">
@@ -89,18 +101,25 @@ const AddressFormFields = ({
             placeholder="e.g., 10001"
             className="h-11"
           />
+          {errors.postalCode && (
+            <p className="text-sm text-red-500">{errors.postalCode}</p>
+          )}
         </div>
       </div>
 
-      <CustomSearchableSelect
-        id="country"
-        label="Country"
-        value={address.country}
-        onChange={(value) => onSelectionChange('country', value)}
-        placeholder="Select country"
-        options={COUNTRIES}
-        className=""
-      />
+      <div className="space-y-2">
+        <CustomSearchableSelect
+          id="country"
+          label="Country"
+          value={address.country}
+          onChange={(value) => onSelectionChange('country', value)}
+          placeholder="Select country"
+          options={COUNTRIES}
+        />
+        {errors.country && (
+          <p className="text-sm text-red-500">{errors.country}</p>
+        )}
+      </div>
     </>
   );
 };

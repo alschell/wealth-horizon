@@ -22,6 +22,7 @@ export type PrimaryContactInfo = {
 
 export type AddressInfo = {
   streetAddress: string;
+  addressLine2?: string;
   city: string;
   state: string;
   postalCode: string;

@@ -1,30 +1,43 @@
 
 import React, { useState } from "react";
-import { useOnboarding, BeneficialOwnerInfo } from "@/context/OnboardingContext";
+import { BeneficialOwnerInfo } from "@/context/OnboardingContext";
 import { Card } from "@/components/ui/card";
 import { toast } from "@/components/ui/use-toast";
 import { motion } from "framer-motion";
-import { Users, ArrowLeft, ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import OwnersList from "./OwnersList";
 import AddOwnerForm from "./AddOwnerForm";
+import FormHeader from "./FormHeader";
+import FormFooter from "./FormFooter";
 
-const BeneficialOwnersForm = () => {
-  const { onboardingData, addBeneficialOwner, removeBeneficialOwner, setCurrentStep } = useOnboarding();
-  const [owners, setOwners] = useState<BeneficialOwnerInfo[]>(onboardingData.beneficialOwners);
+interface BeneficialOwnersFormProps {
+  owners: BeneficialOwnerInfo[];
+  onAddOwner: (owner: BeneficialOwnerInfo) => void;
+  onRemoveOwner: (index: number) => void;
+  onSubmit: () => void;
+  onBack: () => void;
+}
+
+const BeneficialOwnersForm: React.FC<BeneficialOwnersFormProps> = ({
+  owners,
+  onAddOwner,
+  onRemoveOwner,
+  onSubmit,
+  onBack
+}) => {
+  const [localOwners, setLocalOwners] = useState<BeneficialOwnerInfo[]>(owners);
   const [currentEditIndex, setCurrentEditIndex] = useState<number | null>(null);
   const [editingOwner, setEditingOwner] = useState<BeneficialOwnerInfo | null>(null);
   
   const handleAddOwner = (newOwner: BeneficialOwnerInfo) => {
     if (currentEditIndex !== null) {
       // Update existing owner
-      const updatedOwners = [...owners];
+      const updatedOwners = [...localOwners];
       updatedOwners[currentEditIndex] = newOwner;
-      setOwners(updatedOwners);
+      setLocalOwners(updatedOwners);
       
       // Remove the old owner and add the updated one
-      removeBeneficialOwner(currentEditIndex);
-      addBeneficialOwner(newOwner);
+      onRemoveOwner(currentEditIndex);
+      onAddOwner(newOwner);
       
       toast({
         title: "Owner updated",
@@ -36,9 +49,9 @@ const BeneficialOwnersForm = () => {
       setEditingOwner(null);
     } else {
       // Add new owner
-      const updatedOwners = [...owners, newOwner];
-      setOwners(updatedOwners);
-      addBeneficialOwner(newOwner);
+      const updatedOwners = [...localOwners, newOwner];
+      setLocalOwners(updatedOwners);
+      onAddOwner(newOwner);
       
       toast({
         title: "Owner added",
@@ -48,9 +61,9 @@ const BeneficialOwnersForm = () => {
   };
 
   const handleRemoveOwner = (index: number) => {
-    const updatedOwners = owners.filter((_, i) => i !== index);
-    setOwners(updatedOwners);
-    removeBeneficialOwner(index);
+    const updatedOwners = localOwners.filter((_, i) => i !== index);
+    setLocalOwners(updatedOwners);
+    onRemoveOwner(index);
     
     if (currentEditIndex === index) {
       setCurrentEditIndex(null);
@@ -60,7 +73,7 @@ const BeneficialOwnersForm = () => {
   
   const handleEditOwner = (index: number) => {
     setCurrentEditIndex(index);
-    setEditingOwner(owners[index]);
+    setEditingOwner(localOwners[index]);
   };
   
   const handleCancelEdit = () => {
@@ -71,7 +84,7 @@ const BeneficialOwnersForm = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    setCurrentStep(6);
+    onSubmit();
     
     toast({
       title: "Information saved",
@@ -88,17 +101,11 @@ const BeneficialOwnersForm = () => {
     >
       <Card className="p-6 md:p-8 shadow-sm">
         <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="flex items-center gap-3 mb-2">
-            <Users className="h-7 w-7 text-black" />
-            <h2 className="text-2xl font-bold text-black">Beneficial Owners</h2>
-          </div>
-          <p className="text-gray-500">
-            Please provide information about individuals who own or control 25% or more of your entity.
-          </p>
+          <FormHeader />
 
           {/* List of current beneficial owners */}
           <OwnersList 
-            owners={owners}
+            owners={localOwners}
             onRemoveOwner={handleRemoveOwner}
             onEditOwner={handleEditOwner}
           />
@@ -111,31 +118,7 @@ const BeneficialOwnersForm = () => {
             onCancelEdit={handleCancelEdit}
           />
 
-          <div className="pt-4 border-t">
-            <p className="text-sm text-gray-500 mb-6">
-              Fields marked with <span className="text-red-500">*</span> are required.
-            </p>
-            <div className="flex justify-between">
-              <Button 
-                type="button" 
-                variant="outline"
-                size="lg" 
-                className="rounded-lg"
-                onClick={() => setCurrentStep(4)}
-              >
-                <ArrowLeft className="mr-2 h-4 w-4" />
-                Back
-              </Button>
-              <Button 
-                type="submit" 
-                size="lg" 
-                className="rounded-lg hover:shadow-md transition-shadow bg-black hover:bg-gray-800 text-white"
-              >
-                Continue
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </div>
-          </div>
+          <FormFooter onBack={onBack} />
         </form>
       </Card>
     </motion.div>

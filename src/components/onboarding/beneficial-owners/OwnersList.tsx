@@ -1,100 +1,85 @@
 
-import React, { useState } from "react";
-import { BeneficialOwnerInfo } from "@/types/onboarding";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import React from "react";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Edit, Trash2, User } from "lucide-react";
-
-interface OwnersListProps {
-  owners: BeneficialOwnerInfo[];
-  onEditOwner: (index: number) => void;
-  onRemoveOwner: (index: number) => void;
-}
+import { Edit, Trash } from "lucide-react";
+import { OwnersListProps } from "./types";
+import { containerVariants, itemVariants } from "../common/AnimationVariants";
 
 const OwnersList: React.FC<OwnersListProps> = ({ 
   owners, 
   onEditOwner, 
   onRemoveOwner 
 }) => {
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [ownerToDelete, setOwnerToDelete] = useState<number | null>(null);
-
-  const handleDeleteClick = (index: number) => {
-    setOwnerToDelete(index);
-    setDeleteDialogOpen(true);
-  };
-
-  const confirmDelete = () => {
-    if (ownerToDelete !== null) {
-      onRemoveOwner(ownerToDelete);
-      setOwnerToDelete(null);
-    }
-    setDeleteDialogOpen(false);
-  };
-
-  if (owners.length === 0) {
-    return (
-      <div className="text-center py-8 text-gray-500">
-        No beneficial owners added yet.
-      </div>
-    );
-  }
-
   return (
-    <div className="space-y-4">
+    <motion.div
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      className="space-y-4"
+    >
       {owners.map((owner, index) => (
-        <div 
-          key={index} 
-          className="flex items-center justify-between p-4 border rounded-md bg-gray-50"
+        <motion.div
+          key={owner.id}
+          custom={index}
+          variants={itemVariants}
+          className="bg-white rounded-lg p-4 border border-gray-200 shadow-sm transition-all hover:shadow-md"
         >
-          <div className="flex items-center gap-3">
-            <User className="h-5 w-5 text-gray-500" />
+          <div className="flex justify-between items-start">
             <div>
-              <p className="font-medium">{owner.firstName} {owner.lastName}</p>
-              <p className="text-sm text-gray-500">
-                {owner.relationship} · {owner.ownershipPercentage}% ownership
-              </p>
+              <h3 className="font-semibold text-lg">{owner.firstName} {owner.lastName}</h3>
+              <p className="text-gray-600">{owner.relationship}</p>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1 mt-3 text-sm">
+                <div className="flex items-center">
+                  <span className="text-gray-500 mr-2">Ownership:</span>
+                  <span className="font-medium">{owner.ownershipPercentage}%</span>
+                </div>
+                
+                <div className="flex items-center">
+                  <span className="text-gray-500 mr-2">Nationality:</span>
+                  <span className="font-medium">{owner.nationality}</span>
+                </div>
+                
+                <div className="flex items-center">
+                  <span className="text-gray-500 mr-2">Birth Date:</span>
+                  <span className="font-medium">{owner.dateOfBirth}</span>
+                </div>
+                
+                <div className="flex items-center">
+                  <span className="text-gray-500 mr-2">Documents:</span>
+                  <span className="font-medium">
+                    {owner.documents && owner.documents.length > 0 
+                      ? `${owner.documents.length} file(s)` 
+                      : "None"}
+                  </span>
+                </div>
+              </div>
+            </div>
+            
+            <div className="flex space-x-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => onEditOwner(index)}
+                className="text-blue-600 border-blue-200 hover:bg-blue-50"
+              >
+                <Edit className="h-4 w-4" />
+              </Button>
+              
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => onRemoveOwner(index)}
+                className="text-red-600 border-red-200 hover:bg-red-50"
+              >
+                <Trash className="h-4 w-4" />
+              </Button>
             </div>
           </div>
-          
-          <div className="flex gap-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => onEditOwner(index)}
-              className="text-blue-500 hover:text-blue-700 hover:bg-blue-50"
-            >
-              <Edit className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => handleDeleteClick(index)}
-              className="text-red-500 hover:text-red-700 hover:bg-red-50"
-            >
-              <Trash2 className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
+        </motion.div>
       ))}
-
-      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Confirm Deletion</AlertDialogTitle>
-            <AlertDialogDescription>
-              Are you sure you want to delete this beneficial owner? This action cannot be undone.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmDelete} className="bg-red-500 hover:bg-red-600">
-              Delete
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    </div>
+    </motion.div>
   );
 };
 

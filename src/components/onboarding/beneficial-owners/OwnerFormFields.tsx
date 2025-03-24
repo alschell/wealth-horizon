@@ -26,6 +26,7 @@ const OwnerFormFields: React.FC<OwnerFormFieldsProps> = ({
           render={({ field }) => (
             <InputField
               id="firstName"
+              name="firstName"
               label="First Name"
               required
               value={field.value}
@@ -41,6 +42,7 @@ const OwnerFormFields: React.FC<OwnerFormFieldsProps> = ({
           render={({ field }) => (
             <InputField
               id="lastName"
+              name="lastName"
               label="Last Name"
               required
               value={field.value}
@@ -57,6 +59,7 @@ const OwnerFormFields: React.FC<OwnerFormFieldsProps> = ({
         render={({ field }) => (
           <InputField
             id="relationship"
+            name="relationship"
             label="Relationship to Family Office"
             required
             value={field.value}
@@ -73,15 +76,15 @@ const OwnerFormFields: React.FC<OwnerFormFieldsProps> = ({
         render={({ field }) => (
           <InputField
             id="ownershipPercentage"
+            name="ownershipPercentage"
             label="Ownership Percentage"
             required
             value={field.value}
             onChange={field.onChange}
             placeholder="e.g., 25.5"
             type="number"
-            min="0"
-            max="100"
             error={errors.ownershipPercentage?.message}
+            className="w-full"
           />
         )}
       />
@@ -92,11 +95,13 @@ const OwnerFormFields: React.FC<OwnerFormFieldsProps> = ({
         render={({ field }) => (
           <SelectField
             id="nationality"
+            name="nationality"
             label="Nationality"
-            value={field.value || ""}
+            value={field.value}
             onChange={field.onChange}
             options={COUNTRIES}
             required
+            placeholder="Select nationality"
             error={errors.nationality?.message}
           />
         )}
@@ -108,6 +113,7 @@ const OwnerFormFields: React.FC<OwnerFormFieldsProps> = ({
         render={({ field }) => (
           <DateField
             id="dateOfBirth"
+            name="dateOfBirth"
             label="Date of Birth"
             required
             value={field.value}

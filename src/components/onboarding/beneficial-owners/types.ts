@@ -34,6 +34,13 @@ export const ownerSchema = z.object({
 
 export interface OwnersListProps {
   owners: BeneficialOwnerInfo[];
-  onDelete: (index: number) => void;
-  onEdit?: (index: number) => void;
+  onEditOwner: (index: number) => void;
+  onRemoveOwner: (index: number) => void;
+}
+
+export interface AddOwnerFormProps {
+  onAddOwner: (owner: BeneficialOwnerInfo) => void;
+  onCancel: () => void;
+  isEditing?: boolean;
+  existingOwner?: BeneficialOwnerInfo;
 }

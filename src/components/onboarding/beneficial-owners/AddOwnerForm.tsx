@@ -7,32 +7,25 @@ import { ArrowLeft } from "lucide-react";
 import { motion } from "framer-motion";
 import { nanoid } from "nanoid";
 import OwnerFormFields from "./OwnerFormFields";
-import { BeneficialOwnerInfo, OwnerFormValues, ownerSchema } from "./types";
+import { BeneficialOwnerInfo, OwnerFormValues, ownerSchema, AddOwnerFormProps } from "./types";
 import { fadeAnimation } from "../common/AnimationVariants";
-
-interface AddOwnerFormProps {
-  onAddOwner: (owner: BeneficialOwnerInfo) => void;
-  onCancel: () => void;
-  ownerToEdit?: BeneficialOwnerInfo;
-  isEditing?: boolean;
-}
 
 const AddOwnerForm: React.FC<AddOwnerFormProps> = ({
   onAddOwner,
   onCancel,
-  ownerToEdit,
+  existingOwner,
   isEditing = false
 }) => {
-  const [files, setFiles] = useState<File[]>(ownerToEdit?.documents || []);
+  const [files, setFiles] = useState<File[]>(existingOwner?.documents || []);
   
   const defaultValues: OwnerFormValues = {
-    firstName: ownerToEdit?.firstName || "",
-    lastName: ownerToEdit?.lastName || "",
-    relationship: ownerToEdit?.relationship || "",
-    ownershipPercentage: ownerToEdit?.ownershipPercentage || "",
-    nationality: ownerToEdit?.nationality || "",
-    dateOfBirth: ownerToEdit?.dateOfBirth || "",
-    documents: ownerToEdit?.documents || []
+    firstName: existingOwner?.firstName || "",
+    lastName: existingOwner?.lastName || "",
+    relationship: existingOwner?.relationship || "",
+    ownershipPercentage: existingOwner?.ownershipPercentage || "",
+    nationality: existingOwner?.nationality || "",
+    dateOfBirth: existingOwner?.dateOfBirth || "",
+    documents: existingOwner?.documents || []
   };
   
   const { 
@@ -50,7 +43,7 @@ const AddOwnerForm: React.FC<AddOwnerFormProps> = ({
 
   const onSubmit = (data: OwnerFormValues) => {
     const owner: BeneficialOwnerInfo = {
-      id: ownerToEdit?.id || nanoid(),
+      id: existingOwner?.id || nanoid(),
       ...data,
       documents: files
     };

@@ -5,6 +5,7 @@ import {
   InputField, 
   SearchableSelectField 
 } from "../fields";
+import { LEGAL_ENTITIES } from "../constants/legalEntityData";
 
 interface LegalEntitySectionProps {
   account: FinancialAccountInfo;
@@ -22,18 +23,11 @@ const LegalEntitySection = ({
   handleLegalEntityChange,
   handleLeiChange
 }: LegalEntitySectionProps) => {
+  // Get all institutions from the mapping object
+  const institutions = Object.keys(LEGAL_ENTITIES).sort();
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <SearchableSelectField
-        id="legalEntity"
-        label="Legal Entity"
-        value={account.legalEntity || ""}
-        placeholder="Select legal entity"
-        options={legalEntities}
-        onChange={handleLegalEntityChange}
-        allowCustomValue={true}
-      />
-      
+    <div className="space-y-4">
       <InputField
         id="legalEntityIdentifier"
         label="Legal Entity Identifier"
@@ -41,7 +35,34 @@ const LegalEntitySection = ({
         value={account.legalEntityIdentifier || ""}
         onChange={handleLeiChange}
         placeholder="e.g., 7H6GLXDRUGQFU57RNE97"
+        required
       />
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <SearchableSelectField
+          id="institution"
+          label="Institution"
+          value={account.institution || ""}
+          placeholder="Select institution"
+          options={institutions}
+          onChange={value => onInputChange({
+            target: { name: 'institution', value }
+          } as React.ChangeEvent<HTMLInputElement>)}
+          allowCustomValue={true}
+          required
+        />
+        
+        <SearchableSelectField
+          id="legalEntity"
+          label="Legal Entity"
+          value={account.legalEntity || ""}
+          placeholder="Select legal entity"
+          options={legalEntities}
+          onChange={handleLegalEntityChange}
+          allowCustomValue={true}
+          required
+        />
+      </div>
     </div>
   );
 };

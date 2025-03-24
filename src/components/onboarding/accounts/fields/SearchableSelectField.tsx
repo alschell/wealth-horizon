@@ -43,8 +43,16 @@ const SearchableSelectField = ({
   const [open, setOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
 
-  // Sort options alphabetically
-  const sortedOptions = [...options].sort((a, b) => a.localeCompare(b));
+  // Sort options alphabetically, but ensure "Other" is at the end if present
+  let sortedOptions = [...options];
+  if (sortedOptions.includes("Other")) {
+    sortedOptions = sortedOptions
+      .filter(option => option !== "Other")
+      .sort((a, b) => a.localeCompare(b));
+    sortedOptions.push("Other");
+  } else {
+    sortedOptions.sort((a, b) => a.localeCompare(b));
+  }
 
   const handleSelect = (selectedValue: string) => {
     onChange(extractValue(selectedValue));
@@ -121,7 +129,7 @@ const SearchableSelectField = ({
                     key={option}
                     value={option}
                     onSelect={() => handleSelect(option)}
-                    className="hover:bg-slate-100 aria-selected:bg-slate-100 cursor-pointer text-black"
+                    className="hover:bg-slate-100 aria-selected:bg-slate-100 cursor-pointer text-black text-left"
                   >
                     <Check
                       className={cn(

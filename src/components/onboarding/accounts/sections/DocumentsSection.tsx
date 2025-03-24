@@ -11,7 +11,7 @@ interface DocumentsSectionProps {
 const DocumentsSection = ({
   files,
   onStatementsSelected,
-  optional = false
+  optional = true
 }: DocumentsSectionProps) => {
   return (
     <div className="space-y-2">

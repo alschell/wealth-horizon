@@ -22,7 +22,7 @@ export interface OwnerFormValues {
   documents?: File[];
 }
 
-// Update the schema to match the OwnerFormValues interface with required fields
+// Update the schema to explicitly match the OwnerFormValues interface
 export const ownerSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
   lastName: z.string().min(1, "Last name is required"),
@@ -32,6 +32,8 @@ export const ownerSchema = z.object({
   dateOfBirth: z.string().min(1, "Date of birth is required"),
   documents: z.array(z.instanceof(File)).optional()
 });
+
+export type OwnerFormSchema = z.infer<typeof ownerSchema>;
 
 export interface OwnersListProps {
   owners: BeneficialOwnerInfo[];

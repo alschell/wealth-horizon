@@ -7,7 +7,13 @@ import { ArrowLeft } from "lucide-react";
 import { motion } from "framer-motion";
 import { nanoid } from "nanoid";
 import OwnerFormFields from "./OwnerFormFields";
-import { BeneficialOwnerInfo, OwnerFormValues, ownerSchema, AddOwnerFormProps } from "./types";
+import { 
+  BeneficialOwnerInfo, 
+  OwnerFormValues, 
+  ownerSchema, 
+  AddOwnerFormProps,
+  OwnerFormSchema 
+} from "./types";
 
 const AddOwnerForm: React.FC<AddOwnerFormProps> = ({
   onAddOwner,
@@ -30,7 +36,7 @@ const AddOwnerForm: React.FC<AddOwnerFormProps> = ({
     control, 
     handleSubmit, 
     formState: { errors, isSubmitting } 
-  } = useForm<OwnerFormValues>({
+  } = useForm<OwnerFormSchema>({
     resolver: zodResolver(ownerSchema),
     defaultValues
   });
@@ -39,7 +45,7 @@ const AddOwnerForm: React.FC<AddOwnerFormProps> = ({
     setFiles(selectedFiles);
   };
 
-  const onSubmit = (data: OwnerFormValues) => {
+  const onSubmit = (data: OwnerFormSchema) => {
     const owner: BeneficialOwnerInfo = {
       id: existingOwner?.id || nanoid(),
       ...data,

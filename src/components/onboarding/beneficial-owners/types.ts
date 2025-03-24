@@ -22,7 +22,7 @@ export interface OwnerFormValues {
   documents?: File[];
 }
 
-// Define the schema to exactly match the OwnerFormValues interface structure
+// Update the schema to match the OwnerFormValues interface with required fields
 export const ownerSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
   lastName: z.string().min(1, "Last name is required"),

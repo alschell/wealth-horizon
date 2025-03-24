@@ -1,51 +1,47 @@
-import React from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
+
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import OwnerFormFields from "./OwnerFormFields";
 import { Button } from "@/components/ui/button";
-import { X } from "lucide-react";
-import { motion } from "framer-motion";
+import { BeneficialOwnerInfo } from "@/types/onboarding";
+import OwnerFormFields from "./OwnerFormFields";
+import { OwnerFormValues } from "./types";
 
-// Define the OwnerFormValues type explicitly
-export interface OwnerFormValues {
-  firstName: string;
-  lastName: string;
-  relationship: string;
-  ownershipPercentage: string;
-  nationality: string;
-  dateOfBirth?: string;
-  documents?: File[];
-}
-
-// Create a schema that matches OwnerFormValues
-const ownerSchema = z.object({
+// Define the validation schema with Zod
+const ownerFormSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
   lastName: z.string().min(1, "Last name is required"),
   relationship: z.string().min(1, "Relationship is required"),
   ownershipPercentage: z.string().min(1, "Ownership percentage is required"),
   nationality: z.string().min(1, "Nationality is required"),
-  dateOfBirth: z.string().optional(),
-  documents: z.array(z.any()).optional()
+  dateOfBirth: z.string().min(1, "Date of birth is required"),
+  documents: z.array(z.instanceof(File)).optional(),
 });
 
 interface AddOwnerFormProps {
-  onAddOwner: (owner: OwnerFormValues) => void;
-  onCancel?: () => void;
-  isVisible?: boolean;
+  onAddOwner: (owner: BeneficialOwnerInfo) => void;
+  onCancel: () => void;
+  isEdit?: boolean;
+  existingOwner?: BeneficialOwnerInfo;
 }
 
-const AddOwnerForm = ({ onAddOwner, onCancel, isVisible = true }: AddOwnerFormProps) => {
-  // Initialize form with explicit OwnerFormValues type
+const AddOwnerForm: React.FC<AddOwnerFormProps> = ({
+  onAddOwner,
+  onCancel,
+  isEdit = false,
+  existingOwner
+}) => {
+  // Initialize form
   const {
     register,
     handleSubmit,
-    formState: { errors },
     setValue,
+    formState: { errors, isSubmitting },
     reset,
     watch
   } = useForm<OwnerFormValues>({
-    resolver: zodResolver(ownerSchema),
+    resolver: zodResolver(ownerFormSchema),
     defaultValues: {
       firstName: "",
       lastName: "",
@@ -53,51 +49,75 @@ const AddOwnerForm = ({ onAddOwner, onCancel, isVisible = true }: AddOwnerFormPr
       ownershipPercentage: "",
       nationality: "",
       dateOfBirth: "",
-      documents: []
-    }
+      documents: [],
+    },
   });
 
+  const formState = watch();
+
+  // Populate form with existing owner data if in edit mode
+  useEffect(() => {
+    if (isEdit && existingOwner) {
+      reset({
+        firstName: existingOwner.firstName || "",
+        lastName: existingOwner.lastName || "",
+        relationship: existingOwner.relationship || "",
+        ownershipPercentage: existingOwner.ownershipPercentage || "",
+        nationality: existingOwner.nationality || "",
+        dateOfBirth: existingOwner.dateOfBirth || "",
+        documents: existingOwner.documents || [],
+      });
+    }
+  }, [isEdit, existingOwner, reset]);
+
+  // Handle form submission
   const onSubmit = (data: OwnerFormValues) => {
-    onAddOwner(data);
-    reset(); // Reset the form after submission
-    onCancel?.();
+    const newOwner: BeneficialOwnerInfo = {
+      id: existingOwner?.id || Date.now().toString(),
+      firstName: data.firstName,
+      lastName: data.lastName,
+      relationship: data.relationship,
+      ownershipPercentage: data.ownershipPercentage,
+      nationality: data.nationality,
+      dateOfBirth: data.dateOfBirth,
+      documents: data.documents || [],
+    };
+    
+    onAddOwner(newOwner);
+    reset();
   };
 
-  if (!isVisible) {
-    return null;
-  }
-
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: 10 }}
-      transition={{ duration: 0.2 }}
-      className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-500 bg-opacity-75 z-50"
-    >
-      <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-semibold text-gray-800">Add Beneficial Owner</h2>
-          <Button variant="ghost" size="icon" onClick={onCancel}>
-            <X className="h-4 w-4" />
+    <div className="bg-white p-6 rounded-lg border shadow-sm">
+      <h3 className="text-lg font-semibold mb-4">
+        {isEdit ? "Edit Beneficial Owner" : "Add Beneficial Owner"}
+      </h3>
+      
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        <OwnerFormFields
+          register={register}
+          errors={errors}
+          setValue={setValue}
+          formState={formState}
+        />
+        
+        <div className="flex justify-end space-x-4 pt-4">
+          <Button 
+            type="button" 
+            variant="outline" 
+            onClick={onCancel}
+          >
+            Cancel
+          </Button>
+          <Button 
+            type="submit" 
+            disabled={isSubmitting}
+          >
+            {isEdit ? "Update Owner" : "Add Owner"}
           </Button>
         </div>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <OwnerFormFields
-            formState={watch()}
-            errors={errors}
-            register={register}
-            setValue={setValue}
-          />
-          <div className="flex justify-end space-x-2">
-            <Button variant="ghost" onClick={onCancel}>
-              Cancel
-            </Button>
-            <Button type="submit">Add Owner</Button>
-          </div>
-        </form>
-      </div>
-    </motion.div>
+      </form>
+    </div>
   );
 };
 

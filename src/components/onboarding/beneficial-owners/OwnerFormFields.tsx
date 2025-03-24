@@ -1,113 +1,108 @@
+
 import React from "react";
-import { useFormContext } from "react-hook-form";
-import { InputField, SelectField, FileUploadField } from "../fields";
-import { COUNTRIES } from "@/utils/constants";
-import { OwnerFormValues } from "./AddOwnerForm";
+import { UseFormRegister, FieldErrors, UseFormSetValue } from "react-hook-form";
+import { SearchableSelectField, InputField, SelectField, FileField } from "@/components/onboarding/common/fields";
+import { COUNTRIES } from "@/utils/constants/countries";
+import { OwnerFormValues } from "./types";
 
 interface OwnerFormFieldsProps {
+  register: UseFormRegister<OwnerFormValues>;
+  errors: FieldErrors<OwnerFormValues>;
+  setValue: UseFormSetValue<OwnerFormValues>;
   formState: OwnerFormValues;
-  setValue: any;
 }
 
-const OwnerFormFields = ({ formState, setValue }: OwnerFormFieldsProps) => {
-  const {
-    formState: { errors }
-  } = useFormContext();
-
-  const relationships = [
-    "Director",
-    "Shareholder",
-    "Trustee",
-    "Beneficiary",
-    "Partner",
-    "Ultimate Beneficial Owner",
-    "Other"
-  ];
-
+const OwnerFormFields = ({
+  register,
+  errors,
+  setValue,
+  formState
+}: OwnerFormFieldsProps) => {
+  // Convert country objects to string array for the SearchableSelectField
+  const countryOptions = COUNTRIES.map(country => country.name);
+  
   return (
     <div className="space-y-6">
-      <div className="space-y-2">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <InputField
           id="firstName"
           label="First Name"
-          placeholder="Enter first name"
-          onChange={(e) => setValue("firstName", e.target.value)}
-          value={formState.firstName || ""}
-          error={errors.firstName?.message || ""}
+          error={errors.firstName?.message}
+          {...register("firstName")}
           required
         />
-      </div>
-
-      <div className="space-y-2">
+        
         <InputField
           id="lastName"
           label="Last Name"
-          placeholder="Enter last name"
-          onChange={(e) => setValue("lastName", e.target.value)}
-          value={formState.lastName || ""}
-          error={errors.lastName?.message || ""}
+          error={errors.lastName?.message}
+          {...register("lastName")}
           required
         />
       </div>
-
-      <div className="space-y-2">
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <SelectField
           id="relationship"
           label="Relationship"
-          options={relationships}
-          onChange={(value) => setValue("relationship", value)}
-          value={formState.relationship || ""}
           placeholder="Select relationship"
-          error={errors.relationship?.message || ""}
+          options={[
+            "Director",
+            "Shareholder",
+            "Officer",
+            "Trustee", 
+            "Founder",
+            "Beneficiary",
+            "Other"
+          ]}
+          value={formState.relationship || ""}
+          onChange={(value) => setValue("relationship", value)}
+          error={errors.relationship?.message}
           required
         />
-      </div>
-
-      <div className="space-y-2">
+        
         <InputField
           id="ownershipPercentage"
           label="Ownership Percentage"
-          placeholder="Enter ownership percentage"
-          onChange={(e) => setValue("ownershipPercentage", e.target.value)}
-          value={formState.ownershipPercentage || ""}
-          error={errors.ownershipPercentage?.message || ""}
+          type="number"
+          error={errors.ownershipPercentage?.message}
+          {...register("ownershipPercentage")}
           required
         />
       </div>
-
-      <div className="space-y-2">
-        <SelectField
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <SearchableSelectField
           id="nationality"
           label="Nationality"
-          options={COUNTRIES}
-          onChange={(value) => setValue("nationality", value)}
-          value={formState.nationality || ""}
           placeholder="Select nationality"
-          error={errors.nationality?.message || ""}
+          options={countryOptions}
+          value={formState.nationality || ""}
+          onChange={(value) => setValue("nationality", value)}
+          error={errors.nationality?.message}
           required
         />
-      </div>
-
-      <div className="space-y-2">
+        
         <InputField
           id="dateOfBirth"
           label="Date of Birth"
-          placeholder="Enter date of birth"
-          onChange={(e) => setValue("dateOfBirth", e.target.value)}
-          value={formState.dateOfBirth || ""}
-          error={errors.dateOfBirth?.message || ""}
+          type="date"
+          error={errors.dateOfBirth?.message}
+          {...register("dateOfBirth")}
+          required
         />
       </div>
-
-      <div className="space-y-2">
-        <FileUploadField
-          id="documents"
-          label="Documents"
-          onChange={(files) => setValue("documents", files)}
-          files={formState.documents}
-          error={errors.documents?.message || ""}
-        />
-      </div>
+      
+      <FileField
+        id="documents"
+        label="Identity Documents"
+        accept=".pdf,.jpg,.jpeg,.png"
+        onChange={(files) => {
+          setValue("documents", files);
+        }}
+        multiple
+        hint="Upload identification documents (passport, ID card, etc.)"
+      />
     </div>
   );
 };

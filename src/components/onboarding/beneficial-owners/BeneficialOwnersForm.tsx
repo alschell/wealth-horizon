@@ -1,7 +1,10 @@
 
 import React, { useState } from "react";
-import { BeneficialOwnerInfo } from "@/context/OnboardingContext";
-import { AnimatePresence, motion } from "framer-motion";
+import { useForm } from "react-hook-form";
+import { motion } from "framer-motion";
+import { useOnboarding } from "@/context/OnboardingContext";
+import { BeneficialOwnerInfo } from "@/types/onboarding";
+import { useToast } from "@/components/ui/use-toast";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -10,169 +13,164 @@ import {
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
-  AlertDialogTitle,
+  AlertDialogTitle
 } from "@/components/ui/alert-dialog";
-import { UserCircle, Plus, Edit, Trash2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import OwnersList from "./OwnersList";
 import AddOwnerForm from "./AddOwnerForm";
+import OwnersList from "./OwnersList";
 
-interface BeneficialOwnersFormProps {
-  owners: BeneficialOwnerInfo[];
-  onAddOwner: (owner: BeneficialOwnerInfo) => void;
-  onRemoveOwner: (index: number) => void;
-  onSubmit: () => void;
-  onBack: () => void;
-}
-
-const BeneficialOwnersForm = ({
-  owners,
-  onAddOwner,
-  onRemoveOwner,
-  onSubmit,
-  onBack,
-}: BeneficialOwnersFormProps) => {
-  const [showAddForm, setShowAddForm] = useState(owners.length === 0);
-  const [editingIndex, setEditingIndex] = useState<number | null>(null);
-  const [removeIndex, setRemoveIndex] = useState<number | null>(null);
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-
-  const isEditing = editingIndex !== null;
-
+const BeneficialOwnersForm = () => {
+  const { toast } = useToast();
+  const { 
+    beneficialOwners, 
+    setBeneficialOwners, 
+    goToNextStep, 
+    goToPreviousStep 
+  } = useOnboarding();
+  
+  const [showForm, setShowForm] = useState(true);
+  const [editIndex, setEditIndex] = useState<number | null>(null);
+  const [ownerToDelete, setOwnerToDelete] = useState<number | null>(null);
+  
+  // Function to add a new beneficial owner
   const handleAddOwner = (newOwner: BeneficialOwnerInfo) => {
-    if (isEditing && editingIndex !== null) {
-      // Replace the existing owner
-      const updatedOwners = [...owners];
-      updatedOwners[editingIndex] = newOwner;
+    if (editIndex !== null) {
+      // Update existing owner
+      const updatedOwners = [...beneficialOwners];
+      updatedOwners[editIndex] = newOwner;
+      setBeneficialOwners(updatedOwners);
       
-      // Call the onRemoveOwner to remove the old one
-      onRemoveOwner(editingIndex);
-      
-      // Add the updated owner
-      onAddOwner(newOwner);
+      toast({
+        title: "Owner Updated",
+        description: `${newOwner.firstName} ${newOwner.lastName} has been updated.`,
+      });
     } else {
-      // Add a new owner
-      onAddOwner(newOwner);
+      // Add new owner
+      setBeneficialOwners([...beneficialOwners, newOwner]);
+      
+      toast({
+        title: "Owner Added",
+        description: `${newOwner.firstName} ${newOwner.lastName} has been added as a beneficial owner.`,
+      });
     }
     
-    // Reset state
-    setShowAddForm(false);
-    setEditingIndex(null);
+    // Reset form state
+    setShowForm(false);
+    setEditIndex(null);
   };
-
-  const handleEditClick = (index: number) => {
-    setEditingIndex(index);
-    setShowAddForm(true);
+  
+  // Function to edit an existing owner
+  const handleEditOwner = (index: number) => {
+    setEditIndex(index);
+    setShowForm(true);
   };
-
-  const handleRemoveClick = (index: number) => {
-    setRemoveIndex(index);
-    setIsDeleteDialogOpen(true);
-  };
-
-  const confirmRemove = () => {
-    if (removeIndex !== null) {
-      onRemoveOwner(removeIndex);
-      setRemoveIndex(null);
+  
+  // Function to confirm deletion of an owner
+  const handleConfirmDelete = () => {
+    if (ownerToDelete !== null) {
+      const updatedOwners = beneficialOwners.filter((_, index) => index !== ownerToDelete);
+      setBeneficialOwners(updatedOwners);
+      
+      const deletedOwner = beneficialOwners[ownerToDelete];
+      toast({
+        title: "Owner Removed",
+        description: `${deletedOwner.firstName} ${deletedOwner.lastName} has been removed from beneficial owners.`,
+      });
+      
+      setOwnerToDelete(null);
     }
-    setIsDeleteDialogOpen(false);
   };
-
-  const cancelAddOrEdit = () => {
-    setShowAddForm(false);
-    setEditingIndex(null);
+  
+  // Function to cancel form
+  const handleCancelForm = () => {
+    setShowForm(false);
+    setEditIndex(null);
+  };
+  
+  // Function to show the form for adding a new owner
+  const handleShowAddForm = () => {
+    setEditIndex(null);
+    setShowForm(true);
   };
 
   return (
-    <div className="space-y-8">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <UserCircle className="h-10 w-10" />
-          <div>
-            <h2 className="text-xl font-semibold">Beneficial Owners</h2>
-            <p className="text-gray-500">
-              Identify individuals who own or control a significant portion of your organization.
-            </p>
-          </div>
-        </div>
-        
-        {!showAddForm && (
-          <Button
-            onClick={() => setShowAddForm(true)}
-            className="flex items-center gap-2"
-          >
-            <Plus className="h-4 w-4" />
-            Add Beneficial Owner
-          </Button>
-        )}
+    <div className="max-w-3xl mx-auto">
+      <div className="mb-8">
+        <h2 className="text-2xl font-bold mb-2">Beneficial Owners</h2>
+        <p className="text-gray-600">
+          Add all individuals who own or control 25% or more of the family office.
+        </p>
       </div>
-
-      <AnimatePresence mode="wait">
-        {!showAddForm ? (
-          <motion.div
-            key="owners-list"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
+      
+      {/* Display existing owners */}
+      {beneficialOwners.length > 0 && (
+        <OwnersList
+          owners={beneficialOwners}
+          onEdit={handleEditOwner}
+          onDelete={(index) => setOwnerToDelete(index)}
+        />
+      )}
+      
+      {/* Button to show add form if not already visible */}
+      {!showForm && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="mt-6"
+        >
+          <button
+            onClick={handleShowAddForm}
+            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
           >
-            {owners.length > 0 && (
-              <OwnersList
-                owners={owners}
-                onEditOwner={handleEditClick}
-                onRemoveOwner={handleRemoveClick}
-              />
-            )}
-
-            <div className="mt-8 flex justify-between">
-              <Button
-                variant="outline"
-                onClick={onBack}
-                className="min-w-[100px]"
-              >
-                Back
-              </Button>
-
-              <Button
-                onClick={onSubmit}
-                disabled={owners.length === 0}
-                className="min-w-[180px]"
-              >
-                Continue to Review
-              </Button>
-            </div>
-          </motion.div>
-        ) : (
-          <motion.div
-            key="add-owner-form"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <AddOwnerForm
-              onAddOwner={handleAddOwner}
-              onCancel={cancelAddOrEdit}
-              existingOwner={editingIndex !== null ? owners[editingIndex] : undefined}
-              isEdit={isEditing}
-            />
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+            Add Beneficial Owner
+          </button>
+        </motion.div>
+      )}
+      
+      {/* Add/Edit owner form */}
+      {showForm && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mt-6"
+        >
+          <AddOwnerForm
+            onAddOwner={handleAddOwner}
+            onCancel={handleCancelForm}
+            isEdit={editIndex !== null}
+            existingOwner={editIndex !== null ? beneficialOwners[editIndex] : undefined}
+          />
+        </motion.div>
+      )}
+      
+      {/* Navigation buttons */}
+      <div className="flex justify-between mt-8 pt-6 border-t">
+        <button
+          onClick={goToPreviousStep}
+          className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-100 transition"
+        >
+          Previous
+        </button>
+        
+        <button
+          onClick={goToNextStep}
+          className="px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800 transition"
+        >
+          Next
+        </button>
+      </div>
+      
+      {/* Delete confirmation dialog */}
+      <AlertDialog open={ownerToDelete !== null} onOpenChange={() => setOwnerToDelete(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Confirm Removal</AlertDialogTitle>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to remove this beneficial owner? This action cannot be undone.
+              This will permanently remove this beneficial owner from your onboarding application.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmRemove} className="bg-red-500 hover:bg-red-600">
-              Remove
-            </AlertDialogAction>
+            <AlertDialogAction onClick={handleConfirmDelete}>Delete</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

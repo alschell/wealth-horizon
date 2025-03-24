@@ -35,7 +35,10 @@ const AccountForm: React.FC<AccountFormProps> = ({
 
   // Set form title based on editing state
   const formTitle = isEditing ? "Edit Financial Account" : "Add Financial Account";
-  const buttonText = isEditing ? "Save Changes" : "Add Account";
+  const formSubtitle = isEditing 
+    ? "Update the details of your financial account" 
+    : "Enter the details of your financial account";
+  const buttonText = isEditing ? "Update Account" : "Add Account";
 
   return (
     <motion.div
@@ -46,7 +49,7 @@ const AccountForm: React.FC<AccountFormProps> = ({
     >
       <FormHeader 
         title={formTitle} 
-        subtitle="Enter the details of your financial account" 
+        subtitle={formSubtitle} 
       />
       
       <form className="space-y-6 mt-6">

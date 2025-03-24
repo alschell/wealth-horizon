@@ -22,8 +22,6 @@ const BasicInfoSection = ({
 }: BasicInfoSectionProps) => {
   return (
     <div className="space-y-4">
-      <h3 className="text-lg font-medium text-black">Entity Details</h3>
-      
       <div className="space-y-2 md:col-span-2">
         <Label htmlFor="accountName">
           Account Name<span className="text-red-500 ml-1">*</span>

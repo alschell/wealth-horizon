@@ -16,7 +16,7 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
 }) => {
   return (
     <div className="space-y-4">
-      <h3 className="text-lg font-medium text-gray-900">Basic Information</h3>
+      <h3 className="text-lg font-medium text-gray-900">Entity Details</h3>
       
       <FormFieldItem
         index={0}

@@ -48,11 +48,13 @@ export type AggregatorInfo = {
 export type FinancialAccountInfo = {
   accountName: string;
   institution: string;
-  accountType: "cash" | "portfolio" | "investment" | "custody" | "broker" | "other";
+  accountType: "cash" | "portfolio" | "investment" | "custody" | "broker" | "checking" | "savings" | "brokerage" | "trust" | "retirement" | "private equity" | "hedge fund" | "venture capital" | "real estate" | "fixed income" | "credit" | "other";
   accountSubtype?: string;
   currency: string;
-  approximateValue?: string;
+  approximateValue: string;
   statements: File[];
+  legalEntity?: string;
+  legalEntityIdentifier?: string;
 };
 
 export type BeneficialOwnerInfo = {

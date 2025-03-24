@@ -27,7 +27,7 @@ const DataSourceForm = () => {
   
   const [aggregatorInfo, setAggregatorInfo] = useState<AggregatorInfo>(onboardingData.aggregatorInfo);
   const [financialAccounts, setFinancialAccounts] = useState<FinancialAccountInfo[]>(
-    (onboardingData.financialAccounts as unknown as FinancialAccountInfo[]) || []
+    onboardingData.financialAccounts
   );
   const [dataSourceMethod, setDataSourceMethod] = useState<"manual" | "upload">("manual");
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
@@ -128,8 +128,8 @@ const DataSourceForm = () => {
               <DataSourceTabs 
                 dataSourceMethod={dataSourceMethod}
                 setDataSourceMethod={setDataSourceMethod}
-                financialAccounts={financialAccounts as any}
-                handleAddAccount={handleAddAccount as any}
+                financialAccounts={financialAccounts}
+                handleAddAccount={handleAddAccount}
                 handleRemoveAccount={handleRemoveAccount}
                 uploadedFiles={uploadedFiles}
                 handleBulkFilesSelected={handleBulkFilesSelected}

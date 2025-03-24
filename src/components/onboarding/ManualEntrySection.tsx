@@ -18,12 +18,12 @@ const ManualEntrySection = ({
     <div className="space-y-6">
       {/* List of existing accounts */}
       <AccountList 
-        accounts={financialAccounts as any} 
+        accounts={financialAccounts} 
         onRemoveAccount={removeFinancialAccount} 
       />
       
       {/* Form to add a new account */}
-      <AccountForm onAddAccount={addFinancialAccount as any} />
+      <AccountForm onAddAccount={addFinancialAccount} />
     </div>
   );
 };

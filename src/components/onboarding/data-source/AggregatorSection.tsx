@@ -3,10 +3,10 @@ import React from "react";
 import { AggregatorInfo } from "@/context/OnboardingContext";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { motion } from "framer-motion";
 import { AGGREGATORS } from "@/utils/financialDataConstants";
 import AggregatorCredentialsForm from "./AggregatorCredentialsForm";
+import { SearchableSelectField } from "@/components/onboarding/family-office/field-components";
 
 // Animation variants
 const itemVariants = {
@@ -30,7 +30,6 @@ const AggregatorSection = ({
   aggregatorInfo,
   setAggregatorInfo
 }: AggregatorSectionProps) => {
-  // Handle aggregator radio selection
   const handleAggregatorSelection = (value: string) => {
     setAggregatorInfo({
       ...aggregatorInfo,
@@ -38,16 +37,14 @@ const AggregatorSection = ({
     });
   };
 
-  // Handle aggregator name selection
-  const handleAggregatorNameChange = (name: string) => {
+  const handleAggregatorNameChange = (value: string) => {
     setAggregatorInfo({
       ...aggregatorInfo,
-      aggregatorName: name,
+      aggregatorName: value,
       aggregatorCredentials: { username: "" }
     });
   };
 
-  // Handle aggregator credentials
   const handleCredentialsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setAggregatorInfo({
@@ -89,7 +86,6 @@ const AggregatorSection = ({
         </RadioGroup>
       </motion.div>
 
-      {/* Conditional content based on aggregator usage */}
       {aggregatorInfo.usesAggregator && (
         <motion.div 
           custom={1}
@@ -98,31 +94,14 @@ const AggregatorSection = ({
           animate="visible"
           className="space-y-6 border p-4 rounded-lg mt-4"
         >
-          <div className="space-y-4">
-            <Label htmlFor="aggregatorName">Select your aggregator</Label>
-            <Select
-              value={aggregatorInfo.aggregatorName || ""}
-              onValueChange={handleAggregatorNameChange}
-            >
-              <SelectTrigger 
-                id="aggregatorName" 
-                className="h-11 bg-white"
-              >
-                <SelectValue placeholder="Select your aggregator" />
-              </SelectTrigger>
-              <SelectContent 
-                position="popper" 
-                className="z-50 bg-white max-h-[300px] overflow-y-auto"
-                sideOffset={4}
-              >
-                {AGGREGATORS.map((aggregator) => (
-                  <SelectItem key={aggregator} value={aggregator}>
-                    {aggregator}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+          <SearchableSelectField
+            id="aggregatorName"
+            label=""
+            value={aggregatorInfo.aggregatorName || ""}
+            onChange={handleAggregatorNameChange}
+            placeholder="Select your aggregator"
+            options={AGGREGATORS}
+          />
 
           {aggregatorInfo.aggregatorName && (
             <AggregatorCredentialsForm 

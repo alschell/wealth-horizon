@@ -26,15 +26,15 @@ export function DatePicker({ value, onChange, label, optional }: DatePickerProps
           <Button
             variant={"outline"}
             className={cn(
-              "w-full h-11 justify-start text-left font-normal",
+              "w-full h-11 justify-start text-left font-normal bg-white",
               !value && "text-muted-foreground"
             )}
           >
-            <CalendarIcon className="mr-2 h-4 w-4 text-black" />
+            <CalendarIcon className="mr-2 h-4 w-4 text-brand" />
             {value ? format(value, "PPP") : <span>{label}</span>}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-auto p-0" align="start">
+        <PopoverContent className="w-auto p-0 bg-white shadow-lg rounded-md border" align="start">
           <Calendar
             mode="single"
             selected={value}

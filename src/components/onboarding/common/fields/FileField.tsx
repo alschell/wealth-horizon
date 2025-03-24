@@ -2,9 +2,10 @@
 import React, { useRef, useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Upload, X, FileType } from "lucide-react";
+import { Upload, FileType } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import DeleteConfirmationDialog from "@/components/file-uploader/DeleteConfirmationDialog";
+import { DeleteButton } from "@/components/ui/action-buttons";
 
 export interface FileFieldProps {
   id: string;
@@ -118,15 +119,10 @@ const FileField: React.FC<FileFieldProps> = ({
                       {file.name}
                     </span>
                   </div>
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
+                  <DeleteButton 
                     onClick={() => handleRemoveFileClick(index)}
-                    className="h-7 w-7 p-0 text-gray-500 hover:text-red-500"
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
+                    size="icon"
+                  />
                 </motion.div>
               ))}
             </AnimatePresence>

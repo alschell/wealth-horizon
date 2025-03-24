@@ -1,8 +1,8 @@
 
 import { renderHook, act } from '@testing-library/react-hooks';
 import { useLegalEntityHandler } from '../useLegalEntityHandler';
-import { LEI_MAPPING } from '../../constants/leiMappings';
-import { toast } from '@/components/ui/use-toast';
+import { LEI_MAPPING } from '../../../constants/leiMappings';
+import { toast } from "@/components/ui/use-toast";
 
 // Mock toast
 jest.mock('@/components/ui/use-toast', () => ({

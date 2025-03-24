@@ -17,7 +17,7 @@ describe('Validation utilities', () => {
         items: [] as string[],
       };
       
-      const requiredFields = ['name', 'email', 'age', 'items'] as const;
+      const requiredFields = ['name', 'email', 'age', 'items'];
       const errors = validateRequiredFields(data, requiredFields);
       
       expect(errors).toHaveProperty('name');
@@ -34,7 +34,7 @@ describe('Validation utilities', () => {
         items: ['item1', 'item2'],
       };
       
-      const requiredFields = ['name', 'email', 'age', 'items'] as const;
+      const requiredFields = ['name', 'email', 'age', 'items'];
       const errors = validateRequiredFields(data, requiredFields);
       
       expect(Object.keys(errors).length).toBe(0);

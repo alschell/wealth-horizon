@@ -1,24 +1,28 @@
 
-import React from "react";
-import { Label } from "@/components/ui/label";
-import { Calendar } from "@/components/ui/calendar";
-import { cn } from "@/lib/utils";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { CalendarIcon } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { format, parse } from "date-fns";
+import React, { useState } from 'react';
+import { format } from 'date-fns';
+import { Calendar as CalendarIcon } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+import { Label } from '@/components/ui/label';
 
 interface DateFieldProps {
   id?: string;
   label: string;
-  value?: string | Date;
-  onChange: (value: string) => void;
-  placeholder?: string;
+  value: string;
+  onChange: (date: string) => void;
   required?: boolean;
+  placeholder?: string;
   error?: string;
+  disabled?: boolean;
   className?: string;
-  icon?: React.ReactNode;
-  name?: string; // Make name optional
+  closeOnSelect?: boolean;
 }
 
 const DateField = ({
@@ -26,73 +30,67 @@ const DateField = ({
   label,
   value,
   onChange,
-  placeholder = "Select a date",
   required = false,
+  placeholder = 'Select date',
   error,
+  disabled = false,
   className,
-  icon,
-  name
+  closeOnSelect = false
 }: DateFieldProps) => {
-  const parseDate = (dateValue: string | Date | undefined): Date | undefined => {
-    if (!dateValue) return undefined;
-    if (dateValue instanceof Date) return dateValue;
-    
-    try {
-      const date = new Date(dateValue);
-      return isNaN(date.getTime()) ? undefined : date;
-    } catch (e) {
-      return undefined;
-    }
-  };
+  const [open, setOpen] = useState(false);
+  
+  const date = value ? new Date(value) : undefined;
 
-  const date = parseDate(value);
-
-  const handleDateChange = (newDate?: Date) => {
-    if (!newDate) {
-      onChange("");
-      return;
+  const handleSelect = (date: Date | undefined) => {
+    if (date) {
+      onChange(date.toISOString());
+      if (closeOnSelect) {
+        setOpen(false);
+      }
+    } else {
+      onChange('');
     }
-    
-    const formatted = newDate.toISOString().split('T')[0];
-    onChange(formatted);
   };
 
   return (
-    <div className={cn("space-y-2", className)}>
-      <Label htmlFor={id}>
+    <div className={cn('space-y-2', className)}>
+      <Label htmlFor={id} className="text-black">
         {label}{required && <span className="text-red-500 ml-1">*</span>}
       </Label>
-      
-      <Popover>
+      <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
             id={id}
-            name={name || id} // Use id as fallback for name
             variant="outline"
+            size="lg"
             className={cn(
-              "w-full h-11 justify-start text-left font-normal",
-              !date && "text-muted-foreground",
-              error && "border-red-500"
+              'w-full justify-start text-left font-normal h-11 bg-white border',
+              !date && 'text-gray-500',
+              error && 'border-red-500',
+              'focus:ring-2 focus:ring-ring focus:ring-offset-2',
+              disabled && 'opacity-50 cursor-not-allowed'
             )}
+            disabled={disabled}
           >
-            {icon || <CalendarIcon className="mr-2 h-4 w-4" />}
-            {date ? format(date, "PPP") : placeholder}
+            <CalendarIcon className="mr-2 h-4 w-4 text-gray-500" />
+            {date ? (
+              <span className="text-black">{format(date, 'PPP')}</span>
+            ) : (
+              <span>{placeholder}</span>
+            )}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-auto p-0" align="start">
+        <PopoverContent className="w-auto p-0 bg-white" align="start">
           <Calendar
             mode="single"
             selected={date}
-            onSelect={handleDateChange}
+            onSelect={handleSelect}
+            disabled={disabled}
             initialFocus
-            className="pointer-events-auto"
           />
         </PopoverContent>
       </Popover>
-      
-      {error && (
-        <p className="text-red-500 text-sm mt-1">{error}</p>
-      )}
+      {error && <p className="text-sm text-red-500 mt-1">{error}</p>}
     </div>
   );
 };

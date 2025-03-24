@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Control, Controller, FieldErrors } from "react-hook-form";
-import { InputField, SelectField, DateField, FileField } from "../common/fields";
+import { InputField, SearchableSelectField, DateField, FileField } from "../common/fields";
 import { OwnerFormValues, OwnerFormFieldsProps } from "./types";
 import { COUNTRIES } from "@/components/onboarding/constants";
 
@@ -86,7 +86,7 @@ const OwnerFormFields: React.FC<OwnerFormFieldsProps> = ({
         name="nationality"
         control={control}
         render={({ field }) => (
-          <SelectField
+          <SearchableSelectField
             id="nationality"
             label="Nationality"
             value={field.value}
@@ -95,6 +95,7 @@ const OwnerFormFields: React.FC<OwnerFormFieldsProps> = ({
             required
             placeholder="Select nationality"
             error={errors.nationality?.message as string}
+            allowCustomValue={false}
           />
         )}
       />
@@ -111,6 +112,7 @@ const OwnerFormFields: React.FC<OwnerFormFieldsProps> = ({
             onChange={field.onChange}
             placeholder="Select date of birth"
             error={errors.dateOfBirth?.message as string}
+            closeOnSelect={true}
           />
         )}
       />
@@ -123,6 +125,7 @@ const OwnerFormFields: React.FC<OwnerFormFieldsProps> = ({
           onFilesChange={onFilesSelected}
           multiple={true}
           hint="Upload passport, ID card, or other identity documents"
+          customDeleteButton={true}
         />
       </div>
     </div>

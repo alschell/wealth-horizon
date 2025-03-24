@@ -18,7 +18,7 @@ const FormFooter: React.FC<FormFooterProps> = ({
     <div className="pt-4 border-t mt-6">
       {requiredFieldsNote && (
         <p className="text-sm text-gray-500 mb-6">
-          Fields marked with * are required.
+          Fields marked with <span className="text-red-500">*</span> are required.
         </p>
       )}
       <div className="flex justify-end">

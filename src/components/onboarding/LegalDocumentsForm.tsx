@@ -57,7 +57,7 @@ const LegalDocumentsForm = () => {
           <FormHeader 
             icon={<File className="h-7 w-7 text-black" />}
             title="Legal Documents"
-            description="Please provide legal formation documents for your family office entity. Fields marked with <span className='text-red-500'>*</span> are required."
+            description="Please provide legal formation documents for your family office entity."
           />
 
           <div className="space-y-4 border p-4 rounded-md">
@@ -83,6 +83,7 @@ const LegalDocumentsForm = () => {
           <FormFooter
             onSubmit={handleSubmit}
             isSubmitting={false}
+            requiredFieldsNote={true}
           />
         </form>
       </Card>

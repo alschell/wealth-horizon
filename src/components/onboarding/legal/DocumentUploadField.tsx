@@ -1,8 +1,18 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { FileField } from "@/components/onboarding/common/fields";
 import { itemVariants } from "../common/AnimationVariants";
+import { 
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogCancel,
+  AlertDialogAction
+} from "@/components/ui/alert-dialog";
 
 interface DocumentUploadFieldProps {
   files: File[];
@@ -10,6 +20,24 @@ interface DocumentUploadFieldProps {
 }
 
 const DocumentUploadField = ({ files, onFilesSelected }: DocumentUploadFieldProps) => {
+  const [fileToDelete, setFileToDelete] = useState<{index: number, file: File} | null>(null);
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+
+  const handleDeleteRequest = (index: number, file: File) => {
+    setFileToDelete({ index, file });
+    setIsConfirmOpen(true);
+  };
+
+  const confirmDelete = () => {
+    if (fileToDelete !== null) {
+      const newFiles = [...files];
+      newFiles.splice(fileToDelete.index, 1);
+      onFilesSelected(newFiles);
+    }
+    setIsConfirmOpen(false);
+    setFileToDelete(null);
+  };
+
   return (
     <motion.div 
       custom={4}
@@ -26,7 +54,29 @@ const DocumentUploadField = ({ files, onFilesSelected }: DocumentUploadFieldProp
         multiple={true}
         hint="Supported formats: PDF, JPG, PNG (max 10MB per file)"
         onFilesChange={onFilesSelected}
+        onFileDelete={handleDeleteRequest}
+        customDeleteButton={true}
       />
+
+      <AlertDialog open={isConfirmOpen} onOpenChange={setIsConfirmOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirm File Deletion</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete {fileToDelete?.file.name}? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={confirmDelete}
+              className="bg-red-500 hover:bg-red-600 text-white"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </motion.div>
   );
 };

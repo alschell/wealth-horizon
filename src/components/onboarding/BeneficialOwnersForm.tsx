@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useOnboarding, BeneficialOwnerInfo } from "@/context/OnboardingContext";
 import { Button } from "@/components/ui/button";
@@ -9,7 +8,7 @@ import { toast } from "@/components/ui/use-toast";
 import { motion } from "framer-motion";
 import { ArrowRight, ArrowLeft, Users, Plus, Trash2 } from "lucide-react";
 import { CustomSearchableSelect } from "@/components/ui/custom-searchable-select";
-import { COUNTRIES } from "./constants/formOptions";
+import { COUNTRIES } from "./constants";
 import FileUploader from "@/components/FileUploader";
 
 const BeneficialOwnersForm = () => {

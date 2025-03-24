@@ -1,10 +1,11 @@
+
 import React from "react";
 import { FinancialAccountInfo } from "@/types/onboarding";
 import { 
   InputField, 
   SearchableSelectField 
 } from "../fields";
-import { CURRENCIES } from "@/utils/constants/currencies";
+import { CURRENCIES, extractCurrencyCode } from "@/utils/constants/currencies";
 
 interface AccountDetailsSectionProps {
   account: FinancialAccountInfo;
@@ -17,11 +18,6 @@ const AccountDetailsSection = ({
   onInputChange,
   onSelectionChange
 }: AccountDetailsSectionProps) => {
-  // Extract currency code from option (e.g., "USD - US Dollar" -> "USD")
-  const extractCurrencyCode = (currencyOption: string) => {
-    return currencyOption.split(" - ")[0];
-  };
-
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -39,7 +35,7 @@ const AccountDetailsSection = ({
           label="Primary Currency"
           value={account.currency}
           placeholder="Select currency"
-          options={CURRENCIES.sort()}
+          options={CURRENCIES}
           onChange={(value) => onSelectionChange("currency", extractCurrencyCode(value))}
         />
       </div>

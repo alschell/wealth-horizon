@@ -1,102 +1,107 @@
-
 import React from "react";
+import { AddressInfo } from "@/types/onboarding";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { CustomSearchableSelect } from "@/components/ui/custom-searchable-select";
-import { COUNTRIES, US_STATES } from "../constants/formOptions";
-import { AddressInfo } from "@/context/OnboardingContext";
+import { COUNTRIES } from "../constants";
 
 interface AddressFormFieldsProps {
-  formData: AddressInfo;
-  errors: Partial<Record<keyof AddressInfo, string>>;
-  handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleSelectChange: (field: keyof AddressInfo, value: string) => void;
+  address: AddressInfo;
+  onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onSelectionChange: (field: keyof AddressInfo, value: string) => void;
 }
 
-const AddressFormFields: React.FC<AddressFormFieldsProps> = ({
-  formData,
-  errors,
-  handleInputChange,
-  handleSelectChange,
-}) => {
+const AddressFormFields = ({
+  address,
+  onInputChange,
+  onSelectionChange
+}: AddressFormFieldsProps) => {
   return (
-    <div className="space-y-6">
-      <div className="space-y-2">
-        <Label htmlFor="streetAddress">
-          Street Address<span className="text-red-500 ml-1">*</span>
-        </Label>
-        <Input
-          id="streetAddress"
-          name="streetAddress"
-          value={formData.streetAddress}
-          onChange={handleInputChange}
-          placeholder="123 Main Street, Apt 4B"
-          className={`h-11 ${errors.streetAddress ? 'border-red-500' : ''}`}
-        />
-        {errors.streetAddress && (
-          <p className="text-red-500 text-sm mt-1">{errors.streetAddress}</p>
-        )}
-      </div>
-
+    <>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
+          <Label htmlFor="addressLine1">
+            Address Line 1
+          </Label>
+          <Input
+            id="addressLine1"
+            name="addressLine1"
+            value={address.addressLine1 || ""}
+            onChange={onInputChange}
+            placeholder="e.g., 123 Main St"
+            className="h-11"
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="addressLine2">
+            Address Line 2 (optional)
+          </Label>
+          <Input
+            id="addressLine2"
+            name="addressLine2"
+            value={address.addressLine2 || ""}
+            onChange={onInputChange}
+            placeholder="e.g., Apt 4B"
+            className="h-11"
+          />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="space-y-2">
           <Label htmlFor="city">
-            City<span className="text-red-500 ml-1">*</span>
+            City
           </Label>
           <Input
             id="city"
             name="city"
-            value={formData.city}
-            onChange={handleInputChange}
-            placeholder="New York"
-            className={`h-11 ${errors.city ? 'border-red-500' : ''}`}
+            value={address.city || ""}
+            onChange={onInputChange}
+            placeholder="e.g., New York"
+            className="h-11"
           />
-          {errors.city && (
-            <p className="text-red-500 text-sm mt-1">{errors.city}</p>
-          )}
         </div>
 
-        <CustomSearchableSelect
-          id="state"
-          label="State/Province"
-          value={formData.state}
-          onChange={(value) => handleSelectChange('state', value)}
-          placeholder="Select state"
-          options={US_STATES.sort()}
-          allowCustomValue={true}
-        />
-      </div>
+        <div className="space-y-2">
+          <Label htmlFor="region">
+            Region/State
+          </Label>
+          <Input
+            id="region"
+            name="region"
+            value={address.region || ""}
+            onChange={onInputChange}
+            placeholder="e.g., NY"
+            className="h-11"
+          />
+        </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label htmlFor="postalCode">
-            Postal Code<span className="text-red-500 ml-1">*</span>
+            Postal Code
           </Label>
           <Input
             id="postalCode"
             name="postalCode"
-            value={formData.postalCode}
-            onChange={handleInputChange}
-            placeholder="10001"
-            className={`h-11 ${errors.postalCode ? 'border-red-500' : ''}`}
+            value={address.postalCode || ""}
+            onChange={onInputChange}
+            placeholder="e.g., 10001"
+            className="h-11"
           />
-          {errors.postalCode && (
-            <p className="text-red-500 text-sm mt-1">{errors.postalCode}</p>
-          )}
         </div>
-
-        <CustomSearchableSelect
-          id="country"
-          label="Country"
-          value={formData.country}
-          onChange={(value) => handleSelectChange('country', value)}
-          placeholder="Select country"
-          options={COUNTRIES.sort()}
-          required
-          className={errors.country ? 'error' : ''}
-        />
       </div>
-    </div>
+
+      <CustomSearchableSelect
+        id="country"
+        label="Country"
+        value={address.country}
+        onChange={(value) => onSelectionChange('country', value)}
+        placeholder="Select country"
+        options={COUNTRIES}
+        className=""
+      />
+    </>
   );
 };
 

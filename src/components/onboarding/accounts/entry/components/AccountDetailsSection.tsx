@@ -4,21 +4,26 @@ import { FinancialAccountInfo } from "@/types/onboarding";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { CustomSearchableSelect } from "@/components/ui/custom-searchable-select";
-import { CURRENCIES } from "@/utils/constants";
+import { CURRENCIES, extractCurrencyCode } from "@/utils/constants/currencies";
 
 interface AccountDetailsSectionProps {
   account: FinancialAccountInfo;
   onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onSelectionChange: (field: keyof FinancialAccountInfo, value: string) => void;
-  extractCurrencyCode: (currencyOption: string) => string;
+  extractCurrencyCode?: (currencyOption: string) => string;
 }
 
 const AccountDetailsSection = ({
   account,
   onInputChange,
   onSelectionChange,
-  extractCurrencyCode
+  extractCurrencyCode: propExtractCurrencyCode
 }: AccountDetailsSectionProps) => {
+  const handleCurrencyChange = (value: string) => {
+    const code = propExtractCurrencyCode ? propExtractCurrencyCode(value) : extractCurrencyCode(value);
+    onSelectionChange('currency', code);
+  };
+
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -40,9 +45,9 @@ const AccountDetailsSection = ({
           id="currency"
           label="Primary Currency"
           value={account.currency}
-          onChange={(value) => onSelectionChange('currency', extractCurrencyCode(value))}
+          onChange={handleCurrencyChange}
           placeholder="Select currency"
-          options={CURRENCIES.sort()}
+          options={CURRENCIES}
           className=""
         />
       </div>

@@ -1,12 +1,22 @@
 
 import React, { useState } from "react";
 import { BeneficialOwnerInfo } from "@/context/OnboardingContext";
-import { Card } from "@/components/ui/card";
-import { toast } from "@/components/ui/use-toast";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { UserCircle, Plus, Edit, Trash2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import FormHeader from "./FormHeader";
 import OwnersList from "./OwnersList";
 import AddOwnerForm from "./AddOwnerForm";
-import FormHeader from "./FormHeader";
 import FormFooter from "./FormFooter";
 
 interface BeneficialOwnersFormProps {
@@ -17,132 +27,137 @@ interface BeneficialOwnersFormProps {
   onBack: () => void;
 }
 
-const BeneficialOwnersForm: React.FC<BeneficialOwnersFormProps> = ({
+const BeneficialOwnersForm = ({
   owners,
   onAddOwner,
   onRemoveOwner,
   onSubmit,
-  onBack
-}) => {
-  const [localOwners, setLocalOwners] = useState<BeneficialOwnerInfo[]>(owners);
-  const [currentEditIndex, setCurrentEditIndex] = useState<number | null>(null);
-  const [existingOwner, setExistingOwner] = useState<BeneficialOwnerInfo | undefined>(undefined);
+  onBack,
+}: BeneficialOwnersFormProps) => {
   const [showAddForm, setShowAddForm] = useState(false);
-  
+  const [editingIndex, setEditingIndex] = useState<number | null>(null);
+  const [removeIndex, setRemoveIndex] = useState<number | null>(null);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+
+  const isEditing = editingIndex !== null;
+
   const handleAddOwner = (newOwner: BeneficialOwnerInfo) => {
-    if (currentEditIndex !== null) {
-      // Update existing owner
-      const updatedOwners = [...localOwners];
-      updatedOwners[currentEditIndex] = newOwner;
-      setLocalOwners(updatedOwners);
+    if (isEditing && editingIndex !== null) {
+      // Replace the existing owner
+      const updatedOwners = [...owners];
+      updatedOwners[editingIndex] = newOwner;
       
-      // Remove the old owner and add the updated one
-      onRemoveOwner(currentEditIndex);
+      // Call the onRemoveOwner to remove the old one
+      onRemoveOwner(editingIndex);
+      
+      // Add the updated owner
       onAddOwner(newOwner);
-      
-      toast({
-        title: "Owner updated",
-        description: `${newOwner.firstName} ${newOwner.lastName}'s information has been updated.`,
-      });
-      
-      // Reset editing state
-      setCurrentEditIndex(null);
-      setExistingOwner(undefined);
     } else {
-      // Add new owner
-      const updatedOwners = [...localOwners, newOwner];
-      setLocalOwners(updatedOwners);
+      // Add a new owner
       onAddOwner(newOwner);
-      
-      toast({
-        title: "Owner added",
-        description: `${newOwner.firstName} ${newOwner.lastName} has been added as a beneficial owner.`,
-      });
     }
     
-    // Hide the form after adding/editing
+    // Reset state
     setShowAddForm(false);
+    setEditingIndex(null);
   };
 
-  const handleRemoveOwner = (index: number) => {
-    const updatedOwners = localOwners.filter((_, i) => i !== index);
-    setLocalOwners(updatedOwners);
-    onRemoveOwner(index);
-    
-    if (currentEditIndex === index) {
-      setCurrentEditIndex(null);
-      setExistingOwner(undefined);
-      setShowAddForm(false);
-    }
-  };
-  
-  const handleEditOwner = (index: number) => {
-    setCurrentEditIndex(index);
-    setExistingOwner(localOwners[index]);
+  const handleEditClick = (index: number) => {
+    setEditingIndex(index);
     setShowAddForm(true);
   };
-  
-  const handleCancelEdit = () => {
-    setCurrentEditIndex(null);
-    setExistingOwner(undefined);
-    setShowAddForm(false);
+
+  const handleRemoveClick = (index: number) => {
+    setRemoveIndex(index);
+    setIsDeleteDialogOpen(true);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onSubmit();
-    
-    toast({
-      title: "Information saved",
-      description: "Beneficial owner information has been saved successfully.",
-    });
+  const confirmRemove = () => {
+    if (removeIndex !== null) {
+      onRemoveOwner(removeIndex);
+      setRemoveIndex(null);
+    }
+    setIsDeleteDialogOpen(false);
+  };
+
+  const cancelAddOrEdit = () => {
+    setShowAddForm(false);
+    setEditingIndex(null);
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
-      className="w-full max-w-3xl mx-auto"
-    >
-      <Card className="p-6 md:p-8 shadow-sm">
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <FormHeader />
+    <div className="space-y-8">
+      <FormHeader
+        title="Beneficial Owners"
+        description="Identify individuals who own or control a significant portion of your organization."
+        icon={<UserCircle className="h-10 w-10" />}
+      />
 
-          {/* List of current beneficial owners */}
-          <OwnersList 
-            owners={localOwners}
-            onRemoveOwner={handleRemoveOwner}
-            onEditOwner={handleEditOwner}
-          />
-
-          {/* Button to show form when not editing */}
-          {!showAddForm && (
-            <div className="flex justify-center">
-              <button
-                type="button"
-                onClick={() => setShowAddForm(true)}
-                className="px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800 flex items-center"
-              >
-                <span className="mr-2">+</span> Add Beneficial Owner
-              </button>
-            </div>
-          )}
-
-          {/* Form to add a new beneficial owner */}
-          {showAddForm && (
-            <AddOwnerForm 
-              onAddOwner={handleAddOwner}
-              onCancel={handleCancelEdit}
-              existingOwner={existingOwner}
-              isEdit={currentEditIndex !== null}
+      {!showAddForm ? (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          {owners.length > 0 && (
+            <OwnersList
+              owners={owners}
+              onEditOwner={handleEditClick}
+              onRemoveOwner={handleRemoveClick}
             />
           )}
 
-          <FormFooter onBack={onBack} />
-        </form>
-      </Card>
-    </motion.div>
+          <div className="mt-8">
+            <Button
+              onClick={() => setShowAddForm(true)}
+              className="flex items-center gap-2"
+            >
+              <Plus className="h-4 w-4" />
+              Add Beneficial Owner
+            </Button>
+          </div>
+
+          <FormFooter
+            onBack={onBack}
+            onSubmit={onSubmit}
+            submitDisabled={owners.length === 0}
+            submitText="Continue to Review"
+          />
+        </motion.div>
+      ) : (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <AddOwnerForm
+            onAddOwner={handleAddOwner}
+            onCancel={cancelAddOrEdit}
+            existingOwner={editingIndex !== null ? owners[editingIndex] : undefined}
+            isEdit={isEditing}
+          />
+        </motion.div>
+      )}
+
+      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirm Removal</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to remove this beneficial owner? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmRemove} className="bg-red-500 hover:bg-red-600">
+              Remove
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </div>
   );
 };
 

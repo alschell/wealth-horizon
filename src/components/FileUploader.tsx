@@ -11,6 +11,7 @@ interface FileUploaderProps {
   onFilesSelected: (files: File[]) => void;
   existingFiles?: File[];
   label?: string;
+  onFileDelete?: (index: number) => void;
 }
 
 const FileUploader = ({
@@ -19,7 +20,8 @@ const FileUploader = ({
   maxSize = 10, // 10MB default max size
   onFilesSelected,
   existingFiles = [],
-  label = "Upload Documents"
+  label = "Upload Documents",
+  onFileDelete
 }: FileUploaderProps) => {
   const [files, setFiles] = useState<File[]>(existingFiles);
   const [isDragging, setIsDragging] = useState(false);
@@ -97,6 +99,11 @@ const FileUploader = ({
   };
 
   const removeFile = (index: number) => {
+    if (onFileDelete) {
+      onFileDelete(index);
+      return;
+    }
+    
     const newFiles = [...files];
     newFiles.splice(index, 1);
     setFiles(newFiles);

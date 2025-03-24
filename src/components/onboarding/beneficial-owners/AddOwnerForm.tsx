@@ -7,7 +7,7 @@ import { BeneficialOwnerInfo } from "@/context/OnboardingContext";
 import { FormHeader, FormSection, isValidPercentage } from "@/components/onboarding/common";
 import { UserPlus, Edit } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
-import BeneficialOwnerFormFields from "./OwnerFormFields";
+import BeneficialOwnerFormFields, { OwnerFormValues } from "./OwnerFormFields";
 import { Form } from "@/components/ui/form";
 
 interface AddOwnerFormProps {
@@ -29,11 +29,8 @@ const ownerSchema = z.object({
     }),
   nationality: z.string().min(1, { message: "Nationality is required" }),
   dateOfBirth: z.string().optional(),
-  documents: z.any().optional()
+  documents: z.array(z.any()).optional()
 });
-
-// Make TypeScript happy by properly typing the schema output
-type OwnerFormValues = z.infer<typeof ownerSchema>;
 
 const AddOwnerForm: React.FC<AddOwnerFormProps> = ({
   onAddOwner,
@@ -41,7 +38,7 @@ const AddOwnerForm: React.FC<AddOwnerFormProps> = ({
   existingOwner,
   isEdit = false
 }) => {
-  const defaultValues: Partial<OwnerFormValues> = existingOwner || {
+  const defaultValues: OwnerFormValues = existingOwner || {
     firstName: "",
     lastName: "",
     relationship: "",

@@ -11,6 +11,7 @@ interface AccountDetailsSectionProps {
   onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onSelectionChange: (field: keyof FinancialAccountInfo, value: string) => void;
   extractCurrencyCode?: (currencyOption: string) => string;
+  onFilesSelected?: (files: File[]) => void;
 }
 
 const AccountDetailsSection = ({

@@ -7,11 +7,13 @@ export function useAccountForm(onAddAccount: (account: FinancialAccountInfo) => 
   const [newAccount, setNewAccount] = useState<FinancialAccountInfo>({
     accountName: "",
     institution: "",
-    accountType: "cash",
+    accountType: "other", // Default to "other" instead of "cash"
     accountSubtype: "",
     currency: "",
     approximateValue: "",
-    statements: []
+    statements: [],
+    legalEntity: "", // Add missing required properties
+    legalEntityIdentifier: ""
   });
 
   // Handle new account input
@@ -54,15 +56,17 @@ export function useAccountForm(onAddAccount: (account: FinancialAccountInfo) => 
     // Add account
     onAddAccount(newAccount);
 
-    // Reset form
+    // Reset form with all required fields
     setNewAccount({
       accountName: "",
       institution: "",
-      accountType: "cash",
+      accountType: "other", // Default to "other" instead of "cash"
       accountSubtype: "",
       currency: "",
       approximateValue: "",
-      statements: []
+      statements: [],
+      legalEntity: "",
+      legalEntityIdentifier: ""
     });
 
     toast({

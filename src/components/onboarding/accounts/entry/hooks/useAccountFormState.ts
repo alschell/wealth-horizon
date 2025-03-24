@@ -11,12 +11,12 @@ interface UseAccountFormStateProps {
 }
 
 export const useAccountFormState = ({ onAddAccount, initialAccount }: UseAccountFormStateProps) => {
-  // Initialize account state with default values or provided values
+  // Initialize account state with default values or provided values with proper typing
   const [newAccount, setNewAccount] = useState<FinancialAccountInfo>(
     initialAccount || {
       accountName: "",
       institution: "",
-      accountType: "", // Empty string to show placeholder
+      accountType: "other", // Use a valid value from the enum instead of empty string
       legalEntity: "",
       legalEntityIdentifier: "",
       accountSubtype: "",
@@ -29,7 +29,7 @@ export const useAccountFormState = ({ onAddAccount, initialAccount }: UseAccount
   const defaultAccount: FinancialAccountInfo = {
     accountName: "",
     institution: "",
-    accountType: "",
+    accountType: "other", // Use a valid value from the enum instead of empty string
     legalEntity: "",
     legalEntityIdentifier: "",
     accountSubtype: "",

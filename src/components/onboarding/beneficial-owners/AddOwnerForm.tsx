@@ -46,9 +46,15 @@ const AddOwnerForm: React.FC<AddOwnerFormProps> = ({
   };
 
   const onSubmit = (data: OwnerFormSchema) => {
+    // Ensure all required fields are present and convert to BeneficialOwnerInfo
     const owner: BeneficialOwnerInfo = {
       id: existingOwner?.id || nanoid(),
-      ...data,
+      firstName: data.firstName,
+      lastName: data.lastName,
+      relationship: data.relationship,
+      ownershipPercentage: data.ownershipPercentage,
+      nationality: data.nationality,
+      dateOfBirth: data.dateOfBirth,
       documents: files
     };
     

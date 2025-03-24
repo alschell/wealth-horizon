@@ -56,10 +56,11 @@ const SearchableSelectRenderer: React.FC<SearchableSelectRendererProps> = ({
         </Button>
       </PopoverTrigger>
       <PopoverContent 
-        className="w-[var(--radix-popover-trigger-width)] p-0 bg-white border"
+        className="w-[var(--radix-popover-trigger-width)] p-0 bg-white border shadow-md z-50"
         align="start"
         side="bottom" 
         sideOffset={8}
+        avoidCollisions={false}
       >
         <Command className="bg-white">
           <CommandInput placeholder={`Search ${label.toLowerCase()}...`} className="h-9" />

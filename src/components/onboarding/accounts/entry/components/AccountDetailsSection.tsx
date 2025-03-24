@@ -37,7 +37,7 @@ const AccountDetailsSection = ({
     <div className="space-y-4">
       <div className="space-y-2">
         <Label htmlFor="accountSubtype">
-          Account Subtype (optional)
+          Account Subtype
         </Label>
         <Input
           id="accountSubtype"
@@ -51,7 +51,7 @@ const AccountDetailsSection = ({
       
       <div className="space-y-2">
         <Label htmlFor="currency">
-          Primary Currency (optional)
+          Primary Currency
         </Label>
         <CustomSearchableSelect
           id="currency"

@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { CustomSelect } from "@/components/ui/custom-select";
 import { ACCOUNT_TYPES } from "@/utils/constants/accountTypes";
 import { INSTITUTIONS } from "@/utils/constants/institutions";
-import { CustomSearchableSelect } from "@/components/ui/custom-searchable-select";
+import CustomSearchableSelect from "@/components/ui/custom-searchable-select";
 
 interface BasicInfoSectionProps {
   account: FinancialAccountInfo;

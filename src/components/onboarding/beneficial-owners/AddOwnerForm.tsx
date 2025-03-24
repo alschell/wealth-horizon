@@ -1,121 +1,108 @@
 
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { Button } from "@/components/ui/button";
-import { BeneficialOwnerInfo } from "@/types/onboarding";
+import { ArrowLeft } from "lucide-react";
+import { motion } from "framer-motion";
+import { nanoid } from "nanoid";
 import OwnerFormFields from "./OwnerFormFields";
-import { OwnerFormValues } from "./types";
-
-// Define the validation schema with Zod
-const ownerFormSchema = z.object({
-  firstName: z.string().min(1, "First name is required"),
-  lastName: z.string().min(1, "Last name is required"),
-  relationship: z.string().min(1, "Relationship is required"),
-  ownershipPercentage: z.string().min(1, "Ownership percentage is required"),
-  nationality: z.string().min(1, "Nationality is required"),
-  dateOfBirth: z.string().min(1, "Date of birth is required"),
-  documents: z.array(z.instanceof(File)).default([]),
-});
+import { BeneficialOwnerInfo, OwnerFormValues, ownerSchema } from "./types";
+import { fadeAnimation } from "../common/AnimationVariants";
 
 interface AddOwnerFormProps {
   onAddOwner: (owner: BeneficialOwnerInfo) => void;
   onCancel: () => void;
-  isEdit?: boolean;
-  existingOwner?: BeneficialOwnerInfo;
+  ownerToEdit?: BeneficialOwnerInfo;
+  isEditing?: boolean;
 }
 
 const AddOwnerForm: React.FC<AddOwnerFormProps> = ({
   onAddOwner,
   onCancel,
-  isEdit = false,
-  existingOwner
+  ownerToEdit,
+  isEditing = false
 }) => {
-  // Initialize form
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    formState: { errors, isSubmitting },
-    reset,
-    watch
+  const [files, setFiles] = useState<File[]>(ownerToEdit?.documents || []);
+  
+  const defaultValues: OwnerFormValues = {
+    firstName: ownerToEdit?.firstName || "",
+    lastName: ownerToEdit?.lastName || "",
+    relationship: ownerToEdit?.relationship || "",
+    ownershipPercentage: ownerToEdit?.ownershipPercentage || "",
+    nationality: ownerToEdit?.nationality || "",
+    dateOfBirth: ownerToEdit?.dateOfBirth || "",
+    documents: ownerToEdit?.documents || []
+  };
+  
+  const { 
+    control, 
+    handleSubmit, 
+    formState: { errors, isSubmitting } 
   } = useForm<OwnerFormValues>({
-    resolver: zodResolver(ownerFormSchema),
-    defaultValues: {
-      firstName: "",
-      lastName: "",
-      relationship: "",
-      ownershipPercentage: "",
-      nationality: "",
-      dateOfBirth: "",
-      documents: [],
-    },
+    resolver: zodResolver(ownerSchema),
+    defaultValues
   });
 
-  // Populate form with existing owner data if in edit mode
-  useEffect(() => {
-    if (isEdit && existingOwner) {
-      reset({
-        firstName: existingOwner.firstName || "",
-        lastName: existingOwner.lastName || "",
-        relationship: existingOwner.relationship || "",
-        ownershipPercentage: existingOwner.ownershipPercentage || "",
-        nationality: existingOwner.nationality || "",
-        dateOfBirth: existingOwner.dateOfBirth || "",
-        documents: existingOwner.documents || [],
-      });
-    }
-  }, [isEdit, existingOwner, reset]);
+  const onFilesSelected = (selectedFiles: File[]) => {
+    setFiles(selectedFiles);
+  };
 
-  // Handle form submission
   const onSubmit = (data: OwnerFormValues) => {
-    const newOwner: BeneficialOwnerInfo = {
-      id: existingOwner?.id || Date.now().toString(),
-      firstName: data.firstName,
-      lastName: data.lastName,
-      relationship: data.relationship,
-      ownershipPercentage: data.ownershipPercentage,
-      nationality: data.nationality,
-      dateOfBirth: data.dateOfBirth,
-      documents: data.documents,
+    const owner: BeneficialOwnerInfo = {
+      id: ownerToEdit?.id || nanoid(),
+      ...data,
+      documents: files
     };
     
-    onAddOwner(newOwner);
-    reset();
+    onAddOwner(owner);
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg border shadow-sm">
-      <h3 className="text-lg font-semibold mb-4">
-        {isEdit ? "Edit Beneficial Owner" : "Add Beneficial Owner"}
-      </h3>
+    <motion.div
+      {...fadeAnimation}
+      className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm"
+    >
+      <div className="flex items-center justify-between mb-6">
+        <h3 className="text-xl font-semibold text-black">
+          {isEditing ? "Edit Beneficial Owner" : "Add Beneficial Owner"}
+        </h3>
+        
+        <Button
+          variant="ghost"
+          onClick={onCancel}
+          className="text-gray-600 hover:text-black"
+        >
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Back to List
+        </Button>
+      </div>
       
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-        <OwnerFormFields
-          register={register}
-          errors={errors}
-          setValue={setValue}
-          watch={watch}
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <OwnerFormFields 
+          control={control} 
+          errors={errors} 
+          onFilesSelected={onFilesSelected}
         />
         
-        <div className="flex justify-end space-x-4 pt-4">
-          <Button 
-            type="button" 
-            variant="outline" 
+        <div className="mt-8 flex justify-end space-x-4">
+          <Button
+            type="button"
+            variant="outline"
             onClick={onCancel}
           >
             Cancel
           </Button>
+          
           <Button 
-            type="submit" 
+            type="submit"
             disabled={isSubmitting}
           >
-            {isEdit ? "Update Owner" : "Add Owner"}
+            {isEditing ? "Update Owner" : "Add Owner"}
           </Button>
         </div>
       </form>
-    </div>
+    </motion.div>
   );
 };
 

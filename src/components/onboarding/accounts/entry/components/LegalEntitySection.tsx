@@ -1,32 +1,24 @@
 
 import React from "react";
 import { FinancialAccountInfo } from "@/types/onboarding";
-import { 
-  InputField, 
-  SearchableSelectField 
-} from "@/components/onboarding/common/fields";
+import { InputField } from "@/components/onboarding/common/fields";
+import { SearchableSelectField } from "@/components/onboarding/common/fields";
 
 interface LegalEntitySectionProps {
   account: FinancialAccountInfo;
-  legalEntities: Record<string, string[]>;
+  legalEntities: string[];
   onLegalEntityChange: (value: string) => void;
-  onLeiChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onLeiChange: (value: string) => void;
+  disabled?: boolean;
 }
 
 const LegalEntitySection: React.FC<LegalEntitySectionProps> = ({
   account,
   legalEntities,
   onLegalEntityChange,
-  onLeiChange
+  onLeiChange,
+  disabled = false
 }) => {
-  // Get legal entity options based on the selected institution
-  const getLegalEntityOptions = () => {
-    if (account.institution && legalEntities[account.institution]) {
-      return legalEntities[account.institution];
-    }
-    return [];
-  };
-
   return (
     <div className="space-y-4">
       <h3 className="text-lg font-medium">Legal Entity Information</h3>
@@ -37,22 +29,23 @@ const LegalEntitySection: React.FC<LegalEntitySectionProps> = ({
           label="Legal Entity"
           value={account.legalEntity || ""}
           placeholder="Select legal entity"
-          options={getLegalEntityOptions()}
+          options={legalEntities}
           required={false}
           onChange={onLegalEntityChange}
           allowCustomValue={true}
-          disabled={!account.institution}
+          disabled={disabled}
         />
         
         <InputField
-          id="legalEntityIdentifier"
-          label="Legal Entity Identifier (LEI)"
-          name="legalEntityIdentifier"
-          value={account.legalEntityIdentifier || ""}
-          onChange={onLeiChange}
-          placeholder="Enter 20-character LEI code"
+          id="lei"
+          label="LEI (Legal Entity Identifier)"
+          name="lei"
+          value={account.lei || ""}
+          onChange={(e) => onLeiChange(e.target.value)}
+          placeholder="Enter LEI number"
           required={false}
           maxLength={20}
+          disabled={disabled}
         />
       </div>
     </div>

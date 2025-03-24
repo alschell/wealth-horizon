@@ -2,25 +2,28 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface FormNavigationProps {
   onBack: () => void;
   showRequiredFieldsNote?: boolean;
   isSubmitting?: boolean;
   submitText?: string;
+  className?: string;
 }
 
 const FormNavigation: React.FC<FormNavigationProps> = ({ 
   onBack, 
   showRequiredFieldsNote = true,
   isSubmitting = false,
-  submitText = "Continue"
+  submitText = "Continue",
+  className
 }) => {
   return (
-    <div className="pt-4 border-t mt-6">
+    <div className={cn("pt-4 border-t mt-6", className)}>
       {showRequiredFieldsNote && (
-        <p className="text-sm text-black mb-6">
-          Fields marked with * are required.
+        <p className="text-sm text-gray-500 mb-6">
+          Fields marked with <span className="text-red-500">*</span> are required.
         </p>
       )}
       <div className="flex justify-between">

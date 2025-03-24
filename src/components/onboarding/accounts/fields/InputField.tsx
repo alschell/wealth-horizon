@@ -1,7 +1,6 @@
 
 import React from "react";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { InputField as CommonInputField } from "@/components/onboarding/common/fields";
 
 interface InputFieldProps {
   id: string;
@@ -11,7 +10,10 @@ interface InputFieldProps {
   placeholder: string;
   type?: string;
   required?: boolean;
+  error?: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  maxLength?: number;
+  disabled?: boolean;
 }
 
 const InputField = ({
@@ -22,23 +24,25 @@ const InputField = ({
   placeholder,
   type = "text",
   required = false,
-  onChange
+  error,
+  onChange,
+  maxLength,
+  disabled
 }: InputFieldProps) => {
   return (
-    <div className="space-y-2">
-      <Label htmlFor={id}>
-        {label}{required && "*"}
-      </Label>
-      <Input
-        id={id}
-        name={name}
-        value={value || ""}
-        onChange={onChange}
-        placeholder={placeholder}
-        type={type}
-        className="h-11"
-      />
-    </div>
+    <CommonInputField
+      id={id}
+      label={label}
+      name={name}
+      value={value || ""}
+      placeholder={placeholder}
+      type={type}
+      required={required}
+      error={error}
+      onChange={onChange}
+      maxLength={maxLength}
+      disabled={disabled}
+    />
   );
 };
 

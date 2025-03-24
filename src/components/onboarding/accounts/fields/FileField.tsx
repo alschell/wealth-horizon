@@ -29,6 +29,7 @@ const FileField: React.FC<FileFieldProps> = ({
     <CommonFileField
       id={`field-${label.toLowerCase().replace(/\s+/g, '-')}`}
       label={label}
+      files={files}
       required={!optional}
       accept={accept}
       multiple={multiple}

@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { UseAccountFormStateReturn } from "./hooks/form/types";
 import { FinancialAccountInfo } from "@/types/onboarding";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import BasicInfoSection from "./components/BasicInfoSection";
 import LegalEntitySection from "./components/LegalEntitySection";
 import AccountDetailsSection from "./components/AccountDetailsSection";
@@ -92,6 +93,7 @@ const AccountEntryForm: React.FC<AccountEntryFormProps> = ({
               type="button" 
               variant="outline" 
               onClick={onCancel}
+              className="text-black"
             >
               Cancel
             </Button>
@@ -99,7 +101,7 @@ const AccountEntryForm: React.FC<AccountEntryFormProps> = ({
           <Button 
             type="button" 
             onClick={handleAddAccount}
-            className={onCancel ? "" : "ml-auto"}
+            className={cn("bg-black hover:bg-gray-800 text-white", onCancel ? "" : "ml-auto")}
           >
             {buttonText}
           </Button>

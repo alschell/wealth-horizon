@@ -38,13 +38,14 @@ const FormFooter: React.FC<FormFooterProps> = ({
             size="lg"
             className="rounded-lg"
             onClick={onBack}
+            disabled={isSubmitting}
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
             {backLabel}
           </Button>
         )}
         <Button
-          type="submit"
+          type="button"
           size="lg"
           className={cn(
             "rounded-lg hover:shadow-md transition-shadow bg-black hover:bg-gray-800 text-white", 

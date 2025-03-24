@@ -56,20 +56,6 @@ const AccountDetailsSection = ({
           />
         </div>
       </div>
-      
-      <div className="space-y-2">
-        <Label htmlFor="approximateValue">
-          Approximate Value
-        </Label>
-        <Input
-          id="approximateValue"
-          name="approximateValue"
-          value={account.approximateValue || ""}
-          onChange={onInputChange}
-          placeholder="e.g., 10,000,000"
-          className="h-11"
-        />
-      </div>
     </div>
   );
 };

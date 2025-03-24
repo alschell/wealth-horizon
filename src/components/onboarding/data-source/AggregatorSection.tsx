@@ -3,7 +3,7 @@ import React from "react";
 import { AggregatorInfo } from "@/context/OnboardingContext";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { AGGREGATORS } from "@/components/onboarding/constants/aggregators";
+import { AGGREGATORS } from "@/utils/constants/aggregators";
 import { SearchableSelectField } from "../accounts/fields";
 
 interface AggregatorSectionProps {
@@ -37,10 +37,10 @@ const AggregatorSection: React.FC<AggregatorSectionProps> = ({
     <div className="space-y-6">
       <div className="space-y-3">
         <Label className="text-black">Select your aggregator*</Label>
-        <div className="relative z-10">
+        <div className="relative">
           <SearchableSelectField
             id="aggregator"
-            label="Aggregator"
+            label=""
             value={aggregatorInfo.aggregatorName || ""}
             placeholder="Select or enter your data aggregator"
             options={AGGREGATORS}
@@ -62,7 +62,7 @@ const AggregatorSection: React.FC<AggregatorSectionProps> = ({
       </div>
 
       <div className="mt-4">
-        <Label className="text-black">API Key (optional)</Label>
+        <Label className="text-black">API Key</Label>
         <Input
           placeholder="Enter your API key if applicable"
           name="apiKey"

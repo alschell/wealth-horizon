@@ -80,8 +80,8 @@ const FileUploadSection = ({
         </div>
       )}
 
-      <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-md">
-        <p className="text-sm text-blue-700">
+      <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-md border-black">
+        <p className="text-sm text-black">
           <strong>Tip:</strong> You can upload bank statements, portfolio reports, or spreadsheets 
           containing your financial account information. We'll help you organize this data 
           for easy portfolio management.

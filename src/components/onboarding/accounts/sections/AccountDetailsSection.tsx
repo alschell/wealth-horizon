@@ -39,15 +39,6 @@ const AccountDetailsSection = ({
           onChange={(value) => onSelectionChange("currency", extractCurrencyCode(value))}
         />
       </div>
-      
-      <InputField
-        id="approximateValue"
-        label="Approximate Value"
-        name="approximateValue"
-        value={account.approximateValue || ""}
-        onChange={onInputChange}
-        placeholder="e.g., 10,000,000"
-      />
     </div>
   );
 };

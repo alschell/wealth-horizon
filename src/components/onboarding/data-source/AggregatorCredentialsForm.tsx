@@ -34,7 +34,7 @@ const AggregatorCredentialsForm = ({
         className="h-11"
       />
       
-      <Label htmlFor="apiKey">API Key (optional)</Label>
+      <Label htmlFor="apiKey">API Key</Label>
       <Input
         id="apiKey"
         name="apiKey"

@@ -19,9 +19,16 @@ interface DatePickerProps {
 }
 
 export function DatePicker({ value, onChange, label, optional }: DatePickerProps) {
+  const [open, setOpen] = React.useState(false);
+
+  const handleSelect = (date?: Date) => {
+    onChange?.(date);
+    setOpen(false); // Close the popover after selection
+  };
+
   return (
     <div className="grid gap-2">
-      <Popover>
+      <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
             variant={"outline"}
@@ -42,7 +49,7 @@ export function DatePicker({ value, onChange, label, optional }: DatePickerProps
           <Calendar
             mode="single"
             selected={value}
-            onSelect={onChange}
+            onSelect={handleSelect}
             initialFocus
             className="rounded-md border shadow-md bg-white pointer-events-auto"
             weekStartsOn={1}

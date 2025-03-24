@@ -62,6 +62,17 @@ const LegalEntitySection = ({
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <CustomSearchableSelect
+          id="institution"
+          label="Institution"
+          value={account.institution || ""}
+          onChange={(value) => onSelectionChange('institution', value)}
+          placeholder="Select institution"
+          options={topBanks}
+          allowCustomValue={true}
+          required={true}
+        />
+        
+        <CustomSearchableSelect
           id="legalEntity"
           label="Legal Entity"
           value={account.legalEntity || ""}

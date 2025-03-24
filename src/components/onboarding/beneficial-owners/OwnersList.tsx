@@ -2,14 +2,15 @@
 import React from "react";
 import { BeneficialOwnerInfo } from "@/context/OnboardingContext";
 import { Button } from "@/components/ui/button";
-import { Users, Trash2 } from "lucide-react";
+import { Users, Trash2, Edit } from "lucide-react";
 
 interface OwnersListProps {
   owners: BeneficialOwnerInfo[];
   onRemoveOwner: (index: number) => void;
+  onEditOwner: (index: number) => void;
 }
 
-const OwnersList: React.FC<OwnersListProps> = ({ owners, onRemoveOwner }) => {
+const OwnersList: React.FC<OwnersListProps> = ({ owners, onRemoveOwner, onEditOwner }) => {
   if (owners.length === 0) {
     return null;
   }
@@ -33,14 +34,24 @@ const OwnersList: React.FC<OwnersListProps> = ({ owners, onRemoveOwner }) => {
             </div>
           </div>
           
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => onRemoveOwner(index)}
-            className="text-red-500 hover:text-red-700 hover:bg-red-50"
-          >
-            <Trash2 className="h-4 w-4" />
-          </Button>
+          <div className="flex gap-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => onEditOwner(index)}
+              className="text-blue-500 hover:text-blue-700 hover:bg-blue-50"
+            >
+              <Edit className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => onRemoveOwner(index)}
+              className="text-red-500 hover:text-red-700 hover:bg-red-50"
+            >
+              <Trash2 className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
       ))}
     </div>

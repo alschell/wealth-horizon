@@ -5,7 +5,12 @@ import { FinancialAccountInfo } from "@/types/onboarding";
 import { LEGAL_ENTITIES } from "../constants/legalEntities";
 
 // Import our refactored hooks and types
-import { DEFAULT_ACCOUNT, UseAccountFormStateProps, UseAccountFormStateReturn } from "./form/types";
+import { 
+  DEFAULT_ACCOUNT, 
+  UseAccountFormStateProps, 
+  UseAccountFormStateReturn, 
+  createPlaceholderAccount 
+} from "./form/types";
 import { useLeiHandler } from "./form/useLeiHandler";
 import { useFormValidation } from "./form/useFormValidation";
 import { useLegalEntityHandler } from "./form/useLegalEntityHandler";
@@ -14,11 +19,11 @@ import { useInputHandlers } from "./form/useInputHandlers";
 export const useAccountFormState = ({ onAddAccount, initialAccount }: UseAccountFormStateProps): UseAccountFormStateReturn => {
   // Initialize account state with default values or provided values
   const [newAccount, setNewAccount] = useState<FinancialAccountInfo>(
-    initialAccount || { ...DEFAULT_ACCOUNT }
+    initialAccount || createPlaceholderAccount()
   );
 
   // Get validation utilities
-  const { errors, validateForm, clearError } = useFormValidation();
+  const { errors, validateForm, clearError, setError } = useFormValidation();
 
   // Get LEI handler
   const { handleLeiInputChange, handleLeiChange } = useLeiHandler(setNewAccount);
@@ -36,19 +41,28 @@ export const useAccountFormState = ({ onAddAccount, initialAccount }: UseAccount
   // Use the legal entities data
   const legalEntities = LEGAL_ENTITIES;
 
-  // Handle form submission
+  // Handle form submission with improved error handling
   const handleAddAccount = () => {
-    if (validateForm(newAccount)) {
-      onAddAccount(newAccount);
-      setNewAccount({ ...DEFAULT_ACCOUNT });
+    try {
+      if (validateForm(newAccount)) {
+        onAddAccount(newAccount);
+        setNewAccount(createPlaceholderAccount());
+        toast({
+          title: "Account added",
+          description: `${newAccount.accountName} has been added successfully.`,
+        });
+      } else {
+        toast({
+          title: "Form validation failed",
+          description: "Please fill in all required fields.",
+          variant: "destructive"
+        });
+      }
+    } catch (error) {
+      console.error("Error in handleAddAccount:", error);
       toast({
-        title: "Account added",
-        description: `${newAccount.accountName} has been added successfully.`,
-      });
-    } else {
-      toast({
-        title: "Form validation failed",
-        description: "Please fill in all required fields.",
+        title: "Error",
+        description: "Failed to add account. Please try again.",
         variant: "destructive"
       });
     }

@@ -22,10 +22,18 @@ export interface UseAccountFormStateReturn {
   handleAddAccount: () => void;
 }
 
+// Ensure accountType has an empty string as a valid option for the select placeholder
+type AccountTypeWithPlaceholder = FinancialAccountInfo['accountType'] | '';
+
+export interface AccountTypeOptions {
+  value: FinancialAccountInfo['accountType'];
+  label: string;
+}
+
 export const DEFAULT_ACCOUNT: FinancialAccountInfo = {
   accountName: "",
   institution: "",
-  accountType: "other",
+  accountType: "other", // Default fallback for type safety
   legalEntity: "",
   legalEntityIdentifier: "",
   accountSubtype: "",
@@ -33,3 +41,8 @@ export const DEFAULT_ACCOUNT: FinancialAccountInfo = {
   approximateValue: "",
   statements: []
 };
+
+// Utility function to create a placeholder version of the account for new entries
+export const createPlaceholderAccount = (): FinancialAccountInfo => ({
+  ...DEFAULT_ACCOUNT
+});

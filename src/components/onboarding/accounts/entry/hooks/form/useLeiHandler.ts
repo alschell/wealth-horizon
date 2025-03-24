@@ -5,23 +5,32 @@ import { LEGAL_ENTITIES } from "../../constants/legalEntities";
 import { toast } from "@/components/ui/use-toast";
 
 export const useLeiHandler = (setAccount: React.Dispatch<React.SetStateAction<FinancialAccountInfo>>) => {
-  // Handle LEI input change with auto-population
+  // Handle LEI input change with auto-population and improved error handling
   const handleLeiInputChange = (value: string) => {
-    setAccount(prev => ({ ...prev, legalEntityIdentifier: value }));
-    
-    // Auto-populate institution and legal entity from LEI
-    if (value) {
-      // Check if this LEI exists in our mapping
-      for (const [entityName, lei] of Object.entries(LEI_MAPPING)) {
-        if (lei === value) {
+    try {
+      // First update the LEI in the form
+      setAccount(prev => ({ ...prev, legalEntityIdentifier: value }));
+      
+      // Auto-populate institution and legal entity from LEI
+      if (value && value.trim().length > 0) {
+        // Create a reverse mapping for LEI to entity
+        const leiToEntityMap: Record<string, string> = {};
+        for (const [entityName, lei] of Object.entries(LEI_MAPPING)) {
+          leiToEntityMap[lei] = entityName;
+        }
+        
+        // Check if this LEI exists in our mapping
+        const matchedEntity = leiToEntityMap[value];
+        
+        if (matchedEntity) {
           // Found a match, now find which institution it belongs to
           for (const [institution, entities] of Object.entries(LEGAL_ENTITIES)) {
-            if (entities.includes(entityName)) {
+            if (entities.includes(matchedEntity)) {
               setAccount(prev => ({
                 ...prev,
                 legalEntityIdentifier: value,
                 institution: institution,
-                legalEntity: entityName
+                legalEntity: matchedEntity
               }));
               
               // Notify user of auto-population
@@ -34,11 +43,22 @@ export const useLeiHandler = (setAccount: React.Dispatch<React.SetStateAction<Fi
           }
         }
       }
+    } catch (error) {
+      console.error("Error in handleLeiInputChange:", error);
+      toast({
+        title: "Error",
+        description: "Failed to process LEI. Please try again.",
+        variant: "destructive"
+      });
     }
   };
 
-  // Handle LEI change
+  // Handle LEI change from input event
   const handleLeiChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e || !e.target) {
+      console.error("Invalid event in handleLeiChange");
+      return;
+    }
     handleLeiInputChange(e.target.value);
   };
 

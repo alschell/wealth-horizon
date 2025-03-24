@@ -88,6 +88,7 @@ const OwnerFormFields: React.FC<OwnerFormFieldsProps> = ({
         render={({ field }) => (
           <SelectField
             id="nationality"
+            name="nationality"
             label="Nationality"
             value={field.value}
             onChange={field.onChange}
@@ -105,6 +106,7 @@ const OwnerFormFields: React.FC<OwnerFormFieldsProps> = ({
         render={({ field }) => (
           <DateField
             id="dateOfBirth"
+            name="dateOfBirth"
             label="Date of Birth"
             required
             value={field.value}

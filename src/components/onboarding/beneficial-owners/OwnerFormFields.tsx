@@ -10,28 +10,21 @@ import { DatePicker } from "@/components/ui/date-picker";
 
 interface OwnerFormFieldsProps {
   owner: BeneficialOwnerInfo;
-  onChange: (field: keyof BeneficialOwnerInfo, value: any) => void;
-  onFilesSelected: (files: File[]) => void;
   errors: Partial<Record<keyof BeneficialOwnerInfo, string>>;
+  onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onSelectChange: (field: keyof BeneficialOwnerInfo, value: string) => void;
+  onDateChange: (date?: Date) => void;
+  onFilesSelected: (files: File[]) => void;
 }
 
 const OwnerFormFields: React.FC<OwnerFormFieldsProps> = ({
   owner,
-  onChange,
-  onFilesSelected,
-  errors
+  errors,
+  onInputChange,
+  onSelectChange,
+  onDateChange,
+  onFilesSelected
 }) => {
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    onChange(name as keyof BeneficialOwnerInfo, value);
-  };
-
-  const handleDateChange = (date?: Date) => {
-    if (date) {
-      onChange('dateOfBirth', date.toISOString());
-    }
-  };
-
   const dateOfBirthValue = owner.dateOfBirth ? new Date(owner.dateOfBirth) : undefined;
 
   return (
@@ -45,7 +38,7 @@ const OwnerFormFields: React.FC<OwnerFormFieldsProps> = ({
             id="firstName"
             name="firstName"
             value={owner.firstName}
-            onChange={handleInputChange}
+            onChange={onInputChange}
             placeholder="John"
             className={`h-11 ${errors.firstName ? 'border-red-500' : ''}`}
           />
@@ -62,7 +55,7 @@ const OwnerFormFields: React.FC<OwnerFormFieldsProps> = ({
             id="lastName"
             name="lastName"
             value={owner.lastName}
-            onChange={handleInputChange}
+            onChange={onInputChange}
             placeholder="Smith"
             className={`h-11 ${errors.lastName ? 'border-red-500' : ''}`}
           />
@@ -81,7 +74,7 @@ const OwnerFormFields: React.FC<OwnerFormFieldsProps> = ({
             id="relationship"
             name="relationship"
             value={owner.relationship}
-            onChange={handleInputChange}
+            onChange={onInputChange}
             placeholder="e.g., Director, Shareholder"
             className={`h-11 ${errors.relationship ? 'border-red-500' : ''}`}
           />
@@ -98,7 +91,7 @@ const OwnerFormFields: React.FC<OwnerFormFieldsProps> = ({
             id="ownershipPercentage"
             name="ownershipPercentage"
             value={owner.ownershipPercentage}
-            onChange={handleInputChange}
+            onChange={onInputChange}
             placeholder="e.g., 51"
             className={`h-11 ${errors.ownershipPercentage ? 'border-red-500' : ''}`}
           />
@@ -113,7 +106,7 @@ const OwnerFormFields: React.FC<OwnerFormFieldsProps> = ({
           id="nationality"
           label="Nationality"
           value={owner.nationality}
-          onChange={(value) => onChange('nationality', value)}
+          onChange={(value) => onSelectChange('nationality', value)}
           placeholder="Select nationality"
           options={COUNTRIES}
           required
@@ -124,7 +117,7 @@ const OwnerFormFields: React.FC<OwnerFormFieldsProps> = ({
           label="Date of Birth"
           placeholder="Select date of birth"
           value={dateOfBirthValue}
-          onChange={handleDateChange}
+          onChange={onDateChange}
           className="w-full"
         />
       </div>

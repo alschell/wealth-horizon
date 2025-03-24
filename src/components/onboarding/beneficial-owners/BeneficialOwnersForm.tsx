@@ -12,22 +12,60 @@ import AddOwnerForm from "./AddOwnerForm";
 const BeneficialOwnersForm = () => {
   const { onboardingData, addBeneficialOwner, removeBeneficialOwner, setCurrentStep } = useOnboarding();
   const [owners, setOwners] = useState<BeneficialOwnerInfo[]>(onboardingData.beneficialOwners);
+  const [currentEditIndex, setCurrentEditIndex] = useState<number | null>(null);
+  const [editingOwner, setEditingOwner] = useState<BeneficialOwnerInfo | null>(null);
   
   const handleAddOwner = (newOwner: BeneficialOwnerInfo) => {
-    const updatedOwners = [...owners, newOwner];
-    setOwners(updatedOwners);
-    addBeneficialOwner(newOwner);
-    
-    toast({
-      title: "Owner added",
-      description: `${newOwner.firstName} ${newOwner.lastName} has been added as a beneficial owner.`,
-    });
+    if (currentEditIndex !== null) {
+      // Update existing owner
+      const updatedOwners = [...owners];
+      updatedOwners[currentEditIndex] = newOwner;
+      setOwners(updatedOwners);
+      
+      // Remove the old owner and add the updated one
+      removeBeneficialOwner(currentEditIndex);
+      addBeneficialOwner(newOwner);
+      
+      toast({
+        title: "Owner updated",
+        description: `${newOwner.firstName} ${newOwner.lastName}'s information has been updated.`,
+      });
+      
+      // Reset editing state
+      setCurrentEditIndex(null);
+      setEditingOwner(null);
+    } else {
+      // Add new owner
+      const updatedOwners = [...owners, newOwner];
+      setOwners(updatedOwners);
+      addBeneficialOwner(newOwner);
+      
+      toast({
+        title: "Owner added",
+        description: `${newOwner.firstName} ${newOwner.lastName} has been added as a beneficial owner.`,
+      });
+    }
   };
 
   const handleRemoveOwner = (index: number) => {
     const updatedOwners = owners.filter((_, i) => i !== index);
     setOwners(updatedOwners);
     removeBeneficialOwner(index);
+    
+    if (currentEditIndex === index) {
+      setCurrentEditIndex(null);
+      setEditingOwner(null);
+    }
+  };
+  
+  const handleEditOwner = (index: number) => {
+    setCurrentEditIndex(index);
+    setEditingOwner(owners[index]);
+  };
+  
+  const handleCancelEdit = () => {
+    setCurrentEditIndex(null);
+    setEditingOwner(null);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -62,10 +100,16 @@ const BeneficialOwnersForm = () => {
           <OwnersList 
             owners={owners}
             onRemoveOwner={handleRemoveOwner}
+            onEditOwner={handleEditOwner}
           />
 
           {/* Form to add a new beneficial owner */}
-          <AddOwnerForm onAddOwner={handleAddOwner} />
+          <AddOwnerForm 
+            onAddOwner={handleAddOwner}
+            ownerToEdit={editingOwner}
+            isEditing={currentEditIndex !== null}
+            onCancelEdit={handleCancelEdit}
+          />
 
           <div className="pt-4 border-t">
             <p className="text-sm text-gray-500 mb-6">

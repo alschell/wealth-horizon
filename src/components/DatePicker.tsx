@@ -37,7 +37,6 @@ export function DatePicker({ value, onChange, label, optional }: DatePickerProps
         <PopoverContent 
           className="w-auto p-0 bg-white shadow-lg rounded-md border z-[999]" 
           align="start" 
-          forceMount
           avoidCollisions={true}
         >
           <Calendar

@@ -42,7 +42,6 @@ const SelectFieldRenderer: React.FC<SelectFieldRendererProps> = ({
         className="bg-white border shadow-lg z-[999]"
         position="popper" 
         sideOffset={8}
-        forceMount
         avoidCollisions={true}
       >
         {sortedOptions.map((option) => (

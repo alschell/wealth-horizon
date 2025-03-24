@@ -92,7 +92,6 @@ const SearchableSelectField = ({
           side="bottom"
           sideOffset={8}
           avoidCollisions={true}
-          forceMount
         >
           <Command className="bg-white">
             <CommandInput 

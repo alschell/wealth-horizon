@@ -1,49 +1,45 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { BeneficialOwnerInfo } from "@/context/OnboardingContext";
-import { Button } from "@/components/ui/button";
-import { Plus, Save } from "lucide-react";
+import { FormHeader, FormFooter, validateRequiredFields, isValidPercentage } from "@/components/onboarding/common";
+import { FormLayout, FormSection } from "@/components/onboarding/common/layouts";
+import { UserPlus } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
-import OwnerFormFields from "./OwnerFormFields";
+import BeneficialOwnerFormFields from "./OwnerFormFields";
 
 interface AddOwnerFormProps {
   onAddOwner: (owner: BeneficialOwnerInfo) => void;
-  ownerToEdit?: BeneficialOwnerInfo;
-  isEditing?: boolean;
-  onCancelEdit?: () => void;
+  onCancel: () => void;
+  existingOwner?: BeneficialOwnerInfo;
+  isEdit?: boolean;
 }
 
 const AddOwnerForm: React.FC<AddOwnerFormProps> = ({
   onAddOwner,
-  ownerToEdit,
-  isEditing = false,
-  onCancelEdit
+  onCancel,
+  existingOwner,
+  isEdit = false
 }) => {
-  const emptyOwner: BeneficialOwnerInfo = {
-    firstName: "",
-    lastName: "",
-    relationship: "",
-    ownershipPercentage: "",
-    nationality: "",
-    dateOfBirth: "",
-    documents: []
-  };
-
-  const [owner, setOwner] = useState<BeneficialOwnerInfo>(emptyOwner);
-  const [errors, setErrors] = useState<Partial<Record<keyof BeneficialOwnerInfo, string>>>({});
-
-  useEffect(() => {
-    if (isEditing && ownerToEdit) {
-      setOwner(ownerToEdit);
-    } else {
-      setOwner(emptyOwner);
+  const [owner, setOwner] = useState<BeneficialOwnerInfo>(
+    existingOwner || {
+      firstName: "",
+      lastName: "",
+      relationship: "",
+      ownershipPercentage: "",
+      nationality: "",
+      dateOfBirth: "",
+      documents: []
     }
-  }, [isEditing, ownerToEdit]);
+  );
+  
+  const [errors, setErrors] = useState<Partial<Record<keyof BeneficialOwnerInfo, string>>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setOwner({ ...owner, [name]: value });
     
+    // Clear error when field is edited
     if (errors[name as keyof BeneficialOwnerInfo]) {
       setErrors({ ...errors, [name]: undefined });
     }
@@ -52,6 +48,7 @@ const AddOwnerForm: React.FC<AddOwnerFormProps> = ({
   const handleSelectChange = (field: keyof BeneficialOwnerInfo, value: string) => {
     setOwner({ ...owner, [field]: value });
     
+    // Clear error when field is edited
     if (errors[field]) {
       setErrors({ ...errors, [field]: undefined });
     }
@@ -60,49 +57,48 @@ const AddOwnerForm: React.FC<AddOwnerFormProps> = ({
   const handleDateChange = (date?: Date) => {
     if (date) {
       setOwner({ ...owner, dateOfBirth: date.toISOString() });
-    }
-    
-    if (errors.dateOfBirth) {
-      setErrors({ ...errors, dateOfBirth: undefined });
+      
+      // Clear error when field is edited
+      if (errors.dateOfBirth) {
+        setErrors({ ...errors, dateOfBirth: undefined });
+      }
     }
   };
 
   const handleFilesSelected = (files: File[]) => {
     setOwner({ ...owner, documents: files });
     
+    // Clear error when field is edited
     if (errors.documents) {
       setErrors({ ...errors, documents: undefined });
     }
   };
 
   const validateForm = () => {
-    const newErrors: Partial<Record<keyof BeneficialOwnerInfo, string>> = {};
+    // Define required fields
     const requiredFields: (keyof BeneficialOwnerInfo)[] = [
-      'firstName', 
-      'lastName', 
-      'relationship', 
+      'firstName',
+      'lastName',
+      'relationship',
       'ownershipPercentage',
       'nationality'
     ];
     
-    requiredFields.forEach(field => {
-      if (!owner[field]) {
-        newErrors[field] = 'This field is required';
-      }
-    });
+    // Validate required fields
+    let newErrors = validateRequiredFields(owner, requiredFields);
     
-    if (owner.ownershipPercentage) {
-      const percentage = parseFloat(owner.ownershipPercentage);
-      if (isNaN(percentage) || percentage < 0 || percentage > 100) {
-        newErrors.ownershipPercentage = 'Please enter a valid percentage between 0 and 100';
-      }
+    // Validate ownership percentage
+    if (owner.ownershipPercentage && !isValidPercentage(owner.ownershipPercentage)) {
+      newErrors.ownershipPercentage = 'Please enter a valid percentage (0-100)';
     }
     
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    
     if (!validateForm()) {
       toast({
         title: "Form validation failed",
@@ -112,66 +108,64 @@ const AddOwnerForm: React.FC<AddOwnerFormProps> = ({
       return;
     }
     
-    onAddOwner(owner);
+    setIsSubmitting(true);
     
-    if (!isEditing) {
-      setOwner(emptyOwner);
-    }
-    
-    if (isEditing && onCancelEdit) {
-      onCancelEdit();
-    }
+    // Simulate async operation
+    setTimeout(() => {
+      onAddOwner(owner);
+      setIsSubmitting(false);
+      toast({
+        title: isEdit ? "Owner updated" : "Owner added",
+        description: isEdit 
+          ? `${owner.firstName} ${owner.lastName} has been updated.` 
+          : `${owner.firstName} ${owner.lastName} has been added.`,
+      });
+    }, 500);
   };
 
   return (
-    <div className="space-y-6 border p-4 rounded-md">
-      <h3 className="font-medium flex items-center gap-2 text-gray-700">
-        {isEditing ? 
-          <Save className="h-5 w-5 text-gray-500" /> : 
-          <Plus className="h-5 w-5 text-gray-500" />
-        }
-        {isEditing ? "Edit Beneficial Owner" : "Add a Beneficial Owner"}
-      </h3>
-      
-      <OwnerFormFields
-        owner={owner}
-        errors={errors}
-        onInputChange={handleInputChange}
-        onSelectChange={handleSelectChange}
-        onDateChange={handleDateChange}
-        onFilesSelected={handleFilesSelected}
-      />
-      
-      <div className="flex justify-end space-x-4">
-        {isEditing && onCancelEdit && (
-          <Button
-            type="button"
-            variant="outline"
-            onClick={onCancelEdit}
-            className="border-gray-300"
-          >
-            Cancel
-          </Button>
-        )}
-        <Button
-          type="button"
-          onClick={handleSubmit}
-          className="bg-black hover:bg-gray-800 text-white"
-        >
-          {isEditing ? (
-            <>
-              <Save className="mr-2 h-4 w-4" />
-              Update Owner
-            </>
-          ) : (
-            <>
-              <Plus className="mr-2 h-4 w-4" />
-              Add Owner
-            </>
-          )}
-        </Button>
-      </div>
-    </div>
+    <FormLayout>
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <FormHeader
+          icon={<UserPlus className="h-7 w-7" />}
+          title={isEdit ? "Edit Beneficial Owner" : "Add Beneficial Owner"}
+          description="Provide details about individuals who own or control your entity."
+        />
+
+        <FormSection>
+          <BeneficialOwnerFormFields
+            owner={owner}
+            errors={errors}
+            onInputChange={handleInputChange}
+            onSelectChange={handleSelectChange}
+            onDateChange={handleDateChange}
+            onFilesSelected={handleFilesSelected}
+          />
+        </FormSection>
+
+        <div className="pt-4 border-t">
+          <p className="text-sm text-gray-500 mb-6">
+            Fields marked with <span className="text-red-500">*</span> are required.
+          </p>
+          <div className="flex justify-end space-x-4">
+            <button
+              type="button"
+              className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+              onClick={onCancel}
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Saving..." : isEdit ? "Update Owner" : "Add Owner"}
+            </button>
+          </div>
+        </div>
+      </form>
+    </FormLayout>
   );
 };
 

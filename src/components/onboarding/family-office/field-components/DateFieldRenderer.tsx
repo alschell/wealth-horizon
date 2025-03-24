@@ -26,14 +26,16 @@ const DateFieldRenderer: React.FC<DateFieldRendererProps> = ({
   };
 
   return (
-    <DatePicker
-      label={label}
-      placeholder={placeholder || `Select ${label.toLowerCase()}`}
-      value={value ? new Date(value) : undefined}
-      onChange={handleDateChange}
-      optional={!required}
-      className="w-full"
-    />
+    <div className="space-y-2">
+      <DatePicker
+        label={label}
+        placeholder={placeholder || `Select ${label.toLowerCase()}`}
+        value={value ? new Date(value) : undefined}
+        onChange={handleDateChange}
+        optional={!required}
+        className="w-full"
+      />
+    </div>
   );
 };
 

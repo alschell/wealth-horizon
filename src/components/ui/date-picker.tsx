@@ -10,6 +10,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
+import { Label } from "@/components/ui/label"
 
 interface DatePickerProps {
   value?: Date
@@ -32,6 +33,10 @@ export function DatePicker({
 }: DatePickerProps) {
   return (
     <div className={cn("grid gap-2", className)}>
+      <Label className="text-black">
+        {label}
+        {!optional && <span className="text-red-500 ml-1">*</span>}
+      </Label>
       <Popover>
         <PopoverTrigger asChild>
           <Button

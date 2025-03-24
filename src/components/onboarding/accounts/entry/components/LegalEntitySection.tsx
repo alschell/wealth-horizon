@@ -4,7 +4,6 @@ import { FinancialAccountInfo } from "@/types/onboarding";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import CustomSearchableSelect from "@/components/ui/custom-searchable-select";
-import { INSTITUTIONS } from "@/utils/constants";
 import { LEGAL_ENTITIES } from "../constants/legalEntityData";
 
 interface LegalEntitySectionProps {
@@ -52,7 +51,7 @@ const LegalEntitySection = ({
           value={account.institution || ""}
           onChange={(value) => onSelectionChange('institution', value)}
           placeholder="Select institution"
-          options={INSTITUTIONS}
+          options={Object.keys(LEGAL_ENTITIES)}
           allowCustomValue={true}
           required={true}
         />

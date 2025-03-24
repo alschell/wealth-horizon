@@ -3,7 +3,6 @@ import { useState } from "react";
 import { FinancialAccountInfo } from "@/types/onboarding";
 import { toast } from "@/components/ui/use-toast";
 import { LEI_MAPPING, LEGAL_ENTITIES } from "../constants/legalEntityData";
-import { INSTITUTIONS } from "@/utils/constants";
 
 interface UseAccountFormStateProps {
   onAddAccount: (account: FinancialAccountInfo) => void;
@@ -89,19 +88,6 @@ export const useAccountFormState = ({ onAddAccount }: UseAccountFormStateProps) 
     }
   };
 
-  // Get legal entities for the selected institution
-  const getLegalEntities = () => {
-    if (newAccount.institution && LEGAL_ENTITIES[newAccount.institution]) {
-      return LEGAL_ENTITIES[newAccount.institution];
-    }
-    return [];
-  };
-
-  // Handle file upload
-  const handleFilesSelected = (files: File[]) => {
-    setNewAccount({ ...newAccount, statements: files });
-  };
-
   // Validate form
   const validateForm = () => {
     const newErrors: Partial<Record<keyof FinancialAccountInfo, string>> = {};
@@ -158,8 +144,9 @@ export const useAccountFormState = ({ onAddAccount }: UseAccountFormStateProps) 
     errors,
     handleInputChange,
     handleSelectionChange,
-    getLegalEntities,
-    handleFilesSelected,
+    handleFilesSelected: (files: File[]) => {
+      setNewAccount({ ...newAccount, statements: files });
+    },
     handleAddAccount
   };
 };

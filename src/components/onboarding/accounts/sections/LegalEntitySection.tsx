@@ -35,7 +35,7 @@ const LegalEntitySection = ({
         value={account.legalEntityIdentifier || ""}
         onChange={handleLeiChange}
         placeholder="e.g., 7H6GLXDRUGQFU57RNE97"
-        required
+        required={false}
       />
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

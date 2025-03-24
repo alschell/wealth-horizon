@@ -28,7 +28,7 @@ const BasicInfoSection = ({
           value={account.accountName}
           onChange={onInputChange}
           placeholder="e.g., Main Investment Portfolio at UBS"
-          required
+          required={false}
         />
       </div>
       
@@ -39,7 +39,7 @@ const BasicInfoSection = ({
           value={account.accountType || ""}
           placeholder="Select account type"
           options={ACCOUNT_TYPES}
-          required
+          required={false}
           onChange={(value) => onSelectionChange("accountType", value)}
           allowCustomValue={true}
         />

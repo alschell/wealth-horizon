@@ -24,7 +24,7 @@ export const mockReactEvent = (name: string, value: string) => ({
     value
   },
   preventDefault: jest.fn()
-}) as React.ChangeEvent<HTMLInputElement>;
+} as unknown as React.ChangeEvent<HTMLInputElement>);
 
 export const validateMockToasts = (toastMock: jest.Mock, expectedTitle: string) => {
   expect(toastMock).toHaveBeenCalled();

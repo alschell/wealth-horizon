@@ -2,13 +2,19 @@
 import '@testing-library/jest-dom';
 
 // Mock for matchMedia
-window.matchMedia = window.matchMedia || function() {
-  return {
+Object.defineProperty(window, 'matchMedia', {
+  writable: true,
+  value: jest.fn().mockImplementation(query => ({
     matches: false,
-    addListener: function() {},
-    removeListener: function() {}
-  };
-};
+    media: query,
+    onchange: null,
+    addListener: jest.fn(), // deprecated
+    removeListener: jest.fn(), // deprecated
+    addEventListener: jest.fn(),
+    removeEventListener: jest.fn(),
+    dispatchEvent: jest.fn(),
+  })),
+});
 
 // Silent console errors during tests
 const originalConsoleError = console.error;

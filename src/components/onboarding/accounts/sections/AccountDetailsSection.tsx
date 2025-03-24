@@ -28,7 +28,7 @@ const AccountDetailsSection = ({
           value={account.accountSubtype || ""}
           onChange={onInputChange}
           placeholder="e.g., Managed Account, Private Equity"
-          required
+          required={false}
         />
         
         <SearchableSelectField
@@ -38,7 +38,7 @@ const AccountDetailsSection = ({
           placeholder="Select currency"
           options={CURRENCIES}
           onChange={(value) => onSelectionChange("currency", extractCurrencyCode(value))}
-          required
+          required={false}
         />
       </div>
     </div>

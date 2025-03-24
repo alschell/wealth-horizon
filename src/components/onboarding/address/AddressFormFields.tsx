@@ -25,6 +25,7 @@ const AddressFormFields = ({
         <div className="space-y-2">
           <Label htmlFor="streetAddress">
             Address Line 1
+            <span className="text-red-500 ml-1">*</span>
           </Label>
           <Input
             id="streetAddress"
@@ -41,7 +42,8 @@ const AddressFormFields = ({
 
         <div className="space-y-2">
           <Label htmlFor="addressLine2">
-            Address Line 2 (optional)
+            Address Line 2
+            <span className="text-red-500 ml-1">*</span>
           </Label>
           <Input
             id="addressLine2"
@@ -51,6 +53,9 @@ const AddressFormFields = ({
             placeholder="e.g., Apt 4B"
             className="h-11"
           />
+          {errors.addressLine2 && (
+            <p className="text-sm text-red-500">{errors.addressLine2}</p>
+          )}
         </div>
       </div>
 
@@ -58,6 +63,7 @@ const AddressFormFields = ({
         <div className="space-y-2">
           <Label htmlFor="city">
             City
+            <span className="text-red-500 ml-1">*</span>
           </Label>
           <Input
             id="city"
@@ -75,6 +81,7 @@ const AddressFormFields = ({
         <div className="space-y-2">
           <Label htmlFor="state">
             Region/State
+            <span className="text-red-500 ml-1">*</span>
           </Label>
           <Input
             id="state"
@@ -92,6 +99,7 @@ const AddressFormFields = ({
         <div className="space-y-2">
           <Label htmlFor="postalCode">
             Postal Code
+            <span className="text-red-500 ml-1">*</span>
           </Label>
           <Input
             id="postalCode"
@@ -115,6 +123,7 @@ const AddressFormFields = ({
           onChange={(value) => onSelectionChange('country', value)}
           placeholder="Select country"
           options={COUNTRIES}
+          required={true}
         />
         {errors.country && (
           <p className="text-sm text-red-500">{errors.country}</p>

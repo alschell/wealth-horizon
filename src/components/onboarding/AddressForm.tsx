@@ -32,9 +32,12 @@ const AddressForm = () => {
 
   const validateForm = () => {
     const newErrors: Partial<Record<keyof AddressInfo, string>> = {};
+    // Make all fields required
     const requiredFields: (keyof AddressInfo)[] = [
       'streetAddress', 
+      'addressLine2',
       'city', 
+      'state',
       'postalCode', 
       'country'
     ];
@@ -55,7 +58,7 @@ const AddressForm = () => {
     if (!validateForm()) {
       toast({
         title: "Form validation failed",
-        description: "Please check the form for errors.",
+        description: "Please fill in all required fields.",
         variant: "destructive",
       });
       return;

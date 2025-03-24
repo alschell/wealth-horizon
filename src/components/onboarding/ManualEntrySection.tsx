@@ -1,6 +1,6 @@
 
 import React from "react";
-import { FinancialAccountInfo } from "@/types/onboarding";
+import { FinancialAccountInfo } from "@/context/OnboardingContext";
 import { AccountForm, AccountList } from "./accounts/entry";
 
 interface ManualEntrySectionProps {
@@ -18,12 +18,12 @@ const ManualEntrySection = ({
     <div className="space-y-6">
       {/* List of existing accounts */}
       <AccountList 
-        accounts={financialAccounts} 
+        accounts={financialAccounts as any} 
         onRemoveAccount={removeFinancialAccount} 
       />
       
       {/* Form to add a new account */}
-      <AccountForm onAddAccount={addFinancialAccount} />
+      <AccountForm onAddAccount={addFinancialAccount as any} />
     </div>
   );
 };

@@ -1,3 +1,4 @@
+
 import React, { createContext, useState, useContext, ReactNode } from "react";
 
 import { 
@@ -8,27 +9,13 @@ import {
   AddressInfo,
   LegalDocuments,
   AggregatorInfo,
-  FinancialAccountInfo,
   BeneficialOwnerInfo,
   PersonalInfo,
   IdentityVerification
 } from "@/types/onboarding";
 import { defaultOnboardingData } from "./onboardingDefaults";
 
-// Re-export types for convenience
-export type {
-  FamilyOfficeInfo,
-  PrimaryContactInfo,
-  AddressInfo,
-  LegalDocuments,
-  AggregatorInfo,
-  FinancialAccountInfo,
-  BeneficialOwnerInfo,
-  PersonalInfo,
-  IdentityVerification,
-  OnboardingData
-};
-
+// Define the extended FinancialAccountInfo type in the context
 export interface FinancialAccountInfo {
   accountName: string;
   institution: string;
@@ -41,10 +28,27 @@ export interface FinancialAccountInfo {
   legalEntityIdentifier?: string;
 }
 
+// Re-export types for convenience
+export type {
+  FamilyOfficeInfo,
+  PrimaryContactInfo,
+  AddressInfo,
+  LegalDocuments,
+  AggregatorInfo,
+  BeneficialOwnerInfo,
+  PersonalInfo,
+  IdentityVerification
+};
+
+// Define the extended OnboardingData interface that uses our custom FinancialAccountInfo
+export interface ExtendedOnboardingData extends Omit<OnboardingData, 'financialAccounts'> {
+  financialAccounts: FinancialAccountInfo[];
+}
+
 const OnboardingContext = createContext<OnboardingContextType | undefined>(undefined);
 
 export function OnboardingProvider({ children }: { children: ReactNode }) {
-  const [onboardingData, setOnboardingData] = useState<OnboardingData>(defaultOnboardingData);
+  const [onboardingData, setOnboardingData] = useState<ExtendedOnboardingData>(defaultOnboardingData as ExtendedOnboardingData);
   const [currentStep, setCurrentStep] = useState(0);
 
   const updateFamilyOfficeInfo = (info: FamilyOfficeInfo) => {
@@ -108,14 +112,14 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
   };
 
   const resetOnboarding = () => {
-    setOnboardingData(defaultOnboardingData);
+    setOnboardingData(defaultOnboardingData as ExtendedOnboardingData);
     setCurrentStep(0);
   };
 
   return (
     <OnboardingContext.Provider
       value={{
-        onboardingData,
+        onboardingData: onboardingData as unknown as OnboardingData,
         updateFamilyOfficeInfo,
         updatePrimaryContactInfo,
         updateAddressInfo,

@@ -1,6 +1,6 @@
 
 import React from "react";
-import { useOnboarding } from "@/context/OnboardingContext";
+import { useOnboarding, FinancialAccountInfo } from "@/context/OnboardingContext";
 import { Card } from "@/components/ui/card";
 import { toast } from "@/components/ui/use-toast";
 import { motion } from "framer-motion";
@@ -70,7 +70,7 @@ const ReviewStep = () => {
           />
           
           <FinancialAccountsSection 
-            financialAccounts={onboardingData.financialAccounts}
+            financialAccounts={onboardingData.financialAccounts as unknown as FinancialAccountInfo[]}
             aggregatorInfo={onboardingData.aggregatorInfo}
           />
           

@@ -59,13 +59,14 @@ const AggregatorSection: React.FC<AggregatorSectionProps> = ({
         />
       </div>
 
-      <div className="space-y-3 mt-6">
+      <div className="mt-4">
         <Label className="text-black">API Key (optional)</Label>
         <Input
           placeholder="Enter your API key if applicable"
           name="apiKey"
           value={aggregatorInfo.aggregatorCredentials?.apiKey || ""}
           onChange={handleCredentialChange}
+          className="mt-2"
         />
       </div>
     </div>

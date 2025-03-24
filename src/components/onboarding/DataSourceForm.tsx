@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useOnboarding, AggregatorInfo, FinancialAccountInfo } from "@/context/OnboardingContext";
 import { Card } from "@/components/ui/card";
@@ -5,6 +6,8 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { toast } from "@/components/ui/use-toast";
 import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 
 import {
   AggregatorSection,
@@ -23,7 +26,9 @@ const DataSourceForm = () => {
   } = useOnboarding();
   
   const [aggregatorInfo, setAggregatorInfo] = useState<AggregatorInfo>(onboardingData.aggregatorInfo);
-  const [financialAccounts, setFinancialAccounts] = useState<FinancialAccountInfo[]>(onboardingData.financialAccounts);
+  const [financialAccounts, setFinancialAccounts] = useState<FinancialAccountInfo[]>(
+    (onboardingData.financialAccounts as unknown as FinancialAccountInfo[]) || []
+  );
   const [dataSourceMethod, setDataSourceMethod] = useState<"manual" | "upload">("manual");
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
   
@@ -123,8 +128,8 @@ const DataSourceForm = () => {
               <DataSourceTabs 
                 dataSourceMethod={dataSourceMethod}
                 setDataSourceMethod={setDataSourceMethod}
-                financialAccounts={financialAccounts}
-                handleAddAccount={handleAddAccount}
+                financialAccounts={financialAccounts as any}
+                handleAddAccount={handleAddAccount as any}
                 handleRemoveAccount={handleRemoveAccount}
                 uploadedFiles={uploadedFiles}
                 handleBulkFilesSelected={handleBulkFilesSelected}

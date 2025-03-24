@@ -1,36 +1,30 @@
+
 import React, { useState } from "react";
-import { useOnboarding, LegalDocumentInfo } from "@/context/OnboardingContext";
+import { useOnboarding, LegalDocuments } from "@/context/OnboardingContext";
 import { Card } from "@/components/ui/card";
 import { toast } from "@/components/ui/use-toast";
 import { motion } from "framer-motion";
 import { File, ArrowRight, ArrowLeft } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import FormHeader from "./common/FormHeader";
 import { DocumentTypeField, DocumentDetailsFields, DocumentUploadField } from "./legal";
 import FormFooter from "./family-office/FormFooter";
 
 const LegalDocumentsForm = () => {
   const { onboardingData, updateLegalDocuments, setCurrentStep } = useOnboarding();
-  const [legalDocuments, setLegalDocuments] = useState<LegalDocumentInfo[]>(onboardingData.legalDocuments);
+  const [legalDocuments, setLegalDocuments] = useState<LegalDocuments>(onboardingData.legalDocuments);
 
-  const handleDocumentChange = (index: number, field: keyof LegalDocumentInfo, value: string) => {
-    const updatedDocuments = [...legalDocuments];
-    updatedDocuments[index] = { ...updatedDocuments[index], [field]: value };
-    setLegalDocuments(updatedDocuments);
+  const handleDocumentChange = (field: keyof LegalDocuments, value: string) => {
+    setLegalDocuments({ ...legalDocuments, [field]: value });
   };
 
-  const handleFilesSelected = (index: number, files: File[]) => {
-    const updatedDocuments = [...legalDocuments];
-    updatedDocuments[index] = { ...updatedDocuments[index], files: files };
-    setLegalDocuments(updatedDocuments);
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    handleDocumentChange(name as keyof LegalDocuments, value);
   };
 
-  const addDocumentForm = () => {
-    setLegalDocuments([...legalDocuments, { documentType: "", documentNumber: "", issueDate: "", expiryDate: "", files: [] }]);
-  };
-
-  const removeDocumentForm = (index: number) => {
-    const updatedDocuments = legalDocuments.filter((_, i) => i !== index);
-    setLegalDocuments(updatedDocuments);
+  const handleFilesSelected = (files: File[]) => {
+    setLegalDocuments({ ...legalDocuments, documentFiles: files });
   };
 
   const handleSubmit = () => {
@@ -51,33 +45,31 @@ const LegalDocumentsForm = () => {
       className="w-full max-w-3xl mx-auto"
     >
       <Card className="p-6 md:p-8 shadow-sm">
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }} className="space-y-6">
           <FormHeader 
             icon={<File className="h-7 w-7 text-black" />}
             title="Legal Documents"
             description="Please provide legal formation documents for your family office entity."
           />
 
-          {legalDocuments.map((document, index) => (
-            <div key={index} className="space-y-4 border p-4 rounded-md">
-              <DocumentTypeField
-                id={`documentType-${index}`}
-                value={document.documentType}
-                onChange={(value) => handleDocumentChange(index, "documentType", value)}
-                onRemove={() => removeDocumentForm(index)}
-              />
-              <DocumentDetailsFields
-                index={index}
-                document={document}
-                onChange={handleDocumentChange}
-              />
-              <DocumentUploadField
-                id={`documentFiles-${index}`}
-                files={document.files}
-                onFilesSelected={(files) => handleFilesSelected(index, files)}
-              />
-            </div>
-          ))}
+          <div className="space-y-4 border p-4 rounded-md">
+            <DocumentTypeField
+              value={legalDocuments.documentType}
+              onChange={(value) => handleDocumentChange("documentType", value)}
+            />
+            
+            <DocumentDetailsFields
+              documentNumber={legalDocuments.documentNumber}
+              issueDate={legalDocuments.issueDate}
+              expiryDate={legalDocuments.expiryDate}
+              onInputChange={handleInputChange}
+            />
+            
+            <DocumentUploadField
+              files={legalDocuments.documentFiles}
+              onFilesSelected={handleFilesSelected}
+            />
+          </div>
 
           <FormFooter
             onSubmit={handleSubmit}

@@ -34,7 +34,7 @@ const DocumentDetailsFields = ({
           value={documentNumber}
           onChange={onInputChange}
           placeholder="Document ID or Reference"
-          className="h-11"
+          className="h-11 bg-white border border-gray-300 focus:border-black focus:ring-black"
         />
       </motion.div>
 
@@ -52,7 +52,7 @@ const DocumentDetailsFields = ({
           type="date"
           value={issueDate}
           onChange={onInputChange}
-          className="h-11"
+          className="h-11 bg-white border border-gray-300 focus:border-black focus:ring-black"
         />
       </motion.div>
 
@@ -70,7 +70,7 @@ const DocumentDetailsFields = ({
           type="date"
           value={expiryDate || ""}
           onChange={onInputChange}
-          className="h-11"
+          className="h-11 bg-white border border-gray-300 focus:border-black focus:ring-black"
         />
       </motion.div>
     </div>

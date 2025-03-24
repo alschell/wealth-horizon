@@ -28,6 +28,17 @@ const CustomSelect = ({
   const [isOpen, setIsOpen] = useState(false);
   const selectRef = useRef<HTMLDivElement>(null);
 
+  // Sort options alphabetically, but ensure "Other" is at the end
+  let sortedOptions = [...options];
+  if (sortedOptions.includes("Other")) {
+    sortedOptions = sortedOptions
+      .filter(option => option !== "Other")
+      .sort((a, b) => a.localeCompare(b));
+    sortedOptions.push("Other");
+  } else {
+    sortedOptions.sort((a, b) => a.localeCompare(b));
+  }
+
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -57,9 +68,9 @@ const CustomSelect = ({
           aria-expanded={isOpen}
         >
           {value ? (
-            <span className="block truncate">{value}</span>
+            <span className="block truncate text-left">{value}</span>
           ) : (
-            <span className="block truncate text-gray-500">{placeholder}</span>
+            <span className="block truncate text-gray-500 text-left">{placeholder}</span>
           )}
           <ChevronDown className="w-4 h-4 ml-2 text-gray-400" />
         </button>
@@ -70,12 +81,12 @@ const CustomSelect = ({
             style={{ marginTop: '4px' }}
           >
             <ul className="py-1" role="listbox">
-              {options.map((option) => (
+              {sortedOptions.map((option) => (
                 <li
                   key={option}
                   role="option"
                   className={cn(
-                    "cursor-pointer select-none relative py-2 pl-10 pr-4 hover:bg-blue-50",
+                    "cursor-pointer select-none relative py-2 pl-10 pr-4 hover:bg-blue-50 text-left",
                     value === option ? "bg-blue-50" : ""
                   )}
                   onClick={() => {
@@ -84,7 +95,7 @@ const CustomSelect = ({
                   }}
                   aria-selected={value === option}
                 >
-                  <span className="block truncate">{option}</span>
+                  <span className="block truncate text-left">{option}</span>
                   {value === option && (
                     <span className="absolute inset-y-0 left-0 flex items-center pl-3">
                       <Check className="w-4 h-4 text-blue-600" />

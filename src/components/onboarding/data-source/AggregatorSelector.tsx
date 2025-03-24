@@ -2,7 +2,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { AGGREGATORS } from "@/components/onboarding/constants/aggregators";
-import { SearchableSelectField } from "@/components/onboarding/family-office/field-components";
+import { SearchableSelectField } from "@/components/onboarding/accounts/fields";
 import { itemVariants } from "@/components/onboarding/common/AnimationVariants";
 import AggregatorCredentialsForm from "./AggregatorCredentialsForm";
 import { AggregatorInfo } from "@/context/OnboardingContext";
@@ -18,8 +18,8 @@ const AggregatorSelector: React.FC<AggregatorSelectorProps> = ({
   handleAggregatorNameChange,
   handleCredentialsChange
 }) => {
-  // Wrapper function to adapt the onChange signature
-  const handleAggregatorChange = (name: string, value: string) => {
+  // Handle aggregator selection safely
+  const handleAggregatorChange = (value: string) => {
     handleAggregatorNameChange(value);
   };
 
@@ -33,12 +33,12 @@ const AggregatorSelector: React.FC<AggregatorSelectorProps> = ({
     >
       <div className="space-y-2">
         <SearchableSelectField
-          name="aggregatorName"
+          id="aggregatorName"
           label="Aggregator"
           value={aggregatorInfo.aggregatorName || ""}
-          onChange={handleAggregatorChange}
           placeholder="Select your aggregator"
-          options={AGGREGATORS.sort()}
+          options={AGGREGATORS}
+          onChange={handleAggregatorChange}
           allowCustomValue={true}
         />
       </div>

@@ -38,7 +38,17 @@ const SearchableSelectRenderer: React.FC<SearchableSelectRendererProps> = ({
 }) => {
   const [open, setOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
-  const sortedOptions = [...options].sort((a, b) => a.localeCompare(b));
+  
+  // Sort options alphabetically, but ensure "Other" is at the end
+  let sortedOptions = [...options];
+  if (sortedOptions.includes("Other")) {
+    sortedOptions = sortedOptions
+      .filter(option => option !== "Other")
+      .sort((a, b) => a.localeCompare(b));
+    sortedOptions.push("Other");
+  } else {
+    sortedOptions.sort((a, b) => a.localeCompare(b));
+  }
 
   const handleSelect = (currentValue: string) => {
     onChange(name, currentValue);
@@ -65,13 +75,17 @@ const SearchableSelectRenderer: React.FC<SearchableSelectRendererProps> = ({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-full justify-between h-11 bg-white border-input hover:bg-slate-50 text-black"
+          className="w-full justify-between h-11 bg-white border-input hover:bg-slate-50 text-black text-left"
         >
-          {value ? value : placeholder || `Select ${label || 'option'}`}
+          {value ? (
+            <span className="text-left">{value}</span>
+          ) : (
+            <span className="text-left text-muted-foreground">{placeholder || `Select ${label || 'option'}`}</span>
+          )}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50 text-black" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-full p-0 z-[999]" align="start">
+      <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0 z-[999]" align="start">
         <Command onKeyDown={handleKeyDown}>
           <CommandInput 
             placeholder={`Search ${label || 'options'}...`} 
@@ -96,7 +110,7 @@ const SearchableSelectRenderer: React.FC<SearchableSelectRendererProps> = ({
                   key={option}
                   value={option}
                   onSelect={handleSelect}
-                  className="cursor-pointer text-black"
+                  className="cursor-pointer text-black text-left"
                 >
                   <Check
                     className={cn(

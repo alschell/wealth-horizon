@@ -28,8 +28,12 @@ const SelectField = ({
   required = false,
   onChange
 }: SelectFieldProps) => {
-  // Sort options alphabetically
-  const sortedOptions = [...options].sort((a, b) => a.localeCompare(b));
+  // Ensure "Other" is at the end if present
+  const sortedOptions = [...options].sort((a, b) => {
+    if (a === "Other") return 1;
+    if (b === "Other") return -1;
+    return a.localeCompare(b);
+  });
   
   return (
     <div className="space-y-2">
@@ -42,13 +46,13 @@ const SelectField = ({
       >
         <SelectTrigger 
           id={id} 
-          className="h-11 w-full bg-white"
+          className="h-11 w-full bg-white text-left"
         >
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
         <SelectContent 
           position="popper" 
-          className="bg-white border shadow-md z-[999]"
+          className="bg-white border shadow-md z-[999] min-w-[var(--radix-select-trigger-width)]"
           sideOffset={8}
           align="start"
         >
@@ -56,7 +60,7 @@ const SelectField = ({
             <SelectItem 
               key={option} 
               value={option}
-              className="hover:bg-slate-100 cursor-pointer"
+              className="hover:bg-slate-100 cursor-pointer text-left"
             >
               {option}
             </SelectItem>

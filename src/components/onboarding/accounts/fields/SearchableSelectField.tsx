@@ -43,15 +43,15 @@ const SearchableSelectField = ({
   const [open, setOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
 
-  // Sort options alphabetically, but ensure "Other" is at the end if present
+  // Sort options alphabetically, but ensure "Other" is at the end
   let sortedOptions = [...options];
-  if (sortedOptions.includes("Other")) {
-    sortedOptions = sortedOptions
-      .filter(option => option !== "Other")
-      .sort((a, b) => a.localeCompare(b));
+  sortedOptions = sortedOptions
+    .filter(option => option !== "Other")
+    .sort((a, b) => a.localeCompare(b));
+  
+  // Add "Other" to the end if it exists in the original options
+  if (options.includes("Other")) {
     sortedOptions.push("Other");
-  } else {
-    sortedOptions.sort((a, b) => a.localeCompare(b));
   }
 
   const handleSelect = (selectedValue: string) => {
@@ -90,9 +90,9 @@ const SearchableSelectField = ({
             }}
           >
             {value ? (
-              <span className="truncate text-black">{value}</span>
+              <span className="truncate text-black text-left">{value}</span>
             ) : (
-              <span className="truncate text-gray-500">{placeholder}</span>
+              <span className="truncate text-gray-500 text-left">{placeholder}</span>
             )}
             <ChevronsUpDown className="h-4 w-4 shrink-0 opacity-50 ml-2 text-black" />
           </Button>

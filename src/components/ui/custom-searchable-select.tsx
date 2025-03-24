@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef } from "react";
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator } from "@/components/ui/command";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Label } from "@/components/ui/label";
 import { Check, ChevronsUpDown } from "lucide-react";
@@ -47,8 +47,19 @@ const CustomSearchableSelect = ({
     };
   }, []);
 
+  // Sort options alphabetically, but ensure "Other" is at the end
+  let sortedOptions = [...options];
+  if (sortedOptions.includes("Other")) {
+    sortedOptions = sortedOptions
+      .filter(option => option !== "Other")
+      .sort((a, b) => a.localeCompare(b));
+    sortedOptions.push("Other");
+  } else {
+    sortedOptions.sort((a, b) => a.localeCompare(b));
+  }
+
   const filteredOptions = React.useMemo(() => {
-    let filtered = options.filter((option) =>
+    let filtered = sortedOptions.filter((option) =>
       option.toLowerCase().includes(query.toLowerCase())
     );
     
@@ -57,13 +68,13 @@ const CustomSearchableSelect = ({
     }
 
     return filtered;
-  }, [query, options, allowCustomValue]);
+  }, [query, options, allowCustomValue, sortedOptions]);
 
   return (
     <div className={cn("relative", className)}>
       <Label htmlFor={id} className="text-black">
         {label}
-        {required && <span className="text-red-500">*</span>}
+        {required && <span className="text-red-500 ml-1">*</span>}
       </Label>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
@@ -73,20 +84,20 @@ const CustomSearchableSelect = ({
             role="combobox"
             aria-expanded={open}
             className={cn(
-              "h-11 w-full justify-between rounded-md border border-input bg-background px-3 py-2 text-sm",
+              "h-11 w-full justify-between rounded-md border border-input bg-background px-3 py-2 text-sm text-left",
               open && "border-black",
               !value && "text-muted-foreground"
             )}
           >
             {value ? (
-              value
+              <span className="text-left">{value}</span>
             ) : (
-              <span className="text-muted-foreground">{placeholder}</span>
+              <span className="text-muted-foreground text-left">{placeholder}</span>
             )}
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-full p-0 z-[999]">
+        <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0 z-[999]" align="start">
           <Command>
             <CommandInput
               placeholder={placeholder}
@@ -106,8 +117,14 @@ const CustomSearchableSelect = ({
                       onChange(value);
                       setOpen(false);
                     }}
-                    className="cursor-pointer hover:bg-gray-100"
+                    className="cursor-pointer hover:bg-gray-100 text-left"
                   >
+                    <Check
+                      className={cn(
+                        "mr-2 h-4 w-4",
+                        value === option ? "opacity-100" : "opacity-0"
+                      )}
+                    />
                     {option}
                   </CommandItem>
                 ))}

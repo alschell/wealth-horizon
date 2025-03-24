@@ -30,7 +30,7 @@ const LegalEntitySection = ({
     <div className="space-y-4">
       <InputField
         id="legalEntityIdentifier"
-        label="Legal Entity Identifier"
+        label="Legal Entity Identifier (LEI)"
         name="legalEntityIdentifier"
         value={account.legalEntityIdentifier || ""}
         onChange={handleLeiChange}

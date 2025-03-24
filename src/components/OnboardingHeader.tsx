@@ -18,7 +18,7 @@ const OnboardingHeader = () => {
   return (
     <header className="w-full mb-12">
       <div className="flex flex-col items-center">
-        <h1 className="text-3xl font-bold mb-8 text-blue-600">Wealth Horizon</h1>
+        <h1 className="text-3xl font-bold mb-8 text-black">Wealth Horizon</h1>
         
         <div className="hidden md:flex w-full max-w-5xl justify-between relative mb-2">
           {steps.map((step, i) => (
@@ -29,9 +29,9 @@ const OnboardingHeader = () => {
               <div 
                 className={`w-10 h-10 rounded-full flex items-center justify-center font-medium 
                   ${i < currentStep 
-                    ? 'bg-blue-500 text-white' 
+                    ? 'bg-black text-white' 
                     : i === currentStep 
-                      ? 'bg-gray-100 text-blue-600 border-2 border-blue-400' 
+                      ? 'bg-gray-100 text-black border-2 border-gray-400' 
                       : 'bg-gray-100 text-gray-500'
                   } transition-all duration-300`}
               >
@@ -43,7 +43,7 @@ const OnboardingHeader = () => {
               </div>
               <span 
                 className={`mt-2 text-sm font-medium
-                  ${i <= currentStep ? 'text-blue-700' : 'text-gray-500'}`}
+                  ${i <= currentStep ? 'text-black' : 'text-gray-500'}`}
               >
                 {step.name}
               </span>
@@ -53,7 +53,7 @@ const OnboardingHeader = () => {
           {/* Progress line */}
           <div className="absolute top-5 left-0 w-full h-0.5 bg-gray-100 -z-0">
             <div 
-              className="h-full bg-blue-500 transition-all duration-700 ease-in-out"
+              className="h-full bg-black transition-all duration-700 ease-in-out"
               style={{ width: `${(currentStep / (steps.length - 1)) * 100}%` }}
             ></div>
           </div>
@@ -68,12 +68,12 @@ const OnboardingHeader = () => {
           </div>
           <div className="w-full h-2 bg-gray-100 rounded-full mt-2">
             <div 
-              className="h-full bg-blue-500 rounded-full transition-all duration-700 ease-in-out"
+              className="h-full bg-black rounded-full transition-all duration-700 ease-in-out"
               style={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}
             ></div>
           </div>
           <div className="mt-4 text-center">
-            <span className="font-medium text-blue-700">{steps[currentStep]?.name}</span>
+            <span className="font-medium text-black">{steps[currentStep]?.name}</span>
           </div>
         </div>
       </div>

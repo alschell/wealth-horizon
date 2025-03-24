@@ -46,8 +46,8 @@ const ReviewStep = () => {
       <Card className="p-6 md:p-8 shadow-sm">
         <div className="space-y-6">
           <div className="flex items-center gap-3 mb-2">
-            <CheckCircle className="h-7 w-7 text-green-600" />
-            <h2 className="text-2xl font-bold">Review & Submit</h2>
+            <CheckCircle className="h-7 w-7 text-black" />
+            <h2 className="text-2xl font-bold text-black">Review & Submit</h2>
           </div>
           <p className="text-gray-500">
             Please review your information before submitting your onboarding application.
@@ -56,11 +56,11 @@ const ReviewStep = () => {
           {/* Family Office Details */}
           <section className="space-y-3 border-b pb-4">
             <div className="flex justify-between items-center">
-              <h3 className="text-lg font-semibold">Family Office Details</h3>
+              <h3 className="text-lg font-semibold text-black">Family Office Details</h3>
               <Button 
                 variant="ghost" 
                 size="sm" 
-                className="text-blue-600 hover:text-blue-800"
+                className="text-black hover:text-gray-800"
                 onClick={() => setCurrentStep(0)}
               >
                 <Edit2 className="h-4 w-4 mr-1" />
@@ -90,11 +90,11 @@ const ReviewStep = () => {
           {/* Primary Contact */}
           <section className="space-y-3 border-b pb-4">
             <div className="flex justify-between items-center">
-              <h3 className="text-lg font-semibold">Primary Contact</h3>
+              <h3 className="text-lg font-semibold text-black">Primary Contact</h3>
               <Button 
                 variant="ghost" 
                 size="sm" 
-                className="text-blue-600 hover:text-blue-800"
+                className="text-black hover:text-gray-800"
                 onClick={() => setCurrentStep(1)}
               >
                 <Edit2 className="h-4 w-4 mr-1" />
@@ -126,11 +126,11 @@ const ReviewStep = () => {
           {/* Address */}
           <section className="space-y-3 border-b pb-4">
             <div className="flex justify-between items-center">
-              <h3 className="text-lg font-semibold">Address</h3>
+              <h3 className="text-lg font-semibold text-black">Address</h3>
               <Button 
                 variant="ghost" 
                 size="sm" 
-                className="text-blue-600 hover:text-blue-800"
+                className="text-black hover:text-gray-800"
                 onClick={() => setCurrentStep(2)}
               >
                 <Edit2 className="h-4 w-4 mr-1" />
@@ -158,11 +158,11 @@ const ReviewStep = () => {
           {/* Legal Documents */}
           <section className="space-y-3 border-b pb-4">
             <div className="flex justify-between items-center">
-              <h3 className="text-lg font-semibold">Legal Documents</h3>
+              <h3 className="text-lg font-semibold text-black">Legal Documents</h3>
               <Button 
                 variant="ghost" 
                 size="sm" 
-                className="text-blue-600 hover:text-blue-800"
+                className="text-black hover:text-gray-800"
                 onClick={() => setCurrentStep(3)}
               >
                 <Edit2 className="h-4 w-4 mr-1" />
@@ -192,11 +192,11 @@ const ReviewStep = () => {
           {/* Financial Accounts */}
           <section className="space-y-3 border-b pb-4">
             <div className="flex justify-between items-center">
-              <h3 className="text-lg font-semibold">Financial Accounts</h3>
+              <h3 className="text-lg font-semibold text-black">Financial Accounts</h3>
               <Button 
                 variant="ghost" 
                 size="sm" 
-                className="text-blue-600 hover:text-blue-800"
+                className="text-black hover:text-gray-800"
                 onClick={() => setCurrentStep(4)}
               >
                 <Edit2 className="h-4 w-4 mr-1" />
@@ -228,11 +228,11 @@ const ReviewStep = () => {
           {/* Beneficial Owners */}
           <section className="space-y-3">
             <div className="flex justify-between items-center">
-              <h3 className="text-lg font-semibold">Beneficial Owners</h3>
+              <h3 className="text-lg font-semibold text-black">Beneficial Owners</h3>
               <Button 
                 variant="ghost" 
                 size="sm" 
-                className="text-blue-600 hover:text-blue-800"
+                className="text-black hover:text-gray-800"
                 onClick={() => setCurrentStep(5)}
               >
                 <Edit2 className="h-4 w-4 mr-1" />
@@ -269,7 +269,7 @@ const ReviewStep = () => {
             <Button 
               onClick={handleSubmit}
               size="lg" 
-              className="rounded-lg hover:shadow-md transition-shadow bg-green-600 hover:bg-green-700 text-white"
+              className="rounded-lg hover:shadow-md transition-shadow bg-black hover:bg-gray-800 text-white"
             >
               Submit Application
               <CheckCircle className="ml-2 h-4 w-4" />

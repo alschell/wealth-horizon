@@ -1,83 +1,46 @@
 
-import { FinancialAccountInfo } from "@/types/onboarding";
-import { AccountFormErrors } from "./types";
 import { useState } from "react";
-import { toast } from "@/components/ui/use-toast";
-import { validateRequiredFields } from "@/components/onboarding/common/utils/validation";
+import { FinancialAccountInfo } from "@/types/onboarding";
 
 export const useFormValidation = () => {
-  const [errors, setErrors] = useState<AccountFormErrors>({});
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
-  // Validate the form with improved validation logic
+  // Validate required fields
   const validateForm = (account: FinancialAccountInfo): boolean => {
-    try {
-      const requiredFields: (keyof FinancialAccountInfo)[] = [
-        'accountName',
-        'institution',
-        'accountType',
-        'legalEntity',
-        'legalEntityIdentifier',
-        'accountSubtype',
-        'currency'
-      ];
-      
-      // Use the common validation utility
-      const baseErrors = validateRequiredFields(account, requiredFields);
-      
-      // Additional custom validations
-      const customErrors: AccountFormErrors = {};
-      
-      // Validate LEI format if provided
-      if (account.legalEntityIdentifier && !/^[A-Z0-9]{20}$/.test(account.legalEntityIdentifier)) {
-        customErrors.legalEntityIdentifier = 'LEI must be 20 characters of letters and numbers';
-      }
-      
-      // Validate approximate value is a number if provided
-      if (account.approximateValue && isNaN(Number(account.approximateValue))) {
-        customErrors.approximateValue = 'Approximate value must be a number';
-      }
-      
-      // Combine all errors
-      const newErrors = { ...baseErrors, ...customErrors };
-      
-      setErrors(newErrors);
-      return Object.keys(newErrors).length === 0;
-    } catch (error) {
-      console.error("Error in validateForm:", error);
-      toast({
-        title: "Validation Error",
-        description: "An error occurred during form validation. Please check your inputs.",
-        variant: "destructive"
-      });
-      return false;
+    const newErrors: Record<string, string> = {};
+    let isValid = true;
+
+    // The only required field is institution
+    if (!account.institution) {
+      newErrors.institution = "Institution is required";
+      isValid = false;
     }
+
+    // Validate LEI format if provided
+    if (account.legalEntityIdentifier && !/^[A-Z0-9]{20}$/.test(account.legalEntityIdentifier)) {
+      newErrors.legalEntityIdentifier = "LEI must be 20 alphanumeric characters";
+      isValid = false;
+    }
+
+    setErrors(newErrors);
+    return isValid;
   };
 
   // Clear a specific error
   const clearError = (field: string) => {
-    try {
-      if (errors[field]) {
-        setErrors(prev => {
-          const newErrors = { ...prev };
-          delete newErrors[field];
-          return newErrors;
-        });
-      }
-    } catch (error) {
-      console.error("Error in clearError:", error);
-    }
+    setErrors(prev => {
+      const newErrors = { ...prev };
+      delete newErrors[field];
+      return newErrors;
+    });
   };
 
-  // Manually set an error
+  // Set a specific error
   const setError = (field: string, message: string) => {
-    try {
-      setErrors(prev => ({
-        ...prev,
-        [field]: message
-      }));
-    } catch (error) {
-      console.error("Error in setError:", error);
-    }
+    setErrors(prev => ({
+      ...prev,
+      [field]: message
+    }));
   };
 
   return {

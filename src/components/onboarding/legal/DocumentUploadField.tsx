@@ -22,7 +22,7 @@ const DocumentUploadField = ({ files, onFilesSelected }: DocumentUploadFieldProp
       <div className="space-y-1">
         <Label>Document Upload<span className="text-red-500 ml-1">*</span></Label>
         <p className="text-sm text-gray-500">
-          Please upload scanned copies or PDF files of your legal documents. Include any corporate structure diagrams or ownership charts if available.
+          Please upload scanned copies or PDF files of your legal documents.
         </p>
       </div>
       

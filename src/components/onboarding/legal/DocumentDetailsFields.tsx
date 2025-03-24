@@ -41,6 +41,7 @@ const DocumentDetailsFields: React.FC<DocumentDetailsFieldsProps> = ({
           placeholder="Select issue date"
           value={issueDate ? new Date(issueDate) : undefined}
           onChange={(date) => onDateChange('issueDate', date)}
+          required={true}
         />
         
         <DatePicker
@@ -48,6 +49,7 @@ const DocumentDetailsFields: React.FC<DocumentDetailsFieldsProps> = ({
           placeholder="Select expiry date"
           value={expiryDate ? new Date(expiryDate) : undefined}
           onChange={(date) => onDateChange('expiryDate', date)}
+          required={false}
         />
       </div>
     </div>

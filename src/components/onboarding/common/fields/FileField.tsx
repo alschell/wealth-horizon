@@ -4,6 +4,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Upload, X, FileType } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import DeleteConfirmationDialog from "@/components/file-uploader/DeleteConfirmationDialog";
 
 export interface FileFieldProps {
   id: string;
@@ -28,6 +29,8 @@ const FileField: React.FC<FileFieldProps> = ({
 }) => {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [fileToDeleteIndex, setFileToDeleteIndex] = useState<number | null>(null);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -41,13 +44,22 @@ const FileField: React.FC<FileFieldProps> = ({
     }
   };
 
-  const handleRemoveFile = (index: number) => {
-    const updatedFiles = selectedFiles.filter((_, i) => i !== index);
-    setSelectedFiles(updatedFiles);
-    
-    if (onFilesChange) {
-      onFilesChange(updatedFiles);
+  const handleRemoveFileClick = (index: number) => {
+    setFileToDeleteIndex(index);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const confirmDelete = () => {
+    if (fileToDeleteIndex !== null) {
+      const updatedFiles = selectedFiles.filter((_, i) => i !== fileToDeleteIndex);
+      setSelectedFiles(updatedFiles);
+      
+      if (onFilesChange) {
+        onFilesChange(updatedFiles);
+      }
     }
+    setIsDeleteDialogOpen(false);
+    setFileToDeleteIndex(null);
   };
 
   const triggerFileInput = () => {
@@ -110,7 +122,7 @@ const FileField: React.FC<FileFieldProps> = ({
                     type="button"
                     variant="ghost"
                     size="sm"
-                    onClick={() => handleRemoveFile(index)}
+                    onClick={() => handleRemoveFileClick(index)}
                     className="h-7 w-7 p-0 text-gray-500 hover:text-red-500"
                   >
                     <X className="h-4 w-4" />
@@ -133,6 +145,14 @@ const FileField: React.FC<FileFieldProps> = ({
       </div>
       
       {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+
+      <DeleteConfirmationDialog 
+        isOpen={isDeleteDialogOpen}
+        onOpenChange={setIsDeleteDialogOpen}
+        onConfirm={confirmDelete}
+        title="Confirm File Deletion"
+        description="Are you sure you want to delete this file? This action cannot be undone."
+      />
     </div>
   );
 };

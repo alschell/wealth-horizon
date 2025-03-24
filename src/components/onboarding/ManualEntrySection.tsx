@@ -18,11 +18,6 @@ const ManualEntrySection = ({
 }: ManualEntrySectionProps) => {
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   
-  // Function to handle cancelling edit mode
-  const handleCancel = () => {
-    setEditingIndex(null);
-  };
-  
   // Function to handle editing an account
   const handleEditAccount = (index: number) => {
     setEditingIndex(index);
@@ -50,7 +45,6 @@ const ManualEntrySection = ({
       {/* Form to add or edit an account */}
       <AccountForm 
         onAddAccount={handleSaveAccount}
-        onCancel={handleCancel}
         accountToEdit={editingIndex !== null ? financialAccounts[editingIndex] : undefined}
         isEditing={editingIndex !== null}
       />

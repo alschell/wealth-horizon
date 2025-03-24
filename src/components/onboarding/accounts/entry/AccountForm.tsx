@@ -12,14 +12,12 @@ import FormActions from "./components/FormActions";
 
 interface AccountFormProps {
   onAddAccount: (account: FinancialAccountInfo) => void;
-  onCancel: () => void;
   accountToEdit?: FinancialAccountInfo;
   isEditing?: boolean;
 }
 
 const AccountForm: React.FC<AccountFormProps> = ({
   onAddAccount,
-  onCancel,
   accountToEdit,
   isEditing = false
 }) => {
@@ -29,8 +27,7 @@ const AccountForm: React.FC<AccountFormProps> = ({
     handleInputChange,
     handleSelectionChange,
     handleFilesSelected,
-    handleAddAccount,
-    setNewAccount
+    handleAddAccount
   } = useAccountFormState({ 
     onAddAccount,
     initialAccount: accountToEdit 
@@ -89,7 +86,6 @@ const AccountForm: React.FC<AccountFormProps> = ({
         {/* Form Actions */}
         <FormActions
           onAddAccount={handleAddAccount}
-          onCancel={onCancel}
           isEditing={isEditing}
           buttonText={buttonText}
         />

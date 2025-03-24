@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { FinancialAccountInfo } from "@/context/OnboardingContext";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Upload, Wallet } from "lucide-react";

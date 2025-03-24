@@ -9,7 +9,12 @@ export const useLegalEntityMapping = (
 ) => {
   // Get legal entities for the selected institution
   const getLegalEntities = useCallback(() => {
-    if (account.institution && LEGAL_ENTITIES[account.institution]) {
+    if (!account.institution) {
+      // Return all legal entities when no institution is selected
+      return Object.values(LEGAL_ENTITIES).flat();
+    }
+    
+    if (LEGAL_ENTITIES[account.institution]) {
       return LEGAL_ENTITIES[account.institution];
     }
     return [];

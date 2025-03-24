@@ -12,6 +12,7 @@ import {
   AggregatorSection,
   DataSourceTabs
 } from "./data-source";
+import AggregatorRadioGroup from "./data-source/AggregatorRadioGroup";
 
 const DataSourceForm = () => {
   const {
@@ -34,6 +35,17 @@ const DataSourceForm = () => {
   const handleAggregatorInfoChange = (info: AggregatorInfo) => {
     setAggregatorInfo(info);
     setActiveTab(info.usesAggregator ? "aggregator" : "manual");
+  };
+
+  const handleAggregatorSelection = (value: string) => {
+    const usesAggregator = value === "yes";
+    setAggregatorInfo({
+      ...aggregatorInfo,
+      usesAggregator,
+      aggregatorName: usesAggregator ? aggregatorInfo.aggregatorName : "",
+      aggregatorCredentials: usesAggregator ? aggregatorInfo.aggregatorCredentials : { username: "" }
+    });
+    setActiveTab(usesAggregator ? "aggregator" : "manual");
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -73,6 +85,11 @@ const DataSourceForm = () => {
       <Card className="p-6 md:p-8 shadow-sm">
         <form onSubmit={handleSubmit} className="space-y-6">
           <DataSourceFormHeader />
+          
+          <AggregatorRadioGroup
+            usesAggregator={aggregatorInfo.usesAggregator}
+            handleAggregatorSelection={handleAggregatorSelection}
+          />
           
           <DataSourceTabs
             dataSourceMethod={dataSourceMethod}

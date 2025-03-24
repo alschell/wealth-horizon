@@ -3,9 +3,7 @@ import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { motion } from "framer-motion";
 import OwnerFormFields from "./OwnerFormFields";
-import FormHeader from "./FormHeader";
 import FormFooter from "./FormFooter";
-import { useOnboarding } from "@/context/OnboardingContext";
 import { BeneficialOwnerInfo } from "@/types/onboarding";
 import { toast } from "@/components/ui/use-toast";
 

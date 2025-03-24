@@ -1,6 +1,5 @@
 
-// Export all constants from separate files
-export * from './institutions';
-export * from './legalEntities';
-export * from './leiMappings';
-export * from './accountTypes';
+// Export all constants from their respective files
+export { ACCOUNT_TYPES } from './accountTypes';
+export { LEGAL_ENTITIES } from './legalEntities';
+export { LEI_MAPPING } from './leiMappings';

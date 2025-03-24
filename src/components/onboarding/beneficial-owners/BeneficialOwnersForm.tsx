@@ -149,23 +149,6 @@ const BeneficialOwnersForm: React.FC<BeneficialOwnersFormProps> = ({
         </motion.div>
       )}
       
-      {/* Navigation buttons */}
-      <div className="flex justify-between mt-8 pt-6 border-t">
-        <button
-          onClick={onBack}
-          className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-100 transition"
-        >
-          Previous
-        </button>
-        
-        <button
-          onClick={onSubmit}
-          className="px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800 transition"
-        >
-          Next
-        </button>
-      </div>
-      
       {/* Delete confirmation dialog */}
       <AlertDialog open={ownerToDelete !== null} onOpenChange={() => setOwnerToDelete(null)}>
         <AlertDialogContent>

@@ -35,7 +35,7 @@ const DateField = ({
   error,
   disabled = false,
   className,
-  closeOnSelect = false
+  closeOnSelect = true
 }: DateFieldProps) => {
   const [open, setOpen] = useState(false);
   
@@ -54,9 +54,11 @@ const DateField = ({
 
   return (
     <div className={cn('space-y-2', className)}>
-      <Label htmlFor={id} className="text-black">
-        {label}{required && <span className="text-red-500 ml-1">*</span>}
-      </Label>
+      {label && (
+        <Label htmlFor={id} className="text-black">
+          {label}{required && <span className="text-red-500 ml-1">*</span>}
+        </Label>
+      )}
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
@@ -80,13 +82,14 @@ const DateField = ({
             )}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-auto p-0 bg-white" align="start">
+        <PopoverContent className="w-auto p-0 bg-white pointer-events-auto" align="start">
           <Calendar
             mode="single"
             selected={date}
             onSelect={handleSelect}
             disabled={disabled}
             initialFocus
+            className="pointer-events-auto"
           />
         </PopoverContent>
       </Popover>

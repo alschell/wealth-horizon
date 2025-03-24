@@ -1,20 +1,21 @@
 
+import React from "react";
 import { AggregatorInfo } from "@/context/OnboardingContext";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
 
-interface AggregatorCredentialsSectionProps {
+interface AggregatorCredentialsFormProps {
   aggregatorInfo: AggregatorInfo;
   handleCredentialsChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   itemVariants: any;
 }
 
-const AggregatorCredentialsSection = ({
+const AggregatorCredentialsForm = ({
   aggregatorInfo,
   handleCredentialsChange,
   itemVariants
-}: AggregatorCredentialsSectionProps) => {
+}: AggregatorCredentialsFormProps) => {
   return (
     <motion.div 
       custom={2}
@@ -52,4 +53,4 @@ const AggregatorCredentialsSection = ({
   );
 };
 
-export default AggregatorCredentialsSection;
+export default AggregatorCredentialsForm;

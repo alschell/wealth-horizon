@@ -3,3 +3,4 @@
 export * from './institutions';
 export * from './legalEntities';
 export * from './leiMappings';
+export * from './accountTypes';

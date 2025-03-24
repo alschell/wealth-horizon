@@ -19,6 +19,7 @@ const OwnerFormFields: React.FC<OwnerFormFieldsProps> = ({
           render={({ field }) => (
             <InputField
               id="firstName"
+              name="firstName"
               label="First Name"
               required
               value={field.value}
@@ -34,6 +35,7 @@ const OwnerFormFields: React.FC<OwnerFormFieldsProps> = ({
           render={({ field }) => (
             <InputField
               id="lastName"
+              name="lastName"
               label="Last Name"
               required
               value={field.value}
@@ -50,6 +52,7 @@ const OwnerFormFields: React.FC<OwnerFormFieldsProps> = ({
         render={({ field }) => (
           <InputField
             id="relationship"
+            name="relationship"
             label="Relationship to Family Office"
             required
             value={field.value}
@@ -66,6 +69,7 @@ const OwnerFormFields: React.FC<OwnerFormFieldsProps> = ({
         render={({ field }) => (
           <InputField
             id="ownershipPercentage"
+            name="ownershipPercentage"
             label="Ownership Percentage"
             required
             value={field.value}

@@ -22,7 +22,7 @@ export interface OwnerFormValues {
   documents?: File[];
 }
 
-// Update the schema to make all fields required except documents
+// Update the schema to match the OwnerFormValues interface precisely
 export const ownerSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
   lastName: z.string().min(1, "Last name is required"),

@@ -7,8 +7,8 @@ import { cn } from "@/lib/utils";
 interface InputFieldProps {
   id: string;
   label: string;
-  name: string;
   value: string;
+  name?: string; // Make name optional
   placeholder?: string;
   type?: string;
   required?: boolean;
@@ -36,7 +36,7 @@ const InputField = ({
       </Label>
       <Input
         id={id}
-        name={name}
+        name={name || id} // Use id as fallback if name is not provided
         value={value || ""}
         onChange={onChange}
         placeholder={placeholder}

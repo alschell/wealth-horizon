@@ -5,12 +5,14 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 
 interface DataSourceFormNavigationProps {
   onBack: () => void;
+  onSubmit?: () => void;
   isSubmitting?: boolean;
   submitText?: string;
 }
 
 const DataSourceFormNavigation = ({
   onBack,
+  onSubmit,
   isSubmitting = false,
   submitText = "Continue"
 }: DataSourceFormNavigationProps) => {
@@ -29,10 +31,11 @@ const DataSourceFormNavigation = ({
           Back
         </Button>
         <Button 
-          type="submit" 
+          type={onSubmit ? "button" : "submit"}
           size="lg" 
           className="rounded-lg bg-black hover:bg-gray-800 text-white"
           disabled={isSubmitting}
+          onClick={onSubmit}
         >
           {submitText}
           <ArrowRight className="ml-2 h-4 w-4" />

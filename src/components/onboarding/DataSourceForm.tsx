@@ -141,7 +141,8 @@ const DataSourceForm = () => {
           
           <DataSourceFormNavigation
             onBack={() => setCurrentStep(3)}
-            onSubmit={handleSubmit} 
+            isSubmitting={false}
+            submitText="Continue"
           />
         </form>
       </Card>

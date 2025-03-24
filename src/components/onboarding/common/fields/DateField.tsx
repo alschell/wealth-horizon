@@ -19,6 +19,7 @@ interface DateFieldProps {
   required?: boolean;
   error?: string;
   className?: string;
+  id?: string; // Add id as optional prop but don't pass it to DatePicker
 }
 
 const DateField = ({
@@ -28,7 +29,8 @@ const DateField = ({
   label,
   required = false,
   error,
-  className
+  className,
+  id // Add id to the destructured props but don't use it in DatePicker
 }: DateFieldProps) => {
   const [open, setOpen] = React.useState(false);
 

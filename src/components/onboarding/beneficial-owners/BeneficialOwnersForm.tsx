@@ -26,7 +26,7 @@ const BeneficialOwnersForm: React.FC<BeneficialOwnersFormProps> = ({
 }) => {
   const [localOwners, setLocalOwners] = useState<BeneficialOwnerInfo[]>(owners);
   const [currentEditIndex, setCurrentEditIndex] = useState<number | null>(null);
-  const [editingOwner, setEditingOwner] = useState<BeneficialOwnerInfo | null>(null);
+  const [existingOwner, setExistingOwner] = useState<BeneficialOwnerInfo | undefined>(undefined);
   const [showAddForm, setShowAddForm] = useState(false);
   
   const handleAddOwner = (newOwner: BeneficialOwnerInfo) => {
@@ -47,7 +47,7 @@ const BeneficialOwnersForm: React.FC<BeneficialOwnersFormProps> = ({
       
       // Reset editing state
       setCurrentEditIndex(null);
-      setEditingOwner(null);
+      setExistingOwner(undefined);
     } else {
       // Add new owner
       const updatedOwners = [...localOwners, newOwner];
@@ -71,20 +71,20 @@ const BeneficialOwnersForm: React.FC<BeneficialOwnersFormProps> = ({
     
     if (currentEditIndex === index) {
       setCurrentEditIndex(null);
-      setEditingOwner(null);
+      setExistingOwner(undefined);
       setShowAddForm(false);
     }
   };
   
   const handleEditOwner = (index: number) => {
     setCurrentEditIndex(index);
-    setEditingOwner(localOwners[index]);
+    setExistingOwner(localOwners[index]);
     setShowAddForm(true);
   };
   
   const handleCancelEdit = () => {
     setCurrentEditIndex(null);
-    setEditingOwner(null);
+    setExistingOwner(undefined);
     setShowAddForm(false);
   };
 
@@ -134,7 +134,7 @@ const BeneficialOwnersForm: React.FC<BeneficialOwnersFormProps> = ({
             <AddOwnerForm 
               onAddOwner={handleAddOwner}
               onCancel={handleCancelEdit}
-              existingOwner={editingOwner || undefined}
+              existingOwner={existingOwner}
               isEdit={currentEditIndex !== null}
             />
           )}

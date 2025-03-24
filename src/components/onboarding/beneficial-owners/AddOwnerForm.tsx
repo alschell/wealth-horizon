@@ -32,13 +32,16 @@ const ownerSchema = z.object({
   documents: z.any().optional()
 });
 
+// Make TypeScript happy by properly typing the schema output
+type OwnerFormValues = z.infer<typeof ownerSchema>;
+
 const AddOwnerForm: React.FC<AddOwnerFormProps> = ({
   onAddOwner,
   onCancel,
   existingOwner,
   isEdit = false
 }) => {
-  const defaultValues: BeneficialOwnerInfo = existingOwner || {
+  const defaultValues: OwnerFormValues = existingOwner || {
     firstName: "",
     lastName: "",
     relationship: "",
@@ -48,7 +51,7 @@ const AddOwnerForm: React.FC<AddOwnerFormProps> = ({
     documents: []
   };
 
-  const form = useForm<BeneficialOwnerInfo>({
+  const form = useForm<OwnerFormValues>({
     resolver: zodResolver(ownerSchema),
     defaultValues,
     mode: "onChange"
@@ -59,7 +62,7 @@ const AddOwnerForm: React.FC<AddOwnerFormProps> = ({
   const onSubmit = handleSubmit((data) => {
     // Simulate async operation
     setTimeout(() => {
-      onAddOwner(data);
+      onAddOwner(data as BeneficialOwnerInfo);
       toast({
         title: isEdit ? "Owner updated" : "Owner added",
         description: isEdit 

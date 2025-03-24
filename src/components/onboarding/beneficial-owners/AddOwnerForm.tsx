@@ -23,8 +23,7 @@ const AddOwnerForm: React.FC<AddOwnerFormProps> = ({
     relationship: existingOwner?.relationship || "",
     ownershipPercentage: existingOwner?.ownershipPercentage || "",
     nationality: existingOwner?.nationality || "",
-    dateOfBirth: existingOwner?.dateOfBirth || "",
-    documents: existingOwner?.documents || []
+    dateOfBirth: existingOwner?.dateOfBirth || ""
   };
   
   const { 

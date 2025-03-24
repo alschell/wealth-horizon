@@ -20,6 +20,7 @@ interface SelectFieldProps {
   error?: string;
   onChange: (value: string) => void;
   className?: string;
+  name?: string; // Make name optional
 }
 
 const SelectField = ({
@@ -31,7 +32,8 @@ const SelectField = ({
   required = false,
   error,
   onChange,
-  className
+  className,
+  name
 }: SelectFieldProps) => {
   // Ensure "Other" is at the end if present
   const sortedOptions = [...options].sort((a, b) => {
@@ -51,6 +53,7 @@ const SelectField = ({
       >
         <SelectTrigger 
           id={id} 
+          name={name || id} // Use id as fallback for name
           className={cn("h-11 w-full bg-white text-left", error ? "border-red-500" : "")}
         >
           <SelectValue placeholder={placeholder} className="text-left" />

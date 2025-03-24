@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Label } from "@/components/ui/label";
 import { Calendar } from "@/components/ui/calendar";
@@ -17,6 +18,7 @@ interface DateFieldProps {
   error?: string;
   className?: string;
   icon?: React.ReactNode;
+  name?: string; // Make name optional
 }
 
 const DateField = ({
@@ -28,7 +30,8 @@ const DateField = ({
   required = false,
   error,
   className,
-  icon
+  icon,
+  name
 }: DateFieldProps) => {
   const parseDate = (dateValue: string | Date | undefined): Date | undefined => {
     if (!dateValue) return undefined;
@@ -64,6 +67,7 @@ const DateField = ({
         <PopoverTrigger asChild>
           <Button
             id={id}
+            name={name || id} // Use id as fallback for name
             variant="outline"
             className={cn(
               "w-full h-11 justify-start text-left font-normal",
@@ -81,6 +85,7 @@ const DateField = ({
             selected={date}
             onSelect={handleDateChange}
             initialFocus
+            className="pointer-events-auto"
           />
         </PopoverContent>
       </Popover>

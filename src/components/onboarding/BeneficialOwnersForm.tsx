@@ -10,6 +10,7 @@ import { ArrowRight, ArrowLeft, Users, Plus, Trash2 } from "lucide-react";
 import CustomSearchableSelect from "@/components/ui/custom-searchable-select";
 import { COUNTRIES } from "./constants";
 import FileUploader from "@/components/FileUploader";
+import { DatePicker } from "@/components/ui/date-picker";
 
 const BeneficialOwnersForm = () => {
   const { onboardingData, addBeneficialOwner, removeBeneficialOwner, setCurrentStep } = useOnboarding();
@@ -39,6 +40,16 @@ const BeneficialOwnersForm = () => {
     
     if (errors[field]) {
       setErrors({ ...errors, [field]: undefined });
+    }
+  };
+
+  const handleDateChange = (date?: Date) => {
+    if (date) {
+      setNewOwner({ ...newOwner, dateOfBirth: date.toISOString() });
+    }
+    
+    if (errors.dateOfBirth) {
+      setErrors({ ...errors, dateOfBirth: undefined });
     }
   };
 
@@ -128,6 +139,8 @@ const BeneficialOwnersForm = () => {
       description: "Beneficial owner information has been saved successfully.",
     });
   };
+
+  const dateOfBirthValue = newOwner.dateOfBirth ? new Date(newOwner.dateOfBirth) : undefined;
 
   return (
     <motion.div
@@ -268,19 +281,13 @@ const BeneficialOwnersForm = () => {
                 className={errors.nationality ? 'error' : ''}
               />
 
-              <div className="space-y-2">
-                <Label htmlFor="dateOfBirth">
-                  Date of Birth
-                </Label>
-                <Input
-                  id="dateOfBirth"
-                  name="dateOfBirth"
-                  type="date"
-                  value={newOwner.dateOfBirth}
-                  onChange={handleInputChange}
-                  className="h-11"
-                />
-              </div>
+              <DatePicker
+                label="Date of Birth"
+                placeholder="Select date of birth"
+                value={dateOfBirthValue}
+                onChange={handleDateChange}
+                className="w-full"
+              />
             </div>
             
             <div className="space-y-3">

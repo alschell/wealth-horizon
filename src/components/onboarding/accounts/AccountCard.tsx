@@ -3,16 +3,17 @@ import React from "react";
 import { FinancialAccountInfo } from "@/context/OnboardingContext";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Trash2, CreditCard, Wallet, PiggyBank, Coins, Banknote } from "lucide-react";
+import { Trash2, CreditCard, Wallet, PiggyBank, Coins, Banknote, Edit } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 interface AccountCardProps {
   account: FinancialAccountInfo;
   onRemove: () => void;
+  onEdit: () => void;
   index: number;
 }
 
-const AccountCard = ({ account, onRemove, index }: AccountCardProps) => {
+const AccountCard = ({ account, onRemove, onEdit, index }: AccountCardProps) => {
   // Function to get the appropriate icon based on account type
   const getAccountIcon = () => {
     switch (account.accountType) {
@@ -67,15 +68,26 @@ const AccountCard = ({ account, onRemove, index }: AccountCardProps) => {
             )}
           </div>
         </div>
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={onRemove}
-          className="text-gray-500 hover:text-red-500 hover:bg-red-50"
-          aria-label={`Remove account ${account.accountName}`}
-        >
-          <Trash2 className="h-4 w-4" />
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={onEdit}
+            className="text-gray-500 hover:text-blue-500 hover:bg-blue-50"
+            aria-label={`Edit account ${account.accountName}`}
+          >
+            <Edit className="h-4 w-4" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={onRemove}
+            className="text-gray-500 hover:text-red-500 hover:bg-red-50"
+            aria-label={`Remove account ${account.accountName}`}
+          >
+            <Trash2 className="h-4 w-4" />
+          </Button>
+        </div>
       </div>
     </Card>
   );

@@ -7,9 +7,10 @@ import { Wallet, Trash2 } from "lucide-react";
 interface AccountListProps {
   accounts: FinancialAccountInfo[];
   onRemoveAccount: (index: number) => void;
+  onEditAccount: (index: number) => void;
 }
 
-const AccountList = ({ accounts, onRemoveAccount }: AccountListProps) => {
+const AccountList = ({ accounts, onRemoveAccount, onEditAccount }: AccountListProps) => {
   // Map account type to appropriate label for display
   const getAccountTypeLabel = (type: string) => {
     // Capitalize first letter
@@ -40,14 +41,24 @@ const AccountList = ({ accounts, onRemoveAccount }: AccountListProps) => {
             </div>
           </div>
           
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => onRemoveAccount(index)}
-            className="text-red-500 hover:text-red-700 hover:bg-red-50"
-          >
-            <Trash2 className="h-4 w-4" />
-          </Button>
+          <div className="flex gap-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => onEditAccount(index)}
+              className="text-blue-500 hover:text-blue-700 hover:bg-blue-50"
+            >
+              Edit
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => onRemoveAccount(index)}
+              className="text-red-500 hover:text-red-700 hover:bg-red-50"
+            >
+              <Trash2 className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
       ))}
     </div>

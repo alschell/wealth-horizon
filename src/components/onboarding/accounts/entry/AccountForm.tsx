@@ -13,11 +13,15 @@ import FormActions from "./components/FormActions";
 interface AccountFormProps {
   onAddAccount: (account: FinancialAccountInfo) => void;
   onCancel: () => void;
+  accountToEdit?: FinancialAccountInfo;
+  isEditing?: boolean;
 }
 
 const AccountForm: React.FC<AccountFormProps> = ({
   onAddAccount,
-  onCancel
+  onCancel,
+  accountToEdit,
+  isEditing = false
 }) => {
   const {
     newAccount,
@@ -25,8 +29,16 @@ const AccountForm: React.FC<AccountFormProps> = ({
     handleInputChange,
     handleSelectionChange,
     handleFilesSelected,
-    handleAddAccount
-  } = useAccountFormState({ onAddAccount });
+    handleAddAccount,
+    setNewAccount
+  } = useAccountFormState({ 
+    onAddAccount,
+    initialAccount: accountToEdit 
+  });
+
+  // Set form title based on editing state
+  const formTitle = isEditing ? "Edit Financial Account" : "Add Financial Account";
+  const buttonText = isEditing ? "Save Changes" : "Add Account";
 
   return (
     <motion.div
@@ -36,7 +48,7 @@ const AccountForm: React.FC<AccountFormProps> = ({
       className="bg-white rounded-lg shadow-sm border p-6"
     >
       <FormHeader 
-        title="Add Financial Account" 
+        title={formTitle} 
         subtitle="Enter the details of your financial account" 
       />
       
@@ -78,6 +90,8 @@ const AccountForm: React.FC<AccountFormProps> = ({
         <FormActions
           onAddAccount={handleAddAccount}
           onCancel={onCancel}
+          isEditing={isEditing}
+          buttonText={buttonText}
         />
       </form>
     </motion.div>

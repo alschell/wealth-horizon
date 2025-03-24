@@ -5,7 +5,7 @@ import {
   InputField, 
   SearchableSelectField 
 } from "../fields";
-import { INSTITUTIONS, ACCOUNT_TYPES } from "@/utils/financialDataConstants";
+import { INSTITUTIONS, ACCOUNT_TYPES } from "@/utils/constants";
 
 interface BasicInfoSectionProps {
   account: FinancialAccountInfo;

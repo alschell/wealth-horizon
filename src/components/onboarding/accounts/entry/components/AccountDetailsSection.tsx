@@ -4,7 +4,7 @@ import { FinancialAccountInfo } from "@/types/onboarding";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { CustomSearchableSelect } from "@/components/ui/custom-searchable-select";
-import { CURRENCIES } from "@/utils/financialDataConstants";
+import { CURRENCIES } from "@/utils/constants";
 
 interface AccountDetailsSectionProps {
   account: FinancialAccountInfo;

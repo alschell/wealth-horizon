@@ -5,7 +5,7 @@ import {
   InputField, 
   SearchableSelectField 
 } from "../fields";
-import { CURRENCIES } from "@/utils/financialDataConstants";
+import { CURRENCIES } from "@/utils/constants";
 
 interface AccountDetailsSectionProps {
   account: FinancialAccountInfo;

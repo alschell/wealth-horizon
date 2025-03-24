@@ -4,7 +4,7 @@ import { FinancialAccountInfo } from "@/types/onboarding";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import CustomSearchableSelect from "@/components/ui/custom-searchable-select";
-import { INSTITUTIONS, ACCOUNT_TYPES } from "@/utils/constants";
+import { ACCOUNT_TYPES } from "@/utils/constants";
 
 interface BasicInfoSectionProps {
   account: FinancialAccountInfo;
@@ -20,7 +20,7 @@ const BasicInfoSection = ({
   onSelectionChange
 }: BasicInfoSectionProps) => {
   return (
-    <>
+    <div className="space-y-4">
       <div className="space-y-2">
         <Label htmlFor="accountName">
           Account Name<span className="text-red-500 ml-1">*</span>
@@ -38,19 +38,7 @@ const BasicInfoSection = ({
         )}
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <CustomSearchableSelect
-          id="institution"
-          label="Institution"
-          value={account.institution}
-          onChange={(value) => onSelectionChange('institution', value)}
-          placeholder="Select institution"
-          options={INSTITUTIONS.sort()}
-          required
-          className={errors.institution ? 'error' : ''}
-          allowCustomValue={true}
-        />
-        
+      <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
         <CustomSearchableSelect
           id="accountType"
           label="Account Type"
@@ -62,7 +50,7 @@ const BasicInfoSection = ({
           className={errors.accountType ? 'error' : ''}
         />
       </div>
-    </>
+    </div>
   );
 };
 

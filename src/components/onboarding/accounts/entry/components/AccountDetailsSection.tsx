@@ -25,7 +25,7 @@ const AccountDetailsSection = ({
   };
 
   return (
-    <>
+    <div className="space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label htmlFor="accountSubtype">
@@ -41,15 +41,20 @@ const AccountDetailsSection = ({
           />
         </div>
         
-        <CustomSearchableSelect
-          id="currency"
-          label="Primary Currency"
-          value={account.currency}
-          onChange={handleCurrencyChange}
-          placeholder="Select currency"
-          options={CURRENCIES}
-          className=""
-        />
+        <div className="space-y-2">
+          <Label htmlFor="currency">
+            Primary Currency
+          </Label>
+          <CustomSearchableSelect
+            id="currency"
+            label=""
+            value={account.currency || ""}
+            onChange={handleCurrencyChange}
+            placeholder="Select currency"
+            options={CURRENCIES}
+            className="h-11"
+          />
+        </div>
       </div>
       
       <div className="space-y-2">
@@ -65,7 +70,7 @@ const AccountDetailsSection = ({
           className="h-11"
         />
       </div>
-    </>
+    </div>
   );
 };
 

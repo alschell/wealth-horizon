@@ -5,7 +5,7 @@ import {
   InputField, 
   SearchableSelectField 
 } from "../fields";
-import { LEGAL_ENTITIES } from "../constants/legalEntityData";
+import { LEGAL_ENTITIES } from "../constants";
 
 interface LegalEntitySectionProps {
   account: FinancialAccountInfo;

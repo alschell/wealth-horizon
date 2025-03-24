@@ -1,7 +1,7 @@
 
 import { useState, useCallback } from "react";
 import { FinancialAccountInfo } from "@/types/onboarding";
-import { LEGAL_ENTITIES, LEI_MAPPING } from "../constants/legalEntityData";
+import { LEGAL_ENTITIES, LEI_MAPPING } from "../constants";
 
 export const useLegalEntityMapping = (
   account: FinancialAccountInfo,

@@ -4,7 +4,7 @@ import { FinancialAccountInfo } from "@/types/onboarding";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import CustomSearchableSelect from "@/components/ui/custom-searchable-select";
-import { LEGAL_ENTITIES } from "../constants/legalEntityData";
+import { LEGAL_ENTITIES } from "../constants";
 
 interface LegalEntitySectionProps {
   account: FinancialAccountInfo;

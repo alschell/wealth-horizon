@@ -10,10 +10,22 @@ import { toast } from "@/components/ui/use-toast";
 import { motion } from "framer-motion";
 import { ArrowRight, ArrowLeft } from "lucide-react";
 import FileUploader from "@/components/FileUploader";
+import { 
+  AlertDialog, 
+  AlertDialogAction, 
+  AlertDialogCancel, 
+  AlertDialogContent, 
+  AlertDialogDescription, 
+  AlertDialogFooter, 
+  AlertDialogHeader, 
+  AlertDialogTitle 
+} from "@/components/ui/alert-dialog";
 
 const IdentityVerificationForm = () => {
   const { onboardingData, updateIdentityVerification, setCurrentStep } = useOnboarding();
   const [formData, setFormData] = useState<IdentityVerification>(onboardingData.identityVerification);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [fileToDeleteIndex, setFileToDeleteIndex] = useState<number | null>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -28,11 +40,26 @@ const IdentityVerificationForm = () => {
     setFormData({ ...formData, documentFiles: files });
   };
 
+  const handleFileDelete = (index: number) => {
+    setFileToDeleteIndex(index);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const confirmDelete = () => {
+    if (fileToDeleteIndex !== null) {
+      const newFiles = [...formData.documentFiles];
+      newFiles.splice(fileToDeleteIndex, 1);
+      setFormData({ ...formData, documentFiles: newFiles });
+    }
+    setIsDeleteDialogOpen(false);
+    setFileToDeleteIndex(null);
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
     // Simple validation
-    const requiredFields: (keyof IdentityVerification)[] = ['documentType', 'documentNumber', 'issueDate', 'expiryDate'];
+    const requiredFields: (keyof IdentityVerification)[] = ['documentType', 'documentNumber', 'issueDate'];
     const missingFields = requiredFields.filter(field => !formData[field]);
     
     if (missingFields.length > 0) {
@@ -93,7 +120,7 @@ const IdentityVerificationForm = () => {
               animate="visible"
               className="space-y-2"
             >
-              <Label htmlFor="documentType">Document Type*</Label>
+              <Label htmlFor="documentType">Document Type<span className="text-red-500 ml-1">*</span></Label>
               <Select
                 value={formData.documentType}
                 onValueChange={(value: "passport" | "drivingLicense" | "nationalId") => 
@@ -119,7 +146,7 @@ const IdentityVerificationForm = () => {
                 animate="visible"
                 className="space-y-2"
               >
-                <Label htmlFor="documentNumber">Document Number*</Label>
+                <Label htmlFor="documentNumber">Document Number<span className="text-red-500 ml-1">*</span></Label>
                 <Input
                   id="documentNumber"
                   name="documentNumber"
@@ -137,7 +164,7 @@ const IdentityVerificationForm = () => {
                 animate="visible"
                 className="space-y-2"
               >
-                <Label htmlFor="issueDate">Issue Date*</Label>
+                <Label htmlFor="issueDate">Issue Date<span className="text-red-500 ml-1">*</span></Label>
                 <Input
                   id="issueDate"
                   name="issueDate"
@@ -155,7 +182,7 @@ const IdentityVerificationForm = () => {
                 animate="visible"
                 className="col-span-1 md:col-span-2 space-y-2"
               >
-                <Label htmlFor="expiryDate">Expiry Date*</Label>
+                <Label htmlFor="expiryDate">Expiry Date</Label>
                 <Input
                   id="expiryDate"
                   name="expiryDate"
@@ -174,7 +201,7 @@ const IdentityVerificationForm = () => {
               animate="visible"
               className="space-y-3"
             >
-              <Label>Document Upload*</Label>
+              <Label>Document Upload<span className="text-red-500 ml-1">*</span></Label>
               <p className="text-sm text-gray-500 mb-2">
                 Please upload scanned copies or high-quality photos of your identification document (front and back if applicable).
               </p>
@@ -185,6 +212,7 @@ const IdentityVerificationForm = () => {
                 onFilesSelected={handleFilesSelected}
                 existingFiles={formData.documentFiles}
                 label="Upload Identification Documents"
+                onFileDelete={handleFileDelete}
               />
             </motion.div>
           </div>
@@ -216,6 +244,26 @@ const IdentityVerificationForm = () => {
           </div>
         </form>
       </Card>
+
+      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirm File Deletion</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete this file? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={confirmDelete} 
+              className="bg-red-500 hover:bg-red-600"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </motion.div>
   );
 };

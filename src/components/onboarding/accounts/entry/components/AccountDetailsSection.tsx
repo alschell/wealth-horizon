@@ -35,33 +35,37 @@ const AccountDetailsSection = ({
 
   return (
     <div className="space-y-4">
-      <div className="space-y-2">
-        <Label htmlFor="accountSubtype">
-          Account Subtype
-        </Label>
-        <Input
-          id="accountSubtype"
-          name="accountSubtype"
-          value={account.accountSubtype || ""}
-          onChange={onInputChange}
-          placeholder="e.g., Managed Account, Private Equity"
-          className="h-11"
-        />
-      </div>
-      
-      <div className="space-y-2">
-        <Label htmlFor="currency">
-          Primary Currency
-        </Label>
-        <CustomSearchableSelect
-          id="currency"
-          label=""
-          value={account.currency || ""}
-          onChange={handleCurrencyChange}
-          placeholder="Select currency"
-          options={CURRENCIES}
-          className="h-11"
-        />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <Label htmlFor="accountSubtype" className="flex items-center">
+            Account Subtype
+            <span className="text-red-500 ml-1">*</span>
+          </Label>
+          <Input
+            id="accountSubtype"
+            name="accountSubtype"
+            value={account.accountSubtype || ""}
+            onChange={onInputChange}
+            placeholder="e.g., Managed Account, Private Equity"
+            className="h-11"
+          />
+        </div>
+        
+        <div className="space-y-2">
+          <Label htmlFor="currency" className="flex items-center">
+            Primary Currency
+            <span className="text-red-500 ml-1">*</span>
+          </Label>
+          <CustomSearchableSelect
+            id="currency"
+            label=""
+            value={account.currency || ""}
+            onChange={handleCurrencyChange}
+            placeholder="Select currency"
+            options={CURRENCIES}
+            className="h-11"
+          />
+        </div>
       </div>
 
       {onFilesSelected && (

@@ -50,12 +50,12 @@ export type FinancialAccountInfo = {
   accountName: string;
   institution: string;
   accountType: "cash" | "portfolio" | "investment" | "custody" | "broker" | "checking" | "savings" | "brokerage" | "trust" | "retirement" | "private equity" | "hedge fund" | "venture capital" | "real estate" | "fixed income" | "credit" | "other";
-  accountSubtype?: string;
+  accountSubtype: string;
   currency: string;
   approximateValue: string;
   statements: File[];
-  legalEntity?: string;
-  legalEntityIdentifier?: string;
+  legalEntity: string;
+  legalEntityIdentifier: string;
 };
 
 export type BeneficialOwnerInfo = {
@@ -84,7 +84,7 @@ export type IdentityVerification = {
   documentType: "passport" | "drivingLicense" | "nationalId";
   documentNumber: string;
   issueDate: string;
-  expiryDate: string;
+  expiryDate?: string; // Make expiry date optional
   documentFiles: File[];
 };
 

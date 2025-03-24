@@ -1,17 +1,19 @@
 
 import React, { useState } from "react";
-import { FinancialAccountInfo } from "@/types/onboarding";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Wallet, Trash2, Edit } from "lucide-react";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
+import { FinancialAccountInfo } from "@/types/onboarding";
+import { Pencil, Trash2 } from "lucide-react";
+import { Card } from "@/components/ui/card";
+import { 
+  AlertDialog, 
+  AlertDialogAction, 
+  AlertDialogCancel, 
+  AlertDialogContent, 
+  AlertDialogDescription, 
+  AlertDialogFooter, 
+  AlertDialogHeader, 
+  AlertDialogTitle 
 } from "@/components/ui/alert-dialog";
 
 interface AccountListProps {
@@ -21,85 +23,93 @@ interface AccountListProps {
 }
 
 const AccountList = ({ accounts, onRemoveAccount, onEditAccount }: AccountListProps) => {
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [accountToDelete, setAccountToDelete] = useState<number | null>(null);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [accountToDeleteIndex, setAccountToDeleteIndex] = useState<number | null>(null);
 
-  // Map account type to appropriate label for display
-  const getAccountTypeLabel = (type: string) => {
-    // Capitalize first letter
-    return type.charAt(0).toUpperCase() + type.slice(1);
-  };
-
+  // Handle click on delete button
   const handleDeleteClick = (index: number) => {
-    setAccountToDelete(index);
-    setDeleteDialogOpen(true);
+    setAccountToDeleteIndex(index);
+    setIsDeleteDialogOpen(true);
   };
 
+  // Confirm and execute delete
   const confirmDelete = () => {
-    if (accountToDelete !== null) {
-      onRemoveAccount(accountToDelete);
-      setAccountToDelete(null);
+    if (accountToDeleteIndex !== null) {
+      onRemoveAccount(accountToDeleteIndex);
     }
-    setDeleteDialogOpen(false);
+    setIsDeleteDialogOpen(false);
+    setAccountToDeleteIndex(null);
   };
 
   if (accounts.length === 0) {
-    return null;
+    return (
+      <div className="text-center py-8 border rounded-lg bg-gray-50">
+        <p className="text-gray-500">No financial accounts added yet.</p>
+        <p className="text-sm text-gray-400 mt-1">Please add at least one account.</p>
+      </div>
+    );
   }
 
   return (
-    <div className="space-y-4 mb-8">
-      <h3 className="font-medium text-gray-700">Your Financial Accounts</h3>
+    <div className="space-y-4">
+      <h3 className="text-lg font-semibold">Your Financial Accounts</h3>
       
-      {accounts.map((account, index) => (
-        <div 
-          key={index} 
-          className="flex items-center justify-between p-4 border rounded-md bg-gray-50"
-        >
-          <div className="flex items-center gap-3">
-            <Wallet className="h-5 w-5 text-gray-500" />
-            <div>
-              <p className="font-medium">{account.accountName}</p>
-              <p className="text-sm text-gray-500">
-                {account.institution} · {getAccountTypeLabel(account.accountType)}
-                {account.currency && ` · ${account.currency}`}
-              </p>
-            </div>
-          </div>
-          
-          <div className="flex gap-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => onEditAccount(index)}
-              className="text-blue-500 hover:text-blue-700 hover:bg-blue-50"
-              aria-label="Edit account"
-            >
-              <Edit className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => handleDeleteClick(index)}
-              className="text-red-500 hover:text-red-700 hover:bg-red-50"
-            >
-              <Trash2 className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
-      ))}
+      <div className="space-y-3">
+        {accounts.map((account, index) => (
+          <motion.div
+            key={index}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <Card className="p-4 flex justify-between items-center">
+              <div>
+                <h4 className="font-medium">{account.accountName}</h4>
+                <p className="text-sm text-gray-600">
+                  {account.institution} • {account.accountType} • {account.currency}
+                </p>
+              </div>
+              
+              <div className="flex space-x-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => onEditAccount(index)}
+                  className="h-8"
+                >
+                  <Pencil className="h-3.5 w-3.5" />
+                  <span className="sr-only md:not-sr-only md:ml-2">Edit</span>
+                </Button>
+                
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handleDeleteClick(index)}
+                  className="h-8 text-red-500 hover:text-red-700 hover:bg-red-50"
+                >
+                  <Trash2 className="h-3.5 w-3.5" />
+                  <span className="sr-only md:not-sr-only md:ml-2">Delete</span>
+                </Button>
+              </div>
+            </Card>
+          </motion.div>
+        ))}
+      </div>
 
-      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Confirm Deletion</AlertDialogTitle>
+            <AlertDialogTitle>Confirm Account Deletion</AlertDialogTitle>
             <AlertDialogDescription>
               Are you sure you want to delete this financial account? This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmDelete} className="bg-red-500 hover:bg-red-600">
+            <AlertDialogAction 
+              onClick={confirmDelete} 
+              className="bg-red-500 hover:bg-red-600"
+            >
               Delete
             </AlertDialogAction>
           </AlertDialogFooter>

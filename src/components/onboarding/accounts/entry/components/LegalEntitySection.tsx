@@ -20,6 +20,7 @@ const LegalEntitySection = ({
   onSelectionChange
 }: LegalEntitySectionProps) => {
   const [filteredLegalEntities, setFilteredLegalEntities] = useState<string[]>([]);
+  const [isLeiFromMapping, setIsLeiFromMapping] = useState(false);
 
   useEffect(() => {
     // Get the legal entities for the selected institution
@@ -28,7 +29,14 @@ const LegalEntitySection = ({
     } else {
       setFilteredLegalEntities([]);
     }
-  }, [account.institution, legalEntities]);
+
+    // Check if the current LEI is from mapping
+    if (account.legalEntity && LEI_MAPPING[account.legalEntity] === account.legalEntityIdentifier) {
+      setIsLeiFromMapping(true);
+    } else {
+      setIsLeiFromMapping(false);
+    }
+  }, [account.institution, account.legalEntity, account.legalEntityIdentifier, legalEntities]);
 
   // Function to handle legal entity selection
   const handleLegalEntityChange = (value: string) => {
@@ -37,8 +45,6 @@ const LegalEntitySection = ({
     // If we have an LEI mapping for this entity, auto-fill it
     if (value && LEI_MAPPING[value]) {
       onSelectionChange('legalEntityIdentifier', LEI_MAPPING[value]);
-    } else {
-      onSelectionChange('legalEntityIdentifier', '');
     }
   };
 
@@ -54,9 +60,9 @@ const LegalEntitySection = ({
           name="legalEntityIdentifier"
           value={account.legalEntityIdentifier || ""}
           onChange={onInputChange}
-          placeholder="Auto-filled if available, or enter manually"
+          placeholder="Enter LEI (e.g., 7H6GLXDRUGQFU57RNE97)"
           className="h-11"
-          readOnly={!!LEI_MAPPING[account.legalEntity || '']}
+          readOnly={isLeiFromMapping}
         />
       </div>
       

@@ -1,6 +1,8 @@
+
 import { useState, useEffect } from "react";
 import { FinancialAccountInfo } from "@/types/onboarding";
 import { LEGAL_ENTITIES } from "../constants/legalEntities";
+import { LEI_MAPPING } from "../constants/leiMappings";
 import { toast } from "@/components/ui/use-toast";
 
 interface UseAccountFormStateProps {
@@ -14,12 +16,12 @@ export const useAccountFormState = ({ onAddAccount, initialAccount }: UseAccount
     initialAccount || {
       accountName: "",
       institution: "",
-      accountType: "cash", // Set a valid default value
+      accountType: "", // Empty string to show placeholder
       legalEntity: "",
       legalEntityIdentifier: "",
       accountSubtype: "",
       currency: "",
-      approximateValue: "", // Added missing property
+      approximateValue: "",
       statements: []
     }
   );
@@ -27,7 +29,7 @@ export const useAccountFormState = ({ onAddAccount, initialAccount }: UseAccount
   const defaultAccount: FinancialAccountInfo = {
     accountName: "",
     institution: "",
-    accountType: "cash", // Changed from empty string to 'cash' to match the type
+    accountType: "",
     legalEntity: "",
     legalEntityIdentifier: "",
     accountSubtype: "",
@@ -44,7 +46,13 @@ export const useAccountFormState = ({ onAddAccount, initialAccount }: UseAccount
   // Handle input changes
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setNewAccount(prev => ({ ...prev, [name]: value }));
+    
+    // Special handling for LEI field
+    if (name === 'legalEntityIdentifier') {
+      handleLeiInputChange(value);
+    } else {
+      setNewAccount(prev => ({ ...prev, [name]: value }));
+    }
     
     // Clear error for the field
     if (errors[name]) {
@@ -53,6 +61,38 @@ export const useAccountFormState = ({ onAddAccount, initialAccount }: UseAccount
         delete newErrors[name];
         return newErrors;
       });
+    }
+  };
+
+  // Handle LEI input change with auto-population
+  const handleLeiInputChange = (value: string) => {
+    setNewAccount(prev => ({ ...prev, legalEntityIdentifier: value }));
+    
+    // Auto-populate institution and legal entity from LEI
+    if (value) {
+      // Check if this LEI exists in our mapping
+      for (const [entityName, lei] of Object.entries(LEI_MAPPING)) {
+        if (lei === value) {
+          // Found a match, now find which institution it belongs to
+          for (const [institution, entities] of Object.entries(LEGAL_ENTITIES)) {
+            if (entities.includes(entityName)) {
+              setNewAccount(prev => ({
+                ...prev,
+                legalEntityIdentifier: value,
+                institution: institution,
+                legalEntity: entityName
+              }));
+              
+              // Notify user of auto-population
+              toast({
+                title: "Fields auto-populated",
+                description: `Institution and legal entity were set based on the provided LEI.`,
+              });
+              return;
+            }
+          }
+        }
+      }
     }
   };
 
@@ -71,14 +111,23 @@ export const useAccountFormState = ({ onAddAccount, initialAccount }: UseAccount
 
     // If institution changes, we might want to reset the legal entity
     if (field === 'institution') {
-      setNewAccount(prev => ({ ...prev, legalEntity: '', legalEntityIdentifier: '' }));
+      setNewAccount(prev => ({ ...prev, legalEntity: '' }));
     }
   };
 
   // Handle legal entity change
   const handleLegalEntityChange = (value: string) => {
     // Update legal entity
-    setNewAccount(prev => ({ ...prev, legalEntity: value, legalEntityIdentifier: '' }));
+    setNewAccount(prev => ({ ...prev, legalEntity: value }));
+    
+    // If we have an LEI mapping for this entity, auto-populate it
+    if (LEI_MAPPING[value]) {
+      setNewAccount(prev => ({ 
+        ...prev, 
+        legalEntity: value,
+        legalEntityIdentifier: LEI_MAPPING[value] 
+      }));
+    }
     
     // Clear errors
     if (errors.legalEntity) {
@@ -92,8 +141,7 @@ export const useAccountFormState = ({ onAddAccount, initialAccount }: UseAccount
 
   // Handle LEI change
   const handleLeiChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
-    setNewAccount(prev => ({ ...prev, legalEntityIdentifier: value }));
+    handleLeiInputChange(e.target.value);
   };
 
   // Handle file selection
@@ -115,6 +163,22 @@ export const useAccountFormState = ({ onAddAccount, initialAccount }: UseAccount
     
     if (!newAccount.accountType) {
       newErrors.accountType = 'Account type is required';
+    }
+
+    if (!newAccount.legalEntityIdentifier) {
+      newErrors.legalEntityIdentifier = 'Legal Entity Identifier is required';
+    }
+
+    if (!newAccount.legalEntity) {
+      newErrors.legalEntity = 'Legal Entity is required';
+    }
+
+    if (!newAccount.accountSubtype) {
+      newErrors.accountSubtype = 'Account Subtype is required';
+    }
+
+    if (!newAccount.currency) {
+      newErrors.currency = 'Currency is required';
     }
     
     setErrors(newErrors);

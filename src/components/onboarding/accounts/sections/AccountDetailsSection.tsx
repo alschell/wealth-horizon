@@ -23,11 +23,12 @@ const AccountDetailsSection = ({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <InputField
           id="accountSubtype"
-          label="Account Subtype (optional)"
+          label="Account Subtype"
           name="accountSubtype"
           value={account.accountSubtype || ""}
           onChange={onInputChange}
           placeholder="e.g., Managed Account, Private Equity"
+          required
         />
         
         <SearchableSelectField
@@ -37,6 +38,7 @@ const AccountDetailsSection = ({
           placeholder="Select currency"
           options={CURRENCIES}
           onChange={(value) => onSelectionChange("currency", extractCurrencyCode(value))}
+          required
         />
       </div>
     </div>

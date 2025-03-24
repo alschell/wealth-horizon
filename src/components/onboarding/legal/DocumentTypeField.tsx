@@ -21,7 +21,7 @@ const DocumentTypeField = ({ value, onChange }: DocumentTypeFieldProps) => {
       animate="visible"
       className="space-y-2"
     >
-      <Label htmlFor="documentType">Document Type*</Label>
+      <Label htmlFor="documentType">Document Type<span className="text-red-500 ml-1">*</span></Label>
       <Select
         value={value}
         onValueChange={(value: DocumentType) => onChange(value)}

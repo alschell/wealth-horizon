@@ -1,3 +1,4 @@
+
 import React from "react";
 import { FinancialAccountInfo } from "@/types/onboarding";
 import { Label } from "@/components/ui/label";
@@ -21,7 +22,7 @@ const LegalEntitySection = ({
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div className="space-y-2 md:col-span-2">
         <Label htmlFor="legalEntityIdentifier">
-          Legal Entity Identifier (LEI)
+          Legal Entity Identifier (LEI)<span className="text-red-500 ml-1">*</span>
         </Label>
         <Input
           id="legalEntityIdentifier"
@@ -44,6 +45,7 @@ const LegalEntitySection = ({
         placeholder="Select legal entity"
         options={legalEntities}
         allowCustomValue={true}
+        required={true}
       />
     </div>
   );

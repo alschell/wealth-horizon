@@ -57,6 +57,7 @@ export function DatePicker({
             onSelect={onChange}
             initialFocus
             className="rounded-md border shadow-md bg-white pointer-events-auto"
+            weekStartsOn={1} // 1 for Monday (0 is Sunday, 1 is Monday, etc.)
           />
         </PopoverContent>
       </Popover>

@@ -64,7 +64,7 @@ const SearchableSelectField = ({
   return (
     <div className="space-y-2">
       <Label htmlFor={id} className="text-black">
-        {label}{required && <span className="text-red-500">*</span>}
+        {label}{required && <span className="text-red-500 ml-1">*</span>}
       </Label>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>

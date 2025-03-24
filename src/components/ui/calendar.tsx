@@ -1,3 +1,4 @@
+
 import * as React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { DayPicker } from "react-day-picker";
@@ -11,6 +12,7 @@ function Calendar({
   className,
   classNames,
   showOutsideDays = true,
+  weekStartsOn = 1, // Default to Monday
   ...props
 }: CalendarProps) {
   return (
@@ -55,6 +57,7 @@ function Calendar({
         IconLeft: ({ ..._props }) => <ChevronLeft className="h-4 w-4" />,
         IconRight: ({ ..._props }) => <ChevronRight className="h-4 w-4" />,
       }}
+      weekStartsOn={weekStartsOn}
       {...props}
     />
   );

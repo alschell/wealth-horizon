@@ -1,10 +1,10 @@
-
 import React, { useState } from "react";
 import { AggregatorInfo, FinancialAccountInfo, useOnboarding } from "@/context/OnboardingContext";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "@/components/ui/use-toast";
 import { motion } from "framer-motion";
+import { Upload, Wallet } from "lucide-react";
 import ManualEntrySection from "@/components/onboarding/ManualEntrySection";
 import FileUploadSection from "@/components/onboarding/FileUploadSection";
 import {

@@ -12,8 +12,6 @@ import DataSourceForm from "@/components/onboarding/DataSourceForm";
 import BeneficialOwnersForm from "@/components/onboarding/BeneficialOwnersForm";
 import ReviewStep from "@/components/onboarding/ReviewStep";
 import AnimatedTransition from "@/components/AnimatedTransition";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft, ArrowRight } from "lucide-react";
 
 const Onboarding = () => {
   const { currentStep, setCurrentStep } = useOnboarding();
@@ -33,22 +31,6 @@ const Onboarding = () => {
     else if (path === "/onboarding/review") setCurrentStep(6);
     else if (path === "/onboarding") setCurrentStep(0);
   }, [location.pathname, setCurrentStep]);
-
-  const handleNext = () => {
-    if (currentStep < totalSteps - 1) {
-      const nextStep = currentStep + 1;
-      setCurrentStep(nextStep);
-      navigateToStep(nextStep);
-    }
-  };
-
-  const handlePrevious = () => {
-    if (currentStep > 0) {
-      const prevStep = currentStep - 1;
-      setCurrentStep(prevStep);
-      navigateToStep(prevStep);
-    }
-  };
 
   const navigateToStep = (step: number) => {
     switch (step) {
@@ -107,25 +89,6 @@ const Onboarding = () => {
         <AnimatedTransition>
           {renderCurrentStep()}
         </AnimatedTransition>
-
-        <div className="flex justify-between mt-8 px-4">
-          <Button 
-            variant="outline" 
-            onClick={handlePrevious}
-            className="flex items-center gap-2 text-gray-700"
-            disabled={currentStep === 0}
-          >
-            <ArrowLeft className="h-4 w-4" /> Previous
-          </Button>
-          
-          <Button 
-            onClick={handleNext}
-            className="flex items-center gap-2 text-white"
-            disabled={currentStep === totalSteps - 1}
-          >
-            {currentStep === totalSteps - 1 ? 'Complete' : 'Next'} <ArrowRight className="h-4 w-4" />
-          </Button>
-        </div>
       </div>
     </Layout>
   );

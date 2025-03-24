@@ -10,7 +10,7 @@ import { DocumentTypeField, DocumentDetailsFields, DocumentUploadField } from ".
 import FormFooter from "./family-office/FormFooter";
 
 const LegalDocumentsForm = () => {
-  const { onboardingData, updateLegalDocuments, setCurrentStep } = useOnboarding();
+  const { onboardingData, updateLegalDocuments } = useOnboarding();
   const [legalDocuments, setLegalDocuments] = useState<LegalDocuments>(onboardingData.legalDocuments);
 
   const handleDocumentChange = (field: keyof LegalDocuments, value: string) => {
@@ -37,7 +37,6 @@ const LegalDocumentsForm = () => {
 
   const handleSubmit = () => {
     updateLegalDocuments(legalDocuments);
-    setCurrentStep(4);
 
     toast({
       title: "Information saved",
@@ -73,6 +72,13 @@ const LegalDocumentsForm = () => {
               onInputChange={handleInputChange}
               onDateChange={handleDateChange}
             />
+            
+            {legalDocuments.documentFiles.length === 0 && (
+              <div className="text-center py-4 border rounded-lg bg-gray-50 mb-4">
+                <p className="text-gray-500">No legal documents added yet.</p>
+                <p className="text-sm text-gray-400 mt-1">Please add at least one document.</p>
+              </div>
+            )}
             
             <DocumentUploadField
               files={legalDocuments.documentFiles}

@@ -17,9 +17,16 @@ const FileUploadSection = ({
       <div className="space-y-4">
         <Label>Upload Financial Statements</Label>
         
+        {uploadedFiles.length === 0 && (
+          <div className="text-center py-4 border rounded-lg bg-gray-50 mb-4">
+            <p className="text-gray-500">No files uploaded yet.</p>
+            <p className="text-sm text-gray-400 mt-1">Please upload at least one file.</p>
+          </div>
+        )}
+        
         <FileField
           id="financial-statements"
-          label="Upload Files"
+          label=""
           required={false}
           accept=".xlsx,.xls,.csv,.pdf,application/pdf,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
           multiple={true}

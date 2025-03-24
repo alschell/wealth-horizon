@@ -6,6 +6,7 @@ import {
   SearchableSelectField 
 } from "@/components/onboarding/common/fields";
 import { CURRENCIES } from "@/utils/constants";
+import { INSTITUTIONS } from "@/components/onboarding/accounts/entry/constants";
 
 interface AccountDetailsSectionProps {
   account: FinancialAccountInfo;
@@ -33,14 +34,15 @@ const AccountDetailsSection = ({
       </div>
       
       <div className="space-y-2">
-        <InputField
+        <SearchableSelectField
           id="institution"
           label="Institution"
-          name="institution"
           value={account.institution || ""}
-          onChange={onInputChange}
-          placeholder="Enter institution name"
+          placeholder="Select institution"
+          options={INSTITUTIONS}
           required={true}
+          onChange={(value) => onSelectionChange("institution", value)}
+          allowCustomValue={true}
         />
       </div>
       

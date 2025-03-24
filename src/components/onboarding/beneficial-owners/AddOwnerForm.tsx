@@ -1,111 +1,163 @@
 
 import React, { useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
+import { Card } from "@/components/ui/card";
 import { motion } from "framer-motion";
-import { nanoid } from "nanoid";
 import OwnerFormFields from "./OwnerFormFields";
-import { 
-  BeneficialOwnerInfo, 
-  OwnerFormValues, 
-  ownerSchema, 
-  AddOwnerFormProps,
-  OwnerFormSchema 
-} from "./types";
+import FormHeader from "./FormHeader";
+import FormFooter from "./FormFooter";
+import { useOnboarding, BeneficialOwner } from "@/context/OnboardingContext";
+import { toast } from "@/components/ui/use-toast";
+
+interface AddOwnerFormProps {
+  onAddOwner: (owner: BeneficialOwner) => void;
+  onBack: () => void;
+  initialData?: BeneficialOwner;
+  isEditing?: boolean;
+}
 
 const AddOwnerForm: React.FC<AddOwnerFormProps> = ({
   onAddOwner,
-  onCancel,
-  existingOwner,
-  isEditing = false
+  onBack,
+  initialData,
+  isEditing = false,
 }) => {
-  const [files, setFiles] = useState<File[]>(existingOwner?.documents || []);
-  
-  const defaultValues: OwnerFormValues = {
-    firstName: existingOwner?.firstName || "",
-    lastName: existingOwner?.lastName || "",
-    relationship: existingOwner?.relationship || "",
-    ownershipPercentage: existingOwner?.ownershipPercentage || "",
-    nationality: existingOwner?.nationality || "",
-    dateOfBirth: existingOwner?.dateOfBirth || ""
-  };
-  
-  const { 
-    control, 
-    handleSubmit, 
-    formState: { errors, isSubmitting } 
-  } = useForm<OwnerFormSchema>({
-    resolver: zodResolver(ownerSchema),
-    defaultValues
-  });
+  const [ownerData, setOwnerData] = useState<BeneficialOwner>(
+    initialData || {
+      firstName: "",
+      lastName: "",
+      relationship: "",
+      ownershipPercentage: "",
+      nationality: "",
+      dateOfBirth: "",
+      documents: [],
+    }
+  );
 
-  const onFilesSelected = (selectedFiles: File[]) => {
-    setFiles(selectedFiles);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const validateForm = () => {
+    const newErrors: Record<string, string> = {};
+    const requiredFields: (keyof BeneficialOwner)[] = [
+      "firstName",
+      "lastName",
+      "relationship",
+      "ownershipPercentage",
+      "nationality",
+      "dateOfBirth",
+    ];
+
+    requiredFields.forEach((field) => {
+      if (!ownerData[field]) {
+        newErrors[field] = "This field is required";
+      }
+    });
+
+    // Validate ownership percentage is a number between 0 and 100
+    if (ownerData.ownershipPercentage) {
+      const percentage = parseFloat(ownerData.ownershipPercentage);
+      if (isNaN(percentage) || percentage < 0 || percentage > 100) {
+        newErrors.ownershipPercentage = "Must be a number between 0 and 100";
+      }
+    }
+
+    // Validate documents
+    if (!ownerData.documents || ownerData.documents.length === 0) {
+      newErrors.documents = "Please upload at least one document";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
-  const onSubmit = (data: OwnerFormSchema) => {
-    // Ensure all required fields are present and convert to BeneficialOwnerInfo
-    const owner: BeneficialOwnerInfo = {
-      id: existingOwner?.id || nanoid(),
-      firstName: data.firstName,
-      lastName: data.lastName,
-      relationship: data.relationship,
-      ownershipPercentage: data.ownershipPercentage,
-      nationality: data.nationality,
-      dateOfBirth: data.dateOfBirth,
-      documents: files
-    };
-    
-    onAddOwner(owner);
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (validateForm()) {
+      onAddOwner(ownerData);
+      toast({
+        title: isEditing ? "Owner Updated" : "Owner Added",
+        description: `${ownerData.firstName} ${ownerData.lastName} has been ${
+          isEditing ? "updated" : "added"
+        } successfully.`,
+      });
+    } else {
+      toast({
+        title: "Form validation failed",
+        description: "Please check the highlighted fields.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setOwnerData({ ...ownerData, [name]: value });
+    // Clear error when field is edited
+    if (errors[name]) {
+      setErrors({ ...errors, [name]: "" });
+    }
+  };
+
+  const handleSelectionChange = (field: string, value: string) => {
+    setOwnerData({ ...ownerData, [field]: value });
+    // Clear error when field is edited
+    if (errors[field]) {
+      setErrors({ ...errors, [field]: "" });
+    }
+  };
+
+  const handleDateChange = (date?: Date) => {
+    if (date) {
+      setOwnerData({ ...ownerData, dateOfBirth: date.toISOString() });
+      // Clear error when field is edited
+      if (errors.dateOfBirth) {
+        setErrors({ ...errors, dateOfBirth: "" });
+      }
+    }
+  };
+
+  const handleFilesSelected = (files: File[]) => {
+    setOwnerData({ ...ownerData, documents: files });
+    // Clear error when field is edited
+    if (errors.documents) {
+      setErrors({ ...errors, documents: "" });
+    }
   };
 
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm"
+      transition={{ duration: 0.3 }}
     >
-      <div className="flex items-center justify-between mb-6">
-        <h3 className="text-xl font-semibold text-black">
-          {isEditing ? "Edit Beneficial Owner" : "Add Beneficial Owner"}
-        </h3>
-        
-        <Button
-          variant="ghost"
-          onClick={onCancel}
-          className="text-gray-600 hover:text-black"
-        >
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to List
-        </Button>
-      </div>
-      
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <OwnerFormFields 
-          control={control} 
-          errors={errors} 
-          onFilesSelected={onFilesSelected}
-        />
-        
-        <div className="mt-8 flex justify-end space-x-4">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={onCancel}
-          >
-            Cancel
-          </Button>
-          
-          <Button 
-            type="submit"
-            disabled={isSubmitting}
-          >
-            {isEditing ? "Update Owner" : "Add Owner"}
-          </Button>
-        </div>
-      </form>
+      <Card className="p-6 md:p-8 shadow-sm">
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <FormHeader
+            title={isEditing ? "Edit Beneficial Owner" : "Add Beneficial Owner"}
+            description={
+              isEditing
+                ? "Update the information for this beneficial owner."
+                : "Add details for each beneficial owner with 25% or more ownership."
+            }
+          />
+
+          <OwnerFormFields
+            firstName={ownerData.firstName}
+            lastName={ownerData.lastName}
+            relationship={ownerData.relationship}
+            ownershipPercentage={ownerData.ownershipPercentage}
+            nationality={ownerData.nationality}
+            dateOfBirth={ownerData.dateOfBirth}
+            documentFiles={ownerData.documents}
+            errors={errors}
+            onInputChange={handleInputChange}
+            onSelectionChange={handleSelectionChange}
+            onDateChange={handleDateChange}
+            onFilesSelected={handleFilesSelected}
+          />
+
+          <FormFooter onBack={onBack} />
+        </form>
+      </Card>
     </motion.div>
   );
 };

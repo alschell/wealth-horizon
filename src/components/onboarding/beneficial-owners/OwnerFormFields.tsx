@@ -1,113 +1,208 @@
 
 import React from "react";
-import { BeneficialOwnerInfo } from "@/context/OnboardingContext";
-import { 
-  InputField, 
-  DateField, 
-  FileField,
-  SearchableSelectField 
-} from "@/components/onboarding/common/fields";
-import { COUNTRIES } from "@/components/onboarding/constants/countries";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { DatePicker } from "@/components/ui/date-picker";
+import { motion } from "framer-motion";
+import { itemVariants } from "../common/AnimationVariants";
+import { SearchableSelectField, FileField } from "@/components/onboarding/common/fields";
+import { NATIONALITIES } from "@/utils/constants/countries";
 
 interface OwnerFormFieldsProps {
-  owner: BeneficialOwnerInfo;
-  onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onDateChange: (field: string, date?: Date) => void;
-  onFilesChange: (files: File[]) => void;
-  onNationalityChange: (value: string) => void;
+  firstName: string;
+  lastName: string;
+  relationship: string;
+  ownershipPercentage: string;
+  nationality: string;
+  dateOfBirth: string | Date;
+  documentFiles: File[];
   errors: Record<string, string>;
+  onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onSelectionChange: (field: string, value: string) => void;
+  onDateChange: (date?: Date) => void;
+  onFilesSelected: (files: File[]) => void;
 }
 
 const OwnerFormFields: React.FC<OwnerFormFieldsProps> = ({
-  owner,
+  firstName,
+  lastName,
+  relationship,
+  ownershipPercentage,
+  nationality,
+  dateOfBirth,
+  documentFiles,
+  errors,
   onInputChange,
+  onSelectionChange,
   onDateChange,
-  onFilesChange,
-  onNationalityChange,
-  errors
+  onFilesSelected,
 }) => {
+  // Parse date string to Date object if it exists
+  const dateValue = typeof dateOfBirth === 'string' && dateOfBirth 
+    ? new Date(dateOfBirth) 
+    : dateOfBirth instanceof Date ? dateOfBirth : undefined;
+
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <InputField
-          id="firstName"
-          label="First Name"
-          name="firstName"
-          value={owner.firstName}
-          onChange={onInputChange}
-          required={true}
-          error={errors.firstName}
-        />
-        
-        <InputField
-          id="lastName"
-          label="Last Name"
-          name="lastName"
-          value={owner.lastName}
-          onChange={onInputChange}
-          required={true}
-          error={errors.lastName}
-        />
+        <motion.div
+          custom={1}
+          variants={itemVariants}
+          initial="hidden"
+          animate="visible"
+          className="space-y-2"
+        >
+          <Label htmlFor="firstName">
+            First Name<span className="text-red-500">*</span>
+          </Label>
+          <Input
+            id="firstName"
+            name="firstName"
+            value={firstName}
+            onChange={onInputChange}
+            className={`h-11 ${errors.firstName ? "border-red-500" : ""}`}
+          />
+          {errors.firstName && (
+            <p className="text-sm text-red-500">{errors.firstName}</p>
+          )}
+        </motion.div>
+
+        <motion.div
+          custom={2}
+          variants={itemVariants}
+          initial="hidden"
+          animate="visible"
+          className="space-y-2"
+        >
+          <Label htmlFor="lastName">
+            Last Name<span className="text-red-500">*</span>
+          </Label>
+          <Input
+            id="lastName"
+            name="lastName"
+            value={lastName}
+            onChange={onInputChange}
+            className={`h-11 ${errors.lastName ? "border-red-500" : ""}`}
+          />
+          {errors.lastName && (
+            <p className="text-sm text-red-500">{errors.lastName}</p>
+          )}
+        </motion.div>
       </div>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <InputField
-          id="relationship"
-          label="Relationship to Family Office"
-          name="relationship"
-          value={owner.relationship}
-          onChange={onInputChange}
-          required={true}
-          error={errors.relationship}
-        />
-        
-        <InputField
-          id="ownershipPercentage"
-          label="Ownership Percentage"
-          name="ownershipPercentage"
-          value={owner.ownershipPercentage}
-          onChange={onInputChange}
-          required={true}
-          error={errors.ownershipPercentage}
-        />
+        <motion.div
+          custom={3}
+          variants={itemVariants}
+          initial="hidden"
+          animate="visible"
+          className="space-y-2"
+        >
+          <Label htmlFor="relationship">
+            Relationship<span className="text-red-500">*</span>
+          </Label>
+          <Input
+            id="relationship"
+            name="relationship"
+            value={relationship}
+            onChange={onInputChange}
+            className={`h-11 ${errors.relationship ? "border-red-500" : ""}`}
+          />
+          {errors.relationship && (
+            <p className="text-sm text-red-500">{errors.relationship}</p>
+          )}
+        </motion.div>
+
+        <motion.div
+          custom={4}
+          variants={itemVariants}
+          initial="hidden"
+          animate="visible"
+          className="space-y-2"
+        >
+          <Label htmlFor="ownershipPercentage">
+            Ownership Percentage<span className="text-red-500">*</span>
+          </Label>
+          <Input
+            id="ownershipPercentage"
+            name="ownershipPercentage"
+            value={ownershipPercentage}
+            onChange={onInputChange}
+            className={`h-11 ${errors.ownershipPercentage ? "border-red-500" : ""}`}
+          />
+          {errors.ownershipPercentage && (
+            <p className="text-sm text-red-500">{errors.ownershipPercentage}</p>
+          )}
+        </motion.div>
       </div>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <SearchableSelectField
-          id="nationality"
-          label="Nationality"
-          value={owner.nationality}
-          onChange={onNationalityChange}
-          options={COUNTRIES.map(country => ({ label: country, value: country }))}
-          required={true}
-          error={errors.nationality}
-          placeholder="Select nationality"
-          allowCustomValue={false}
-        />
-        
-        <DateField
-          id="dateOfBirth"
-          label="Date of Birth"
-          value={owner.dateOfBirth ? new Date(owner.dateOfBirth) : undefined}
-          onChange={(date) => onDateChange("dateOfBirth", date)}
-          required={true}
-          error={errors.dateOfBirth}
-        />
+        <motion.div
+          custom={5}
+          variants={itemVariants}
+          initial="hidden"
+          animate="visible"
+          className="space-y-2"
+        >
+          <Label htmlFor="nationality">
+            Nationality<span className="text-red-500">*</span>
+          </Label>
+          <SearchableSelectField
+            id="nationality"
+            value={nationality}
+            placeholder="Select nationality"
+            options={NATIONALITIES}
+            required={true}
+            onChange={(value) => onSelectionChange("nationality", value)}
+            allowCustomValue={false}
+          />
+          {errors.nationality && (
+            <p className="text-sm text-red-500">{errors.nationality}</p>
+          )}
+        </motion.div>
+
+        <motion.div
+          custom={6}
+          variants={itemVariants}
+          initial="hidden"
+          animate="visible"
+          className="space-y-2"
+        >
+          <Label htmlFor="dateOfBirth">
+            Date of Birth<span className="text-red-500">*</span>
+          </Label>
+          <DatePicker
+            id="dateOfBirth"
+            value={dateValue}
+            onChange={onDateChange}
+            className={`w-full ${errors.dateOfBirth ? "border-red-500" : ""}`}
+          />
+          {errors.dateOfBirth && (
+            <p className="text-sm text-red-500">{errors.dateOfBirth}</p>
+          )}
+        </motion.div>
       </div>
-      
-      <div className="mt-6">
+
+      <motion.div
+        custom={7}
+        variants={itemVariants}
+        initial="hidden"
+        animate="visible"
+        className="space-y-2"
+      >
         <FileField
-          id="ownerDocuments"
+          id="owner-documents"
           label="Identity Documents"
+          required={true}
           accept="application/pdf,image/*"
           multiple={true}
-          hint="Upload proof of identity (passport, national ID, etc.)"
-          files={owner.documents}
-          onFilesChange={onFilesChange}
-          required={true}
-          error={errors.documents}
+          hint="Upload identity documents (passport, ID, etc.)"
+          onFilesChange={onFilesSelected}
         />
-      </div>
+        {errors.documents && (
+          <p className="text-sm text-red-500">{errors.documents}</p>
+        )}
+      </motion.div>
     </div>
   );
 };

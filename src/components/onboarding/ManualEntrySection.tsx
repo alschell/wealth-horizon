@@ -32,6 +32,11 @@ const ManualEntrySection = ({
       addFinancialAccount(account);
     }
   };
+  
+  // Function to cancel editing
+  const handleCancelEdit = () => {
+    setEditingIndex(null);
+  };
 
   return (
     <div className="space-y-6">
@@ -47,6 +52,7 @@ const ManualEntrySection = ({
         onAddAccount={handleSaveAccount}
         accountToEdit={editingIndex !== null ? financialAccounts[editingIndex] : undefined}
         isEditing={editingIndex !== null}
+        onCancelEdit={handleCancelEdit}
       />
     </div>
   );

@@ -8,18 +8,19 @@ import BasicInfoSection from "./components/BasicInfoSection";
 import LegalEntitySection from "./components/LegalEntitySection";
 import AccountDetailsSection from "./components/AccountDetailsSection";
 import FormActions from "./components/FormActions";
-import { Wallet, Upload } from "lucide-react";
 
 interface AccountFormProps {
   onAddAccount: (account: FinancialAccountInfo) => void;
   accountToEdit?: FinancialAccountInfo;
   isEditing?: boolean;
+  onCancelEdit?: () => void;
 }
 
 const AccountForm: React.FC<AccountFormProps> = ({
   onAddAccount,
   accountToEdit,
-  isEditing = false
+  isEditing = false,
+  onCancelEdit
 }) => {
   const {
     newAccount,
@@ -84,6 +85,7 @@ const AccountForm: React.FC<AccountFormProps> = ({
           onAddAccount={handleAddAccount}
           isEditing={isEditing}
           buttonText={buttonText}
+          onCancelEdit={onCancelEdit}
         />
       </form>
     </motion.div>

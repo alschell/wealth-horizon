@@ -1,34 +1,41 @@
 
 import React from "react";
 import { BeneficialOwnerInfo } from "@/context/OnboardingContext";
-import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { DatePicker } from "@/components/ui/date-picker";
-import FileUploader from "@/components/FileUploader";
+import { Label } from "@/components/ui/label";
 import CustomSearchableSelect from "@/components/ui/custom-searchable-select";
-import { COUNTRIES } from "../constants";
+import { COUNTRIES } from "@/components/onboarding/constants";
+import FileUploader from "@/components/FileUploader";
+import { DatePicker } from "@/components/ui/date-picker";
 
 interface OwnerFormFieldsProps {
   owner: BeneficialOwnerInfo;
-  errors: Partial<Record<keyof BeneficialOwnerInfo, string>>;
-  onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onSelectChange: (field: keyof BeneficialOwnerInfo, value: string) => void;
-  onDateChange: (date?: Date) => void;
+  onChange: (field: keyof BeneficialOwnerInfo, value: any) => void;
   onFilesSelected: (files: File[]) => void;
+  errors: Partial<Record<keyof BeneficialOwnerInfo, string>>;
 }
 
 const OwnerFormFields: React.FC<OwnerFormFieldsProps> = ({
   owner,
-  errors,
-  onInputChange,
-  onSelectChange,
-  onDateChange,
-  onFilesSelected
+  onChange,
+  onFilesSelected,
+  errors
 }) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    onChange(name as keyof BeneficialOwnerInfo, value);
+  };
+
+  const handleDateChange = (date?: Date) => {
+    if (date) {
+      onChange('dateOfBirth', date.toISOString());
+    }
+  };
+
   const dateOfBirthValue = owner.dateOfBirth ? new Date(owner.dateOfBirth) : undefined;
 
   return (
-    <>
+    <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label htmlFor="firstName">
@@ -38,7 +45,7 @@ const OwnerFormFields: React.FC<OwnerFormFieldsProps> = ({
             id="firstName"
             name="firstName"
             value={owner.firstName}
-            onChange={onInputChange}
+            onChange={handleInputChange}
             placeholder="John"
             className={`h-11 ${errors.firstName ? 'border-red-500' : ''}`}
           />
@@ -55,7 +62,7 @@ const OwnerFormFields: React.FC<OwnerFormFieldsProps> = ({
             id="lastName"
             name="lastName"
             value={owner.lastName}
-            onChange={onInputChange}
+            onChange={handleInputChange}
             placeholder="Smith"
             className={`h-11 ${errors.lastName ? 'border-red-500' : ''}`}
           />
@@ -74,7 +81,7 @@ const OwnerFormFields: React.FC<OwnerFormFieldsProps> = ({
             id="relationship"
             name="relationship"
             value={owner.relationship}
-            onChange={onInputChange}
+            onChange={handleInputChange}
             placeholder="e.g., Director, Shareholder"
             className={`h-11 ${errors.relationship ? 'border-red-500' : ''}`}
           />
@@ -91,7 +98,7 @@ const OwnerFormFields: React.FC<OwnerFormFieldsProps> = ({
             id="ownershipPercentage"
             name="ownershipPercentage"
             value={owner.ownershipPercentage}
-            onChange={onInputChange}
+            onChange={handleInputChange}
             placeholder="e.g., 51"
             className={`h-11 ${errors.ownershipPercentage ? 'border-red-500' : ''}`}
           />
@@ -106,22 +113,20 @@ const OwnerFormFields: React.FC<OwnerFormFieldsProps> = ({
           id="nationality"
           label="Nationality"
           value={owner.nationality}
-          onChange={(value) => onSelectChange('nationality', value)}
+          onChange={(value) => onChange('nationality', value)}
           placeholder="Select nationality"
           options={COUNTRIES}
           required
           className={errors.nationality ? 'error' : ''}
         />
 
-        <div className="space-y-2">
-          <Label htmlFor="dateOfBirth">Date of Birth</Label>
-          <DatePicker
-            placeholder="Select date of birth"
-            value={dateOfBirthValue}
-            onChange={onDateChange}
-            className="w-full"
-          />
-        </div>
+        <DatePicker
+          label="Date of Birth"
+          placeholder="Select date of birth"
+          value={dateOfBirthValue}
+          onChange={handleDateChange}
+          className="w-full"
+        />
       </div>
       
       <div className="space-y-3">
@@ -135,7 +140,7 @@ const OwnerFormFields: React.FC<OwnerFormFieldsProps> = ({
           label="Upload ID Documents"
         />
       </div>
-    </>
+    </div>
   );
 };
 

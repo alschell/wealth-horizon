@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "@/components/ui/use-toast";
 import { motion } from "framer-motion";
-import { ManualEntrySection } from "@/components/onboarding";
+import ManualEntrySection from "@/components/onboarding/ManualEntrySection";
 import {
   DataSourceFormHeader,
   DataSourceFormNavigation,
@@ -25,6 +25,8 @@ const DataSourceForm = () => {
   const [aggregatorInfo, setAggregatorInfo] = useState<AggregatorInfo>(
     onboardingData.aggregatorInfo
   );
+  const [dataSourceMethod, setDataSourceMethod] = useState<"manual" | "upload">("manual");
+  const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
   const [activeTab, setActiveTab] = useState<string>(
     aggregatorInfo.usesAggregator ? "aggregator" : "manual"
   );
@@ -57,6 +59,10 @@ const DataSourceForm = () => {
     });
   };
 
+  const handleBulkFilesSelected = (files: File[]) => {
+    setUploadedFiles(files);
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -69,10 +75,13 @@ const DataSourceForm = () => {
           <DataSourceFormHeader />
           
           <DataSourceTabs
-            activeTab={activeTab}
-            setActiveTab={setActiveTab}
-            usesAggregator={aggregatorInfo.usesAggregator}
-            onAggregatorInfoChange={handleAggregatorInfoChange}
+            dataSourceMethod={dataSourceMethod}
+            setDataSourceMethod={setDataSourceMethod}
+            financialAccounts={onboardingData.financialAccounts}
+            handleAddAccount={addFinancialAccount}
+            handleRemoveAccount={removeFinancialAccount}
+            uploadedFiles={uploadedFiles}
+            handleBulkFilesSelected={handleBulkFilesSelected}
           />
           
           <Tabs value={activeTab} className="w-full">
@@ -93,7 +102,9 @@ const DataSourceForm = () => {
             </TabsContent>
           </Tabs>
           
-          <DataSourceFormNavigation />
+          <DataSourceFormNavigation
+            onBack={() => setCurrentStep(3)}
+          />
         </form>
       </Card>
     </motion.div>

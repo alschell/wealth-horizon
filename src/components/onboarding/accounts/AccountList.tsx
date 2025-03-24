@@ -6,9 +6,10 @@ import AccountCard from "./AccountCard";
 interface AccountListProps {
   accounts: FinancialAccountInfo[];
   onRemoveAccount: (index: number) => void;
+  onEditAccount?: (index: number) => void;
 }
 
-const AccountList = ({ accounts, onRemoveAccount }: AccountListProps) => {
+const AccountList = ({ accounts, onRemoveAccount, onEditAccount }: AccountListProps) => {
   if (accounts.length === 0) {
     return null;
   }
@@ -23,6 +24,7 @@ const AccountList = ({ accounts, onRemoveAccount }: AccountListProps) => {
             account={account}
             index={index}
             onRemove={() => onRemoveAccount(index)}
+            onEdit={() => onEditAccount && onEditAccount(index)}
           />
         ))}
       </div>

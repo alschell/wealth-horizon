@@ -1,8 +1,6 @@
 
 import React, { useState } from "react";
 import { BeneficialOwnerInfo } from "@/context/OnboardingContext";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
@@ -22,32 +20,14 @@ const AddOwnerForm: React.FC<AddOwnerFormProps> = ({ onAddOwner }) => {
     dateOfBirth: "",
     documents: []
   });
+  
   const [errors, setErrors] = useState<Partial<Record<keyof BeneficialOwnerInfo, string>>>({});
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setNewOwner({ ...newOwner, [name]: value });
-    
-    if (errors[name as keyof BeneficialOwnerInfo]) {
-      setErrors({ ...errors, [name]: undefined });
-    }
-  };
-
-  const handleSelectChange = (field: keyof BeneficialOwnerInfo, value: string) => {
+  const handleChange = (field: keyof BeneficialOwnerInfo, value: any) => {
     setNewOwner({ ...newOwner, [field]: value });
     
     if (errors[field]) {
       setErrors({ ...errors, [field]: undefined });
-    }
-  };
-
-  const handleDateChange = (date?: Date) => {
-    if (date) {
-      setNewOwner({ ...newOwner, dateOfBirth: date.toISOString() });
-    }
-    
-    if (errors.dateOfBirth) {
-      setErrors({ ...errors, dateOfBirth: undefined });
     }
   };
 
@@ -57,19 +37,6 @@ const AddOwnerForm: React.FC<AddOwnerFormProps> = ({ onAddOwner }) => {
     if (errors.documents) {
       setErrors({ ...errors, documents: undefined });
     }
-  };
-
-  const resetForm = () => {
-    setNewOwner({
-      firstName: "",
-      lastName: "",
-      relationship: "",
-      ownershipPercentage: "",
-      nationality: "",
-      dateOfBirth: "",
-      documents: []
-    });
-    setErrors({});
   };
 
   const validateForm = () => {
@@ -99,7 +66,20 @@ const AddOwnerForm: React.FC<AddOwnerFormProps> = ({ onAddOwner }) => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleAddOwner = () => {
+  const resetForm = () => {
+    setNewOwner({
+      firstName: "",
+      lastName: "",
+      relationship: "",
+      ownershipPercentage: "",
+      nationality: "",
+      dateOfBirth: "",
+      documents: []
+    });
+    setErrors({});
+  };
+
+  const handleSubmit = () => {
     if (!validateForm()) {
       toast({
         title: "Form validation failed",
@@ -120,18 +100,16 @@ const AddOwnerForm: React.FC<AddOwnerFormProps> = ({ onAddOwner }) => {
         Add a Beneficial Owner
       </h3>
       
-      <OwnerFormFields 
+      <OwnerFormFields
         owner={newOwner}
-        errors={errors}
-        onInputChange={handleInputChange}
-        onSelectChange={handleSelectChange}
-        onDateChange={handleDateChange}
+        onChange={handleChange}
         onFilesSelected={handleFilesSelected}
+        errors={errors}
       />
       
       <Button
         type="button"
-        onClick={handleAddOwner}
+        onClick={handleSubmit}
         className="w-full md:w-auto bg-black hover:bg-gray-800 text-white"
       >
         <Plus className="mr-2 h-4 w-4" />

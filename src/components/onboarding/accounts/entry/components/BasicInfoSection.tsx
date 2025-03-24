@@ -3,10 +3,10 @@ import React from "react";
 import { FinancialAccountInfo } from "@/types/onboarding";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import CustomSearchableSelect from "@/components/ui/custom-searchable-select";
 import { CustomSelect } from "@/components/ui/custom-select";
 import { ACCOUNT_TYPES } from "@/utils/constants/accountTypes";
 import { INSTITUTIONS } from "@/utils/constants/institutions";
+import { CustomSearchableSelect } from "@/components/ui/custom-searchable-select";
 
 interface BasicInfoSectionProps {
   account: FinancialAccountInfo;
@@ -43,42 +43,23 @@ const BasicInfoSection = ({
         </div>
         
         <div className="space-y-2">
-          <Label htmlFor="institution" className="flex items-center">
-            Institution
+          <Label htmlFor="accountType" className="flex items-center">
+            Account Type
             <span className="text-red-500 ml-1">*</span>
           </Label>
-          <CustomSearchableSelect
-            id="institution"
+          <CustomSelect
+            id="accountType"
             label=""
-            value={account.institution || ""}
-            onChange={(value) => onSelectionChange('institution', value)}
-            placeholder="Select or enter institution"
-            options={INSTITUTIONS}
-            className={`h-11 ${errors.institution ? 'border-red-500' : ''}`}
+            value={account.accountType || ""}
+            onChange={(value) => onSelectionChange('accountType', value)}
+            placeholder="Select account type"
+            options={ACCOUNT_TYPES}
+            className={`h-11 ${errors.accountType ? 'border-red-500' : ''}`}
           />
-          {errors.institution && (
-            <p className="text-red-500 text-sm mt-1">{errors.institution}</p>
+          {errors.accountType && (
+            <p className="text-red-500 text-sm mt-1">{errors.accountType}</p>
           )}
         </div>
-      </div>
-      
-      <div className="space-y-2">
-        <Label htmlFor="accountType" className="flex items-center">
-          Account Type
-          <span className="text-red-500 ml-1">*</span>
-        </Label>
-        <CustomSelect
-          id="accountType"
-          label=""
-          value={account.accountType || ""}
-          onChange={(value) => onSelectionChange('accountType', value)}
-          placeholder="Select account type"
-          options={ACCOUNT_TYPES}
-          className={`h-11 ${errors.accountType ? 'border-red-500' : ''}`}
-        />
-        {errors.accountType && (
-          <p className="text-red-500 text-sm mt-1">{errors.accountType}</p>
-        )}
       </div>
     </div>
   );

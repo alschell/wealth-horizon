@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { FinancialAccountInfo } from "@/types/onboarding";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import CustomSearchableSelect from "@/components/ui/custom-searchable-select";
+import { CustomSearchableSelect } from "@/components/ui/custom-searchable-select";
 import { LEI_MAPPING } from "../../constants/leiMappings";
 
 interface LegalEntitySectionProps {
@@ -45,24 +45,9 @@ const LegalEntitySection = ({
   return (
     <div className="space-y-4">
       <div className="space-y-2">
-        <Label htmlFor="legalEntity" className="flex items-center">
-          Legal Entity
-          <span className="text-red-500 ml-1">*</span>
-        </Label>
-        <CustomSearchableSelect
-          id="legalEntity"
-          label=""
-          value={account.legalEntity || ""}
-          onChange={handleLegalEntityChange}
-          placeholder="Select legal entity"
-          options={filteredLegalEntities}
-          className="h-11"
-        />
-      </div>
-      
-      <div className="space-y-2">
-        <Label htmlFor="legalEntityIdentifier">
+        <Label htmlFor="legalEntityIdentifier" className="flex items-center">
           Legal Entity Identifier (LEI)
+          <span className="text-red-500 ml-1">*</span>
         </Label>
         <Input
           id="legalEntityIdentifier"
@@ -73,6 +58,40 @@ const LegalEntitySection = ({
           className="h-11"
           readOnly={!!LEI_MAPPING[account.legalEntity || '']}
         />
+      </div>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <Label htmlFor="institution" className="flex items-center">
+            Institution
+            <span className="text-red-500 ml-1">*</span>
+          </Label>
+          <CustomSearchableSelect
+            id="institution"
+            label=""
+            value={account.institution || ""}
+            onChange={(value) => onSelectionChange('institution', value)}
+            placeholder="Select or enter institution"
+            options={Object.keys(legalEntities)}
+            className="h-11"
+          />
+        </div>
+        
+        <div className="space-y-2">
+          <Label htmlFor="legalEntity" className="flex items-center">
+            Legal Entity
+            <span className="text-red-500 ml-1">*</span>
+          </Label>
+          <CustomSearchableSelect
+            id="legalEntity"
+            label=""
+            value={account.legalEntity || ""}
+            onChange={handleLegalEntityChange}
+            placeholder="Select legal entity"
+            options={filteredLegalEntities}
+            className="h-11"
+          />
+        </div>
       </div>
     </div>
   );

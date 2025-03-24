@@ -58,7 +58,7 @@ const AccountForm: React.FC<AccountFormProps> = ({
       
       <form className="space-y-6 mt-6">
         {/* LEI Field First */}
-        <div className="space-y-2">
+        <div className="space-y-4">
           <LegalEntitySection
             account={newAccount}
             legalEntities={legalEntities}
@@ -67,8 +67,8 @@ const AccountForm: React.FC<AccountFormProps> = ({
           />
         </div>
         
-        {/* Account Name Field */}
-        <div className="space-y-2">
+        {/* Account Name and Type Fields */}
+        <div className="space-y-4">
           <BasicInfoSection
             account={newAccount}
             errors={errors}
@@ -82,7 +82,6 @@ const AccountForm: React.FC<AccountFormProps> = ({
           account={newAccount}
           onInputChange={handleInputChange}
           onSelectionChange={handleSelectionChange}
-          onFilesSelected={handleFilesSelected}
         />
         
         {/* Form Actions */}

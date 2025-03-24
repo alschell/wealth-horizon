@@ -19,9 +19,6 @@ const ownerFormSchema = z.object({
   documents: z.array(z.instanceof(File)).default([]),
 });
 
-// This ensures the schema matches the OwnerFormValues type
-type OwnerFormSchema = z.infer<typeof ownerFormSchema>;
-
 interface AddOwnerFormProps {
   onAddOwner: (owner: BeneficialOwnerInfo) => void;
   onCancel: () => void;

@@ -7,13 +7,11 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 interface DocumentsSectionProps {
   files: File[];
   onStatementsSelected: (files: File[]) => void;
-  optional?: boolean;
 }
 
 const DocumentsSection = ({
   files,
-  onStatementsSelected,
-  optional = true
+  onStatementsSelected
 }: DocumentsSectionProps) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [fileToDeleteIndex, setFileToDeleteIndex] = useState<number | null>(null);
@@ -35,7 +33,11 @@ const DocumentsSection = ({
 
   return (
     <div className="space-y-2">
-      <Label>Account Statements{!optional && <span className="text-red-500 ml-1">*</span>}</Label>
+      <Label htmlFor="statements" className="flex items-center">
+        Account Statements
+        <span className="text-red-500 ml-1">*</span>
+      </Label>
+      
       <FileUploader
         accept="application/pdf,image/*"
         multiple={true}
@@ -45,9 +47,6 @@ const DocumentsSection = ({
         label="Upload Account Statements"
         onFileDelete={handleFileDelete}
       />
-      {optional && (
-        <p className="text-xs text-gray-500 mt-1">This field is optional</p>
-      )}
 
       <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
         <AlertDialogContent>

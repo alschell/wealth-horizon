@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { BeneficialOwnerInfo } from "@/types/onboarding";
@@ -33,7 +32,7 @@ const BeneficialOwnersForm: React.FC<BeneficialOwnersFormProps> = ({
 }) => {
   const { toast } = useToast();
   
-  const [showForm, setShowForm] = useState(false);
+  const [showForm, setShowForm] = useState(true);
   const [editIndex, setEditIndex] = useState<number | null>(null);
   const [ownerToDelete, setOwnerToDelete] = useState<number | null>(null);
   
@@ -59,7 +58,7 @@ const BeneficialOwnersForm: React.FC<BeneficialOwnersFormProps> = ({
     }
     
     // Reset form state
-    setShowForm(false);
+    setShowForm(true);
     setEditIndex(null);
   };
   
@@ -86,6 +85,10 @@ const BeneficialOwnersForm: React.FC<BeneficialOwnersFormProps> = ({
   
   // Function to cancel form
   const handleCancelForm = () => {
+    if (owners.length === 0) {
+      // Keep form visible if no owners added yet
+      return;
+    }
     setShowForm(false);
     setEditIndex(null);
   };
@@ -123,7 +126,7 @@ const BeneficialOwnersForm: React.FC<BeneficialOwnersFormProps> = ({
         >
           <button
             onClick={handleShowAddForm}
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
+            className="px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800 transition"
           >
             Add Beneficial Owner
           </button>

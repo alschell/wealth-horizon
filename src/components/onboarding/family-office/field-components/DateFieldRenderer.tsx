@@ -1,11 +1,6 @@
 
 import React from "react";
-import { format } from "date-fns";
-import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Button } from "@/components/ui/button";
-import { CalendarIcon } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { DatePicker } from "@/components/ui/date-picker";
 
 interface DateFieldRendererProps {
   name: string;
@@ -22,44 +17,22 @@ const DateFieldRenderer: React.FC<DateFieldRendererProps> = ({
   onChange,
   placeholder,
   label,
+  required = false,
 }) => {
-  const [open, setOpen] = React.useState(false);
-  
   const handleDateChange = (date?: Date) => {
     if (date) {
       onChange(name, date.toISOString());
-      setOpen(false);
     }
   };
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          className={cn(
-            "w-full justify-start text-left h-11 font-normal bg-white",
-            !value && "text-muted-foreground"
-          )}
-        >
-          <CalendarIcon className="mr-2 h-4 w-4" />
-          {value ? (
-            format(new Date(value), "PPP")
-          ) : (
-            <span>{placeholder || `Select ${label.toLowerCase()}`}</span>
-          )}
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-auto p-0 z-[999]" align="start">
-        <Calendar
-          mode="single"
-          selected={value ? new Date(value) : undefined}
-          onSelect={handleDateChange}
-          initialFocus
-          className="pointer-events-auto"
-        />
-      </PopoverContent>
-    </Popover>
+    <DatePicker
+      label={label}
+      placeholder={placeholder || `Select ${label.toLowerCase()}`}
+      value={value ? new Date(value) : undefined}
+      onChange={handleDateChange}
+      optional={!required}
+    />
   );
 };
 

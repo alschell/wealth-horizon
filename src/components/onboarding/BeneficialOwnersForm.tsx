@@ -307,9 +307,9 @@ const BeneficialOwnersForm = () => {
             <Button
               type="button"
               onClick={handleAddOwner}
-              className="mt-2 bg-blue-600 hover:bg-blue-700 text-white"
+              className="w-full md:w-auto bg-black hover:bg-gray-800 text-white"
             >
-              <Plus className="h-4 w-4 mr-2" />
+              <Plus className="mr-2 h-4 w-4" />
               Add Owner
             </Button>
           </div>
@@ -346,3 +346,4 @@ const BeneficialOwnersForm = () => {
 };
 
 export default BeneficialOwnersForm;
+

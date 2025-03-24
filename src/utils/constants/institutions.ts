@@ -1,5 +1,5 @@
 
-// Financial institutions constants
+// Top 100 Global Financial Institutions
 export const INSTITUTIONS = [
   "Agricultural Bank of China",
   "Allianz",

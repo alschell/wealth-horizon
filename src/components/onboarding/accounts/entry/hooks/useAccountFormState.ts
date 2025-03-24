@@ -64,7 +64,20 @@ export const useAccountFormState = ({ onAddAccount }: UseAccountFormStateProps) 
     
     // If changing institution, reset legal entity
     if (field === "institution") {
-      setNewAccount(prev => ({ ...prev, legalEntity: undefined }));
+      if (newAccount.legalEntity) {
+        // Check if current legal entity belongs to new institution
+        const entitiesForInstitution = LEGAL_ENTITIES[value] || [];
+        if (!entitiesForInstitution.includes(newAccount.legalEntity)) {
+          setNewAccount(prev => ({ 
+            ...prev, 
+            institution: value,
+            legalEntity: undefined,
+            legalEntityIdentifier: undefined
+          }));
+        }
+      } else {
+        setNewAccount(prev => ({ ...prev, institution: value }));
+      }
     }
     
     // If setting legal entity, also set legal entity identifier if available

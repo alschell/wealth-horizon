@@ -10,7 +10,7 @@ import DocumentsSection from "./components/DocumentsSection";
 import { useAccountFormState } from "./hooks/useAccountFormState";
 
 interface AccountFormProps {
-  onAddAccount: (account: FinancialAccountInfo) => void;
+  onAddAccount: (FinancialAccountInfo: FinancialAccountInfo) => void;
   enableLegalEntityFields?: boolean;
 }
 
@@ -31,13 +31,7 @@ const AccountForm = ({ onAddAccount, enableLegalEntityFields = false }: AccountF
       <FormHeader />
       
       <div className="space-y-6">
-        <BasicInfoSection
-          account={newAccount}
-          errors={errors}
-          onInputChange={handleInputChange}
-          onSelectionChange={handleSelectionChange}
-        />
-        
+        {/* Place LEI section first for institutions */}
         {enableLegalEntityFields && (
           <LegalEntitySection
             account={newAccount}
@@ -46,6 +40,13 @@ const AccountForm = ({ onAddAccount, enableLegalEntityFields = false }: AccountF
             onSelectionChange={handleSelectionChange}
           />
         )}
+        
+        <BasicInfoSection
+          account={newAccount}
+          errors={errors}
+          onInputChange={handleInputChange}
+          onSelectionChange={handleSelectionChange}
+        />
         
         <AccountDetailsSection
           account={newAccount}

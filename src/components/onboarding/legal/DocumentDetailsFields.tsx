@@ -3,6 +3,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { DatePicker } from "@/components/ui/date-picker";
 import { itemVariants } from "../common/AnimationVariants";
 
 interface DocumentDetailsFieldsProps {
@@ -10,14 +11,28 @@ interface DocumentDetailsFieldsProps {
   issueDate: string;
   expiryDate?: string;
   onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onDateChange: (field: string, value: string) => void;
 }
 
 const DocumentDetailsFields = ({ 
   documentNumber, 
   issueDate, 
   expiryDate, 
-  onInputChange 
+  onInputChange,
+  onDateChange 
 }: DocumentDetailsFieldsProps) => {
+  const handleIssueDateChange = (date?: Date) => {
+    if (date) {
+      onDateChange("issueDate", date.toISOString());
+    }
+  };
+
+  const handleExpiryDateChange = (date?: Date) => {
+    if (date) {
+      onDateChange("expiryDate", date.toISOString());
+    }
+  };
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       <motion.div 
@@ -45,14 +60,11 @@ const DocumentDetailsFields = ({
         animate="visible"
         className="space-y-2"
       >
-        <Label htmlFor="issueDate">Issue Date*</Label>
-        <Input
-          id="issueDate"
-          name="issueDate"
-          type="date"
-          value={issueDate}
-          onChange={onInputChange}
-          className="h-11 bg-white border border-gray-300 focus:border-black focus:ring-black"
+        <DatePicker
+          label="Issue Date*"
+          placeholder="Select issue date"
+          value={issueDate ? new Date(issueDate) : undefined}
+          onChange={handleIssueDateChange}
         />
       </motion.div>
 
@@ -63,14 +75,12 @@ const DocumentDetailsFields = ({
         animate="visible"
         className="space-y-2"
       >
-        <Label htmlFor="expiryDate">Expiry Date (if applicable)</Label>
-        <Input
-          id="expiryDate"
-          name="expiryDate"
-          type="date"
-          value={expiryDate || ""}
-          onChange={onInputChange}
-          className="h-11 bg-white border border-gray-300 focus:border-black focus:ring-black"
+        <DatePicker
+          label="Expiry Date"
+          placeholder="Select expiry date (if applicable)"
+          value={expiryDate ? new Date(expiryDate) : undefined}
+          onChange={handleExpiryDateChange}
+          optional={true}
         />
       </motion.div>
     </div>

@@ -20,17 +20,7 @@ const LegalEntitySection = ({
 }: LegalEntitySectionProps) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <CustomSearchableSelect
-        id="legalEntity"
-        label="Legal Entity"
-        value={account.legalEntity || ""}
-        onChange={(value) => onSelectionChange('legalEntity', value)}
-        placeholder="Select legal entity"
-        options={legalEntities}
-        allowCustomValue={true}
-      />
-      
-      <div className="space-y-2">
+      <div className="space-y-2 md:col-span-2">
         <Label htmlFor="legalEntityIdentifier">
           Legal Entity Identifier (LEI)
         </Label>
@@ -42,7 +32,20 @@ const LegalEntitySection = ({
           placeholder="e.g., 7H6GLXDRUGQFU57RNE97"
           className="h-11"
         />
+        <p className="text-xs text-gray-500">
+          Enter an LEI to automatically select the institution and legal entity
+        </p>
       </div>
+      
+      <CustomSearchableSelect
+        id="legalEntity"
+        label="Legal Entity"
+        value={account.legalEntity || ""}
+        onChange={(value) => onSelectionChange('legalEntity', value)}
+        placeholder="Select legal entity"
+        options={legalEntities}
+        allowCustomValue={true}
+      />
     </div>
   );
 };

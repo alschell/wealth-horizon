@@ -12,8 +12,11 @@ interface FormActionsProps {
 const FormActions: React.FC<FormActionsProps> = ({ 
   onAddAccount, 
   isEditing = false,
-  buttonText = "Add Account"
+  buttonText
 }) => {
+  const defaultButtonText = isEditing ? "Update Account" : "Add Account";
+  const displayText = buttonText || defaultButtonText;
+
   return (
     <div className="flex justify-end pt-4">
       <Button
@@ -26,7 +29,7 @@ const FormActions: React.FC<FormActionsProps> = ({
         ) : (
           <Plus className="mr-2 h-4 w-4" />
         )}
-        {buttonText}
+        {displayText}
       </Button>
     </div>
   );

@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { FinancialAccountInfo } from "@/types/onboarding";
 import { toast } from "@/components/ui/use-toast";
 
@@ -8,119 +8,98 @@ interface UseAccountFormStateProps {
   initialAccount?: FinancialAccountInfo;
 }
 
-interface FormErrors {
-  accountName?: string;
-  institution?: string;
-  accountType?: string;
-  currency?: string;
-}
-
-export const useAccountFormState = ({ onAddAccount, initialAccount }: UseAccountFormStateProps) => {
-  const [newAccount, setNewAccount] = useState<FinancialAccountInfo>(
-    initialAccount || {
-      accountName: "",
-      institution: "",
-      accountType: "cash",
-      accountSubtype: "",
-      currency: "",
-      approximateValue: "",
-      statements: [],
-      legalEntity: "",
-      legalEntityIdentifier: "",
-    }
-  );
-  const [errors, setErrors] = useState<FormErrors>({});
-
-  // Update form state when initialAccount changes (for editing)
-  useEffect(() => {
-    if (initialAccount) {
-      setNewAccount(initialAccount);
-    }
-  }, [initialAccount]);
-
-  const validateForm = () => {
-    const formErrors: FormErrors = {};
-    
-    if (!newAccount.accountName.trim()) {
-      formErrors.accountName = "Account name is required";
-    }
-    
-    if (!newAccount.institution.trim()) {
-      formErrors.institution = "Institution is required";
-    }
-    
-    if (!newAccount.accountType) {
-      formErrors.accountType = "Account type is required";
-    }
-    
-    if (!newAccount.currency) {
-      formErrors.currency = "Currency is required";
-    }
-    
-    setErrors(formErrors);
-    return Object.keys(formErrors).length === 0;
+export function useAccountFormState({ onAddAccount, initialAccount }: UseAccountFormStateProps) {
+  const defaultAccount: FinancialAccountInfo = {
+    accountName: "",
+    institution: "",
+    accountType: "cash",
+    accountSubtype: "",
+    currency: "",
+    approximateValue: "",
+    statements: []
   };
+  
+  const [newAccount, setNewAccount] = useState<FinancialAccountInfo>(initialAccount || defaultAccount);
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
+  // Handle input change
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setNewAccount(prev => ({ ...prev, [name]: value }));
     
-    if (errors[name as keyof FormErrors]) {
-      setErrors(prev => ({ ...prev, [name]: undefined }));
+    // Clear error when user types
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: '' }));
     }
   };
 
+  // Handle selection change
   const handleSelectionChange = (field: keyof FinancialAccountInfo, value: string) => {
     setNewAccount(prev => ({ ...prev, [field]: value }));
     
-    if (errors[field as keyof FormErrors]) {
-      setErrors(prev => ({ ...prev, [field]: undefined }));
+    // Clear error when user selects
+    if (errors[field]) {
+      setErrors(prev => ({ ...prev, [field]: '' }));
     }
   };
 
+  // Handle file selection
   const handleFilesSelected = (files: File[]) => {
     setNewAccount(prev => ({ ...prev, statements: files }));
   };
 
-  const handleAddAccount = () => {
-    if (validateForm()) {
-      onAddAccount(newAccount);
-      
-      // Only reset form if not editing
-      if (!initialAccount) {
-        setNewAccount({
-          accountName: "",
-          institution: "",
-          accountType: "cash",
-          accountSubtype: "",
-          currency: "",
-          approximateValue: "",
-          statements: [],
-          legalEntity: "",
-          legalEntityIdentifier: "",
-        });
-      }
-      
-      toast({
-        title: initialAccount ? "Account updated" : "Account added",
-        description: `Financial account has been ${initialAccount ? "updated" : "added"} successfully.`,
-      });
-    } else {
-      toast({
-        title: "Required fields missing",
-        description: "Please fill in all required fields.",
-        variant: "destructive",
-      });
+  // Validate the account
+  const validateAccount = (): boolean => {
+    const newErrors: Record<string, string> = {};
+    
+    if (!newAccount.accountName.trim()) {
+      newErrors.accountName = "Account name is required";
     }
+    
+    if (!newAccount.institution) {
+      newErrors.institution = "Institution is required";
+    }
+    
+    if (!newAccount.accountType) {
+      newErrors.accountType = "Account type is required";
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  // Add or update account
+  const handleAddAccount = () => {
+    if (!validateAccount()) {
+      toast({
+        title: "Please fix the errors",
+        description: "There are some required fields that need to be filled.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    onAddAccount(newAccount);
+    
+    // Reset form if not editing
+    if (!initialAccount) {
+      setNewAccount(defaultAccount);
+    }
+    
+    toast({
+      title: initialAccount ? "Account updated" : "Account added",
+      description: initialAccount 
+        ? `${newAccount.accountName} has been updated successfully.` 
+        : `${newAccount.accountName} has been added successfully.`
+    });
   };
 
   return {
     newAccount,
-    setNewAccount,
     errors,
     handleInputChange,
     handleSelectionChange,
     handleFilesSelected,
-    handleAddAccount,
+    handleAddAccount
   };
-};
+}

@@ -43,7 +43,7 @@ const AccountDetailsSection = ({
         
         <div className="space-y-2">
           <Label htmlFor="currency">
-            Primary Currency
+            Primary Currency (optional)
           </Label>
           <CustomSearchableSelect
             id="currency"

@@ -11,6 +11,7 @@ import { ArrowRight, ArrowLeft, ScrollText } from "lucide-react";
 import { CustomSelect } from "@/components/ui/custom-select";
 import { DOCUMENT_TYPES } from "./constants/formOptions";
 import FileUploader from "@/components/FileUploader";
+import FormHeader from "./family-office/FormHeader";
 
 type DocumentType = "incorporation" | "registration" | "taxCertificate" | "ownership" | "other";
 
@@ -117,13 +118,11 @@ const LegalDocumentsForm = () => {
     >
       <Card className="p-6 md:p-8 shadow-sm">
         <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="flex items-center gap-3 mb-2">
-            <ScrollText className="h-7 w-7 text-blue-600" />
-            <h2 className="text-2xl font-bold">Legal Documents</h2>
-          </div>
-          <p className="text-gray-500">
-            Please upload the legal documentation for your family office entity.
-          </p>
+          <FormHeader 
+            title="Legal Documents"
+            description="Please upload the legal documentation for your family office entity."
+            icon={<ScrollText className="h-7 w-7 text-[#86CEFA]" />}
+          />
 
           <div className="space-y-6">
             <CustomSelect
@@ -223,7 +222,7 @@ const LegalDocumentsForm = () => {
               <Button 
                 type="submit" 
                 size="lg" 
-                className="rounded-lg hover:shadow-md transition-shadow bg-blue-600 hover:bg-blue-700 text-white"
+                className="rounded-lg hover:shadow-md transition-shadow bg-[#86CEFA] hover:bg-[#6CBEFA] text-white"
               >
                 Continue
                 <ArrowRight className="ml-2 h-4 w-4" />

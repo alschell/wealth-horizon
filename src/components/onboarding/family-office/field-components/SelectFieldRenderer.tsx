@@ -23,6 +23,9 @@ const SelectFieldRenderer: React.FC<SelectFieldRendererProps> = ({
   placeholder,
   options,
 }) => {
+  // Sort options alphabetically
+  const sortedOptions = [...options].sort((a, b) => a.localeCompare(b));
+  
   const handleSelectChange = (newValue: string) => {
     onChange(name, newValue);
   };
@@ -39,8 +42,10 @@ const SelectFieldRenderer: React.FC<SelectFieldRendererProps> = ({
         className="bg-white border shadow-lg z-[999]"
         position="popper" 
         sideOffset={8}
+        forceMount
+        avoidCollisions={true}
       >
-        {options.map((option) => (
+        {sortedOptions.map((option) => (
           <SelectItem 
             key={option} 
             value={option}

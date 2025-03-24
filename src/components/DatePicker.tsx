@@ -26,7 +26,7 @@ export function DatePicker({ value, onChange, label, optional }: DatePickerProps
           <Button
             variant={"outline"}
             className={cn(
-              "w-full h-11 justify-start text-left font-normal bg-white",
+              "w-full h-11 justify-start text-left font-normal bg-white border-gray-300 hover:bg-gray-50",
               !value && "text-muted-foreground"
             )}
           >
@@ -34,13 +34,18 @@ export function DatePicker({ value, onChange, label, optional }: DatePickerProps
             {value ? format(value, "PPP") : <span>{label}</span>}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-auto p-0 bg-white shadow-lg rounded-md border z-[999]" align="start" forceMount>
+        <PopoverContent 
+          className="w-auto p-0 bg-white shadow-lg rounded-md border z-[999]" 
+          align="start" 
+          forceMount
+          avoidCollisions={true}
+        >
           <Calendar
             mode="single"
             selected={value}
             onSelect={onChange}
             initialFocus
-            className="pointer-events-auto rounded-md border shadow-md"
+            className="rounded-md border shadow-md bg-white"
           />
         </PopoverContent>
       </Popover>

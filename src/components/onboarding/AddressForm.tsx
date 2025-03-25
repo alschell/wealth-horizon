@@ -32,10 +32,9 @@ const AddressForm = () => {
 
   const validateForm = () => {
     const newErrors: Partial<Record<keyof AddressInfo, string>> = {};
-    // Make all fields required
+    // Make required fields validation explicit
     const requiredFields: (keyof AddressInfo)[] = [
-      'streetAddress', 
-      'addressLine2',
+      'streetAddress',
       'city', 
       'state',
       'postalCode', 

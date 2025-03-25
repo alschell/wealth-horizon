@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { FilePlus } from "lucide-react";
+import { FilePlus, Plus } from "lucide-react";
 import DocumentTypeField from "./DocumentTypeField";
 import DocumentDetailsFields from "./DocumentDetailsFields";
 import DocumentUploadField from "./DocumentUploadField";
@@ -48,7 +48,7 @@ const AddDocumentForm: React.FC<AddDocumentFormProps> = ({
           issueDate={issueDate}
           expiryDate={expiryDate}
           onDateChange={onDateChange}
-          errors={errors}
+          error={errors}
         />
       </div>
       
@@ -74,7 +74,7 @@ const AddDocumentForm: React.FC<AddDocumentFormProps> = ({
           onClick={onAddDocument}
           className="bg-black hover:bg-gray-800 text-white"
         >
-          <FilePlus className="mr-2 h-4 w-4" />
+          <Plus className="mr-2 h-4 w-4" />
           {isEditing ? "Update Document" : "Add Document"}
         </Button>
       </div>

@@ -43,7 +43,6 @@ const AddressFormFields = ({
         <div className="space-y-2">
           <Label htmlFor="addressLine2">
             Address Line 2
-            <span className="text-red-500 ml-1">*</span>
           </Label>
           <Input
             id="addressLine2"

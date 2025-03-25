@@ -31,7 +31,7 @@ const AddressFormNavigation: React.FC<AddressFormNavigationProps> = ({ hasErrors
           type="submit" 
           size="lg" 
           className="rounded-lg bg-black hover:bg-gray-800 text-white hover:shadow-md transition-shadow"
-          disabled={hasErrors}
+          disabled={false} // Remove the hasErrors conditional to enable the button
         >
           Continue
           <ArrowRight className="ml-2 h-4 w-4" />

@@ -13,6 +13,7 @@ interface FileUploaderProps {
   existingFiles?: File[];
   label?: string;
   onFileDelete?: (index: number) => void;
+  customFileDeleteButton?: (file: any) => React.ReactNode;
 }
 
 const FileUploader = ({
@@ -22,7 +23,8 @@ const FileUploader = ({
   onFilesSelected,
   existingFiles = [],
   label = "Upload Documents",
-  onFileDelete
+  onFileDelete,
+  customFileDeleteButton
 }: FileUploaderProps) => {
   const [files, setFiles] = useState<File[]>(existingFiles);
   const [isDragging, setIsDragging] = useState(false);
@@ -174,6 +176,7 @@ const FileUploader = ({
       <FileList 
         files={files} 
         onDeleteClick={handleDeleteClick} 
+        customFileDeleteButton={customFileDeleteButton}
       />
 
       <DeleteFileDialog

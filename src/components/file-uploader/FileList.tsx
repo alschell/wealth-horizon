@@ -1,41 +1,66 @@
 
 import React from "react";
-import { Card } from "@/components/ui/card";
-import { FileText } from "lucide-react";
-import { DeleteButton } from "@/components/ui/action-buttons";
+import { Button } from "@/components/ui/button";
+import { Trash2 } from "lucide-react";
 
 interface FileListProps {
   files: File[];
   onDeleteClick: (index: number) => void;
+  customFileDeleteButton?: (file: any) => React.ReactNode;
 }
 
-const FileList: React.FC<FileListProps> = ({ files, onDeleteClick }) => {
-  if (files.length === 0) {
-    return null;
-  }
+const FileList: React.FC<FileListProps> = ({ 
+  files, 
+  onDeleteClick,
+  customFileDeleteButton 
+}) => {
+  if (!files.length) return null;
+
+  const getFileIcon = (fileName: string) => {
+    const extension = fileName.split('.').pop()?.toLowerCase();
+    
+    return (
+      <div className="bg-gray-100 h-9 w-9 rounded flex items-center justify-center text-xs font-medium uppercase text-gray-500">
+        {extension || "?"}
+      </div>
+    );
+  };
 
   return (
     <div className="space-y-2">
-      <p className="text-sm font-medium">Uploaded Files</p>
-      <div className="space-y-2">
-        {files.map((file, index) => (
-          <Card key={`${file.name}-${index}`} className="flex items-center justify-between p-3 hover:shadow-md transition-shadow">
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-md bg-blue-50">
-                <FileText className="h-4 w-4 text-blue-600" />
-              </div>
-              <div className="truncate">
-                <p className="text-sm font-medium truncate">{file.name}</p>
-                <p className="text-xs text-gray-500">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
-              </div>
+      {files.map((file, index) => (
+        <div
+          key={index}
+          className="flex items-center justify-between p-2 border border-gray-200 rounded-md bg-white"
+        >
+          <div className="flex items-center space-x-3 overflow-hidden">
+            {getFileIcon(file.name)}
+            <div className="overflow-hidden">
+              <p className="text-sm font-medium truncate max-w-[200px] sm:max-w-[300px]">
+                {file.name}
+              </p>
+              <p className="text-xs text-gray-500">
+                {(file.size / 1024 / 1024).toFixed(2)} MB
+              </p>
             </div>
-            <DeleteButton
-              size="icon"
+          </div>
+          
+          {customFileDeleteButton ? (
+            customFileDeleteButton(file)
+          ) : (
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              className="text-gray-500 hover:text-red-500"
               onClick={() => onDeleteClick(index)}
-            />
-          </Card>
-        ))}
-      </div>
+            >
+              <Trash2 className="h-4 w-4" />
+              <span className="sr-only">Delete file</span>
+            </Button>
+          )}
+        </div>
+      ))}
     </div>
   );
 };

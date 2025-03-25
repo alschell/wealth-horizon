@@ -42,6 +42,7 @@ export type AggregatorInfo = {
   aggregatorName?: string;
   aggregatorCredentials?: {
     username: string;
+    email?: string;
     apiKey?: string;
   };
 };

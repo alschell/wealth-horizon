@@ -35,6 +35,9 @@ const AddDocumentForm: React.FC<AddDocumentFormProps> = ({
   isEditing,
   onCancelEdit
 }) => {
+  // Determine if all required fields are filled
+  const isDisabled = !documentType || !issueDate || !file;
+  
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -43,14 +46,14 @@ const AddDocumentForm: React.FC<AddDocumentFormProps> = ({
           onChange={onDocumentTypeChange}
           error={errors.documentType}
         />
-        
-        <DocumentDetailsFields
-          issueDate={issueDate}
-          expiryDate={expiryDate}
-          onDateChange={onDateChange}
-          error={errors}
-        />
       </div>
+      
+      <DocumentDetailsFields
+        issueDate={issueDate}
+        expiryDate={expiryDate}
+        onDateChange={onDateChange}
+        error={errors}
+      />
       
       <DocumentUploadField
         file={file}
@@ -72,7 +75,8 @@ const AddDocumentForm: React.FC<AddDocumentFormProps> = ({
         <Button
           type="button"
           onClick={onAddDocument}
-          className="bg-black hover:bg-gray-800 text-white"
+          className={`transition-shadow ${isDisabled ? 'bg-gray-300 text-gray-500' : 'bg-black hover:bg-gray-800 text-white hover:shadow-md'}`}
+          disabled={isDisabled}
         >
           <Plus className="mr-2 h-4 w-4" />
           {isEditing ? "Update Document" : "Add Document"}

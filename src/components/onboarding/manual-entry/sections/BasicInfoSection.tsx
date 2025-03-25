@@ -4,7 +4,7 @@ import { FinancialAccountInfo } from "@/context/OnboardingContext";
 import { 
   InputField, 
   SelectField 
-} from "@/components/onboarding/accounts/fields";
+} from "@/components/onboarding/common/fields";
 
 const ACCOUNT_TYPES = [
   "Cash", "Checking", "Savings", "Brokerage", "Investment", "Portfolio", 
@@ -33,7 +33,7 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
         id="accountName"
         label="Account Name"
         name="accountName"
-        value={account.accountName}
+        value={account.accountName || ""}
         onChange={onInputChange}
         placeholder="Enter account name"
         required={false}
@@ -43,7 +43,7 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
         id="accountType"
         label="Account Type"
         name="accountType"
-        value={account.accountType}
+        value={account.accountType || ""}
         onChange={handleSelectChange("accountType")}
         options={ACCOUNT_TYPES}
         placeholder="Select account type"

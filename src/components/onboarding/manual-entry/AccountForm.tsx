@@ -7,7 +7,7 @@ import { FinancialAccountInfo } from "@/context/OnboardingContext";
 import { AccountFormProps } from "./types";
 import { useAccountForm } from "@/components/onboarding/accounts/hooks/useAccountForm";
 import { useLegalEntityMapping } from "@/components/onboarding/accounts/hooks/useLegalEntityMapping";
-import { InputField, SearchableSelectField, SelectField } from "@/components/onboarding/accounts/fields";
+import { InputField, SearchableSelectField, SelectField } from "@/components/onboarding/common/fields";
 import { LEGAL_ENTITIES } from "@/components/onboarding/accounts/constants";
 import { INSTITUTIONS } from "@/utils/constants/institutions";
 import { ACCOUNT_TYPES } from "@/utils/constants/accountTypes";

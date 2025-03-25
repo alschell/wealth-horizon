@@ -113,23 +113,18 @@ const OwnerFormFields: React.FC<OwnerFormFieldsProps> = ({
           allowCustomValue={false}
         />
 
-        <div className="space-y-2">
-          <Label htmlFor="dateOfBirth">
-            Date of Birth<span className="text-red-500 ml-1">*</span>
-          </Label>
-          <DateField
-            id="dateOfBirth"
-            label="Date of Birth"
-            value={dateOfBirth}
-            onChange={(date) => {
-              if (date) {
-                onDateChange(new Date(date));
-              }
-            }}
-            required={true}
-            error={errors.dateOfBirth}
-          />
-        </div>
+        <DateField
+          id="dateOfBirth"
+          label="Date of Birth"
+          value={dateOfBirth}
+          onChange={(date) => {
+            if (date) {
+              onDateChange(new Date(date));
+            }
+          }}
+          required={true}
+          error={errors.dateOfBirth}
+        />
       </div>
 
       {/* Document Upload */}

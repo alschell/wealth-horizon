@@ -129,23 +129,7 @@ const FileField = ({
                   <p className="text-xs text-gray-500">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
                 </div>
               </div>
-              {customDeleteButton ? (
-                <DeleteButton onClick={() => handleDelete(index)} />
-              ) : (
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  className="text-gray-500 hover:text-red-500 p-1 h-auto"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleDelete(index);
-                  }}
-                >
-                  <X className="h-4 w-4" />
-                  <span className="sr-only">Remove file</span>
-                </Button>
-              )}
+              <DeleteButton onClick={() => handleDelete(index)} />
             </div>
           ))}
         </div>

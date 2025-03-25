@@ -48,25 +48,48 @@ const FileUploader = ({
         return false;
       }
       
-      // Check file type (if accept is specified)
-      if (accept) {
-        const acceptTypes = accept.split(',');
-        const fileType = file.type;
-        const isValidType = acceptTypes.some(type => {
-          if (type.includes('*')) {
-            return fileType.startsWith(type.split('*')[0]);
+      // Parse the accept string to proper format for validation
+      const acceptTypes = accept.split(',').map(type => {
+        // Convert file extensions to MIME types
+        if (type.startsWith('.')) {
+          switch (type.toLowerCase()) {
+            case '.pdf': return 'application/pdf';
+            case '.doc': return 'application/msword';
+            case '.docx': return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+            case '.jpg':
+            case '.jpeg': return 'image/jpeg';
+            case '.png': return 'image/png';
+            default: return type;
           }
-          return type === fileType;
-        });
-        
-        if (!isValidType) {
-          toast({
-            title: "Invalid file type",
-            description: `${file.name} is not a supported file type.`,
-            variant: "destructive"
-          });
-          return false;
         }
+        return type;
+      });
+      
+      // Check if file type is acceptable
+      const fileType = file.type;
+      const fileExt = file.name.split('.').pop()?.toLowerCase();
+      
+      const isValidType = acceptTypes.some(type => {
+        // Handle file extensions for cases where browser doesn't provide MIME type
+        if (type.includes('*')) {
+          return fileType.startsWith(type.split('*')[0]);
+        }
+        // Check for extension match if no MIME type is available
+        if (!fileType && fileExt) {
+          if (accept.includes(`.${fileExt}`)) {
+            return true;
+          }
+        }
+        return type === fileType;
+      });
+      
+      if (!isValidType) {
+        toast({
+          title: "Invalid file type",
+          description: `${file.name} is not a supported file type.`,
+          variant: "destructive"
+        });
+        return false;
       }
       
       return true;

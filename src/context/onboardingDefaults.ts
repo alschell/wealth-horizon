@@ -29,7 +29,7 @@ export const defaultOnboardingData: OnboardingData = {
     country: "",
   },
   legalDocuments: {
-    documentType: "incorporation",
+    documentType: "",
     documentNumber: "",
     issueDate: "",
     documentFiles: [],

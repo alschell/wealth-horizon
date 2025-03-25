@@ -13,6 +13,7 @@ const LegalDocumentsForm = () => {
   const { onboardingData, updateLegalDocuments, setCurrentStep } = useOnboarding();
   const [legalDocuments, setLegalDocuments] = useState<LegalDocuments>(onboardingData.legalDocuments);
   const [errors, setErrors] = useState<Record<string, boolean>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleDocumentChange = (field: keyof LegalDocuments, value: string) => {
     setLegalDocuments({ ...legalDocuments, [field]: value });
@@ -63,23 +64,37 @@ const LegalDocumentsForm = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = () => {
-    if (!validateForm()) {
+  const handleSubmit = async () => {
+    try {
+      setIsSubmitting(true);
+      
+      if (!validateForm()) {
+        toast({
+          title: "Missing information",
+          description: "Please fill out all required fields and upload at least one document.",
+          variant: "destructive"
+        });
+        setIsSubmitting(false);
+        return;
+      }
+      
+      await updateLegalDocuments(legalDocuments);
+      setCurrentStep(4); // Move to the next step (data source step)
+
       toast({
-        title: "Missing information",
-        description: "Please fill out all required fields and upload at least one document.",
+        title: "Information saved",
+        description: "Legal documents information has been saved successfully.",
+      });
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      toast({
+        title: "An error occurred",
+        description: "There was a problem saving your information. Please try again.",
         variant: "destructive"
       });
-      return;
+    } finally {
+      setIsSubmitting(false);
     }
-    
-    updateLegalDocuments(legalDocuments);
-    setCurrentStep(4); // Move to the next step (data source step)
-
-    toast({
-      title: "Information saved",
-      description: "Legal documents information has been saved successfully.",
-    });
   };
 
   const handleBack = () => {
@@ -124,7 +139,7 @@ const LegalDocumentsForm = () => {
           <FormFooter
             onBack={handleBack}
             onSubmit={handleSubmit}
-            isSubmitting={false}
+            isSubmitting={isSubmitting}
             showRequired={true}
           />
         </form>

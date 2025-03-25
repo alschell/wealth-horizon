@@ -21,9 +21,8 @@ const DocumentTypeField: React.FC<DocumentTypeFieldProps> = ({
         Document Type<span className="text-red-500 ml-1">*</span>
       </Label>
       <Select
-        value={value}
+        value={value || ""}
         onValueChange={onChange}
-        defaultValue=""
       >
         <SelectTrigger 
           id="documentType"
@@ -35,7 +34,6 @@ const DocumentTypeField: React.FC<DocumentTypeFieldProps> = ({
           <SelectValue placeholder="Select document type" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="">Select document type</SelectItem>
           <SelectItem value="certificate_of_incorporation">Certificate of Incorporation</SelectItem>
           <SelectItem value="trust_deed">Trust Deed</SelectItem>
           <SelectItem value="operating_agreement">Operating Agreement</SelectItem>

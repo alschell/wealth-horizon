@@ -23,6 +23,24 @@ const DropZone: React.FC<DropZoneProps> = ({
   onDragLeave,
   onDrop,
 }) => {
+  // Format the accept string for display
+  const formatAcceptString = (acceptString: string) => {
+    return acceptString
+      .split(',')
+      .map(type => {
+        if (type.startsWith('.')) return type.substring(1).toUpperCase();
+        if (type.includes('/')) {
+          const parts = type.split('/');
+          if (parts[1] === '*') return parts[0].toUpperCase() + ' files';
+          return parts[1].toUpperCase();
+        }
+        return type;
+      })
+      .join(', ');
+  };
+
+  const acceptDisplay = formatAcceptString(accept);
+
   return (
     <div
       className={`
@@ -45,7 +63,7 @@ const DropZone: React.FC<DropZoneProps> = ({
             Drag and drop your files, or <span className="text-blue-600 font-medium">browse</span>
           </p>
           <p className="text-xs text-gray-400 mt-2">
-            Max {maxSize}MB per file • {accept.split(',').map(type => type.replace('application/', '').replace('image/', '')).join(', ')}
+            Max {maxSize}MB per file • {acceptDisplay}
           </p>
         </div>
       </div>

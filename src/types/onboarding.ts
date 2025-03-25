@@ -30,7 +30,7 @@ export type AddressInfo = {
 };
 
 export type LegalDocuments = {
-  documentType: "incorporation" | "registration" | "taxCertificate" | "ownership" | "other";
+  documentType: string;
   documentNumber: string;
   issueDate: string;
   expiryDate?: string;
@@ -84,7 +84,7 @@ export type IdentityVerification = {
   documentType: "passport" | "drivingLicense" | "nationalId";
   documentNumber: string;
   issueDate: string;
-  expiryDate?: string; // Make expiry date optional
+  expiryDate?: string;
   documentFiles: File[];
 };
 

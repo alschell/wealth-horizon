@@ -15,28 +15,28 @@ import {
 
 // Account types for select field
 const ACCOUNT_TYPES = [
-  { value: "cash", label: "Cash" },
-  { value: "checking", label: "Checking" },
-  { value: "savings", label: "Savings" },
-  { value: "brokerage", label: "Brokerage" },
-  { value: "investment", label: "Investment" },
-  { value: "portfolio", label: "Portfolio" },
-  { value: "custody", label: "Custody" },
-  { value: "trust", label: "Trust" },
-  { value: "retirement", label: "Retirement" },
-  { value: "private equity", label: "Private Equity" },
-  { value: "hedge fund", label: "Hedge Fund" },
-  { value: "venture capital", label: "Venture Capital" },
-  { value: "real estate", label: "Real Estate" },
-  { value: "fixed income", label: "Fixed Income" },
-  { value: "credit", label: "Credit" },
-  { value: "other", label: "Other" }
+  "Cash",
+  "Checking",
+  "Savings",
+  "Brokerage",
+  "Investment",
+  "Portfolio",
+  "Custody",
+  "Trust",
+  "Retirement",
+  "Private Equity",
+  "Hedge Fund",
+  "Venture Capital",
+  "Real Estate",
+  "Fixed Income",
+  "Credit",
+  "Other"
 ];
 
 // Currencies for select field
 const CURRENCIES = [
   "USD", "EUR", "GBP", "JPY", "CHF", "CAD", "AUD", "CNY", "HKD", "SGD"
-].map(currency => ({ value: currency, label: currency }));
+];
 
 interface ManualEntrySectionProps {
   accounts: FinancialAccountInfo[];
@@ -72,11 +72,6 @@ const ManualEntrySection: React.FC<ManualEntrySectionProps> = ({
     handleNewAccountChange({
       target: { name: field, value }
     } as React.ChangeEvent<HTMLInputElement>);
-  };
-
-  // Extract labels for select options
-  const getOptionsAsStrings = (options: { value: string; label: string }[]) => {
-    return options.map(option => option.label);
   };
 
   return (
@@ -136,7 +131,7 @@ const ManualEntrySection: React.FC<ManualEntrySectionProps> = ({
               name="accountType"
               value={newAccount.accountType}
               onChange={handleNewAccountChange}
-              options={getOptionsAsStrings(ACCOUNT_TYPES)}
+              options={ACCOUNT_TYPES}
               placeholder="Select account type"
               required={false}
             />
@@ -150,7 +145,7 @@ const ManualEntrySection: React.FC<ManualEntrySectionProps> = ({
               name="currency"
               value={newAccount.currency}
               onChange={handleNewAccountChange}
-              options={getOptionsAsStrings(CURRENCIES)}
+              options={CURRENCIES}
               placeholder="Select currency"
               required={false}
             />

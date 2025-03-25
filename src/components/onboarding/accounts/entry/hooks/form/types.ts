@@ -20,6 +20,7 @@ export interface UseAccountFormStateReturn {
   handleLeiChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleFilesSelected: (files: File[]) => void;
   handleAddAccount: () => void;
+  isFormValid: boolean;
 }
 
 // Ensure accountType has an empty string as a valid option for the select placeholder

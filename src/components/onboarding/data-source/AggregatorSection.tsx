@@ -69,7 +69,9 @@ const AggregatorSection: React.FC<AggregatorSectionProps> = ({
         
         {showCustomField && (
           <div className="mt-3">
-            <Label className="text-black">Enter Aggregator Name</Label>
+            <Label className="text-black">
+              Enter Aggregator Name <span className="text-red-500">*</span>
+            </Label>
             <Input
               placeholder="Enter the name of your aggregator"
               value={aggregatorInfo.aggregatorName || ""}

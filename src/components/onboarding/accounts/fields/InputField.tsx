@@ -16,6 +16,7 @@ interface InputFieldProps {
   error?: string;
   disabled?: boolean;
   className?: string;
+  maxLength?: number;
 }
 
 const InputField = ({
@@ -29,7 +30,8 @@ const InputField = ({
   required = false,
   error,
   disabled = false,
-  className
+  className,
+  maxLength
 }: InputFieldProps) => {
   return (
     <div className={cn("space-y-2", className)}>
@@ -44,6 +46,7 @@ const InputField = ({
         onChange={onChange}
         placeholder={placeholder}
         disabled={disabled}
+        maxLength={maxLength}
         className={cn(
           "h-11 bg-white",
           error ? "border-red-500" : ""

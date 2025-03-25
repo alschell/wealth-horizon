@@ -12,14 +12,19 @@ interface DocumentDetailsFieldsProps {
   expiryDate: string;
   onDateChange: (field: 'issueDate' | 'expiryDate', date?: Date) => void;
   error: Record<string, boolean>;
+  formTouched?: boolean;
 }
 
 const DocumentDetailsFields: React.FC<DocumentDetailsFieldsProps> = ({
   issueDate,
   expiryDate,
   onDateChange,
-  error
+  error,
+  formTouched = false
 }) => {
+  // Only show errors if the form has been touched
+  const showErrors = formTouched ? error : {};
+  
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div>
@@ -31,7 +36,7 @@ const DocumentDetailsFields: React.FC<DocumentDetailsFieldsProps> = ({
               className={cn(
                 "w-full justify-start text-left font-normal",
                 !issueDate && "text-gray-500",
-                error.issueDate && "border-red-500"
+                showErrors.issueDate && "border-red-500"
               )}
             >
               <CalendarIcon className="mr-2 h-4 w-4" />

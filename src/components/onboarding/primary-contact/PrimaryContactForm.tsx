@@ -1,9 +1,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useOnboarding, PrimaryContactInfo } from "@/context/OnboardingContext";
-import { Card } from "@/components/ui/card";
 import { toast } from "@/components/ui/use-toast";
-import { motion } from "framer-motion";
 import { FormLayout, FormSection } from "@/components/onboarding/common/layouts";
 import { FormFooter } from "@/components/onboarding/common";
 import { validateRequiredFields, isValidEmail } from "../common/utils/validation";
@@ -14,7 +12,6 @@ const PrimaryContactForm: React.FC = () => {
   const [formData, setFormData] = useState<PrimaryContactInfo>(onboardingData.primaryContactInfo);
   const [errors, setErrors] = useState<Partial<Record<keyof PrimaryContactInfo, string>>>({});
   const [formTouched, setFormTouched] = useState(false);
-  const [hasErrors, setHasErrors] = useState(false);
 
   const requiredFields: (keyof PrimaryContactInfo)[] = [
     'firstName', 
@@ -56,7 +53,6 @@ const PrimaryContactForm: React.FC = () => {
       }
       
       setErrors(newErrors);
-      setHasErrors(Object.keys(newErrors).length > 0);
     }
   }, [formData, formTouched]);
 

@@ -12,7 +12,6 @@ const AddressForm = () => {
   const [formData, setFormData] = useState<AddressInfo>(onboardingData.addressInfo);
   const [errors, setErrors] = useState<Partial<Record<keyof AddressInfo, string>>>({});
   const [formTouched, setFormTouched] = useState(false);
-  const [hasErrors, setHasErrors] = useState(false);
 
   // Required fields for validation
   const requiredFields: (keyof AddressInfo)[] = [
@@ -55,7 +54,6 @@ const AddressForm = () => {
     if (formTouched) {
       const newErrors = validateRequiredFields(formData, requiredFields);
       setErrors(newErrors);
-      setHasErrors(Object.keys(newErrors).length > 0);
     }
   }, [formData, formTouched]);
 

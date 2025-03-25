@@ -1,69 +1,63 @@
 
-import React, { useState } from "react";
+import React from "react";
 import { FinancialAccountInfo } from "@/context/OnboardingContext";
-import AccountCard from "./AccountCard";
-import DeleteConfirmationDialog from "@/components/file-uploader/DeleteConfirmationDialog";
+import { Card } from "@/components/ui/card";
 import { EditButton, DeleteButton } from "@/components/ui/action-buttons";
+import { Building, CreditCard } from "lucide-react";
+import { motion } from "framer-motion";
 
 interface AccountListProps {
   accounts: FinancialAccountInfo[];
-  onRemoveAccount: (index: number) => void;
-  onEditAccount?: (index: number) => void;
+  onEditAccount: (index: number) => void;
+  onDeleteAccount: (index: number) => void;
 }
 
-const AccountList = ({ accounts, onRemoveAccount, onEditAccount }: AccountListProps) => {
-  const [accountToDeleteIndex, setAccountToDeleteIndex] = useState<number | null>(null);
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-
-  const handleDeleteClick = (index: number) => {
-    setAccountToDeleteIndex(index);
-    setIsDeleteDialogOpen(true);
-  };
-
-  const confirmDelete = () => {
-    if (accountToDeleteIndex !== null) {
-      onRemoveAccount(accountToDeleteIndex);
-    }
-    setIsDeleteDialogOpen(false);
-    setAccountToDeleteIndex(null);
-  };
-
+const AccountList: React.FC<AccountListProps> = ({
+  accounts,
+  onEditAccount,
+  onDeleteAccount
+}) => {
   if (accounts.length === 0) {
-    return null;
+    return (
+      <div className="text-center p-6 border border-dashed rounded-lg bg-gray-50">
+        <p className="text-gray-500">No financial accounts added yet.</p>
+      </div>
+    );
   }
 
   return (
     <div className="space-y-3">
-      <h3 className="font-medium">Added Financial Accounts</h3>
-      <div className="space-y-2">
-        {accounts.map((account, index) => (
-          <div key={index} className="p-3 bg-gray-50 rounded-md">
-            <div className="flex justify-between">
+      {accounts.map((account, index) => (
+        <motion.div
+          key={index}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <Card className="p-4 flex justify-between items-start hover:shadow-md transition-shadow">
+            <div className="flex items-start gap-3">
+              <div className="p-2 bg-blue-50 rounded-md flex-shrink-0 mt-1">
+                {account.accountType === "investment" ? (
+                  <CreditCard className="h-4 w-4 text-blue-600" />
+                ) : (
+                  <Building className="h-4 w-4 text-blue-600" />
+                )}
+              </div>
               <div>
-                <div className="font-medium">{account.accountName}</div>
-                <div className="text-sm text-gray-600">
-                  {account.institution} • {account.accountType}
-                  {account.currency && ` • ${account.currency}`}
+                <h3 className="font-medium text-black">{account.accountName}</h3>
+                <p className="text-sm text-gray-600">{account.institution}</p>
+                <div className="text-xs text-gray-500 mt-1">
+                  {account.accountType} {account.currency && `• ${account.currency}`}
                 </div>
               </div>
-              <div className="flex space-x-2">
-                {onEditAccount && (
-                  <EditButton onClick={() => onEditAccount(index)} />
-                )}
-                <DeleteButton onClick={() => handleDeleteClick(index)} />
-              </div>
             </div>
-          </div>
-        ))}
-      </div>
-
-      <DeleteConfirmationDialog
-        isOpen={isDeleteDialogOpen}
-        onOpenChange={setIsDeleteDialogOpen}
-        onConfirm={confirmDelete}
-        title="Confirm Account Deletion"
-        description="Are you sure you want to delete this financial account? This action cannot be undone."
-      />
+            <div className="flex space-x-2">
+              <EditButton onClick={() => onEditAccount(index)} />
+              <DeleteButton onClick={() => onDeleteAccount(index)} />
+            </div>
+          </Card>
+        </motion.div>
+      ))}
     </div>
   );
 };

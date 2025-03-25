@@ -10,6 +10,8 @@ interface BasicInfoSectionProps {
   onSelectionChange: (field: keyof FinancialAccountInfo, value: string) => void;
 }
 
+// This component is no longer used in the current implementation.
+// The fields from this component have been moved directly to AccountForm.tsx
 const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
   account,
   onInputChange,

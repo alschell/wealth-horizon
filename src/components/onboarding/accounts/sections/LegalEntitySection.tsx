@@ -49,7 +49,7 @@ const LegalEntitySection = ({
             target: { name: 'institution', value }
           } as React.ChangeEvent<HTMLInputElement>)}
           allowCustomValue={true}
-          required
+          required={true}
         />
         
         <SearchableSelectField
@@ -60,7 +60,7 @@ const LegalEntitySection = ({
           options={legalEntities}
           onChange={handleLegalEntityChange}
           allowCustomValue={true}
-          required
+          required={true}
         />
       </div>
     </div>

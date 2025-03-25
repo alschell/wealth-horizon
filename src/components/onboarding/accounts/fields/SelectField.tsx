@@ -8,6 +8,7 @@ import {
   SelectTrigger,
   SelectValue
 } from "@/components/ui/select";
+import { cn } from "@/lib/utils";
 
 interface SelectFieldProps {
   id: string;
@@ -16,7 +17,10 @@ interface SelectFieldProps {
   placeholder: string;
   options: string[];
   required?: boolean;
-  onChange: (value: string) => void;
+  error?: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  className?: string;
+  name?: string;
 }
 
 const SelectField = ({
@@ -26,8 +30,18 @@ const SelectField = ({
   placeholder,
   options,
   required = false,
-  onChange
+  error,
+  onChange,
+  className,
+  name
 }: SelectFieldProps) => {
+  // Handle onChange to match expected React.ChangeEvent format
+  const handleValueChange = (newValue: string) => {
+    onChange({
+      target: { name: name || id, value: newValue }
+    } as React.ChangeEvent<HTMLInputElement>);
+  };
+
   // Ensure "Other" is at the end if present
   const sortedOptions = [...options].sort((a, b) => {
     if (a === "Other") return 1;
@@ -36,17 +50,18 @@ const SelectField = ({
   });
   
   return (
-    <div className="space-y-2">
+    <div className={cn("space-y-2", className)}>
       <Label htmlFor={id}>
         {label}{required && <span className="text-red-500 ml-1">*</span>}
       </Label>
       <Select
         value={value || ""}
-        onValueChange={onChange}
+        onValueChange={handleValueChange}
       >
         <SelectTrigger 
           id={id} 
-          className="h-11 w-full bg-white text-left"
+          name={name || id}
+          className={cn("h-11 w-full bg-white text-left", error ? "border-red-500" : "")}
         >
           <SelectValue placeholder={placeholder} className="text-left" />
         </SelectTrigger>
@@ -67,6 +82,9 @@ const SelectField = ({
           ))}
         </SelectContent>
       </Select>
+      {error && (
+        <p className="text-red-500 text-sm mt-1">{error}</p>
+      )}
     </div>
   );
 };

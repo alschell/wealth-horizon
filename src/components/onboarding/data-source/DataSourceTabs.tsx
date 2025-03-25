@@ -47,10 +47,9 @@ const DataSourceTabs = ({
       
       <TabsContent value="manual">
         <ManualEntrySection 
-          financialAccounts={financialAccounts}
-          addFinancialAccount={handleAddAccount}
-          removeFinancialAccount={handleRemoveAccount}
-          updateFinancialAccount={handleUpdateAccount}
+          accounts={financialAccounts}
+          onAddAccount={handleAddAccount}
+          onRemoveAccount={handleRemoveAccount}
         />
       </TabsContent>
       

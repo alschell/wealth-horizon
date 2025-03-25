@@ -18,9 +18,11 @@ const DataSourceForm: React.FC = () => {
     onboardingData, 
     updateAggregatorInfo, 
     addFinancialAccount, 
-    removeFinancialAccount,
-    financialAccounts = onboardingData.financialAccounts
+    removeFinancialAccount
   } = useOnboarding();
+  
+  // Access financialAccounts directly from onboardingData
+  const financialAccounts = onboardingData.financialAccounts;
   
   const [aggregatorInfo, setAggregatorInfo] = useState<AggregatorInfo>(onboardingData.aggregatorInfo);
   const [dataSourceMethod, setDataSourceMethod] = useState<"manual" | "upload">("manual");
@@ -124,8 +126,7 @@ const DataSourceForm: React.FC = () => {
       {aggregatorInfo.usesAggregator ? (
         <AggregatorSection 
           aggregatorInfo={aggregatorInfo}
-          onAggregatorNameChange={handleAggregatorNameChange}
-          onCredentialsChange={handleAggregatorCredentialsChange}
+          setAggregatorInfo={setAggregatorInfo}
         />
       ) : (
         <FormSection>

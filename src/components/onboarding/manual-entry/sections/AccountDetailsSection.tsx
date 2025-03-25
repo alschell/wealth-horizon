@@ -22,10 +22,9 @@ const AccountDetailsSection: React.FC<AccountDetailsSectionProps> = ({
   onInputChange,
   onSelectionChange
 }) => {
-  // Adapter function to transform select handler to fit SelectField's expected format
-  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    onSelectionChange(name as keyof FinancialAccountInfo, value);
+  // Create an adapter function that converts the SelectField's onChange to work with our onSelectionChange
+  const handleSelectChange = (name: keyof FinancialAccountInfo) => (value: string) => {
+    onSelectionChange(name, value);
   };
 
   return (
@@ -35,7 +34,7 @@ const AccountDetailsSection: React.FC<AccountDetailsSectionProps> = ({
         label="Currency"
         name="currency"
         value={account.currency}
-        onChange={handleSelectChange}
+        onChange={handleSelectChange("currency")}
         options={CURRENCIES}
         placeholder="Select currency"
         required={false}

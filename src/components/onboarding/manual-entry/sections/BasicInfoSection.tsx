@@ -37,10 +37,9 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
   onInputChange,
   onSelectionChange
 }) => {
-  // Adapter function to transform select handler to fit SelectField's expected format
-  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    onSelectionChange(name as keyof FinancialAccountInfo, value);
+  // Create an adapter function that converts the SelectField's onChange to work with our onSelectionChange
+  const handleSelectChange = (name: keyof FinancialAccountInfo) => (value: string) => {
+    onSelectionChange(name, value);
   };
 
   return (
@@ -60,7 +59,7 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
         label="Account Type"
         name="accountType"
         value={account.accountType}
-        onChange={handleSelectChange}
+        onChange={handleSelectChange("accountType")}
         options={ACCOUNT_TYPES}
         placeholder="Select account type"
         required={false}

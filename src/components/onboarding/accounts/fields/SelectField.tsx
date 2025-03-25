@@ -48,7 +48,8 @@ const SelectField = ({
         {label}{required && <span className="text-red-500 ml-1">*</span>}
       </Label>
       <Select
-        value={value || undefined}
+        defaultValue=""
+        value={value === "" ? undefined : value}
         onValueChange={onChange}
       >
         <SelectTrigger 
@@ -56,7 +57,10 @@ const SelectField = ({
           name={name || id}
           className={cn("h-11 w-full bg-white text-left", error ? "border-red-500" : "")}
         >
-          <SelectValue placeholder={placeholder} className="text-left" />
+          <SelectValue 
+            className="text-left"
+            placeholder={placeholder} 
+          />
         </SelectTrigger>
         <SelectContent 
           position="popper" 

@@ -26,6 +26,11 @@ const AccountFormFields = ({
     handleLeiChange
   } = useLegalEntityMapping(account, onSelectionChange);
 
+  // Create an adapter function to convert event to string parameter
+  const handleLeiInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    handleLeiChange(e.target.value);
+  };
+
   return (
     <div className="space-y-6">
       <LegalEntitySection
@@ -34,7 +39,7 @@ const AccountFormFields = ({
         onInputChange={onInputChange}
         onSelectionChange={onSelectionChange}
         handleLegalEntityChange={handleLegalEntityChange}
-        handleLeiChange={handleLeiChange}
+        handleLeiChange={handleLeiInputChange}
       />
       
       <BasicInfoSection

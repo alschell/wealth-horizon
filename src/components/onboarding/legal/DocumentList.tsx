@@ -2,17 +2,12 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Trash2, Edit } from "lucide-react";
-
-interface DocumentFile extends File {
-  documentType: string;
-  issueDate: string;
-  expiryDate?: string;
-}
+import { DocumentFileWithMetadata } from "./useLegalDocumentsForm";
 
 interface DocumentListProps {
-  documentFiles: DocumentFile[];
-  onRemoveDocument: (index: number) => void;
-  onEditDocument: (index: number) => void;
+  documentFiles: DocumentFileWithMetadata[];
+  onRemoveDocument: (id: string) => void;
+  onEditDocument: (id: string) => void;
 }
 
 const DocumentList: React.FC<DocumentListProps> = ({ 
@@ -41,19 +36,19 @@ const DocumentList: React.FC<DocumentListProps> = ({
     <div className="border p-5 rounded-md space-y-3">
       <h3 className="font-medium">Added Documents</h3>
       <div className="space-y-3">
-        {documentFiles.map((file, index) => (
-          <div key={index} className="flex items-center justify-between bg-gray-50 p-3 rounded-lg">
+        {documentFiles.map((document) => (
+          <div key={document.id} className="flex items-center justify-between bg-gray-50 p-3 rounded-lg">
             <div className="flex items-center space-x-3">
               <div className="w-9 h-9 bg-gray-200 rounded-md flex items-center justify-center">
                 <span className="text-xs font-medium text-gray-600">
-                  {file.name.split('.').pop()?.toUpperCase()}
+                  {document.file.name.split('.').pop()?.toUpperCase()}
                 </span>
               </div>
               <div>
                 <p className="text-sm font-medium">
-                  {formatDocumentType(file.documentType || '')}
+                  {formatDocumentType(document.documentType || '')}
                 </p>
-                <p className="text-xs text-gray-500">{getFileSizeInMB(file)} MB</p>
+                <p className="text-xs text-gray-500">{getFileSizeInMB(document.file)} MB</p>
               </div>
             </div>
             <div className="flex space-x-2">
@@ -62,7 +57,7 @@ const DocumentList: React.FC<DocumentListProps> = ({
                 variant="ghost"
                 size="sm"
                 className="text-gray-500 hover:text-blue-500 p-2 h-auto"
-                onClick={() => onEditDocument(index)}
+                onClick={() => onEditDocument(document.id)}
               >
                 <Edit className="h-5 w-5" />
                 <span className="sr-only">Edit document</span>
@@ -72,7 +67,7 @@ const DocumentList: React.FC<DocumentListProps> = ({
                 variant="ghost"
                 size="sm"
                 className="text-gray-500 hover:text-red-500 p-2 h-auto"
-                onClick={() => onRemoveDocument(index)}
+                onClick={() => onRemoveDocument(document.id)}
               >
                 <Trash2 className="h-5 w-5" />
                 <span className="sr-only">Remove document</span>

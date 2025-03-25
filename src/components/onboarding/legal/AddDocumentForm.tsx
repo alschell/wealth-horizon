@@ -2,17 +2,19 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
-import { DocumentTypeField, DocumentDetailsFields, DocumentUploadField } from "./index";
+import DocumentTypeField from "./DocumentTypeField";
+import DocumentDetailsFields from "./DocumentDetailsFields";
+import DocumentUploadField from "./DocumentUploadField";
 
 interface AddDocumentFormProps {
   documentType: string;
   issueDate: string;
   expiryDate: string;
-  selectedFiles: File[];
+  selectedFile: File | null;
   errors: Record<string, boolean>;
   onDocumentTypeChange: (value: string) => void;
   onDateChange: (field: 'issueDate' | 'expiryDate', date?: Date) => void;
-  onFilesSelected: (files: File[]) => void;
+  onFileSelected: (files: File[]) => void;
   onAddDocument: () => void;
   isEditing: boolean;
   onCancelEdit: () => void;
@@ -22,11 +24,11 @@ const AddDocumentForm: React.FC<AddDocumentFormProps> = ({
   documentType,
   issueDate,
   expiryDate,
-  selectedFiles,
+  selectedFile,
   errors,
   onDocumentTypeChange,
   onDateChange,
-  onFilesSelected,
+  onFileSelected,
   onAddDocument,
   isEditing,
   onCancelEdit
@@ -47,12 +49,15 @@ const AddDocumentForm: React.FC<AddDocumentFormProps> = ({
         issueDate={issueDate}
         expiryDate={expiryDate}
         onDateChange={onDateChange}
+        error={{
+          issueDate: errors.issueDate
+        }}
       />
       
       <DocumentUploadField
-        files={selectedFiles}
-        onFilesSelected={onFilesSelected}
-        error={errors.selectedFiles}
+        file={selectedFile}
+        onFileSelected={onFileSelected}
+        error={errors.selectedFile}
         documentType={documentType}
       />
       

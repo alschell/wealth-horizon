@@ -5,21 +5,23 @@ import FileUploader from "@/components/file-uploader";
 import { cn } from "@/lib/utils";
 
 interface DocumentUploadFieldProps {
-  files: File[];
-  onFilesSelected: (files: File[]) => void;
+  file: File | null;
+  onFileSelected: (files: File[]) => void;
   error?: boolean;
   documentType?: string;
 }
 
 const DocumentUploadField: React.FC<DocumentUploadFieldProps> = ({ 
-  files, 
-  onFilesSelected,
+  file, 
+  onFileSelected,
   error,
   documentType
 }) => {
+  const existingFiles = file ? [file] : [];
+
   return (
     <div className="space-y-2">
-      <Label htmlFor="documentFiles">
+      <Label htmlFor="documentFile">
         Upload Legal Document<span className="text-red-500 ml-1">*</span>
       </Label>
       <div 
@@ -32,8 +34,8 @@ const DocumentUploadField: React.FC<DocumentUploadFieldProps> = ({
           accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
           multiple={false}
           maxSize={10}
-          onFilesSelected={onFilesSelected}
-          existingFiles={files}
+          onFilesSelected={onFileSelected}
+          existingFiles={existingFiles}
           label="Upload Legal Document"
         />
       </div>

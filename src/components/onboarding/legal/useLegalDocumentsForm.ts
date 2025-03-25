@@ -1,9 +1,10 @@
-
 import { useState } from "react";
 import { useOnboarding, LegalDocuments } from "@/context/OnboardingContext";
 import { toast } from "@/components/ui/use-toast";
 
-interface DocumentFile extends File {
+export interface DocumentFileWithMetadata {
+  id: string;
+  file: File;
   documentType: string;
   issueDate: string;
   expiryDate?: string;
@@ -12,17 +13,32 @@ interface DocumentFile extends File {
 export const useLegalDocumentsForm = () => {
   const { onboardingData, updateLegalDocuments, setCurrentStep } = useOnboarding();
   
-  // State for form fields and validation
   const [documentType, setDocumentType] = useState<string>("");
   const [issueDate, setIssueDate] = useState<string>("");
   const [expiryDate, setExpiryDate] = useState<string>("");
-  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
-  const [documentFiles, setDocumentFiles] = useState<DocumentFile[]>(onboardingData.legalDocuments.documentFiles as DocumentFile[] || []);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  
+  const initialDocuments: DocumentFileWithMetadata[] = 
+    onboardingData.legalDocuments.documentFiles?.map(file => {
+      if ('id' in file && 'file' in file) {
+        return file as unknown as DocumentFileWithMetadata;
+      }
+      
+      return {
+        id: crypto.randomUUID(),
+        file: file as File,
+        documentType: (file as any).documentType || "",
+        issueDate: (file as any).issueDate || "",
+        expiryDate: (file as any).expiryDate || "",
+      };
+    }) || [];
+  
+  const [documentFiles, setDocumentFiles] = useState<DocumentFileWithMetadata[]>(initialDocuments);
   
   const [errors, setErrors] = useState<Record<string, boolean>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [editingIndex, setEditingIndex] = useState<number | null>(null);
+  const [editingDocumentId, setEditingDocumentId] = useState<string | null>(null);
 
   const handleDocumentTypeChange = (value: string) => {
     setDocumentType(value);
@@ -50,12 +66,16 @@ export const useLegalDocumentsForm = () => {
     }
   };
 
-  const handleFilesSelected = (files: File[]) => {
-    setSelectedFiles(files);
-    if (errors.selectedFiles) {
-      const updatedErrors = { ...errors };
-      delete updatedErrors.selectedFiles;
-      setErrors(updatedErrors);
+  const handleFileSelected = (files: File[]) => {
+    if (files.length > 0) {
+      setSelectedFile(files[0]);
+      if (errors.selectedFile) {
+        const updatedErrors = { ...errors };
+        delete updatedErrors.selectedFile;
+        setErrors(updatedErrors);
+      }
+    } else {
+      setSelectedFile(null);
     }
   };
 
@@ -70,8 +90,8 @@ export const useLegalDocumentsForm = () => {
       newErrors.issueDate = true;
     }
     
-    if (selectedFiles.length === 0) {
-      newErrors.selectedFiles = true;
+    if (!selectedFile) {
+      newErrors.selectedFile = true;
     }
     
     setErrors(newErrors);
@@ -88,29 +108,36 @@ export const useLegalDocumentsForm = () => {
       return;
     }
 
-    // Create enhanced file objects with metadata
-    const enhancedFiles = selectedFiles.map(file => {
-      // Create a new object that has both File properties and our custom properties
-      const enhancedFile = Object.assign(Object.create(Object.getPrototypeOf(file)), file) as DocumentFile;
-      enhancedFile.documentType = documentType;
-      enhancedFile.issueDate = issueDate;
-      enhancedFile.expiryDate = expiryDate || "";
-      return enhancedFile;
-    });
-    
-    if (isEditing && editingIndex !== null) {
-      // Update existing document
-      const updatedDocuments = [...documentFiles];
-      updatedDocuments[editingIndex] = enhancedFiles[0];
+    if (isEditing && editingDocumentId && selectedFile) {
+      const updatedDocuments = documentFiles.map(doc => {
+        if (doc.id === editingDocumentId) {
+          return {
+            ...doc,
+            file: selectedFile,
+            documentType,
+            issueDate,
+            expiryDate: expiryDate || undefined
+          };
+        }
+        return doc;
+      });
+      
       setDocumentFiles(updatedDocuments);
       
       toast({
         title: "Document updated",
         description: "Your document has been updated successfully.",
       });
-    } else {
-      // Add new document
-      setDocumentFiles([...documentFiles, ...enhancedFiles]);
+    } else if (selectedFile) {
+      const newDocument: DocumentFileWithMetadata = {
+        id: crypto.randomUUID(),
+        file: selectedFile,
+        documentType,
+        issueDate,
+        expiryDate: expiryDate || undefined
+      };
+      
+      setDocumentFiles([...documentFiles, newDocument]);
       
       toast({
         title: "Document added",
@@ -118,7 +145,6 @@ export const useLegalDocumentsForm = () => {
       });
     }
     
-    // Reset the form for new document
     resetForm();
   };
 
@@ -126,27 +152,22 @@ export const useLegalDocumentsForm = () => {
     setDocumentType("");
     setIssueDate("");
     setExpiryDate("");
-    setSelectedFiles([]);
+    setSelectedFile(null);
     setIsEditing(false);
-    setEditingIndex(null);
+    setEditingDocumentId(null);
   };
 
-  const handleEditDocument = (index: number) => {
-    const docToEdit = documentFiles[index];
+  const handleEditDocument = (id: string) => {
+    const docToEdit = documentFiles.find(doc => doc.id === id);
+    if (!docToEdit) return;
+    
     setDocumentType(docToEdit.documentType || "");
     setIssueDate(docToEdit.issueDate || "");
     setExpiryDate(docToEdit.expiryDate || "");
+    setSelectedFile(docToEdit.file);
     
-    // Create a plain File object from the DocumentFile for the file uploader
-    const fileBlob = new Blob([docToEdit], { type: docToEdit.type });
-    const plainFile = new File([fileBlob], docToEdit.name, { 
-      type: docToEdit.type,
-      lastModified: docToEdit.lastModified
-    });
-    
-    setSelectedFiles([plainFile]);
     setIsEditing(true);
-    setEditingIndex(index);
+    setEditingDocumentId(id);
   };
 
   const handleCancelEdit = () => {
@@ -175,12 +196,14 @@ export const useLegalDocumentsForm = () => {
         return;
       }
       
+      const filesToSave = documentFiles.map(doc => doc.file);
+      
       const legalDocumentsData: LegalDocuments = {
         documentType: documentType || "",
         documentNumber: "",
         issueDate: issueDate || "",
         expiryDate: expiryDate || "",
-        documentFiles: documentFiles
+        documentFiles: filesToSave
       };
       
       await updateLegalDocuments(legalDocumentsData);
@@ -206,29 +229,32 @@ export const useLegalDocumentsForm = () => {
     setCurrentStep(2); // Go back to the Address step
   };
 
-  const handleRemoveDocument = (index: number) => {
-    const updatedFiles = [...documentFiles];
-    updatedFiles.splice(index, 1);
+  const handleRemoveDocument = (id: string) => {
+    const updatedFiles = documentFiles.filter(doc => doc.id !== id);
     setDocumentFiles(updatedFiles);
     
-    // If removing a document that's currently being edited, reset the form
-    if (isEditing && editingIndex === index) {
+    if (isEditing && editingDocumentId === id) {
       resetForm();
     }
+    
+    toast({
+      title: "Document removed",
+      description: "The document has been removed successfully.",
+    });
   };
 
   return {
     documentType,
     issueDate,
     expiryDate,
-    selectedFiles,
+    selectedFile,
     documentFiles,
     errors,
     isSubmitting,
     isEditing,
     handleDocumentTypeChange,
     handleDateChange,
-    handleFilesSelected,
+    handleFileSelected,
     handleAddDocument,
     handleSubmit,
     handleBack,

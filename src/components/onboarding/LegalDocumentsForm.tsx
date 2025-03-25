@@ -18,13 +18,16 @@ const LegalDocumentsForm = () => {
     documentFiles,
     errors,
     isSubmitting,
+    isEditing,
     handleDocumentTypeChange,
     handleDateChange,
     handleFilesSelected,
     handleAddDocument,
     handleSubmit,
     handleBack,
-    handleRemoveDocument
+    handleRemoveDocument,
+    handleEditDocument,
+    handleCancelEdit
   } = useLegalDocumentsForm();
 
   return (
@@ -52,11 +55,14 @@ const LegalDocumentsForm = () => {
             onDateChange={handleDateChange}
             onFilesSelected={handleFilesSelected}
             onAddDocument={handleAddDocument}
+            isEditing={isEditing}
+            onCancelEdit={handleCancelEdit}
           />
           
           <DocumentList 
             documentFiles={documentFiles} 
-            onRemoveDocument={handleRemoveDocument} 
+            onRemoveDocument={handleRemoveDocument}
+            onEditDocument={handleEditDocument}
           />
 
           <FormFooter

@@ -1,20 +1,36 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Trash2 } from "lucide-react";
+import { Trash2, Edit } from "lucide-react";
+
+interface DocumentFile extends File {
+  documentType: string;
+  issueDate: string;
+  expiryDate?: string;
+}
 
 interface DocumentListProps {
-  documentFiles: File[];
+  documentFiles: DocumentFile[];
   onRemoveDocument: (index: number) => void;
+  onEditDocument: (index: number) => void;
 }
 
 const DocumentList: React.FC<DocumentListProps> = ({ 
   documentFiles, 
-  onRemoveDocument 
+  onRemoveDocument,
+  onEditDocument
 }) => {
   if (documentFiles.length === 0) {
     return null;
   }
+
+  // Function to format the document type for display
+  const formatDocumentType = (type: string): string => {
+    return type
+      .split('_')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+  };
 
   return (
     <div className="border p-5 rounded-md space-y-3">
@@ -29,20 +45,34 @@ const DocumentList: React.FC<DocumentListProps> = ({
                 </span>
               </div>
               <div>
-                <p className="text-sm font-medium">{file.name}</p>
+                <p className="text-sm font-medium">
+                  {formatDocumentType(file.documentType || '')}
+                </p>
                 <p className="text-xs text-gray-500">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
               </div>
             </div>
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              className="text-gray-500 hover:text-red-500 p-2 h-auto"
-              onClick={() => onRemoveDocument(index)}
-            >
-              <Trash2 className="h-5 w-5" />
-              <span className="sr-only">Remove file</span>
-            </Button>
+            <div className="flex space-x-2">
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="text-gray-500 hover:text-blue-500 p-2 h-auto"
+                onClick={() => onEditDocument(index)}
+              >
+                <Edit className="h-5 w-5" />
+                <span className="sr-only">Edit document</span>
+              </Button>
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="text-gray-500 hover:text-red-500 p-2 h-auto"
+                onClick={() => onRemoveDocument(index)}
+              >
+                <Trash2 className="h-5 w-5" />
+                <span className="sr-only">Remove document</span>
+              </Button>
+            </div>
           </div>
         ))}
       </div>

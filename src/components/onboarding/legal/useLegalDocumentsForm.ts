@@ -3,6 +3,12 @@ import { useState } from "react";
 import { useOnboarding, LegalDocuments } from "@/context/OnboardingContext";
 import { toast } from "@/components/ui/use-toast";
 
+interface DocumentFile extends File {
+  documentType: string;
+  issueDate: string;
+  expiryDate?: string;
+}
+
 export const useLegalDocumentsForm = () => {
   const { onboardingData, updateLegalDocuments, setCurrentStep } = useOnboarding();
   
@@ -11,10 +17,12 @@ export const useLegalDocumentsForm = () => {
   const [issueDate, setIssueDate] = useState<string>("");
   const [expiryDate, setExpiryDate] = useState<string>("");
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
-  const [documentFiles, setDocumentFiles] = useState<File[]>(onboardingData.legalDocuments.documentFiles || []);
+  const [documentFiles, setDocumentFiles] = useState<DocumentFile[]>(onboardingData.legalDocuments.documentFiles as DocumentFile[] || []);
   
   const [errors, setErrors] = useState<Record<string, boolean>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingIndex, setEditingIndex] = useState<number | null>(null);
 
   const handleDocumentTypeChange = (value: string) => {
     setDocumentType(value);
@@ -74,29 +82,79 @@ export const useLegalDocumentsForm = () => {
     if (!validateAddDocument()) {
       toast({
         title: "Missing information",
-        description: "Please select document type, issue date, and upload at least one file.",
+        description: "Please select document type, issue date, and upload a document.",
         variant: "destructive"
       });
       return;
     }
+
+    // Create enhanced file objects with metadata
+    const enhancedFiles = selectedFiles.map(file => {
+      // Create a new object that has both File properties and our custom properties
+      const enhancedFile = Object.assign(Object.create(Object.getPrototypeOf(file)), file) as DocumentFile;
+      enhancedFile.documentType = documentType;
+      enhancedFile.issueDate = issueDate;
+      enhancedFile.expiryDate = expiryDate || "";
+      return enhancedFile;
+    });
     
-    // Add the file with the current document type
-    setDocumentFiles([...documentFiles, ...selectedFiles]);
+    if (isEditing && editingIndex !== null) {
+      // Update existing document
+      const updatedDocuments = [...documentFiles];
+      updatedDocuments[editingIndex] = enhancedFiles[0];
+      setDocumentFiles(updatedDocuments);
+      
+      toast({
+        title: "Document updated",
+        description: "Your document has been updated successfully.",
+      });
+    } else {
+      // Add new document
+      setDocumentFiles([...documentFiles, ...enhancedFiles]);
+      
+      toast({
+        title: "Document added",
+        description: "Your document has been added successfully.",
+      });
+    }
     
     // Reset the form for new document
+    resetForm();
+  };
+
+  const resetForm = () => {
+    setDocumentType("");
+    setIssueDate("");
+    setExpiryDate("");
     setSelectedFiles([]);
+    setIsEditing(false);
+    setEditingIndex(null);
+  };
+
+  const handleEditDocument = (index: number) => {
+    const docToEdit = documentFiles[index];
+    setDocumentType(docToEdit.documentType || "");
+    setIssueDate(docToEdit.issueDate || "");
+    setExpiryDate(docToEdit.expiryDate || "");
     
-    toast({
-      title: "Document added",
-      description: "Your document has been added successfully.",
+    // Create a plain File object from the DocumentFile for the file uploader
+    const fileBlob = new Blob([docToEdit], { type: docToEdit.type });
+    const plainFile = new File([fileBlob], docToEdit.name, { 
+      type: docToEdit.type,
+      lastModified: docToEdit.lastModified
     });
+    
+    setSelectedFiles([plainFile]);
+    setIsEditing(true);
+    setEditingIndex(index);
+  };
+
+  const handleCancelEdit = () => {
+    resetForm();
   };
 
   const validateForm = () => {
-    const newErrors: Record<string, boolean> = {};
-    
     if (documentFiles.length === 0) {
-      newErrors.documentFiles = true;
       toast({
         title: "Missing documents",
         description: "Please add at least one document before proceeding.",
@@ -118,11 +176,11 @@ export const useLegalDocumentsForm = () => {
       }
       
       const legalDocumentsData: LegalDocuments = {
-        documentType,
+        documentType: documentType || "",
         documentNumber: "",
         issueDate: issueDate || "",
         expiryDate: expiryDate || "",
-        documentFiles
+        documentFiles: documentFiles
       };
       
       await updateLegalDocuments(legalDocumentsData);
@@ -152,6 +210,11 @@ export const useLegalDocumentsForm = () => {
     const updatedFiles = [...documentFiles];
     updatedFiles.splice(index, 1);
     setDocumentFiles(updatedFiles);
+    
+    // If removing a document that's currently being edited, reset the form
+    if (isEditing && editingIndex === index) {
+      resetForm();
+    }
   };
 
   return {
@@ -162,12 +225,15 @@ export const useLegalDocumentsForm = () => {
     documentFiles,
     errors,
     isSubmitting,
+    isEditing,
     handleDocumentTypeChange,
     handleDateChange,
     handleFilesSelected,
     handleAddDocument,
     handleSubmit,
     handleBack,
-    handleRemoveDocument
+    handleRemoveDocument,
+    handleEditDocument,
+    handleCancelEdit
   };
 };

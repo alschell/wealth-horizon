@@ -14,6 +14,8 @@ interface AddDocumentFormProps {
   onDateChange: (field: 'issueDate' | 'expiryDate', date?: Date) => void;
   onFilesSelected: (files: File[]) => void;
   onAddDocument: () => void;
+  isEditing: boolean;
+  onCancelEdit: () => void;
 }
 
 const AddDocumentForm: React.FC<AddDocumentFormProps> = ({
@@ -25,11 +27,15 @@ const AddDocumentForm: React.FC<AddDocumentFormProps> = ({
   onDocumentTypeChange,
   onDateChange,
   onFilesSelected,
-  onAddDocument
+  onAddDocument,
+  isEditing,
+  onCancelEdit
 }) => {
   return (
     <div className="space-y-5 border p-5 rounded-md">
-      <h3 className="font-medium text-lg">Add a Legal Document</h3>
+      <h3 className="font-medium text-lg">
+        {isEditing ? "Edit Document" : "Add a Legal Document"}
+      </h3>
       
       <DocumentTypeField
         value={documentType}
@@ -50,14 +56,23 @@ const AddDocumentForm: React.FC<AddDocumentFormProps> = ({
         documentType={documentType}
       />
       
-      <div className="flex justify-end mt-4">
+      <div className="flex justify-end mt-4 space-x-3">
+        {isEditing && (
+          <Button
+            type="button"
+            variant="outline"
+            onClick={onCancelEdit}
+          >
+            Cancel
+          </Button>
+        )}
         <Button
           type="button"
           onClick={onAddDocument}
           className="flex items-center gap-2"
         >
-          <Plus className="h-4 w-4" />
-          Add Document
+          {!isEditing && <Plus className="h-4 w-4" />}
+          {isEditing ? "Update Document" : "Add Document"}
         </Button>
       </div>
     </div>

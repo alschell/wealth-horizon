@@ -99,6 +99,11 @@ const PrimaryContactForm: React.FC = () => {
     });
   };
 
+  // Check if form is filled out properly - used for button activation
+  const areAllRequiredFieldsFilled = requiredFields.every(field => 
+    Boolean(formData[field])
+  ) && formData.email && isValidEmail(formData.email);
+
   return (
     <FormLayout>
       <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }} className="space-y-6">
@@ -115,7 +120,7 @@ const PrimaryContactForm: React.FC = () => {
         <FormFooter
           onBack={() => setCurrentStep(0)}
           onSubmit={handleSubmit}
-          disableContinue={formTouched && hasErrors}
+          disableContinue={!areAllRequiredFieldsFilled}
         />
       </form>
     </FormLayout>

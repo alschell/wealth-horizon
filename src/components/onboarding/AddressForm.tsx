@@ -87,6 +87,11 @@ const AddressForm = () => {
     });
   };
 
+  // Check if all required fields are filled
+  const areAllRequiredFieldsFilled = requiredFields.every(field => 
+    Boolean(formData[field])
+  );
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -105,7 +110,7 @@ const AddressForm = () => {
             onSelectionChange={handleSelectChange}
           />
 
-          <AddressFormNavigation hasErrors={formTouched && hasErrors} />
+          <AddressFormNavigation hasErrors={!areAllRequiredFieldsFilled} />
         </form>
       </Card>
     </motion.div>

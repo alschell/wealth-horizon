@@ -1,7 +1,7 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { AGGREGATORS } from "@/components/onboarding/constants/aggregators";
+import { AGGREGATORS } from "@/utils/constants/aggregators";
 import { SearchableSelectField } from "@/components/onboarding/common/fields";
 import { itemVariants } from "@/components/onboarding/common/AnimationVariants";
 import AggregatorCredentialsForm from "./AggregatorCredentialsForm";
@@ -20,8 +20,12 @@ const AggregatorSelector: React.FC<AggregatorSelectorProps> = ({
   handleAggregatorNameChange,
   handleCredentialsChange
 }) => {
-  const [showCustomInput, setShowCustomInput] = useState(aggregatorInfo.aggregatorName === "Other (Manual Entry)");
-  const [customAggregator, setCustomAggregator] = useState("");
+  const [showCustomInput, setShowCustomInput] = useState(
+    aggregatorInfo.aggregatorName === "Other (Manual Entry)"
+  );
+  const [customAggregator, setCustomAggregator] = useState(
+    aggregatorInfo.aggregatorName !== "Other (Manual Entry)" ? "" : aggregatorInfo.aggregatorName || ""
+  );
 
   // Handle aggregator selection safely
   const handleAggregatorChange = (value: string) => {
@@ -35,9 +39,10 @@ const AggregatorSelector: React.FC<AggregatorSelectorProps> = ({
   };
 
   const handleCustomAggregatorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCustomAggregator(e.target.value);
-    if (e.target.value) {
-      handleAggregatorNameChange(e.target.value);
+    const newValue = e.target.value;
+    setCustomAggregator(newValue);
+    if (newValue) {
+      handleAggregatorNameChange(newValue);
     } else {
       handleAggregatorNameChange("Other (Manual Entry)");
     }

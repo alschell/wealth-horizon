@@ -37,7 +37,7 @@ const DataSourceTabs = ({
       <TabsList className="grid grid-cols-2 w-full mb-4">
         <TabsTrigger value="manual" className="text-center py-2">
           <Wallet className="h-4 w-4 mr-2" />
-          Submit Financial Information
+          Manual Entry
         </TabsTrigger>
         <TabsTrigger value="upload" className="text-center py-2">
           <Upload className="h-4 w-4 mr-2" />

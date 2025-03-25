@@ -1,9 +1,9 @@
 
 import React from "react";
-import { AggregatorInfo } from "@/context/OnboardingContext";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
+import { AggregatorInfo } from "@/context/OnboardingContext";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 interface AggregatorCredentialsFormProps {
   aggregatorInfo: AggregatorInfo;
@@ -11,11 +11,11 @@ interface AggregatorCredentialsFormProps {
   itemVariants: any;
 }
 
-const AggregatorCredentialsForm = ({
+const AggregatorCredentialsForm: React.FC<AggregatorCredentialsFormProps> = ({
   aggregatorInfo,
   handleCredentialsChange,
   itemVariants
-}: AggregatorCredentialsFormProps) => {
+}) => {
   return (
     <motion.div 
       custom={2}
@@ -24,42 +24,51 @@ const AggregatorCredentialsForm = ({
       animate="visible"
       className="space-y-4"
     >
-      <Label htmlFor="username">Username or API Key ID</Label>
-      <Input
-        id="username"
-        name="username"
-        value={aggregatorInfo.aggregatorCredentials?.username || ""}
-        onChange={handleCredentialsChange}
-        placeholder="Enter your username or API key identifier"
-        className="h-11"
-      />
+      <h3 className="text-md font-medium">Aggregator Credentials</h3>
       
-      <Label htmlFor="email">Email Address (Optional)</Label>
-      <Input
-        id="email"
-        name="email"
-        type="email"
-        value={aggregatorInfo.aggregatorCredentials?.email || ""}
-        onChange={handleCredentialsChange}
-        placeholder="Enter your contact email address"
-        className="h-11"
-      />
-      
-      <Label htmlFor="apiKey">API Key</Label>
-      <Input
-        id="apiKey"
-        name="apiKey"
-        type="password"
-        value={aggregatorInfo.aggregatorCredentials?.apiKey || ""}
-        onChange={handleCredentialsChange}
-        placeholder="Enter your API key if applicable"
-        className="h-11"
-      />
-      
-      <p className="text-sm text-gray-500 mt-2">
-        We'll use these credentials to securely connect to your {aggregatorInfo.aggregatorName} account.
-        Your credentials are encrypted and stored securely.
-      </p>
+      <div className="space-y-4">
+        <div className="space-y-2">
+          <Label htmlFor="username">
+            Username<span className="text-red-500 ml-1">*</span>
+          </Label>
+          <Input
+            id="username"
+            name="username"
+            value={aggregatorInfo.aggregatorCredentials?.username || ""}
+            onChange={handleCredentialsChange}
+            placeholder="Enter your username"
+            className="h-11"
+          />
+        </div>
+        
+        <div className="space-y-2">
+          <Label htmlFor="email">
+            Email Address
+          </Label>
+          <Input
+            id="email"
+            name="email"
+            value={aggregatorInfo.aggregatorCredentials?.email || ""}
+            onChange={handleCredentialsChange}
+            placeholder="Enter your email address (optional)"
+            className="h-11"
+          />
+        </div>
+        
+        <div className="space-y-2">
+          <Label htmlFor="apiKey">
+            API Key
+          </Label>
+          <Input
+            id="apiKey"
+            name="apiKey"
+            value={aggregatorInfo.aggregatorCredentials?.apiKey || ""}
+            onChange={handleCredentialsChange}
+            placeholder="Enter your API key if applicable"
+            className="h-11"
+          />
+        </div>
+      </div>
     </motion.div>
   );
 };

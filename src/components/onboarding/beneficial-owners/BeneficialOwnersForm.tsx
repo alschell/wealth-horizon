@@ -68,21 +68,21 @@ const BeneficialOwnersForm: React.FC<BeneficialOwnersFormProps> = ({
     setFormData((prev) => ({ ...prev, documents: files }));
   };
   
+  // Check if form is valid (all required fields filled and at least one document)
+  const isFormValid = Boolean(
+    formData.firstName &&
+    formData.lastName &&
+    formData.relationship &&
+    formData.ownershipPercentage &&
+    formData.nationality &&
+    formData.dateOfBirth &&
+    formData.documents.length > 0
+  );
+  
   // Function to add a new beneficial owner
   const handleAddOwner = () => {
     // Validate form data
-    const requiredFields = [
-      "firstName",
-      "lastName",
-      "relationship",
-      "ownershipPercentage",
-      "nationality",
-      "dateOfBirth",
-    ];
-    
-    const missingFields = requiredFields.filter(field => !formData[field as keyof BeneficialOwnerInfo]);
-    
-    if (missingFields.length > 0 || formData.documents.length === 0) {
+    if (!isFormValid) {
       toast({
         title: "Missing Information",
         description: "Please fill in all required fields and upload at least one document.",
@@ -204,8 +204,9 @@ const BeneficialOwnersForm: React.FC<BeneficialOwnersFormProps> = ({
           )}
           <Button 
             type="button" 
-            className="bg-black text-white hover:bg-gray-800"
+            className={`${!isFormValid ? 'bg-gray-300 text-gray-500' : 'bg-black text-white hover:bg-gray-800'}`}
             onClick={handleAddOwner}
+            disabled={!isFormValid}
           >
             <PlusCircle className="h-4 w-4 mr-2" />
             {editIndex !== null ? "Update" : "Add"} Beneficial Owner

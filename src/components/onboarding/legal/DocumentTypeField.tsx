@@ -13,7 +13,7 @@ interface DocumentTypeFieldProps {
 
 const DocumentTypeField: React.FC<DocumentTypeFieldProps> = ({ value, onChange, error }) => {
   return (
-    <div className="space-y-2 w-full">
+    <div className="space-y-2 w-full col-span-1 md:col-span-2">
       <Label htmlFor="documentType">
         Document Type<span className="text-red-500 ml-1">*</span>
       </Label>
@@ -27,7 +27,7 @@ const DocumentTypeField: React.FC<DocumentTypeFieldProps> = ({ value, onChange, 
         >
           <SelectValue placeholder="Select document type" />
         </SelectTrigger>
-        <SelectContent className="w-full">
+        <SelectContent className="w-[var(--radix-select-trigger-width)]">
           {DOCUMENT_TYPES.map((type) => (
             <SelectItem key={type.value} value={type.value}>
               {type.label}

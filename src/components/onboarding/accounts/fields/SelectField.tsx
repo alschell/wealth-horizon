@@ -48,7 +48,7 @@ const SelectField = ({
         {label}{required && <span className="text-red-500 ml-1">*</span>}
       </Label>
       <Select
-        value={value}
+        value={value || undefined}
         onValueChange={onChange}
       >
         <SelectTrigger 
@@ -60,7 +60,7 @@ const SelectField = ({
         </SelectTrigger>
         <SelectContent 
           position="popper" 
-          className="bg-white border shadow-md z-[999] min-w-[var(--radix-select-trigger-width)]"
+          className="bg-white border shadow-md z-[999] w-[var(--radix-select-trigger-width)]"
           sideOffset={8}
           align="start"
         >

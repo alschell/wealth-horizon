@@ -4,8 +4,7 @@ import { FinancialAccountInfo } from "@/types/onboarding";
 import { 
   BasicInfoSection,
   LegalEntitySection,
-  AccountDetailsSection,
-  DocumentsSection
+  AccountDetailsSection
 } from "./sections";
 import { useLegalEntityMapping } from "./hooks/useLegalEntityMapping";
 
@@ -19,8 +18,7 @@ interface AccountFormFieldsProps {
 const AccountFormFields = ({
   account,
   onInputChange,
-  onSelectionChange,
-  onStatementsSelected
+  onSelectionChange
 }: AccountFormFieldsProps) => {
   const { 
     getLegalEntities, 
@@ -30,12 +28,6 @@ const AccountFormFields = ({
 
   return (
     <div className="space-y-6">
-      <BasicInfoSection
-        account={account}
-        onInputChange={onInputChange}
-        onSelectionChange={onSelectionChange}
-      />
-      
       <LegalEntitySection
         account={account}
         legalEntities={getLegalEntities()}
@@ -45,15 +37,16 @@ const AccountFormFields = ({
         handleLeiChange={handleLeiChange}
       />
       
-      <AccountDetailsSection
+      <BasicInfoSection
         account={account}
         onInputChange={onInputChange}
         onSelectionChange={onSelectionChange}
       />
       
-      <DocumentsSection
-        files={account.statements}
-        onStatementsSelected={onStatementsSelected}
+      <AccountDetailsSection
+        account={account}
+        onInputChange={onInputChange}
+        onSelectionChange={onSelectionChange}
       />
     </div>
   );

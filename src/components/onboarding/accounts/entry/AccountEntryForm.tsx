@@ -2,13 +2,11 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { UseAccountFormStateReturn } from "./hooks/form/types";
-import { FinancialAccountInfo } from "@/types/onboarding";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import BasicInfoSection from "./components/BasicInfoSection";
 import LegalEntitySection from "./components/LegalEntitySection";
 import AccountDetailsSection from "./components/AccountDetailsSection";
-import DocumentsSection from "./components/DocumentsSection";
 import FormHeader from "./components/FormHeader";
 
 interface AccountEntryFormProps {
@@ -30,7 +28,6 @@ const AccountEntryForm: React.FC<AccountEntryFormProps> = ({
     handleSelectionChange,
     handleLegalEntityChange,
     handleLeiChange,
-    handleFilesSelected,
     handleAddAccount
   } = formState;
 
@@ -79,12 +76,6 @@ const AccountEntryForm: React.FC<AccountEntryFormProps> = ({
           account={newAccount}
           onInputChange={handleInputChange}
           onSelectionChange={handleSelectionChange}
-        />
-        
-        {/* Documents Section */}
-        <DocumentsSection
-          account={newAccount}
-          onFilesSelected={handleFilesSelected}
         />
         
         {/* Form Actions */}

@@ -8,7 +8,6 @@ import { useAccountFormState } from "../entry/hooks/useAccountFormState";
 import LegalEntitySection from "../sections/LegalEntitySection";
 import BasicInfoSection from "../sections/BasicInfoSection";
 import AccountDetailsSection from "../sections/AccountDetailsSection";
-import DocumentsSection from "../sections/DocumentsSection";
 
 interface AccountFormProps {
   onAddAccount: (account: FinancialAccountInfo) => void;
@@ -75,12 +74,6 @@ const AccountForm: React.FC<AccountFormProps> = ({
         account={newAccount}
         onInputChange={handleInputChange}
         onSelectionChange={handleSelectionChange}
-      />
-
-      {/* Statements Section */}
-      <DocumentsSection
-        files={newAccount.statements}
-        onStatementsSelected={handleFilesSelected}
       />
 
       {/* Form Buttons */}

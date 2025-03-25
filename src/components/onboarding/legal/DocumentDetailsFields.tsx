@@ -44,7 +44,6 @@ const DocumentDetailsFields: React.FC<DocumentDetailsFieldsProps> = ({
           id="expiryDate"
           value={expiryDate ? new Date(expiryDate) : undefined}
           onChange={(date) => onDateChange('expiryDate', date)}
-          label="Expiry Date"
           optional={true}
         />
       </div>

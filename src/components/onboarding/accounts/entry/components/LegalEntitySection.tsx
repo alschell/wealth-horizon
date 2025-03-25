@@ -65,8 +65,9 @@ const LegalEntitySection: React.FC<LegalEntitySectionProps> = ({
           options={legalEntitiesList}
           onChange={handleLegalEntitySelection}
           allowCustomValue={true}
-          required={false}
+          required={true}
           disabled={false}
+          error={errors?.legalEntity}
         />
       </div>
     </div>

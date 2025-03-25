@@ -20,30 +20,26 @@ const BasicInfoSection = ({
 }: BasicInfoSectionProps) => {
   return (
     <div className="space-y-4">
-      <div className="space-y-2">
-        <InputField
-          id="accountName"
-          label="Account Name"
-          name="accountName"
-          value={account.accountName}
-          onChange={onInputChange}
-          placeholder="e.g., Main Investment Portfolio at UBS"
-          required={false}
-        />
-      </div>
+      <InputField
+        id="accountName"
+        label="Account Name"
+        name="accountName"
+        value={account.accountName}
+        onChange={onInputChange}
+        placeholder="e.g., Main Investment Portfolio at UBS"
+        required={false}
+      />
       
-      <div className="space-y-2">
-        <SearchableSelectField
-          id="accountType"
-          label="Account Type"
-          value={account.accountType || ""}
-          placeholder="Select account type"
-          options={ACCOUNT_TYPES}
-          required={false}
-          onChange={(value) => onSelectionChange("accountType", value)}
-          allowCustomValue={true}
-        />
-      </div>
+      <SearchableSelectField
+        id="accountType"
+        label="Account Type"
+        value={account.accountType || ""}
+        placeholder="Select account type"
+        options={ACCOUNT_TYPES}
+        required={false}
+        onChange={(value) => onSelectionChange("accountType", value)}
+        allowCustomValue={true}
+      />
     </div>
   );
 };

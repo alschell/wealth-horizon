@@ -22,6 +22,7 @@ const LegalDocumentsForm = () => {
     handleDocumentTypeChange,
     handleDateChange,
     handleFileSelected,
+    handleFileClear,
     handleAddDocument,
     handleSubmit,
     handleBack,
@@ -49,11 +50,12 @@ const LegalDocumentsForm = () => {
             documentType={documentType}
             issueDate={issueDate}
             expiryDate={expiryDate}
-            selectedFile={selectedFile}
+            file={selectedFile}
             errors={errors}
             onDocumentTypeChange={handleDocumentTypeChange}
             onDateChange={handleDateChange}
             onFileSelected={handleFileSelected}
+            onFileClear={handleFileClear}
             onAddDocument={handleAddDocument}
             isEditing={isEditing}
             onCancelEdit={handleCancelEdit}

@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { FinancialAccountInfo } from "@/context/OnboardingContext";
 import { toast } from "@/components/ui/use-toast";
 
@@ -43,10 +43,19 @@ export function useAccountForm(onAddAccount: (account: FinancialAccountInfo) => 
     });
   };
 
+  // Check if form is valid (required fields filled)
+  const isFormValid = useMemo(() => {
+    return Boolean(
+      newAccount.institution && 
+      newAccount.legalEntity && 
+      newAccount.accountNumber
+    );
+  }, [newAccount.institution, newAccount.legalEntity, newAccount.accountNumber]);
+
   // Add new account
   const handleAddAccount = () => {
     // Validation - checking for institution, legalEntity and accountNumber
-    if (!newAccount.institution || !newAccount.legalEntity || !newAccount.accountNumber) {
+    if (!isFormValid) {
       toast({
         title: "Missing information",
         description: "Please fill in all required account fields.",
@@ -91,6 +100,7 @@ export function useAccountForm(onAddAccount: (account: FinancialAccountInfo) => 
 
   return {
     newAccount,
+    isFormValid,
     handleNewAccountChange,
     handleAccountSelectionChange,
     handleStatementsSelected,

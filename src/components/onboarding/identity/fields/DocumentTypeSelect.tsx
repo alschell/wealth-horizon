@@ -17,17 +17,17 @@ const DocumentTypeSelect: React.FC<DocumentTypeSelectProps> = ({ value, onChange
       variants={itemVariants}
       initial="hidden"
       animate="visible"
-      className="space-y-2"
+      className="space-y-2 w-full"
     >
       <Label htmlFor="documentType">Document Type<span className="text-red-500 ml-1">*</span></Label>
       <Select
         value={value}
         onValueChange={(value: "passport" | "drivingLicense" | "nationalId") => onChange(value)}
       >
-        <SelectTrigger className="h-11">
+        <SelectTrigger className="h-11 w-full">
           <SelectValue placeholder="Select document type" />
         </SelectTrigger>
-        <SelectContent>
+        <SelectContent className="w-full">
           <SelectItem value="passport">Passport</SelectItem>
           <SelectItem value="drivingLicense">Driving License</SelectItem>
           <SelectItem value="nationalId">National ID</SelectItem>

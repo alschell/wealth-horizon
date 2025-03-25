@@ -1,11 +1,7 @@
 
 import React from "react";
-import { Calendar } from "@/components/ui/calendar";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { Calendar as CalendarIcon } from "lucide-react";
-import { format } from "date-fns";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Label } from "@/components/ui/label";
+import DateField from "@/components/onboarding/common/fields/DateField";
 
 interface DocumentDetailsFieldsProps {
   issueDate: string;
@@ -25,59 +21,37 @@ const DocumentDetailsFields: React.FC<DocumentDetailsFieldsProps> = ({
   // Only show errors if the form has been touched
   const showErrors = formTouched ? error : {};
   
+  const handleDateFieldChange = (field: 'issueDate' | 'expiryDate', dateString: string) => {
+    if (dateString) {
+      onDateChange(field, new Date(dateString));
+    } else {
+      onDateChange(field, undefined);
+    }
+  };
+  
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div>
-        <label className="block text-sm font-medium mb-1">Issue Date <span className="text-red-500">*</span></label>
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button
-              variant="outline"
-              className={cn(
-                "w-full justify-start text-left font-normal",
-                !issueDate && "text-gray-500",
-                showErrors.issueDate && "border-red-500"
-              )}
-            >
-              <CalendarIcon className="mr-2 h-4 w-4" />
-              {issueDate ? format(new Date(issueDate), 'PP') : <span>Select date</span>}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-auto p-0">
-            <Calendar
-              mode="single"
-              selected={issueDate ? new Date(issueDate) : undefined}
-              onSelect={(date) => onDateChange('issueDate', date)}
-              initialFocus
-            />
-          </PopoverContent>
-        </Popover>
+        <DateField
+          id="issueDate"
+          label="Issue Date"
+          required={true}
+          value={issueDate}
+          onChange={(date) => handleDateFieldChange('issueDate', date)}
+          error={showErrors.issueDate ? "This field is required" : undefined}
+          closeOnSelect={true}
+        />
       </div>
       
       <div>
-        <label className="block text-sm font-medium mb-1">Expiry Date</label>
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button
-              variant="outline"
-              className={cn(
-                "w-full justify-start text-left font-normal",
-                !expiryDate && "text-gray-500"
-              )}
-            >
-              <CalendarIcon className="mr-2 h-4 w-4" />
-              {expiryDate ? format(new Date(expiryDate), 'PP') : <span>Select date</span>}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-auto p-0">
-            <Calendar
-              mode="single"
-              selected={expiryDate ? new Date(expiryDate) : undefined}
-              onSelect={(date) => onDateChange('expiryDate', date)}
-              initialFocus
-            />
-          </PopoverContent>
-        </Popover>
+        <DateField
+          id="expiryDate"
+          label="Expiry Date"
+          required={false}
+          value={expiryDate || ""}
+          onChange={(date) => handleDateFieldChange('expiryDate', date)}
+          closeOnSelect={true}
+        />
       </div>
     </div>
   );

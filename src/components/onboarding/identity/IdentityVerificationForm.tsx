@@ -29,6 +29,10 @@ const IdentityVerificationForm = () => {
     setFormData({ ...formData, documentFiles: files });
   };
 
+  const handleDateChange = (field: string, value: string) => {
+    setFormData({ ...formData, [field]: value });
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setFormTouched(true);
@@ -97,6 +101,7 @@ const IdentityVerificationForm = () => {
               issueDate={formData.issueDate}
               expiryDate={formData.expiryDate}
               onChange={handleInputChange}
+              onDateChange={handleDateChange}
               formTouched={formTouched}
               errors={errors}
             />

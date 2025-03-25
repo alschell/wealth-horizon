@@ -8,13 +8,15 @@ interface FormActionsProps {
   isEditing?: boolean;
   buttonText: string;
   onCancelEdit?: () => void;
+  disabled?: boolean;
 }
 
 const FormActions: React.FC<FormActionsProps> = ({ 
   onAddAccount, 
   isEditing = false,
   buttonText,
-  onCancelEdit
+  onCancelEdit,
+  disabled = false
 }) => {
   return (
     <div className="flex justify-end space-x-4 pt-4">
@@ -31,7 +33,8 @@ const FormActions: React.FC<FormActionsProps> = ({
       <Button
         type="button"
         onClick={onAddAccount}
-        className="bg-black hover:bg-gray-800 text-white"
+        disabled={disabled}
+        className={`${disabled ? 'bg-gray-300 text-gray-500' : 'bg-black hover:bg-gray-800 text-white'}`}
       >
         {isEditing ? (
           <Save className="mr-2 h-4 w-4" />

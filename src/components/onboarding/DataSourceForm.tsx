@@ -18,7 +18,8 @@ const DataSourceForm: React.FC = () => {
     onboardingData, 
     updateAggregatorInfo, 
     addFinancialAccount, 
-    removeFinancialAccount
+    removeFinancialAccount,
+    setCurrentStep
   } = useOnboarding();
   
   const financialAccounts = onboardingData.financialAccounts;
@@ -111,27 +112,18 @@ const DataSourceForm: React.FC = () => {
         return;
       }
     } else {
-      if (dataSourceMethod === "manual") {
-        if (financialAccounts.length === 0) {
-          toast({
-            title: "Missing Information",
-            description: "Please add at least one financial account.",
-            variant: "destructive"
-          });
-          return;
-        }
-      } else if (dataSourceMethod === "upload") {
-        if (uploadedFiles.length === 0) {
-          toast({
-            title: "Missing Information",
-            description: "Please upload at least one financial statement.",
-            variant: "destructive"
-          });
-          return;
-        }
+      if (dataSourceMethod === "manual" && financialAccounts.length === 0) {
+        toast({
+          title: "Missing Information",
+          description: "Please add at least one financial account.",
+          variant: "destructive"
+        });
+        return;
       }
     }
 
+    // Proceed to next step
+    setCurrentStep(5);
     navigate("/onboarding/beneficial-owners");
   };
 

@@ -4,12 +4,14 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
 import { itemVariants } from "../../common/AnimationVariants";
+import DateField from "../../common/fields/DateField";
 
 interface DocumentDetailsFieldsProps {
   documentNumber: string;
   issueDate: string;
   expiryDate?: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onDateChange?: (field: string, value: string) => void;
   formTouched?: boolean;
   errors?: Record<string, string>;
 }
@@ -19,11 +21,18 @@ const DocumentDetailsFields: React.FC<DocumentDetailsFieldsProps> = ({
   issueDate,
   expiryDate,
   onChange,
+  onDateChange,
   formTouched = false,
   errors = {}
 }) => {
   // Only show errors if the form has been touched
   const showErrors = formTouched ? errors : {};
+  
+  const handleDateChange = (field: string, value: string) => {
+    if (onDateChange) {
+      onDateChange(field, value);
+    }
+  };
   
   return (
     <>
@@ -56,17 +65,31 @@ const DocumentDetailsFields: React.FC<DocumentDetailsFieldsProps> = ({
           animate="visible"
           className="space-y-2"
         >
-          <Label htmlFor="issueDate">Issue Date<span className="text-red-500 ml-1">*</span></Label>
-          <Input
-            id="issueDate"
-            name="issueDate"
-            type="date"
-            value={issueDate}
-            onChange={onChange}
-            className={`h-11 ${showErrors.issueDate ? 'border-red-500' : ''}`}
-          />
-          {showErrors.issueDate && (
-            <p className="text-red-500 text-sm mt-1">{showErrors.issueDate}</p>
+          {onDateChange ? (
+            <DateField
+              id="issueDate"
+              label="Issue Date"
+              value={issueDate}
+              onChange={(date) => handleDateChange("issueDate", date)}
+              required={true}
+              closeOnSelect={true}
+              error={showErrors.issueDate}
+            />
+          ) : (
+            <>
+              <Label htmlFor="issueDate">Issue Date<span className="text-red-500 ml-1">*</span></Label>
+              <Input
+                id="issueDate"
+                name="issueDate"
+                type="date"
+                value={issueDate}
+                onChange={onChange}
+                className={`h-11 ${showErrors.issueDate ? 'border-red-500' : ''}`}
+              />
+              {showErrors.issueDate && (
+                <p className="text-red-500 text-sm mt-1">{showErrors.issueDate}</p>
+              )}
+            </>
           )}
         </motion.div>
 
@@ -77,15 +100,28 @@ const DocumentDetailsFields: React.FC<DocumentDetailsFieldsProps> = ({
           animate="visible"
           className="col-span-1 md:col-span-2 space-y-2"
         >
-          <Label htmlFor="expiryDate">Expiry Date</Label>
-          <Input
-            id="expiryDate"
-            name="expiryDate"
-            type="date"
-            value={expiryDate || ""}
-            onChange={onChange}
-            className="h-11"
-          />
+          {onDateChange ? (
+            <DateField
+              id="expiryDate"
+              label="Expiry Date"
+              value={expiryDate || ""}
+              onChange={(date) => handleDateChange("expiryDate", date)}
+              required={false}
+              closeOnSelect={true}
+            />
+          ) : (
+            <>
+              <Label htmlFor="expiryDate">Expiry Date</Label>
+              <Input
+                id="expiryDate"
+                name="expiryDate"
+                type="date"
+                value={expiryDate || ""}
+                onChange={onChange}
+                className="h-11"
+              />
+            </>
+          )}
         </motion.div>
       </div>
     </>

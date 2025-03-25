@@ -107,5 +107,6 @@ export const AGGREGATORS = [
   "WideOrbit",
   "Workday",
   "Xignite",
-  "Yardi"
+  "Yardi",
+  "Other"
 ];

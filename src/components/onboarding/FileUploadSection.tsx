@@ -22,10 +22,6 @@ const FileUploadSection: React.FC<FileUploadSectionProps> = ({
           accept="application/pdf,image/*,.doc,.docx"
           label="Upload Financial Documents"
         />
-        
-        <div className="mt-4 text-sm text-gray-500">
-          <p>Max 10MB per file • PDF, DOC, DOCX, JPG, JPEG, PNG</p>
-        </div>
       </CardContent>
     </Card>
   );

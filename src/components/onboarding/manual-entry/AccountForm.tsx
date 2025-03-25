@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -7,10 +6,9 @@ import { FinancialAccountInfo } from "@/context/OnboardingContext";
 import { AccountFormProps } from "./types";
 import { useAccountForm } from "@/components/onboarding/accounts/hooks/useAccountForm";
 import { useLegalEntityMapping } from "@/components/onboarding/accounts/hooks/useLegalEntityMapping";
-import { InputField, SearchableSelectField, SelectField } from "@/components/onboarding/common/fields";
+import { InputField, SearchableSelectField } from "@/components/onboarding/common/fields";
 import { LEGAL_ENTITIES } from "@/components/onboarding/accounts/constants";
 import { INSTITUTIONS } from "@/utils/constants/institutions";
-import { ACCOUNT_TYPES } from "@/utils/constants/accountTypes";
 
 import AccountDetailsSection from "./sections/AccountDetailsSection";
 import BasicInfoSection from "./sections/BasicInfoSection";
@@ -130,8 +128,8 @@ const AccountForm: React.FC<AccountFormProps> = ({ onAddAccount }) => {
           />
         </div>
         
-        {/* Account Name and Type Fields */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* Account Name Field */}
+        <div className="grid grid-cols-1 gap-4">
           <InputField
             id="accountName"
             label="Account Name"
@@ -139,16 +137,6 @@ const AccountForm: React.FC<AccountFormProps> = ({ onAddAccount }) => {
             value={newAccount.accountName || ""}
             onChange={handleNewAccountChange}
             placeholder="Enter account name"
-            required={false}
-          />
-          
-          <SelectField
-            id="accountType"
-            label="Account Type"
-            value={newAccount.accountType || ""}
-            placeholder="Select account type"
-            options={ACCOUNT_TYPES}
-            onChange={(value) => handleAccountSelectionChange("accountType", value)}
             required={false}
           />
         </div>

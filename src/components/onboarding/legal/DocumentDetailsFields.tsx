@@ -39,9 +39,7 @@ const DocumentDetailsFields: React.FC<DocumentDetailsFieldsProps> = ({
         )}
       </div>
       <div className="space-y-2">
-        <Label htmlFor="expiryDate">
-          Expiry Date <span className="text-gray-500 text-xs font-normal">(Optional)</span>
-        </Label>
+        <Label htmlFor="expiryDate">Expiry Date</Label>
         <DatePicker
           id="expiryDate"
           value={expiryDate ? new Date(expiryDate) : undefined}

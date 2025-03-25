@@ -2,6 +2,8 @@
 import React from "react";
 import { Label } from "@/components/ui/label";
 import FileUploader from "@/components/file-uploader";
+import { Button } from "@/components/ui/button";
+import { Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface DocumentUploadFieldProps {
@@ -21,7 +23,7 @@ const DocumentUploadField: React.FC<DocumentUploadFieldProps> = ({
 }) => {
   const existingFiles = file ? [file] : [];
   
-  const handleFileDelete = () => {
+  const handleCustomFileDelete = () => {
     if (onFileDelete) {
       onFileDelete();
     }
@@ -45,7 +47,18 @@ const DocumentUploadField: React.FC<DocumentUploadFieldProps> = ({
           onFilesSelected={onFileSelected}
           existingFiles={existingFiles}
           label="Upload Legal Document"
-          onFileDelete={handleFileDelete}
+          customFileDeleteButton={(file) => (
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              className="text-gray-500 hover:text-red-500 p-2 h-auto"
+              onClick={handleCustomFileDelete}
+            >
+              <Trash2 className="h-5 w-5" />
+              <span className="sr-only">Remove document</span>
+            </Button>
+          )}
         />
       </div>
       

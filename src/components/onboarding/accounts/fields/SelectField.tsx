@@ -57,7 +57,7 @@ const SelectField = ({
           className={cn("h-11 w-full bg-white text-left", error ? "border-red-500" : "")}
         >
           <SelectValue 
-            className="text-left"
+            className="text-left text-gray-500"
             placeholder={placeholder} 
           />
         </SelectTrigger>

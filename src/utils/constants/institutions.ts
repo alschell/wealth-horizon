@@ -116,7 +116,7 @@ export const INSTITUTIONS = [
   "Westpac Banking",
   "Zurich Insurance Group",
   "Other (Manual Entry)"
-].sort();
+];
 
 // Export a subset of institutions for components that need a smaller list
 export const TOP_INSTITUTIONS = [
@@ -138,5 +138,6 @@ export const TOP_INSTITUTIONS = [
   "BlackRock",
   "Vanguard Group",
   "Fidelity Investments",
-  "Charles Schwab"
-].sort();
+  "Charles Schwab",
+  "Other (Manual Entry)"
+];

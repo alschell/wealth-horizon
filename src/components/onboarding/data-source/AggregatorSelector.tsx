@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { AggregatorInfo } from "@/context/OnboardingContext";
 import { AGGREGATORS } from "@/utils/constants";
 import { Label } from "@/components/ui/label";
@@ -45,7 +45,7 @@ const AggregatorSelector = ({
       </div>
 
       {aggregatorInfo.aggregatorName && (
-        <div className="space-y-4">
+        <div className="space-y-5">
           <h3 className="text-lg font-medium">Access Credentials</h3>
           
           <div className="space-y-2">

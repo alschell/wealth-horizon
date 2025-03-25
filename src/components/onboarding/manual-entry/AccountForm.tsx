@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
@@ -8,6 +8,7 @@ import { useAccountForm } from "@/components/onboarding/accounts/hooks/useAccoun
 import { useLegalEntityMapping } from "@/components/onboarding/accounts/hooks/useLegalEntityMapping";
 import { InputField, SearchableSelectField } from "@/components/onboarding/accounts/fields";
 import { LEGAL_ENTITIES } from "@/components/onboarding/accounts/constants";
+import { INSTITUTIONS } from "@/utils/constants/institutions";
 
 import AccountDetailsSection from "./sections/AccountDetailsSection";
 
@@ -25,6 +26,8 @@ const AccountForm: React.FC<AccountFormProps> = ({ onAddAccount }) => {
     handleLeiChange
   } = useLegalEntityMapping(newAccount, handleAccountSelectionChange);
 
+  const [showOtherInstitution, setShowOtherInstitution] = useState(false);
+
   // Create an adapter for handleLeiChange to handle direct string input
   const handleLeiStringChange = (value: string) => {
     handleLeiChange(value);
@@ -35,14 +38,17 @@ const AccountForm: React.FC<AccountFormProps> = ({ onAddAccount }) => {
     handleLeiChange(e.target.value);
   };
 
+  // Handle institution selection with custom option
+  const handleInstitutionChange = (value: string) => {
+    handleAccountSelectionChange("institution", value);
+    setShowOtherInstitution(value === "Other (Manual Entry)");
+  };
+
   const legalEntitiesList = getLegalEntities();
   
-  // Get all institutions from the mapping object
-  const institutions = Object.keys(LEGAL_ENTITIES).sort();
-
   return (
     <Card className="p-5 border rounded-lg">
-      <div className="grid grid-cols-1 gap-4">
+      <div className="grid grid-cols-1 gap-5">
         {/* LEI Field First */}
         <InputField
           id="legalEntityIdentifier"
@@ -61,11 +67,23 @@ const AccountForm: React.FC<AccountFormProps> = ({ onAddAccount }) => {
             label="Institution"
             value={newAccount.institution || ""}
             placeholder="Select institution"
-            options={institutions}
-            onChange={value => handleAccountSelectionChange("institution", value)}
-            allowCustomValue={true}
+            options={INSTITUTIONS}
+            onChange={handleInstitutionChange}
+            allowCustomValue={false}
             required={true}
           />
+          
+          {showOtherInstitution && (
+            <InputField
+              id="customInstitution"
+              label="Institution name"
+              name="institution"
+              value={newAccount.institution === "Other (Manual Entry)" ? "" : newAccount.institution || ""}
+              onChange={(e) => handleAccountSelectionChange("institution", e.target.value)}
+              placeholder="Enter institution name"
+              required={true}
+            />
+          )}
           
           <SearchableSelectField
             id="legalEntity"
@@ -102,29 +120,7 @@ const AccountForm: React.FC<AccountFormProps> = ({ onAddAccount }) => {
           />
         </div>
         
-        {/* Account Name and Type Fields */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <InputField
-            id="accountName"
-            label="Account Name"
-            name="accountName"
-            value={newAccount.accountName || ""}
-            onChange={handleNewAccountChange}
-            placeholder="Enter account name"
-            required={true}
-          />
-          
-          <SearchableSelectField
-            id="accountType"
-            label="Account Type"
-            value={newAccount.accountType || ""}
-            placeholder="Select account type"
-            options={["Cash", "Checking", "Savings", "Investment", "Credit Card", "Loan", "Other"]}
-            onChange={value => handleAccountSelectionChange("accountType", value)}
-            allowCustomValue={true}
-            required={true}
-          />
-        </div>
+        {/* Remove Account Name and Type Fields */}
         
         {/* Other Account Details */}
         <AccountDetailsSection 
@@ -133,7 +129,7 @@ const AccountForm: React.FC<AccountFormProps> = ({ onAddAccount }) => {
           onSelectionChange={handleAccountSelectionChange}
         />
         
-        <div className="flex justify-end mt-6">
+        <div className="flex justify-end mt-4">
           <Button 
             type="button" 
             className="bg-black hover:bg-gray-800 text-white flex items-center"

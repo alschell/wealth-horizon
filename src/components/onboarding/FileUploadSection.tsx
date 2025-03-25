@@ -21,7 +21,7 @@ const FileUploadSection: React.FC<FileUploadSectionProps> = ({
           existingFiles={uploadedFiles}
           multiple={true}
           accept="application/pdf,image/*,.doc,.docx"
-          label="Upload Financial Documents"
+          label="Upload Account Statements"
         />
         
         <Separator className="my-6" />

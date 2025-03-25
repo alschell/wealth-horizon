@@ -7,15 +7,15 @@ export function useAccountForm(onAddAccount: (account: FinancialAccountInfo) => 
   const [newAccount, setNewAccount] = useState<FinancialAccountInfo>({
     accountName: "",
     institution: "",
-    accountType: "other", // Set to "other" as a default value
+    accountType: "",
     accountSubtype: "",
     currency: "",
     approximateValue: "",
     statements: [],
-    legalEntity: "", // Add missing required properties
+    legalEntity: "",
     legalEntityIdentifier: "",
-    accountNumber: "", // Add accountNumber field
-    swiftCode: "" // Add swiftCode field
+    accountNumber: "",
+    swiftCode: ""
   });
 
   // Handle new account input
@@ -45,7 +45,7 @@ export function useAccountForm(onAddAccount: (account: FinancialAccountInfo) => 
 
   // Add new account
   const handleAddAccount = () => {
-    // Validation - only checking for institution, legalEntity and accountNumber
+    // Validation - checking for institution, legalEntity and accountNumber
     if (!newAccount.institution || !newAccount.legalEntity || !newAccount.accountNumber) {
       toast({
         title: "Missing information",
@@ -55,14 +55,24 @@ export function useAccountForm(onAddAccount: (account: FinancialAccountInfo) => 
       return;
     }
 
+    // Special validation for "Other" institution
+    if (newAccount.institution === "Other (Manual Entry)" || newAccount.institution === "") {
+      toast({
+        title: "Missing information",
+        description: "Please enter a valid institution name.",
+        variant: "destructive"
+      });
+      return;
+    }
+
     // Add account
     onAddAccount(newAccount);
 
-    // Reset form with all required fields
+    // Reset form with default values
     setNewAccount({
       accountName: "",
       institution: "",
-      accountType: "other", // Keep "other" as default
+      accountType: "",
       accountSubtype: "",
       currency: "",
       approximateValue: "",
@@ -75,7 +85,7 @@ export function useAccountForm(onAddAccount: (account: FinancialAccountInfo) => 
 
     toast({
       title: "Account added",
-      description: `${newAccount.accountName || "New account"} has been added successfully.`
+      description: "Financial account has been added successfully."
     });
   };
 

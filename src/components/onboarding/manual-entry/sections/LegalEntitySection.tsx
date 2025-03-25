@@ -23,11 +23,7 @@ const LegalEntitySection: React.FC<LegalEntitySectionProps> = ({
   handleLegalEntityChange,
   handleLeiChange
 }) => {
-  // Create an adapter function that converts the SelectField's onChange to work with our handlers
-  const handleSelectChange = (value: string) => {
-    handleLegalEntityChange(value);
-  };
-
+  // Create handler for LEI input change
   const handleLeiInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     handleLeiChange(e.target.value);
   };
@@ -39,7 +35,7 @@ const LegalEntitySection: React.FC<LegalEntitySectionProps> = ({
         label="Legal Entity"
         name="legalEntity"
         value={account.legalEntity}
-        onChange={handleSelectChange}
+        onChange={handleLegalEntityChange}
         options={legalEntities.length > 0 ? legalEntities : ["Default Entity"]}
         placeholder="Select legal entity"
         required={false}

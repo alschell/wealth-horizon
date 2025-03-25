@@ -18,7 +18,7 @@ interface SelectFieldProps {
   options: string[];
   required?: boolean;
   error?: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange: (value: string) => void;
   className?: string;
   name?: string;
 }
@@ -35,13 +35,6 @@ const SelectField = ({
   className,
   name
 }: SelectFieldProps) => {
-  // Handle onChange to match expected React.ChangeEvent format
-  const handleValueChange = (newValue: string) => {
-    onChange({
-      target: { name: name || id, value: newValue }
-    } as React.ChangeEvent<HTMLInputElement>);
-  };
-
   // Ensure "Other" is at the end if present
   const sortedOptions = [...options].sort((a, b) => {
     if (a === "Other") return 1;
@@ -56,7 +49,7 @@ const SelectField = ({
       </Label>
       <Select
         value={value || ""}
-        onValueChange={handleValueChange}
+        onValueChange={onChange}
       >
         <SelectTrigger 
           id={id} 

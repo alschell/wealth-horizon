@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useOnboarding, FamilyOfficeInfo } from "@/context/OnboardingContext";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -16,6 +16,7 @@ const FamilyOfficeInfoForm = () => {
   const { onboardingData, updateFamilyOfficeInfo, setCurrentStep } = useOnboarding();
   const [formData, setFormData] = useState<FamilyOfficeInfo>(onboardingData.familyOfficeInfo);
   const [errors, setErrors] = useState<Partial<Record<keyof FamilyOfficeInfo, string>>>({});
+  const [isValid, setIsValid] = useState(false);
 
   const handleInputChange = (name: string, value: string) => {
     setFormData({ ...formData, [name]: value });
@@ -25,6 +26,12 @@ const FamilyOfficeInfoForm = () => {
       setErrors({ ...errors, [name]: undefined });
     }
   };
+
+  // Check form validity whenever formData changes
+  useEffect(() => {
+    const isFormValid = validateFamilyOfficeInfo(formData, true);
+    setIsValid(isFormValid);
+  }, [formData]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -88,7 +95,8 @@ const FamilyOfficeInfoForm = () => {
               <Button 
                 type="submit" 
                 size="lg" 
-                className="rounded-lg bg-black hover:bg-gray-800 text-white hover:shadow-md transition-shadow"
+                className={`rounded-lg transition-shadow ${!isValid ? 'bg-gray-300 text-gray-500' : 'bg-black hover:bg-gray-800 text-white hover:shadow-md'}`}
+                disabled={!isValid}
               >
                 Continue
                 <ArrowRight className="ml-2 h-4 w-4" />

@@ -28,7 +28,7 @@ const FormNavigation: React.FC<FormNavigationProps> = ({ onBack, hasErrors = fal
         <Button 
           type="submit" 
           size="lg" 
-          className="rounded-lg hover:shadow-md transition-shadow"
+          className={`rounded-lg transition-shadow ${hasErrors ? 'bg-gray-300 text-gray-500' : 'bg-black hover:bg-gray-800 text-white hover:shadow-md'}`}
           disabled={hasErrors}
         >
           Continue

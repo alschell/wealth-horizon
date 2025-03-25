@@ -6,9 +6,10 @@ import { useOnboarding } from "@/context/OnboardingContext";
 
 interface FormNavigationProps {
   onSubmit: () => void;
+  isDisabled?: boolean;
 }
 
-const FormNavigation: React.FC<FormNavigationProps> = ({ onSubmit }) => {
+const FormNavigation: React.FC<FormNavigationProps> = ({ onSubmit, isDisabled = false }) => {
   const { setCurrentStep } = useOnboarding();
   
   return (
@@ -26,7 +27,8 @@ const FormNavigation: React.FC<FormNavigationProps> = ({ onSubmit }) => {
       <Button 
         onClick={onSubmit}
         size="lg" 
-        className="rounded-lg hover:shadow-md transition-shadow bg-black hover:bg-gray-800 text-white"
+        className={`rounded-lg transition-shadow ${isDisabled ? 'bg-gray-300 text-gray-500' : 'bg-black hover:bg-gray-800 text-white hover:shadow-md'}`}
+        disabled={isDisabled}
       >
         Submit Application
         <CheckCircle className="ml-2 h-4 w-4" />

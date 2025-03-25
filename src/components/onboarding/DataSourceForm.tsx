@@ -130,7 +130,6 @@ const DataSourceForm: React.FC = () => {
         />
       ) : (
         <FormSection>
-          <h3 className="text-xl font-semibold mb-4">Submit Financial Information</h3>
           <DataSourceTabs 
             dataSourceMethod={dataSourceMethod}
             setDataSourceMethod={setDataSourceMethod}

@@ -34,7 +34,7 @@ const AggregatorSection: React.FC<AggregatorSectionProps> = ({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 mt-6">
       <div className="space-y-3">
         <Label className="text-black">Select your aggregator</Label>
         <div className="relative">
@@ -51,21 +51,11 @@ const AggregatorSection: React.FC<AggregatorSectionProps> = ({
       </div>
 
       <div className="space-y-3">
-        <Label className="text-black">Username or Contact Email*</Label>
+        <Label className="text-black">User ID*</Label>
         <Input
-          placeholder="Enter your username or contact email"
+          placeholder="Enter your user ID"
           name="username"
           value={aggregatorInfo.aggregatorCredentials?.username || ""}
-          onChange={handleCredentialChange}
-        />
-      </div>
-
-      <div className="space-y-3">
-        <Label className="text-black">Email Address</Label>
-        <Input
-          placeholder="Enter your email address (optional)"
-          name="email"
-          value={aggregatorInfo.aggregatorCredentials?.email || ""}
           onChange={handleCredentialChange}
         />
       </div>

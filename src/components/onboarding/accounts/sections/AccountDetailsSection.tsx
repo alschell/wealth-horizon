@@ -34,7 +34,7 @@ const AccountDetailsSection = ({
         <SearchableSelectField
           id="currency"
           label="Primary Currency"
-          value={account.currency}
+          value={account.currency || ""}
           placeholder="Select currency"
           options={CURRENCIES}
           onChange={(value) => onSelectionChange("currency", extractCurrencyCode(value))}

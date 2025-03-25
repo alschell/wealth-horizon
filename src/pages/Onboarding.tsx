@@ -20,6 +20,7 @@ const Onboarding = () => {
 
   const totalSteps = 7;
 
+  // Detect path changes and update current step
   useEffect(() => {
     const path = location.pathname;
     if (path === "/onboarding/family-office") setCurrentStep(0);
@@ -30,9 +31,16 @@ const Onboarding = () => {
     else if (path === "/onboarding/beneficial-owners") setCurrentStep(5);
     else if (path === "/onboarding/review") setCurrentStep(6);
     else if (path === "/onboarding") setCurrentStep(0);
+    
+    // Scroll to top when the route changes
+    window.scrollTo(0, 0);
   }, [location.pathname, setCurrentStep]);
 
+  // Navigation function that also scrolls to top
   const navigateToStep = (step: number) => {
+    // Scroll to top before navigating
+    window.scrollTo(0, 0);
+    
     switch (step) {
       case 0:
         navigate("/onboarding/family-office");

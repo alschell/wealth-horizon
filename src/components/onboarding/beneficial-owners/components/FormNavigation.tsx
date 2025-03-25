@@ -14,18 +14,30 @@ const FormNavigation: React.FC<FormNavigationProps> = ({
   onBack,
   onSubmit
 }) => {
+  const handleBack = () => {
+    // Scroll to top before going back
+    window.scrollTo(0, 0);
+    onBack();
+  };
+
+  const handleSubmit = () => {
+    // Scroll to top before proceeding
+    window.scrollTo(0, 0);
+    onSubmit();
+  };
+
   return (
     <motion.div className="mt-8 flex justify-between">
       <Button
         type="button"
         variant="outline"
-        onClick={onBack}
+        onClick={handleBack}
       >
         Back
       </Button>
       <Button
         type="button"
-        onClick={onSubmit}
+        onClick={handleSubmit}
         disabled={!hasOwners}
       >
         Continue

@@ -61,6 +61,17 @@ const DataSourceForm: React.FC = () => {
     setUploadedFiles(files);
   };
 
+  // Handle account operations without changing the data source method
+  const handleAddAccount = (account: FinancialAccountInfo) => {
+    addFinancialAccount(account);
+    // We don't change dataSourceMethod, ensuring user stays in the same tab
+  };
+
+  const handleRemoveAccount = (index: number) => {
+    removeFinancialAccount(index);
+    // We don't change dataSourceMethod, ensuring user stays in the same tab
+  };
+
   // Validate the form based on the selected option
   useEffect(() => {
     if (aggregatorInfo.usesAggregator) {
@@ -124,10 +135,14 @@ const DataSourceForm: React.FC = () => {
 
     // Proceed to next step
     setCurrentStep(5);
+    // Scroll to top before navigating to the next page
+    window.scrollTo(0, 0);
     navigate("/onboarding/beneficial-owners");
   };
 
   const handleBack = () => {
+    // Scroll to top before navigating to the previous page
+    window.scrollTo(0, 0);
     navigate("/onboarding/legal-documents");
   };
 
@@ -155,8 +170,8 @@ const DataSourceForm: React.FC = () => {
             dataSourceMethod={dataSourceMethod}
             setDataSourceMethod={setDataSourceMethod}
             financialAccounts={financialAccounts}
-            handleAddAccount={addFinancialAccount}
-            handleRemoveAccount={removeFinancialAccount}
+            handleAddAccount={handleAddAccount}
+            handleRemoveAccount={handleRemoveAccount}
             handleUpdateAccount={() => {}}
             uploadedFiles={uploadedFiles}
             handleBulkFilesSelected={handleBulkFilesSelected}

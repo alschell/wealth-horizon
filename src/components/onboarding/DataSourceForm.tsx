@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useOnboarding } from "@/context/OnboardingContext";
@@ -10,7 +11,6 @@ import { AggregatorRadioGroup } from "@/components/onboarding/data-source";
 import AggregatorSection from "@/components/onboarding/data-source/AggregatorSection";
 import FormSection from "@/components/onboarding/common/layouts/FormSection";
 import { toast } from "@/components/ui/use-toast";
-import { Separator } from "@/components/ui/separator";
 
 const DataSourceForm: React.FC = () => {
   const navigate = useNavigate();
@@ -117,10 +117,6 @@ const DataSourceForm: React.FC = () => {
             aggregatorInfo={aggregatorInfo}
             setAggregatorInfo={setAggregatorInfo}
           />
-          <Separator className="my-6" />
-          <p className="text-sm text-gray-500 mb-6">
-            Fields marked with <span className="text-red-500">*</span> are required.
-          </p>
         </FormSection>
       ) : (
         <FormSection className="mt-6">

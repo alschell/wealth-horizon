@@ -2,6 +2,7 @@
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import FileUploader from "@/components/file-uploader/FileUploader";
+import { Separator } from "@/components/ui/separator";
 
 interface FileUploadSectionProps {
   uploadedFiles: File[];
@@ -22,6 +23,11 @@ const FileUploadSection: React.FC<FileUploadSectionProps> = ({
           accept="application/pdf,image/*,.doc,.docx"
           label="Upload Financial Documents"
         />
+        
+        <Separator className="my-6" />
+        <p className="text-sm text-gray-500">
+          Fields marked with <span className="text-red-500">*</span> are required.
+        </p>
       </CardContent>
     </Card>
   );

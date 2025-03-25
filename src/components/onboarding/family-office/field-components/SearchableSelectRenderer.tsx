@@ -5,8 +5,8 @@ import {
   CommandEmpty, 
   CommandGroup, 
   CommandInput, 
-  CommandItem, 
-  CommandList 
+  CommandItem,
+  CommandList
 } from "@/components/ui/command";
 import { 
   Popover, 
@@ -39,8 +39,11 @@ const SearchableSelectRenderer: React.FC<SearchableSelectRendererProps> = ({
   const [open, setOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
   
+  // Ensure options is always an array
+  const safeOptions = Array.isArray(options) ? options : [];
+  
   // Sort options alphabetically, but ensure "Other" is at the end
-  let sortedOptions = [...options];
+  let sortedOptions = [...safeOptions];
   if (sortedOptions.includes("Other")) {
     sortedOptions = sortedOptions
       .filter(option => option !== "Other")
@@ -60,7 +63,7 @@ const SearchableSelectRenderer: React.FC<SearchableSelectRendererProps> = ({
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (allowCustomValue && e.key === "Enter" && inputValue && !options.includes(inputValue)) {
+    if (allowCustomValue && e.key === "Enter" && inputValue && !safeOptions.includes(inputValue)) {
       e.preventDefault();
       onChange(name, inputValue);
       setOpen(false);

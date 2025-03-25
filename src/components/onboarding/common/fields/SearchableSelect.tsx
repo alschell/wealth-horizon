@@ -7,7 +7,8 @@ import {
   CommandEmpty, 
   CommandGroup, 
   CommandInput, 
-  CommandItem 
+  CommandItem, 
+  CommandList
 } from "@/components/ui/command";
 import {
   Popover,
@@ -41,9 +42,12 @@ const SearchableSelect: React.FC<SearchableSelectProps> = ({
   className
 }) => {
   const [open, setOpen] = useState(false);
+  
+  // Ensure options is always an array
+  const safeOptions = Array.isArray(options) ? options : [];
 
   // Sort options alphabetically
-  const sortedOptions = [...options].sort((a, b) => a.localeCompare(b));
+  const sortedOptions = [...safeOptions].sort((a, b) => a.localeCompare(b));
 
   const handleSelect = (selectedValue: string) => {
     onChange(selectedValue);
@@ -89,27 +93,29 @@ const SearchableSelect: React.FC<SearchableSelectProps> = ({
               placeholder={`Search ${label.toLowerCase()}...`} 
               className="h-9 text-black"
             />
-            <CommandEmpty>
-              <span className="text-black">No results found.</span>
-            </CommandEmpty>
-            <CommandGroup className="max-h-[300px] overflow-y-auto">
-              {sortedOptions.map((option) => (
-                <CommandItem
-                  key={option}
-                  value={option}
-                  onSelect={() => handleSelect(option)}
-                  className="hover:bg-slate-100 aria-selected:bg-slate-100 cursor-pointer text-black text-left"
-                >
-                  <Check
-                    className={cn(
-                      "mr-2 h-4 w-4 text-black",
-                      value === option ? "opacity-100" : "opacity-0"
-                    )}
-                  />
-                  {option}
-                </CommandItem>
-              ))}
-            </CommandGroup>
+            <CommandList>
+              <CommandEmpty>
+                <span className="text-black">No results found.</span>
+              </CommandEmpty>
+              <CommandGroup className="max-h-[300px] overflow-y-auto">
+                {sortedOptions.map((option) => (
+                  <CommandItem
+                    key={option}
+                    value={option}
+                    onSelect={() => handleSelect(option)}
+                    className="hover:bg-slate-100 aria-selected:bg-slate-100 cursor-pointer text-black text-left"
+                  >
+                    <Check
+                      className={cn(
+                        "mr-2 h-4 w-4 text-black",
+                        value === option ? "opacity-100" : "opacity-0"
+                      )}
+                    />
+                    {option}
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            </CommandList>
           </Command>
         </PopoverContent>
       </Popover>

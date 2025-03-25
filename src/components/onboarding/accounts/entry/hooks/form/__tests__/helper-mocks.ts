@@ -15,6 +15,8 @@ export const createMockAccount = (overrides = {}): FinancialAccountInfo => ({
   currency: "USD",
   approximateValue: "10000",
   statements: [],
+  accountNumber: "", // Add missing field
+  swiftCode: "", // Add missing field
   ...overrides
 });
 

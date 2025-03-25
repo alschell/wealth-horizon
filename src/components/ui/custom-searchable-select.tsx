@@ -47,8 +47,11 @@ const CustomSearchableSelect = ({
     };
   }, []);
 
+  // Ensure options is always an array
+  const safeOptions = Array.isArray(options) ? options : [];
+
   // Sort options alphabetically, but ensure "Other" is at the end
-  let sortedOptions = [...options];
+  let sortedOptions = [...safeOptions];
   if (sortedOptions.includes("Other")) {
     sortedOptions = sortedOptions
       .filter(option => option !== "Other")
@@ -63,12 +66,12 @@ const CustomSearchableSelect = ({
       option.toLowerCase().includes(query.toLowerCase())
     );
     
-    if (allowCustomValue && query && !options.includes(query) && !filtered.includes(query)) {
+    if (allowCustomValue && query && !safeOptions.includes(query) && !filtered.includes(query)) {
       filtered = [query, ...filtered];
     }
 
     return filtered;
-  }, [query, options, allowCustomValue, sortedOptions]);
+  }, [query, safeOptions, allowCustomValue, sortedOptions]);
 
   return (
     <div className={cn("relative", className)}>

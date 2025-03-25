@@ -7,7 +7,8 @@ import {
   CommandEmpty, 
   CommandGroup, 
   CommandInput, 
-  CommandItem 
+  CommandItem, 
+  CommandList
 } from "@/components/ui/command";
 import {
   Popover,
@@ -47,8 +48,11 @@ const SearchableSelectField = ({
   const [open, setOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
 
+  // Ensure options is always an array
+  const safeOptions = Array.isArray(options) ? options : [];
+
   // Sort options alphabetically, but ensure "Other" is at the end
-  let sortedOptions = [...options];
+  let sortedOptions = [...safeOptions];
   if (sortedOptions.includes("Other")) {
     sortedOptions = sortedOptions
       .filter(option => option !== "Other")
@@ -65,7 +69,7 @@ const SearchableSelectField = ({
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (allowCustomValue && e.key === "Enter" && inputValue && !options.includes(inputValue)) {
+    if (allowCustomValue && e.key === "Enter" && inputValue && !safeOptions.includes(inputValue)) {
       e.preventDefault();
       onChange(inputValue);
       setOpen(false);
@@ -116,34 +120,36 @@ const SearchableSelectField = ({
               value={inputValue}
               onValueChange={setInputValue}
             />
-            <CommandEmpty>
-              {allowCustomValue ? (
-                <div className="py-3 px-4 text-sm">
-                  <p className="text-black">No results found.</p>
-                  <p className="font-medium text-black">Press Enter to add "{inputValue}"</p>
-                </div>
-              ) : (
-                <span className="text-black">No results found.</span>
-              )}
-            </CommandEmpty>
-            <CommandGroup className="max-h-[300px] overflow-y-auto">
-              {sortedOptions.map((option) => (
-                <CommandItem
-                  key={option}
-                  value={option}
-                  onSelect={() => handleSelect(option)}
-                  className="hover:bg-slate-100 cursor-pointer text-black"
-                >
-                  <Check
-                    className={cn(
-                      "mr-2 h-4 w-4 text-black",
-                      value === option ? "opacity-100" : "opacity-0"
-                    )}
-                  />
-                  {option}
-                </CommandItem>
-              ))}
-            </CommandGroup>
+            <CommandList>
+              <CommandEmpty>
+                {allowCustomValue ? (
+                  <div className="py-3 px-4 text-sm">
+                    <p className="text-black">No results found.</p>
+                    <p className="font-medium text-black">Press Enter to add "{inputValue}"</p>
+                  </div>
+                ) : (
+                  <span className="text-black">No results found.</span>
+                )}
+              </CommandEmpty>
+              <CommandGroup className="max-h-[300px] overflow-y-auto">
+                {sortedOptions.map((option) => (
+                  <CommandItem
+                    key={option}
+                    value={option}
+                    onSelect={() => handleSelect(option)}
+                    className="hover:bg-slate-100 cursor-pointer text-black"
+                  >
+                    <Check
+                      className={cn(
+                        "mr-2 h-4 w-4 text-black",
+                        value === option ? "opacity-100" : "opacity-0"
+                      )}
+                    />
+                    {option}
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            </CommandList>
           </Command>
         </PopoverContent>
       </Popover>

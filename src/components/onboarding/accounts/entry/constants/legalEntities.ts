@@ -1,4 +1,3 @@
-
 // Legal entities for institutions (mapping)
 export const LEGAL_ENTITIES: Record<string, string[]> = {
   "JP Morgan Chase": [
@@ -152,5 +151,20 @@ export const LEGAL_ENTITIES: Record<string, string[]> = {
     "TD AMERITRADE, INC.",
     "TD AMERITRADE CLEARING, INC.",
     "CHARLES SCHWAB FUTURES AND FOREX LLC"
-  ]
+  ],
+  "Other": ["Other Legal Entity"]
+};
+
+// Ensure no institution has an empty array of legal entities
+export const ensureAllInstitutionsHaveLegalEntities = (institutions: string[]): Record<string, string[]> => {
+  const result = { ...LEGAL_ENTITIES };
+  
+  // Add at least one default legal entity for each institution that doesn't have any
+  institutions.forEach(institution => {
+    if (!result[institution]) {
+      result[institution] = [`${institution} Default Legal Entity`];
+    }
+  });
+  
+  return result;
 };

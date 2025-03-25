@@ -1,7 +1,5 @@
 
 import React from "react";
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
 import { BeneficialOwnerInfo, OwnersListProps } from "./types";
 import { motion } from "framer-motion";
 import { EditButton, DeleteButton } from "@/components/ui/action-buttons";
@@ -15,15 +13,6 @@ const OwnersList: React.FC<OwnersListProps> = ({
     <div className="space-y-4">
       <div className="flex justify-between items-center">
         <h3 className="text-lg font-semibold text-black">Beneficial Owners</h3>
-        
-        <Button
-          type="button"
-          className="text-white"
-          onClick={() => onEditOwner(-1)}
-        >
-          <Plus className="mr-2 h-4 w-4" />
-          Add Beneficial Owner
-        </Button>
       </div>
       
       {owners.length === 0 ? (

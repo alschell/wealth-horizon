@@ -62,6 +62,7 @@ const SearchableSelectField = ({
     sortedOptions.sort((a, b) => a.localeCompare(b));
   }
 
+  // This function immediately applies the selected value and closes the dropdown
   const handleSelect = (selectedValue: string) => {
     onChange(selectedValue);
     setOpen(false);
@@ -121,6 +122,7 @@ const SearchableSelectField = ({
               className="h-9 text-black"
               value={inputValue}
               onValueChange={setInputValue}
+              autoFocus
             />
             <CommandList className="max-h-[300px] overflow-y-auto">
               <CommandEmpty>

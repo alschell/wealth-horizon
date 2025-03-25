@@ -1,24 +1,31 @@
 
 import { useState, useCallback } from "react";
 import { FinancialAccountInfo } from "@/types/onboarding";
-import { LEGAL_ENTITIES, LEI_MAPPING } from "../constants";
+import { LEGAL_ENTITIES, ensureAllInstitutionsHaveLegalEntities } from "../constants";
+import { LEI_MAPPING } from "../constants";
+import { INSTITUTIONS } from "@/utils/constants/institutions";
 
 export const useLegalEntityMapping = (
   account: FinancialAccountInfo,
   onSelectionChange: (field: keyof FinancialAccountInfo, value: string) => void
 ) => {
+  // Ensure all institutions have legal entities
+  const allLegalEntities = ensureAllInstitutionsHaveLegalEntities(INSTITUTIONS);
+  
   // Get legal entities for the selected institution
   const getLegalEntities = useCallback(() => {
     if (!account.institution) {
       // Return all legal entities when no institution is selected
-      return Object.values(LEGAL_ENTITIES).flat();
+      return Object.values(allLegalEntities).flat();
     }
     
-    if (LEGAL_ENTITIES[account.institution]) {
-      return LEGAL_ENTITIES[account.institution];
+    if (allLegalEntities[account.institution]) {
+      return allLegalEntities[account.institution];
     }
-    return [];
-  }, [account.institution]);
+    
+    // Fallback to a default legal entity if the institution doesn't have any
+    return [`${account.institution} Default Legal Entity`];
+  }, [account.institution, allLegalEntities]);
 
   // Handle legal entity selection
   const handleLegalEntityChange = useCallback((value: string) => {
@@ -39,7 +46,7 @@ export const useLegalEntityMapping = (
       for (const [entityName, entityLei] of Object.entries(LEI_MAPPING)) {
         if (entityLei === value) {
           // Find the institution this entity belongs to
-          for (const [instName, entities] of Object.entries(LEGAL_ENTITIES)) {
+          for (const [instName, entities] of Object.entries(allLegalEntities)) {
             if (entities.includes(entityName)) {
               onSelectionChange("institution", instName);
               onSelectionChange("legalEntity", entityName);
@@ -50,7 +57,7 @@ export const useLegalEntityMapping = (
         }
       }
     }
-  }, [onSelectionChange]);
+  }, [onSelectionChange, allLegalEntities]);
 
   return {
     getLegalEntities,

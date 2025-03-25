@@ -1,7 +1,9 @@
 
 import React from "react";
+import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import { Trash2, Edit } from "lucide-react";
+import { File, Pencil, Trash } from "lucide-react";
+import { format } from "date-fns";
 import { DocumentFileWithMetadata } from "./useLegalDocumentsForm";
 
 interface DocumentListProps {
@@ -13,65 +15,55 @@ interface DocumentListProps {
 const DocumentList: React.FC<DocumentListProps> = ({ 
   documentFiles, 
   onRemoveDocument,
-  onEditDocument
+  onEditDocument 
 }) => {
-  if (documentFiles.length === 0) {
-    return null;
-  }
-
-  // Function to format the document type for display
-  const formatDocumentType = (type: string): string => {
-    return type
-      .split('_')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(' ');
-  };
-
-  // Function to safely get file size
-  const getFileSizeInMB = (file: File): string => {
-    return (file.size / (1024 * 1024)).toFixed(2);
-  };
-
   return (
-    <div className="border p-5 rounded-md space-y-3">
-      <h3 className="font-medium">Added Legal Documents</h3>
-      <div className="space-y-3">
-        {documentFiles.map((document) => (
-          <div key={document.id} className="flex items-center justify-between bg-gray-50 p-3 rounded-lg">
-            <div className="flex items-center space-x-3">
-              <div className="w-9 h-9 bg-gray-200 rounded-md flex items-center justify-center">
-                <span className="text-xs font-medium text-gray-600">
-                  {document.file.name.split('.').pop()?.toUpperCase()}
-                </span>
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <h3 className="text-lg font-medium">Added Legal Documents</h3>
+      </div>
+      <Separator />
+      
+      <div className="space-y-4">
+        {documentFiles.map((doc) => (
+          <div key={doc.id} className="border rounded-lg p-4 bg-gray-50">
+            <div className="flex items-start justify-between">
+              <div className="flex items-start space-x-3">
+                <div className="mt-1">
+                  <File className="h-5 w-5 text-gray-500" />
+                </div>
+                <div>
+                  <h4 className="font-medium">{doc.documentType}</h4>
+                  <div className="text-sm text-gray-500 mt-1 space-y-1">
+                    <p>Issue Date: {doc.issueDate ? format(new Date(doc.issueDate), 'PPP') : 'N/A'}</p>
+                    {doc.expiryDate && (
+                      <p>Expiry Date: {format(new Date(doc.expiryDate), 'PPP')}</p>
+                    )}
+                    <p>File: {doc.file.name}</p>
+                  </div>
+                </div>
               </div>
-              <div>
-                <p className="text-sm font-medium">
-                  {formatDocumentType(document.documentType || '')}
-                </p>
-                <p className="text-xs text-gray-500">{getFileSizeInMB(document.file)} MB</p>
+              
+              <div className="flex space-x-2">
+                <Button
+                  variant="ghost" 
+                  size="sm"
+                  className="text-gray-500 hover:text-blue-500"
+                  onClick={() => onEditDocument(doc.id)}
+                >
+                  <Pencil className="h-4 w-4" />
+                  <span className="sr-only">Edit document</span>
+                </Button>
+                <Button
+                  variant="ghost" 
+                  size="sm"
+                  className="text-gray-500 hover:text-red-500"
+                  onClick={() => onRemoveDocument(doc.id)}
+                >
+                  <Trash className="h-4 w-4" />
+                  <span className="sr-only">Remove document</span>
+                </Button>
               </div>
-            </div>
-            <div className="flex space-x-2">
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                className="text-gray-500 hover:text-blue-500 p-2 h-auto"
-                onClick={() => onEditDocument(document.id)}
-              >
-                <Edit className="h-5 w-5" />
-                <span className="sr-only">Edit document</span>
-              </Button>
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                className="text-gray-500 hover:text-red-500 p-2 h-auto"
-                onClick={() => onRemoveDocument(document.id)}
-              >
-                <Trash2 className="h-5 w-5" />
-                <span className="sr-only">Remove document</span>
-              </Button>
             </div>
           </div>
         ))}

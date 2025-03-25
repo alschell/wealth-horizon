@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 interface DocumentUploadFieldProps {
   file: File | null;
   onFileSelected: (files: File[]) => void;
+  onFileClear?: () => void;
   error?: boolean;
   documentType?: string;
   onFileDelete?: () => void;
@@ -17,6 +18,7 @@ interface DocumentUploadFieldProps {
 const DocumentUploadField: React.FC<DocumentUploadFieldProps> = ({ 
   file, 
   onFileSelected,
+  onFileClear,
   error,
   documentType,
   onFileDelete
@@ -26,6 +28,8 @@ const DocumentUploadField: React.FC<DocumentUploadFieldProps> = ({
   const handleCustomFileDelete = () => {
     if (onFileDelete) {
       onFileDelete();
+    } else if (onFileClear) {
+      onFileClear();
     }
   };
 

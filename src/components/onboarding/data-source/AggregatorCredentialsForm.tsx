@@ -1,76 +1,28 @@
 
 import React from "react";
-import { motion } from "framer-motion";
-import { AggregatorInfo } from "@/context/OnboardingContext";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { InputField } from "../common/fields";
+import { Card } from "@/components/ui/card";
 
 interface AggregatorCredentialsFormProps {
-  aggregatorInfo: AggregatorInfo;
-  handleCredentialsChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  itemVariants: any;
+  apiKey: string;
+  onApiKeyChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const AggregatorCredentialsForm: React.FC<AggregatorCredentialsFormProps> = ({
-  aggregatorInfo,
-  handleCredentialsChange,
-  itemVariants
+  apiKey,
+  onApiKeyChange
 }) => {
   return (
-    <motion.div 
-      custom={2}
-      variants={itemVariants}
-      initial="hidden"
-      animate="visible"
-      className="space-y-4"
-    >
-      <h3 className="text-md font-medium">Aggregator Credentials</h3>
-      
-      <div className="space-y-4">
-        <div className="space-y-2">
-          <Label htmlFor="username">
-            User ID <span className="text-red-500">*</span>
-          </Label>
-          <Input
-            id="username"
-            name="username"
-            value={aggregatorInfo.aggregatorCredentials?.username || ""}
-            onChange={handleCredentialsChange}
-            placeholder="Enter your username"
-            className="h-11"
-          />
-        </div>
-        
-        <div className="space-y-2">
-          <Label htmlFor="email">
-            Contact email address
-          </Label>
-          <Input
-            id="email"
-            name="email"
-            value={aggregatorInfo.aggregatorCredentials?.email || ""}
-            onChange={handleCredentialsChange}
-            placeholder="Enter your email address (optional)"
-            className="h-11"
-            type="email"
-          />
-        </div>
-        
-        <div className="space-y-2">
-          <Label htmlFor="apiKey">
-            API Key
-          </Label>
-          <Input
-            id="apiKey"
-            name="apiKey"
-            value={aggregatorInfo.aggregatorCredentials?.apiKey || ""}
-            onChange={handleCredentialsChange}
-            placeholder="Enter your API key if applicable"
-            className="h-11"
-          />
-        </div>
-      </div>
-    </motion.div>
+    <Card className="p-4 mt-4">
+      <InputField
+        id="apiKey"
+        name="apiKey"
+        label="API Key"
+        value={apiKey}
+        onChange={onApiKeyChange}
+        placeholder="Enter your API key if available"
+      />
+    </Card>
   );
 };
 

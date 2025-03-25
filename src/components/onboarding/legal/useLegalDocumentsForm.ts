@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useOnboarding, LegalDocuments } from "@/context/OnboardingContext";
 import { toast } from "@/components/ui/use-toast";

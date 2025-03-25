@@ -34,7 +34,7 @@ const DocumentList: React.FC<DocumentListProps> = ({
 
   return (
     <div className="border p-5 rounded-md space-y-3">
-      <h3 className="font-medium">Added Documents</h3>
+      <h3 className="font-medium">Added Legal Documents</h3>
       <div className="space-y-3">
         {documentFiles.map((document) => (
           <div key={document.id} className="flex items-center justify-between bg-gray-50 p-3 rounded-lg">

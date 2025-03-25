@@ -32,6 +32,11 @@ const DocumentList: React.FC<DocumentListProps> = ({
       .join(' ');
   };
 
+  // Function to safely get file size
+  const getFileSizeInMB = (file: File): string => {
+    return (file.size / (1024 * 1024)).toFixed(2);
+  };
+
   return (
     <div className="border p-5 rounded-md space-y-3">
       <h3 className="font-medium">Added Documents</h3>
@@ -48,7 +53,7 @@ const DocumentList: React.FC<DocumentListProps> = ({
                 <p className="text-sm font-medium">
                   {formatDocumentType(file.documentType || '')}
                 </p>
-                <p className="text-xs text-gray-500">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
+                <p className="text-xs text-gray-500">{getFileSizeInMB(file)} MB</p>
               </div>
             </div>
             <div className="flex space-x-2">

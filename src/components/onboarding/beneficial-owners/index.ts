@@ -5,3 +5,7 @@ export { default as BeneficialOwnerFormFields } from './OwnerFormFields';
 export { default as FormHeader } from './FormHeader';
 export { default as FormFooter } from './FormFooter';
 export { default } from './BeneficialOwnersForm';
+
+// New components
+export * from './components';
+export { useBeneficialOwnerForm } from './hooks/useBeneficialOwnerForm';

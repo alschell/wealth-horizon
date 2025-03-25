@@ -21,12 +21,14 @@ const LegalDocumentsSection: React.FC<LegalDocumentsSectionProps> = ({
           <span className="ml-2 text-black">{legalDocuments.documentType || "Not provided"}</span>
         </div>
         <div>
-          <span className="font-medium text-black">Document Number:</span>
-          <span className="ml-2 text-black">{legalDocuments.documentNumber || "Not provided"}</span>
-        </div>
-        <div>
           <span className="font-medium text-black">Issue Date:</span>
           <span className="ml-2 text-black">{formatDate(legalDocuments.issueDate)}</span>
+        </div>
+        <div>
+          <span className="font-medium text-black">Expiry Date:</span>
+          <span className="ml-2 text-black">
+            {legalDocuments.expiryDate ? formatDate(legalDocuments.expiryDate) : "Not provided"}
+          </span>
         </div>
         <div>
           <span className="font-medium text-black">Uploaded Documents:</span>

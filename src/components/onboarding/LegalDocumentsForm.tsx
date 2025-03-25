@@ -24,11 +24,6 @@ const LegalDocumentsForm = () => {
     }
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    handleDocumentChange(name as keyof LegalDocuments, value);
-  };
-
   const handleDateChange = (field: 'issueDate' | 'expiryDate', date?: Date) => {
     if (date) {
       handleDocumentChange(field, date.toISOString());
@@ -114,12 +109,9 @@ const LegalDocumentsForm = () => {
             />
             
             <DocumentDetailsFields
-              documentNumber={legalDocuments.documentNumber}
               issueDate={legalDocuments.issueDate}
               expiryDate={legalDocuments.expiryDate}
-              onInputChange={handleInputChange}
               onDateChange={handleDateChange}
-              documentNumberRequired={false}
             />
             
             <DocumentUploadField

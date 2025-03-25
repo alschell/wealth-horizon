@@ -27,6 +27,18 @@ const FormFooter: React.FC<FormFooterProps> = ({
 }) => {
   const isDisabled = isSubmitting || disableContinue;
   
+  const handleBack = () => {
+    // Scroll to top before going back
+    window.scrollTo(0, 0);
+    if (onBack) onBack();
+  };
+
+  const handleSubmit = () => {
+    // Scroll to top before submitting
+    window.scrollTo(0, 0);
+    onSubmit();
+  };
+  
   return (
     <div className={cn("pt-4 border-t", className)}>
       {showRequired && (
@@ -41,7 +53,7 @@ const FormFooter: React.FC<FormFooterProps> = ({
             variant="outline"
             size="lg"
             className="rounded-lg"
-            onClick={onBack}
+            onClick={handleBack}
             disabled={isSubmitting}
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
@@ -56,7 +68,7 @@ const FormFooter: React.FC<FormFooterProps> = ({
             isDisabled ? "bg-gray-300 text-gray-500" : "bg-black hover:bg-gray-800 text-white hover:shadow-md", 
             !onBack && "ml-auto"
           )}
-          onClick={onSubmit}
+          onClick={handleSubmit}
           disabled={isDisabled}
         >
           {isSubmitting ? (

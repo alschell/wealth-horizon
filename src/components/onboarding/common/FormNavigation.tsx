@@ -19,6 +19,12 @@ const FormNavigation: React.FC<FormNavigationProps> = ({
   submitText = "Continue",
   className
 }) => {
+  const handleBack = () => {
+    // Scroll to top before navigating back
+    window.scrollTo(0, 0);
+    onBack();
+  };
+
   return (
     <div className={cn("pt-4 border-t mt-6", className)}>
       {showRequiredFieldsNote && (
@@ -32,7 +38,7 @@ const FormNavigation: React.FC<FormNavigationProps> = ({
           variant="outline"
           size="lg" 
           className="rounded-lg"
-          onClick={onBack}
+          onClick={handleBack}
           disabled={isSubmitting}
         >
           <ArrowLeft className="mr-2 h-4 w-4 text-black" />

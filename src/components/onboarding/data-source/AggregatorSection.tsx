@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { AggregatorInfo } from "@/context/OnboardingContext";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -16,6 +16,11 @@ const AggregatorSection: React.FC<AggregatorSectionProps> = ({
   setAggregatorInfo
 }) => {
   const [showCustomField, setShowCustomField] = useState(aggregatorInfo.aggregatorName === "Other");
+  const [errors, setErrors] = useState<{
+    aggregatorName?: boolean;
+    username?: boolean;
+    customAggregator?: boolean;
+  }>({});
 
   const handleAggregatorChange = (value: string) => {
     setAggregatorInfo({
@@ -23,6 +28,10 @@ const AggregatorSection: React.FC<AggregatorSectionProps> = ({
       aggregatorName: value === "Other" ? "" : value
     });
     setShowCustomField(value === "Other");
+    
+    if (errors.aggregatorName) {
+      setErrors(prev => ({ ...prev, aggregatorName: false }));
+    }
   };
 
   const handleCustomAggregatorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,6 +39,10 @@ const AggregatorSection: React.FC<AggregatorSectionProps> = ({
       ...aggregatorInfo,
       aggregatorName: e.target.value
     });
+    
+    if (errors.customAggregator && e.target.value) {
+      setErrors(prev => ({ ...prev, customAggregator: false }));
+    }
   };
 
   const handleCredentialChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,6 +54,10 @@ const AggregatorSection: React.FC<AggregatorSectionProps> = ({
         [name]: value
       }
     });
+    
+    if (name === 'username' && errors.username && value) {
+      setErrors(prev => ({ ...prev, username: false }));
+    }
   };
 
   // Ensure "Other" is at the end of the list
@@ -54,7 +71,9 @@ const AggregatorSection: React.FC<AggregatorSectionProps> = ({
   return (
     <div className="space-y-6">
       <div className="space-y-3 mt-4">
-        <Label className="text-black">Select your aggregator</Label>
+        <Label className="text-black">
+          Select your aggregator <span className="text-red-500">*</span>
+        </Label>
         <div className="relative">
           <SearchableSelectField
             id="aggregator"
@@ -78,6 +97,11 @@ const AggregatorSection: React.FC<AggregatorSectionProps> = ({
               onChange={handleCustomAggregatorChange}
               className="mt-1"
             />
+            {errors.customAggregator && (
+              <p className="text-sm font-medium text-red-500 mt-1">
+                Please enter the aggregator name
+              </p>
+            )}
           </div>
         )}
       </div>
@@ -92,6 +116,11 @@ const AggregatorSection: React.FC<AggregatorSectionProps> = ({
           value={aggregatorInfo.aggregatorCredentials?.username || ""}
           onChange={handleCredentialChange}
         />
+        {errors.username && (
+          <p className="text-sm font-medium text-red-500 mt-1">
+            Please enter your user ID
+          </p>
+        )}
       </div>
 
       <div className="space-y-3">

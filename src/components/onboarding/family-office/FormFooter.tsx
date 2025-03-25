@@ -7,13 +7,17 @@ interface FormFooterProps {
   onSubmit: () => void;
   requiredFieldsNote?: boolean;
   isSubmitting?: boolean;
+  disableContinue?: boolean;
 }
 
 const FormFooter: React.FC<FormFooterProps> = ({ 
   onSubmit,
   requiredFieldsNote = true,
-  isSubmitting = false
+  isSubmitting = false,
+  disableContinue = false
 }) => {
+  const isDisabled = isSubmitting || disableContinue;
+  
   return (
     <div className="pt-4 border-t mt-6">
       {requiredFieldsNote && (
@@ -25,8 +29,8 @@ const FormFooter: React.FC<FormFooterProps> = ({
         <Button 
           onClick={onSubmit} 
           size="lg" 
-          className={`rounded-lg transition-shadow ${isSubmitting ? 'bg-gray-300 text-gray-500' : 'bg-black hover:bg-gray-800 text-white hover:shadow-md'}`}
-          disabled={isSubmitting}
+          className={`rounded-lg transition-shadow ${isDisabled ? 'bg-gray-300 text-gray-500' : 'bg-black hover:bg-gray-800 text-white hover:shadow-md'}`}
+          disabled={isDisabled}
         >
           Continue
           <ArrowRight className="ml-2 h-4 w-4" />

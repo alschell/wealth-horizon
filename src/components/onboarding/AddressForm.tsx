@@ -11,7 +11,8 @@ const AddressForm = () => {
   const { onboardingData, updateAddressInfo, setCurrentStep } = useOnboarding();
   const [formData, setFormData] = useState<AddressInfo>(onboardingData.addressInfo);
   const [errors, setErrors] = useState<Partial<Record<keyof AddressInfo, string>>>({});
-  const [hasErrors, setHasErrors] = useState(true);
+  const [formTouched, setFormTouched] = useState(false);
+  const [hasErrors, setHasErrors] = useState(false);
 
   // Required fields for validation
   const requiredFields: (keyof AddressInfo)[] = [
@@ -26,6 +27,10 @@ const AddressForm = () => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
     
+    if (!formTouched) {
+      setFormTouched(true);
+    }
+    
     // Clear error when field is edited
     if (errors[name as keyof AddressInfo]) {
       setErrors({ ...errors, [name]: undefined });
@@ -35,18 +40,24 @@ const AddressForm = () => {
   const handleSelectChange = (field: keyof AddressInfo, value: string) => {
     setFormData({ ...formData, [field]: value });
     
+    if (!formTouched) {
+      setFormTouched(true);
+    }
+    
     // Clear error when field is edited
     if (errors[field]) {
       setErrors({ ...errors, [field]: undefined });
     }
   };
 
-  // Check for form validity whenever formData changes
+  // Check for form validity whenever formData changes, but only if form has been touched
   useEffect(() => {
-    const newErrors = validateRequiredFields(formData, requiredFields);
-    setErrors(newErrors);
-    setHasErrors(Object.keys(newErrors).length > 0);
-  }, [formData]);
+    if (formTouched) {
+      const newErrors = validateRequiredFields(formData, requiredFields);
+      setErrors(newErrors);
+      setHasErrors(Object.keys(newErrors).length > 0);
+    }
+  }, [formData, formTouched]);
 
   const validateForm = () => {
     const newErrors = validateRequiredFields(formData, requiredFields);
@@ -56,6 +67,7 @@ const AddressForm = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setFormTouched(true);
     
     if (!validateForm()) {
       toast({
@@ -88,12 +100,12 @@ const AddressForm = () => {
           
           <AddressFormFields 
             address={formData}
-            errors={errors}
+            errors={formTouched ? errors : {}}
             onInputChange={handleInputChange}
             onSelectionChange={handleSelectChange}
           />
 
-          <AddressFormNavigation hasErrors={hasErrors} />
+          <AddressFormNavigation hasErrors={formTouched && hasErrors} />
         </form>
       </Card>
     </motion.div>

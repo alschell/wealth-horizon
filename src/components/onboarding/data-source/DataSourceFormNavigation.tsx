@@ -7,13 +7,17 @@ interface DataSourceFormNavigationProps {
   onBack: () => void;
   isSubmitting: boolean;
   onSubmit?: () => void;
+  disableContinue?: boolean;
 }
 
 const DataSourceFormNavigation: React.FC<DataSourceFormNavigationProps> = ({
   onBack,
   isSubmitting,
-  onSubmit
+  onSubmit,
+  disableContinue = false
 }) => {
+  const isDisabled = isSubmitting || disableContinue;
+  
   return (
     <div className="flex justify-between pt-4">
       <Button
@@ -28,8 +32,8 @@ const DataSourceFormNavigation: React.FC<DataSourceFormNavigationProps> = ({
       
       <Button 
         type={onSubmit ? "button" : "submit"}
-        disabled={isSubmitting}
-        className={`rounded-lg transition-shadow ${isSubmitting ? 'bg-gray-300 text-gray-500' : 'bg-black hover:bg-gray-800 text-white hover:shadow-md'}`}
+        disabled={isDisabled}
+        className={`rounded-lg transition-shadow ${isDisabled ? 'bg-gray-300 text-gray-500' : 'bg-black hover:bg-gray-800 text-white hover:shadow-md'}`}
         onClick={onSubmit}
       >
         {isSubmitting ? "Saving..." : "Continue"}

@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useOnboarding } from "@/context/OnboardingContext";
 import { AggregatorInfo, FinancialAccountInfo } from "@/context/OnboardingContext";
@@ -26,6 +26,7 @@ const DataSourceForm: React.FC = () => {
   const [aggregatorInfo, setAggregatorInfo] = useState<AggregatorInfo>(onboardingData.aggregatorInfo);
   const [dataSourceMethod, setDataSourceMethod] = useState<"manual" | "upload">("manual");
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+  const [isValid, setIsValid] = useState(false);
 
   const handleAggregatorSelection = (value: "yes" | "no") => {
     const newAggregatorInfo = {
@@ -59,6 +60,26 @@ const DataSourceForm: React.FC = () => {
     setUploadedFiles(files);
   };
 
+  // Validate the form based on the selected option
+  useEffect(() => {
+    if (aggregatorInfo.usesAggregator) {
+      // Using aggregator - validate credentials
+      const isAggregatorValid = !!aggregatorInfo.aggregatorName && 
+        !!aggregatorInfo.aggregatorCredentials?.username &&
+        (aggregatorInfo.aggregatorName !== "Other" || 
+         (aggregatorInfo.aggregatorName === "Other" && !!aggregatorInfo.aggregatorName));
+        
+      setIsValid(isAggregatorValid);
+    } else {
+      // Not using aggregator - validate based on method
+      if (dataSourceMethod === "manual") {
+        setIsValid(financialAccounts.length > 0);
+      } else if (dataSourceMethod === "upload") {
+        setIsValid(uploadedFiles.length > 0);
+      }
+    }
+  }, [aggregatorInfo, dataSourceMethod, uploadedFiles, financialAccounts]);
+
   const handleSubmit = () => {
     updateAggregatorInfo(aggregatorInfo);
 
@@ -67,6 +88,24 @@ const DataSourceForm: React.FC = () => {
         toast({
           title: "Missing Information",
           description: "Please select an aggregator.",
+          variant: "destructive"
+        });
+        return;
+      }
+      
+      if (!aggregatorInfo.aggregatorCredentials?.username) {
+        toast({
+          title: "Missing Information", 
+          description: "Please enter your User ID.",
+          variant: "destructive"
+        });
+        return;
+      }
+      
+      if (aggregatorInfo.aggregatorName === "Other" && !aggregatorInfo.aggregatorName) {
+        toast({
+          title: "Missing Information",
+          description: "Please enter the aggregator name.",
           variant: "destructive"
         });
         return;
@@ -136,6 +175,7 @@ const DataSourceForm: React.FC = () => {
       <FormFooter 
         onBack={handleBack}
         onSubmit={handleSubmit}
+        disableContinue={!isValid}
       />
     </FormLayout>
   );

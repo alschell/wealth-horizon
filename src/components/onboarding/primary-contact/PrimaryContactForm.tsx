@@ -13,7 +13,8 @@ const PrimaryContactForm: React.FC = () => {
   const { onboardingData, updatePrimaryContactInfo, setCurrentStep } = useOnboarding();
   const [formData, setFormData] = useState<PrimaryContactInfo>(onboardingData.primaryContactInfo);
   const [errors, setErrors] = useState<Partial<Record<keyof PrimaryContactInfo, string>>>({});
-  const [hasErrors, setHasErrors] = useState(true);
+  const [formTouched, setFormTouched] = useState(false);
+  const [hasErrors, setHasErrors] = useState(false);
 
   const requiredFields: (keyof PrimaryContactInfo)[] = [
     'firstName', 
@@ -27,31 +28,37 @@ const PrimaryContactForm: React.FC = () => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
     
+    if (!formTouched) {
+      setFormTouched(true);
+    }
+    
     // Clear error when field is edited
     if (errors[name as keyof PrimaryContactInfo]) {
       setErrors({ ...errors, [name]: undefined });
     }
   };
 
-  // Validate form whenever formData changes
+  // Only validate form after it's been touched
   useEffect(() => {
-    const newErrors: Partial<Record<keyof PrimaryContactInfo, string>> = {};
-    
-    // Check required fields
-    requiredFields.forEach(field => {
-      if (!formData[field]) {
-        newErrors[field] = 'This field is required';
+    if (formTouched) {
+      const newErrors: Partial<Record<keyof PrimaryContactInfo, string>> = {};
+      
+      // Check required fields
+      requiredFields.forEach(field => {
+        if (!formData[field]) {
+          newErrors[field] = 'This field is required';
+        }
+      });
+      
+      // Email validation
+      if (formData.email && !isValidEmail(formData.email)) {
+        newErrors.email = 'Please enter a valid email address';
       }
-    });
-    
-    // Email validation
-    if (formData.email && !isValidEmail(formData.email)) {
-      newErrors.email = 'Please enter a valid email address';
+      
+      setErrors(newErrors);
+      setHasErrors(Object.keys(newErrors).length > 0);
     }
-    
-    setErrors(newErrors);
-    setHasErrors(Object.keys(newErrors).length > 0);
-  }, [formData]);
+  }, [formData, formTouched]);
 
   const validateForm = () => {
     const newErrors: Partial<Record<keyof PrimaryContactInfo, string>> = {};
@@ -72,6 +79,8 @@ const PrimaryContactForm: React.FC = () => {
   };
 
   const handleSubmit = () => {
+    setFormTouched(true);
+    
     if (!validateForm()) {
       toast({
         title: "Form validation failed",
@@ -98,7 +107,7 @@ const PrimaryContactForm: React.FC = () => {
         <FormSection>
           <PrimaryContactFormFields 
             formData={formData}
-            errors={errors}
+            errors={formTouched ? errors : {}}
             handleInputChange={handleInputChange}
           />
         </FormSection>
@@ -106,7 +115,7 @@ const PrimaryContactForm: React.FC = () => {
         <FormFooter
           onBack={() => setCurrentStep(0)}
           onSubmit={handleSubmit}
-          disableContinue={hasErrors}
+          disableContinue={formTouched && hasErrors}
         />
       </form>
     </FormLayout>

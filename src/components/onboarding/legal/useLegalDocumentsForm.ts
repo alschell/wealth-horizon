@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useOnboarding, LegalDocuments } from "@/context/OnboardingContext";
 import { toast } from "@/components/ui/use-toast";
@@ -77,6 +78,10 @@ export const useLegalDocumentsForm = () => {
     } else {
       setSelectedFile(null);
     }
+  };
+  
+  const handleFileClear = () => {
+    setSelectedFile(null);
   };
 
   const validateAddDocument = () => {
@@ -196,14 +201,12 @@ export const useLegalDocumentsForm = () => {
         return;
       }
       
-      const filesToSave = documentFiles.map(doc => doc.file);
-      
       const legalDocumentsData: LegalDocuments = {
         documentType: documentType || "",
         documentNumber: "",
         issueDate: issueDate || "",
         expiryDate: expiryDate || "",
-        documentFiles: filesToSave
+        documentFiles: documentFiles.map(doc => doc.file)
       };
       
       await updateLegalDocuments(legalDocumentsData);
@@ -255,6 +258,7 @@ export const useLegalDocumentsForm = () => {
     handleDocumentTypeChange,
     handleDateChange,
     handleFileSelected,
+    handleFileClear,
     handleAddDocument,
     handleSubmit,
     handleBack,

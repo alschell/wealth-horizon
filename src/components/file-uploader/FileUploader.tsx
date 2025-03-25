@@ -131,13 +131,14 @@ const FileUploader = ({
 
   const confirmDelete = () => {
     if (fileToDeleteIndex !== null) {
+      const newFiles = [...files];
+      newFiles.splice(fileToDeleteIndex, 1);
+      setFiles(newFiles);
+      onFilesSelected(newFiles);
+      
+      // If a custom delete handler was provided, call it as well
       if (onFileDelete) {
         onFileDelete(fileToDeleteIndex);
-      } else {
-        const newFiles = [...files];
-        newFiles.splice(fileToDeleteIndex, 1);
-        setFiles(newFiles);
-        onFilesSelected(newFiles);
       }
     }
     setIsDeleteDialogOpen(false);

@@ -110,6 +110,7 @@ export type OnboardingContextType = {
   updateAggregatorInfo: (info: AggregatorInfo) => void;
   addFinancialAccount: (account: FinancialAccountInfo) => void;
   removeFinancialAccount: (index: number) => void;
+  updateFinancialAccount: (index: number, account: FinancialAccountInfo) => void;
   addBeneficialOwner: (owner: BeneficialOwnerInfo) => void;
   removeBeneficialOwner: (index: number) => void;
   updatePersonalInfo: (info: PersonalInfo) => void;

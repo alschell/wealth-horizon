@@ -69,6 +69,17 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
     }));
   };
 
+  const updateFinancialAccount = (index: number, updatedAccount: FinancialAccountInfo) => {
+    setOnboardingData((prev) => {
+      const newAccounts = [...prev.financialAccounts];
+      newAccounts[index] = updatedAccount;
+      return {
+        ...prev,
+        financialAccounts: newAccounts
+      };
+    });
+  };
+
   const addBeneficialOwner = (owner: BeneficialOwnerInfo) => {
     setOnboardingData((prev) => ({
       ...prev,
@@ -111,6 +122,7 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
         updateAggregatorInfo,
         addFinancialAccount,
         removeFinancialAccount,
+        updateFinancialAccount,
         addBeneficialOwner,
         removeBeneficialOwner,
         updatePersonalInfo,

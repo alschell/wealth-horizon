@@ -9,15 +9,23 @@ interface DocumentUploadFieldProps {
   onFileSelected: (files: File[]) => void;
   error?: boolean;
   documentType?: string;
+  onFileDelete?: () => void;
 }
 
 const DocumentUploadField: React.FC<DocumentUploadFieldProps> = ({ 
   file, 
   onFileSelected,
   error,
-  documentType
+  documentType,
+  onFileDelete
 }) => {
   const existingFiles = file ? [file] : [];
+  
+  const handleFileDelete = () => {
+    if (onFileDelete) {
+      onFileDelete();
+    }
+  };
 
   return (
     <div className="space-y-2">
@@ -37,6 +45,7 @@ const DocumentUploadField: React.FC<DocumentUploadFieldProps> = ({
           onFilesSelected={onFileSelected}
           existingFiles={existingFiles}
           label="Upload Legal Document"
+          onFileDelete={handleFileDelete}
         />
       </div>
       

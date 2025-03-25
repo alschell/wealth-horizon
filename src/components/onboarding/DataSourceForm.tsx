@@ -1,13 +1,10 @@
 
 import React, { useState } from "react";
-import { AggregatorInfo, FinancialAccountInfo, useOnboarding } from "@/context/OnboardingContext";
+import { FinancialAccountInfo, useOnboarding } from "@/context/OnboardingContext";
 import { Card } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "@/components/ui/use-toast";
 import { motion } from "framer-motion";
-import { Upload, Wallet } from "lucide-react";
-import ManualEntrySection from "@/components/onboarding/ManualEntrySection";
-import FileUploadSection from "@/components/onboarding/FileUploadSection";
+import DataSourceTabs from "./data-source/DataSourceTabs";
 import {
   DataSourceFormHeader,
   DataSourceFormNavigation,
@@ -21,21 +18,23 @@ const DataSourceForm = () => {
     updateAggregatorInfo,
     addFinancialAccount,
     removeFinancialAccount,
+    updateFinancialAccount,
     setCurrentStep
   } = useOnboarding();
 
-  const [aggregatorInfo, setAggregatorInfo] = useState<AggregatorInfo>(
-    onboardingData.aggregatorInfo
-  );
+  const [aggregatorInfo, setAggregatorInfo] = useState({
+    ...onboardingData.aggregatorInfo
+  });
+  
   const [dataSourceMethod, setDataSourceMethod] = useState<"manual" | "upload">("manual");
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
-  const [activeTab, setActiveTab] = useState<string>(
-    aggregatorInfo.usesAggregator ? "aggregator" : "manual"
+  const [financialAccounts, setFinancialAccounts] = useState<FinancialAccountInfo[]>(
+    onboardingData.financialAccounts || []
   );
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleAggregatorInfoChange = (info: AggregatorInfo) => {
+  const handleAggregatorInfoChange = (info: typeof aggregatorInfo) => {
     setAggregatorInfo(info);
-    setActiveTab(info.usesAggregator ? "aggregator" : "manual");
   };
 
   const handleAggregatorSelection = (value: string) => {
@@ -44,46 +43,136 @@ const DataSourceForm = () => {
       ...aggregatorInfo,
       usesAggregator,
       aggregatorName: usesAggregator ? aggregatorInfo.aggregatorName : "",
-      aggregatorCredentials: usesAggregator ? aggregatorInfo.aggregatorCredentials : { username: "" }
+      aggregatorCredentials: usesAggregator 
+        ? aggregatorInfo.aggregatorCredentials 
+        : { username: "" }
     });
-    setActiveTab(usesAggregator ? "aggregator" : "manual");
   };
-
-  const handleSubmit = () => {
-    updateAggregatorInfo(aggregatorInfo);
+  
+  const handleAddAccount = (account: FinancialAccountInfo) => {
+    const newAccounts = [...financialAccounts, account];
+    setFinancialAccounts(newAccounts);
     
-    setCurrentStep(5);
+    // Also update in context
+    addFinancialAccount(account);
     
     toast({
-      title: "Information saved",
-      description: "Financial data source information has been saved successfully.",
+      title: "Account added",
+      description: "Financial account has been added successfully."
     });
   };
-
-  const updateFinancialAccount = (index: number, updatedAccount: FinancialAccountInfo) => {
-    // Remove the old account and add the updated one at the same index
-    const accounts = [...onboardingData.financialAccounts];
-    accounts.splice(index, 1);
-    accounts.splice(index, 0, updatedAccount);
+  
+  const handleRemoveAccount = (index: number) => {
+    const newAccounts = [...financialAccounts];
+    newAccounts.splice(index, 1);
+    setFinancialAccounts(newAccounts);
     
-    // Remove all existing accounts from context
-    onboardingData.financialAccounts.forEach((_, i) => {
-      removeFinancialAccount(0); // Always remove the first one
-    });
+    // Also update in context
+    removeFinancialAccount(index);
     
-    // Add all accounts back with the updated one
-    accounts.forEach(account => {
-      addFinancialAccount(account);
+    toast({
+      title: "Account removed",
+      description: "Financial account has been removed successfully."
     });
+  };
+  
+  const handleUpdateAccount = (index: number, updatedAccount: FinancialAccountInfo) => {
+    const newAccounts = [...financialAccounts];
+    newAccounts[index] = updatedAccount;
+    setFinancialAccounts(newAccounts);
+    
+    // Also update in context if it exists
+    if (typeof updateFinancialAccount === 'function') {
+      updateFinancialAccount(index, updatedAccount);
+    } else {
+      // Fallback approach if updateFinancialAccount doesn't exist
+      removeFinancialAccount(index);
+      addFinancialAccount(updatedAccount);
+    }
     
     toast({
       title: "Account updated",
-      description: "Financial account has been updated successfully.",
+      description: "Financial account has been updated successfully."
+    });
+  };
+  
+  const handleBulkFilesSelected = (files: File[]) => {
+    setUploadedFiles(files);
+    
+    toast({
+      title: "Files uploaded",
+      description: `${files.length} file(s) have been uploaded.`
     });
   };
 
-  const handleBulkFilesSelected = (files: File[]) => {
-    setUploadedFiles(files);
+  const handleSubmit = async () => {
+    try {
+      setIsSubmitting(true);
+      
+      // Validate the form based on aggregator selection
+      if (aggregatorInfo.usesAggregator) {
+        if (!aggregatorInfo.aggregatorName) {
+          toast({
+            title: "Missing information",
+            description: "Please select an aggregator service.",
+            variant: "destructive"
+          });
+          setIsSubmitting(false);
+          return;
+        }
+        
+        if (!aggregatorInfo.aggregatorCredentials?.username) {
+          toast({
+            title: "Missing information",
+            description: "Please provide aggregator credentials.",
+            variant: "destructive"
+          });
+          setIsSubmitting(false);
+          return;
+        }
+      } else {
+        // If not using aggregator, validate based on selected method
+        if (dataSourceMethod === "manual" && financialAccounts.length === 0) {
+          toast({
+            title: "Missing information",
+            description: "Please add at least one financial account.",
+            variant: "destructive"
+          });
+          setIsSubmitting(false);
+          return;
+        }
+        
+        if (dataSourceMethod === "upload" && uploadedFiles.length === 0) {
+          toast({
+            title: "Missing information",
+            description: "Please upload at least one financial document.",
+            variant: "destructive"
+          });
+          setIsSubmitting(false);
+          return;
+        }
+      }
+      
+      // Save the data
+      updateAggregatorInfo(aggregatorInfo);
+      
+      // Move to the next step
+      setCurrentStep(5);
+      
+      toast({
+        title: "Information saved",
+        description: "Financial data source information has been saved successfully."
+      });
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      toast({
+        title: "An error occurred",
+        description: "There was a problem saving your information. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -103,55 +192,29 @@ const DataSourceForm = () => {
           />
           
           {!aggregatorInfo.usesAggregator && (
-            <div className="space-y-6">
-              <Tabs 
-                defaultValue="manual" 
-                value={dataSourceMethod}
-                onValueChange={(value) => setDataSourceMethod(value as "manual" | "upload")}
-                className="w-full"
-              >
-                <TabsList className="grid grid-cols-2 w-full mb-4">
-                  <TabsTrigger value="manual" className="text-center py-2">
-                    <Wallet className="h-4 w-4 mr-2" />
-                    Manual Entry
-                  </TabsTrigger>
-                  <TabsTrigger value="upload" className="text-center py-2">
-                    <Upload className="h-4 w-4 mr-2" />
-                    Upload Files
-                  </TabsTrigger>
-                </TabsList>
-                
-                <TabsContent value="manual">
-                  <ManualEntrySection 
-                    financialAccounts={onboardingData.financialAccounts}
-                    addFinancialAccount={addFinancialAccount}
-                    removeFinancialAccount={removeFinancialAccount}
-                    updateFinancialAccount={updateFinancialAccount}
-                  />
-                </TabsContent>
-                
-                <TabsContent value="upload">
-                  <FileUploadSection 
-                    uploadedFiles={uploadedFiles}
-                    handleBulkFilesSelected={handleBulkFilesSelected}
-                  />
-                </TabsContent>
-              </Tabs>
-            </div>
+            <DataSourceTabs
+              dataSourceMethod={dataSourceMethod}
+              setDataSourceMethod={setDataSourceMethod}
+              financialAccounts={financialAccounts}
+              handleAddAccount={handleAddAccount}
+              handleRemoveAccount={handleRemoveAccount}
+              handleUpdateAccount={handleUpdateAccount}
+              uploadedFiles={uploadedFiles}
+              handleBulkFilesSelected={handleBulkFilesSelected}
+            />
           )}
           
           {aggregatorInfo.usesAggregator && (
-            <div className="space-y-6">
-              <AggregatorSection
-                aggregatorInfo={aggregatorInfo}
-                setAggregatorInfo={setAggregatorInfo}
-              />
-            </div>
+            <AggregatorSection
+              aggregatorInfo={aggregatorInfo}
+              setAggregatorInfo={handleAggregatorInfoChange}
+            />
           )}
           
           <DataSourceFormNavigation
             onBack={() => setCurrentStep(3)}
-            isSubmitting={false}
+            isSubmitting={isSubmitting}
+            onSubmit={handleSubmit}
           />
         </form>
       </Card>

@@ -20,7 +20,7 @@ interface SelectFieldProps {
   error?: string;
   onChange: (value: string) => void;
   className?: string;
-  name?: string; // Make name optional
+  name?: string;
 }
 
 const SelectField = ({
@@ -48,13 +48,12 @@ const SelectField = ({
         {label}{required && <span className="text-red-500 ml-1">*</span>}
       </Label>
       <Select
-        defaultValue=""
         value={value}
         onValueChange={onChange}
       >
         <SelectTrigger 
           id={id} 
-          name={name || id} // Use id as fallback for name
+          name={name || id}
           className={cn("h-11 w-full bg-white text-left", error ? "border-red-500" : "")}
         >
           <SelectValue placeholder={placeholder} />

@@ -71,9 +71,7 @@ const PrimaryContactForm: React.FC = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
+  const handleSubmit = () => {
     if (!validateForm()) {
       toast({
         title: "Form validation failed",
@@ -94,7 +92,7 @@ const PrimaryContactForm: React.FC = () => {
 
   return (
     <FormLayout>
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }} className="space-y-6">
         <PrimaryContactFormHeader />
         
         <FormSection>

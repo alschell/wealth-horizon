@@ -1,84 +1,46 @@
 
-import React, { useState } from "react";
-import { motion } from "framer-motion";
-import { FileField } from "@/components/onboarding/common/fields";
-import { itemVariants } from "../common/AnimationVariants";
-import { 
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogCancel,
-  AlertDialogAction
-} from "@/components/ui/alert-dialog";
+import React from "react";
+import { Label } from "@/components/ui/label";
+import { FileUploader } from "@/components/file-uploader";
+import { cn } from "@/lib/utils";
 
 interface DocumentUploadFieldProps {
   files: File[];
   onFilesSelected: (files: File[]) => void;
+  error?: boolean;
 }
 
-const DocumentUploadField = ({ files, onFilesSelected }: DocumentUploadFieldProps) => {
-  const [fileToDelete, setFileToDelete] = useState<{index: number, file: File} | null>(null);
-  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
-
-  const handleDeleteRequest = (index: number, file: File) => {
-    setFileToDelete({ index, file });
-    setIsConfirmOpen(true);
-  };
-
-  const confirmDelete = () => {
-    if (fileToDelete !== null) {
-      const newFiles = [...files];
-      newFiles.splice(fileToDelete.index, 1);
-      onFilesSelected(newFiles);
-    }
-    setIsConfirmOpen(false);
-    setFileToDelete(null);
-  };
-
+const DocumentUploadField: React.FC<DocumentUploadFieldProps> = ({ 
+  files, 
+  onFilesSelected,
+  error 
+}) => {
   return (
-    <motion.div 
-      custom={4}
-      variants={itemVariants}
-      initial="hidden"
-      animate="visible"
-      className="space-y-3"
-    >
-      <FileField
-        id="legal-documents"
-        label="Upload Legal Documents"
-        required={true}
-        accept="application/pdf,image/*"
-        multiple={true}
-        hint="Supported formats: PDF, JPG, PNG (max 10MB per file)"
-        onFilesChange={onFilesSelected}
-        onFileDelete={handleDeleteRequest}
-        customDeleteButton={true}
-        files={files}
-      />
-
-      <AlertDialog open={isConfirmOpen} onOpenChange={setIsConfirmOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Confirm File Deletion</AlertDialogTitle>
-            <AlertDialogDescription>
-              Are you sure you want to delete {fileToDelete?.file.name}? This action cannot be undone.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction 
-              onClick={confirmDelete}
-              className="bg-red-500 hover:bg-red-600 text-white"
-            >
-              Delete
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    </motion.div>
+    <div className="space-y-2">
+      <Label htmlFor="documentFiles">
+        Upload Documents<span className="text-red-500 ml-1">*</span>
+      </Label>
+      <div 
+        className={cn(
+          "border rounded-md p-4",
+          error && "border-red-500"
+        )}
+      >
+        <FileUploader
+          id="documentFiles"
+          value={files}
+          onChange={onFilesSelected}
+          accept={[".pdf", ".doc", ".docx", ".jpg", ".jpeg", ".png"]}
+          maxFiles={5}
+          maxSize={10}
+        />
+      </div>
+      {error && (
+        <p className="text-sm font-medium text-red-500">
+          Please upload at least one document
+        </p>
+      )}
+    </div>
   );
 };
 

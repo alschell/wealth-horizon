@@ -7,14 +7,21 @@ import { motion } from "framer-motion";
 import { File } from "lucide-react";
 import FormHeader from "./common/FormHeader";
 import { DocumentTypeField, DocumentDetailsFields, DocumentUploadField } from "./legal";
-import FormFooter from "./family-office/FormFooter";
+import FormFooter from "./common/FormFooter";
 
 const LegalDocumentsForm = () => {
   const { onboardingData, updateLegalDocuments, setCurrentStep } = useOnboarding();
   const [legalDocuments, setLegalDocuments] = useState<LegalDocuments>(onboardingData.legalDocuments);
+  const [errors, setErrors] = useState<Record<string, boolean>>({});
 
   const handleDocumentChange = (field: keyof LegalDocuments, value: string) => {
     setLegalDocuments({ ...legalDocuments, [field]: value });
+    // Clear error for this field if it exists
+    if (errors[field]) {
+      const updatedErrors = { ...errors };
+      delete updatedErrors[field];
+      setErrors(updatedErrors);
+    }
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -33,14 +40,39 @@ const LegalDocumentsForm = () => {
 
   const handleFilesSelected = (files: File[]) => {
     setLegalDocuments({ ...legalDocuments, documentFiles: files });
+    // Clear error for documentFiles if it exists
+    if (errors['documentFiles']) {
+      const updatedErrors = { ...errors };
+      delete updatedErrors['documentFiles'];
+      setErrors(updatedErrors);
+    }
+  };
+
+  const validateForm = () => {
+    const newErrors: Record<string, boolean> = {};
+    
+    // Validate required fields
+    if (!legalDocuments.documentType) {
+      newErrors.documentType = true;
+    }
+    
+    if (!legalDocuments.issueDate) {
+      newErrors.issueDate = true;
+    }
+    
+    if (legalDocuments.documentFiles.length === 0) {
+      newErrors.documentFiles = true;
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = () => {
-    // Check if at least one document is uploaded
-    if (legalDocuments.documentFiles.length === 0) {
+    if (!validateForm()) {
       toast({
-        title: "Missing documents",
-        description: "Please upload at least one document to continue.",
+        title: "Missing information",
+        description: "Please fill out all required fields and upload at least one document.",
         variant: "destructive"
       });
       return;
@@ -53,6 +85,10 @@ const LegalDocumentsForm = () => {
       title: "Information saved",
       description: "Legal documents information has been saved successfully.",
     });
+  };
+
+  const handleBack = () => {
+    setCurrentStep(2); // Go back to the Address step
   };
 
   return (
@@ -74,6 +110,7 @@ const LegalDocumentsForm = () => {
             <DocumentTypeField
               value={legalDocuments.documentType}
               onChange={(value) => handleDocumentChange("documentType", value)}
+              error={errors.documentType}
             />
             
             <DocumentDetailsFields
@@ -88,13 +125,15 @@ const LegalDocumentsForm = () => {
             <DocumentUploadField
               files={legalDocuments.documentFiles}
               onFilesSelected={handleFilesSelected}
+              error={errors.documentFiles}
             />
           </div>
 
           <FormFooter
+            onBack={handleBack}
             onSubmit={handleSubmit}
             isSubmitting={false}
-            requiredFieldsNote={true}
+            showRequired={true}
           />
         </form>
       </Card>

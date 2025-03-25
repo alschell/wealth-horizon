@@ -1,51 +1,66 @@
 
 import React from "react";
-import { motion } from "framer-motion";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { itemVariants } from "../common/AnimationVariants";
-
-type DocumentType = "incorporation" | "registration" | "taxCertificate" | "ownership" | "other";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { cn } from "@/lib/utils";
 
 interface DocumentTypeFieldProps {
-  value: DocumentType;
-  onChange: (value: DocumentType) => void;
+  value: string;
+  onChange: (value: string) => void;
+  error?: boolean;
 }
 
-const DocumentTypeField = ({ value, onChange }: DocumentTypeFieldProps) => {
+const documentTypes = [
+  "Articles of Incorporation",
+  "Certificate of Formation",
+  "Partnership Agreement",
+  "Trust Agreement",
+  "Operating Agreement",
+  "LLC Agreement",
+  "Certificate of Organization",
+  "Bylaws",
+  "Other Legal Document",
+];
+
+const DocumentTypeField: React.FC<DocumentTypeFieldProps> = ({ 
+  value, 
+  onChange,
+  error
+}) => {
   return (
-    <motion.div 
-      custom={0}
-      variants={itemVariants}
-      initial="hidden"
-      animate="visible"
-      className="space-y-2"
-    >
+    <div className="space-y-2">
       <Label htmlFor="documentType">Document Type<span className="text-red-500 ml-1">*</span></Label>
       <Select
-        value={value || ""}
-        onValueChange={(value: DocumentType) => onChange(value)}
+        value={value}
+        onValueChange={onChange}
       >
         <SelectTrigger 
-          id="documentType" 
-          className="h-11 bg-white"
+          id="documentType"
+          className={cn(
+            "w-full",
+            error && "border-red-500 focus:ring-red-500"
+          )}
         >
           <SelectValue placeholder="Select document type" />
         </SelectTrigger>
-        <SelectContent 
-          position="popper" 
-          className="bg-white border shadow-md z-[999]"
-          sideOffset={8}
-          align="start"
-        >
-          <SelectItem value="incorporation" className="hover:bg-gray-100 cursor-pointer">Certificate of Incorporation</SelectItem>
-          <SelectItem value="registration" className="hover:bg-gray-100 cursor-pointer">Business Registration</SelectItem>
-          <SelectItem value="taxCertificate" className="hover:bg-gray-100 cursor-pointer">Tax Certificate</SelectItem>
-          <SelectItem value="ownership" className="hover:bg-gray-100 cursor-pointer">Ownership Structure</SelectItem>
-          <SelectItem value="other" className="hover:bg-gray-100 cursor-pointer">Other Legal Document</SelectItem>
+        <SelectContent position="popper" className="max-h-60">
+          {documentTypes.map((type) => (
+            <SelectItem key={type} value={type}>
+              {type}
+            </SelectItem>
+          ))}
         </SelectContent>
       </Select>
-    </motion.div>
+      {error && (
+        <p className="text-sm font-medium text-red-500">Document type is required</p>
+      )}
+    </div>
   );
 };
 

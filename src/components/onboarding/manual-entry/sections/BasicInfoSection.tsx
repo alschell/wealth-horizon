@@ -36,7 +36,7 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
         value={account.accountName}
         onChange={onInputChange}
         placeholder="Enter account name"
-        required={false}  // Remove mandatory status
+        required={false}
       />
       
       <SelectField
@@ -47,7 +47,7 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
         onChange={handleSelectChange("accountType")}
         options={ACCOUNT_TYPES}
         placeholder="Select account type"
-        required={false}  // Remove mandatory status
+        required={false}
       />
     </div>
   );

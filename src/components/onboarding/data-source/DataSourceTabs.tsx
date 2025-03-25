@@ -34,7 +34,7 @@ const DataSourceTabs: React.FC<DataSourceTabsProps> = ({
       onValueChange={(value) => setDataSourceMethod(value as "manual" | "upload")}
       className="w-full"
     >
-      <TabsList className="grid grid-cols-2 w-full mb-4">
+      <TabsList className="grid grid-cols-2 w-full mb-6">
         <TabsTrigger value="manual" className="text-center py-2">
           <Wallet className="h-4 w-4 mr-2" />
           Manual Entry

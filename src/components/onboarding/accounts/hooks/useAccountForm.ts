@@ -13,7 +13,9 @@ export function useAccountForm(onAddAccount: (account: FinancialAccountInfo) => 
     approximateValue: "",
     statements: [],
     legalEntity: "", // Add missing required properties
-    legalEntityIdentifier: ""
+    legalEntityIdentifier: "",
+    accountNumber: "", // Add accountNumber field
+    swiftCode: "" // Add swiftCode field
   });
 
   // Handle new account input
@@ -44,7 +46,7 @@ export function useAccountForm(onAddAccount: (account: FinancialAccountInfo) => 
   // Add new account
   const handleAddAccount = () => {
     // Validation
-    if (!newAccount.accountName || !newAccount.institution || !newAccount.accountType) {
+    if (!newAccount.accountName || !newAccount.institution || !newAccount.accountType || !newAccount.legalEntity || !newAccount.accountNumber) {
       toast({
         title: "Missing information",
         description: "Please fill in all required account fields.",
@@ -66,7 +68,9 @@ export function useAccountForm(onAddAccount: (account: FinancialAccountInfo) => 
       approximateValue: "",
       statements: [],
       legalEntity: "",
-      legalEntityIdentifier: ""
+      legalEntityIdentifier: "",
+      accountNumber: "",
+      swiftCode: ""
     });
 
     toast({

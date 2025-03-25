@@ -129,7 +129,7 @@ const DataSourceForm: React.FC = () => {
           setAggregatorInfo={setAggregatorInfo}
         />
       ) : (
-        <FormSection>
+        <FormSection className="mt-6">
           <DataSourceTabs 
             dataSourceMethod={dataSourceMethod}
             setDataSourceMethod={setDataSourceMethod}

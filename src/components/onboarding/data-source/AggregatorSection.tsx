@@ -33,9 +33,17 @@ const AggregatorSection: React.FC<AggregatorSectionProps> = ({
     });
   };
 
+  // Ensure "Other" is at the end of the list
+  const sortedAggregators = [...AGGREGATORS];
+  if (sortedAggregators.includes("Other")) {
+    const otherIndex = sortedAggregators.indexOf("Other");
+    sortedAggregators.splice(otherIndex, 1);
+    sortedAggregators.push("Other");
+  }
+
   return (
-    <div className="space-y-6 mt-6">
-      <div className="space-y-3">
+    <div className="space-y-6">
+      <div className="space-y-3 mt-4">
         <Label className="text-black">Select your aggregator</Label>
         <div className="relative">
           <SearchableSelectField
@@ -43,7 +51,7 @@ const AggregatorSection: React.FC<AggregatorSectionProps> = ({
             label=""
             value={aggregatorInfo.aggregatorName || ""}
             placeholder="Select or enter your data aggregator"
-            options={AGGREGATORS}
+            options={sortedAggregators}
             onChange={handleAggregatorChange}
             allowCustomValue={true}
           />

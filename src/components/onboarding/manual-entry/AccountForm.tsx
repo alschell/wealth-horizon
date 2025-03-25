@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -43,7 +44,7 @@ const AccountForm: React.FC<AccountFormProps> = ({ onAddAccount }) => {
   // Handle institution selection with custom option
   const handleInstitutionChange = (value: string) => {
     handleAccountSelectionChange("institution", value);
-    setShowOtherInstitution(value === "Other (Manual Entry)");
+    setShowOtherInstitution(value === "Other");
   };
 
   const legalEntitiesList = getLegalEntities();
@@ -80,7 +81,7 @@ const AccountForm: React.FC<AccountFormProps> = ({ onAddAccount }) => {
               id="customInstitution"
               label="Institution name"
               name="institution"
-              value={newAccount.institution === "Other (Manual Entry)" ? "" : newAccount.institution || ""}
+              value={newAccount.institution === "Other" ? "" : newAccount.institution || ""}
               onChange={(e) => handleAccountSelectionChange("institution", e.target.value)}
               placeholder="Enter institution name"
               required={true}
@@ -137,7 +138,7 @@ const AccountForm: React.FC<AccountFormProps> = ({ onAddAccount }) => {
           <SelectField
             id="accountType"
             label="Account Type"
-            value={newAccount.accountType || "other"}
+            value={newAccount.accountType || ""}
             placeholder="Select account type"
             options={ACCOUNT_TYPES}
             onChange={(value) => handleAccountSelectionChange("accountType", value)}

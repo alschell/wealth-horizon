@@ -115,7 +115,7 @@ export const INSTITUTIONS = [
   "Wells Fargo",
   "Westpac Banking",
   "Zurich Insurance Group",
-  "Other (Manual Entry)"
+  "Other"
 ];
 
 // Export a subset of institutions for components that need a smaller list
@@ -139,5 +139,5 @@ export const TOP_INSTITUTIONS = [
   "Vanguard Group",
   "Fidelity Investments",
   "Charles Schwab",
-  "Other (Manual Entry)"
+  "Other"
 ];

@@ -12,7 +12,7 @@ const OwnersList: React.FC<OwnersListProps> = ({
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
-        <h3 className="text-lg font-semibold text-black">Beneficial Owners</h3>
+        <h3 className="text-lg font-semibold text-black">Added Beneficial Owners</h3>
       </div>
       
       {owners.length === 0 ? (

@@ -7,7 +7,7 @@ export function useAccountForm(onAddAccount: (account: FinancialAccountInfo) => 
   const [newAccount, setNewAccount] = useState<FinancialAccountInfo>({
     accountName: "",
     institution: "",
-    accountType: "other", // Changed from "" to "other" to satisfy the type requirement
+    accountType: "",
     accountSubtype: "",
     currency: "",
     approximateValue: "",
@@ -56,7 +56,7 @@ export function useAccountForm(onAddAccount: (account: FinancialAccountInfo) => 
     }
 
     // Special validation for "Other" institution
-    if (newAccount.institution === "Other (Manual Entry)" || newAccount.institution === "") {
+    if (newAccount.institution === "Other" && newAccount.legalEntity === "Other Legal Entity") {
       toast({
         title: "Missing information",
         description: "Please enter a valid institution name.",
@@ -72,7 +72,7 @@ export function useAccountForm(onAddAccount: (account: FinancialAccountInfo) => 
     setNewAccount({
       accountName: "",
       institution: "",
-      accountType: "other", // Changed from "" to "other" to satisfy the type requirement
+      accountType: "",
       accountSubtype: "",
       currency: "",
       approximateValue: "",

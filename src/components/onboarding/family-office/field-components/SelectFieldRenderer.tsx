@@ -24,7 +24,11 @@ const SelectFieldRenderer: React.FC<SelectFieldRendererProps> = ({
   options,
 }) => {
   // Sort options alphabetically
-  const sortedOptions = [...options].sort((a, b) => a.localeCompare(b));
+  const sortedOptions = [...options].sort((a, b) => {
+    if (a === "Other") return 1;
+    if (b === "Other") return -1;
+    return a.localeCompare(b);
+  });
   
   const handleSelectChange = (newValue: string) => {
     onChange(name, newValue);

@@ -16,7 +16,7 @@ import {
 import AddOwnerForm from "./AddOwnerForm";
 import OwnersList from "./OwnersList";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { Plus, PlusCircle } from "lucide-react";
 
 interface BeneficialOwnersFormProps {
   owners: BeneficialOwnerInfo[];
@@ -207,7 +207,7 @@ const BeneficialOwnersForm: React.FC<BeneficialOwnersFormProps> = ({
             className="bg-black text-white hover:bg-gray-800"
             onClick={handleAddOwner}
           >
-            <Plus className="h-4 w-4 mr-2" />
+            <PlusCircle className="h-4 w-4 mr-2" />
             {editIndex !== null ? "Update" : "Add"} Beneficial Owner
           </Button>
         </div>
@@ -219,7 +219,6 @@ const BeneficialOwnersForm: React.FC<BeneficialOwnersFormProps> = ({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
         >
-          <h3 className="text-lg font-medium mb-4">Added Beneficial Owners</h3>
           <OwnersList
             owners={owners}
             onEditOwner={handleEditOwner}

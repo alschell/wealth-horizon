@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { PlusCircle } from "lucide-react";
 
 interface AccountFormButtonProps {
   onClick: () => void;
@@ -13,9 +13,9 @@ const AccountFormButton = ({ onClick }: AccountFormButtonProps) => {
       type="button"
       variant="outline"
       onClick={onClick}
-      className="mt-2"
+      className="mt-2 bg-black hover:bg-gray-800 text-white"
     >
-      <Plus className="h-4 w-4 mr-2" />
+      <PlusCircle className="h-4 w-4 mr-2" />
       Add Account
     </Button>
   );

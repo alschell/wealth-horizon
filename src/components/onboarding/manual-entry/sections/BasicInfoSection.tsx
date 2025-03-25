@@ -6,24 +6,10 @@ import {
   SelectField 
 } from "@/components/onboarding/accounts/fields";
 
-// Account types for select field
 const ACCOUNT_TYPES = [
-  "Cash",
-  "Checking",
-  "Savings",
-  "Brokerage",
-  "Investment",
-  "Portfolio",
-  "Custody",
-  "Trust",
-  "Retirement",
-  "Private Equity",
-  "Hedge Fund",
-  "Venture Capital",
-  "Real Estate",
-  "Fixed Income",
-  "Credit",
-  "Other"
+  "Cash", "Checking", "Savings", "Brokerage", "Investment", "Portfolio", 
+  "Custody", "Trust", "Retirement", "Private Equity", "Hedge Fund", 
+  "Venture Capital", "Real Estate", "Fixed Income", "Credit", "Other"
 ];
 
 interface BasicInfoSectionProps {
@@ -37,7 +23,6 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
   onInputChange,
   onSelectionChange
 }) => {
-  // Create an adapter function that converts the SelectField's onChange to work with our onSelectionChange
   const handleSelectChange = (name: keyof FinancialAccountInfo) => (value: string) => {
     onSelectionChange(name, value);
   };
@@ -51,7 +36,7 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
         value={account.accountName}
         onChange={onInputChange}
         placeholder="Enter account name"
-        required={false}
+        required={false}  // Remove mandatory status
       />
       
       <SelectField
@@ -62,7 +47,7 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
         onChange={handleSelectChange("accountType")}
         options={ACCOUNT_TYPES}
         placeholder="Select account type"
-        required={false}
+        required={false}  // Remove mandatory status
       />
     </div>
   );

@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { BeneficialOwnerInfo } from "@/types/onboarding";
@@ -14,6 +15,8 @@ import {
 } from "@/components/ui/alert-dialog";
 import AddOwnerForm from "./AddOwnerForm";
 import OwnersList from "./OwnersList";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
 
 interface BeneficialOwnersFormProps {
   owners: BeneficialOwnerInfo[];
@@ -32,40 +35,120 @@ const BeneficialOwnersForm: React.FC<BeneficialOwnersFormProps> = ({
 }) => {
   const { toast } = useToast();
   
-  const [showForm, setShowForm] = useState(true);
-  const [editIndex, setEditIndex] = useState<number | null>(null);
   const [ownerToDelete, setOwnerToDelete] = useState<number | null>(null);
+  const [editIndex, setEditIndex] = useState<number | null>(null);
+  const [formData, setFormData] = useState<BeneficialOwnerInfo>({
+    id: crypto.randomUUID(),
+    firstName: "",
+    lastName: "",
+    relationship: "",
+    ownershipPercentage: "",
+    nationality: "",
+    dateOfBirth: "",
+    documents: [],
+  });
+  
+  // Handle form input/selection changes
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+  
+  const handleSelectionChange = (field: string, value: string) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+  
+  const handleDateChange = (date?: Date) => {
+    if (date) {
+      setFormData((prev) => ({ ...prev, dateOfBirth: date.toISOString() }));
+    }
+  };
+  
+  const handleFilesSelected = (files: File[]) => {
+    setFormData((prev) => ({ ...prev, documents: files }));
+  };
   
   // Function to add a new beneficial owner
-  const handleAddOwner = (newOwner: BeneficialOwnerInfo) => {
+  const handleAddOwner = () => {
+    // Validate form data
+    const requiredFields = [
+      "firstName",
+      "lastName",
+      "relationship",
+      "ownershipPercentage",
+      "nationality",
+      "dateOfBirth",
+    ];
+    
+    const missingFields = requiredFields.filter(field => !formData[field as keyof BeneficialOwnerInfo]);
+    
+    if (missingFields.length > 0 || formData.documents.length === 0) {
+      toast({
+        title: "Missing Information",
+        description: "Please fill in all required fields and upload at least one document.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    // Add or update owner
     if (editIndex !== null) {
       // Update existing owner
-      const updatedOwner = newOwner;
-      onAddOwner(updatedOwner);
+      const updatedOwnersList = [...owners];
+      updatedOwnersList[editIndex] = formData;
+      
+      // Use the onAddOwner callback to update the owner in the context
+      onAddOwner(formData);
       
       toast({
         title: "Owner Updated",
-        description: `${newOwner.firstName} ${newOwner.lastName} has been updated.`,
+        description: `${formData.firstName} ${formData.lastName} has been updated.`,
       });
+      
+      // Reset edit index
+      setEditIndex(null);
     } else {
       // Add new owner
-      onAddOwner(newOwner);
+      onAddOwner(formData);
       
       toast({
         title: "Owner Added",
-        description: `${newOwner.firstName} ${newOwner.lastName} has been added as a beneficial owner.`,
+        description: `${formData.firstName} ${formData.lastName} has been added as a beneficial owner.`,
       });
     }
     
-    // Reset form state
-    setShowForm(true);
-    setEditIndex(null);
+    // Reset form
+    setFormData({
+      id: crypto.randomUUID(),
+      firstName: "",
+      lastName: "",
+      relationship: "",
+      ownershipPercentage: "",
+      nationality: "",
+      dateOfBirth: "",
+      documents: [],
+    });
   };
   
   // Function to edit an existing owner
   const handleEditOwner = (index: number) => {
     setEditIndex(index);
-    setShowForm(true);
+    setFormData(owners[index]);
+  };
+  
+  // Function to cancel editing
+  const handleCancelEdit = () => {
+    setEditIndex(null);
+    setFormData({
+      id: crypto.randomUUID(),
+      firstName: "",
+      lastName: "",
+      relationship: "",
+      ownershipPercentage: "",
+      nationality: "",
+      dateOfBirth: "",
+      documents: [],
+    });
   };
   
   // Function to confirm deletion of an owner
@@ -82,22 +165,6 @@ const BeneficialOwnersForm: React.FC<BeneficialOwnersFormProps> = ({
       setOwnerToDelete(null);
     }
   };
-  
-  // Function to cancel form
-  const handleCancelForm = () => {
-    if (owners.length === 0) {
-      // Keep form visible if no owners added yet
-      return;
-    }
-    setShowForm(false);
-    setEditIndex(null);
-  };
-  
-  // Function to show the form for adding a new owner
-  const handleShowAddForm = () => {
-    setEditIndex(null);
-    setShowForm(true);
-  };
 
   return (
     <div className="max-w-3xl mx-auto">
@@ -108,46 +175,76 @@ const BeneficialOwnersForm: React.FC<BeneficialOwnersFormProps> = ({
         </p>
       </div>
       
+      {/* Form for adding/editing owners */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="mb-8"
+      >
+        <AddOwnerForm
+          formData={formData}
+          isEditing={editIndex !== null}
+          onInputChange={handleInputChange}
+          onSelectionChange={handleSelectionChange}
+          onDateChange={handleDateChange}
+          onFilesSelected={handleFilesSelected}
+          onCancelEdit={handleCancelEdit}
+        />
+        
+        <div className="mt-4 flex justify-end">
+          {editIndex !== null && (
+            <Button 
+              type="button" 
+              variant="outline" 
+              className="mr-2"
+              onClick={handleCancelEdit}
+            >
+              Cancel
+            </Button>
+          )}
+          <Button 
+            type="button" 
+            className="bg-black text-white hover:bg-gray-800"
+            onClick={handleAddOwner}
+          >
+            <Plus className="h-4 w-4 mr-2" />
+            {editIndex !== null ? "Update" : "Add"} Beneficial Owner
+          </Button>
+        </div>
+      </motion.div>
+      
       {/* Display existing owners */}
       {owners.length > 0 && (
-        <OwnersList
-          owners={owners}
-          onEditOwner={handleEditOwner}
-          onRemoveOwner={(index) => setOwnerToDelete(index)}
-        />
-      )}
-      
-      {/* Button to show add form if not already visible */}
-      {!showForm && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="mt-6"
         >
-          <button
-            onClick={handleShowAddForm}
-            className="px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800 transition"
-          >
-            Add Beneficial Owner
-          </button>
-        </motion.div>
-      )}
-      
-      {/* Add/Edit owner form */}
-      {showForm && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mt-6"
-        >
-          <AddOwnerForm
-            onAddOwner={handleAddOwner}
-            onBack={handleCancelForm}
-            isEditing={editIndex !== null}
-            initialData={editIndex !== null ? owners[editIndex] : undefined}
+          <h3 className="text-lg font-medium mb-4">Added Beneficial Owners</h3>
+          <OwnersList
+            owners={owners}
+            onEditOwner={handleEditOwner}
+            onRemoveOwner={(index) => setOwnerToDelete(index)}
           />
         </motion.div>
       )}
+      
+      {/* Form navigation */}
+      <motion.div className="mt-8 flex justify-between">
+        <Button
+          type="button"
+          variant="outline"
+          onClick={onBack}
+        >
+          Back
+        </Button>
+        <Button
+          type="button"
+          onClick={onSubmit}
+          disabled={owners.length === 0}
+        >
+          Continue
+        </Button>
+      </motion.div>
       
       {/* Delete confirmation dialog */}
       <AlertDialog open={ownerToDelete !== null} onOpenChange={() => setOwnerToDelete(null)}>

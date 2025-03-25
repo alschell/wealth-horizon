@@ -58,7 +58,7 @@ const SelectField = ({
         >
           <SelectValue 
             className="text-left"
-            placeholder={placeholder} 
+            placeholder={placeholder}
           />
         </SelectTrigger>
         <SelectContent 

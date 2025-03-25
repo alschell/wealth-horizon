@@ -29,17 +29,14 @@ const AccountForm: React.FC<AccountFormProps> = ({ onAddAccount }) => {
 
   const [showOtherInstitution, setShowOtherInstitution] = useState(false);
 
-  // Create an adapter for handleLeiChange to handle direct string input
   const handleLeiStringChange = (value: string) => {
     handleLeiChange(value);
   };
 
-  // Create an adapter for handleLeiChange to handle input event
   const handleLeiInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     handleLeiChange(e.target.value);
   };
 
-  // Handle institution selection with custom option
   const handleInstitutionChange = (value: string) => {
     handleAccountSelectionChange("institution", value);
     setShowOtherInstitution(value === "Other");
@@ -47,7 +44,6 @@ const AccountForm: React.FC<AccountFormProps> = ({ onAddAccount }) => {
 
   const legalEntitiesList = getLegalEntities();
   
-  // Check if form is valid (required fields are filled)
   const isFormValid = Boolean(
     newAccount.institution && 
     newAccount.legalEntity && 
@@ -57,7 +53,6 @@ const AccountForm: React.FC<AccountFormProps> = ({ onAddAccount }) => {
   return (
     <Card className="p-5 border rounded-lg">
       <div className="grid grid-cols-1 gap-5">
-        {/* LEI Field First */}
         <InputField
           id="legalEntityIdentifier"
           label="Legal Entity Identifier (LEI)"
@@ -68,7 +63,6 @@ const AccountForm: React.FC<AccountFormProps> = ({ onAddAccount }) => {
           required={false}
         />
         
-        {/* Institution and Legal Entity Fields */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <SearchableSelectField
             id="institution"
@@ -105,7 +99,6 @@ const AccountForm: React.FC<AccountFormProps> = ({ onAddAccount }) => {
           />
         </div>
         
-        {/* Account Number/IBAN and SWIFT/BIC Fields */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <InputField
             id="accountNumber"
@@ -128,7 +121,6 @@ const AccountForm: React.FC<AccountFormProps> = ({ onAddAccount }) => {
           />
         </div>
         
-        {/* Account Name and Type Fields - Moved to be below Account Number/IBAN and SWIFT fields */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <InputField
             id="accountName"
@@ -151,7 +143,6 @@ const AccountForm: React.FC<AccountFormProps> = ({ onAddAccount }) => {
           />
         </div>
         
-        {/* Other Account Details */}
         <AccountDetailsSection 
           account={newAccount}
           onInputChange={handleNewAccountChange}

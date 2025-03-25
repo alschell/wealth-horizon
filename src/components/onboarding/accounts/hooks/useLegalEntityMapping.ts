@@ -30,9 +30,8 @@ export const useLegalEntityMapping = (
     }
   }, [onSelectionChange]);
 
-  // Handle legal entity identifier change
-  const handleLeiChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
+  // Handle legal entity identifier change (now accepts string directly)
+  const handleLeiChange = useCallback((value: string) => {
     onSelectionChange("legalEntityIdentifier", value);
     
     // Try to find and populate institution and legal entity from LEI

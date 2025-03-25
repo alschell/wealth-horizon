@@ -23,7 +23,7 @@ const LegalEntitySection: React.FC<LegalEntitySectionProps> = ({
   handleLegalEntityChange,
   handleLeiChange
 }) => {
-  // Create handler for LEI input change
+  // Create handler for LEI input change that adapts from event to string
   const handleLeiInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     handleLeiChange(e.target.value);
   };

@@ -26,6 +26,11 @@ const AccountForm: React.FC<AccountFormProps> = ({ onAddAccount }) => {
     handleLeiChange
   } = useLegalEntityMapping(newAccount, handleAccountSelectionChange);
 
+  // Create an adapter for handleLeiChange to handle direct string input
+  const handleLeiStringChange = (value: string) => {
+    handleLeiChange(value);
+  };
+
   const legalEntitiesList = getLegalEntities();
 
   return (
@@ -37,7 +42,7 @@ const AccountForm: React.FC<AccountFormProps> = ({ onAddAccount }) => {
           onInputChange={handleNewAccountChange}
           onSelectionChange={handleAccountSelectionChange}
           handleLegalEntityChange={handleLegalEntityChange}
-          handleLeiChange={handleLeiChange}
+          handleLeiChange={handleLeiStringChange}
         />
         
         <BasicInfoSection 

@@ -5,7 +5,7 @@ import { useOnboarding } from "@/context/OnboardingContext";
 import Layout from "@/components/Layout";
 import OnboardingHeader from "@/components/OnboardingHeader";
 import FamilyOfficeInfoForm from "@/components/onboarding/family-office/FamilyOfficeInfoForm";
-import PrimaryContactForm from "@/components/onboarding/PrimaryContactForm";
+import { PrimaryContactForm } from "@/components/onboarding/primary-contact";
 import AddressForm from "@/components/onboarding/AddressForm";
 import LegalDocumentsForm from "@/components/onboarding/LegalDocumentsForm";
 import DataSourceForm from "@/components/onboarding/DataSourceForm";

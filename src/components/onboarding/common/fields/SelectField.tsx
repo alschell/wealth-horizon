@@ -48,7 +48,8 @@ const SelectField = ({
         {label}{required && <span className="text-red-500 ml-1">*</span>}
       </Label>
       <Select
-        value={value || ""}
+        defaultValue=""
+        value={value}
         onValueChange={onChange}
       >
         <SelectTrigger 

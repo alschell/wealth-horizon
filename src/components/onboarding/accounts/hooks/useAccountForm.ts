@@ -7,7 +7,7 @@ export function useAccountForm(onAddAccount: (account: FinancialAccountInfo) => 
   const [newAccount, setNewAccount] = useState<FinancialAccountInfo>({
     accountName: "",
     institution: "",
-    accountType: "", // Empty default to show placeholder
+    accountType: "other", // Changed from empty string to "other" as a default valid value
     accountSubtype: "",
     currency: "",
     approximateValue: "",
@@ -62,7 +62,7 @@ export function useAccountForm(onAddAccount: (account: FinancialAccountInfo) => 
     setNewAccount({
       accountName: "",
       institution: "",
-      accountType: "", // Empty default to show placeholder
+      accountType: "other", // Changed from empty string to "other" to match type definition
       accountSubtype: "",
       currency: "",
       approximateValue: "",

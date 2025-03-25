@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Label } from "@/components/ui/label";
-import { FileUploader } from "@/components/file-uploader";
+import FileUploader from "@/components/file-uploader";
 import { cn } from "@/lib/utils";
 
 interface DocumentUploadFieldProps {

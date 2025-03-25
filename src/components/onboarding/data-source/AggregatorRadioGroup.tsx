@@ -30,8 +30,8 @@ const AggregatorRadioGroup: React.FC<AggregatorRadioGroupProps> = ({
               </div>
             </div>
             <div className="space-y-1">
-              <h4 className="font-medium text-black">Submit Financial Information</h4>
-              <p className="text-sm text-gray-600">Manually enter your financial accounts or upload your financial documents.</p>
+              <h4 className="font-medium text-black">Submit financial information</h4>
+              <p className="text-sm text-gray-600">Manually enter your financial accounts or upload your latest account statements.</p>
             </div>
           </div>
         </div>

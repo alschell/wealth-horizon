@@ -6,11 +6,13 @@ import { FinancialAccountInfo } from "@/context/OnboardingContext";
 import { AccountFormProps } from "./types";
 import { useAccountForm } from "@/components/onboarding/accounts/hooks/useAccountForm";
 import { useLegalEntityMapping } from "@/components/onboarding/accounts/hooks/useLegalEntityMapping";
-import { InputField, SearchableSelectField } from "@/components/onboarding/accounts/fields";
+import { InputField, SearchableSelectField, SelectField } from "@/components/onboarding/accounts/fields";
 import { LEGAL_ENTITIES } from "@/components/onboarding/accounts/constants";
 import { INSTITUTIONS } from "@/utils/constants/institutions";
+import { ACCOUNT_TYPES } from "@/utils/constants/accountTypes";
 
 import AccountDetailsSection from "./sections/AccountDetailsSection";
+import BasicInfoSection from "./sections/BasicInfoSection";
 
 const AccountForm: React.FC<AccountFormProps> = ({ onAddAccount }) => {
   const {
@@ -120,7 +122,28 @@ const AccountForm: React.FC<AccountFormProps> = ({ onAddAccount }) => {
           />
         </div>
         
-        {/* Remove Account Name and Type Fields */}
+        {/* Account Name and Type Fields */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <InputField
+            id="accountName"
+            label="Account Name"
+            name="accountName"
+            value={newAccount.accountName || ""}
+            onChange={handleNewAccountChange}
+            placeholder="Enter account name"
+            required={false}
+          />
+          
+          <SelectField
+            id="accountType"
+            label="Account Type"
+            value={newAccount.accountType || "other"}
+            placeholder="Select account type"
+            options={ACCOUNT_TYPES}
+            onChange={(value) => handleAccountSelectionChange("accountType", value)}
+            required={false}
+          />
+        </div>
         
         {/* Other Account Details */}
         <AccountDetailsSection 

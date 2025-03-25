@@ -29,7 +29,7 @@ const AggregatorCredentialsForm: React.FC<AggregatorCredentialsFormProps> = ({
       <div className="space-y-4">
         <div className="space-y-2">
           <Label htmlFor="username">
-            Username<span className="text-red-500 ml-1">*</span>
+            User ID <span className="text-red-500">*</span>
           </Label>
           <Input
             id="username"
@@ -43,7 +43,7 @@ const AggregatorCredentialsForm: React.FC<AggregatorCredentialsFormProps> = ({
         
         <div className="space-y-2">
           <Label htmlFor="email">
-            Email Address
+            Contact email address
           </Label>
           <Input
             id="email"
@@ -52,6 +52,7 @@ const AggregatorCredentialsForm: React.FC<AggregatorCredentialsFormProps> = ({
             onChange={handleCredentialsChange}
             placeholder="Enter your email address (optional)"
             className="h-11"
+            type="email"
           />
         </div>
         

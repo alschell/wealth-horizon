@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { AggregatorInfo } from "@/context/OnboardingContext";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -15,10 +15,20 @@ const AggregatorSection: React.FC<AggregatorSectionProps> = ({
   aggregatorInfo,
   setAggregatorInfo
 }) => {
+  const [showCustomField, setShowCustomField] = useState(aggregatorInfo.aggregatorName === "Other");
+
   const handleAggregatorChange = (value: string) => {
     setAggregatorInfo({
       ...aggregatorInfo,
-      aggregatorName: value
+      aggregatorName: value === "Other" ? "" : value
+    });
+    setShowCustomField(value === "Other");
+  };
+
+  const handleCustomAggregatorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setAggregatorInfo({
+      ...aggregatorInfo,
+      aggregatorName: e.target.value
     });
   };
 
@@ -35,8 +45,8 @@ const AggregatorSection: React.FC<AggregatorSectionProps> = ({
 
   // Ensure "Other" is at the end of the list
   const sortedAggregators = [...AGGREGATORS];
-  if (sortedAggregators.includes("Other")) {
-    const otherIndex = sortedAggregators.indexOf("Other");
+  const otherIndex = sortedAggregators.indexOf("Other");
+  if (otherIndex > -1) {
     sortedAggregators.splice(otherIndex, 1);
     sortedAggregators.push("Other");
   }
@@ -49,21 +59,46 @@ const AggregatorSection: React.FC<AggregatorSectionProps> = ({
           <SearchableSelectField
             id="aggregator"
             label=""
-            value={aggregatorInfo.aggregatorName || ""}
+            value={showCustomField ? "Other" : aggregatorInfo.aggregatorName || ""}
             placeholder="Select or enter your data aggregator"
             options={sortedAggregators}
             onChange={handleAggregatorChange}
-            allowCustomValue={true}
+            allowCustomValue={false}
           />
         </div>
+        
+        {showCustomField && (
+          <div className="mt-3">
+            <Label className="text-black">Enter Aggregator Name</Label>
+            <Input
+              placeholder="Enter the name of your aggregator"
+              value={aggregatorInfo.aggregatorName || ""}
+              onChange={handleCustomAggregatorChange}
+              className="mt-1"
+            />
+          </div>
+        )}
       </div>
 
       <div className="space-y-3">
-        <Label className="text-black">User ID*</Label>
+        <Label className="text-black">
+          User ID <span className="text-red-500">*</span>
+        </Label>
         <Input
           placeholder="Enter your user ID"
           name="username"
           value={aggregatorInfo.aggregatorCredentials?.username || ""}
+          onChange={handleCredentialChange}
+        />
+      </div>
+
+      <div className="space-y-3">
+        <Label className="text-black">Contact email address</Label>
+        <Input
+          placeholder="Enter your contact email"
+          name="email"
+          type="email"
+          value={aggregatorInfo.aggregatorCredentials?.email || ""}
           onChange={handleCredentialChange}
         />
       </div>

@@ -7,7 +7,7 @@ export function useAccountForm(onAddAccount: (account: FinancialAccountInfo) => 
   const [newAccount, setNewAccount] = useState<FinancialAccountInfo>({
     accountName: "",
     institution: "",
-    accountType: "other", // Default to "other" instead of "cash"
+    accountType: "", // Empty default to show placeholder
     accountSubtype: "",
     currency: "",
     approximateValue: "",
@@ -45,8 +45,8 @@ export function useAccountForm(onAddAccount: (account: FinancialAccountInfo) => 
 
   // Add new account
   const handleAddAccount = () => {
-    // Validation
-    if (!newAccount.accountName || !newAccount.institution || !newAccount.accountType || !newAccount.legalEntity || !newAccount.accountNumber) {
+    // Validation - now only checking for institution, legalEntity and accountNumber
+    if (!newAccount.institution || !newAccount.legalEntity || !newAccount.accountNumber) {
       toast({
         title: "Missing information",
         description: "Please fill in all required account fields.",
@@ -62,7 +62,7 @@ export function useAccountForm(onAddAccount: (account: FinancialAccountInfo) => 
     setNewAccount({
       accountName: "",
       institution: "",
-      accountType: "other", // Default to "other" instead of "cash"
+      accountType: "", // Empty default to show placeholder
       accountSubtype: "",
       currency: "",
       approximateValue: "",
@@ -75,7 +75,7 @@ export function useAccountForm(onAddAccount: (account: FinancialAccountInfo) => 
 
     toast({
       title: "Account added",
-      description: `${newAccount.accountName} has been added successfully.`
+      description: `${newAccount.accountName || "New account"} has been added successfully.`
     });
   };
 

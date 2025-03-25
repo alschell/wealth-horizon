@@ -7,7 +7,7 @@ export function useAccountForm(onAddAccount: (account: FinancialAccountInfo) => 
   const [newAccount, setNewAccount] = useState<FinancialAccountInfo>({
     accountName: "",
     institution: "",
-    accountType: "",
+    accountType: "other", // Changed from "" to "other" to satisfy the type requirement
     accountSubtype: "",
     currency: "",
     approximateValue: "",
@@ -72,7 +72,7 @@ export function useAccountForm(onAddAccount: (account: FinancialAccountInfo) => 
     setNewAccount({
       accountName: "",
       institution: "",
-      accountType: "",
+      accountType: "other", // Changed from "" to "other" to satisfy the type requirement
       accountSubtype: "",
       currency: "",
       approximateValue: "",

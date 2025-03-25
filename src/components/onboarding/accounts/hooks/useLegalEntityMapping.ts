@@ -47,7 +47,7 @@ export const useLegalEntityMapping = (
         if (entityLei === value) {
           // Find the institution this entity belongs to
           for (const [instName, entities] of Object.entries(allLegalEntities)) {
-            if (entities.includes(entityName)) {
+            if (Array.isArray(entities) && entities.includes(entityName)) {
               onSelectionChange("institution", instName);
               onSelectionChange("legalEntity", entityName);
               break;

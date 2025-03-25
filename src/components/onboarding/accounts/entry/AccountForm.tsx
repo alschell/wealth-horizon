@@ -29,7 +29,8 @@ const AccountForm: React.FC<AccountFormProps> = ({
     handleLegalEntityChange,
     handleLeiChange,
     handleFilesSelected,
-    handleAddAccount
+    handleAddAccount,
+    isFormValid
   } = useAccountFormState({
     onAddAccount,
     initialAccount
@@ -87,7 +88,10 @@ const AccountForm: React.FC<AccountFormProps> = ({
             Cancel
           </Button>
         )}
-        <Button type="submit">
+        <Button 
+          type="submit" 
+          disabled={!isFormValid}
+        >
           {isEditMode ? "Update Account" : "Add Account"}
         </Button>
       </div>

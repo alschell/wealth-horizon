@@ -41,10 +41,18 @@ export const useAccountFormState = ({ onAddAccount, initialAccount }: UseAccount
   // Use the legal entities data
   const legalEntities = LEGAL_ENTITIES;
 
+  // Check if form is valid
+  const isFormValid = Boolean(
+    newAccount.institution && 
+    newAccount.legalEntity && 
+    newAccount.accountName && 
+    newAccount.accountType
+  );
+
   // Handle form submission with improved error handling
   const handleAddAccount = () => {
     try {
-      if (validateForm(newAccount)) {
+      if (isFormValid) {
         onAddAccount(newAccount);
         setNewAccount(createPlaceholderAccount());
         toast({
@@ -53,7 +61,7 @@ export const useAccountFormState = ({ onAddAccount, initialAccount }: UseAccount
         });
       } else {
         toast({
-          title: "Form validation failed",
+          title: "Incomplete Form",
           description: "Please fill in all required fields.",
           variant: "destructive"
         });
@@ -77,6 +85,7 @@ export const useAccountFormState = ({ onAddAccount, initialAccount }: UseAccount
     handleLegalEntityChange,
     handleLeiChange,
     handleFilesSelected,
-    handleAddAccount
+    handleAddAccount,
+    isFormValid
   };
 };

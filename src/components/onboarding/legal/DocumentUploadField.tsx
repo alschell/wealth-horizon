@@ -30,7 +30,7 @@ const DocumentUploadField: React.FC<DocumentUploadFieldProps> = ({
           id="documentFiles"
           value={files}
           onChange={onFilesSelected}
-          accept={[".pdf", ".doc", ".docx", ".jpg", ".jpeg", ".png"]}
+          accept={".pdf,.doc,.docx,.jpg,.jpeg,.png"}
           maxFiles={5}
           maxSize={10}
         />

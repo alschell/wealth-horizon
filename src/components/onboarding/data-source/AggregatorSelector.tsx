@@ -30,7 +30,7 @@ const AggregatorSelector = ({
           <SelectTrigger id="aggregatorName" className="h-11 w-full bg-white">
             <SelectValue placeholder="Select aggregator service" />
           </SelectTrigger>
-          <SelectContent className="bg-white z-[999]">
+          <SelectContent className="bg-white" style={{ zIndex: 100 }}>
             {AGGREGATORS.map((aggregator) => (
               <SelectItem 
                 key={aggregator} 

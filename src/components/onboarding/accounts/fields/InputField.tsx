@@ -1,19 +1,21 @@
 
 import React from "react";
-import { InputField as CommonInputField } from "@/components/onboarding/common/fields";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 
 interface InputFieldProps {
   id: string;
   label: string;
   name: string;
-  value: string;
-  placeholder: string;
+  value: string | number;
+  placeholder?: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   type?: string;
   required?: boolean;
   error?: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  maxLength?: number;
   disabled?: boolean;
+  className?: string;
 }
 
 const InputField = ({
@@ -22,27 +24,35 @@ const InputField = ({
   name,
   value,
   placeholder,
+  onChange,
   type = "text",
   required = false,
   error,
-  onChange,
-  maxLength,
-  disabled
+  disabled = false,
+  className
 }: InputFieldProps) => {
   return (
-    <CommonInputField
-      id={id}
-      label={label}
-      name={name}
-      value={value || ""}
-      placeholder={placeholder}
-      type={type}
-      required={required}
-      error={error}
-      onChange={onChange}
-      maxLength={maxLength}
-      disabled={disabled}
-    />
+    <div className={cn("space-y-2", className)}>
+      <Label htmlFor={id}>
+        {label}{required && <span className="text-red-500 ml-1">*</span>}
+      </Label>
+      <Input
+        id={id}
+        name={name}
+        type={type}
+        value={value}
+        onChange={onChange}
+        placeholder={placeholder}
+        disabled={disabled}
+        className={cn(
+          "h-11 bg-white",
+          error ? "border-red-500" : ""
+        )}
+      />
+      {error && (
+        <p className="text-red-500 text-sm mt-1">{error}</p>
+      )}
+    </div>
   );
 };
 

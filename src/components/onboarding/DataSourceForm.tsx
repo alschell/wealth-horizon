@@ -9,67 +9,7 @@ import FormHeader from "./common/FormHeader";
 import FormFooter from "./common/FormFooter";
 import DataSourceTabs from "./data-source/DataSourceTabs";
 import AggregatorSelector from "./data-source/AggregatorSelector";
-import { Trash2 } from "lucide-react";
 
-// Aggregator Radio Group Component
-const AggregatorRadioGroup = ({ 
-  usesAggregator, 
-  handleAggregatorSelection 
-}: { 
-  usesAggregator: boolean;
-  handleAggregatorSelection: (value: string) => void;
-}) => {
-  return (
-    <div className="space-y-4">
-      <h3 className="text-lg font-medium">How would you like to provide your financial data?</h3>
-      <div className="flex flex-col gap-4 sm:flex-row">
-        <div 
-          className={`relative flex-1 border rounded-md p-4 cursor-pointer hover:border-black ${
-            !usesAggregator ? "border-black bg-gray-50" : "border-gray-200"
-          }`}
-          onClick={() => handleAggregatorSelection("no")}
-        >
-          <div className="flex items-start gap-3">
-            <div className="mt-0.5">
-              <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${
-                !usesAggregator ? "border-black" : "border-gray-400"
-              }`}>
-                {!usesAggregator && <div className="w-2 h-2 rounded-full bg-black" />}
-              </div>
-            </div>
-            <div className="space-y-1">
-              <h4 className="font-medium text-black">Submit Financial Information</h4>
-              <p className="text-sm text-gray-600">Add your accounts manually or upload statements</p>
-            </div>
-          </div>
-        </div>
-        
-        <div 
-          className={`relative flex-1 border rounded-md p-4 cursor-pointer hover:border-black ${
-            usesAggregator ? "border-black bg-gray-50" : "border-gray-200"
-          }`}
-          onClick={() => handleAggregatorSelection("yes")}
-        >
-          <div className="flex items-start gap-3">
-            <div className="mt-0.5">
-              <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${
-                usesAggregator ? "border-black" : "border-gray-400"
-              }`}>
-                {usesAggregator && <div className="w-2 h-2 rounded-full bg-black" />}
-              </div>
-            </div>
-            <div className="space-y-1">
-              <h4 className="font-medium text-black">Use Data Aggregator</h4>
-              <p className="text-sm text-gray-600">Connect through a data aggregation service</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-// Main DataSourceForm Component
 const DataSourceForm = () => {
   const {
     onboardingData,
@@ -286,6 +226,58 @@ const DataSourceForm = () => {
     }
   };
 
+  // AggregatorRadioGroup Component
+  const AggregatorRadioGroup = () => {
+    return (
+      <div className="space-y-4">
+        <h3 className="text-lg font-medium">How would you like to provide your financial data?</h3>
+        <div className="flex flex-col gap-4 sm:flex-row">
+          <div 
+            className={`relative flex-1 border rounded-md p-4 cursor-pointer hover:border-black ${
+              !aggregatorInfo.usesAggregator ? "border-black bg-gray-50" : "border-gray-200"
+            }`}
+            onClick={() => handleAggregatorSelection("no")}
+          >
+            <div className="flex items-start gap-3">
+              <div className="mt-0.5">
+                <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${
+                  !aggregatorInfo.usesAggregator ? "border-black" : "border-gray-400"
+                }`}>
+                  {!aggregatorInfo.usesAggregator && <div className="w-2 h-2 rounded-full bg-black" />}
+                </div>
+              </div>
+              <div className="space-y-1">
+                <h4 className="font-medium text-black">Manual Entry</h4>
+                <p className="text-sm text-gray-600">Add your accounts manually or upload statements</p>
+              </div>
+            </div>
+          </div>
+          
+          <div 
+            className={`relative flex-1 border rounded-md p-4 cursor-pointer hover:border-black ${
+              aggregatorInfo.usesAggregator ? "border-black bg-gray-50" : "border-gray-200"
+            }`}
+            onClick={() => handleAggregatorSelection("yes")}
+          >
+            <div className="flex items-start gap-3">
+              <div className="mt-0.5">
+                <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${
+                  aggregatorInfo.usesAggregator ? "border-black" : "border-gray-400"
+                }`}>
+                  {aggregatorInfo.usesAggregator && <div className="w-2 h-2 rounded-full bg-black" />}
+                </div>
+              </div>
+              <div className="space-y-1">
+                <h4 className="font-medium text-black">Use Data Aggregator</h4>
+                <p className="text-sm text-gray-600">Connect through a data aggregation service</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -301,10 +293,7 @@ const DataSourceForm = () => {
             description="Provide information about your financial accounts or connect to a data aggregator."
           />
           
-          <AggregatorRadioGroup
-            usesAggregator={aggregatorInfo.usesAggregator}
-            handleAggregatorSelection={handleAggregatorSelection}
-          />
+          <AggregatorRadioGroup />
           
           {!aggregatorInfo.usesAggregator ? (
             <DataSourceTabs

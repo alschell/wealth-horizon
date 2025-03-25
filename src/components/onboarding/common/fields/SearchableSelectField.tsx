@@ -49,13 +49,13 @@ const SearchableSelectField = ({
 
   // Sort options alphabetically, but ensure "Other" is at the end
   let sortedOptions = [...options];
-  sortedOptions = sortedOptions
-    .filter(option => option !== "Other")
-    .sort((a, b) => a.localeCompare(b));
-  
-  // Add "Other" to the end if it exists in the original options
-  if (options.includes("Other")) {
+  if (sortedOptions.includes("Other")) {
+    sortedOptions = sortedOptions
+      .filter(option => option !== "Other")
+      .sort((a, b) => a.localeCompare(b));
     sortedOptions.push("Other");
+  } else {
+    sortedOptions.sort((a, b) => a.localeCompare(b));
   }
 
   const handleSelect = (selectedValue: string) => {
@@ -87,17 +87,11 @@ const SearchableSelectField = ({
             aria-expanded={open}
             aria-label={`Select ${label}`}
             className={cn(
-              "h-11 w-full justify-between text-left font-normal bg-white border text-black",
+              "h-11 w-full justify-between text-left font-normal bg-white border border-input text-black",
               error ? "border-red-500" : "",
               disabled ? "opacity-70 cursor-not-allowed" : ""
             )}
             type="button"
-            onClick={(e) => {
-              e.preventDefault();
-              if (!disabled) {
-                setOpen(!open);
-              }
-            }}
             disabled={disabled}
           >
             {value ? (
@@ -109,11 +103,11 @@ const SearchableSelectField = ({
           </Button>
         </PopoverTrigger>
         <PopoverContent 
-          className="w-[var(--radix-popover-trigger-width)] p-0 bg-white border shadow-md z-[999]" 
+          className="w-[var(--radix-popover-trigger-width)] p-0 bg-white border shadow-md" 
           align="start"
-          side="bottom"
           sideOffset={8}
           avoidCollisions={true}
+          style={{ zIndex: 100 }}
         >
           <Command onKeyDown={handleKeyDown}>
             <CommandInput 
@@ -138,7 +132,7 @@ const SearchableSelectField = ({
                   key={option}
                   value={option}
                   onSelect={() => handleSelect(option)}
-                  className="hover:bg-slate-100 aria-selected:bg-slate-100 cursor-pointer text-black text-left"
+                  className="hover:bg-slate-100 cursor-pointer text-black"
                 >
                   <Check
                     className={cn(

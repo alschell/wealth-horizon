@@ -3,7 +3,7 @@ import React from "react";
 import { FinancialAccountInfo } from "@/context/OnboardingContext";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Upload, Wallet } from "lucide-react";
-import ManualEntrySection from "../ManualEntrySection";
+import ManualEntrySection from "../manual-entry/ManualEntrySection";
 import FileUploadSection from "../FileUploadSection";
 
 interface DataSourceTabsProps {
@@ -17,7 +17,7 @@ interface DataSourceTabsProps {
   handleBulkFilesSelected: (files: File[]) => void;
 }
 
-const DataSourceTabs = ({
+const DataSourceTabs: React.FC<DataSourceTabsProps> = ({
   dataSourceMethod,
   setDataSourceMethod,
   financialAccounts,

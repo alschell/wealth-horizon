@@ -4,22 +4,21 @@ import { FinancialAccountInfo, useOnboarding } from "@/context/OnboardingContext
 import { Card } from "@/components/ui/card";
 import { toast } from "@/components/ui/use-toast";
 import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
-import { Plus, Wallet, Upload, Database } from "lucide-react";
+import { Database } from "lucide-react";
 import FormHeader from "./common/FormHeader";
 import FormFooter from "./common/FormFooter";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  AccountFormHeader,
-  AccountFormButton
-} from "./accounts/form";
-import {
-  AccountForm,
-  AccountList
-} from "./accounts/entry";
+import DataSourceTabs from "./data-source/DataSourceTabs";
+import AggregatorSelector from "./data-source/AggregatorSelector";
+import { Trash2 } from "lucide-react";
 
-// Aggregator Components
-const AggregatorRadioGroup = ({ usesAggregator, handleAggregatorSelection }) => {
+// Aggregator Radio Group Component
+const AggregatorRadioGroup = ({ 
+  usesAggregator, 
+  handleAggregatorSelection 
+}: { 
+  usesAggregator: boolean;
+  handleAggregatorSelection: (value: string) => void;
+}) => {
   return (
     <div className="space-y-4">
       <h3 className="text-lg font-medium">How would you like to provide your financial data?</h3>
@@ -39,7 +38,7 @@ const AggregatorRadioGroup = ({ usesAggregator, handleAggregatorSelection }) => 
               </div>
             </div>
             <div className="space-y-1">
-              <h4 className="font-medium text-black">Manual Entry</h4>
+              <h4 className="font-medium text-black">Submit Financial Information</h4>
               <p className="text-sm text-gray-600">Add your accounts manually or upload statements</p>
             </div>
           </div>
@@ -70,161 +69,6 @@ const AggregatorRadioGroup = ({ usesAggregator, handleAggregatorSelection }) => 
   );
 };
 
-// Aggregator Section
-const AggregatorSection = ({ aggregatorInfo, setAggregatorInfo }) => {
-  const aggregators = [
-    "Plaid",
-    "Yodlee",
-    "MX",
-    "Finicity",
-    "Akoya",
-    "Salt Edge",
-    "TrueLayer",
-    "Tink",
-    "Other"
-  ];
-
-  return (
-    <div className="space-y-6">
-      <div className="space-y-4">
-        <label className="block text-sm font-medium text-black">
-          Select Data Aggregator<span className="text-red-500 ml-1">*</span>
-        </label>
-        
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-          {aggregators.map((name) => (
-            <div 
-              key={name}
-              className={`border rounded-md p-3 cursor-pointer hover:border-black transition-colors ${
-                aggregatorInfo.aggregatorName === name ? "border-black bg-gray-50" : "border-gray-200"
-              }`}
-              onClick={() => setAggregatorInfo({
-                ...aggregatorInfo,
-                aggregatorName: name
-              })}
-            >
-              <div className="text-center">
-                <span className="text-sm font-medium text-black">{name}</span>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-      
-      <div className="space-y-4 border-t pt-4">
-        <h3 className="text-md font-medium">Aggregator Credentials</h3>
-        <div className="space-y-4">
-          <div>
-            <label htmlFor="username" className="block text-sm font-medium text-black">
-              Username<span className="text-red-500 ml-1">*</span>
-            </label>
-            <input
-              id="username"
-              type="text"
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-black focus:border-black"
-              value={aggregatorInfo.aggregatorCredentials?.username || ''}
-              onChange={(e) => setAggregatorInfo({
-                ...aggregatorInfo,
-                aggregatorCredentials: {
-                  ...aggregatorInfo.aggregatorCredentials,
-                  username: e.target.value
-                }
-              })}
-            />
-          </div>
-          
-          <div>
-            <label htmlFor="apiKey" className="block text-sm font-medium text-black">
-              API Key <span className="text-gray-500 text-xs font-normal">(Optional)</span>
-            </label>
-            <input
-              id="apiKey"
-              type="password"
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-black focus:border-black"
-              value={aggregatorInfo.aggregatorCredentials?.apiKey || ''}
-              onChange={(e) => setAggregatorInfo({
-                ...aggregatorInfo,
-                aggregatorCredentials: {
-                  ...aggregatorInfo.aggregatorCredentials,
-                  apiKey: e.target.value
-                }
-              })}
-            />
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-// File Upload Section
-const FileUploadSection = ({ uploadedFiles, handleBulkFilesSelected }) => {
-  return (
-    <div className="space-y-6">
-      <div className="border border-dashed border-gray-300 rounded-lg p-6">
-        <div className="text-center">
-          <Upload className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-black mb-1">Upload Financial Statements</h3>
-          <p className="text-sm text-gray-500 mb-4">
-            Drag and drop your financial statements here, or click to browse files
-          </p>
-          
-          <label htmlFor="file-upload" className="cursor-pointer inline-flex items-center justify-center rounded-md text-sm font-medium bg-black text-white hover:bg-gray-800 py-2 px-4">
-            Browse Files
-            <input
-              id="file-upload"
-              name="file-upload"
-              type="file"
-              className="sr-only"
-              multiple
-              onChange={(e) => {
-                if (e.target.files?.length) {
-                  handleBulkFilesSelected(Array.from(e.target.files));
-                }
-              }}
-            />
-          </label>
-        </div>
-      </div>
-      
-      {uploadedFiles.length > 0 && (
-        <div className="border rounded-md p-4">
-          <h4 className="font-medium mb-3">Uploaded Files ({uploadedFiles.length})</h4>
-          <div className="space-y-2">
-            {uploadedFiles.map((file, index) => (
-              <div key={index} className="flex items-center justify-between bg-gray-50 p-3 rounded-lg">
-                <div className="flex items-center space-x-3">
-                  <div className="w-9 h-9 bg-gray-200 rounded-md flex items-center justify-center">
-                    <span className="text-xs font-medium text-gray-600">
-                      {file.name.split('.').pop()?.toUpperCase()}
-                    </span>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium">{file.name}</p>
-                    <p className="text-xs text-gray-500">{(file.size / (1024 * 1024)).toFixed(2)} MB</p>
-                  </div>
-                </div>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  className="text-gray-500 hover:text-red-500 p-2 h-auto"
-                  onClick={() => {
-                    handleBulkFilesSelected(uploadedFiles.filter((_, i) => i !== index));
-                  }}
-                >
-                  <Trash2 className="h-5 w-5" />
-                  <span className="sr-only">Remove file</span>
-                </Button>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-    </div>
-  );
-};
-
 // Main DataSourceForm Component
 const DataSourceForm = () => {
   const {
@@ -246,9 +90,6 @@ const DataSourceForm = () => {
     onboardingData.financialAccounts || []
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [currentAccount, setCurrentAccount] = useState<FinancialAccountInfo | null>(null);
-  const [isEditing, setIsEditing] = useState(false);
-  const [editIndex, setEditIndex] = useState(-1);
 
   // Load existing accounts
   useEffect(() => {
@@ -257,8 +98,22 @@ const DataSourceForm = () => {
     }
   }, [onboardingData.financialAccounts]);
 
-  const handleAggregatorInfoChange = (info: typeof aggregatorInfo) => {
-    setAggregatorInfo(info);
+  const handleAggregatorNameChange = (value: string) => {
+    setAggregatorInfo({
+      ...aggregatorInfo,
+      aggregatorName: value
+    });
+  };
+
+  const handleCredentialsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setAggregatorInfo({
+      ...aggregatorInfo,
+      aggregatorCredentials: {
+        ...aggregatorInfo.aggregatorCredentials,
+        [name]: value
+      }
+    });
   };
 
   const handleAggregatorSelection = (value: string) => {
@@ -284,36 +139,25 @@ const DataSourceForm = () => {
       return;
     }
 
-    if (isEditing && editIndex !== -1) {
-      // Update existing account
-      const updatedAccounts = [...financialAccounts];
-      updatedAccounts[editIndex] = account;
-      setFinancialAccounts(updatedAccounts);
-      
-      // Update in context
-      updateFinancialAccount(editIndex, account);
-      
-      setIsEditing(false);
-      setEditIndex(-1);
-      setCurrentAccount(null);
-      
+    if (!account.legalEntity) {
       toast({
-        title: "Account updated",
-        description: "Financial account has been updated successfully."
+        title: "Missing information",
+        description: "Please provide the legal entity name.",
+        variant: "destructive"
       });
-    } else {
-      // Add new account
-      const newAccounts = [...financialAccounts, account];
-      setFinancialAccounts(newAccounts);
-      
-      // Also update in context
-      addFinancialAccount(account);
-      
-      toast({
-        title: "Account added",
-        description: "Financial account has been added successfully."
-      });
+      return;
     }
+
+    const newAccounts = [...financialAccounts, account];
+    setFinancialAccounts(newAccounts);
+    
+    // Also update in context
+    addFinancialAccount(account);
+    
+    toast({
+      title: "Account added",
+      description: "Financial account has been added successfully."
+    });
   };
   
   const handleRemoveAccount = (index: number) => {
@@ -324,29 +168,43 @@ const DataSourceForm = () => {
     // Also update in context
     removeFinancialAccount(index);
     
-    // If removing the account being edited, reset edit state
-    if (isEditing && index === editIndex) {
-      setIsEditing(false);
-      setEditIndex(-1);
-      setCurrentAccount(null);
-    }
-    
     toast({
       title: "Account removed",
       description: "Financial account has been removed successfully."
     });
   };
   
-  const handleEditAccount = (index: number) => {
-    setCurrentAccount(financialAccounts[index]);
-    setIsEditing(true);
-    setEditIndex(index);
-  };
-  
-  const handleCancelEdit = () => {
-    setIsEditing(false);
-    setEditIndex(-1);
-    setCurrentAccount(null);
+  const handleUpdateAccount = (index: number, account: FinancialAccountInfo) => {
+    // Validate required fields
+    if (!account.institution) {
+      toast({
+        title: "Missing information",
+        description: "Please provide the institution name.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (!account.legalEntity) {
+      toast({
+        title: "Missing information",
+        description: "Please provide the legal entity name.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    const updatedAccounts = [...financialAccounts];
+    updatedAccounts[index] = account;
+    setFinancialAccounts(updatedAccounts);
+    
+    // Update in context
+    updateFinancialAccount(index, account);
+    
+    toast({
+      title: "Account updated",
+      description: "Financial account has been updated successfully."
+    });
   };
   
   const handleBulkFilesSelected = (files: File[]) => {
@@ -448,68 +306,22 @@ const DataSourceForm = () => {
             handleAggregatorSelection={handleAggregatorSelection}
           />
           
-          {!aggregatorInfo.usesAggregator && (
-            <Tabs 
-              value={dataSourceMethod} 
-              onValueChange={(value) => setDataSourceMethod(value as "manual" | "upload")}
-              className="w-full"
-            >
-              <TabsList className="grid w-full grid-cols-2 mb-4">
-                <TabsTrigger value="manual" className="data-[state=active]:bg-black data-[state=active]:text-white">
-                  <Wallet className="w-4 h-4 mr-2" />
-                  Manual Entry
-                </TabsTrigger>
-                <TabsTrigger value="upload" className="data-[state=active]:bg-black data-[state=active]:text-white">
-                  <Upload className="w-4 h-4 mr-2" />
-                  Upload Statements
-                </TabsTrigger>
-              </TabsList>
-              
-              <TabsContent value="manual" className="space-y-6">
-                {!isEditing && (
-                  <div className="mb-4">
-                    <AccountFormButton 
-                      onClick={() => {
-                        setCurrentAccount(null);
-                        setIsEditing(false);
-                      }}
-                    />
-                  </div>
-                )}
-                
-                {(currentAccount !== null || isEditing || financialAccounts.length === 0) && (
-                  <Card className="p-5">
-                    <AccountFormHeader />
-                    <AccountForm 
-                      onAddAccount={handleAddAccount}
-                      initialAccount={currentAccount || undefined}
-                      onCancel={isEditing ? handleCancelEdit : undefined}
-                    />
-                  </Card>
-                )}
-                
-                {financialAccounts.length > 0 && (
-                  <AccountList 
-                    accounts={financialAccounts}
-                    onRemove={handleRemoveAccount}
-                    onEdit={handleEditAccount}
-                  />
-                )}
-              </TabsContent>
-              
-              <TabsContent value="upload" className="space-y-4">
-                <FileUploadSection 
-                  uploadedFiles={uploadedFiles}
-                  handleBulkFilesSelected={handleBulkFilesSelected}
-                />
-              </TabsContent>
-            </Tabs>
-          )}
-          
-          {aggregatorInfo.usesAggregator && (
-            <AggregatorSection
+          {!aggregatorInfo.usesAggregator ? (
+            <DataSourceTabs
+              dataSourceMethod={dataSourceMethod}
+              setDataSourceMethod={setDataSourceMethod}
+              financialAccounts={financialAccounts}
+              handleAddAccount={handleAddAccount}
+              handleRemoveAccount={handleRemoveAccount}
+              handleUpdateAccount={handleUpdateAccount}
+              uploadedFiles={uploadedFiles}
+              handleBulkFilesSelected={handleBulkFilesSelected}
+            />
+          ) : (
+            <AggregatorSelector
               aggregatorInfo={aggregatorInfo}
-              setAggregatorInfo={handleAggregatorInfoChange}
+              handleAggregatorNameChange={handleAggregatorNameChange}
+              handleCredentialsChange={handleCredentialsChange}
             />
           )}
           

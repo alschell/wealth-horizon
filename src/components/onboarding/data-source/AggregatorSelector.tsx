@@ -1,11 +1,13 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { AGGREGATORS } from "@/components/onboarding/constants/aggregators";
-import { SearchableSelectField } from "@/components/onboarding/accounts/fields";
+import { SearchableSelectField } from "@/components/onboarding/common/fields";
 import { itemVariants } from "@/components/onboarding/common/AnimationVariants";
 import AggregatorCredentialsForm from "./AggregatorCredentialsForm";
 import { AggregatorInfo } from "@/context/OnboardingContext";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 interface AggregatorSelectorProps {
   aggregatorInfo: AggregatorInfo;
@@ -18,9 +20,27 @@ const AggregatorSelector: React.FC<AggregatorSelectorProps> = ({
   handleAggregatorNameChange,
   handleCredentialsChange
 }) => {
+  const [showCustomInput, setShowCustomInput] = useState(aggregatorInfo.aggregatorName === "Other (Manual Entry)");
+  const [customAggregator, setCustomAggregator] = useState("");
+
   // Handle aggregator selection safely
   const handleAggregatorChange = (value: string) => {
-    handleAggregatorNameChange(value);
+    if (value === "Other (Manual Entry)") {
+      setShowCustomInput(true);
+      handleAggregatorNameChange(value);
+    } else {
+      setShowCustomInput(false);
+      handleAggregatorNameChange(value);
+    }
+  };
+
+  const handleCustomAggregatorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCustomAggregator(e.target.value);
+    if (e.target.value) {
+      handleAggregatorNameChange(e.target.value);
+    } else {
+      handleAggregatorNameChange("Other (Manual Entry)");
+    }
   };
 
   return (
@@ -35,13 +55,26 @@ const AggregatorSelector: React.FC<AggregatorSelectorProps> = ({
         <SearchableSelectField
           id="aggregatorName"
           label="Aggregator"
-          value={aggregatorInfo.aggregatorName || ""}
+          value={showCustomInput ? "Other (Manual Entry)" : aggregatorInfo.aggregatorName || ""}
           placeholder="Select your aggregator"
           options={AGGREGATORS}
           onChange={handleAggregatorChange}
-          allowCustomValue={true}
+          allowCustomValue={false}
         />
       </div>
+
+      {showCustomInput && (
+        <div className="space-y-2">
+          <Label htmlFor="customAggregator">Enter Aggregator Name</Label>
+          <Input
+            id="customAggregator"
+            value={customAggregator}
+            onChange={handleCustomAggregatorChange}
+            placeholder="Enter your aggregator's name"
+            className="h-11"
+          />
+        </div>
+      )}
 
       {aggregatorInfo.aggregatorName && (
         <AggregatorCredentialsForm 

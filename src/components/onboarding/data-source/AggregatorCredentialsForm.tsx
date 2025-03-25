@@ -34,6 +34,17 @@ const AggregatorCredentialsForm = ({
         className="h-11"
       />
       
+      <Label htmlFor="email">Email Address (Optional)</Label>
+      <Input
+        id="email"
+        name="email"
+        type="email"
+        value={aggregatorInfo.aggregatorCredentials?.email || ""}
+        onChange={handleCredentialsChange}
+        placeholder="Enter your contact email address"
+        className="h-11"
+      />
+      
       <Label htmlFor="apiKey">API Key</Label>
       <Input
         id="apiKey"

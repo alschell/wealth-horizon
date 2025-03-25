@@ -39,12 +39,13 @@ const DocumentDetailsFields: React.FC<DocumentDetailsFieldsProps> = ({
         )}
       </div>
       <div className="space-y-2">
-        <Label htmlFor="expiryDate">Expiry Date</Label>
+        <Label htmlFor="expiryDate">Expiry Date (Optional)</Label>
         <DatePicker
           id="expiryDate"
           value={expiryDate ? new Date(expiryDate) : undefined}
           onChange={(date) => onDateChange('expiryDate', date)}
           label="Expiry Date"
+          optional={true}
         />
       </div>
     </div>

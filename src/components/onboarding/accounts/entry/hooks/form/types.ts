@@ -39,7 +39,9 @@ export const DEFAULT_ACCOUNT: FinancialAccountInfo = {
   accountSubtype: "",
   currency: "",
   approximateValue: "",
-  statements: []
+  statements: [],
+  accountNumber: "", // Add accountNumber field
+  swiftCode: "" // Add swiftCode field
 };
 
 // Utility function to create a placeholder version of the account for new entries

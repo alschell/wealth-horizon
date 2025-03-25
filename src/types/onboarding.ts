@@ -57,6 +57,8 @@ export type FinancialAccountInfo = {
   statements: File[];
   legalEntity: string;
   legalEntityIdentifier: string;
+  accountNumber: string; // Add accountNumber field
+  swiftCode: string; // Add swiftCode field
 };
 
 export type BeneficialOwnerInfo = {

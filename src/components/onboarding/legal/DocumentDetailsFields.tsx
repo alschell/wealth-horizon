@@ -27,8 +27,9 @@ const DocumentDetailsFields: React.FC<DocumentDetailsFieldsProps> = ({
         </Label>
         <DatePicker
           id="issueDate"
-          date={issueDate ? new Date(issueDate) : undefined}
-          onSelect={(date) => onDateChange('issueDate', date)}
+          value={issueDate ? new Date(issueDate) : undefined}
+          onChange={(date) => onDateChange('issueDate', date)}
+          label="Issue Date"
           className={cn(error?.issueDate && "border-red-500")}
         />
         {error?.issueDate && (
@@ -43,8 +44,9 @@ const DocumentDetailsFields: React.FC<DocumentDetailsFieldsProps> = ({
         </Label>
         <DatePicker
           id="expiryDate"
-          date={expiryDate ? new Date(expiryDate) : undefined}
-          onSelect={(date) => onDateChange('expiryDate', date)}
+          value={expiryDate ? new Date(expiryDate) : undefined}
+          onChange={(date) => onDateChange('expiryDate', date)}
+          label="Expiry Date"
         />
       </div>
     </div>

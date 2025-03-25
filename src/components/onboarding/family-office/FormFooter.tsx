@@ -25,7 +25,7 @@ const FormFooter: React.FC<FormFooterProps> = ({
         <Button 
           onClick={onSubmit} 
           size="lg" 
-          className="rounded-lg bg-black hover:bg-gray-800 text-white hover:shadow-md transition-shadow"
+          className={`rounded-lg transition-shadow ${isSubmitting ? 'bg-gray-300 text-gray-500' : 'bg-black hover:bg-gray-800 text-white hover:shadow-md'}`}
           disabled={isSubmitting}
         >
           Continue

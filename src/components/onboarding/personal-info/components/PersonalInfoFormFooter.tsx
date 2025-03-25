@@ -21,7 +21,7 @@ const PersonalInfoFormFooter: React.FC<PersonalInfoFormFooterProps> = ({
         <Button 
           type="submit" 
           size="lg" 
-          className="rounded-lg hover:shadow-md transition-shadow"
+          className={`rounded-lg hover:shadow-md transition-shadow ${isValid ? 'bg-black hover:bg-gray-800 text-white' : 'bg-gray-300 text-gray-500'}`}
           disabled={!isValid}
           onClick={onSubmit}
         >

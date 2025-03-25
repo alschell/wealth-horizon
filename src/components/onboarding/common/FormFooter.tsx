@@ -25,6 +25,8 @@ const FormFooter: React.FC<FormFooterProps> = ({
   showRequired = true,
   disableContinue = false,
 }) => {
+  const isDisabled = isSubmitting || disableContinue;
+  
   return (
     <div className={cn("pt-4 border-t", className)}>
       {showRequired && (
@@ -50,11 +52,12 @@ const FormFooter: React.FC<FormFooterProps> = ({
           type="button"
           size="lg"
           className={cn(
-            "rounded-lg hover:shadow-md transition-shadow bg-black hover:bg-gray-800 text-white", 
+            "rounded-lg transition-shadow",
+            isDisabled ? "bg-gray-300 text-gray-500" : "bg-black hover:bg-gray-800 text-white hover:shadow-md", 
             !onBack && "ml-auto"
           )}
           onClick={onSubmit}
-          disabled={isSubmitting || disableContinue}
+          disabled={isDisabled}
         >
           {isSubmitting ? (
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />

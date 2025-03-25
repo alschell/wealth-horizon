@@ -1,15 +1,26 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useOnboarding, AddressInfo } from "@/context/OnboardingContext";
 import { Card } from "@/components/ui/card";
 import { toast } from "@/components/ui/use-toast";
 import { motion } from "framer-motion";
 import { AddressFormHeader, AddressFormFields, AddressFormNavigation } from "./address";
+import { validateRequiredFields } from "./common/utils/validation";
 
 const AddressForm = () => {
   const { onboardingData, updateAddressInfo, setCurrentStep } = useOnboarding();
   const [formData, setFormData] = useState<AddressInfo>(onboardingData.addressInfo);
   const [errors, setErrors] = useState<Partial<Record<keyof AddressInfo, string>>>({});
+  const [hasErrors, setHasErrors] = useState(true);
+
+  // Required fields for validation
+  const requiredFields: (keyof AddressInfo)[] = [
+    'streetAddress',
+    'city', 
+    'state',
+    'postalCode', 
+    'country'
+  ];
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -30,23 +41,15 @@ const AddressForm = () => {
     }
   };
 
+  // Check for form validity whenever formData changes
+  useEffect(() => {
+    const newErrors = validateRequiredFields(formData, requiredFields);
+    setErrors(newErrors);
+    setHasErrors(Object.keys(newErrors).length > 0);
+  }, [formData]);
+
   const validateForm = () => {
-    const newErrors: Partial<Record<keyof AddressInfo, string>> = {};
-    // Make required fields validation explicit
-    const requiredFields: (keyof AddressInfo)[] = [
-      'streetAddress',
-      'city', 
-      'state',
-      'postalCode', 
-      'country'
-    ];
-    
-    requiredFields.forEach(field => {
-      if (!formData[field]) {
-        newErrors[field] = 'This field is required';
-      }
-    });
-    
+    const newErrors = validateRequiredFields(formData, requiredFields);
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -90,7 +93,7 @@ const AddressForm = () => {
             onSelectionChange={handleSelectChange}
           />
 
-          <AddressFormNavigation hasErrors={Object.keys(errors).length > 0} />
+          <AddressFormNavigation hasErrors={hasErrors} />
         </form>
       </Card>
     </motion.div>

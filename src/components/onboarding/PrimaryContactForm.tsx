@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useOnboarding, PrimaryContactInfo } from "@/context/OnboardingContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,11 +8,21 @@ import { Card } from "@/components/ui/card";
 import { toast } from "@/components/ui/use-toast";
 import { motion } from "framer-motion";
 import { ArrowRight, ArrowLeft, UserRound } from "lucide-react";
+import { validateRequiredFields, isValidEmail } from "./common/utils/validation";
 
 const PrimaryContactForm = () => {
   const { onboardingData, updatePrimaryContactInfo, setCurrentStep } = useOnboarding();
   const [formData, setFormData] = useState<PrimaryContactInfo>(onboardingData.primaryContactInfo);
   const [errors, setErrors] = useState<Partial<Record<keyof PrimaryContactInfo, string>>>({});
+  const [hasErrors, setHasErrors] = useState(true);
+
+  const requiredFields: (keyof PrimaryContactInfo)[] = [
+    'firstName', 
+    'lastName', 
+    'position', 
+    'email', 
+    'phone'
+  ];
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -24,15 +34,28 @@ const PrimaryContactForm = () => {
     }
   };
 
+  // Validate form whenever formData changes
+  useEffect(() => {
+    const newErrors: Partial<Record<keyof PrimaryContactInfo, string>> = {};
+    
+    // Check required fields
+    requiredFields.forEach(field => {
+      if (!formData[field]) {
+        newErrors[field] = 'This field is required';
+      }
+    });
+    
+    // Email validation
+    if (formData.email && !isValidEmail(formData.email)) {
+      newErrors.email = 'Please enter a valid email address';
+    }
+    
+    setErrors(newErrors);
+    setHasErrors(Object.keys(newErrors).length > 0);
+  }, [formData]);
+
   const validateForm = () => {
     const newErrors: Partial<Record<keyof PrimaryContactInfo, string>> = {};
-    const requiredFields: (keyof PrimaryContactInfo)[] = [
-      'firstName', 
-      'lastName', 
-      'position', 
-      'email', 
-      'phone'
-    ];
     
     requiredFields.forEach(field => {
       if (!formData[field]) {
@@ -198,6 +221,7 @@ const PrimaryContactForm = () => {
                 type="submit" 
                 size="lg" 
                 className="rounded-lg hover:shadow-md transition-shadow bg-black hover:bg-gray-800 text-white"
+                disabled={hasErrors}
               >
                 Continue
                 <ArrowRight className="ml-2 h-4 w-4" />

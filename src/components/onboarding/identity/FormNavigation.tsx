@@ -5,9 +5,10 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 
 interface FormNavigationProps {
   onBack: () => void;
+  hasErrors?: boolean;
 }
 
-const FormNavigation: React.FC<FormNavigationProps> = ({ onBack }) => {
+const FormNavigation: React.FC<FormNavigationProps> = ({ onBack, hasErrors = false }) => {
   return (
     <div className="pt-4 border-t">
       <p className="text-sm text-gray-500 mb-6">
@@ -28,6 +29,7 @@ const FormNavigation: React.FC<FormNavigationProps> = ({ onBack }) => {
           type="submit" 
           size="lg" 
           className="rounded-lg hover:shadow-md transition-shadow"
+          disabled={hasErrors}
         >
           Continue
           <ArrowRight className="ml-2 h-4 w-4" />

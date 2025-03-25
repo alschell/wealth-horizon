@@ -31,6 +31,9 @@ const LegalDocumentsForm = () => {
     handleCancelEdit
   } = useLegalDocumentsForm();
 
+  // Determine if we should disable the continue button
+  const hasDocuments = documentFiles.length > 0;
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -74,6 +77,7 @@ const LegalDocumentsForm = () => {
             onSubmit={handleSubmit}
             isSubmitting={isSubmitting}
             showRequired={true}
+            disableContinue={!hasDocuments}
           />
         </form>
       </Card>

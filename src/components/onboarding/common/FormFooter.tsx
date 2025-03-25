@@ -12,6 +12,7 @@ interface FormFooterProps {
   isSubmitting?: boolean;
   className?: string;
   showRequired?: boolean;
+  disableContinue?: boolean;
 }
 
 const FormFooter: React.FC<FormFooterProps> = ({
@@ -22,6 +23,7 @@ const FormFooter: React.FC<FormFooterProps> = ({
   isSubmitting = false,
   className,
   showRequired = true,
+  disableContinue = false,
 }) => {
   return (
     <div className={cn("pt-4 border-t", className)}>
@@ -52,7 +54,7 @@ const FormFooter: React.FC<FormFooterProps> = ({
             !onBack && "ml-auto"
           )}
           onClick={onSubmit}
-          disabled={isSubmitting}
+          disabled={isSubmitting || disableContinue}
         >
           {isSubmitting ? (
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />

@@ -24,37 +24,12 @@ const PrimaryContactForm: React.FC = () => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-    
-    if (!formTouched) {
-      setFormTouched(true);
-    }
-    
-    // Clear error when field is edited
-    if (errors[name as keyof PrimaryContactInfo]) {
-      setErrors({ ...errors, [name]: undefined });
-    }
   };
 
-  // Only validate form after it's been touched
-  useEffect(() => {
-    if (formTouched) {
-      const newErrors: Partial<Record<keyof PrimaryContactInfo, string>> = {};
-      
-      // Check required fields
-      requiredFields.forEach(field => {
-        if (!formData[field]) {
-          newErrors[field] = 'This field is required';
-        }
-      });
-      
-      // Email validation
-      if (formData.email && !isValidEmail(formData.email)) {
-        newErrors.email = 'Please enter a valid email address';
-      }
-      
-      setErrors(newErrors);
-    }
-  }, [formData, formTouched]);
+  // Check if all required fields are filled out properly - used for button activation
+  const areAllRequiredFieldsFilled = requiredFields.every(field => 
+    Boolean(formData[field])
+  ) && formData.email && isValidEmail(formData.email);
 
   const validateForm = () => {
     const newErrors: Partial<Record<keyof PrimaryContactInfo, string>> = {};
@@ -94,11 +69,6 @@ const PrimaryContactForm: React.FC = () => {
       description: "Primary contact information has been saved successfully.",
     });
   };
-
-  // Check if form is filled out properly - used for button activation
-  const areAllRequiredFieldsFilled = requiredFields.every(field => 
-    Boolean(formData[field])
-  ) && formData.email && isValidEmail(formData.email);
 
   return (
     <FormLayout>

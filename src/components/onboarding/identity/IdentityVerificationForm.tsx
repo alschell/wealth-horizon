@@ -13,6 +13,8 @@ import DocumentUploadSection from "./fields/DocumentUploadSection";
 const IdentityVerificationForm = () => {
   const { onboardingData, updateIdentityVerification, setCurrentStep } = useOnboarding();
   const [formData, setFormData] = useState<IdentityVerification>(onboardingData.identityVerification);
+  const [formTouched, setFormTouched] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -29,12 +31,19 @@ const IdentityVerificationForm = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setFormTouched(true);
     
     // Simple validation
     const requiredFields: (keyof IdentityVerification)[] = ['documentType', 'documentNumber', 'issueDate'];
     const missingFields = requiredFields.filter(field => !formData[field]);
     
+    const newErrors: Record<string, string> = {};
+    missingFields.forEach(field => {
+      newErrors[field] = 'This field is required';
+    });
+    
     if (missingFields.length > 0) {
+      setErrors(newErrors);
       toast({
         title: "Missing information",
         description: `Please complete all required fields.`,
@@ -55,6 +64,13 @@ const IdentityVerificationForm = () => {
     updateIdentityVerification(formData);
     setCurrentStep(3); // Move to data source step
   };
+
+  // Check if required fields and files are present
+  const isFormComplete = 
+    formData.documentType && 
+    formData.documentNumber && 
+    formData.issueDate && 
+    formData.documentFiles.length > 0;
 
   return (
     <motion.div
@@ -81,6 +97,8 @@ const IdentityVerificationForm = () => {
               issueDate={formData.issueDate}
               expiryDate={formData.expiryDate}
               onChange={handleInputChange}
+              formTouched={formTouched}
+              errors={errors}
             />
             
             <DocumentUploadSection 
@@ -89,7 +107,10 @@ const IdentityVerificationForm = () => {
             />
           </div>
 
-          <FormNavigation onBack={() => setCurrentStep(1)} />
+          <FormNavigation 
+            onBack={() => setCurrentStep(1)} 
+            disableContinue={!isFormComplete}
+          />
         </form>
       </Card>
     </motion.div>

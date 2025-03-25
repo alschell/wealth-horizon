@@ -10,14 +10,21 @@ interface DocumentDetailsFieldsProps {
   issueDate: string;
   expiryDate?: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  formTouched?: boolean;
+  errors?: Record<string, string>;
 }
 
 const DocumentDetailsFields: React.FC<DocumentDetailsFieldsProps> = ({
   documentNumber,
   issueDate,
   expiryDate,
-  onChange
+  onChange,
+  formTouched = false,
+  errors = {}
 }) => {
+  // Only show errors if the form has been touched
+  const showErrors = formTouched ? errors : {};
+  
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -35,8 +42,11 @@ const DocumentDetailsFields: React.FC<DocumentDetailsFieldsProps> = ({
             value={documentNumber}
             onChange={onChange}
             placeholder="Document ID Number"
-            className="h-11"
+            className={`h-11 ${showErrors.documentNumber ? 'border-red-500' : ''}`}
           />
+          {showErrors.documentNumber && (
+            <p className="text-red-500 text-sm mt-1">{showErrors.documentNumber}</p>
+          )}
         </motion.div>
 
         <motion.div 
@@ -53,8 +63,11 @@ const DocumentDetailsFields: React.FC<DocumentDetailsFieldsProps> = ({
             type="date"
             value={issueDate}
             onChange={onChange}
-            className="h-11"
+            className={`h-11 ${showErrors.issueDate ? 'border-red-500' : ''}`}
           />
+          {showErrors.issueDate && (
+            <p className="text-red-500 text-sm mt-1">{showErrors.issueDate}</p>
+          )}
         </motion.div>
 
         <motion.div 

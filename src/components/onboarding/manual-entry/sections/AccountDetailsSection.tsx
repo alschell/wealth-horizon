@@ -3,13 +3,10 @@ import React from "react";
 import { FinancialAccountInfo } from "@/context/OnboardingContext";
 import { 
   InputField, 
-  SelectField 
+  SelectField,
+  SearchableSelectField 
 } from "@/components/onboarding/accounts/fields";
-
-// Currencies for select field
-const CURRENCIES = [
-  "USD", "EUR", "GBP", "JPY", "CHF", "CAD", "AUD", "CNY", "HKD", "SGD"
-];
+import { CURRENCIES } from "@/utils/constants/currencies";
 
 interface AccountDetailsSectionProps {
   account: FinancialAccountInfo;
@@ -29,10 +26,9 @@ const AccountDetailsSection: React.FC<AccountDetailsSectionProps> = ({
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-      <SelectField
+      <SearchableSelectField
         id="currency"
         label="Currency"
-        name="currency"
         value={account.currency}
         onChange={handleSelectChange("currency")}
         options={CURRENCIES}

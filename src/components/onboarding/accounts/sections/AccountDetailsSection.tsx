@@ -4,7 +4,7 @@ import { FinancialAccountInfo } from "@/types/onboarding";
 import { 
   InputField, 
   SearchableSelectField 
-} from "../fields";
+} from "@/components/onboarding/common/fields";
 import { CURRENCIES, extractCurrencyCode } from "@/utils/constants/currencies";
 
 interface AccountDetailsSectionProps {

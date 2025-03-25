@@ -1,0 +1,67 @@
+
+import React from "react";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
+import { DocumentTypeField, DocumentDetailsFields, DocumentUploadField } from "./index";
+
+interface AddDocumentFormProps {
+  documentType: string;
+  issueDate: string;
+  expiryDate: string;
+  selectedFiles: File[];
+  errors: Record<string, boolean>;
+  onDocumentTypeChange: (value: string) => void;
+  onDateChange: (field: 'issueDate' | 'expiryDate', date?: Date) => void;
+  onFilesSelected: (files: File[]) => void;
+  onAddDocument: () => void;
+}
+
+const AddDocumentForm: React.FC<AddDocumentFormProps> = ({
+  documentType,
+  issueDate,
+  expiryDate,
+  selectedFiles,
+  errors,
+  onDocumentTypeChange,
+  onDateChange,
+  onFilesSelected,
+  onAddDocument
+}) => {
+  return (
+    <div className="space-y-5 border p-5 rounded-md">
+      <h3 className="font-medium text-lg">Add a Legal Document</h3>
+      
+      <DocumentTypeField
+        value={documentType}
+        onChange={onDocumentTypeChange}
+        error={errors.documentType}
+      />
+      
+      <DocumentDetailsFields
+        issueDate={issueDate}
+        expiryDate={expiryDate}
+        onDateChange={onDateChange}
+      />
+      
+      <DocumentUploadField
+        files={selectedFiles}
+        onFilesSelected={onFilesSelected}
+        error={errors.selectedFiles}
+        documentType={documentType}
+      />
+      
+      <div className="flex justify-end mt-4">
+        <Button
+          type="button"
+          onClick={onAddDocument}
+          className="flex items-center gap-2"
+        >
+          <Plus className="h-4 w-4" />
+          Add Document
+        </Button>
+      </div>
+    </div>
+  );
+};
+
+export default AddDocumentForm;

@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -18,7 +19,8 @@ const AccountForm: React.FC<AccountFormProps> = ({ onAddAccount }) => {
     newAccount,
     handleNewAccountChange,
     handleAccountSelectionChange,
-    handleAddAccount
+    handleAddAccount,
+    isAccountTypeSelected
   } = useAccountForm(onAddAccount);
 
   const {
@@ -135,7 +137,7 @@ const AccountForm: React.FC<AccountFormProps> = ({ onAddAccount }) => {
           <SelectField
             id="accountType"
             label="Account Type"
-            value={newAccount.accountType || ""}
+            value={isAccountTypeSelected ? newAccount.accountType : ""}
             placeholder="Select account type"
             options={ACCOUNT_TYPES}
             onChange={(value) => handleAccountSelectionChange("accountType", value)}

@@ -7,7 +7,7 @@ export function useAccountForm(onAddAccount: (account: FinancialAccountInfo) => 
   const [newAccount, setNewAccount] = useState<FinancialAccountInfo>({
     accountName: "",
     institution: "",
-    accountType: "", // Changed from "other" to empty string to ensure placeholder shows
+    accountType: "other", // Using "other" as default to satisfy TypeScript requirements
     accountSubtype: "",
     currency: "",
     approximateValue: "",
@@ -17,6 +17,9 @@ export function useAccountForm(onAddAccount: (account: FinancialAccountInfo) => 
     accountNumber: "",
     swiftCode: ""
   });
+
+  // Track if accountType has been explicitly set by the user
+  const [isAccountTypeSelected, setIsAccountTypeSelected] = useState(false);
 
   // Handle new account input
   const handleNewAccountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,6 +32,10 @@ export function useAccountForm(onAddAccount: (account: FinancialAccountInfo) => 
 
   // Handle account selection changes
   const handleAccountSelectionChange = (field: keyof FinancialAccountInfo, value: string) => {
+    if (field === 'accountType') {
+      setIsAccountTypeSelected(true);
+    }
+    
     setNewAccount({
       ...newAccount,
       [field]: value
@@ -81,7 +88,7 @@ export function useAccountForm(onAddAccount: (account: FinancialAccountInfo) => 
     setNewAccount({
       accountName: "",
       institution: "",
-      accountType: "", // Reset to empty string instead of "other"
+      accountType: "other", // Reset to "other" to satisfy TypeScript
       accountSubtype: "",
       currency: "",
       approximateValue: "",
@@ -91,6 +98,9 @@ export function useAccountForm(onAddAccount: (account: FinancialAccountInfo) => 
       accountNumber: "",
       swiftCode: ""
     });
+    
+    // Reset selection state
+    setIsAccountTypeSelected(false);
 
     toast({
       title: "Account added",
@@ -101,6 +111,7 @@ export function useAccountForm(onAddAccount: (account: FinancialAccountInfo) => 
   return {
     newAccount,
     isFormValid,
+    isAccountTypeSelected,
     handleNewAccountChange,
     handleAccountSelectionChange,
     handleStatementsSelected,

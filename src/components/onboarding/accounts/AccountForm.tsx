@@ -19,6 +19,13 @@ const AccountForm = ({ onAddAccount }: AccountFormProps) => {
     handleAddAccount
   } = useAccountForm(onAddAccount);
 
+  // Check if form is valid (required fields are filled)
+  const isFormValid = Boolean(
+    newAccount.institution && 
+    newAccount.legalEntity && 
+    newAccount.accountName
+  );
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
@@ -35,7 +42,7 @@ const AccountForm = ({ onAddAccount }: AccountFormProps) => {
         onStatementsSelected={handleStatementsSelected}
       />
       
-      <AccountFormButton onClick={handleAddAccount} />
+      <AccountFormButton onClick={handleAddAccount} disabled={!isFormValid} />
     </motion.div>
   );
 };

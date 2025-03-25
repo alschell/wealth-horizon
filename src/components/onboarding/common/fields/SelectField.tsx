@@ -60,7 +60,7 @@ const SelectField = ({
         </SelectTrigger>
         <SelectContent 
           position="popper" 
-          className="bg-white border shadow-md z-[999] min-w-[var(--radix-select-trigger-width)]"
+          className="bg-white border shadow-md z-[999] w-[var(--radix-select-trigger-width)]"
           sideOffset={8}
           align="start"
         >

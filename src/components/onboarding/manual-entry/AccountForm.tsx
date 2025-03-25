@@ -49,6 +49,13 @@ const AccountForm: React.FC<AccountFormProps> = ({ onAddAccount }) => {
 
   const legalEntitiesList = getLegalEntities();
   
+  // Check if form is valid (required fields are filled)
+  const isFormValid = Boolean(
+    newAccount.institution && 
+    newAccount.legalEntity && 
+    newAccount.accountNumber
+  );
+  
   return (
     <Card className="p-5 border rounded-lg">
       <div className="grid grid-cols-1 gap-5">
@@ -156,8 +163,9 @@ const AccountForm: React.FC<AccountFormProps> = ({ onAddAccount }) => {
         <div className="flex justify-end mt-4">
           <Button 
             type="button" 
-            className="bg-black hover:bg-gray-800 text-white flex items-center"
+            className={`flex items-center ${!isFormValid ? 'bg-gray-300 text-gray-500' : 'bg-black hover:bg-gray-800 text-white'}`}
             onClick={handleAddAccount}
+            disabled={!isFormValid}
           >
             <PlusCircle className="mr-2 h-4 w-4" />
             Add Account

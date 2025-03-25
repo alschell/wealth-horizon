@@ -18,7 +18,7 @@ const DocumentUploadField: React.FC<DocumentUploadFieldProps> = ({
   return (
     <div className="space-y-2">
       <Label htmlFor="documentFiles">
-        Upload Documents<span className="text-red-500 ml-1">*</span>
+        Upload Legal Documents<span className="text-red-500 ml-1">*</span>
       </Label>
       <div 
         className={cn(
@@ -27,12 +27,12 @@ const DocumentUploadField: React.FC<DocumentUploadFieldProps> = ({
         )}
       >
         <FileUploader
-          id="documentFiles"
-          value={files}
-          onChange={onFilesSelected}
-          accept={".pdf,.doc,.docx,.jpg,.jpeg,.png"}
-          maxFiles={5}
+          accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+          multiple={true}
           maxSize={10}
+          onFilesSelected={onFilesSelected}
+          existingFiles={files}
+          label="Upload Legal Documents"
         />
       </div>
       {error && (

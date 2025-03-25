@@ -7,7 +7,8 @@ import {
   CommandEmpty, 
   CommandGroup, 
   CommandInput, 
-  CommandItem 
+  CommandItem,
+  CommandList
 } from "@/components/ui/command";
 import {
   Popover,
@@ -121,7 +122,7 @@ const SearchableSelectField = ({
               value={inputValue}
               onValueChange={setInputValue}
             />
-            <CommandList>
+            <CommandList className="max-h-[300px] overflow-y-auto">
               <CommandEmpty>
                 {allowCustomValue ? (
                   <div className="py-3 px-4 text-sm">
@@ -132,7 +133,7 @@ const SearchableSelectField = ({
                   <span className="text-black">No results found.</span>
                 )}
               </CommandEmpty>
-              <CommandGroup className="max-h-[300px] overflow-y-auto">
+              <CommandGroup>
                 {sortedOptions.map((option) => (
                   <CommandItem
                     key={option}
@@ -160,18 +161,5 @@ const SearchableSelectField = ({
     </div>
   );
 };
-
-// Make sure CommandList is defined
-const CommandList = React.forwardRef<
-  React.ElementRef<typeof Command.List>,
-  React.ComponentPropsWithoutRef<typeof Command.List>
->(({ className, ...props }, ref) => (
-  <Command.List
-    ref={ref}
-    className={cn("max-h-[300px] overflow-y-auto overflow-x-hidden", className)}
-    {...props}
-  />
-));
-CommandList.displayName = "CommandList";
 
 export default SearchableSelectField;

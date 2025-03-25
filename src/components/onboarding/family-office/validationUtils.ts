@@ -1,8 +1,8 @@
 
 import { FamilyOfficeInfo } from "@/context/OnboardingContext";
-import { toast } from "@/components/ui/use-toast";
+import { toast } from "@/hooks/use-toast";
 
-export const validateFamilyOfficeInfo = (formData: FamilyOfficeInfo): boolean => {
+export const validateFamilyOfficeInfo = (formData: FamilyOfficeInfo, silent: boolean = false): boolean => {
   // Check required fields
   const requiredFields: (keyof FamilyOfficeInfo)[] = [
     'officeName', 
@@ -15,11 +15,13 @@ export const validateFamilyOfficeInfo = (formData: FamilyOfficeInfo): boolean =>
   const missingFields = requiredFields.filter(field => !formData[field]);
   
   if (missingFields.length > 0) {
-    toast({
-      title: "Missing information",
-      description: `Please complete all required fields.`,
-      variant: "destructive",
-    });
+    if (!silent) {
+      toast({
+        title: "Missing information",
+        description: `Please complete all required fields.`,
+        variant: "destructive",
+      });
+    }
     return false;
   }
   
@@ -27,11 +29,13 @@ export const validateFamilyOfficeInfo = (formData: FamilyOfficeInfo): boolean =>
   if (formData.email) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
-      toast({
-        title: "Invalid email",
-        description: "Please enter a valid email address.",
-        variant: "destructive",
-      });
+      if (!silent) {
+        toast({
+          title: "Invalid email",
+          description: "Please enter a valid email address.",
+          variant: "destructive",
+        });
+      }
       return false;
     }
   }

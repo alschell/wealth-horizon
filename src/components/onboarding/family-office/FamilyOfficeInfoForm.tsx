@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useOnboarding, FamilyOfficeInfo } from "@/context/OnboardingContext";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { toast } from "@/components/ui/use-toast";
+import { toast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
 import { Building2, ArrowRight } from "lucide-react";
 import { validateFamilyOfficeInfo } from "./validationUtils";

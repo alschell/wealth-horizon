@@ -4,7 +4,7 @@ import { useOnboarding, LegalDocuments } from "@/context/OnboardingContext";
 import { Card } from "@/components/ui/card";
 import { toast } from "@/components/ui/use-toast";
 import { motion } from "framer-motion";
-import { File, Plus } from "lucide-react";
+import { File, Plus, Trash2 } from "lucide-react";
 import FormHeader from "./common/FormHeader";
 import { DocumentTypeField, DocumentDetailsFields, DocumentUploadField } from "./legal";
 import FormFooter from "./common/FormFooter";

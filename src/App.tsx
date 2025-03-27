@@ -9,6 +9,7 @@ import LandingPage from "./pages/LandingPage";
 import NotFound from "./pages/NotFound";
 import Onboarding from "./pages/Onboarding";
 import Dashboard from "./pages/Dashboard";
+import Trading from "./pages/Trading";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -24,6 +25,7 @@ function App() {
               <Route path="/onboarding/*" element={<Onboarding />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/dashboard/*" element={<Dashboard />} />
+              <Route path="/trading" element={<Trading />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>

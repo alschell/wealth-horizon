@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import TradingForm from "./TradingForm";
 import { OrderType } from "./types";
 import MarketInsights from "./sections/MarketInsights";
+import { ArrowDownUp, TrendingUp } from "lucide-react";
 
 const TradingInterface = () => {
   const [orderType, setOrderType] = useState<OrderType>("buy");
@@ -25,8 +26,14 @@ const TradingInterface = () => {
           className="w-full"
         >
           <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="buy" className="data-[state=active]:bg-green-50">Buy Order</TabsTrigger>
-            <TabsTrigger value="sell" className="data-[state=active]:bg-red-50">Sell Order</TabsTrigger>
+            <TabsTrigger value="buy" className="flex items-center justify-center gap-2 py-3 data-[state=active]:bg-green-50 data-[state=active]:text-green-700">
+              <TrendingUp className="h-4 w-4" />
+              Buy Order
+            </TabsTrigger>
+            <TabsTrigger value="sell" className="flex items-center justify-center gap-2 py-3 data-[state=active]:bg-red-50 data-[state=active]:text-red-700">
+              <ArrowDownUp className="h-4 w-4" />
+              Sell Order
+            </TabsTrigger>
           </TabsList>
           <CardContent className="pt-6">
             <TabsContent value="buy" className="mt-0">

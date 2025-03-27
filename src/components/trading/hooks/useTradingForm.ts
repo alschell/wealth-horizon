@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { OrderType, Instrument, TradeOrder, Broker } from "../types";
 
@@ -24,7 +24,7 @@ export const useTradingForm = (orderType: OrderType) => {
     timeInForce: "day"
   });
 
-  const handleNextStep = () => {
+  const handleNextStep = useCallback(() => {
     if (currentStep === 0 && !selectedInstrument) {
       toast({
         title: "Error",
@@ -97,14 +97,28 @@ export const useTradingForm = (orderType: OrderType) => {
       timeInForce: timeInForce
     }));
 
+    // Move to next step
     setCurrentStep(prev => Math.min(prev + 1, 5));
-  };
+  }, [
+    currentStep, 
+    selectedInstrument, 
+    quantity, 
+    price, 
+    selectedBroker, 
+    orderExecutionType, 
+    timeInForce, 
+    currentOrderType, 
+    order.fundingAllocations, 
+    order.depositAllocations, 
+    order.instrumentAllocations, 
+    toast
+  ]);
 
-  const handlePreviousStep = () => {
+  const handlePreviousStep = useCallback(() => {
     setCurrentStep(prev => Math.max(prev - 1, 0));
-  };
+  }, []);
 
-  const handleSubmitOrder = () => {
+  const handleSubmitOrder = useCallback(() => {
     const calculatedPrice = orderExecutionType === "market"
       ? selectedInstrument?.currentPrice || 0
       : Number(price);
@@ -148,7 +162,17 @@ export const useTradingForm = (orderType: OrderType) => {
       timeInForce: "day"
     });
     setCurrentStep(0);
-  };
+  }, [
+    selectedInstrument, 
+    price, 
+    quantity, 
+    orderExecutionType, 
+    currentOrderType, 
+    selectedBroker, 
+    timeInForce, 
+    order, 
+    toast
+  ]);
 
   return {
     currentStep,

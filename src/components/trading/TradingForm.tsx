@@ -12,6 +12,7 @@ import { useTradingForm } from "./hooks/useTradingForm";
 import { OrderType } from "./types";
 import FormLayout from "@/components/onboarding/common/layouts/FormLayout";
 import FormSection from "@/components/onboarding/common/layouts/FormSection";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface TradingFormProps {
   orderType: OrderType;
@@ -58,6 +59,13 @@ const TradingForm: React.FC<TradingFormProps> = ({ orderType: initialOrderType }
 
   const CurrentStepComponent = steps[currentStep].component;
 
+  // Animation variants
+  const variants = {
+    enter: { opacity: 0, x: 20 },
+    center: { opacity: 1, x: 0 },
+    exit: { opacity: 0, x: -20 }
+  };
+
   return (
     <div className="max-w-4xl mx-auto">
       {/* Progress steps outside the card */}
@@ -69,39 +77,51 @@ const TradingForm: React.FC<TradingFormProps> = ({ orderType: initialOrderType }
       </div>
 
       <FormLayout>
-        <FormSection>
-          <h2 className="text-xl font-semibold mb-6">{steps[currentStep].title}</h2>
-          
-          <CurrentStepComponent 
-            orderType={orderType}
-            selectedInstrument={selectedInstrument}
-            setSelectedInstrument={setSelectedInstrument}
-            quantity={quantity}
-            setQuantity={setQuantity}
-            price={price}
-            setPrice={setPrice}
-            selectedBroker={selectedBroker}
-            setSelectedBroker={setSelectedBroker}
-            order={order}
-            setOrder={setOrder}
-            orderExecutionType={orderExecutionType}
-            setOrderExecutionType={setOrderExecutionType}
-            timeInForce={timeInForce}
-            setTimeInForce={setTimeInForce}
-            setCurrentStep={setCurrentStep}
-          />
-        </FormSection>
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={currentStep}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            variants={variants}
+            transition={{ duration: 0.3 }}
+            className="w-full"
+          >
+            <FormSection>
+              <h2 className="text-xl font-semibold mb-6">{steps[currentStep].title}</h2>
+              
+              <CurrentStepComponent 
+                orderType={orderType}
+                selectedInstrument={selectedInstrument}
+                setSelectedInstrument={setSelectedInstrument}
+                quantity={quantity}
+                setQuantity={setQuantity}
+                price={price}
+                setPrice={setPrice}
+                selectedBroker={selectedBroker}
+                setSelectedBroker={setSelectedBroker}
+                order={order}
+                setOrder={setOrder}
+                orderExecutionType={orderExecutionType}
+                setOrderExecutionType={setOrderExecutionType}
+                timeInForce={timeInForce}
+                setTimeInForce={setTimeInForce}
+                setCurrentStep={setCurrentStep}
+              />
+            </FormSection>
 
-        {/* Navigation buttons */}
-        <div className="mt-8">
-          <TradingFormNavigation
-            currentStep={currentStep}
-            totalSteps={steps.length}
-            onPrevious={handlePreviousStep}
-            onNext={handleNextStep}
-            onSubmit={handleSubmitOrder}
-          />
-        </div>
+            {/* Navigation buttons */}
+            <div className="mt-8">
+              <TradingFormNavigation
+                currentStep={currentStep}
+                totalSteps={steps.length}
+                onPrevious={handlePreviousStep}
+                onNext={handleNextStep}
+                onSubmit={handleSubmitOrder}
+              />
+            </div>
+          </motion.div>
+        </AnimatePresence>
       </FormLayout>
     </div>
   );

@@ -13,6 +13,13 @@ import {
   TableRow 
 } from "@/components/ui/table";
 import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
   OrderType,
   TradeOrder,
   ViewMode,
@@ -63,6 +70,7 @@ const TradingAllocation: React.FC<TradingAllocationProps> = ({
             order={order}
             setOrder={setOrder}
             viewMode={viewMode}
+            instrumentPrice={typeof price === 'number' ? price : 0}
           />
           
           <DestinationPortfoliosSection
@@ -82,6 +90,7 @@ const TradingAllocation: React.FC<TradingAllocationProps> = ({
             order={order}
             setOrder={setOrder}
             viewMode={viewMode}
+            price={typeof price === 'number' ? price : 0}
           />
           
           <DestinationCashAccountsSection
@@ -141,10 +150,13 @@ const FundingSourcesSection: React.FC<{
   order: Partial<TradeOrder>;
   setOrder: (order: Partial<TradeOrder>) => void;
   viewMode: ViewMode;
-}> = ({ totalAmount, currency, order, setOrder, viewMode }) => {
+  instrumentPrice: number;
+}> = ({ totalAmount, currency, order, setOrder, viewMode, instrumentPrice }) => {
   const [activeTab, setActiveTab] = useState<"cash" | "credit">("cash");
   const [allocations, setAllocations] = useState<Record<string, number>>({});
   const [currentAllocation, setCurrentAllocation] = useState(0);
+  const [selectedSourceId, setSelectedSourceId] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   
   // Initialize with existing allocations if any
   React.useEffect(() => {
@@ -152,28 +164,29 @@ const FundingSourcesSection: React.FC<{
     
     if (order.fundingAllocations) {
       order.fundingAllocations.forEach(allocation => {
-        initialAllocations[allocation.sourceId] = allocation.amount;
+        initialAllocations[allocation.sourceId] = allocation.amount / instrumentPrice;
       });
     }
     
     setAllocations(initialAllocations);
     updateCurrentAllocation(initialAllocations);
-  }, [order.fundingAllocations]);
+  }, [order.fundingAllocations, instrumentPrice]);
   
   const updateCurrentAllocation = (allocs: Record<string, number>) => {
-    const total = Object.values(allocs).reduce((sum, amount) => sum + amount, 0);
-    setCurrentAllocation(total);
+    const totalQuantity = Object.values(allocs).reduce((sum, quantity) => sum + quantity, 0);
+    const totalAmount = totalQuantity * instrumentPrice;
+    setCurrentAllocation(totalAmount);
   };
   
-  const handleAllocationChange = (sourceId: string, amount: number) => {
-    const updatedAllocations = { ...allocations, [sourceId]: amount };
+  const handleAllocationChange = (sourceId: string, quantity: number) => {
+    const updatedAllocations = { ...allocations, [sourceId]: quantity };
     setAllocations(updatedAllocations);
     updateCurrentAllocation(updatedAllocations);
     
     // Update order with new allocations
     const fundingAllocations = Object.entries(updatedAllocations)
-      .filter(([_, amount]) => amount > 0)
-      .map(([sourceId, amount]) => {
+      .filter(([_, quantity]) => quantity > 0)
+      .map(([sourceId, quantity]) => {
         const source = activeTab === "cash" 
           ? [...mockCashAccountsFlat]
           : [...mockCreditFacilitiesFlat];
@@ -183,7 +196,7 @@ const FundingSourcesSection: React.FC<{
         return {
           sourceId,
           sourceType: activeTab as "cash" | "credit",
-          amount,
+          amount: quantity * instrumentPrice,
           currency: sourceItem?.currency || currency
         };
       });
@@ -191,190 +204,294 @@ const FundingSourcesSection: React.FC<{
     setOrder({ ...order, fundingAllocations });
   };
   
-  // Get the data source based on the view mode and active tab
-  const getDataSource = () => {
-    if (viewMode === "institutions") {
-      return activeTab === "cash" 
-        ? mockCashAccountsByInstitution 
-        : mockCreditFacilitiesByInstitution;
-    } else {
-      return activeTab === "cash" 
-        ? mockCashAccountsFlat.map(item => ({
-            id: item.id,
-            name: item.name,
-            institutionName: getInstitutionName(item.institutionId),
-            legalEntityName: getLegalEntityName(item.legalEntityId),
-            available: item.balance,
-            currency: item.currency
-          }))
-        : mockCreditFacilitiesFlat.map(item => ({
-            id: item.id,
-            name: item.name,
-            institutionName: getInstitutionName(item.institutionId),
-            legalEntityName: getLegalEntityName(item.legalEntityId),
-            available: item.available,
-            currency: item.currency
-          }));
-    }
-  };
-  
-  // Helper functions to get institution and legal entity names
-  const getInstitutionName = (id: string) => {
-    const institution = mockPortfoliosByInstitution.find(inst => inst.id === id);
-    return institution?.name || "Unknown";
-  };
-  
-  const getLegalEntityName = (id: string) => {
-    for (const institution of mockPortfoliosByInstitution) {
-      const legalEntity = institution.legalEntities.find(entity => entity.id === id);
-      if (legalEntity) return legalEntity.name;
-    }
-    return "Unknown";
-  };
-  
   // Calculate the remaining amount to allocate
-  const remainingAmount = totalAmount - currentAllocation;
+  const currentQuantityAllocation = Object.values(allocations).reduce((sum, qty) => sum + qty, 0);
+  const remainingQuantity = (totalAmount / instrumentPrice) - currentQuantityAllocation;
+  const remainingAmount = remainingQuantity * instrumentPrice;
   
-  // Render the appropriate view
-  const renderInstitutionsView = () => {
-    const dataSource = getDataSource() as any[];
+  // Get a single source by ID
+  const getSourceById = (sourceId: string) => {
+    if (activeTab === "cash") {
+      return mockCashAccountsFlat.find(item => item.id === sourceId);
+    } else {
+      return mockCreditFacilitiesFlat.find(item => item.id === sourceId);
+    }
+  };
+
+  // Open modal for selecting a funding source
+  const openSourceSelectionModal = () => {
+    setIsModalOpen(true);
+  };
+
+  // Close modal and reset selection
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedSourceId(null);
+  };
+
+  // Confirm selection and add allocation
+  const confirmSourceSelection = () => {
+    if (selectedSourceId) {
+      const source = getSourceById(selectedSourceId);
+      if (!source) return;
+      
+      const maxAvailable = activeTab === "cash" 
+        ? (source as any).balance / instrumentPrice
+        : (source as any).available / instrumentPrice;
+      
+      const suggestedAllocation = Math.min(
+        maxAvailable,
+        remainingQuantity > 0 ? remainingQuantity : 0
+      );
+      
+      handleAllocationChange(selectedSourceId, suggestedAllocation);
+    }
+    closeModal();
+  };
+
+  // Render selected funding sources table
+  const renderSelectedSources = () => {
+    const selectedSourceIds = Object.keys(allocations).filter(id => allocations[id] > 0);
+    
+    if (selectedSourceIds.length === 0) {
+      return (
+        <div className="text-center py-4 border rounded-md">
+          <p className="text-gray-500">No funding sources selected</p>
+          <Button 
+            onClick={openSourceSelectionModal}
+            className="mt-2 bg-black text-white hover:bg-gray-800"
+          >
+            Add Funding Source
+          </Button>
+        </div>
+      );
+    }
     
     return (
       <div className="space-y-4">
-        {dataSource.map(institution => (
-          <div key={institution.id} className="border rounded-md overflow-hidden">
-            <div className="bg-gray-100 p-3 font-medium">
-              {institution.name}
-            </div>
-            
-            <div className="p-2">
-              {institution.legalEntities.map((entity: any) => (
-                <div key={entity.id} className="mb-3 last:mb-0">
-                  <div className="text-sm font-medium pl-2 mb-1">{entity.name}</div>
-                  
-                  <div className="pl-4">
-                    {activeTab === "cash" ? (
-                      entity.cashAccounts.length > 0 ? (
-                        entity.cashAccounts.map((account: any) => (
-                          <AllocationItemRow 
-                            key={account.id}
-                            item={{
-                              id: account.id,
-                              name: account.name,
-                              institutionName: institution.name,
-                              legalEntityName: entity.name,
-                              available: account.balance,
-                              currency: account.currency
-                            }}
-                            allocation={allocations[account.id] || 0}
-                            onChange={(amount) => handleAllocationChange(account.id, amount)}
-                            maxAmount={Math.min(account.balance, remainingAmount + (allocations[account.id] || 0))}
-                          />
-                        ))
-                      ) : (
-                        <p className="text-sm text-gray-500 py-1">No cash accounts available</p>
-                      )
-                    ) : (
-                      entity.creditFacilities.length > 0 ? (
-                        entity.creditFacilities.map((facility: any) => (
-                          <AllocationItemRow 
-                            key={facility.id}
-                            item={{
-                              id: facility.id,
-                              name: facility.name,
-                              institutionName: institution.name,
-                              legalEntityName: entity.name,
-                              available: facility.available,
-                              currency: facility.currency
-                            }}
-                            allocation={allocations[facility.id] || 0}
-                            onChange={(amount) => handleAllocationChange(facility.id, amount)}
-                            maxAmount={Math.min(facility.available, remainingAmount + (allocations[facility.id] || 0))}
-                          />
-                        ))
-                      ) : (
-                        <p className="text-sm text-gray-500 py-1">No credit facilities available</p>
-                      )
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        ))}
+        <div className="border rounded-md overflow-hidden">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Account</TableHead>
+                <TableHead>Type</TableHead>
+                <TableHead>Available</TableHead>
+                <TableHead>Funded Quantity</TableHead>
+                <TableHead>Est. Amount</TableHead>
+                <TableHead>Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {selectedSourceIds.map(sourceId => {
+                const source = getSourceById(sourceId);
+                if (!source) return null;
+                
+                const sourceType = activeTab === "cash" ? "Cash" : "Credit";
+                const available = activeTab === "cash" 
+                  ? (source as any).balance 
+                  : (source as any).available;
+                
+                const quantity = allocations[sourceId];
+                const estAmount = quantity * instrumentPrice;
+                
+                return (
+                  <TableRow key={sourceId}>
+                    <TableCell>{source.name}</TableCell>
+                    <TableCell>{sourceType}</TableCell>
+                    <TableCell>
+                      {available.toLocaleString('en-US', {
+                        style: 'currency',
+                        currency: (source as any).currency || currency
+                      })}
+                    </TableCell>
+                    <TableCell>
+                      <Input
+                        type="number"
+                        min="0"
+                        max={available / instrumentPrice}
+                        value={quantity}
+                        onChange={(e) => handleAllocationChange(sourceId, Number(e.target.value))}
+                        className="w-24"
+                      />
+                    </TableCell>
+                    <TableCell>
+                      {estAmount.toLocaleString('en-US', {
+                        style: 'currency',
+                        currency: (source as any).currency || currency
+                      })}
+                    </TableCell>
+                    <TableCell>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleAllocationChange(sourceId, 0)}
+                        className="text-xs"
+                      >
+                        Remove
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        </div>
+        
+        <div className="flex justify-end">
+          <Button 
+            onClick={openSourceSelectionModal}
+            className="bg-black text-white hover:bg-gray-800"
+          >
+            Add Funding Source
+          </Button>
+        </div>
       </div>
     );
   };
   
-  const renderPortfoliosView = () => {
-    const dataSource = getDataSource() as AllocationItem[];
+  // Source selection modal
+  const renderSourceSelectionModal = () => {
+    const sourceList = activeTab === "cash" 
+      ? mockCashAccountsFlat
+      : mockCreditFacilitiesFlat;
+    
+    // Filter out already selected sources
+    const availableSources = sourceList.filter(
+      source => !Object.keys(allocations).includes(source.id) || allocations[source.id] === 0
+    );
     
     return (
-      <div className="border rounded-md overflow-hidden">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Institution</TableHead>
-              <TableHead>Legal Entity</TableHead>
-              <TableHead>Available</TableHead>
-              <TableHead>Allocation</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {dataSource.length > 0 ? (
-              dataSource.map(item => (
-                <TableRow key={item.id}>
-                  <TableCell>{item.name}</TableCell>
-                  <TableCell>{item.institutionName}</TableCell>
-                  <TableCell>{item.legalEntityName}</TableCell>
-                  <TableCell>
-                    {item.available?.toLocaleString('en-US', {
-                      style: 'currency',
-                      currency: item.currency || currency
-                    })}
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <Input
-                        type="number"
-                        min="0"
-                        max={Math.min(
-                          item.available || 0,
-                          remainingAmount + (allocations[item.id] || 0)
-                        )}
-                        value={allocations[item.id] || 0}
-                        onChange={(e) => handleAllocationChange(item.id, Number(e.target.value))}
-                        className="w-24"
-                      />
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleAllocationChange(
-                          item.id,
-                          Math.min(
-                            item.available || 0,
-                            remainingAmount + (allocations[item.id] || 0)
-                          )
-                        )}
-                        className="text-xs"
-                      >
-                        Max
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={5} className="text-center py-4">
-                  No {activeTab === "cash" ? "cash accounts" : "credit facilities"} available
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <DialogContent className="max-w-3xl max-h-[80vh] overflow-auto">
+          <DialogHeader>
+            <DialogTitle>Select Funding Source</DialogTitle>
+          </DialogHeader>
+          
+          <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as "cash" | "credit")}>
+            <TabsList className="mb-4">
+              <TabsTrigger value="cash">Cash Accounts</TabsTrigger>
+              <TabsTrigger value="credit">Credit Facilities</TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="cash" className="mt-0">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Select</TableHead>
+                    <TableHead>Account Name</TableHead>
+                    <TableHead>Institution</TableHead>
+                    <TableHead>Balance</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {availableSources.length > 0 ? (
+                    availableSources.map(source => {
+                      const institution = mockPortfoliosByInstitution.find(
+                        inst => inst.id === source.institutionId
+                      );
+                      
+                      return (
+                        <TableRow 
+                          key={source.id} 
+                          className={selectedSourceId === source.id ? "bg-gray-100" : ""}
+                          onClick={() => setSelectedSourceId(source.id)}
+                        >
+                          <TableCell>
+                            <input 
+                              type="radio" 
+                              checked={selectedSourceId === source.id}
+                              onChange={() => setSelectedSourceId(source.id)}
+                            />
+                          </TableCell>
+                          <TableCell>{source.name}</TableCell>
+                          <TableCell>{institution?.name || "Unknown"}</TableCell>
+                          <TableCell>
+                            {(source as any).balance.toLocaleString('en-US', {
+                              style: 'currency',
+                              currency: (source as any).currency || currency
+                            })}
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan={4} className="text-center">
+                        No available cash accounts
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </TabsContent>
+            
+            <TabsContent value="credit" className="mt-0">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Select</TableHead>
+                    <TableHead>Facility Name</TableHead>
+                    <TableHead>Institution</TableHead>
+                    <TableHead>Available Credit</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {availableSources.length > 0 ? (
+                    availableSources.map(source => {
+                      const institution = mockPortfoliosByInstitution.find(
+                        inst => inst.id === source.institutionId
+                      );
+                      
+                      return (
+                        <TableRow 
+                          key={source.id} 
+                          className={selectedSourceId === source.id ? "bg-gray-100" : ""}
+                          onClick={() => setSelectedSourceId(source.id)}
+                        >
+                          <TableCell>
+                            <input 
+                              type="radio" 
+                              checked={selectedSourceId === source.id}
+                              onChange={() => setSelectedSourceId(source.id)}
+                            />
+                          </TableCell>
+                          <TableCell>{source.name}</TableCell>
+                          <TableCell>{institution?.name || "Unknown"}</TableCell>
+                          <TableCell>
+                            {(source as any).available.toLocaleString('en-US', {
+                              style: 'currency',
+                              currency: (source as any).currency || currency
+                            })}
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan={4} className="text-center">
+                        No available credit facilities
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </TabsContent>
+          </Tabs>
+          
+          <div className="flex justify-end gap-2 mt-4">
+            <Button variant="outline" onClick={closeModal}>
+              Cancel
+            </Button>
+            <Button 
+              className="bg-black text-white hover:bg-gray-800"
+              onClick={confirmSourceSelection}
+              disabled={!selectedSourceId}
+            >
+              Select
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     );
   };
   
@@ -386,20 +503,8 @@ const FundingSourcesSection: React.FC<{
           Select which accounts to use for funding this purchase
         </p>
         
-        <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as "cash" | "credit")}>
-          <TabsList className="mb-4">
-            <TabsTrigger value="cash">Cash Accounts</TabsTrigger>
-            <TabsTrigger value="credit">Credit Facilities</TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="cash" className="mt-0">
-            {viewMode === "institutions" ? renderInstitutionsView() : renderPortfoliosView()}
-          </TabsContent>
-          
-          <TabsContent value="credit" className="mt-0">
-            {viewMode === "institutions" ? renderInstitutionsView() : renderPortfoliosView()}
-          </TabsContent>
-        </Tabs>
+        {renderSelectedSources()}
+        {renderSourceSelectionModal()}
       </div>
       
       <div className="bg-gray-50 p-4 rounded-md border">
@@ -448,6 +553,8 @@ const DestinationPortfoliosSection: React.FC<{
 }> = ({ totalQuantity, order, setOrder, viewMode }) => {
   const [allocations, setAllocations] = useState<Record<string, number>>({});
   const [currentAllocation, setCurrentAllocation] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedPortfolioId, setSelectedPortfolioId] = useState<string | null>(null);
 
   // Initialize with existing allocations if any
   React.useEffect(() => {
@@ -496,54 +603,51 @@ const DestinationPortfoliosSection: React.FC<{
   
   // Calculate the remaining quantity to allocate
   const remainingQuantity = totalQuantity - currentAllocation;
-  
-  // Render the appropriate view based on viewMode
-  const renderView = () => {
-    if (viewMode === "institutions") {
+
+  // Open modal for selecting a portfolio
+  const openPortfolioSelectionModal = () => {
+    setIsModalOpen(true);
+  };
+
+  // Close modal and reset selection
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedPortfolioId(null);
+  };
+
+  // Confirm selection and add allocation
+  const confirmPortfolioSelection = () => {
+    if (selectedPortfolioId) {
+      const suggestedAllocation = Math.min(
+        totalQuantity,
+        remainingQuantity > 0 ? remainingQuantity : 0
+      );
+      
+      handleAllocationChange(selectedPortfolioId, suggestedAllocation);
+    }
+    closeModal();
+  };
+
+  // Render selected portfolios table
+  const renderSelectedPortfolios = () => {
+    const selectedPortfolioIds = Object.keys(allocations).filter(id => allocations[id] > 0);
+    
+    if (selectedPortfolioIds.length === 0) {
       return (
-        <div className="space-y-4">
-          {mockPortfoliosByInstitution.map(institution => (
-            <div key={institution.id} className="border rounded-md overflow-hidden">
-              <div className="bg-gray-100 p-3 font-medium">
-                {institution.name}
-              </div>
-              
-              <div className="p-2">
-                {institution.legalEntities.map(entity => (
-                  <div key={entity.id} className="mb-3 last:mb-0">
-                    <div className="text-sm font-medium pl-2 mb-1">{entity.name}</div>
-                    
-                    <div className="pl-4">
-                      {entity.portfolios.length > 0 ? (
-                        entity.portfolios.map(portfolio => (
-                          <div key={portfolio.id} className="flex items-center justify-between py-1 border-b last:border-b-0">
-                            <span>{portfolio.name}</span>
-                            <div className="flex items-center gap-2">
-                              <Input
-                                type="number"
-                                min="0"
-                                max={remainingQuantity + (allocations[portfolio.id] || 0)}
-                                value={allocations[portfolio.id] || 0}
-                                onChange={(e) => handleAllocationChange(portfolio.id, Number(e.target.value))}
-                                className="w-24"
-                              />
-                            </div>
-                          </div>
-                        ))
-                      ) : (
-                        <p className="text-sm text-gray-500 py-1">No portfolios available</p>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))}
+        <div className="text-center py-4 border rounded-md">
+          <p className="text-gray-500">No destination portfolios selected</p>
+          <Button 
+            onClick={openPortfolioSelectionModal}
+            className="mt-2 bg-black text-white hover:bg-gray-800"
+          >
+            Add Destination Portfolio
+          </Button>
         </div>
       );
-    } else {
-      // Portfolios view (flat list)
-      return (
+    }
+    
+    return (
+      <div className="space-y-4">
         <div className="border rounded-md overflow-hidden">
           <Table>
             <TableHeader>
@@ -552,10 +656,14 @@ const DestinationPortfoliosSection: React.FC<{
                 <TableHead>Institution</TableHead>
                 <TableHead>Legal Entity</TableHead>
                 <TableHead>Allocation</TableHead>
+                <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {mockPortfoliosFlat.map(portfolio => {
+              {selectedPortfolioIds.map(portfolioId => {
+                const portfolio = mockPortfoliosFlat.find(p => p.id === portfolioId);
+                if (!portfolio) return null;
+                
                 const institution = mockPortfoliosByInstitution.find(
                   inst => inst.id === portfolio.institutionId
                 );
@@ -569,35 +677,29 @@ const DestinationPortfoliosSection: React.FC<{
                 }
                 
                 return (
-                  <TableRow key={portfolio.id}>
+                  <TableRow key={portfolioId}>
                     <TableCell>{portfolio.name}</TableCell>
                     <TableCell>{institution?.name || "Unknown"}</TableCell>
                     <TableCell>{legalEntity?.name || "Unknown"}</TableCell>
                     <TableCell>
-                      <div className="flex items-center gap-2">
-                        <Input
-                          type="number"
-                          min="0"
-                          max={remainingQuantity + (allocations[portfolio.id] || 0)}
-                          value={allocations[portfolio.id] || 0}
-                          onChange={(e) => handleAllocationChange(portfolio.id, Number(e.target.value))}
-                          className="w-24"
-                        />
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleAllocationChange(
-                            portfolio.id,
-                            Math.min(
-                              totalQuantity,
-                              remainingQuantity + (allocations[portfolio.id] || 0)
-                            )
-                          )}
-                          className="text-xs"
-                        >
-                          All
-                        </Button>
-                      </div>
+                      <Input
+                        type="number"
+                        min="0"
+                        max={remainingQuantity + allocations[portfolioId]}
+                        value={allocations[portfolioId]}
+                        onChange={(e) => handleAllocationChange(portfolioId, Number(e.target.value))}
+                        className="w-24"
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleAllocationChange(portfolioId, 0)}
+                        className="text-xs"
+                      >
+                        Remove
+                      </Button>
                     </TableCell>
                   </TableRow>
                 );
@@ -605,8 +707,101 @@ const DestinationPortfoliosSection: React.FC<{
             </TableBody>
           </Table>
         </div>
-      );
-    }
+        
+        <div className="flex justify-end">
+          <Button 
+            onClick={openPortfolioSelectionModal}
+            className="bg-black text-white hover:bg-gray-800"
+          >
+            Add Destination Portfolio
+          </Button>
+        </div>
+      </div>
+    );
+  };
+
+  // Portfolio selection modal
+  const renderPortfolioSelectionModal = () => {
+    // Filter out already selected portfolios
+    const availablePortfolios = mockPortfoliosFlat.filter(
+      portfolio => !Object.keys(allocations).includes(portfolio.id) || allocations[portfolio.id] === 0
+    );
+    
+    return (
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <DialogContent className="max-w-3xl max-h-[80vh] overflow-auto">
+          <DialogHeader>
+            <DialogTitle>Select Destination Portfolio</DialogTitle>
+          </DialogHeader>
+          
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Select</TableHead>
+                <TableHead>Portfolio</TableHead>
+                <TableHead>Institution</TableHead>
+                <TableHead>Legal Entity</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {availablePortfolios.length > 0 ? (
+                availablePortfolios.map(portfolio => {
+                  const institution = mockPortfoliosByInstitution.find(
+                    inst => inst.id === portfolio.institutionId
+                  );
+                  
+                  let legalEntity;
+                  for (const inst of mockPortfoliosByInstitution) {
+                    legalEntity = inst.legalEntities.find(
+                      entity => entity.id === portfolio.legalEntityId
+                    );
+                    if (legalEntity) break;
+                  }
+                  
+                  return (
+                    <TableRow 
+                      key={portfolio.id} 
+                      className={selectedPortfolioId === portfolio.id ? "bg-gray-100" : ""}
+                      onClick={() => setSelectedPortfolioId(portfolio.id)}
+                    >
+                      <TableCell>
+                        <input 
+                          type="radio" 
+                          checked={selectedPortfolioId === portfolio.id}
+                          onChange={() => setSelectedPortfolioId(portfolio.id)}
+                        />
+                      </TableCell>
+                      <TableCell>{portfolio.name}</TableCell>
+                      <TableCell>{institution?.name || "Unknown"}</TableCell>
+                      <TableCell>{legalEntity?.name || "Unknown"}</TableCell>
+                    </TableRow>
+                  );
+                })
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={4} className="text-center">
+                    No available portfolios
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+          
+          <div className="flex justify-end gap-2 mt-4">
+            <Button variant="outline" onClick={closeModal}>
+              Cancel
+            </Button>
+            <Button 
+              className="bg-black text-white hover:bg-gray-800"
+              onClick={confirmPortfolioSelection}
+              disabled={!selectedPortfolioId}
+            >
+              Select
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+    );
   };
 
   return (
@@ -617,7 +812,8 @@ const DestinationPortfoliosSection: React.FC<{
           Select which portfolios to deposit the purchased shares into
         </p>
         
-        {renderView()}
+        {renderSelectedPortfolios()}
+        {renderPortfolioSelectionModal()}
       </div>
       
       <div className="bg-gray-50 p-4 rounded-md border">
@@ -651,9 +847,12 @@ const SourcePortfoliosSection: React.FC<{
   order: Partial<TradeOrder>;
   setOrder: (order: Partial<TradeOrder>) => void;
   viewMode: ViewMode;
-}> = ({ totalQuantity, selectedInstrument, order, setOrder, viewMode }) => {
+  price: number;
+}> = ({ totalQuantity, selectedInstrument, order, setOrder, viewMode, price }) => {
   const [allocations, setAllocations] = useState<Record<string, number>>({});
   const [currentAllocation, setCurrentAllocation] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedPortfolioId, setSelectedPortfolioId] = useState<string | null>(null);
 
   // Initialize with existing allocations if any
   React.useEffect(() => {
@@ -711,167 +910,202 @@ const SourcePortfoliosSection: React.FC<{
   
   // Calculate the remaining quantity to allocate
   const remainingQuantity = totalQuantity - currentAllocation;
-  
-  // Render the appropriate view based on viewMode
-  const renderView = () => {
-    if (viewMode === "institutions") {
+
+  // Open modal for selecting a portfolio
+  const openPortfolioSelectionModal = () => {
+    setIsModalOpen(true);
+  };
+
+  // Close modal and reset selection
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedPortfolioId(null);
+  };
+
+  // Confirm selection and add allocation
+  const confirmPortfolioSelection = () => {
+    if (selectedPortfolioId) {
+      const availableQuantity = availableHoldings[selectedPortfolioId] || 0;
+      const suggestedAllocation = Math.min(
+        availableQuantity,
+        remainingQuantity > 0 ? remainingQuantity : 0
+      );
+      
+      handleAllocationChange(selectedPortfolioId, suggestedAllocation);
+    }
+    closeModal();
+  };
+
+  // Render selected portfolios table
+  const renderSelectedPortfolios = () => {
+    const selectedPortfolioIds = Object.keys(allocations).filter(id => allocations[id] > 0);
+    
+    if (selectedPortfolioIds.length === 0) {
       return (
-        <div className="space-y-4">
-          {mockPortfoliosByInstitution.map(institution => {
-            // Filter portfolios that have holdings of the selected instrument
-            const hasRelevantHoldings = institution.legalEntities.some(entity => 
-              entity.portfolios.some(portfolio => availableHoldings[portfolio.id])
-            );
-            
-            if (!hasRelevantHoldings) return null;
-            
-            return (
-              <div key={institution.id} className="border rounded-md overflow-hidden">
-                <div className="bg-gray-100 p-3 font-medium">
-                  {institution.name}
-                </div>
-                
-                <div className="p-2">
-                  {institution.legalEntities.map(entity => {
-                    const entityHasRelevantHoldings = entity.portfolios.some(
-                      portfolio => availableHoldings[portfolio.id]
-                    );
-                    
-                    if (!entityHasRelevantHoldings) return null;
-                    
-                    return (
-                      <div key={entity.id} className="mb-3 last:mb-0">
-                        <div className="text-sm font-medium pl-2 mb-1">{entity.name}</div>
-                        
-                        <div className="pl-4">
-                          {entity.portfolios.map(portfolio => {
-                            const availableQuantity = availableHoldings[portfolio.id] || 0;
-                            
-                            if (availableQuantity === 0) return null;
-                            
-                            return (
-                              <div key={portfolio.id} className="flex items-center justify-between py-1 border-b last:border-b-0">
-                                <div>
-                                  <span className="font-medium">{portfolio.name}</span>
-                                  <div className="text-sm text-gray-500">
-                                    Available: {availableQuantity} shares
-                                  </div>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                  <Input
-                                    type="number"
-                                    min="0"
-                                    max={Math.min(
-                                      availableQuantity,
-                                      remainingQuantity + (allocations[portfolio.id] || 0)
-                                    )}
-                                    value={allocations[portfolio.id] || 0}
-                                    onChange={(e) => handleAllocationChange(portfolio.id, Number(e.target.value))}
-                                    className="w-24"
-                                  />
-                                  <Button
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={() => handleAllocationChange(
-                                      portfolio.id,
-                                      Math.min(
-                                        availableQuantity,
-                                        remainingQuantity + (allocations[portfolio.id] || 0)
-                                      )
-                                    )}
-                                    className="text-xs"
-                                  >
-                                    Max
-                                  </Button>
-                                </div>
-                              </div>
-                            );
-                          })}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            );
-          })}
+        <div className="text-center py-4 border rounded-md">
+          <p className="text-gray-500">No source portfolios selected</p>
+          <Button 
+            onClick={openPortfolioSelectionModal}
+            className="mt-2 bg-black text-white hover:bg-gray-800"
+            disabled={!selectedInstrument}
+          >
+            Add Source Portfolio
+          </Button>
         </div>
       );
-    } else {
-      // Portfolios view (flat list)
-      return (
+    }
+    
+    return (
+      <div className="space-y-4">
         <div className="border rounded-md overflow-hidden">
           <Table>
             <TableHeader>
               <TableRow>
                 <TableHead>Portfolio</TableHead>
-                <TableHead>Institution</TableHead>
-                <TableHead>Legal Entity</TableHead>
                 <TableHead>Available</TableHead>
-                <TableHead>Allocation</TableHead>
+                <TableHead>Quantity</TableHead>
+                <TableHead>Est. Value</TableHead>
+                <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {mockPortfoliosFlat
-                .filter(portfolio => (availableHoldings[portfolio.id] || 0) > 0)
-                .map(portfolio => {
+              {selectedPortfolioIds.map(portfolioId => {
+                const portfolio = mockPortfoliosFlat.find(p => p.id === portfolioId);
+                if (!portfolio) return null;
+                
+                const availableQuantity = availableHoldings[portfolioId] || 0;
+                const quantity = allocations[portfolioId];
+                const estimatedValue = quantity * price;
+                
+                return (
+                  <TableRow key={portfolioId}>
+                    <TableCell>{portfolio.name}</TableCell>
+                    <TableCell>{availableQuantity} shares</TableCell>
+                    <TableCell>
+                      <Input
+                        type="number"
+                        min="0"
+                        max={Math.min(availableQuantity, remainingQuantity + quantity)}
+                        value={quantity}
+                        onChange={(e) => handleAllocationChange(portfolioId, Number(e.target.value))}
+                        className="w-24"
+                      />
+                    </TableCell>
+                    <TableCell>
+                      {estimatedValue.toLocaleString('en-US', {
+                        style: 'currency',
+                        currency: selectedInstrument?.currency || "USD"
+                      })}
+                    </TableCell>
+                    <TableCell>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleAllocationChange(portfolioId, 0)}
+                        className="text-xs"
+                      >
+                        Remove
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        </div>
+        
+        <div className="flex justify-end">
+          <Button 
+            onClick={openPortfolioSelectionModal}
+            className="bg-black text-white hover:bg-gray-800"
+            disabled={!selectedInstrument}
+          >
+            Add Source Portfolio
+          </Button>
+        </div>
+      </div>
+    );
+  };
+
+  // Portfolio selection modal
+  const renderPortfolioSelectionModal = () => {
+    // Filter portfolios with available holdings
+    const availablePortfolios = mockPortfoliosFlat
+      .filter(portfolio => {
+        const hasHoldings = availableHoldings[portfolio.id] && availableHoldings[portfolio.id] > 0;
+        const notSelected = !Object.keys(allocations).includes(portfolio.id) || allocations[portfolio.id] === 0;
+        return hasHoldings && notSelected;
+      });
+    
+    return (
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <DialogContent className="max-w-3xl max-h-[80vh] overflow-auto">
+          <DialogHeader>
+            <DialogTitle>Select Source Portfolio</DialogTitle>
+          </DialogHeader>
+          
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Select</TableHead>
+                <TableHead>Portfolio</TableHead>
+                <TableHead>Institution</TableHead>
+                <TableHead>Available Shares</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {availablePortfolios.length > 0 ? (
+                availablePortfolios.map(portfolio => {
                   const institution = mockPortfoliosByInstitution.find(
                     inst => inst.id === portfolio.institutionId
                   );
                   
-                  let legalEntity;
-                  for (const inst of mockPortfoliosByInstitution) {
-                    legalEntity = inst.legalEntities.find(
-                      entity => entity.id === portfolio.legalEntityId
-                    );
-                    if (legalEntity) break;
-                  }
-                  
                   const availableQuantity = availableHoldings[portfolio.id] || 0;
                   
                   return (
-                    <TableRow key={portfolio.id}>
+                    <TableRow 
+                      key={portfolio.id} 
+                      className={selectedPortfolioId === portfolio.id ? "bg-gray-100" : ""}
+                      onClick={() => setSelectedPortfolioId(portfolio.id)}
+                    >
+                      <TableCell>
+                        <input 
+                          type="radio" 
+                          checked={selectedPortfolioId === portfolio.id}
+                          onChange={() => setSelectedPortfolioId(portfolio.id)}
+                        />
+                      </TableCell>
                       <TableCell>{portfolio.name}</TableCell>
                       <TableCell>{institution?.name || "Unknown"}</TableCell>
-                      <TableCell>{legalEntity?.name || "Unknown"}</TableCell>
                       <TableCell>{availableQuantity} shares</TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          <Input
-                            type="number"
-                            min="0"
-                            max={Math.min(
-                              availableQuantity,
-                              remainingQuantity + (allocations[portfolio.id] || 0)
-                            )}
-                            value={allocations[portfolio.id] || 0}
-                            onChange={(e) => handleAllocationChange(portfolio.id, Number(e.target.value))}
-                            className="w-24"
-                          />
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => handleAllocationChange(
-                              portfolio.id,
-                              Math.min(
-                                availableQuantity,
-                                remainingQuantity + (allocations[portfolio.id] || 0)
-                              )
-                            )}
-                            className="text-xs"
-                          >
-                            Max
-                          </Button>
-                        </div>
-                      </TableCell>
                     </TableRow>
                   );
-                })}
+                })
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={4} className="text-center">
+                    No portfolios with holdings of this instrument
+                  </TableCell>
+                </TableRow>
+              )}
             </TableBody>
           </Table>
-        </div>
-      );
-    }
+          
+          <div className="flex justify-end gap-2 mt-4">
+            <Button variant="outline" onClick={closeModal}>
+              Cancel
+            </Button>
+            <Button 
+              className="bg-black text-white hover:bg-gray-800"
+              onClick={confirmPortfolioSelection}
+              disabled={!selectedPortfolioId}
+            >
+              Select
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+    );
   };
 
   return (
@@ -883,7 +1117,10 @@ const SourcePortfoliosSection: React.FC<{
         </p>
         
         {selectedInstrument ? (
-          renderView()
+          <>
+            {renderSelectedPortfolios()}
+            {renderPortfolioSelectionModal()}
+          </>
         ) : (
           <div className="text-center p-4 border rounded-md">
             Please select an instrument first
@@ -925,6 +1162,8 @@ const DestinationCashAccountsSection: React.FC<{
 }> = ({ totalAmount, currency, order, setOrder, viewMode }) => {
   const [allocations, setAllocations] = useState<Record<string, number>>({});
   const [currentAllocation, setCurrentAllocation] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedAccountId, setSelectedAccountId] = useState<string | null>(null);
 
   // Initialize with existing allocations if any
   React.useEffect(() => {
@@ -977,103 +1216,75 @@ const DestinationCashAccountsSection: React.FC<{
   
   // Calculate the remaining amount to allocate
   const remainingAmount = totalAmount - currentAllocation;
-  
-  // Render the appropriate view based on viewMode
-  const renderView = () => {
-    if (viewMode === "institutions") {
+
+  // Open modal for selecting a cash account
+  const openAccountSelectionModal = () => {
+    setIsModalOpen(true);
+  };
+
+  // Close modal and reset selection
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedAccountId(null);
+  };
+
+  // Confirm selection and add allocation
+  const confirmAccountSelection = () => {
+    if (selectedAccountId) {
+      const suggestedAllocation = Math.min(
+        totalAmount,
+        remainingAmount > 0 ? remainingAmount : 0
+      );
+      
+      handleAllocationChange(selectedAccountId, suggestedAllocation);
+    }
+    closeModal();
+  };
+
+  // Render selected accounts table
+  const renderSelectedAccounts = () => {
+    const selectedAccountIds = Object.keys(allocations).filter(id => allocations[id] > 0);
+    
+    if (selectedAccountIds.length === 0) {
       return (
-        <div className="space-y-4">
-          {mockCashAccountsByInstitution.map(institution => (
-            <div key={institution.id} className="border rounded-md overflow-hidden">
-              <div className="bg-gray-100 p-3 font-medium">
-                {institution.name}
-              </div>
-              
-              <div className="p-2">
-                {institution.legalEntities.map(entity => (
-                  <div key={entity.id} className="mb-3 last:mb-0">
-                    <div className="text-sm font-medium pl-2 mb-1">{entity.name}</div>
-                    
-                    <div className="pl-4">
-                      {entity.cashAccounts.length > 0 ? (
-                        entity.cashAccounts.map(account => (
-                          <div key={account.id} className="flex items-center justify-between py-1 border-b last:border-b-0">
-                            <div>
-                              <span className="font-medium">{account.name}</span>
-                              <div className="text-sm text-gray-500">
-                                {account.balance.toLocaleString('en-US', {
-                                  style: 'currency',
-                                  currency: account.currency
-                                })}
-                              </div>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <Input
-                                type="number"
-                                min="0"
-                                max={remainingAmount + (allocations[account.id] || 0)}
-                                value={allocations[account.id] || 0}
-                                onChange={(e) => handleAllocationChange(account.id, Number(e.target.value))}
-                                className="w-24"
-                              />
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => handleAllocationChange(
-                                  account.id,
-                                  remainingAmount + (allocations[account.id] || 0)
-                                )}
-                                className="text-xs"
-                              >
-                                Max
-                              </Button>
-                            </div>
-                          </div>
-                        ))
-                      ) : (
-                        <p className="text-sm text-gray-500 py-1">No cash accounts available</p>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))}
+        <div className="text-center py-4 border rounded-md">
+          <p className="text-gray-500">No destination cash accounts selected</p>
+          <Button 
+            onClick={openAccountSelectionModal}
+            className="mt-2 bg-black text-white hover:bg-gray-800"
+          >
+            Add Cash Account
+          </Button>
         </div>
       );
-    } else {
-      // Portfolios view (flat list)
-      return (
+    }
+    
+    return (
+      <div className="space-y-4">
         <div className="border rounded-md overflow-hidden">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Account Name</TableHead>
+                <TableHead>Account</TableHead>
                 <TableHead>Institution</TableHead>
-                <TableHead>Legal Entity</TableHead>
                 <TableHead>Balance</TableHead>
                 <TableHead>Allocation</TableHead>
+                <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {mockCashAccountsFlat.map(account => {
+              {selectedAccountIds.map(accountId => {
+                const account = mockCashAccountsFlat.find(a => a.id === accountId);
+                if (!account) return null;
+                
                 const institution = mockPortfoliosByInstitution.find(
                   inst => inst.id === account.institutionId
                 );
                 
-                let legalEntity;
-                for (const inst of mockPortfoliosByInstitution) {
-                  legalEntity = inst.legalEntities.find(
-                    entity => entity.id === account.legalEntityId
-                  );
-                  if (legalEntity) break;
-                }
-                
                 return (
-                  <TableRow key={account.id}>
+                  <TableRow key={accountId}>
                     <TableCell>{account.name}</TableCell>
                     <TableCell>{institution?.name || "Unknown"}</TableCell>
-                    <TableCell>{legalEntity?.name || "Unknown"}</TableCell>
                     <TableCell>
                       {account.balance.toLocaleString('en-US', {
                         style: 'currency',
@@ -1081,27 +1292,24 @@ const DestinationCashAccountsSection: React.FC<{
                       })}
                     </TableCell>
                     <TableCell>
-                      <div className="flex items-center gap-2">
-                        <Input
-                          type="number"
-                          min="0"
-                          max={remainingAmount + (allocations[account.id] || 0)}
-                          value={allocations[account.id] || 0}
-                          onChange={(e) => handleAllocationChange(account.id, Number(e.target.value))}
-                          className="w-24"
-                        />
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleAllocationChange(
-                            account.id,
-                            remainingAmount + (allocations[account.id] || 0)
-                          )}
-                          className="text-xs"
-                        >
-                          Max
-                        </Button>
-                      </div>
+                      <Input
+                        type="number"
+                        min="0"
+                        max={remainingAmount + allocations[accountId]}
+                        value={allocations[accountId]}
+                        onChange={(e) => handleAllocationChange(accountId, Number(e.target.value))}
+                        className="w-24"
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleAllocationChange(accountId, 0)}
+                        className="text-xs"
+                      >
+                        Remove
+                      </Button>
                     </TableCell>
                   </TableRow>
                 );
@@ -1109,8 +1317,98 @@ const DestinationCashAccountsSection: React.FC<{
             </TableBody>
           </Table>
         </div>
-      );
-    }
+        
+        <div className="flex justify-end">
+          <Button 
+            onClick={openAccountSelectionModal}
+            className="bg-black text-white hover:bg-gray-800"
+          >
+            Add Cash Account
+          </Button>
+        </div>
+      </div>
+    );
+  };
+
+  // Account selection modal
+  const renderAccountSelectionModal = () => {
+    // Filter out already selected accounts
+    const availableAccounts = mockCashAccountsFlat.filter(
+      account => !Object.keys(allocations).includes(account.id) || allocations[account.id] === 0
+    );
+    
+    return (
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <DialogContent className="max-w-3xl max-h-[80vh] overflow-auto">
+          <DialogHeader>
+            <DialogTitle>Select Destination Cash Account</DialogTitle>
+          </DialogHeader>
+          
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Select</TableHead>
+                <TableHead>Account Name</TableHead>
+                <TableHead>Institution</TableHead>
+                <TableHead>Balance</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {availableAccounts.length > 0 ? (
+                availableAccounts.map(account => {
+                  const institution = mockPortfoliosByInstitution.find(
+                    inst => inst.id === account.institutionId
+                  );
+                  
+                  return (
+                    <TableRow 
+                      key={account.id} 
+                      className={selectedAccountId === account.id ? "bg-gray-100" : ""}
+                      onClick={() => setSelectedAccountId(account.id)}
+                    >
+                      <TableCell>
+                        <input 
+                          type="radio" 
+                          checked={selectedAccountId === account.id}
+                          onChange={() => setSelectedAccountId(account.id)}
+                        />
+                      </TableCell>
+                      <TableCell>{account.name}</TableCell>
+                      <TableCell>{institution?.name || "Unknown"}</TableCell>
+                      <TableCell>
+                        {account.balance.toLocaleString('en-US', {
+                          style: 'currency',
+                          currency: account.currency
+                        })}
+                      </TableCell>
+                    </TableRow>
+                  );
+                })
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={4} className="text-center">
+                    No available cash accounts
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+          
+          <div className="flex justify-end gap-2 mt-4">
+            <Button variant="outline" onClick={closeModal}>
+              Cancel
+            </Button>
+            <Button 
+              className="bg-black text-white hover:bg-gray-800"
+              onClick={confirmAccountSelection}
+              disabled={!selectedAccountId}
+            >
+              Select
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+    );
   };
 
   return (
@@ -1121,7 +1419,8 @@ const DestinationCashAccountsSection: React.FC<{
           Select which cash accounts to deposit the proceeds into
         </p>
         
-        {renderView()}
+        {renderSelectedAccounts()}
+        {renderAccountSelectionModal()}
       </div>
       
       <div className="bg-gray-50 p-4 rounded-md border">

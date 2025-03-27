@@ -2,19 +2,23 @@
 import { useEffect, useState } from "react";
 
 export function useIsMobile() {
-  const [isMobile, setIsMobile] = useState(
-    typeof window !== "undefined" ? window.innerWidth < 768 : false
-  );
+  // Initialize with a default value that doesn't require window
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    const handleResize = () => {
+    // Only access window within useEffect to ensure it's running client-side
+    const checkMobile = () => {
       setIsMobile(window.innerWidth < 768);
     };
 
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    // Initial check
+    checkMobile();
+
+    // Set up event listener
+    window.addEventListener("resize", checkMobile);
+    
+    // Clean up
+    return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
   return isMobile;

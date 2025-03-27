@@ -30,8 +30,8 @@ const TradingStepsProgress: React.FC<TradingStepsProgressProps> = ({
                 i < currentStep 
                   ? 'bg-black text-white' 
                   : i === currentStep 
-                    ? 'bg-gray-100 text-black border-2 border-gray-400' 
-                    : 'bg-gray-100 text-gray-500'
+                    ? 'bg-white text-black border-2 border-black' 
+                    : 'bg-white text-gray-500 border border-gray-300'
               )}
             >
               {i < currentStep ? (
@@ -52,7 +52,7 @@ const TradingStepsProgress: React.FC<TradingStepsProgressProps> = ({
         ))}
         
         {/* Progress line */}
-        <div className="absolute top-5 left-0 w-full h-0.5 bg-gray-100 -z-0">
+        <div className="absolute top-5 left-0 w-full h-0.5 bg-gray-200 -z-0 transform -translate-y-1/2">
           <div 
             className="h-full bg-black transition-all duration-700 ease-in-out"
             style={{ width: `${(currentStep / (steps.length - 1)) * 100}%` }}
@@ -67,7 +67,7 @@ const TradingStepsProgress: React.FC<TradingStepsProgressProps> = ({
             Step {currentStep + 1} of {steps.length}
           </span>
         </div>
-        <div className="w-full h-2 bg-gray-100 rounded-full mt-2">
+        <div className="w-full h-2 bg-gray-200 rounded-full mt-2">
           <div 
             className="h-full bg-black rounded-full transition-all duration-700 ease-in-out"
             style={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}

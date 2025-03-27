@@ -1,338 +1,306 @@
+
 import React from "react";
-import { OrderType, TradeOrder } from "../types";
 import { Card, CardContent } from "@/components/ui/card";
-import {
-  mockBrokers,
-  mockPortfoliosByInstitution,
-  mockPortfoliosFlat,
-  mockCashAccountsFlat,
-  mockCreditFacilitiesFlat
-} from "../data";
+import { Check, AlertTriangle, Clock, Calendar, User, Briefcase, Building, ArrowRight } from "lucide-react";
+import { OrderType, TradeOrder } from "../types";
+import { mockInstruments, mockBrokers } from "../data";
+import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
 
 interface TradingReviewProps {
+  order: Partial<TradeOrder>;
   orderType: OrderType;
   selectedInstrument: any;
-  quantity: number | "";
-  price: number | "";
-  selectedBroker: string | "best";
-  order: Partial<TradeOrder>;
   [key: string]: any;
 }
 
 const TradingReview: React.FC<TradingReviewProps> = ({
+  order,
   orderType,
-  selectedInstrument,
-  quantity,
-  price,
-  selectedBroker,
-  order
+  selectedInstrument
 }) => {
-  if (!selectedInstrument || !quantity || !price) {
-    return (
-      <div className="text-center p-4">
-        Incomplete order information. Please go back and complete previous steps.
-      </div>
-    );
+  const instrument = selectedInstrument || 
+    (order.instrumentId ? mockInstruments.find(i => i.id === order.instrumentId) : null);
+
+  const broker = order.brokerId === "best" 
+    ? { id: "best", name: "Best Execution" }
+    : mockBrokers.find(b => b.id === order.brokerId) || { id: "unknown", name: "Unknown" };
+
+  const executionTypeDisplay = {
+    "market": "Market",
+    "limit": "Limit",
+    "stop": "Stop"
+  }[order.executionType as string] || "Market";
+
+  const timeInForceDisplay = {
+    "day": "Day Only",
+    "gtc": "Good Till Canceled (GTC)",
+    "fok": "Fill or Kill (FOK)",
+    "ioc": "Immediate or Cancel (IOC)"
+  }[order.timeInForce as string] || "Day Only";
+
+  const totalAmount = (order.quantity || 0) * (
+    order.executionType === "market" 
+      ? (instrument?.currentPrice || 0) 
+      : (order.price || 0)
+  );
+
+  const estimatedFees = totalAmount * 0.0025; // Example: 0.25% commission
+  const totalWithFees = totalAmount + estimatedFees;
+
+  // Check for potential warnings
+  const warnings = [];
+  
+  if (orderType === "buy" && totalAmount > 100000) {
+    warnings.push("Large order - consider splitting into multiple transactions");
   }
   
-  const totalAmount = Number(quantity) * Number(price);
-  
-  const getBrokerName = () => {
-    if (selectedBroker === "best") return "Best Execution";
-    const broker = mockBrokers.find(b => b.id === selectedBroker);
-    return broker ? broker.name : "Unknown";
-  };
-  
-  const getEntityNames = (institutionId: string, legalEntityId: string) => {
-    const institution = mockPortfoliosByInstitution.find(
-      inst => inst.id === institutionId
-    );
-    
-    let legalEntity;
-    for (const inst of mockPortfoliosByInstitution) {
-      legalEntity = inst.legalEntities.find(
-        entity => entity.id === legalEntityId
-      );
-      if (legalEntity) break;
-    }
-    
-    return {
-      institution: institution?.name || "Unknown",
-      legalEntity: legalEntity?.name || "Unknown"
-    };
-  };
-  
-  const renderSourceAllocations = () => {
-    if (orderType !== "sell" || !order.instrumentAllocations?.length) {
-      return <p>No source portfolios selected</p>;
-    }
-    
-    return (
-      <div className="space-y-3">
-        {order.instrumentAllocations.map((allocation, index) => {
-          const portfolio = mockPortfoliosFlat.find(p => p.id === allocation.portfolioId);
-          
-          if (!portfolio) return null;
-          
-          const { institution, legalEntity } = getEntityNames(
-            portfolio.institutionId,
-            portfolio.legalEntityId
-          );
-          
-          return (
-            <div key={index} className="p-3 border rounded-md">
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <p className="text-sm text-gray-500">Portfolio</p>
-                  <p className="font-medium">{portfolio.name}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500">Quantity</p>
-                  <p className="font-medium">{allocation.quantity}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500">Institution</p>
-                  <p>{institution}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500">Legal Entity</p>
-                  <p>{legalEntity}</p>
-                </div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    );
-  };
-  
-  const renderFundingAllocations = () => {
-    if (orderType !== "buy" || !order.fundingAllocations?.length) {
-      return <p>No funding sources selected</p>;
-    }
-    
-    return (
-      <div className="space-y-3">
-        {order.fundingAllocations.map((allocation, index) => {
-          let source;
-          let sourceType;
-          
-          if (allocation.sourceType === "cash") {
-            source = mockCashAccountsFlat.find(acc => acc.id === allocation.sourceId);
-            sourceType = "Cash Account";
-          } else {
-            source = mockCreditFacilitiesFlat.find(fac => fac.id === allocation.sourceId);
-            sourceType = "Credit Facility";
-          }
-          
-          if (!source) return null;
-          
-          const { institution, legalEntity } = getEntityNames(
-            source.institutionId,
-            source.legalEntityId
-          );
-          
-          return (
-            <div key={index} className="p-3 border rounded-md">
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <p className="text-sm text-gray-500">Source Type</p>
-                  <p className="font-medium">{sourceType}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500">Name</p>
-                  <p className="font-medium">{source.name}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500">Amount</p>
-                  <p className="font-medium">
-                    {allocation.amount.toLocaleString('en-US', {
-                      style: 'currency',
-                      currency: allocation.currency
-                    })}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500">Currency</p>
-                  <p>{allocation.currency}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500">Institution</p>
-                  <p>{institution}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500">Legal Entity</p>
-                  <p>{legalEntity}</p>
-                </div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    );
-  };
-  
-  const renderDepositAllocations = () => {
-    if (!order.depositAllocations?.length) {
-      return <p>No destination allocations selected</p>;
-    }
-    
-    return (
-      <div className="space-y-3">
-        {order.depositAllocations.map((allocation, index) => {
-          let destination;
-          let destinationType = allocation.destinationType;
-          
-          if (destinationType === "portfolio") {
-            destination = mockPortfoliosFlat.find(p => p.id === allocation.destinationId);
-          } else {
-            destination = mockCashAccountsFlat.find(acc => acc.id === allocation.destinationId);
-          }
-          
-          if (!destination) return null;
-          
-          const { institution, legalEntity } = getEntityNames(
-            destination.institutionId,
-            destination.legalEntityId
-          );
-          
-          return (
-            <div key={index} className="p-3 border rounded-md">
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <p className="text-sm text-gray-500">Type</p>
-                  <p className="font-medium">
-                    {destinationType === "portfolio" ? "Portfolio" : "Cash Account"}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500">Name</p>
-                  <p className="font-medium">{destination.name}</p>
-                </div>
-                
-                {destinationType === "portfolio" && allocation.quantity && (
-                  <div>
-                    <p className="text-sm text-gray-500">Quantity</p>
-                    <p className="font-medium">{allocation.quantity}</p>
-                  </div>
-                )}
-                
-                {destinationType === "cash" && allocation.amount && (
-                  <>
-                    <div>
-                      <p className="text-sm text-gray-500">Amount</p>
-                      <p className="font-medium">
-                        {allocation.amount.toLocaleString('en-US', {
-                          style: 'currency',
-                          currency: allocation.currency || selectedInstrument.currency
-                        })}
-                      </p>
-                    </div>
-                    {allocation.currency && (
-                      <div>
-                        <p className="text-sm text-gray-500">Currency</p>
-                        <p>{allocation.currency}</p>
-                      </div>
-                    )}
-                  </>
-                )}
-                
-                <div>
-                  <p className="text-sm text-gray-500">Institution</p>
-                  <p>{institution}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500">Legal Entity</p>
-                  <p>{legalEntity}</p>
-                </div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    );
-  };
-  
+  if (order.executionType === "market" && orderType === "sell") {
+    warnings.push("Market sell orders may execute at prices lower than current market value");
+  }
+
   return (
     <div className="space-y-6">
-      <Card>
-        <CardContent className="p-6">
-          <h3 className="text-lg font-medium mb-4">Order Summary</h3>
-          
-          <div className="grid grid-cols-2 gap-x-6 gap-y-4">
-            <div>
-              <p className="text-sm text-gray-500">Order Type</p>
-              <p className="font-medium capitalize">{orderType}</p>
+      <div className="text-center mb-8">
+        <h3 className="text-xl font-semibold mb-2">Review Your Order</h3>
+        <p className="text-gray-600">
+          Please verify all details before submitting your order
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <Card>
+          <CardContent className="pt-6">
+            <h4 className="text-lg font-medium mb-4 flex items-center">
+              <Briefcase className="h-5 w-5 mr-2 text-gray-600" />
+              Order Details
+            </h4>
+            
+            <div className="space-y-4">
+              <div className="flex justify-between">
+                <span className="text-gray-500">Order Type</span>
+                <span className="font-medium capitalize">
+                  {orderType} ({executionTypeDisplay})
+                </span>
+              </div>
+              
+              <div className="flex justify-between">
+                <span className="text-gray-500">Instrument</span>
+                <span className="font-medium">
+                  {instrument?.symbol} - {instrument?.name}
+                </span>
+              </div>
+              
+              <div className="flex justify-between">
+                <span className="text-gray-500">Quantity</span>
+                <span className="font-medium">{order.quantity}</span>
+              </div>
+              
+              <div className="flex justify-between">
+                <span className="text-gray-500">
+                  {order.executionType === "market" ? "Estimated Price" : 
+                   order.executionType === "limit" ? "Limit Price" : 
+                   order.executionType === "stop" ? "Stop Price" : "Price"}
+                </span>
+                <span className="font-medium">
+                  {order.executionType === "market" 
+                    ? instrument?.currentPrice.toLocaleString('en-US', {
+                        style: 'currency',
+                        currency: instrument?.currency
+                      })
+                    : order.price?.toLocaleString('en-US', {
+                        style: 'currency',
+                        currency: instrument?.currency
+                      })
+                  }
+                </span>
+              </div>
+              
+              <Separator />
+              
+              <div className="flex justify-between">
+                <span className="text-gray-500">Subtotal</span>
+                <span className="font-medium">
+                  {totalAmount.toLocaleString('en-US', {
+                    style: 'currency',
+                    currency: instrument?.currency || 'USD'
+                  })}
+                </span>
+              </div>
+              
+              <div className="flex justify-between">
+                <span className="text-gray-500">Estimated Fees</span>
+                <span className="font-medium">
+                  {estimatedFees.toLocaleString('en-US', {
+                    style: 'currency',
+                    currency: instrument?.currency || 'USD'
+                  })}
+                </span>
+              </div>
+              
+              <Separator />
+              
+              <div className="flex justify-between font-semibold">
+                <span>Total</span>
+                <span>
+                  {totalWithFees.toLocaleString('en-US', {
+                    style: 'currency',
+                    currency: instrument?.currency || 'USD'
+                  })}
+                </span>
+              </div>
             </div>
-            <div>
-              <p className="text-sm text-gray-500">Instrument</p>
-              <p className="font-medium">{selectedInstrument.symbol} - {selectedInstrument.name}</p>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardContent className="pt-6">
+            <h4 className="text-lg font-medium mb-4 flex items-center">
+              <Building className="h-5 w-5 mr-2 text-gray-600" />
+              Execution Details
+            </h4>
+            
+            <div className="space-y-4">
+              <div className="flex justify-between">
+                <span className="text-gray-500">Broker</span>
+                <span className="font-medium">{broker.name}</span>
+              </div>
+              
+              <div className="flex justify-between">
+                <span className="text-gray-500">Time in Force</span>
+                <span className="font-medium">{timeInForceDisplay}</span>
+              </div>
+              
+              <div className="flex justify-between">
+                <span className="text-gray-500">Settlement Date</span>
+                <span className="font-medium">T+2 (Estimated)</span>
+              </div>
+              
+              <Separator />
+              
+              <h5 className="font-medium flex items-center">
+                <Clock className="h-4 w-4 mr-2 text-gray-600" />
+                Allocation Details
+              </h5>
+              
+              {orderType === "buy" ? (
+                <>
+                  <div>
+                    <span className="text-gray-500 block mb-1">Funding Sources</span>
+                    <div className="bg-gray-50 p-2 rounded border text-sm">
+                      {order.fundingAllocations && order.fundingAllocations.length > 0 ? (
+                        order.fundingAllocations.map((source, index) => (
+                          <div key={index} className="flex justify-between py-1">
+                            <span>{source.sourceType === "cash" ? "Cash Account" : "Credit Facility"}</span>
+                            <span className="font-medium">
+                              {source.amount.toLocaleString('en-US', {
+                                style: 'currency',
+                                currency: source.currency
+                              })}
+                            </span>
+                          </div>
+                        ))
+                      ) : (
+                        <span className="text-gray-400">No funding sources specified</span>
+                      )}
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <div className="flex justify-between mb-1">
+                      <span className="text-gray-500">Destination Portfolios</span>
+                      <ArrowRight className="h-4 w-4 text-gray-400" />
+                    </div>
+                    <div className="bg-gray-50 p-2 rounded border text-sm">
+                      {order.depositAllocations && order.depositAllocations.length > 0 ? (
+                        order.depositAllocations.map((dest, index) => (
+                          <div key={index} className="flex justify-between py-1">
+                            <span>Portfolio</span>
+                            <span className="font-medium">{dest.quantity || 0} shares</span>
+                          </div>
+                        ))
+                      ) : (
+                        <span className="text-gray-400">No destinations specified</span>
+                      )}
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div>
+                    <span className="text-gray-500 block mb-1">Source Portfolios</span>
+                    <div className="bg-gray-50 p-2 rounded border text-sm">
+                      {order.instrumentAllocations && order.instrumentAllocations.length > 0 ? (
+                        order.instrumentAllocations.map((source, index) => (
+                          <div key={index} className="flex justify-between py-1">
+                            <span>Portfolio</span>
+                            <span className="font-medium">{source.quantity} shares</span>
+                          </div>
+                        ))
+                      ) : (
+                        <span className="text-gray-400">No source portfolios specified</span>
+                      )}
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <div className="flex justify-between mb-1">
+                      <span className="text-gray-500">Destination Cash Accounts</span>
+                      <ArrowRight className="h-4 w-4 text-gray-400" />
+                    </div>
+                    <div className="bg-gray-50 p-2 rounded border text-sm">
+                      {order.depositAllocations && order.depositAllocations.length > 0 ? (
+                        order.depositAllocations.map((dest, index) => (
+                          <div key={index} className="flex justify-between py-1">
+                            <span>Cash Account</span>
+                            <span className="font-medium">
+                              {dest.amount?.toLocaleString('en-US', {
+                                style: 'currency',
+                                currency: dest.currency || 'USD'
+                              })}
+                            </span>
+                          </div>
+                        ))
+                      ) : (
+                        <span className="text-gray-400">No destinations specified</span>
+                      )}
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Warnings and notices */}
+      {warnings.length > 0 && (
+        <div className="bg-amber-50 border border-amber-200 rounded-md p-4 mt-6">
+          <div className="flex items-start">
+            <AlertTriangle className="h-5 w-5 text-amber-600 mt-0.5 mr-2 flex-shrink-0" />
             <div>
-              <p className="text-sm text-gray-500">Quantity</p>
-              <p className="font-medium">{quantity}</p>
-            </div>
-            <div>
-              <p className="text-sm text-gray-500">Price per Share</p>
-              <p className="font-medium">
-                {Number(price).toLocaleString('en-US', {
-                  style: 'currency',
-                  currency: selectedInstrument.currency
-                })}
-              </p>
-            </div>
-            <div>
-              <p className="text-sm text-gray-500">Total Amount</p>
-              <p className="font-medium">
-                {totalAmount.toLocaleString('en-US', {
-                  style: 'currency',
-                  currency: selectedInstrument.currency
-                })}
-              </p>
-            </div>
-            <div>
-              <p className="text-sm text-gray-500">Broker</p>
-              <p className="font-medium">{getBrokerName()}</p>
+              <h4 className="font-medium text-amber-800 mb-1">Please note:</h4>
+              <ul className="list-disc pl-5 space-y-1">
+                {warnings.map((warning, index) => (
+                  <li key={index} className="text-sm text-amber-700">{warning}</li>
+                ))}
+              </ul>
             </div>
           </div>
-        </CardContent>
-      </Card>
-      
-      {orderType === "sell" && (
-        <Card>
-          <CardContent className="p-6">
-            <h3 className="text-lg font-medium mb-4">Source Portfolios</h3>
-            {renderSourceAllocations()}
-          </CardContent>
-        </Card>
+        </div>
       )}
-      
-      {orderType === "buy" && (
-        <Card>
-          <CardContent className="p-6">
-            <h3 className="text-lg font-medium mb-4">Funding Sources</h3>
-            {renderFundingAllocations()}
-          </CardContent>
-        </Card>
-      )}
-      
-      <Card>
-        <CardContent className="p-6">
-          <h3 className="text-lg font-medium mb-4">
-            {orderType === "buy" 
-              ? "Destination Portfolios" 
-              : "Destination Cash Accounts"}
-          </h3>
-          {renderDepositAllocations()}
-        </CardContent>
-      </Card>
-      
-      <div className="p-4 bg-blue-50 border border-blue-100 rounded-md">
-        <p className="text-sm text-blue-700">
-          Please review all details carefully before submitting your order. 
-          Once submitted, your order will be processed according to the 
-          broker&apos;s execution policies.
-        </p>
+
+      {/* Confirmation box */}
+      <div className="bg-green-50 border border-green-200 rounded-md p-4 mt-2">
+        <div className="flex items-start">
+          <Check className="h-5 w-5 text-green-600 mt-0.5 mr-2 flex-shrink-0" />
+          <div>
+            <h4 className="font-medium text-green-800">Ready to submit</h4>
+            <p className="text-sm text-green-700 mt-1">
+              By clicking "Submit Order", you agree to the terms and conditions of this transaction.
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );

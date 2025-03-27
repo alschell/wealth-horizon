@@ -3,6 +3,10 @@ export type OrderType = "buy" | "sell";
 
 export type ViewMode = "portfolios" | "institutions";
 
+export type OrderExecutionType = "market" | "limit" | "stop";
+
+export type TimeInForce = "day" | "gtc" | "fok" | "ioc";
+
 export type Institution = {
   id: string;
   name: string;
@@ -107,4 +111,6 @@ export type TradeOrder = {
   instrumentAllocations: InstrumentAllocation[];
   fundingAllocations: FundingAllocation[];
   depositAllocations: DepositAllocation[];
+  executionType?: OrderExecutionType | string;
+  timeInForce?: TimeInForce | string;
 };

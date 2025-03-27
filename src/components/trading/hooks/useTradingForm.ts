@@ -10,12 +10,18 @@ export const useTradingForm = (orderType: OrderType) => {
   const [quantity, setQuantity] = useState<number | "">("");
   const [price, setPrice] = useState<number | "">("");
   const [selectedBroker, setSelectedBroker] = useState<string | "best">("best");
+  const [orderExecutionType, setOrderExecutionType] = useState<string>("market");
+  const [timeInForce, setTimeInForce] = useState<string>("day");
+  const [currentOrderType, setOrderType] = useState<OrderType>(orderType);
+  
   const [order, setOrder] = useState<Partial<TradeOrder>>({
     orderType,
     instrumentAllocations: [],
     fundingAllocations: [],
     depositAllocations: [],
-    brokerId: "best"
+    brokerId: "best",
+    executionType: "market",
+    timeInForce: "day"
   });
 
   const handleNextStep = () => {
@@ -28,18 +34,38 @@ export const useTradingForm = (orderType: OrderType) => {
       return;
     }
 
-    if (currentStep === 1 && (!quantity || !price)) {
+    if (currentStep === 1 && !orderExecutionType) {
       toast({
         title: "Error",
-        description: "Please enter quantity and price to proceed",
+        description: "Please select an order execution type",
         variant: "destructive"
       });
       return;
     }
 
-    if (currentStep === 3) {
+    if (currentStep === 2 && (!quantity || (orderExecutionType !== "market" && !price))) {
+      toast({
+        title: "Error",
+        description: orderExecutionType === "market"
+          ? "Please enter quantity to proceed"
+          : "Please enter quantity and price to proceed",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (currentStep === 3 && !selectedBroker) {
+      toast({
+        title: "Error",
+        description: "Please select a broker to proceed",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (currentStep === 4) {
       // Validate allocations
-      if (orderType === "buy" && (!order.fundingAllocations?.length || !order.depositAllocations?.length)) {
+      if (currentOrderType === "buy" && (!order.fundingAllocations?.length || !order.depositAllocations?.length)) {
         toast({
           title: "Error",
           description: "Please allocate funding sources and destination portfolios",
@@ -48,7 +74,7 @@ export const useTradingForm = (orderType: OrderType) => {
         return;
       }
 
-      if (orderType === "sell" && (!order.instrumentAllocations?.length || !order.depositAllocations?.length)) {
+      if (currentOrderType === "sell" && (!order.instrumentAllocations?.length || !order.depositAllocations?.length)) {
         toast({
           title: "Error",
           description: "Please allocate source portfolios and destination cash accounts",
@@ -58,7 +84,20 @@ export const useTradingForm = (orderType: OrderType) => {
       }
     }
 
-    setCurrentStep(prev => Math.min(prev + 1, 4));
+    // Update order with current selections before proceeding
+    setOrder(prev => ({
+      ...prev,
+      orderType: currentOrderType,
+      instrumentId: selectedInstrument?.id || "",
+      quantity: Number(quantity),
+      price: Number(price),
+      totalAmount: Number(quantity) * Number(price || selectedInstrument?.currentPrice || 0),
+      brokerId: selectedBroker,
+      executionType: orderExecutionType,
+      timeInForce: timeInForce
+    }));
+
+    setCurrentStep(prev => Math.min(prev + 1, 5));
   };
 
   const handlePreviousStep = () => {
@@ -66,15 +105,22 @@ export const useTradingForm = (orderType: OrderType) => {
   };
 
   const handleSubmitOrder = () => {
-    const totalAmount = Number(quantity) * Number(price);
+    const calculatedPrice = orderExecutionType === "market"
+      ? selectedInstrument?.currentPrice || 0
+      : Number(price);
+      
+    const totalAmount = Number(quantity) * calculatedPrice;
+    
     const completeOrder: TradeOrder = {
       ...order as TradeOrder,
-      orderType,
+      orderType: currentOrderType,
       instrumentId: selectedInstrument?.id || "",
       quantity: Number(quantity),
-      price: Number(price),
+      price: calculatedPrice,
       totalAmount,
-      brokerId: selectedBroker
+      brokerId: selectedBroker,
+      executionType: orderExecutionType,
+      timeInForce: timeInForce
     };
 
     // In a real app, you would submit this order to your backend
@@ -82,7 +128,7 @@ export const useTradingForm = (orderType: OrderType) => {
 
     toast({
       title: "Order Submitted",
-      description: `Your ${orderType} order for ${quantity} ${selectedInstrument?.symbol} has been submitted successfully.`,
+      description: `Your ${currentOrderType} order for ${quantity} ${selectedInstrument?.symbol} has been submitted successfully.`,
     });
 
     // Reset form
@@ -90,18 +136,23 @@ export const useTradingForm = (orderType: OrderType) => {
     setQuantity("");
     setPrice("");
     setSelectedBroker("best");
+    setOrderExecutionType("market");
+    setTimeInForce("day");
     setOrder({
-      orderType,
+      orderType: currentOrderType,
       instrumentAllocations: [],
       fundingAllocations: [],
       depositAllocations: [],
-      brokerId: "best"
+      brokerId: "best",
+      executionType: "market",
+      timeInForce: "day"
     });
     setCurrentStep(0);
   };
 
   return {
     currentStep,
+    setCurrentStep,
     selectedInstrument,
     setSelectedInstrument,
     quantity,
@@ -114,6 +165,12 @@ export const useTradingForm = (orderType: OrderType) => {
     setOrder,
     handleNextStep,
     handlePreviousStep,
-    handleSubmitOrder
+    handleSubmitOrder,
+    orderExecutionType,
+    setOrderExecutionType,
+    timeInForce,
+    setTimeInForce,
+    orderType: currentOrderType,
+    setOrderType
   };
 };

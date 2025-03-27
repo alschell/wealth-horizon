@@ -1,11 +1,11 @@
 
-import React from "react";
-import { Card } from "@/components/ui/card";
+import React, { useState, useEffect } from "react";
 import TradingInstrumentSearch from "./sections/TradingInstrumentSearch";
 import TradingQuantityPrice from "./sections/TradingQuantityPrice";
 import TradingBrokerSelection from "./sections/TradingBrokerSelection";
 import TradingAllocation from "./sections/TradingAllocation";
 import TradingReview from "./sections/TradingReview";
+import TradingOrderType from "./sections/TradingOrderType";
 import TradingStepsProgress from "./components/TradingStepsProgress";
 import TradingFormNavigation from "./components/TradingFormNavigation";
 import { useTradingForm } from "./hooks/useTradingForm";
@@ -17,9 +17,10 @@ interface TradingFormProps {
   orderType: OrderType;
 }
 
-const TradingForm: React.FC<TradingFormProps> = ({ orderType }) => {
+const TradingForm: React.FC<TradingFormProps> = ({ orderType: initialOrderType }) => {
   const {
     currentStep,
+    setCurrentStep,
     selectedInstrument,
     setSelectedInstrument,
     quantity,
@@ -32,14 +33,26 @@ const TradingForm: React.FC<TradingFormProps> = ({ orderType }) => {
     setOrder,
     handleNextStep,
     handlePreviousStep,
-    handleSubmitOrder
-  } = useTradingForm(orderType);
+    handleSubmitOrder,
+    orderExecutionType,
+    setOrderExecutionType,
+    timeInForce,
+    setTimeInForce,
+    orderType,
+    setOrderType
+  } = useTradingForm(initialOrderType);
+
+  // Update base order type when parent changes the tab
+  useEffect(() => {
+    setOrderType(initialOrderType);
+  }, [initialOrderType, setOrderType]);
 
   const steps = [
     { title: "Select Instrument", component: TradingInstrumentSearch },
+    { title: "Order Type", component: TradingOrderType },
     { title: "Quantity & Price", component: TradingQuantityPrice },
     { title: "Select Broker", component: TradingBrokerSelection },
-    { title: "Allocate Sources/Destinations", component: TradingAllocation },
+    { title: "Allocate", component: TradingAllocation },
     { title: "Review Order", component: TradingReview }
   ];
 
@@ -71,6 +84,11 @@ const TradingForm: React.FC<TradingFormProps> = ({ orderType }) => {
             setSelectedBroker={setSelectedBroker}
             order={order}
             setOrder={setOrder}
+            orderExecutionType={orderExecutionType}
+            setOrderExecutionType={setOrderExecutionType}
+            timeInForce={timeInForce}
+            setTimeInForce={setTimeInForce}
+            setCurrentStep={setCurrentStep}
           />
         </FormSection>
 

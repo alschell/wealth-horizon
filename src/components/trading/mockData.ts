@@ -71,6 +71,124 @@ export const mockInstruments: Instrument[] = [
     currentPrice: 95.72,
     currency: "EUR",
     exchange: "XETRA"
+  },
+  // Add S&P 500 stocks
+  {
+    id: "instr-8",
+    symbol: "JPM",
+    name: "JPMorgan Chase & Co.",
+    type: "Equity",
+    currentPrice: 189.82,
+    currency: "USD",
+    exchange: "NYSE"
+  },
+  {
+    id: "instr-9",
+    symbol: "V",
+    name: "Visa Inc.",
+    type: "Equity",
+    currentPrice: 275.36,
+    currency: "USD",
+    exchange: "NYSE"
+  },
+  {
+    id: "instr-10",
+    symbol: "PG",
+    name: "Procter & Gamble Co.",
+    type: "Equity",
+    currentPrice: 166.43,
+    currency: "USD",
+    exchange: "NYSE"
+  },
+  {
+    id: "instr-11",
+    symbol: "UNH",
+    name: "UnitedHealth Group Inc.",
+    type: "Equity",
+    currentPrice: 524.61,
+    currency: "USD",
+    exchange: "NYSE"
+  },
+  {
+    id: "instr-12",
+    symbol: "HD",
+    name: "Home Depot Inc.",
+    type: "Equity",
+    currentPrice: 343.22,
+    currency: "USD",
+    exchange: "NYSE"
+  },
+  {
+    id: "instr-13",
+    symbol: "BAC",
+    name: "Bank of America Corp.",
+    type: "Equity",
+    currentPrice: 38.46,
+    currency: "USD",
+    exchange: "NYSE"
+  },
+  {
+    id: "instr-14",
+    symbol: "XOM",
+    name: "Exxon Mobil Corp.",
+    type: "Equity",
+    currentPrice: 114.96,
+    currency: "USD",
+    exchange: "NYSE"
+  },
+  {
+    id: "instr-15",
+    symbol: "PFE",
+    name: "Pfizer Inc.",
+    type: "Equity",
+    currentPrice: 28.35,
+    currency: "USD",
+    exchange: "NYSE"
+  },
+  {
+    id: "instr-16",
+    symbol: "CSCO",
+    name: "Cisco Systems Inc.",
+    type: "Equity",
+    currentPrice: 47.71,
+    currency: "USD",
+    exchange: "NASDAQ"
+  },
+  {
+    id: "instr-17",
+    symbol: "CVX",
+    name: "Chevron Corp.",
+    type: "Equity",
+    currentPrice: 152.32,
+    currency: "USD",
+    exchange: "NYSE"
+  },
+  {
+    id: "instr-18",
+    symbol: "ADBE",
+    name: "Adobe Inc.",
+    type: "Equity",
+    currentPrice: 521.07,
+    currency: "USD",
+    exchange: "NASDAQ"
+  },
+  {
+    id: "instr-19",
+    symbol: "WMT",
+    name: "Walmart Inc.",
+    type: "Equity",
+    currentPrice: 69.89,
+    currency: "USD",
+    exchange: "NYSE"
+  },
+  {
+    id: "instr-20",
+    symbol: "DIS",
+    name: "Walt Disney Co.",
+    type: "Equity",
+    currentPrice: 111.21,
+    currency: "USD",
+    exchange: "NYSE"
   }
 ];
 
@@ -94,6 +212,18 @@ export const mockBrokers: Broker[] = [
   {
     id: "broker-5",
     name: "Credit Suisse"
+  },
+  {
+    id: "broker-6",
+    name: "Citigroup"
+  },
+  {
+    id: "broker-7",
+    name: "Bank of America Merrill Lynch"
+  },
+  {
+    id: "broker-8",
+    name: "Deutsche Bank"
   }
 ];
 
@@ -107,7 +237,10 @@ export const mockPortfoliosFlat: Portfolio[] = [
     holdings: [
       { instrumentId: "instr-1", quantity: 1000, averagePurchasePrice: 150.25 },
       { instrumentId: "instr-2", quantity: 500, averagePurchasePrice: 290.15 },
-      { instrumentId: "instr-3", quantity: 200, averagePurchasePrice: 120.50 }
+      { instrumentId: "instr-3", quantity: 200, averagePurchasePrice: 120.50 },
+      { instrumentId: "instr-8", quantity: 300, averagePurchasePrice: 160.50 },
+      { instrumentId: "instr-11", quantity: 150, averagePurchasePrice: 495.75 },
+      { instrumentId: "instr-14", quantity: 400, averagePurchasePrice: 105.80 }
     ]
   },
   {
@@ -118,7 +251,9 @@ export const mockPortfoliosFlat: Portfolio[] = [
     holdings: [
       { instrumentId: "instr-1", quantity: 2000, averagePurchasePrice: 145.30 },
       { instrumentId: "instr-4", quantity: 300, averagePurchasePrice: 160.75 },
-      { instrumentId: "instr-5", quantity: 500, averagePurchasePrice: 190.20 }
+      { instrumentId: "instr-5", quantity: 500, averagePurchasePrice: 190.20 },
+      { instrumentId: "instr-16", quantity: 800, averagePurchasePrice: 45.60 },
+      { instrumentId: "instr-18", quantity: 200, averagePurchasePrice: 490.30 }
     ]
   },
   {
@@ -139,7 +274,33 @@ export const mockPortfoliosFlat: Portfolio[] = [
     holdings: [
       { instrumentId: "instr-1", quantity: 750, averagePurchasePrice: 155.50 },
       { instrumentId: "instr-2", quantity: 300, averagePurchasePrice: 310.25 },
-      { instrumentId: "instr-4", quantity: 450, averagePurchasePrice: 170.30 }
+      { instrumentId: "instr-4", quantity: 450, averagePurchasePrice: 170.30 },
+      { instrumentId: "instr-3", quantity: 350, averagePurchasePrice: 125.40 },
+      { instrumentId: "instr-5", quantity: 650, averagePurchasePrice: 185.50 }
+    ]
+  },
+  {
+    id: "port-5",
+    name: "Dividend Income Portfolio",
+    institutionId: "inst-1",
+    legalEntityId: "le-1",
+    holdings: [
+      { instrumentId: "instr-10", quantity: 600, averagePurchasePrice: 155.20 },
+      { instrumentId: "instr-13", quantity: 1200, averagePurchasePrice: 35.40 },
+      { instrumentId: "instr-15", quantity: 900, averagePurchasePrice: 26.80 },
+      { instrumentId: "instr-17", quantity: 400, averagePurchasePrice: 145.60 },
+      { instrumentId: "instr-19", quantity: 750, averagePurchasePrice: 65.30 }
+    ]
+  },
+  {
+    id: "port-6",
+    name: "Financial Services Portfolio",
+    institutionId: "inst-2",
+    legalEntityId: "le-2",
+    holdings: [
+      { instrumentId: "instr-8", quantity: 800, averagePurchasePrice: 175.40 },
+      { instrumentId: "instr-9", quantity: 400, averagePurchasePrice: 260.75 },
+      { instrumentId: "instr-13", quantity: 2000, averagePurchasePrice: 36.20 }
     ]
   }
 ];
@@ -184,6 +345,22 @@ export const mockCashAccountsFlat: CashAccount[] = [
     legalEntityId: "le-3",
     currency: "USD",
     balance: 1200000
+  },
+  {
+    id: "cash-6",
+    name: "CHF Primary Account",
+    institutionId: "inst-1",
+    legalEntityId: "le-1",
+    currency: "CHF",
+    balance: 900000
+  },
+  {
+    id: "cash-7",
+    name: "JPY Trading Account",
+    institutionId: "inst-2",
+    legalEntityId: "le-2",
+    currency: "JPY",
+    balance: 85000000
   }
 ];
 
@@ -227,6 +404,26 @@ export const mockCreditFacilitiesFlat: CreditFacility[] = [
     limit: 7500000,
     used: 3000000,
     available: 4500000
+  },
+  {
+    id: "credit-5",
+    name: "GBP Credit Line",
+    institutionId: "inst-1",
+    legalEntityId: "le-1",
+    currency: "GBP",
+    limit: 4000000,
+    used: 1200000,
+    available: 2800000
+  },
+  {
+    id: "credit-6",
+    name: "Investment Credit Facility",
+    institutionId: "inst-2",
+    legalEntityId: "le-3",
+    currency: "EUR",
+    limit: 6000000,
+    used: 2000000,
+    available: 4000000
   }
 ];
 
@@ -241,15 +438,18 @@ export const mockPortfoliosByInstitution: Institution[] = [
         name: "HSBC Holdings plc",
         portfolios: [
           mockPortfoliosFlat[0],
-          mockPortfoliosFlat[1]
+          mockPortfoliosFlat[1],
+          mockPortfoliosFlat[4]
         ],
         cashAccounts: [
           mockCashAccountsFlat[0],
-          mockCashAccountsFlat[1]
+          mockCashAccountsFlat[1],
+          mockCashAccountsFlat[5]
         ],
         creditFacilities: [
           mockCreditFacilitiesFlat[0],
-          mockCreditFacilitiesFlat[1]
+          mockCreditFacilitiesFlat[1],
+          mockCreditFacilitiesFlat[4]
         ]
       }
     ]
@@ -262,11 +462,13 @@ export const mockPortfoliosByInstitution: Institution[] = [
         id: "le-2",
         name: "Citigroup Global Markets Ltd",
         portfolios: [
-          mockPortfoliosFlat[2]
+          mockPortfoliosFlat[2],
+          mockPortfoliosFlat[5]
         ],
         cashAccounts: [
           mockCashAccountsFlat[2],
-          mockCashAccountsFlat[3]
+          mockCashAccountsFlat[3],
+          mockCashAccountsFlat[6]
         ],
         creditFacilities: [
           mockCreditFacilitiesFlat[2]
@@ -282,7 +484,8 @@ export const mockPortfoliosByInstitution: Institution[] = [
           mockCashAccountsFlat[4]
         ],
         creditFacilities: [
-          mockCreditFacilitiesFlat[3]
+          mockCreditFacilitiesFlat[3],
+          mockCreditFacilitiesFlat[5]
         ]
       }
     ]

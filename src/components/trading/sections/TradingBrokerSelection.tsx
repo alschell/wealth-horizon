@@ -1,8 +1,7 @@
-
 import React from "react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { mockBrokers } from "../mockData";
+import { mockBrokers } from "../data";
 
 interface TradingBrokerSelectionProps {
   selectedBroker: string | "best";

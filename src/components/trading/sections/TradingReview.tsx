@@ -1,4 +1,3 @@
-
 import React from "react";
 import { OrderType, TradeOrder } from "../types";
 import { Card, CardContent } from "@/components/ui/card";
@@ -8,7 +7,7 @@ import {
   mockPortfoliosFlat,
   mockCashAccountsFlat,
   mockCreditFacilitiesFlat
-} from "../mockData";
+} from "../data";
 
 interface TradingReviewProps {
   orderType: OrderType;
@@ -38,14 +37,12 @@ const TradingReview: React.FC<TradingReviewProps> = ({
   
   const totalAmount = Number(quantity) * Number(price);
   
-  // Get broker name
   const getBrokerName = () => {
     if (selectedBroker === "best") return "Best Execution";
     const broker = mockBrokers.find(b => b.id === selectedBroker);
     return broker ? broker.name : "Unknown";
   };
   
-  // Get institution and legal entity names
   const getEntityNames = (institutionId: string, legalEntityId: string) => {
     const institution = mockPortfoliosByInstitution.find(
       inst => inst.id === institutionId
@@ -65,7 +62,6 @@ const TradingReview: React.FC<TradingReviewProps> = ({
     };
   };
   
-  // Render source allocations (for sell orders)
   const renderSourceAllocations = () => {
     if (orderType !== "sell" || !order.instrumentAllocations?.length) {
       return <p>No source portfolios selected</p>;
@@ -110,7 +106,6 @@ const TradingReview: React.FC<TradingReviewProps> = ({
     );
   };
   
-  // Render funding allocations (for buy orders)
   const renderFundingAllocations = () => {
     if (orderType !== "buy" || !order.fundingAllocations?.length) {
       return <p>No funding sources selected</p>;
@@ -177,7 +172,6 @@ const TradingReview: React.FC<TradingReviewProps> = ({
     );
   };
   
-  // Render deposit allocations
   const renderDepositAllocations = () => {
     if (!order.depositAllocations?.length) {
       return <p>No destination allocations selected</p>;

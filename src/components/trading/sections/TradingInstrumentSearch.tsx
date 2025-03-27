@@ -1,11 +1,10 @@
-
 import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Instrument } from "../types";
-import { mockInstruments } from "../mockData";
+import { mockInstruments } from "../data";
 
 interface TradingInstrumentSearchProps {
   selectedInstrument: Instrument | null;

@@ -4,7 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent } from "@/components/ui/card";
 import TradingForm from "./TradingForm";
 import { OrderType } from "./types";
-import { mockInstruments } from "./mockData";
+import { mockInstruments } from "./data";
 
 const TradingInterface = () => {
   const [orderType, setOrderType] = useState<OrderType>("buy");

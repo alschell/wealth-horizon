@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -959,4 +960,245 @@ const DestinationCashAccountsSection: React.FC<{
     const cashAllocations = Object.entries(updatedAllocations)
       .filter(([_, amount]) => amount > 0)
       .map(([destinationId, amount]) => {
-        const account
+        const account = mockCashAccountsFlat.find(a => a.id === destinationId);
+        return {
+          destinationId,
+          destinationType: "cash" as const,
+          amount,
+          currency: account?.currency || currency
+        };
+      });
+    
+    setOrder({
+      ...order,
+      depositAllocations: [...otherAllocations, ...cashAllocations]
+    });
+  };
+  
+  // Calculate the remaining amount to allocate
+  const remainingAmount = totalAmount - currentAllocation;
+  
+  // Render the appropriate view based on viewMode
+  const renderView = () => {
+    if (viewMode === "institutions") {
+      return (
+        <div className="space-y-4">
+          {mockCashAccountsByInstitution.map(institution => (
+            <div key={institution.id} className="border rounded-md overflow-hidden">
+              <div className="bg-gray-100 p-3 font-medium">
+                {institution.name}
+              </div>
+              
+              <div className="p-2">
+                {institution.legalEntities.map(entity => (
+                  <div key={entity.id} className="mb-3 last:mb-0">
+                    <div className="text-sm font-medium pl-2 mb-1">{entity.name}</div>
+                    
+                    <div className="pl-4">
+                      {entity.cashAccounts.length > 0 ? (
+                        entity.cashAccounts.map(account => (
+                          <div key={account.id} className="flex items-center justify-between py-1 border-b last:border-b-0">
+                            <div>
+                              <span className="font-medium">{account.name}</span>
+                              <div className="text-sm text-gray-500">
+                                {account.balance.toLocaleString('en-US', {
+                                  style: 'currency',
+                                  currency: account.currency
+                                })}
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <Input
+                                type="number"
+                                min="0"
+                                max={remainingAmount + (allocations[account.id] || 0)}
+                                value={allocations[account.id] || 0}
+                                onChange={(e) => handleAllocationChange(account.id, Number(e.target.value))}
+                                className="w-24"
+                              />
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleAllocationChange(
+                                  account.id,
+                                  remainingAmount + (allocations[account.id] || 0)
+                                )}
+                                className="text-xs"
+                              >
+                                Max
+                              </Button>
+                            </div>
+                          </div>
+                        ))
+                      ) : (
+                        <p className="text-sm text-gray-500 py-1">No cash accounts available</p>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      );
+    } else {
+      // Portfolios view (flat list)
+      return (
+        <div className="border rounded-md overflow-hidden">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Account Name</TableHead>
+                <TableHead>Institution</TableHead>
+                <TableHead>Legal Entity</TableHead>
+                <TableHead>Balance</TableHead>
+                <TableHead>Allocation</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {mockCashAccountsFlat.map(account => {
+                const institution = mockPortfoliosByInstitution.find(
+                  inst => inst.id === account.institutionId
+                );
+                
+                let legalEntity;
+                for (const inst of mockPortfoliosByInstitution) {
+                  legalEntity = inst.legalEntities.find(
+                    entity => entity.id === account.legalEntityId
+                  );
+                  if (legalEntity) break;
+                }
+                
+                return (
+                  <TableRow key={account.id}>
+                    <TableCell>{account.name}</TableCell>
+                    <TableCell>{institution?.name || "Unknown"}</TableCell>
+                    <TableCell>{legalEntity?.name || "Unknown"}</TableCell>
+                    <TableCell>
+                      {account.balance.toLocaleString('en-US', {
+                        style: 'currency',
+                        currency: account.currency
+                      })}
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <Input
+                          type="number"
+                          min="0"
+                          max={remainingAmount + (allocations[account.id] || 0)}
+                          value={allocations[account.id] || 0}
+                          onChange={(e) => handleAllocationChange(account.id, Number(e.target.value))}
+                          className="w-24"
+                        />
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleAllocationChange(
+                            account.id,
+                            remainingAmount + (allocations[account.id] || 0)
+                          )}
+                          className="text-xs"
+                        >
+                          Max
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        </div>
+      );
+    }
+  };
+
+  return (
+    <div className="space-y-4">
+      <div>
+        <h3 className="text-base font-medium mb-1">Destination Cash Accounts</h3>
+        <p className="text-sm text-gray-500 mb-3">
+          Select which cash accounts to deposit the proceeds into
+        </p>
+        
+        {renderView()}
+      </div>
+      
+      <div className="bg-gray-50 p-4 rounded-md border">
+        <div className="flex justify-between mb-2">
+          <span>Total amount to deposit:</span>
+          <span className="font-medium">
+            {totalAmount.toLocaleString('en-US', {
+              style: 'currency',
+              currency: currency
+            })}
+          </span>
+        </div>
+        
+        <div className="flex justify-between mb-2">
+          <span>Allocated so far:</span>
+          <span className={`font-medium ${
+            currentAllocation > totalAmount ? "text-red-600" : ""
+          }`}>
+            {currentAllocation.toLocaleString('en-US', {
+              style: 'currency',
+              currency: currency
+            })}
+          </span>
+        </div>
+        
+        <div className="flex justify-between font-medium">
+          <span>Remaining to allocate:</span>
+          <span className={remainingAmount < 0 ? "text-red-600" : remainingAmount > 0 ? "text-amber-600" : "text-green-600"}>
+            {remainingAmount.toLocaleString('en-US', {
+              style: 'currency',
+              currency: currency
+            })}
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Helper component for allocation item rows in institutions view
+const AllocationItemRow: React.FC<{
+  item: AllocationItem;
+  allocation: number;
+  onChange: (amount: number) => void;
+  maxAmount: number;
+}> = ({ item, allocation, onChange, maxAmount }) => {
+  return (
+    <div className="flex items-center justify-between py-1 border-b last:border-b-0">
+      <div>
+        <span className="font-medium">{item.name}</span>
+        <div className="text-sm text-gray-500">
+          Available: {item.available?.toLocaleString('en-US', {
+            style: 'currency',
+            currency: item.currency || 'USD'
+          })}
+        </div>
+      </div>
+      <div className="flex items-center gap-2">
+        <Input
+          type="number"
+          min="0"
+          max={maxAmount}
+          value={allocation}
+          onChange={(e) => onChange(Number(e.target.value))}
+          className="w-24"
+        />
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => onChange(maxAmount)}
+          className="text-xs"
+        >
+          Max
+        </Button>
+      </div>
+    </div>
+  );
+};
+
+export default TradingAllocation;

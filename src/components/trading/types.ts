@@ -113,4 +113,5 @@ export type TradeOrder = {
   depositAllocations: DepositAllocation[];
   executionType?: OrderExecutionType | string;
   timeInForce?: TimeInForce | string;
+  leverage: number; // Added leverage property
 };

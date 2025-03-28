@@ -56,6 +56,7 @@ export const useTradingForm = (orderType: OrderType) => {
       return;
     }
 
+    // Now step 4 is for broker selection
     if (currentStep === 4 && !selectedBroker) {
       toast({
         title: "Error",
@@ -65,6 +66,7 @@ export const useTradingForm = (orderType: OrderType) => {
       return;
     }
 
+    // Now step 5 is for allocation
     if (currentStep === 5) {
       // Validate allocations
       if (currentOrderType === "buy" && (!order.fundingAllocations?.length || !order.depositAllocations?.length)) {

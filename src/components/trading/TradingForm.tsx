@@ -9,16 +9,19 @@ import TradingOrderType from "./sections/TradingOrderType";
 import TradingStepsProgress from "./components/TradingStepsProgress";
 import TradingFormNavigation from "./components/TradingFormNavigation";
 import { useTradingForm } from "./hooks/useTradingForm";
-import { OrderType } from "./types";
 import FormLayout from "@/components/onboarding/common/layouts/FormLayout";
 import FormSection from "@/components/onboarding/common/layouts/FormSection";
 import { motion, AnimatePresence } from "framer-motion";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { ArrowDownUp, TrendingUp } from "lucide-react";
+import { OrderType } from "./types";
+import TradingValiditySelection from "./sections/TradingValiditySelection";
+import TradingLeverageOptions from "./sections/TradingLeverageOptions";
 
-interface TradingFormProps {
-  orderType: OrderType;
-}
-
-const TradingForm: React.FC<TradingFormProps> = ({ orderType: initialOrderType }) => {
+const TradingForm: React.FC = () => {
+  const [orderType, setOrderTypeLocal] = useState<OrderType>("buy");
+  
   const {
     currentStep,
     setCurrentStep,
@@ -39,19 +42,28 @@ const TradingForm: React.FC<TradingFormProps> = ({ orderType: initialOrderType }
     setOrderExecutionType,
     timeInForce,
     setTimeInForce,
-    orderType,
-    setOrderType
-  } = useTradingForm(initialOrderType);
+    orderType: formOrderType,
+    setOrderType,
+    leverage,
+    setLeverage
+  } = useTradingForm(orderType);
 
-  // Update base order type when parent changes the tab
+  // Update the form's order type when local state changes
   useEffect(() => {
-    setOrderType(initialOrderType);
-  }, [initialOrderType, setOrderType]);
+    setOrderType(orderType);
+  }, [orderType, setOrderType]);
 
   const steps = [
     { title: "Select Instrument", component: TradingInstrumentSearch },
     { title: "Order Type", component: TradingOrderType },
-    { title: "Quantity & Price", component: TradingQuantityPrice },
+    { 
+      title: "Quantity & Price", 
+      component: TradingQuantityPrice 
+    },
+    { 
+      title: "Validity & Leverage", 
+      component: orderExecutionType !== "market" ? TradingValiditySelection : TradingLeverageOptions 
+    },
     { title: "Select Broker", component: TradingBrokerSelection },
     { title: "Allocate", component: TradingAllocation },
     { title: "Review Order", component: TradingReview }
@@ -68,7 +80,31 @@ const TradingForm: React.FC<TradingFormProps> = ({ orderType: initialOrderType }
 
   return (
     <div className="max-w-4xl mx-auto">
-      {/* Progress steps outside the card */}
+      {/* Order type selection */}
+      <div className="flex space-x-4 mb-8">
+        <Button
+          type="button"
+          size="lg"
+          variant={orderType === "buy" ? "default" : "outline"}
+          className={`flex-1 ${orderType === "buy" ? "bg-green-600 hover:bg-green-700" : ""}`}
+          onClick={() => setOrderTypeLocal("buy")}
+        >
+          <TrendingUp className="mr-2 h-5 w-5" />
+          Buy Order
+        </Button>
+        <Button
+          type="button"
+          size="lg"
+          variant={orderType === "sell" ? "default" : "outline"}
+          className={`flex-1 ${orderType === "sell" ? "bg-red-600 hover:bg-red-700" : ""}`}
+          onClick={() => setOrderTypeLocal("sell")}
+        >
+          <ArrowDownUp className="mr-2 h-5 w-5" />
+          Sell Order
+        </Button>
+      </div>
+
+      {/* Progress steps */}
       <div className="mb-8">
         <TradingStepsProgress 
           steps={steps}
@@ -76,7 +112,7 @@ const TradingForm: React.FC<TradingFormProps> = ({ orderType: initialOrderType }
         />
       </div>
 
-      <FormLayout>
+      <Card className="border border-gray-200 shadow-sm">
         <AnimatePresence mode="wait">
           <motion.div
             key={currentStep}
@@ -85,30 +121,30 @@ const TradingForm: React.FC<TradingFormProps> = ({ orderType: initialOrderType }
             exit="exit"
             variants={variants}
             transition={{ duration: 0.3 }}
-            className="w-full"
+            className="w-full p-6"
           >
-            <FormSection>
-              <h2 className="text-xl font-semibold mb-6">{steps[currentStep].title}</h2>
-              
-              <CurrentStepComponent 
-                orderType={orderType}
-                selectedInstrument={selectedInstrument}
-                setSelectedInstrument={setSelectedInstrument}
-                quantity={quantity}
-                setQuantity={setQuantity}
-                price={price}
-                setPrice={setPrice}
-                selectedBroker={selectedBroker}
-                setSelectedBroker={setSelectedBroker}
-                order={order}
-                setOrder={setOrder}
-                orderExecutionType={orderExecutionType}
-                setOrderExecutionType={setOrderExecutionType}
-                timeInForce={timeInForce}
-                setTimeInForce={setTimeInForce}
-                setCurrentStep={setCurrentStep}
-              />
-            </FormSection>
+            <h2 className="text-xl font-semibold mb-6">{steps[currentStep].title}</h2>
+            
+            <CurrentStepComponent 
+              orderType={orderType}
+              selectedInstrument={selectedInstrument}
+              setSelectedInstrument={setSelectedInstrument}
+              quantity={quantity}
+              setQuantity={setQuantity}
+              price={price}
+              setPrice={setPrice}
+              selectedBroker={selectedBroker}
+              setSelectedBroker={setSelectedBroker}
+              order={order}
+              setOrder={setOrder}
+              orderExecutionType={orderExecutionType}
+              setOrderExecutionType={setOrderExecutionType}
+              timeInForce={timeInForce}
+              setTimeInForce={setTimeInForce}
+              leverage={leverage}
+              setLeverage={setLeverage}
+              setCurrentStep={setCurrentStep}
+            />
 
             {/* Navigation buttons */}
             <div className="mt-8">
@@ -122,7 +158,7 @@ const TradingForm: React.FC<TradingFormProps> = ({ orderType: initialOrderType }
             </div>
           </motion.div>
         </AnimatePresence>
-      </FormLayout>
+      </Card>
     </div>
   );
 };

@@ -1,15 +1,9 @@
 
-import React, { useState } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent } from "@/components/ui/card";
+import React from "react";
 import TradingForm from "./TradingForm";
-import { OrderType } from "./types";
 import MarketInsights from "./sections/MarketInsights";
-import { ArrowDownUp, TrendingUp } from "lucide-react";
 
 const TradingInterface = () => {
-  const [orderType, setOrderType] = useState<OrderType>("buy");
-
   return (
     <div className="space-y-8">
       <div className="flex flex-col space-y-2">
@@ -19,33 +13,7 @@ const TradingInterface = () => {
         </p>
       </div>
 
-      <Card className="overflow-hidden">
-        <Tabs 
-          defaultValue="buy" 
-          onValueChange={(value) => setOrderType(value as OrderType)}
-          className="w-full"
-        >
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="buy" className="flex items-center justify-center gap-2 py-3 data-[state=active]:bg-green-50 data-[state=active]:text-green-700">
-              <TrendingUp className="h-4 w-4" />
-              Buy Order
-            </TabsTrigger>
-            <TabsTrigger value="sell" className="flex items-center justify-center gap-2 py-3 data-[state=active]:bg-red-50 data-[state=active]:text-red-700">
-              <ArrowDownUp className="h-4 w-4" />
-              Sell Order
-            </TabsTrigger>
-          </TabsList>
-          <CardContent className="pt-6">
-            <TabsContent value="buy" className="mt-0">
-              <TradingForm orderType="buy" />
-            </TabsContent>
-            <TabsContent value="sell" className="mt-0">
-              <TradingForm orderType="sell" />
-            </TabsContent>
-          </CardContent>
-        </Tabs>
-      </Card>
-
+      <TradingForm />
       <MarketInsights />
     </div>
   );

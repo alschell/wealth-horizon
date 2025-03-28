@@ -13,6 +13,7 @@ export const useTradingForm = (orderType: OrderType) => {
   const [orderExecutionType, setOrderExecutionType] = useState<string>("market");
   const [timeInForce, setTimeInForce] = useState<string>("day");
   const [currentOrderType, setOrderType] = useState<OrderType>(orderType);
+  const [leverage, setLeverage] = useState<number>(1); // Default to 1x (no leverage)
   
   const [order, setOrder] = useState<Partial<TradeOrder>>({
     orderType,
@@ -21,7 +22,8 @@ export const useTradingForm = (orderType: OrderType) => {
     depositAllocations: [],
     brokerId: "best",
     executionType: "market",
-    timeInForce: "day"
+    timeInForce: "day",
+    leverage: 1
   });
 
   const handleNextStep = useCallback(() => {
@@ -54,7 +56,7 @@ export const useTradingForm = (orderType: OrderType) => {
       return;
     }
 
-    if (currentStep === 3 && !selectedBroker) {
+    if (currentStep === 4 && !selectedBroker) {
       toast({
         title: "Error",
         description: "Please select a broker to proceed",
@@ -63,7 +65,7 @@ export const useTradingForm = (orderType: OrderType) => {
       return;
     }
 
-    if (currentStep === 4) {
+    if (currentStep === 5) {
       // Validate allocations
       if (currentOrderType === "buy" && (!order.fundingAllocations?.length || !order.depositAllocations?.length)) {
         toast({
@@ -94,11 +96,12 @@ export const useTradingForm = (orderType: OrderType) => {
       totalAmount: Number(quantity) * Number(price || selectedInstrument?.currentPrice || 0),
       brokerId: selectedBroker,
       executionType: orderExecutionType,
-      timeInForce: timeInForce
+      timeInForce: timeInForce,
+      leverage: leverage
     }));
 
     // Move to next step
-    setCurrentStep(prev => Math.min(prev + 1, 5));
+    setCurrentStep(prev => Math.min(prev + 1, 6));
   }, [
     currentStep, 
     selectedInstrument, 
@@ -110,7 +113,8 @@ export const useTradingForm = (orderType: OrderType) => {
     currentOrderType, 
     order.fundingAllocations, 
     order.depositAllocations, 
-    order.instrumentAllocations, 
+    order.instrumentAllocations,
+    leverage,
     toast
   ]);
 
@@ -123,7 +127,7 @@ export const useTradingForm = (orderType: OrderType) => {
       ? selectedInstrument?.currentPrice || 0
       : Number(price);
       
-    const totalAmount = Number(quantity) * calculatedPrice;
+    const totalAmount = Number(quantity) * calculatedPrice * leverage;
     
     const completeOrder: TradeOrder = {
       ...order as TradeOrder,
@@ -134,7 +138,8 @@ export const useTradingForm = (orderType: OrderType) => {
       totalAmount,
       brokerId: selectedBroker,
       executionType: orderExecutionType,
-      timeInForce: timeInForce
+      timeInForce: timeInForce,
+      leverage: leverage
     };
 
     // In a real app, you would submit this order to your backend
@@ -152,6 +157,7 @@ export const useTradingForm = (orderType: OrderType) => {
     setSelectedBroker("best");
     setOrderExecutionType("market");
     setTimeInForce("day");
+    setLeverage(1);
     setOrder({
       orderType: currentOrderType,
       instrumentAllocations: [],
@@ -159,7 +165,8 @@ export const useTradingForm = (orderType: OrderType) => {
       depositAllocations: [],
       brokerId: "best",
       executionType: "market",
-      timeInForce: "day"
+      timeInForce: "day",
+      leverage: 1
     });
     setCurrentStep(0);
   }, [
@@ -171,6 +178,7 @@ export const useTradingForm = (orderType: OrderType) => {
     selectedBroker, 
     timeInForce, 
     order, 
+    leverage,
     toast
   ]);
 
@@ -195,6 +203,8 @@ export const useTradingForm = (orderType: OrderType) => {
     timeInForce,
     setTimeInForce,
     orderType: currentOrderType,
-    setOrderType
+    setOrderType,
+    leverage,
+    setLeverage
   };
 };

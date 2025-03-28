@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { 
   OrderType,
@@ -29,54 +29,97 @@ const TradingAllocation: React.FC<TradingAllocationProps> = ({
   order,
   setOrder
 }) => {
+  console.log("TradingAllocation rendering", { orderType, selectedInstrument, quantity, price, order });
   const [viewMode, setViewMode] = useState<ViewMode>("portfolios");
   
-  const totalAmount = typeof quantity === 'number' && typeof price === 'number' 
-    ? quantity * price 
+  useEffect(() => {
+    console.log("TradingAllocation mounted/updated");
+    
+    // Initialize any required allocations if they don't exist
+    if (orderType === "buy" && (!order.fundingAllocations || order.fundingAllocations.length === 0)) {
+      console.log("Initializing empty funding allocations");
+      setOrder({
+        ...order,
+        fundingAllocations: []
+      });
+    }
+    
+    if (!order.depositAllocations || order.depositAllocations.length === 0) {
+      console.log("Initializing empty deposit allocations");
+      setOrder({
+        ...order,
+        depositAllocations: []
+      });
+    }
+    
+    if (orderType === "sell" && (!order.instrumentAllocations || order.instrumentAllocations.length === 0)) {
+      console.log("Initializing empty instrument allocations");
+      setOrder({
+        ...order,
+        instrumentAllocations: []
+      });
+    }
+  }, [orderType, order, setOrder]);
+  
+  const totalAmount = typeof quantity === 'number' && (typeof price === 'number' || selectedInstrument?.currentPrice)
+    ? quantity * (typeof price === 'number' ? price : selectedInstrument?.currentPrice || 0)
     : 0;
 
   // For buy orders: funding sources and destination portfolios
   // For sell orders: source portfolios and destination cash accounts
   const renderContent = () => {
-    if (orderType === "buy") {
+    console.log("Rendering allocation content for", orderType);
+    try {
+      if (orderType === "buy") {
+        return (
+          <div className="space-y-6">
+            <FundingSourcesSection 
+              totalAmount={totalAmount} 
+              currency={selectedInstrument?.currency || "USD"}
+              order={order}
+              setOrder={setOrder}
+              viewMode={viewMode}
+              instrumentPrice={typeof price === 'number' ? price : (selectedInstrument?.currentPrice || 0)}
+            />
+            
+            <DestinationPortfoliosSection
+              totalQuantity={typeof quantity === 'number' ? quantity : 0}
+              order={order}
+              setOrder={setOrder}
+              viewMode={viewMode}
+            />
+          </div>
+        );
+      } else {
+        return (
+          <div className="space-y-6">
+            <SourcePortfoliosSection
+              totalQuantity={typeof quantity === 'number' ? quantity : 0}
+              selectedInstrument={selectedInstrument}
+              order={order}
+              setOrder={setOrder}
+              viewMode={viewMode}
+              price={typeof price === 'number' ? price : (selectedInstrument?.currentPrice || 0)}
+            />
+            
+            <DestinationCashAccountsSection
+              totalAmount={totalAmount}
+              currency={selectedInstrument?.currency || "USD"}
+              order={order}
+              setOrder={setOrder}
+              viewMode={viewMode}
+            />
+          </div>
+        );
+      }
+    } catch (error) {
+      console.error("Error rendering allocation content:", error);
       return (
-        <div className="space-y-6">
-          <FundingSourcesSection 
-            totalAmount={totalAmount} 
-            currency={selectedInstrument?.currency || "USD"}
-            order={order}
-            setOrder={setOrder}
-            viewMode={viewMode}
-            instrumentPrice={typeof price === 'number' ? price : 0}
-          />
-          
-          <DestinationPortfoliosSection
-            totalQuantity={typeof quantity === 'number' ? quantity : 0}
-            order={order}
-            setOrder={setOrder}
-            viewMode={viewMode}
-          />
-        </div>
-      );
-    } else {
-      return (
-        <div className="space-y-6">
-          <SourcePortfoliosSection
-            totalQuantity={typeof quantity === 'number' ? quantity : 0}
-            selectedInstrument={selectedInstrument}
-            order={order}
-            setOrder={setOrder}
-            viewMode={viewMode}
-            price={typeof price === 'number' ? price : 0}
-          />
-          
-          <DestinationCashAccountsSection
-            totalAmount={totalAmount}
-            currency={selectedInstrument?.currency || "USD"}
-            order={order}
-            setOrder={setOrder}
-            viewMode={viewMode}
-          />
+        <div className="p-4 border border-red-300 bg-red-50 rounded-md">
+          <p className="text-red-500">Error rendering allocation sections.</p>
+          <p className="text-sm text-red-400 mt-2">
+            {error instanceof Error ? error.message : "Unknown error"}
+          </p>
         </div>
       );
     }

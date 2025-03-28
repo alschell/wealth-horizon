@@ -41,42 +41,61 @@ export const useTradingHandlers = ({
   } = state;
 
   const handleNextStep = useCallback(() => {
+    console.log("handleNextStep called, current step:", currentStep);
+    
+    // Step 0: Instrument Selection
     if (currentStep === 0 && !validateInstrumentSelection(selectedInstrument)) {
+      console.log("Validation failed: instrument selection");
       return;
     }
 
+    // Step 1: Order Type
     if (currentStep === 1 && !validateOrderExecution(orderExecutionType)) {
+      console.log("Validation failed: order execution");
       return;
     }
 
+    // Step 2: Quantity & Price
     if (currentStep === 2 && !validateQuantityPrice(quantity, price, orderExecutionType)) {
+      console.log("Validation failed: quantity/price");
       return;
     }
 
-    // Now step 4 is for broker selection
+    // Step 4: Broker Selection (since step 3 is Validity & Leverage)
     if (currentStep === 4 && !validateBrokerSelection(selectedBroker)) {
+      console.log("Validation failed: broker selection");
       return;
     }
 
-    // Now step 5 is for allocation
-    if (currentStep === 5 && !validateAllocations(currentOrderType, order)) {
-      return;
+    // Step 5: Allocation
+    if (currentStep === 5) {
+      console.log("Validating allocations:", currentOrderType, order);
+      if (!validateAllocations(currentOrderType, order)) {
+        console.log("Validation failed: allocations");
+        return;
+      }
     }
 
     // Update order with current selections before proceeding
-    setOrder(prev => ({
-      ...prev,
-      orderType: currentOrderType,
-      instrumentId: selectedInstrument?.id || "",
-      quantity: Number(quantity),
-      price: Number(price),
-      totalAmount: Number(quantity) * Number(price || selectedInstrument?.currentPrice || 0),
-      brokerId: selectedBroker,
-      executionType: orderExecutionType,
-      timeInForce: timeInForce,
-      leverage: leverage
-    }));
+    console.log("Updating order state with current selections");
+    setOrder(prev => {
+      const updatedOrder = {
+        ...prev,
+        orderType: currentOrderType,
+        instrumentId: selectedInstrument?.id || "",
+        quantity: Number(quantity),
+        price: Number(price || (selectedInstrument?.currentPrice || 0)),
+        totalAmount: Number(quantity) * Number(price || selectedInstrument?.currentPrice || 0),
+        brokerId: selectedBroker,
+        executionType: orderExecutionType,
+        timeInForce: timeInForce,
+        leverage: leverage
+      };
+      console.log("Updated order:", updatedOrder);
+      return updatedOrder;
+    });
 
+    console.log("Moving to next step:", currentStep + 1);
     // Move to next step
     setCurrentStep(prev => Math.min(prev + 1, 6));
   }, [
@@ -91,12 +110,18 @@ export const useTradingHandlers = ({
     order,
     leverage,
     setOrder,
-    setCurrentStep
+    setCurrentStep,
+    validateInstrumentSelection,
+    validateOrderExecution,
+    validateQuantityPrice,
+    validateBrokerSelection,
+    validateAllocations
   ]);
 
   const handlePreviousStep = useCallback(() => {
+    console.log("Moving to previous step:", currentStep - 1);
     setCurrentStep(prev => Math.max(prev - 1, 0));
-  }, [setCurrentStep]);
+  }, [setCurrentStep, currentStep]);
 
   const handleSubmitOrder = useCallback(() => {
     const calculatedPrice = orderExecutionType === "market"

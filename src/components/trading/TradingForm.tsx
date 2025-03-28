@@ -16,6 +16,7 @@ import TradingValiditySelection from "./sections/TradingValiditySelection";
 
 const TradingForm: React.FC = () => {
   const [orderType, setOrderTypeLocal] = useState<OrderType>("buy");
+  const [renderError, setRenderError] = useState<string | null>(null);
   
   const {
     currentStep,
@@ -37,11 +38,17 @@ const TradingForm: React.FC = () => {
     setOrderExecutionType,
     timeInForce,
     setTimeInForce,
-    currentOrderType, // Updated to use currentOrderType instead of orderType
+    currentOrderType,
     setOrderType,
     leverage,
     setLeverage
   } = useTradingForm(orderType);
+
+  // For debugging
+  useEffect(() => {
+    console.log("Current step:", currentStep);
+    console.log("Current order state:", order);
+  }, [currentStep, order]);
 
   // Update the form's order type when local state changes
   useEffect(() => {
@@ -66,6 +73,55 @@ const TradingForm: React.FC = () => {
     enter: { opacity: 0, x: 20 },
     center: { opacity: 1, x: 0 },
     exit: { opacity: 0, x: -20 }
+  };
+
+  // Safe render function to catch errors
+  const renderCurrentStep = () => {
+    try {
+      if (!CurrentStepComponent) {
+        return (
+          <div className="text-center py-12">
+            <p className="text-gray-500">Loading...</p>
+          </div>
+        );
+      }
+
+      return (
+        <>
+          <h2 className="text-xl font-semibold mb-6">{steps[currentStep].title}</h2>
+          
+          <CurrentStepComponent 
+            orderType={orderType}
+            selectedInstrument={selectedInstrument}
+            setSelectedInstrument={setSelectedInstrument}
+            quantity={quantity}
+            setQuantity={setQuantity}
+            price={price}
+            setPrice={setPrice}
+            selectedBroker={selectedBroker}
+            setSelectedBroker={setSelectedBroker}
+            order={order}
+            setOrder={setOrder}
+            orderExecutionType={orderExecutionType}
+            setOrderExecutionType={setOrderExecutionType}
+            timeInForce={timeInForce}
+            setTimeInForce={setTimeInForce}
+            leverage={leverage}
+            setLeverage={setLeverage}
+            setCurrentStep={setCurrentStep}
+          />
+        </>
+      );
+    } catch (error) {
+      console.error("Error rendering trading step:", error);
+      setRenderError(error instanceof Error ? error.message : "Unknown error");
+      return (
+        <div className="text-center py-12 text-red-500">
+          <p>An error occurred while rendering this step.</p>
+          <p className="text-sm mt-2">{renderError}</p>
+        </div>
+      );
+    }
   };
 
   return (
@@ -113,36 +169,7 @@ const TradingForm: React.FC = () => {
           transition={{ duration: 0.3 }}
           className="w-full p-6 border border-gray-200 rounded-md shadow-sm bg-white"
         >
-          {CurrentStepComponent ? (
-            <>
-              <h2 className="text-xl font-semibold mb-6">{steps[currentStep].title}</h2>
-              
-              <CurrentStepComponent 
-                orderType={orderType}
-                selectedInstrument={selectedInstrument}
-                setSelectedInstrument={setSelectedInstrument}
-                quantity={quantity}
-                setQuantity={setQuantity}
-                price={price}
-                setPrice={setPrice}
-                selectedBroker={selectedBroker}
-                setSelectedBroker={setSelectedBroker}
-                order={order}
-                setOrder={setOrder}
-                orderExecutionType={orderExecutionType}
-                setOrderExecutionType={setOrderExecutionType}
-                timeInForce={timeInForce}
-                setTimeInForce={setTimeInForce}
-                leverage={leverage}
-                setLeverage={setLeverage}
-                setCurrentStep={setCurrentStep}
-              />
-            </>
-          ) : (
-            <div className="text-center py-12">
-              <p className="text-gray-500">Loading...</p>
-            </div>
-          )}
+          {renderCurrentStep()}
 
           <div className="mt-8">
             <TradingFormNavigation

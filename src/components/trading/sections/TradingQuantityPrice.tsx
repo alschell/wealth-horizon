@@ -29,7 +29,8 @@ const TradingQuantityPrice: React.FC<TradingQuantityPriceProps> = ({
 }) => {
   const [total, setTotal] = useState<number>(0);
   const [quantityPercent, setQuantityPercent] = useState<number>(50);
-  const maxRecommendedQuantity = 10000;
+  // Update the maximum quantity to 100,000
+  const maxRecommendedQuantity = 100000;
 
   useEffect(() => {
     if (selectedInstrument) {

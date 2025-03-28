@@ -14,7 +14,6 @@ import { Card } from "@/components/ui/card";
 import { ArrowDownUp, TrendingUp } from "lucide-react";
 import { OrderType } from "./types";
 import TradingValiditySelection from "./sections/TradingValiditySelection";
-import TradingLeverageOptions from "./sections/TradingLeverageOptions";
 
 const TradingForm: React.FC = () => {
   const [orderType, setOrderTypeLocal] = useState<OrderType>("buy");
@@ -51,7 +50,6 @@ const TradingForm: React.FC = () => {
   }, [orderType, setOrderType]);
 
   // Define the step components with conditions
-  // Consolidated validity and leverage into a single step
   const steps = [
     { title: "Select Instrument", component: TradingInstrumentSearch },
     { title: "Order Type", component: TradingOrderType },
@@ -106,60 +104,58 @@ const TradingForm: React.FC = () => {
         />
       </div>
 
-      <Card className="shadow-sm">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={currentStep}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            variants={variants}
-            transition={{ duration: 0.3 }}
-            className="w-full p-6"
-          >
-            {CurrentStepComponent ? (
-              <>
-                <h2 className="text-xl font-semibold mb-6">{steps[currentStep].title}</h2>
-                
-                <CurrentStepComponent 
-                  orderType={orderType}
-                  selectedInstrument={selectedInstrument}
-                  setSelectedInstrument={setSelectedInstrument}
-                  quantity={quantity}
-                  setQuantity={setQuantity}
-                  price={price}
-                  setPrice={setPrice}
-                  selectedBroker={selectedBroker}
-                  setSelectedBroker={setSelectedBroker}
-                  order={order}
-                  setOrder={setOrder}
-                  orderExecutionType={orderExecutionType}
-                  setOrderExecutionType={setOrderExecutionType}
-                  timeInForce={timeInForce}
-                  setTimeInForce={setTimeInForce}
-                  leverage={leverage}
-                  setLeverage={setLeverage}
-                  setCurrentStep={setCurrentStep}
-                />
-              </>
-            ) : (
-              <div className="text-center py-12">
-                <p className="text-gray-500">Loading...</p>
-              </div>
-            )}
-
-            <div className="mt-8">
-              <TradingFormNavigation
-                currentStep={currentStep}
-                totalSteps={steps.length}
-                onPrevious={handlePreviousStep}
-                onNext={handleNextStep}
-                onSubmit={handleSubmitOrder}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={currentStep}
+          initial="enter"
+          animate="center"
+          exit="exit"
+          variants={variants}
+          transition={{ duration: 0.3 }}
+          className="w-full p-6 border border-gray-200 rounded-md shadow-sm bg-white"
+        >
+          {CurrentStepComponent ? (
+            <>
+              <h2 className="text-xl font-semibold mb-6">{steps[currentStep].title}</h2>
+              
+              <CurrentStepComponent 
+                orderType={orderType}
+                selectedInstrument={selectedInstrument}
+                setSelectedInstrument={setSelectedInstrument}
+                quantity={quantity}
+                setQuantity={setQuantity}
+                price={price}
+                setPrice={setPrice}
+                selectedBroker={selectedBroker}
+                setSelectedBroker={setSelectedBroker}
+                order={order}
+                setOrder={setOrder}
+                orderExecutionType={orderExecutionType}
+                setOrderExecutionType={setOrderExecutionType}
+                timeInForce={timeInForce}
+                setTimeInForce={setTimeInForce}
+                leverage={leverage}
+                setLeverage={setLeverage}
+                setCurrentStep={setCurrentStep}
               />
+            </>
+          ) : (
+            <div className="text-center py-12">
+              <p className="text-gray-500">Loading...</p>
             </div>
-          </motion.div>
-        </AnimatePresence>
-      </Card>
+          )}
+
+          <div className="mt-8">
+            <TradingFormNavigation
+              currentStep={currentStep}
+              totalSteps={steps.length}
+              onPrevious={handlePreviousStep}
+              onNext={handleNextStep}
+              onSubmit={handleSubmitOrder}
+            />
+          </div>
+        </motion.div>
+      </AnimatePresence>
     </div>
   );
 };

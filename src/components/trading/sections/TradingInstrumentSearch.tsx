@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+
+import React, { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
@@ -20,6 +21,29 @@ const TradingInstrumentSearch: React.FC<TradingInstrumentSearchProps> = ({
   const [searchResults, setSearchResults] = useState<Instrument[]>([]);
   const [isSearching, setIsSearching] = useState(false);
 
+  // Auto-search when typing
+  useEffect(() => {
+    if (searchTerm.trim().length > 0) {
+      setIsSearching(true);
+      
+      // Add a small delay to avoid too many searches while typing
+      const debounceTimer = setTimeout(() => {
+        // Filter instruments based on search term
+        const results = mockInstruments.filter(
+          instrument => 
+            instrument.symbol.toLowerCase().includes(searchTerm.toLowerCase()) || 
+            instrument.name.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+        setSearchResults(results);
+        setIsSearching(false);
+      }, 300);
+      
+      return () => clearTimeout(debounceTimer);
+    } else {
+      setSearchResults([]);
+    }
+  }, [searchTerm]);
+
   const handleSearch = () => {
     if (!searchTerm.trim()) return;
     
@@ -34,7 +58,7 @@ const TradingInstrumentSearch: React.FC<TradingInstrumentSearchProps> = ({
       );
       setSearchResults(results);
       setIsSearching(false);
-    }, 500);
+    }, 300);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -65,7 +89,13 @@ const TradingInstrumentSearch: React.FC<TradingInstrumentSearchProps> = ({
         </Button>
       </div>
 
-      {searchResults.length > 0 && (
+      {isSearching && (
+        <div className="text-center p-4">
+          <p>Searching for instruments...</p>
+        </div>
+      )}
+
+      {searchResults.length > 0 && !isSearching && (
         <div className="border rounded-md overflow-hidden">
           <Table>
             <TableHeader>

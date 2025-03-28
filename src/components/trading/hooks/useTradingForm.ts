@@ -84,7 +84,7 @@ export const useTradingForm = (orderType: OrderType): UseTradingFormReturn => {
     selectedBroker,
     orderExecutionType,
     timeInForce,
-    orderType: currentOrderType,
+    currentOrderType, // This is the correct property name according to the type definition
     leverage,
     order,
     

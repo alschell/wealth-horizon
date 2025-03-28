@@ -10,7 +10,6 @@ import TradingStepsProgress from "./components/TradingStepsProgress";
 import TradingFormNavigation from "./components/TradingFormNavigation";
 import { useTradingForm } from "./hooks/useTradingForm";
 import { motion, AnimatePresence } from "framer-motion";
-import { Card } from "@/components/ui/card";
 import { ArrowDownUp, TrendingUp } from "lucide-react";
 import { OrderType } from "./types";
 import TradingValiditySelection from "./sections/TradingValiditySelection";
@@ -38,7 +37,7 @@ const TradingForm: React.FC = () => {
     setOrderExecutionType,
     timeInForce,
     setTimeInForce,
-    orderType: formOrderType,
+    currentOrderType, // Updated to use currentOrderType instead of orderType
     setOrderType,
     leverage,
     setLeverage

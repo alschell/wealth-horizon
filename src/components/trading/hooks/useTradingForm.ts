@@ -1,10 +1,11 @@
 
 import { useState, useCallback } from "react";
-import { useToast } from "@/components/ui/use-toast";
-import { OrderType, Instrument, TradeOrder, Broker } from "../types";
+import { OrderType, Instrument, TradeOrder } from "../types";
+import { useTradingHandlers } from "./utils/tradingHandlers";
+import { UseTradingFormReturn } from "./types/tradingHookTypes";
 
-export const useTradingForm = (orderType: OrderType) => {
-  const { toast } = useToast();
+export const useTradingForm = (orderType: OrderType): UseTradingFormReturn => {
+  // Form state
   const [currentStep, setCurrentStep] = useState(0);
   const [selectedInstrument, setSelectedInstrument] = useState<Instrument | null>(null);
   const [quantity, setQuantity] = useState<number | "">("");
@@ -26,133 +27,8 @@ export const useTradingForm = (orderType: OrderType) => {
     leverage: 1
   });
 
-  const handleNextStep = useCallback(() => {
-    if (currentStep === 0 && !selectedInstrument) {
-      toast({
-        title: "Error",
-        description: "Please select an instrument to proceed",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    if (currentStep === 1 && !orderExecutionType) {
-      toast({
-        title: "Error",
-        description: "Please select an order execution type",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    if (currentStep === 2 && (!quantity || (orderExecutionType !== "market" && !price))) {
-      toast({
-        title: "Error",
-        description: orderExecutionType === "market"
-          ? "Please enter quantity to proceed"
-          : "Please enter quantity and price to proceed",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    // Now step 4 is for broker selection
-    if (currentStep === 4 && !selectedBroker) {
-      toast({
-        title: "Error",
-        description: "Please select a broker to proceed",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    // Now step 5 is for allocation
-    if (currentStep === 5) {
-      // Validate allocations
-      if (currentOrderType === "buy" && (!order.fundingAllocations?.length || !order.depositAllocations?.length)) {
-        toast({
-          title: "Error",
-          description: "Please allocate funding sources and destination portfolios",
-          variant: "destructive"
-        });
-        return;
-      }
-
-      if (currentOrderType === "sell" && (!order.instrumentAllocations?.length || !order.depositAllocations?.length)) {
-        toast({
-          title: "Error",
-          description: "Please allocate source portfolios and destination cash accounts",
-          variant: "destructive"
-        });
-        return;
-      }
-    }
-
-    // Update order with current selections before proceeding
-    setOrder(prev => ({
-      ...prev,
-      orderType: currentOrderType,
-      instrumentId: selectedInstrument?.id || "",
-      quantity: Number(quantity),
-      price: Number(price),
-      totalAmount: Number(quantity) * Number(price || selectedInstrument?.currentPrice || 0),
-      brokerId: selectedBroker,
-      executionType: orderExecutionType,
-      timeInForce: timeInForce,
-      leverage: leverage
-    }));
-
-    // Move to next step
-    setCurrentStep(prev => Math.min(prev + 1, 6));
-  }, [
-    currentStep, 
-    selectedInstrument, 
-    quantity, 
-    price, 
-    selectedBroker, 
-    orderExecutionType, 
-    timeInForce, 
-    currentOrderType, 
-    order.fundingAllocations, 
-    order.depositAllocations, 
-    order.instrumentAllocations,
-    leverage,
-    toast
-  ]);
-
-  const handlePreviousStep = useCallback(() => {
-    setCurrentStep(prev => Math.max(prev - 1, 0));
-  }, []);
-
-  const handleSubmitOrder = useCallback(() => {
-    const calculatedPrice = orderExecutionType === "market"
-      ? selectedInstrument?.currentPrice || 0
-      : Number(price);
-      
-    const totalAmount = Number(quantity) * calculatedPrice * leverage;
-    
-    const completeOrder: TradeOrder = {
-      ...order as TradeOrder,
-      orderType: currentOrderType,
-      instrumentId: selectedInstrument?.id || "",
-      quantity: Number(quantity),
-      price: calculatedPrice,
-      totalAmount,
-      brokerId: selectedBroker,
-      executionType: orderExecutionType,
-      timeInForce: timeInForce,
-      leverage: leverage
-    };
-
-    // In a real app, you would submit this order to your backend
-    console.log("Submitting order:", completeOrder);
-
-    toast({
-      title: "Order Submitted",
-      description: `Your ${currentOrderType} order for ${quantity} ${selectedInstrument?.symbol} has been submitted successfully.`,
-    });
-
-    // Reset form
+  // Reset form to initial state
+  const resetForm = useCallback(() => {
     setSelectedInstrument(null);
     setQuantity("");
     setPrice("");
@@ -171,42 +47,62 @@ export const useTradingForm = (orderType: OrderType) => {
       leverage: 1
     });
     setCurrentStep(0);
-  }, [
-    selectedInstrument, 
-    price, 
-    quantity, 
-    orderExecutionType, 
-    currentOrderType, 
-    selectedBroker, 
-    timeInForce, 
-    order, 
+  }, [currentOrderType]);
+
+  // Create trading state object for the handlers
+  const tradingState = {
+    currentStep,
+    selectedInstrument,
+    quantity,
+    price,
+    selectedBroker,
+    orderExecutionType,
+    timeInForce,
+    currentOrderType,
     leverage,
-    toast
-  ]);
+    order
+  };
+
+  // Use the extracted handler hooks
+  const { 
+    handleNextStep, 
+    handlePreviousStep, 
+    handleSubmitOrder 
+  } = useTradingHandlers({
+    state: tradingState,
+    setCurrentStep,
+    setOrder,
+    resetForm
+  });
 
   return {
+    // State
     currentStep,
-    setCurrentStep,
     selectedInstrument,
-    setSelectedInstrument,
     quantity,
-    setQuantity,
     price,
-    setPrice,
     selectedBroker,
-    setSelectedBroker,
+    orderExecutionType,
+    timeInForce,
+    orderType: currentOrderType,
+    leverage,
     order,
+    
+    // State setters
+    setCurrentStep,
+    setSelectedInstrument,
+    setQuantity,
+    setPrice,
+    setSelectedBroker,
+    setOrderExecutionType,
+    setTimeInForce,
+    setOrderType,
+    setLeverage,
     setOrder,
+    
+    // Handlers
     handleNextStep,
     handlePreviousStep,
-    handleSubmitOrder,
-    orderExecutionType,
-    setOrderExecutionType,
-    timeInForce,
-    setTimeInForce,
-    orderType: currentOrderType,
-    setOrderType,
-    leverage,
-    setLeverage
+    handleSubmitOrder
   };
 };

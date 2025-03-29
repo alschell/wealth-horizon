@@ -3,10 +3,9 @@ import React, { useState, useEffect } from "react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
-import { BarChart3, BadgeCheck, Clock, Shield, Building } from "lucide-react";
+import { BarChart3, Building } from "lucide-react";
 import { mockBrokers } from "../data";
 import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
 
 interface TradingBrokerSelectionProps {
   selectedBroker: string | "best";
@@ -21,7 +20,6 @@ const TradingBrokerSelection: React.FC<TradingBrokerSelectionProps> = ({
   setCurrentStep
 }) => {
   const [selectedBrokerDetails, setSelectedBrokerDetails] = useState<any>(null);
-  const [loadingScore, setLoadingScore] = useState(0);
 
   useEffect(() => {
     if (selectedBroker !== "best") {
@@ -31,19 +29,6 @@ const TradingBrokerSelection: React.FC<TradingBrokerSelectionProps> = ({
       setSelectedBrokerDetails(null);
     }
   }, [selectedBroker]);
-
-  // Simulate calculating broker scores
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setLoadingScore(prev => {
-        if (prev < 100) return prev + 1;
-        clearInterval(interval);
-        return 100;
-      });
-    }, 20);
-    
-    return () => clearInterval(interval);
-  }, []);
 
   const handleBrokerSelect = (brokerId: string) => {
     setSelectedBroker(brokerId);
@@ -92,31 +77,6 @@ const TradingBrokerSelection: React.FC<TradingBrokerSelectionProps> = ({
                 Automatically routes your order to the broker offering the best price.
                 Considers price, speed, and execution quality.
               </p>
-              
-              <div className="ml-7 mt-3 flex flex-wrap gap-3">
-                <div className="flex items-center text-xs text-gray-600">
-                  <BadgeCheck className="h-4 w-4 mr-1 text-green-600" />
-                  Best pricing
-                </div>
-                <div className="flex items-center text-xs text-gray-600">
-                  <Clock className="h-4 w-4 mr-1 text-green-600" />
-                  Fastest execution
-                </div>
-                <div className="flex items-center text-xs text-gray-600">
-                  <Shield className="h-4 w-4 mr-1 text-green-600" />
-                  Enhanced security
-                </div>
-              </div>
-              
-              {selectedBroker === 'best' && (
-                <div className="mt-3 ml-7">
-                  <div className="flex justify-between mb-1 text-xs text-gray-500">
-                    <span>Calculating optimal execution route</span>
-                    <span>{loadingScore}%</span>
-                  </div>
-                  <Progress value={loadingScore} className="h-1.5" />
-                </div>
-              )}
             </div>
           </div>
         </Card>

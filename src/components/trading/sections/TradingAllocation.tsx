@@ -5,7 +5,7 @@ import {
   TradeOrder
 } from "../types";
 import { useToast } from "@/components/ui/use-toast";
-import FundingSourcesSection from "./allocation/buy/FundingSourcesSection";
+import { FundingSourcesSection } from "./allocation/buy/funding-sources";
 import { DestinationPortfoliosSection } from "./allocation/buy/destination-portfolios";
 import SourcePortfoliosSection from "./allocation/sell/SourcePortfoliosSection";
 import DestinationCashAccountsSection from "./allocation/sell/DestinationCashAccountsSection";

@@ -1,8 +1,10 @@
 
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import TradingFormNavigation from "./TradingFormNavigation";
 import { OrderType, Instrument, TradeOrder } from "../types";
+import TradingStepRenderer from "./TradingStepRenderer";
+import { useTradingFormContent } from "../hooks/useTradingFormContent";
 
 interface Step {
   title: string;
@@ -62,22 +64,18 @@ const TradingFormContent: React.FC<TradingFormContentProps> = ({
   handleSubmitOrder,
   nextButtonDisabled
 }) => {
-  const [renderError, setRenderError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  
-  // Log whenever the current step changes to help with debugging
-  useEffect(() => {
-    console.log(`TradingFormContent: Current step changed to ${currentStep}`, { 
-      stepName: steps[currentStep]?.title,
-      component: steps[currentStep]?.component?.name,
-      orderType,
-      selectedInstrument: selectedInstrument?.symbol,
-      quantity,
-      price, 
-      selectedBroker,
-      order: JSON.stringify(order)
-    });
-  }, [currentStep, steps, orderType, selectedInstrument, quantity, price, selectedBroker, order]);
+  const {
+    renderError,
+    isLoading,
+    handleNext,
+    ensureOrderHasAllocations
+  } = useTradingFormContent({
+    currentStep,
+    selectedInstrument,
+    orderType,
+    order,
+    setOrder
+  });
   
   const CurrentStepComponent = steps[currentStep]?.component;
 
@@ -85,99 +83,6 @@ const TradingFormContent: React.FC<TradingFormContentProps> = ({
     enter: { opacity: 0, x: 20 },
     center: { opacity: 1, x: 0 },
     exit: { opacity: 0, x: -20 }
-  };
-
-  // Wrap next button click with loading state
-  const handleNext = () => {
-    setIsLoading(true);
-    
-    // Use setTimeout to allow UI to update before potentially heavy operations
-    setTimeout(() => {
-      try {
-        handleNextStep();
-      } catch (error) {
-        console.error("Error in next step handler:", error);
-        setRenderError(error instanceof Error ? error.message : "An unexpected error occurred");
-      } finally {
-        setIsLoading(false);
-      }
-    }, 10);
-  };
-
-  const renderCurrentStep = () => {
-    try {
-      if (!CurrentStepComponent) {
-        console.error("No component found for step", currentStep);
-        return (
-          <div className="text-center py-12">
-            <p className="text-gray-500">Component not found for this step.</p>
-          </div>
-        );
-      }
-
-      console.log(`Rendering step ${currentStep}:`, {
-        component: CurrentStepComponent.name || "Unknown",
-        orderType,
-        selectedBroker,
-        orderExecutionType
-      });
-
-      // Ensure we initialize the order properly before rendering the allocation step
-      if (currentStep === 5 && CurrentStepComponent === steps[5].component) {
-        console.log("Ensuring order has proper allocation arrays before rendering allocation step");
-        
-        // Make sure allocations are initialized before rendering
-        if (orderType === "buy" && (!order.fundingAllocations || !order.depositAllocations)) {
-          const updatedOrder = { ...order };
-          if (!updatedOrder.fundingAllocations) updatedOrder.fundingAllocations = [];
-          if (!updatedOrder.depositAllocations) updatedOrder.depositAllocations = [];
-          setOrder(updatedOrder);
-        }
-        
-        if (orderType === "sell" && (!order.instrumentAllocations || !order.depositAllocations)) {
-          const updatedOrder = { ...order };
-          if (!updatedOrder.instrumentAllocations) updatedOrder.instrumentAllocations = [];
-          if (!updatedOrder.depositAllocations) updatedOrder.depositAllocations = [];
-          setOrder(updatedOrder);
-        }
-      }
-
-      return (
-        <>
-          <h2 className="text-xl font-semibold mb-6">{steps[currentStep].title}</h2>
-          
-          <CurrentStepComponent 
-            orderType={orderType}
-            selectedInstrument={selectedInstrument}
-            setSelectedInstrument={setSelectedInstrument}
-            quantity={quantity}
-            setQuantity={setQuantity}
-            price={price}
-            setPrice={setPrice}
-            selectedBroker={selectedBroker}
-            setSelectedBroker={setSelectedBroker}
-            order={order}
-            setOrder={setOrder}
-            orderExecutionType={orderExecutionType}
-            setOrderExecutionType={setOrderExecutionType}
-            timeInForce={timeInForce}
-            setTimeInForce={setTimeInForce}
-            leverage={leverage}
-            setLeverage={setLeverage}
-            setCurrentStep={setCurrentStep}
-          />
-        </>
-      );
-    } catch (error) {
-      console.error("Error rendering trading step:", error);
-      setRenderError(error instanceof Error ? error.message : "Unknown error");
-      return (
-        <div className="text-center py-12 text-red-500">
-          <p>An error occurred while rendering this step.</p>
-          <p className="text-sm mt-2">{renderError}</p>
-        </div>
-      );
-    }
   };
 
   return (
@@ -191,14 +96,37 @@ const TradingFormContent: React.FC<TradingFormContentProps> = ({
         transition={{ duration: 0.3 }}
         className="w-full p-6 border border-gray-200 rounded-md shadow-sm bg-white"
       >
-        {renderCurrentStep()}
+        <TradingStepRenderer
+          CurrentStepComponent={CurrentStepComponent}
+          stepTitle={steps[currentStep]?.title || ""}
+          orderType={orderType}
+          selectedInstrument={selectedInstrument}
+          setSelectedInstrument={setSelectedInstrument}
+          quantity={quantity}
+          setQuantity={setQuantity}
+          price={price}
+          setPrice={setPrice}
+          selectedBroker={selectedBroker}
+          setSelectedBroker={setSelectedBroker}
+          order={order}
+          setOrder={setOrder}
+          orderExecutionType={orderExecutionType}
+          setOrderExecutionType={setOrderExecutionType}
+          timeInForce={timeInForce}
+          setTimeInForce={setTimeInForce}
+          leverage={leverage}
+          setLeverage={setLeverage}
+          setCurrentStep={setCurrentStep}
+          renderError={renderError}
+          ensureOrderHasAllocations={ensureOrderHasAllocations}
+        />
 
         <div className="mt-8">
           <TradingFormNavigation
             currentStep={currentStep}
             totalSteps={steps.length}
             onPrevious={handlePreviousStep}
-            onNext={handleNext}
+            onNext={() => handleNext(handleNextStep)}
             onSubmit={handleSubmitOrder}
             disabled={nextButtonDisabled}
             isLoading={isLoading}

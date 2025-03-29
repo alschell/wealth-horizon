@@ -16,7 +16,8 @@ export const useTradingFormContent = ({
   selectedInstrument,
   orderType,
   order,
-  setOrder
+  setOrder,
+  handleNextStep
 }: TradingFormContentProps) => {
   const [renderError, setRenderError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -32,7 +33,7 @@ export const useTradingFormContent = ({
   }, [currentStep, orderType, selectedInstrument, order]);
 
   // Wrap next button click with loading state
-  const handleNext = (handleNextStep: () => void) => {
+  const handleNext = () => {
     setIsLoading(true);
     
     // Use setTimeout to allow UI to update before potentially heavy operations

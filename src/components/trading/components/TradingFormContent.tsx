@@ -74,7 +74,8 @@ const TradingFormContent: React.FC<TradingFormContentProps> = ({
     selectedInstrument,
     orderType,
     order,
-    setOrder
+    setOrder,
+    handleNextStep
   });
   
   const CurrentStepComponent = steps[currentStep]?.component;
@@ -126,7 +127,7 @@ const TradingFormContent: React.FC<TradingFormContentProps> = ({
             currentStep={currentStep}
             totalSteps={steps.length}
             onPrevious={handlePreviousStep}
-            onNext={() => handleNext(handleNextStep)}
+            onNext={handleNext}
             onSubmit={handleSubmitOrder}
             disabled={nextButtonDisabled}
             isLoading={isLoading}

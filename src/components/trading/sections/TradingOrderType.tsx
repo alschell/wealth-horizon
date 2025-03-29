@@ -42,35 +42,47 @@ const TradingOrderType: React.FC<TradingOrderTypeProps> = ({
           onValueChange={setOrderExecutionType}
           className="space-y-4"
         >
-          <Card className={`p-4 cursor-pointer transition-all ${orderExecutionType === 'market' ? 'ring-2 ring-black' : 'hover:bg-gray-50'}`}>
-            <RadioGroupItem value="market" id="market" className="mr-2" />
-            <Label htmlFor="market" className="cursor-pointer font-medium">
-              Market Order
-              <p className="font-normal text-sm text-gray-600 mt-1">
-                Execute immediately at the best available market price. Best used when execution speed is your priority.
-              </p>
-            </Label>
-          </Card>
+          <div onClick={() => setOrderExecutionType('market')}>
+            <Card className={`p-4 cursor-pointer transition-all ${orderExecutionType === 'market' ? 'ring-2 ring-black' : 'hover:bg-gray-50'}`}>
+              <div className="flex items-start">
+                <RadioGroupItem value="market" id="market" className="mr-2" />
+                <Label htmlFor="market" className="cursor-pointer font-medium">
+                  Market Order
+                  <p className="font-normal text-sm text-gray-600 mt-1">
+                    Execute immediately at the best available market price. Best used when execution speed is your priority.
+                  </p>
+                </Label>
+              </div>
+            </Card>
+          </div>
 
-          <Card className={`p-4 cursor-pointer transition-all ${orderExecutionType === 'limit' ? 'ring-2 ring-black' : 'hover:bg-gray-50'}`}>
-            <RadioGroupItem value="limit" id="limit" className="mr-2" />
-            <Label htmlFor="limit" className="cursor-pointer font-medium">
-              Limit Order
-              <p className="font-normal text-sm text-gray-600 mt-1">
-                Execute only at your specified price or better. Best used when price is your priority.
-              </p>
-            </Label>
-          </Card>
+          <div onClick={() => setOrderExecutionType('limit')}>
+            <Card className={`p-4 cursor-pointer transition-all ${orderExecutionType === 'limit' ? 'ring-2 ring-black' : 'hover:bg-gray-50'}`}>
+              <div className="flex items-start">
+                <RadioGroupItem value="limit" id="limit" className="mr-2" />
+                <Label htmlFor="limit" className="cursor-pointer font-medium">
+                  Limit Order
+                  <p className="font-normal text-sm text-gray-600 mt-1">
+                    Execute only at your specified price or better. Best used when price is your priority.
+                  </p>
+                </Label>
+              </div>
+            </Card>
+          </div>
 
-          <Card className={`p-4 cursor-pointer transition-all ${orderExecutionType === 'stop' ? 'ring-2 ring-black' : 'hover:bg-gray-50'}`}>
-            <RadioGroupItem value="stop" id="stop" className="mr-2" />
-            <Label htmlFor="stop" className="cursor-pointer font-medium">
-              Stop Order
-              <p className="font-normal text-sm text-gray-600 mt-1">
-                Becomes a market order when price reaches or passes your stop price. Used to limit losses or protect profits.
-              </p>
-            </Label>
-          </Card>
+          <div onClick={() => setOrderExecutionType('stop')}>
+            <Card className={`p-4 cursor-pointer transition-all ${orderExecutionType === 'stop' ? 'ring-2 ring-black' : 'hover:bg-gray-50'}`}>
+              <div className="flex items-start">
+                <RadioGroupItem value="stop" id="stop" className="mr-2" />
+                <Label htmlFor="stop" className="cursor-pointer font-medium">
+                  Stop Order
+                  <p className="font-normal text-sm text-gray-600 mt-1">
+                    Becomes a market order when price reaches or passes your stop price. Used to limit losses or protect profits.
+                  </p>
+                </Label>
+              </div>
+            </Card>
+          </div>
         </RadioGroup>
       </div>
 

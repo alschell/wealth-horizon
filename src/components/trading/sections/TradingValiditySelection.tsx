@@ -52,65 +52,73 @@ const TradingValiditySelection: React.FC<TradingValiditySelectionProps> = ({
                 onValueChange={setTimeInForce}
                 className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2"
               >
-                <Card className={`p-4 cursor-pointer transition-all ${timeInForce === 'day' ? 'ring-2 ring-black' : 'hover:bg-gray-50'}`}>
-                  <div className="flex items-start">
-                    <RadioGroupItem value="day" id="day" className="mr-2 mt-1" />
-                    <div>
-                      <Label htmlFor="day" className="cursor-pointer font-medium flex items-center">
-                        <Clock className="h-4 w-4 mr-2 text-blue-600" />
-                        Day Order
-                      </Label>
-                      <p className="text-sm text-gray-600 mt-1">
-                        Order is valid until the end of the current trading day.
-                      </p>
+                <div onClick={() => setTimeInForce('day')}>
+                  <Card className={`p-4 cursor-pointer transition-all ${timeInForce === 'day' ? 'ring-2 ring-black' : 'hover:bg-gray-50'}`}>
+                    <div className="flex items-start">
+                      <RadioGroupItem value="day" id="day" className="mr-2 mt-1" />
+                      <div>
+                        <Label htmlFor="day" className="cursor-pointer font-medium flex items-center">
+                          <Clock className="h-4 w-4 mr-2 text-blue-600" />
+                          Day Order
+                        </Label>
+                        <p className="text-sm text-gray-600 mt-1">
+                          Order is valid until the end of the current trading day.
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                </Card>
+                  </Card>
+                </div>
 
-                <Card className={`p-4 cursor-pointer transition-all ${timeInForce === 'gtc' ? 'ring-2 ring-black' : 'hover:bg-gray-50'}`}>
-                  <div className="flex items-start">
-                    <RadioGroupItem value="gtc" id="gtc" className="mr-2 mt-1" />
-                    <div>
-                      <Label htmlFor="gtc" className="cursor-pointer font-medium flex items-center">
-                        <CalendarClock className="h-4 w-4 mr-2 text-indigo-600" />
-                        Good Till Canceled (GTC)
-                      </Label>
-                      <p className="text-sm text-gray-600 mt-1">
-                        Order remains active until explicitly canceled.
-                      </p>
+                <div onClick={() => setTimeInForce('gtc')}>
+                  <Card className={`p-4 cursor-pointer transition-all ${timeInForce === 'gtc' ? 'ring-2 ring-black' : 'hover:bg-gray-50'}`}>
+                    <div className="flex items-start">
+                      <RadioGroupItem value="gtc" id="gtc" className="mr-2 mt-1" />
+                      <div>
+                        <Label htmlFor="gtc" className="cursor-pointer font-medium flex items-center">
+                          <CalendarClock className="h-4 w-4 mr-2 text-indigo-600" />
+                          Good Till Canceled (GTC)
+                        </Label>
+                        <p className="text-sm text-gray-600 mt-1">
+                          Order remains active until explicitly canceled.
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                </Card>
+                  </Card>
+                </div>
 
-                <Card className={`p-4 cursor-pointer transition-all ${timeInForce === 'fok' ? 'ring-2 ring-black' : 'hover:bg-gray-50'}`}>
-                  <div className="flex items-start">
-                    <RadioGroupItem value="fok" id="fok" className="mr-2 mt-1" />
-                    <div>
-                      <Label htmlFor="fok" className="cursor-pointer font-medium flex items-center">
-                        <AlertCircle className="h-4 w-4 mr-2 text-amber-600" />
-                        Fill or Kill (FOK)
-                      </Label>
-                      <p className="text-sm text-gray-600 mt-1">
-                        Order must be filled immediately in its entirety or canceled.
-                      </p>
+                <div onClick={() => setTimeInForce('fok')}>
+                  <Card className={`p-4 cursor-pointer transition-all ${timeInForce === 'fok' ? 'ring-2 ring-black' : 'hover:bg-gray-50'}`}>
+                    <div className="flex items-start">
+                      <RadioGroupItem value="fok" id="fok" className="mr-2 mt-1" />
+                      <div>
+                        <Label htmlFor="fok" className="cursor-pointer font-medium flex items-center">
+                          <AlertCircle className="h-4 w-4 mr-2 text-amber-600" />
+                          Fill or Kill (FOK)
+                        </Label>
+                        <p className="text-sm text-gray-600 mt-1">
+                          Order must be filled immediately in its entirety or canceled.
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                </Card>
+                  </Card>
+                </div>
 
-                <Card className={`p-4 cursor-pointer transition-all ${timeInForce === 'ioc' ? 'ring-2 ring-black' : 'hover:bg-gray-50'}`}>
-                  <div className="flex items-start">
-                    <RadioGroupItem value="ioc" id="ioc" className="mr-2 mt-1" />
-                    <div>
-                      <Label htmlFor="ioc" className="cursor-pointer font-medium flex items-center">
-                        <Clock className="h-4 w-4 mr-2 text-green-600" />
-                        Immediate or Cancel (IOC)
-                      </Label>
-                      <p className="text-sm text-gray-600 mt-1">
-                        Fills all or part of the order immediately, then cancels any unfilled portion.
-                      </p>
+                <div onClick={() => setTimeInForce('ioc')}>
+                  <Card className={`p-4 cursor-pointer transition-all ${timeInForce === 'ioc' ? 'ring-2 ring-black' : 'hover:bg-gray-50'}`}>
+                    <div className="flex items-start">
+                      <RadioGroupItem value="ioc" id="ioc" className="mr-2 mt-1" />
+                      <div>
+                        <Label htmlFor="ioc" className="cursor-pointer font-medium flex items-center">
+                          <Clock className="h-4 w-4 mr-2 text-green-600" />
+                          Immediate or Cancel (IOC)
+                        </Label>
+                        <p className="text-sm text-gray-600 mt-1">
+                          Fills all or part of the order immediately, then cancels any unfilled portion.
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                </Card>
+                  </Card>
+                </div>
               </RadioGroup>
             </div>
           </TabsContent>
@@ -131,53 +139,59 @@ const TradingValiditySelection: React.FC<TradingValiditySelectionProps> = ({
                 onValueChange={(value) => setLeverage(Number(value))}
                 className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-4"
               >
-                <Card className={`p-4 cursor-pointer transition-all ${leverage === 1 ? 'ring-2 ring-black' : 'hover:bg-gray-50'}`}>
-                  <div className="flex items-start">
-                    <RadioGroupItem value="1" id="leverage-1" className="mr-2 mt-1" />
-                    <div>
-                      <Label htmlFor="leverage-1" className="cursor-pointer font-medium flex items-center">
-                        <Shield className="h-4 w-4 mr-2 text-green-600" />
-                        No Leverage (1x)
-                      </Label>
-                      <p className="text-sm text-gray-600 mt-1">
-                        Standard trading with your available capital.
-                      </p>
-                      <Badge variant="secondary" className="mt-2">Conservative</Badge>
+                <div onClick={() => setLeverage(1)}>
+                  <Card className={`p-4 cursor-pointer transition-all ${leverage === 1 ? 'ring-2 ring-black' : 'hover:bg-gray-50'}`}>
+                    <div className="flex items-start">
+                      <RadioGroupItem value="1" id="leverage-1" className="mr-2 mt-1" />
+                      <div>
+                        <Label htmlFor="leverage-1" className="cursor-pointer font-medium flex items-center">
+                          <Shield className="h-4 w-4 mr-2 text-green-600" />
+                          No Leverage (1x)
+                        </Label>
+                        <p className="text-sm text-gray-600 mt-1">
+                          Standard trading with your available capital.
+                        </p>
+                        <Badge variant="secondary" className="mt-2">Conservative</Badge>
+                      </div>
                     </div>
-                  </div>
-                </Card>
+                  </Card>
+                </div>
 
-                <Card className={`p-4 cursor-pointer transition-all ${leverage === 2 ? 'ring-2 ring-black' : 'hover:bg-gray-50'}`}>
-                  <div className="flex items-start">
-                    <RadioGroupItem value="2" id="leverage-2" className="mr-2 mt-1" />
-                    <div>
-                      <Label htmlFor="leverage-2" className="cursor-pointer font-medium flex items-center">
-                        <TrendingUp className="h-4 w-4 mr-2 text-blue-600" />
-                        Moderate (2x)
-                      </Label>
-                      <p className="text-sm text-gray-600 mt-1">
-                        Double your buying power with moderate risk.
-                      </p>
-                      <Badge variant="outline" className="mt-2">Standard</Badge>
+                <div onClick={() => setLeverage(2)}>
+                  <Card className={`p-4 cursor-pointer transition-all ${leverage === 2 ? 'ring-2 ring-black' : 'hover:bg-gray-50'}`}>
+                    <div className="flex items-start">
+                      <RadioGroupItem value="2" id="leverage-2" className="mr-2 mt-1" />
+                      <div>
+                        <Label htmlFor="leverage-2" className="cursor-pointer font-medium flex items-center">
+                          <TrendingUp className="h-4 w-4 mr-2 text-blue-600" />
+                          Moderate (2x)
+                        </Label>
+                        <p className="text-sm text-gray-600 mt-1">
+                          Double your buying power with moderate risk.
+                        </p>
+                        <Badge variant="outline" className="mt-2">Standard</Badge>
+                      </div>
                     </div>
-                  </div>
-                </Card>
+                  </Card>
+                </div>
 
-                <Card className={`p-4 cursor-pointer transition-all ${leverage === 5 ? 'ring-2 ring-black' : 'hover:bg-gray-50'}`}>
-                  <div className="flex items-start">
-                    <RadioGroupItem value="5" id="leverage-5" className="mr-2 mt-1" />
-                    <div>
-                      <Label htmlFor="leverage-5" className="cursor-pointer font-medium flex items-center">
-                        <AlertCircle className="h-4 w-4 mr-2 text-amber-600" />
-                        Advanced (5x)
-                      </Label>
-                      <p className="text-sm text-gray-600 mt-1">
-                        Quintuple your position size with higher risk.
-                      </p>
-                      <Badge variant="destructive" className="mt-2">High Risk</Badge>
+                <div onClick={() => setLeverage(5)}>
+                  <Card className={`p-4 cursor-pointer transition-all ${leverage === 5 ? 'ring-2 ring-black' : 'hover:bg-gray-50'}`}>
+                    <div className="flex items-start">
+                      <RadioGroupItem value="5" id="leverage-5" className="mr-2 mt-1" />
+                      <div>
+                        <Label htmlFor="leverage-5" className="cursor-pointer font-medium flex items-center">
+                          <AlertCircle className="h-4 w-4 mr-2 text-amber-600" />
+                          Advanced (5x)
+                        </Label>
+                        <p className="text-sm text-gray-600 mt-1">
+                          Quintuple your position size with higher risk.
+                        </p>
+                        <Badge variant="destructive" className="mt-2">High Risk</Badge>
+                      </div>
                     </div>
-                  </div>
-                </Card>
+                  </Card>
+                </div>
               </RadioGroup>
             </div>
 

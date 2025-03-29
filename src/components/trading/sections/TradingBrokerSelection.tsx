@@ -76,47 +76,49 @@ const TradingBrokerSelection: React.FC<TradingBrokerSelectionProps> = ({
         onValueChange={handleBrokerSelect}
         className="space-y-4"
       >
-        <Card className={`p-4 cursor-pointer transition-all ${selectedBroker === 'best' ? 'ring-2 ring-black' : 'hover:bg-gray-50'}`}>
-          <div className="flex items-start">
-            <RadioGroupItem value="best" id="best" className="mr-2 mt-1" />
-            <div className="w-full">
-              <Label htmlFor="best" className="cursor-pointer font-medium flex items-center">
-                <BarChart3 className="h-5 w-5 mr-2 text-blue-600" />
-                Best Execution
-                <Badge className="ml-2 bg-blue-100 text-blue-800 hover:bg-blue-200">Recommended</Badge>
-              </Label>
-              <p className="text-sm text-gray-600 mt-1 ml-7">
-                Automatically routes your order to the broker offering the best price.
-                Considers price, speed, and execution quality.
-              </p>
-              
-              <div className="ml-7 mt-3 flex flex-wrap gap-3">
-                <div className="flex items-center text-xs text-gray-600">
-                  <BadgeCheck className="h-4 w-4 mr-1 text-green-600" />
-                  Best pricing
-                </div>
-                <div className="flex items-center text-xs text-gray-600">
-                  <Clock className="h-4 w-4 mr-1 text-green-600" />
-                  Fastest execution
-                </div>
-                <div className="flex items-center text-xs text-gray-600">
-                  <Shield className="h-4 w-4 mr-1 text-green-600" />
-                  Enhanced security
-                </div>
-              </div>
-              
-              {selectedBroker === 'best' && (
-                <div className="mt-3 ml-7">
-                  <div className="flex justify-between mb-1 text-xs text-gray-500">
-                    <span>Calculating optimal execution route</span>
-                    <span>{loadingScore}%</span>
+        <div onClick={() => setSelectedBroker("best")}>
+          <Card className={`p-4 cursor-pointer transition-all ${selectedBroker === 'best' ? 'ring-2 ring-black' : 'hover:bg-gray-50'}`}>
+            <div className="flex items-start">
+              <RadioGroupItem value="best" id="best" className="mr-2 mt-1" />
+              <div className="w-full">
+                <Label htmlFor="best" className="cursor-pointer font-medium flex items-center">
+                  <BarChart3 className="h-5 w-5 mr-2 text-blue-600" />
+                  Best Execution
+                  <Badge className="ml-2 bg-blue-100 text-blue-800 hover:bg-blue-200">Recommended</Badge>
+                </Label>
+                <p className="text-sm text-gray-600 mt-1 ml-7">
+                  Automatically routes your order to the broker offering the best price.
+                  Considers price, speed, and execution quality.
+                </p>
+                
+                <div className="ml-7 mt-3 flex flex-wrap gap-3">
+                  <div className="flex items-center text-xs text-gray-600">
+                    <BadgeCheck className="h-4 w-4 mr-1 text-green-600" />
+                    Best pricing
                   </div>
-                  <Progress value={loadingScore} className="h-1.5" />
+                  <div className="flex items-center text-xs text-gray-600">
+                    <Clock className="h-4 w-4 mr-1 text-green-600" />
+                    Fastest execution
+                  </div>
+                  <div className="flex items-center text-xs text-gray-600">
+                    <Shield className="h-4 w-4 mr-1 text-green-600" />
+                    Enhanced security
+                  </div>
                 </div>
-              )}
+                
+                {selectedBroker === 'best' && (
+                  <div className="mt-3 ml-7">
+                    <div className="flex justify-between mb-1 text-xs text-gray-500">
+                      <span>Calculating optimal execution route</span>
+                      <span>{loadingScore}%</span>
+                    </div>
+                    <Progress value={loadingScore} className="h-1.5" />
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
-        </Card>
+          </Card>
+        </div>
 
         <div className="mt-4">
           <h3 className="font-medium mb-3">Or select a specific broker:</h3>
@@ -125,27 +127,28 @@ const TradingBrokerSelection: React.FC<TradingBrokerSelectionProps> = ({
             {mockBrokers.map((broker) => {
               const score = getBrokerScore(broker.id);
               return (
-                <Card 
-                  key={broker.id}
-                  className={`p-4 cursor-pointer transition-all ${selectedBroker === broker.id ? 'ring-2 ring-black' : 'hover:bg-gray-50'}`}
-                >
-                  <div className="flex items-start">
-                    <RadioGroupItem value={broker.id} id={broker.id} className="mr-2 mt-1" />
-                    <div className="w-full">
-                      <div className="flex justify-between items-center">
-                        <Label htmlFor={broker.id} className="cursor-pointer flex items-center">
-                          <Building className="h-4 w-4 mr-1.5 text-gray-600" />
-                          {broker.name}
-                        </Label>
-                        <div className="flex items-center">
-                          <Badge variant="outline" className={`text-xs ${score >= 90 ? 'bg-green-50 border-green-200 text-green-700' : 'bg-amber-50 border-amber-200 text-amber-700'}`}>
-                            {score}/100
-                          </Badge>
+                <div key={broker.id} onClick={() => setSelectedBroker(broker.id)}>
+                  <Card 
+                    className={`p-4 cursor-pointer transition-all ${selectedBroker === broker.id ? 'ring-2 ring-black' : 'hover:bg-gray-50'}`}
+                  >
+                    <div className="flex items-start">
+                      <RadioGroupItem value={broker.id} id={broker.id} className="mr-2 mt-1" />
+                      <div className="w-full">
+                        <div className="flex justify-between items-center">
+                          <Label htmlFor={broker.id} className="cursor-pointer flex items-center">
+                            <Building className="h-4 w-4 mr-1.5 text-gray-600" />
+                            {broker.name}
+                          </Label>
+                          <div className="flex items-center">
+                            <Badge variant="outline" className={`text-xs ${score >= 90 ? 'bg-green-50 border-green-200 text-green-700' : 'bg-amber-50 border-amber-200 text-amber-700'}`}>
+                              {score}/100
+                            </Badge>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </Card>
+                  </Card>
+                </div>
               );
             })}
           </div>

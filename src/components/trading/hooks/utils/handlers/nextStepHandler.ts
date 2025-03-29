@@ -1,6 +1,6 @@
 
 import { useToast } from "@/components/ui/use-toast";
-import { Instrument, TradeOrder } from "../../../types";
+import { Instrument, OrderType, TradeOrder } from "../../../types";
 
 interface NextStepHandlerProps {
   currentStep: number;
@@ -10,7 +10,7 @@ interface NextStepHandlerProps {
   orderExecutionType: string;
   selectedBroker: string | "best";
   timeInForce: string;
-  currentOrderType: string;
+  currentOrderType: OrderType; // Changed from string to OrderType
   leverage: number;
   setCurrentStep: (value: React.SetStateAction<number>) => void;
   setOrder: (value: React.SetStateAction<Partial<TradeOrder>>) => void;
@@ -98,9 +98,9 @@ export const useNextStepHandler = ({
       console.log("Updating order state with current selections");
       setOrder(prev => {
         // Create updated order with all current values
-        const updatedOrder = {
+        const updatedOrder: Partial<TradeOrder> = {
           ...prev,
-          orderType: currentOrderType,
+          orderType: currentOrderType, // This is now of type OrderType
           instrumentId: selectedInstrument?.id || "",
           quantity: Number(quantity),
           price: Number(price || (selectedInstrument?.currentPrice || 0)),

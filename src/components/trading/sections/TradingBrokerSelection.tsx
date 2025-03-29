@@ -23,13 +23,16 @@ const TradingBrokerSelection: React.FC<TradingBrokerSelectionProps> = ({
 
   // When component mounts, ensure a default selection is made if none exists
   useEffect(() => {
-    if (!selectedBroker) {
+    if (selectedBroker === undefined || selectedBroker === null) {
+      console.log("Setting default broker to 'best'");
       setSelectedBroker("best");
+    } else {
+      console.log("Broker already selected:", selectedBroker);
     }
   }, [selectedBroker, setSelectedBroker]);
 
   useEffect(() => {
-    if (selectedBroker !== "best") {
+    if (selectedBroker !== "best" && selectedBroker) {
       const broker = mockBrokers.find(b => b.id === selectedBroker);
       setSelectedBrokerDetails(broker);
     } else {
@@ -37,7 +40,7 @@ const TradingBrokerSelection: React.FC<TradingBrokerSelectionProps> = ({
     }
     
     // Debug
-    console.log("Selected broker:", selectedBroker);
+    console.log("Selected broker updated:", selectedBroker);
   }, [selectedBroker]);
 
   const handleBrokerSelect = (brokerId: string) => {

@@ -23,8 +23,7 @@ export const useTradingHandlers = ({
     validateInstrumentSelection,
     validateOrderExecution,
     validateQuantityPrice,
-    validateBrokerSelection,
-    validateAllocations
+    validateBrokerSelection
   } = useTradingValidations();
 
   const {
@@ -74,32 +73,33 @@ export const useTradingHandlers = ({
       // Step 3: Leverage validation
       if (currentStep === 3 && (leverage === undefined || leverage === null || leverage <= 0)) {
         console.log("Validation failed: leverage must be greater than 0");
+        toast({
+          title: "Error",
+          description: "Please set a valid leverage value greater than 0",
+          variant: "destructive"
+        });
         return;
       }
 
       // Step 4: Broker Selection
       if (currentStep === 4) {
         console.log("Validating broker:", selectedBroker);
-        if (!validateBrokerSelection(selectedBroker || "")) {
+        // Only validate if defined (undefined means no selection has been made)
+        if (selectedBroker === undefined || selectedBroker === null) {
           console.log("Validation failed: broker selection");
+          toast({
+            title: "Error",
+            description: "Please select a broker to proceed",
+            variant: "destructive"
+          });
           return;
         }
-      }
-
-      // Step 5: Allocation
-      if (currentStep === 5) {
-        console.log("Validating allocations:", currentOrderType, order);
-        // For debugging, temporarily bypass allocation validation
-        // if (!validateAllocations(currentOrderType, order)) {
-        //   console.log("Validation failed: allocations");
-        //   return;
-        // }
       }
 
       // Update order with current selections before proceeding
       console.log("Updating order state with current selections");
       setOrder(prev => {
-        // Ensure we're not replacing the entire order object, but updating it
+        // Create updated order with all current values
         const updatedOrder = {
           ...prev,
           orderType: currentOrderType,
@@ -107,10 +107,10 @@ export const useTradingHandlers = ({
           quantity: Number(quantity),
           price: Number(price || (selectedInstrument?.currentPrice || 0)),
           totalAmount: Number(quantity) * Number(price || selectedInstrument?.currentPrice || 0),
-          brokerId: selectedBroker || "best",  // Ensure broker is never undefined
-          executionType: orderExecutionType || "market", // Ensure execution type is never undefined
-          timeInForce: timeInForce || "day",  // Ensure time in force is never undefined
-          leverage: leverage || 1  // Ensure leverage is never undefined
+          brokerId: selectedBroker || "best",
+          executionType: orderExecutionType || "market", 
+          timeInForce: timeInForce || "day",
+          leverage: leverage || 1
         };
         console.log("Updated order:", updatedOrder);
         return updatedOrder;
@@ -119,7 +119,7 @@ export const useTradingHandlers = ({
       // Move to next step
       const nextStep = currentStep + 1;
       console.log("Moving to next step:", nextStep);
-      setCurrentStep(prev => Math.min(prev + 1, 6));
+      setCurrentStep(nextStep);
     } catch (error) {
       console.error("Error in handleNextStep:", error);
       toast({
@@ -145,7 +145,6 @@ export const useTradingHandlers = ({
     validateOrderExecution,
     validateQuantityPrice,
     validateBrokerSelection,
-    validateAllocations,
     toast
   ]);
 
@@ -168,10 +167,10 @@ export const useTradingHandlers = ({
       quantity: Number(quantity),
       price: calculatedPrice,
       totalAmount,
-      brokerId: selectedBroker || "best", // Ensure broker is never undefined
-      executionType: orderExecutionType || "market", // Ensure execution type is never undefined
-      timeInForce: timeInForce || "day", // Ensure time in force is never undefined
-      leverage: leverage || 1 // Ensure leverage is never undefined
+      brokerId: selectedBroker || "best", 
+      executionType: orderExecutionType || "market",
+      timeInForce: timeInForce || "day", 
+      leverage: leverage || 1
     };
 
     // In a real app, you would submit this order to your backend

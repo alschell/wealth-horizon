@@ -63,6 +63,7 @@ const TradingFormContent: React.FC<TradingFormContentProps> = ({
   nextButtonDisabled
 }) => {
   const [renderError, setRenderError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   
   // Log whenever the current step changes to help with debugging
   useEffect(() => {
@@ -78,6 +79,23 @@ const TradingFormContent: React.FC<TradingFormContentProps> = ({
     enter: { opacity: 0, x: 20 },
     center: { opacity: 1, x: 0 },
     exit: { opacity: 0, x: -20 }
+  };
+
+  // Wrap next button click with loading state
+  const handleNext = () => {
+    setIsLoading(true);
+    
+    // Use setTimeout to allow UI to update before potentially heavy operations
+    setTimeout(() => {
+      try {
+        handleNextStep();
+      } catch (error) {
+        console.error("Error in next step handler:", error);
+        setRenderError(error instanceof Error ? error.message : "An unexpected error occurred");
+      } finally {
+        setIsLoading(false);
+      }
+    }, 10);
   };
 
   const renderCurrentStep = () => {
@@ -154,9 +172,10 @@ const TradingFormContent: React.FC<TradingFormContentProps> = ({
             currentStep={currentStep}
             totalSteps={steps.length}
             onPrevious={handlePreviousStep}
-            onNext={handleNextStep}
+            onNext={handleNext}
             onSubmit={handleSubmitOrder}
             disabled={nextButtonDisabled}
+            isLoading={isLoading}
           />
         </div>
       </motion.div>

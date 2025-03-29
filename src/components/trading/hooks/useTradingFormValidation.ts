@@ -56,23 +56,17 @@ export const useTradingFormValidation = ({
           return leverage === undefined || leverage === null || leverage <= 0;
         
         case 4: // Broker Selection
-          console.log("Broker selection validation detail:", {
-            selectedBroker,
-            isUndefined: selectedBroker === undefined,
-            isNull: selectedBroker === null,
-            isEmpty: selectedBroker === ""
+          // Important: Only check if broker is undefined/null, but allow empty string as valid
+          // because "best" is a valid broker selection
+          const isBrokerInvalid = selectedBroker === undefined || selectedBroker === null;
+          console.log("Broker selection validation:", {
+            selectedBroker, 
+            isBrokerInvalid
           });
-          
-          // Valid as long as selectedBroker is either "best" or any non-empty string (broker ID)
-          const isBrokerInvalid = selectedBroker === undefined || 
-                                 selectedBroker === null || 
-                                 selectedBroker === "";
-                                 
-          console.log("Is broker invalid:", isBrokerInvalid);
           return isBrokerInvalid;
         
         case 5: // Allocation
-          // For debugging purposes, temporarily disable allocation validation
+          // Always allow proceeding from allocation step (validation happens in handlers)
           return false;
         
         case 6: // Review

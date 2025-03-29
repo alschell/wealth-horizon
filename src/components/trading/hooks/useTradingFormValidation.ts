@@ -27,6 +27,16 @@ export const useTradingFormValidation = ({
 
   useEffect(() => {
     const validateCurrentStep = () => {
+      console.log("Validating step:", currentStep, {
+        selectedInstrument,
+        orderExecutionType,
+        timeInForce, 
+        quantity,
+        price,
+        selectedBroker,
+        leverage
+      });
+
       switch (currentStep) {
         case 0: // Instrument Selection
           return !selectedInstrument;
@@ -63,7 +73,9 @@ export const useTradingFormValidation = ({
       }
     };
     
-    setNextButtonDisabled(validateCurrentStep());
+    const isDisabled = validateCurrentStep();
+    console.log(`Step ${currentStep} button disabled:`, isDisabled);
+    setNextButtonDisabled(isDisabled);
   }, [
     currentStep, 
     selectedInstrument, 

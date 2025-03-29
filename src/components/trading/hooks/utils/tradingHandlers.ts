@@ -1,3 +1,4 @@
+
 import { useCallback } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { Instrument, OrderType, TradeOrder } from "../../types";
@@ -143,7 +144,7 @@ export const useTradingHandlers = ({
       ? selectedInstrument?.currentPrice || 0
       : Number(price);
       
-    const totalAmount = Number(quantity) * calculatedPrice * leverage;
+    const totalAmount = Number(quantity) * calculatedPrice * (leverage || 1);
     
     const completeOrder: TradeOrder = {
       ...order as TradeOrder,
@@ -152,10 +153,10 @@ export const useTradingHandlers = ({
       quantity: Number(quantity),
       price: calculatedPrice,
       totalAmount,
-      brokerId: selectedBroker,
-      executionType: orderExecutionType,
-      timeInForce: timeInForce,
-      leverage: leverage
+      brokerId: selectedBroker || "best", // Ensure broker is never undefined
+      executionType: orderExecutionType || "market", // Ensure execution type is never undefined
+      timeInForce: timeInForce || "day", // Ensure time in force is never undefined
+      leverage: leverage || 1 // Ensure leverage is never undefined
     };
 
     // In a real app, you would submit this order to your backend

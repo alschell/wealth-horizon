@@ -28,20 +28,19 @@ const TradingAllocation: React.FC<TradingAllocationProps> = ({
   order,
   setOrder
 }) => {
-  console.log("TradingAllocation rendering", { 
+  console.log("TradingAllocation rendering with props:", { 
     orderType, 
-    selectedInstrument, 
+    selectedInstrument: selectedInstrument?.symbol, 
     quantity, 
-    price, 
+    price,
     order: JSON.stringify(order)
   });
   
-  const [hasRenderError, setHasRenderError] = useState(false);
-  const [isInitialized, setIsInitialized] = useState(false);
   const { toast } = useToast();
   
+  // Initialize the allocations immediately when the component mounts
   useEffect(() => {
-    console.log("TradingAllocation mounted/updated with orderType:", orderType);
+    console.log("TradingAllocation initialization effect running");
     
     try {
       // Create a new order object with initialized properties
@@ -64,19 +63,17 @@ const TradingAllocation: React.FC<TradingAllocationProps> = ({
       }
 
       // Update the order state
+      console.log("Setting initialized order:", updatedOrder);
       setOrder(updatedOrder);
-      setIsInitialized(true);
     } catch (error) {
       console.error("Error initializing allocations:", error);
       toast({
         title: "Initialization Error",
-        description: "Failed to initialize allocations. You can continue anyway.",
+        description: "Failed to initialize allocations. Please try again.",
         variant: "destructive"
       });
-      setHasRenderError(true);
-      setIsInitialized(true);
     }
-  }, []);  // Run only once on mount
+  }, [orderType, setOrder, toast, order]);  // Include dependencies
   
   const totalAmount = typeof quantity === 'number' && (typeof price === 'number' || selectedInstrument?.currentPrice)
     ? quantity * (typeof price === 'number' ? price : selectedInstrument?.currentPrice || 0)
@@ -84,25 +81,6 @@ const TradingAllocation: React.FC<TradingAllocationProps> = ({
 
   // Default currency from the selected instrument or fallback to USD
   const currency = selectedInstrument?.currency || "USD";
-
-  // Render a simple placeholder if there's an error or we're waiting for initialization
-  if (hasRenderError) {
-    return (
-      <div className="space-y-4">
-        <h3 className="text-lg font-medium">
-          {orderType === "buy" 
-            ? "Allocate Funding & Destination" 
-            : "Allocate Source & Proceeds"}
-        </h3>
-        
-        <div className="p-6 border rounded-md">
-          <p className="text-center text-gray-500">
-            There was an issue loading allocation details. You can proceed anyway.
-          </p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="space-y-6">

@@ -69,9 +69,15 @@ const TradingFormContent: React.FC<TradingFormContentProps> = ({
   useEffect(() => {
     console.log(`TradingFormContent: Current step changed to ${currentStep}`, { 
       stepName: steps[currentStep]?.title,
-      component: steps[currentStep]?.component?.name
+      component: steps[currentStep]?.component?.name,
+      orderType,
+      selectedInstrument: selectedInstrument?.symbol,
+      quantity,
+      price, 
+      selectedBroker,
+      order: JSON.stringify(order)
     });
-  }, [currentStep, steps]);
+  }, [currentStep, steps, orderType, selectedInstrument, quantity, price, selectedBroker, order]);
   
   const CurrentStepComponent = steps[currentStep]?.component;
 
@@ -115,6 +121,26 @@ const TradingFormContent: React.FC<TradingFormContentProps> = ({
         selectedBroker,
         orderExecutionType
       });
+
+      // Ensure we initialize the order properly before rendering the allocation step
+      if (currentStep === 5 && CurrentStepComponent === steps[5].component) {
+        console.log("Ensuring order has proper allocation arrays before rendering allocation step");
+        
+        // Make sure allocations are initialized before rendering
+        if (orderType === "buy" && (!order.fundingAllocations || !order.depositAllocations)) {
+          const updatedOrder = { ...order };
+          if (!updatedOrder.fundingAllocations) updatedOrder.fundingAllocations = [];
+          if (!updatedOrder.depositAllocations) updatedOrder.depositAllocations = [];
+          setOrder(updatedOrder);
+        }
+        
+        if (orderType === "sell" && (!order.instrumentAllocations || !order.depositAllocations)) {
+          const updatedOrder = { ...order };
+          if (!updatedOrder.instrumentAllocations) updatedOrder.instrumentAllocations = [];
+          if (!updatedOrder.depositAllocations) updatedOrder.depositAllocations = [];
+          setOrder(updatedOrder);
+        }
+      }
 
       return (
         <>

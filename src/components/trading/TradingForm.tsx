@@ -56,30 +56,38 @@ const TradingForm: React.FC = () => {
   });
 
   useEffect(() => {
-    console.log("Current step:", currentStep);
-    console.log("Current order state:", order);
+    console.log("TradingForm - Current step:", currentStep);
+    console.log("TradingForm - Current order state:", JSON.stringify(order));
     
     // Ensure we have a broker selected, defaulting to "best" if not set
     if (currentStep >= 4 && !selectedBroker) {
+      console.log("Setting default broker to 'best'");
       setSelectedBroker("best");
     }
     
-    // Initialize order with default values when reaching allocation step
+    // Initialize allocation data when reaching the allocation step
     if (currentStep === 5) {
+      console.log("Preparing allocation data");
       setOrder(prevOrder => {
-        // Only update if properties aren't already set
-        if (!prevOrder.fundingAllocations || !prevOrder.depositAllocations || !prevOrder.instrumentAllocations) {
-          return {
-            ...prevOrder,
-            fundingAllocations: prevOrder.fundingAllocations || [],
-            depositAllocations: prevOrder.depositAllocations || [],
-            instrumentAllocations: prevOrder.instrumentAllocations || []
-          };
+        const updatedOrder = { ...prevOrder };
+        
+        // Initialize empty arrays for allocations if they don't exist
+        if (!updatedOrder.fundingAllocations) {
+          updatedOrder.fundingAllocations = [];
         }
-        return prevOrder;
+        
+        if (!updatedOrder.depositAllocations) {
+          updatedOrder.depositAllocations = [];
+        }
+        
+        if (!updatedOrder.instrumentAllocations) {
+          updatedOrder.instrumentAllocations = [];
+        }
+        
+        return updatedOrder;
       });
     }
-  }, [currentStep, order, selectedBroker, setSelectedBroker, setOrder]);
+  }, [currentStep, selectedBroker, setSelectedBroker, setOrder]);
 
   useEffect(() => {
     setOrderType(orderType);

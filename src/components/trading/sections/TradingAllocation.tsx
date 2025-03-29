@@ -1,16 +1,14 @@
 
 import React, { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
 import { 
   OrderType,
-  TradeOrder,
-  ViewMode
+  TradeOrder
 } from "../types";
+import { useToast } from "@/components/ui/use-toast";
 import FundingSourcesSection from "./allocation/buy/FundingSourcesSection";
 import DestinationPortfoliosSection from "./allocation/buy/DestinationPortfoliosSection";
 import SourcePortfoliosSection from "./allocation/sell/SourcePortfoliosSection";
 import DestinationCashAccountsSection from "./allocation/sell/DestinationCashAccountsSection";
-import { useToast } from "@/components/ui/use-toast";
 
 interface TradingAllocationProps {
   orderType: OrderType;
@@ -38,7 +36,6 @@ const TradingAllocation: React.FC<TradingAllocationProps> = ({
     order: JSON.stringify(order)
   });
   
-  const [viewMode, setViewMode] = useState<ViewMode>("portfolios");
   const [hasRenderError, setHasRenderError] = useState(false);
   const [isInitialized, setIsInitialized] = useState(false);
   const { toast } = useToast();
@@ -80,7 +77,6 @@ const TradingAllocation: React.FC<TradingAllocationProps> = ({
         variant: "destructive"
       });
       setHasRenderError(true);
-      // Set initialized to true to avoid infinite loops
       setIsInitialized(true);
     }
   }, [orderType, order, setOrder, toast, isInitialized]);
@@ -106,65 +102,51 @@ const TradingAllocation: React.FC<TradingAllocationProps> = ({
               : "Preparing allocation options..."}
           </p>
         </div>
-        
-        <div className="mt-6 text-sm text-gray-500">
-          <p>
-            After submitting your order, you'll be able to review all allocations in the confirmation screen.
-          </p>
-        </div>
       </div>
     );
   }
 
-  // Simplified rendering - avoid complex conditions that could cause errors
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
+      <div>
         <h3 className="text-lg font-medium">
           {orderType === "buy" 
             ? "Allocate Funding & Destination" 
             : "Allocate Source & Proceeds"}
         </h3>
-        
-        <div className="flex border rounded-md overflow-hidden">
-          <Button
-            type="button"
-            variant={viewMode === "portfolios" ? "default" : "outline"}
-            className={`px-3 py-1 text-sm rounded-none ${
-              viewMode === "portfolios" ? "bg-black text-white" : ""
-            }`}
-            onClick={() => setViewMode("portfolios")}
-          >
-            Portfolios View
-          </Button>
-          <Button
-            type="button"
-            variant={viewMode === "institutions" ? "default" : "outline"}
-            className={`px-3 py-1 text-sm rounded-none ${
-              viewMode === "institutions" ? "bg-black text-white" : ""
-            }`}
-            onClick={() => setViewMode("institutions")}
-          >
-            Institutions View
-          </Button>
-        </div>
       </div>
 
-      {/* Simple version of content rendering to avoid errors */}
+      {/* Restore the actual allocation functionality based on order type */}
       <div className="space-y-6">
         {orderType === "buy" ? (
           <>
-            <div className="p-4 border rounded-md bg-gray-50">
-              <p className="text-center">Funding sources and destination portfolios will be allocated automatically.</p>
-              <p className="text-center text-sm text-gray-500 mt-2">You can review and modify these allocations after order submission.</p>
-            </div>
+            <FundingSourcesSection
+              totalAmount={totalAmount}
+              order={order}
+              setOrder={setOrder}
+            />
+            
+            <DestinationPortfoliosSection
+              totalQuantity={typeof quantity === 'number' ? quantity : 0}
+              order={order}
+              setOrder={setOrder}
+              viewMode="portfolios"
+            />
           </>
         ) : (
           <>
-            <div className="p-4 border rounded-md bg-gray-50">
-              <p className="text-center">Source portfolios and destination cash accounts will be allocated automatically.</p>
-              <p className="text-center text-sm text-gray-500 mt-2">You can review and modify these allocations after order submission.</p>
-            </div>
+            <SourcePortfoliosSection
+              totalQuantity={typeof quantity === 'number' ? quantity : 0}
+              selectedInstrument={selectedInstrument}
+              order={order}
+              setOrder={setOrder}
+            />
+            
+            <DestinationCashAccountsSection
+              totalAmount={totalAmount}
+              order={order}
+              setOrder={setOrder}
+            />
           </>
         )}
       </div>

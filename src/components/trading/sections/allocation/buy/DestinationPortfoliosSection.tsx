@@ -24,14 +24,12 @@ interface DestinationPortfoliosSectionProps {
   totalQuantity: number;
   order: Partial<TradeOrder>;
   setOrder: (order: Partial<TradeOrder>) => void;
-  viewMode: "portfolios" | "institutions";
 }
 
 const DestinationPortfoliosSection: React.FC<DestinationPortfoliosSectionProps> = ({ 
   totalQuantity, 
   order, 
-  setOrder, 
-  viewMode 
+  setOrder
 }) => {
   const [allocations, setAllocations] = useState<Record<string, number>>({});
   const [currentAllocation, setCurrentAllocation] = useState(0);

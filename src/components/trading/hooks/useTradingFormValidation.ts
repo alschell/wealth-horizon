@@ -43,10 +43,12 @@ export const useTradingFormValidation = ({
           return false;
         
         case 3: // Leverage
-          return !leverage; // Leverage must be set (should default to 1 in most cases)
+          // Leverage is required but could be 0, so check for null/undefined
+          return leverage === undefined || leverage === null;
         
         case 4: // Broker Selection
-          return !selectedBroker;
+          // Both "best" and any other broker ID are valid selections
+          return selectedBroker === undefined || selectedBroker === null;
         
         case 5: // Allocation
           // Basic validation - we'll let the allocation section handle more complex validation

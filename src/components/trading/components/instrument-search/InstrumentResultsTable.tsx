@@ -26,7 +26,7 @@ const InstrumentResultsTable: React.FC<InstrumentResultsTableProps> = ({
             <TableHead className="hidden md:table-cell">ISIN</TableHead>
             <TableHead className="hidden md:table-cell">Exchange</TableHead>
             <TableHead>Price</TableHead>
-            <TableHead>Action</TableHead>
+            <TableHead className="w-24 text-center">Action</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -46,11 +46,12 @@ const InstrumentResultsTable: React.FC<InstrumentResultsTableProps> = ({
                   currency: instrument.currency
                 })}
               </TableCell>
-              <TableCell>
+              <TableCell className="text-center">
                 <Button
                   variant={selectedInstrument?.id === instrument.id ? "default" : "outline"}
                   size="sm"
                   onClick={() => onSelectInstrument(instrument)}
+                  className="w-20" // Fixed width button
                 >
                   {selectedInstrument?.id === instrument.id ? "Selected" : "Select"}
                 </Button>

@@ -21,6 +21,13 @@ const TradingBrokerSelection: React.FC<TradingBrokerSelectionProps> = ({
 }) => {
   const [selectedBrokerDetails, setSelectedBrokerDetails] = useState<any>(null);
 
+  // When component mounts, ensure a default selection is made if none exists
+  useEffect(() => {
+    if (!selectedBroker) {
+      setSelectedBroker("best");
+    }
+  }, []);
+
   useEffect(() => {
     if (selectedBroker !== "best") {
       const broker = mockBrokers.find(b => b.id === selectedBroker);
@@ -28,9 +35,13 @@ const TradingBrokerSelection: React.FC<TradingBrokerSelectionProps> = ({
     } else {
       setSelectedBrokerDetails(null);
     }
+    
+    // Debug
+    console.log("Selected broker:", selectedBroker);
   }, [selectedBroker]);
 
   const handleBrokerSelect = (brokerId: string) => {
+    console.log("Setting broker to:", brokerId);
     setSelectedBroker(brokerId);
   };
 
@@ -57,7 +68,7 @@ const TradingBrokerSelection: React.FC<TradingBrokerSelectionProps> = ({
       </div>
 
       <RadioGroup 
-        value={selectedBroker} 
+        value={selectedBroker || "best"} 
         onValueChange={handleBrokerSelect}
         className="space-y-4"
       >

@@ -42,6 +42,15 @@ export const useTradingHandlers = ({
 
   const handleNextStep = useCallback(() => {
     console.log("handleNextStep called, current step:", currentStep);
+    console.log("Current state:", {
+      selectedInstrument,
+      quantity,
+      price,
+      orderExecutionType,
+      selectedBroker,
+      timeInForce,
+      leverage
+    });
     
     // Step 0: Instrument Selection
     if (currentStep === 0 && !validateInstrumentSelection(selectedInstrument)) {
@@ -61,7 +70,7 @@ export const useTradingHandlers = ({
       return;
     }
 
-    // Step 4: Broker Selection (since step 3 is Validity & Leverage)
+    // Step 4: Broker Selection (since step 3 is Leverage)
     if (currentStep === 4 && !validateBrokerSelection(selectedBroker)) {
       console.log("Validation failed: broker selection");
       return;
@@ -79,6 +88,7 @@ export const useTradingHandlers = ({
     // Update order with current selections before proceeding
     console.log("Updating order state with current selections");
     setOrder(prev => {
+      // Ensure we're not replacing the entire order object, but updating it
       const updatedOrder = {
         ...prev,
         orderType: currentOrderType,
@@ -86,10 +96,10 @@ export const useTradingHandlers = ({
         quantity: Number(quantity),
         price: Number(price || (selectedInstrument?.currentPrice || 0)),
         totalAmount: Number(quantity) * Number(price || selectedInstrument?.currentPrice || 0),
-        brokerId: selectedBroker,
+        brokerId: selectedBroker || "best",  // Ensure broker is never undefined
         executionType: orderExecutionType,
         timeInForce: timeInForce,
-        leverage: leverage
+        leverage: leverage || 1  // Ensure leverage is never undefined
       };
       console.log("Updated order:", updatedOrder);
       return updatedOrder;

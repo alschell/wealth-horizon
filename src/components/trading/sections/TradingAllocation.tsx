@@ -6,7 +6,7 @@ import {
 } from "../types";
 import { useToast } from "@/components/ui/use-toast";
 import FundingSourcesSection from "./allocation/buy/FundingSourcesSection";
-import DestinationPortfoliosSection from "./allocation/buy/DestinationPortfoliosSection";
+import { DestinationPortfoliosSection } from "./allocation/buy/destination-portfolios";
 import SourcePortfoliosSection from "./allocation/sell/SourcePortfoliosSection";
 import DestinationCashAccountsSection from "./allocation/sell/DestinationCashAccountsSection";
 

@@ -43,8 +43,8 @@ export const useTradingFormValidation = ({
           return false;
         
         case 3: // Leverage
-          // Leverage is required but could be 0, so check for null/undefined
-          return leverage === undefined || leverage === null;
+          // Fix: leverage is valid as long as it's a number greater than 0
+          return leverage === undefined || leverage === null || leverage <= 0;
         
         case 4: // Broker Selection
           // Both "best" and any other broker ID are valid selections

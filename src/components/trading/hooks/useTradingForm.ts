@@ -14,7 +14,7 @@ export const useTradingForm = (orderType: OrderType): UseTradingFormReturn => {
   const [orderExecutionType, setOrderExecutionType] = useState<string>("market");
   const [timeInForce, setTimeInForce] = useState<string>("day");
   const [currentOrderType, setOrderType] = useState<OrderType>(orderType);
-  const [leverage, setLeverage] = useState<number>(1); // Default to 1x (no leverage)
+  const [leverage, setLeverage] = useState<number>(1); // Ensure default is set to 1
   
   const [order, setOrder] = useState<Partial<TradeOrder>>({
     orderType,
@@ -84,7 +84,7 @@ export const useTradingForm = (orderType: OrderType): UseTradingFormReturn => {
     selectedBroker,
     orderExecutionType,
     timeInForce,
-    currentOrderType, // This is the correct property name according to the type definition
+    currentOrderType, 
     leverage,
     order,
     

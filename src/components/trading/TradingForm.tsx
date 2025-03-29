@@ -43,13 +43,16 @@ const TradingForm: React.FC = () => {
     setLeverage
   } = useTradingForm(orderType);
 
-  // Validation hook
+  // Validation hook - Pass leverage to ensure proper validation
   const { nextButtonDisabled } = useTradingFormValidation({
     currentStep,
     selectedInstrument,
     orderExecutionType,
     timeInForce,
-    quantity
+    quantity,
+    price,
+    selectedBroker,
+    leverage
   });
 
   useEffect(() => {

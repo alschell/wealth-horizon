@@ -19,10 +19,6 @@ const TradingLeverageOptions: React.FC<TradingLeverageOptionsProps> = ({
   setLeverage,
   orderType
 }) => {
-  const handleLeveragePreset = (value: number) => {
-    setLeverage(value);
-  };
-
   return (
     <div className="space-y-6">
       <div className="space-y-4">

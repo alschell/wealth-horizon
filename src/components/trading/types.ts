@@ -63,6 +63,7 @@ export type Instrument = {
   currentPrice: number;
   currency: string;
   exchange: string;
+  isin?: string; // Added ISIN property as optional
 };
 
 export type Broker = {

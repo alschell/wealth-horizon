@@ -7,7 +7,6 @@ import TradingAllocation from "./sections/TradingAllocation";
 import TradingReview from "./sections/TradingReview";
 import TradingOrderType from "./sections/TradingOrderType";
 import TradingStepsProgress from "./components/TradingStepsProgress";
-import TradingFormHeader from "./components/TradingFormHeader";
 import TradingFormContent from "./components/TradingFormContent";
 import { useTradingForm } from "./hooks/useTradingForm";
 import { useTradingFormValidation } from "./hooks/useTradingFormValidation";
@@ -106,10 +105,7 @@ const TradingForm: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto">
       <div className="mb-8">
-        <TradingFormHeader 
-          orderType={orderType} 
-          setOrderType={setOrderTypeLocal} 
-        />
+        <h2 className="text-2xl font-bold mb-6">New Trading Order</h2>
         <TradingStepsProgress 
           steps={steps}
           currentStep={currentStep}
@@ -120,6 +116,7 @@ const TradingForm: React.FC = () => {
         currentStep={currentStep}
         steps={steps}
         orderType={orderType}
+        setOrderType={setOrderTypeLocal}
         selectedInstrument={selectedInstrument}
         setSelectedInstrument={setSelectedInstrument}
         quantity={quantity}

@@ -5,6 +5,7 @@ import TradingFormNavigation from "./TradingFormNavigation";
 import { OrderType, Instrument, TradeOrder } from "../types";
 import TradingStepRenderer from "./TradingStepRenderer";
 import { useTradingFormContent } from "../hooks/useTradingFormContent";
+import TradingOrderTypeSelector from "./TradingOrderTypeSelector";
 
 interface Step {
   title: string;
@@ -15,6 +16,7 @@ interface TradingFormContentProps {
   currentStep: number;
   steps: Step[];
   orderType: OrderType;
+  setOrderType: (type: OrderType) => void;
   selectedInstrument: Instrument | null;
   setSelectedInstrument: (instrument: Instrument | null) => void;
   quantity: number | "";
@@ -42,6 +44,7 @@ const TradingFormContent: React.FC<TradingFormContentProps> = ({
   currentStep,
   steps,
   orderType,
+  setOrderType,
   selectedInstrument,
   setSelectedInstrument,
   quantity,
@@ -97,6 +100,15 @@ const TradingFormContent: React.FC<TradingFormContentProps> = ({
         transition={{ duration: 0.3 }}
         className="w-full p-6 border border-gray-200 rounded-md shadow-sm bg-white"
       >
+        {currentStep === 0 && (
+          <div className="mb-6">
+            <TradingOrderTypeSelector 
+              orderType={orderType} 
+              setOrderType={setOrderType} 
+            />
+          </div>
+        )}
+        
         <TradingStepRenderer
           CurrentStepComponent={CurrentStepComponent}
           stepTitle={steps[currentStep]?.title || ""}

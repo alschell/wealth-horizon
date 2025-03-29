@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import TradingFormNavigation from "./TradingFormNavigation";
 import { OrderType, Instrument, TradeOrder } from "../types";
@@ -64,6 +64,14 @@ const TradingFormContent: React.FC<TradingFormContentProps> = ({
 }) => {
   const [renderError, setRenderError] = useState<string | null>(null);
   
+  // Log whenever the current step changes to help with debugging
+  useEffect(() => {
+    console.log(`TradingFormContent: Current step changed to ${currentStep}`, { 
+      stepName: steps[currentStep]?.title,
+      component: steps[currentStep]?.component?.name
+    });
+  }, [currentStep, steps]);
+  
   const CurrentStepComponent = steps[currentStep]?.component;
 
   const variants = {
@@ -75,12 +83,20 @@ const TradingFormContent: React.FC<TradingFormContentProps> = ({
   const renderCurrentStep = () => {
     try {
       if (!CurrentStepComponent) {
+        console.error("No component found for step", currentStep);
         return (
           <div className="text-center py-12">
-            <p className="text-gray-500">Loading...</p>
+            <p className="text-gray-500">Component not found for this step.</p>
           </div>
         );
       }
+
+      console.log(`Rendering step ${currentStep}:`, {
+        component: CurrentStepComponent.name || "Unknown",
+        orderType,
+        selectedBroker,
+        orderExecutionType
+      });
 
       return (
         <>

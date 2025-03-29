@@ -10,6 +10,7 @@ import FundingSourcesSection from "./allocation/buy/FundingSourcesSection";
 import DestinationPortfoliosSection from "./allocation/buy/DestinationPortfoliosSection";
 import SourcePortfoliosSection from "./allocation/sell/SourcePortfoliosSection";
 import DestinationCashAccountsSection from "./allocation/sell/DestinationCashAccountsSection";
+import { useToast } from "@/components/ui/use-toast";
 
 interface TradingAllocationProps {
   orderType: OrderType;
@@ -29,37 +30,56 @@ const TradingAllocation: React.FC<TradingAllocationProps> = ({
   order,
   setOrder
 }) => {
-  console.log("TradingAllocation rendering", { orderType, selectedInstrument, quantity, price, order });
+  console.log("TradingAllocation rendering", { 
+    orderType, 
+    selectedInstrument, 
+    quantity, 
+    price, 
+    order: JSON.stringify(order)
+  });
+  
   const [viewMode, setViewMode] = useState<ViewMode>("portfolios");
+  const [hasRenderError, setHasRenderError] = useState(false);
+  const { toast } = useToast();
   
   useEffect(() => {
-    console.log("TradingAllocation mounted/updated");
+    console.log("TradingAllocation mounted/updated with orderType:", orderType);
     
-    // Initialize any required allocations if they don't exist
-    if (orderType === "buy" && (!order.fundingAllocations || order.fundingAllocations.length === 0)) {
-      console.log("Initializing empty funding allocations");
-      setOrder({
-        ...order,
-        fundingAllocations: []
+    try {
+      // Initialize any required allocations if they don't exist
+      if (orderType === "buy" && (!order.fundingAllocations || order.fundingAllocations.length === 0)) {
+        console.log("Initializing empty funding allocations");
+        setOrder({
+          ...order,
+          fundingAllocations: []
+        });
+      }
+      
+      if (!order.depositAllocations || order.depositAllocations.length === 0) {
+        console.log("Initializing empty deposit allocations");
+        setOrder({
+          ...order,
+          depositAllocations: []
+        });
+      }
+      
+      if (orderType === "sell" && (!order.instrumentAllocations || order.instrumentAllocations.length === 0)) {
+        console.log("Initializing empty instrument allocations");
+        setOrder({
+          ...order,
+          instrumentAllocations: []
+        });
+      }
+    } catch (error) {
+      console.error("Error initializing allocations:", error);
+      toast({
+        title: "Initialization Error",
+        description: "Failed to initialize allocations. Please try again.",
+        variant: "destructive"
       });
+      setHasRenderError(true);
     }
-    
-    if (!order.depositAllocations || order.depositAllocations.length === 0) {
-      console.log("Initializing empty deposit allocations");
-      setOrder({
-        ...order,
-        depositAllocations: []
-      });
-    }
-    
-    if (orderType === "sell" && (!order.instrumentAllocations || order.instrumentAllocations.length === 0)) {
-      console.log("Initializing empty instrument allocations");
-      setOrder({
-        ...order,
-        instrumentAllocations: []
-      });
-    }
-  }, [orderType, order, setOrder]);
+  }, [orderType, order, setOrder, toast]);
   
   const totalAmount = typeof quantity === 'number' && (typeof price === 'number' || selectedInstrument?.currentPrice)
     ? quantity * (typeof price === 'number' ? price : selectedInstrument?.currentPrice || 0)
@@ -124,6 +144,26 @@ const TradingAllocation: React.FC<TradingAllocationProps> = ({
       );
     }
   };
+
+  // If there's a rendering error, show fallback UI
+  if (hasRenderError) {
+    return (
+      <div className="p-6 border border-red-300 bg-red-50 rounded-md">
+        <h3 className="text-lg font-medium text-red-700 mb-2">
+          Unable to Load Allocation Screen
+        </h3>
+        <p className="text-red-600 mb-4">
+          There was a problem loading the allocation interface. This may be due to missing data.
+        </p>
+        <Button
+          variant="outline"
+          onClick={() => setHasRenderError(false)}
+        >
+          Try Again
+        </Button>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">

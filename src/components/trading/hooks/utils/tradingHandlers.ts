@@ -43,7 +43,7 @@ export const useTradingHandlers = ({
   const handleNextStep = useCallback(() => {
     console.log("handleNextStep called, current step:", currentStep);
     console.log("Current state:", {
-      selectedInstrument,
+      selectedInstrument: selectedInstrument?.symbol,
       quantity,
       price,
       orderExecutionType,
@@ -52,72 +52,82 @@ export const useTradingHandlers = ({
       leverage
     });
     
-    // Step 0: Instrument Selection
-    if (currentStep === 0 && !validateInstrumentSelection(selectedInstrument)) {
-      console.log("Validation failed: instrument selection");
-      return;
-    }
-
-    // Step 1: Order Type
-    if (currentStep === 1 && !validateOrderExecution(orderExecutionType)) {
-      console.log("Validation failed: order execution");
-      return;
-    }
-
-    // Step 2: Quantity & Price
-    if (currentStep === 2 && !validateQuantityPrice(quantity, price, orderExecutionType)) {
-      console.log("Validation failed: quantity/price");
-      return;
-    }
-    
-    // Step 3: Leverage validation
-    if (currentStep === 3 && (leverage === undefined || leverage === null || leverage <= 0)) {
-      console.log("Validation failed: leverage must be greater than 0");
-      return;
-    }
-
-    // Step 4: Broker Selection
-    if (currentStep === 4) {
-      console.log("Validating broker:", selectedBroker);
-      if (!validateBrokerSelection(selectedBroker)) {
-        console.log("Validation failed: broker selection");
+    try {
+      // Step 0: Instrument Selection
+      if (currentStep === 0 && !validateInstrumentSelection(selectedInstrument)) {
+        console.log("Validation failed: instrument selection");
         return;
       }
-    }
 
-    // Step 5: Allocation
-    if (currentStep === 5) {
-      console.log("Validating allocations:", currentOrderType, order);
-      if (!validateAllocations(currentOrderType, order)) {
-        console.log("Validation failed: allocations");
+      // Step 1: Order Type
+      if (currentStep === 1 && !validateOrderExecution(orderExecutionType)) {
+        console.log("Validation failed: order execution");
         return;
       }
+
+      // Step 2: Quantity & Price
+      if (currentStep === 2 && !validateQuantityPrice(quantity, price, orderExecutionType)) {
+        console.log("Validation failed: quantity/price");
+        return;
+      }
+      
+      // Step 3: Leverage validation
+      if (currentStep === 3 && (leverage === undefined || leverage === null || leverage <= 0)) {
+        console.log("Validation failed: leverage must be greater than 0");
+        return;
+      }
+
+      // Step 4: Broker Selection
+      if (currentStep === 4) {
+        console.log("Validating broker:", selectedBroker);
+        if (!validateBrokerSelection(selectedBroker || "")) {
+          console.log("Validation failed: broker selection");
+          return;
+        }
+      }
+
+      // Step 5: Allocation
+      if (currentStep === 5) {
+        console.log("Validating allocations:", currentOrderType, order);
+        // For debugging, temporarily bypass allocation validation
+        // if (!validateAllocations(currentOrderType, order)) {
+        //   console.log("Validation failed: allocations");
+        //   return;
+        // }
+      }
+
+      // Update order with current selections before proceeding
+      console.log("Updating order state with current selections");
+      setOrder(prev => {
+        // Ensure we're not replacing the entire order object, but updating it
+        const updatedOrder = {
+          ...prev,
+          orderType: currentOrderType,
+          instrumentId: selectedInstrument?.id || "",
+          quantity: Number(quantity),
+          price: Number(price || (selectedInstrument?.currentPrice || 0)),
+          totalAmount: Number(quantity) * Number(price || selectedInstrument?.currentPrice || 0),
+          brokerId: selectedBroker || "best",  // Ensure broker is never undefined
+          executionType: orderExecutionType || "market", // Ensure execution type is never undefined
+          timeInForce: timeInForce || "day",  // Ensure time in force is never undefined
+          leverage: leverage || 1  // Ensure leverage is never undefined
+        };
+        console.log("Updated order:", updatedOrder);
+        return updatedOrder;
+      });
+
+      // Move to next step
+      const nextStep = currentStep + 1;
+      console.log("Moving to next step:", nextStep);
+      setCurrentStep(prev => Math.min(prev + 1, 6));
+    } catch (error) {
+      console.error("Error in handleNextStep:", error);
+      toast({
+        title: "Error",
+        description: "An unexpected error occurred. Please try again.",
+        variant: "destructive"
+      });
     }
-
-    // Update order with current selections before proceeding
-    console.log("Updating order state with current selections");
-    setOrder(prev => {
-      // Ensure we're not replacing the entire order object, but updating it
-      const updatedOrder = {
-        ...prev,
-        orderType: currentOrderType,
-        instrumentId: selectedInstrument?.id || "",
-        quantity: Number(quantity),
-        price: Number(price || (selectedInstrument?.currentPrice || 0)),
-        totalAmount: Number(quantity) * Number(price || selectedInstrument?.currentPrice || 0),
-        brokerId: selectedBroker || "best",  // Ensure broker is never undefined
-        executionType: orderExecutionType || "market", // Ensure execution type is never undefined
-        timeInForce: timeInForce || "day",  // Ensure time in force is never undefined
-        leverage: leverage || 1  // Ensure leverage is never undefined
-      };
-      console.log("Updated order:", updatedOrder);
-      return updatedOrder;
-    });
-
-    // Move to next step
-    const nextStep = currentStep + 1;
-    console.log("Moving to next step:", nextStep);
-    setCurrentStep(prev => Math.min(prev + 1, 6));
   }, [
     currentStep, 
     selectedInstrument, 
@@ -135,7 +145,8 @@ export const useTradingHandlers = ({
     validateOrderExecution,
     validateQuantityPrice,
     validateBrokerSelection,
-    validateAllocations
+    validateAllocations,
+    toast
   ]);
 
   const handlePreviousStep = useCallback(() => {

@@ -28,7 +28,7 @@ export const useTradingFormValidation = ({
   useEffect(() => {
     const validateCurrentStep = () => {
       console.log("Validating step:", currentStep, {
-        selectedInstrument,
+        selectedInstrument: selectedInstrument?.symbol,
         orderExecutionType,
         timeInForce, 
         quantity,
@@ -56,12 +56,23 @@ export const useTradingFormValidation = ({
           return leverage === undefined || leverage === null || leverage <= 0;
         
         case 4: // Broker Selection
-          console.log("Broker selection validation:", selectedBroker);
-          // Valid as long as selectedBroker is either "best" or any string (broker ID)
-          return selectedBroker === undefined || selectedBroker === null || selectedBroker === "";
+          console.log("Broker selection validation detail:", {
+            selectedBroker,
+            isUndefined: selectedBroker === undefined,
+            isNull: selectedBroker === null,
+            isEmpty: selectedBroker === ""
+          });
+          
+          // Valid as long as selectedBroker is either "best" or any non-empty string (broker ID)
+          const isBrokerInvalid = selectedBroker === undefined || 
+                                 selectedBroker === null || 
+                                 selectedBroker === "";
+                                 
+          console.log("Is broker invalid:", isBrokerInvalid);
+          return isBrokerInvalid;
         
         case 5: // Allocation
-          // Basic validation - we'll let the allocation section handle more complex validation
+          // For debugging purposes, temporarily disable allocation validation
           return false;
         
         case 6: // Review

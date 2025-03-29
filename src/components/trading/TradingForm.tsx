@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import TradingInstrumentSearch from "./sections/TradingInstrumentSearch";
 import TradingQuantityPrice from "./sections/TradingQuantityPrice";
@@ -45,24 +44,21 @@ const TradingForm: React.FC = () => {
     setLeverage
   } = useTradingForm(orderType);
 
-  // For debugging
   useEffect(() => {
     console.log("Current step:", currentStep);
     console.log("Current order state:", order);
   }, [currentStep, order]);
 
-  // Update the form's order type when local state changes
   useEffect(() => {
     setOrderType(orderType);
   }, [orderType, setOrderType]);
 
-  // Control Next button disabled state based on current step validation
   useEffect(() => {
     const validateCurrentStep = () => {
       switch (currentStep) {
         case 0: // Instrument Selection
           return !selectedInstrument;
-        case 1: // Order Type
+        case 1: // Order Type & Validity
           return !orderExecutionType || !timeInForce;
         case 2: // Quantity & Price
           return !quantity;
@@ -74,12 +70,11 @@ const TradingForm: React.FC = () => {
     setNextButtonDisabled(validateCurrentStep());
   }, [currentStep, selectedInstrument, orderExecutionType, timeInForce, quantity]);
 
-  // Define the step components with conditions
   const steps = [
     { title: "Select Instrument", component: TradingInstrumentSearch },
-    { title: "Order Type", component: TradingOrderType },
+    { title: "Order Type & Validity", component: TradingOrderType },
     { title: "Quantity & Price", component: TradingQuantityPrice },
-    { title: "Validity & Leverage", component: TradingValiditySelection },
+    { title: "Leverage", component: TradingValiditySelection },
     { title: "Select Broker", component: TradingBrokerSelection },
     { title: "Allocate", component: TradingAllocation },
     { title: "Review Order", component: TradingReview }
@@ -87,14 +82,12 @@ const TradingForm: React.FC = () => {
 
   const CurrentStepComponent = steps[currentStep]?.component;
 
-  // Animation variants
   const variants = {
     enter: { opacity: 0, x: 20 },
     center: { opacity: 1, x: 0 },
     exit: { opacity: 0, x: -20 }
   };
 
-  // Safe render function to catch errors
   const renderCurrentStep = () => {
     try {
       if (!CurrentStepComponent) {

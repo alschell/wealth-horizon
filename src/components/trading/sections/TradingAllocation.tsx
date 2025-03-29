@@ -43,9 +43,6 @@ const TradingAllocation: React.FC<TradingAllocationProps> = ({
   useEffect(() => {
     console.log("TradingAllocation mounted/updated with orderType:", orderType);
     
-    // Skip if already initialized
-    if (isInitialized) return;
-    
     try {
       // Create a new order object with initialized properties
       const updatedOrder = { ...order };
@@ -79,7 +76,7 @@ const TradingAllocation: React.FC<TradingAllocationProps> = ({
       setHasRenderError(true);
       setIsInitialized(true);
     }
-  }, [orderType, order, setOrder, toast, isInitialized]);
+  }, []);  // Run only once on mount
   
   const totalAmount = typeof quantity === 'number' && (typeof price === 'number' || selectedInstrument?.currentPrice)
     ? quantity * (typeof price === 'number' ? price : selectedInstrument?.currentPrice || 0)
@@ -89,7 +86,7 @@ const TradingAllocation: React.FC<TradingAllocationProps> = ({
   const currency = selectedInstrument?.currency || "USD";
 
   // Render a simple placeholder if there's an error or we're waiting for initialization
-  if (hasRenderError || !isInitialized) {
+  if (hasRenderError) {
     return (
       <div className="space-y-4">
         <h3 className="text-lg font-medium">
@@ -100,9 +97,7 @@ const TradingAllocation: React.FC<TradingAllocationProps> = ({
         
         <div className="p-6 border rounded-md">
           <p className="text-center text-gray-500">
-            {hasRenderError 
-              ? "There was an issue loading allocation details. You can proceed anyway."
-              : "Preparing allocation options..."}
+            There was an issue loading allocation details. You can proceed anyway.
           </p>
         </div>
       </div>
@@ -119,7 +114,7 @@ const TradingAllocation: React.FC<TradingAllocationProps> = ({
         </h3>
       </div>
 
-      {/* Restore the actual allocation functionality based on order type */}
+      {/* Allocation functionality based on order type */}
       <div className="space-y-6">
         {orderType === "buy" ? (
           <>

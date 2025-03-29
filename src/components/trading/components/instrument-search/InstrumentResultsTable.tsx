@@ -48,10 +48,10 @@ const InstrumentResultsTable: React.FC<InstrumentResultsTableProps> = ({
               </TableCell>
               <TableCell className="text-center">
                 <Button
-                  variant={selectedInstrument?.id === instrument.id ? "outline" : "default"}
+                  variant={selectedInstrument?.id === instrument.id ? "default" : "outline"}
                   size="sm"
                   onClick={() => onSelectInstrument(instrument)}
-                  className={`w-20 ${selectedInstrument?.id === instrument.id ? "bg-white border-gray-300 hover:bg-gray-100" : "bg-black text-white hover:bg-gray-800"}`}
+                  className={`w-20 ${selectedInstrument?.id === instrument.id ? "bg-black text-white hover:bg-gray-800" : "bg-white border-gray-300 hover:bg-gray-100"}`}
                 >
                   {selectedInstrument?.id === instrument.id ? "Selected" : "Select"}
                 </Button>

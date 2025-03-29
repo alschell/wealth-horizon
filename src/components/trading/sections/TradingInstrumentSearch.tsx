@@ -21,32 +21,12 @@ const TradingInstrumentSearch: React.FC<TradingInstrumentSearchProps> = ({
   const [searchResults, setSearchResults] = useState<Instrument[]>([]);
   const [isSearching, setIsSearching] = useState(false);
 
-  // Auto-search when typing
-  useEffect(() => {
-    if (searchTerm.trim().length > 0) {
-      setIsSearching(true);
-      
-      // Add a small delay to avoid too many searches while typing
-      const debounceTimer = setTimeout(() => {
-        // Filter instruments based on search term (symbol, name, or ISIN)
-        const results = mockInstruments.filter(
-          instrument => 
-            instrument.symbol.toLowerCase().includes(searchTerm.toLowerCase()) || 
-            instrument.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            (instrument.isin && instrument.isin.toLowerCase().includes(searchTerm.toLowerCase()))
-        );
-        setSearchResults(results);
-        setIsSearching(false);
-      }, 300);
-      
-      return () => clearTimeout(debounceTimer);
-    } else {
-      setSearchResults([]);
-    }
-  }, [searchTerm]);
-
+  // Search function
   const handleSearch = () => {
-    if (!searchTerm.trim()) return;
+    if (!searchTerm.trim()) {
+      setSearchResults([]);
+      return;
+    }
     
     setIsSearching(true);
     
@@ -62,6 +42,19 @@ const TradingInstrumentSearch: React.FC<TradingInstrumentSearchProps> = ({
       setIsSearching(false);
     }, 300);
   };
+
+  // Auto-search when typing with debounce
+  useEffect(() => {
+    const debounceTimer = setTimeout(() => {
+      if (searchTerm) {
+        handleSearch();
+      } else {
+        setSearchResults([]);
+      }
+    }, 300);
+    
+    return () => clearTimeout(debounceTimer);
+  }, [searchTerm]);
 
   const handleSelectInstrument = (instrument: Instrument) => {
     // Toggle selection: if already selected, deselect it

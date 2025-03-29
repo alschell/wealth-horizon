@@ -1,7 +1,6 @@
 
-import React, { useState } from "react";
+import React from "react";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
 
 interface SearchBarProps {
@@ -29,15 +28,19 @@ const SearchBar: React.FC<SearchBarProps> = ({
         <Input
           placeholder="Search by symbol, company name, or ISIN (e.g., AAPL, Apple, US0378331005)"
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={(e) => {
+            setSearchTerm(e.target.value);
+            // Auto-search when typing
+            if (e.target.value.trim().length > 0) {
+              onSearch();
+            }
+          }}
           onKeyDown={handleKeyDown}
           className="pl-10"
         />
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
       </div>
-      <Button onClick={onSearch} disabled={isSearching}>
-        {isSearching ? "Searching..." : "Search"}
-      </Button>
+      {/* Search button removed */}
     </div>
   );
 };

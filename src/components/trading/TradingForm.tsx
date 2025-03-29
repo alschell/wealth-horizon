@@ -58,7 +58,28 @@ const TradingForm: React.FC = () => {
   useEffect(() => {
     console.log("Current step:", currentStep);
     console.log("Current order state:", order);
-  }, [currentStep, order]);
+    
+    // Ensure we have a broker selected, defaulting to "best" if not set
+    if (currentStep >= 4 && !selectedBroker) {
+      setSelectedBroker("best");
+    }
+    
+    // Initialize order with default values when reaching allocation step
+    if (currentStep === 5) {
+      setOrder(prevOrder => {
+        // Only update if properties aren't already set
+        if (!prevOrder.fundingAllocations || !prevOrder.depositAllocations || !prevOrder.instrumentAllocations) {
+          return {
+            ...prevOrder,
+            fundingAllocations: prevOrder.fundingAllocations || [],
+            depositAllocations: prevOrder.depositAllocations || [],
+            instrumentAllocations: prevOrder.instrumentAllocations || []
+          };
+        }
+        return prevOrder;
+      });
+    }
+  }, [currentStep, order, selectedBroker, setSelectedBroker, setOrder]);
 
   useEffect(() => {
     setOrderType(orderType);

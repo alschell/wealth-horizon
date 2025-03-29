@@ -1,4 +1,3 @@
-
 import { useCallback } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { Instrument, OrderType, TradeOrder } from "../../types";
@@ -69,8 +68,14 @@ export const useTradingHandlers = ({
       console.log("Validation failed: quantity/price");
       return;
     }
+    
+    // Step 3: Leverage validation
+    if (currentStep === 3 && (leverage === undefined || leverage === null || leverage <= 0)) {
+      console.log("Validation failed: leverage must be greater than 0");
+      return;
+    }
 
-    // Step 4: Broker Selection (since step 3 is Leverage)
+    // Step 4: Broker Selection
     if (currentStep === 4 && !validateBrokerSelection(selectedBroker)) {
       console.log("Validation failed: broker selection");
       return;
@@ -97,8 +102,8 @@ export const useTradingHandlers = ({
         price: Number(price || (selectedInstrument?.currentPrice || 0)),
         totalAmount: Number(quantity) * Number(price || selectedInstrument?.currentPrice || 0),
         brokerId: selectedBroker || "best",  // Ensure broker is never undefined
-        executionType: orderExecutionType,
-        timeInForce: timeInForce,
+        executionType: orderExecutionType || "market", // Ensure execution type is never undefined
+        timeInForce: timeInForce || "day",  // Ensure time in force is never undefined
         leverage: leverage || 1  // Ensure leverage is never undefined
       };
       console.log("Updated order:", updatedOrder);

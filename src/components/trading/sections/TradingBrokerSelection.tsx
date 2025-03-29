@@ -26,7 +26,7 @@ const TradingBrokerSelection: React.FC<TradingBrokerSelectionProps> = ({
     if (!selectedBroker) {
       setSelectedBroker("best");
     }
-  }, []);
+  }, [selectedBroker, setSelectedBroker]);
 
   useEffect(() => {
     if (selectedBroker !== "best") {
@@ -48,14 +48,26 @@ const TradingBrokerSelection: React.FC<TradingBrokerSelectionProps> = ({
   const getBrokerScore = (brokerId: string): number => {
     // In a real app, this would be calculated based on performance metrics
     const scores: Record<string, number> = {
-      "broker-1": 95,
-      "broker-2": 92,
-      "broker-3": 88,
-      "broker-4": 91,
-      "broker-5": 84,
-      "broker-6": 86,
+      "broker-1": 92,
+      "broker-2": 93,
+      "broker-3": 90,
+      "broker-4": 89,
+      "broker-5": 91,
+      "broker-6": 90,
       "broker-7": 93,
-      "broker-8": 85
+      "broker-8": 88,
+      "broker-9": 94,
+      "broker-10": 87,
+      "broker-11": 95,
+      "broker-12": 92,
+      "broker-13": 94,
+      "broker-14": 96,
+      "broker-15": 91,
+      "broker-16": 93,
+      "broker-17": 90,
+      "broker-18": 89,
+      "broker-19": 91,
+      "broker-20": 92
     };
     
     return scores[brokerId] || 90;

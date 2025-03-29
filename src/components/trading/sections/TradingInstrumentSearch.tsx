@@ -28,11 +28,12 @@ const TradingInstrumentSearch: React.FC<TradingInstrumentSearchProps> = ({
       
       // Add a small delay to avoid too many searches while typing
       const debounceTimer = setTimeout(() => {
-        // Filter instruments based on search term
+        // Filter instruments based on search term (symbol, name, or ISIN)
         const results = mockInstruments.filter(
           instrument => 
             instrument.symbol.toLowerCase().includes(searchTerm.toLowerCase()) || 
-            instrument.name.toLowerCase().includes(searchTerm.toLowerCase())
+            instrument.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            (instrument.isin && instrument.isin.toLowerCase().includes(searchTerm.toLowerCase()))
         );
         setSearchResults(results);
         setIsSearching(false);
@@ -54,7 +55,8 @@ const TradingInstrumentSearch: React.FC<TradingInstrumentSearchProps> = ({
       const results = mockInstruments.filter(
         instrument => 
           instrument.symbol.toLowerCase().includes(searchTerm.toLowerCase()) || 
-          instrument.name.toLowerCase().includes(searchTerm.toLowerCase())
+          instrument.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          (instrument.isin && instrument.isin.toLowerCase().includes(searchTerm.toLowerCase()))
       );
       setSearchResults(results);
       setIsSearching(false);
@@ -76,7 +78,7 @@ const TradingInstrumentSearch: React.FC<TradingInstrumentSearchProps> = ({
       <div className="flex gap-2">
         <div className="relative flex-1">
           <Input
-            placeholder="Search for symbol or company name (e.g., AAPL, Apple)"
+            placeholder="Search by symbol, company name, or ISIN (e.g., AAPL, Apple, US0378331005)"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             onKeyDown={handleKeyDown}
@@ -103,7 +105,8 @@ const TradingInstrumentSearch: React.FC<TradingInstrumentSearchProps> = ({
                 <TableHead>Symbol</TableHead>
                 <TableHead>Name</TableHead>
                 <TableHead>Type</TableHead>
-                <TableHead>Exchange</TableHead>
+                <TableHead className="hidden md:table-cell">ISIN</TableHead>
+                <TableHead className="hidden md:table-cell">Exchange</TableHead>
                 <TableHead>Price</TableHead>
                 <TableHead>Action</TableHead>
               </TableRow>
@@ -117,7 +120,8 @@ const TradingInstrumentSearch: React.FC<TradingInstrumentSearchProps> = ({
                   <TableCell className="font-medium">{instrument.symbol}</TableCell>
                   <TableCell>{instrument.name}</TableCell>
                   <TableCell>{instrument.type}</TableCell>
-                  <TableCell>{instrument.exchange}</TableCell>
+                  <TableCell className="hidden md:table-cell">{instrument.isin || "—"}</TableCell>
+                  <TableCell className="hidden md:table-cell">{instrument.exchange}</TableCell>
                   <TableCell>
                     {instrument.currentPrice.toLocaleString('en-US', {
                       style: 'currency',
@@ -175,6 +179,12 @@ const TradingInstrumentSearch: React.FC<TradingInstrumentSearchProps> = ({
               <p className="text-sm text-gray-500">Exchange</p>
               <p>{selectedInstrument.exchange}</p>
             </div>
+            {selectedInstrument.isin && (
+              <div>
+                <p className="text-sm text-gray-500">ISIN</p>
+                <p>{selectedInstrument.isin}</p>
+              </div>
+            )}
           </div>
         </div>
       )}

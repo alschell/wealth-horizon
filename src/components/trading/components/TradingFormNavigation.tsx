@@ -10,6 +10,7 @@ interface TradingFormNavigationProps {
   onNext: () => void;
   onSubmit: () => void;
   isLoading?: boolean;
+  disabled?: boolean; // New disabled prop
 }
 
 const TradingFormNavigation: React.FC<TradingFormNavigationProps> = ({
@@ -18,7 +19,8 @@ const TradingFormNavigation: React.FC<TradingFormNavigationProps> = ({
   onPrevious,
   onNext,
   onSubmit,
-  isLoading = false
+  isLoading = false,
+  disabled = false // Default to false
 }) => {
   // Determine which button to show based on the current step
   const renderNextButton = () => {
@@ -29,7 +31,7 @@ const TradingFormNavigation: React.FC<TradingFormNavigationProps> = ({
           size="lg" 
           className="rounded-lg bg-black hover:bg-gray-800 text-white hover:shadow-md"
           onClick={onNext}
-          disabled={isLoading}
+          disabled={disabled || isLoading}
         >
           {isLoading ? (
             <>
@@ -51,7 +53,7 @@ const TradingFormNavigation: React.FC<TradingFormNavigationProps> = ({
           size="lg" 
           className="rounded-lg bg-green-600 hover:bg-green-700 text-white hover:shadow-md"
           onClick={onSubmit}
-          disabled={isLoading}
+          disabled={disabled || isLoading}
         >
           {isLoading ? (
             <>

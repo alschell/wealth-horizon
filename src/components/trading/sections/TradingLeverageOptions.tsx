@@ -38,59 +38,62 @@ const TradingLeverageOptions: React.FC<TradingLeverageOptionsProps> = ({
           onValueChange={(value) => setLeverage(Number(value))}
           className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-4"
         >
-          <div onClick={() => setLeverage(1)}>
-            <Card className={`p-4 cursor-pointer transition-all ${leverage === 1 ? 'ring-2 ring-black' : 'hover:bg-gray-50'}`}>
-              <div className="flex items-start">
-                <RadioGroupItem value="1" id="leverage-1" className="mr-2 mt-1" />
-                <div>
-                  <Label htmlFor="leverage-1" className="cursor-pointer font-medium flex items-center">
-                    <Shield className="h-4 w-4 mr-2 text-green-600" />
-                    No Leverage (1x)
-                  </Label>
-                  <p className="text-sm text-gray-600 mt-1">
-                    Standard trading with your available capital.
-                  </p>
-                  <Badge variant="secondary" className="mt-2">Conservative</Badge>
-                </div>
+          <Card 
+            className={`p-4 cursor-pointer transition-all ${leverage === 1 ? 'ring-2 ring-black' : 'hover:bg-gray-50'}`}
+            onClick={() => setLeverage(1)}
+          >
+            <div className="flex items-start">
+              <RadioGroupItem value="1" id="leverage-1" className="mr-2 mt-1" />
+              <div className="w-full">
+                <Label htmlFor="leverage-1" className="cursor-pointer font-medium flex items-center">
+                  <Shield className="h-4 w-4 mr-2 text-green-600" />
+                  No Leverage (1x)
+                </Label>
+                <p className="text-sm text-gray-600 mt-1">
+                  Standard trading with your available capital.
+                </p>
+                <Badge variant="secondary" className="mt-2">Conservative</Badge>
               </div>
-            </Card>
-          </div>
+            </div>
+          </Card>
 
-          <div onClick={() => setLeverage(2)}>
-            <Card className={`p-4 cursor-pointer transition-all ${leverage === 2 ? 'ring-2 ring-black' : 'hover:bg-gray-50'}`}>
-              <div className="flex items-start">
-                <RadioGroupItem value="2" id="leverage-2" className="mr-2 mt-1" />
-                <div>
-                  <Label htmlFor="leverage-2" className="cursor-pointer font-medium flex items-center">
-                    <TrendingUp className="h-4 w-4 mr-2 text-blue-600" />
-                    Moderate (2x)
-                  </Label>
-                  <p className="text-sm text-gray-600 mt-1">
-                    Double your buying power with moderate risk.
-                  </p>
-                  <Badge variant="outline" className="mt-2">Standard</Badge>
-                </div>
+          <Card 
+            className={`p-4 cursor-pointer transition-all ${leverage === 2 ? 'ring-2 ring-black' : 'hover:bg-gray-50'}`}
+            onClick={() => setLeverage(2)}
+          >
+            <div className="flex items-start">
+              <RadioGroupItem value="2" id="leverage-2" className="mr-2 mt-1" />
+              <div className="w-full">
+                <Label htmlFor="leverage-2" className="cursor-pointer font-medium flex items-center">
+                  <TrendingUp className="h-4 w-4 mr-2 text-blue-600" />
+                  Moderate (2x)
+                </Label>
+                <p className="text-sm text-gray-600 mt-1">
+                  Double your buying power with moderate risk.
+                </p>
+                <Badge variant="outline" className="mt-2">Standard</Badge>
               </div>
-            </Card>
-          </div>
+            </div>
+          </Card>
 
-          <div onClick={() => setLeverage(5)}>
-            <Card className={`p-4 cursor-pointer transition-all ${leverage === 5 ? 'ring-2 ring-black' : 'hover:bg-gray-50'}`}>
-              <div className="flex items-start">
-                <RadioGroupItem value="5" id="leverage-5" className="mr-2 mt-1" />
-                <div>
-                  <Label htmlFor="leverage-5" className="cursor-pointer font-medium flex items-center">
-                    <AlertTriangle className="h-4 w-4 mr-2 text-amber-600" />
-                    Advanced (5x)
-                  </Label>
-                  <p className="text-sm text-gray-600 mt-1">
-                    Quintuple your position size with higher risk.
-                  </p>
-                  <Badge variant="destructive" className="mt-2">High Risk</Badge>
-                </div>
+          <Card 
+            className={`p-4 cursor-pointer transition-all ${leverage === 5 ? 'ring-2 ring-black' : 'hover:bg-gray-50'}`}
+            onClick={() => setLeverage(5)}
+          >
+            <div className="flex items-start">
+              <RadioGroupItem value="5" id="leverage-5" className="mr-2 mt-1" />
+              <div className="w-full">
+                <Label htmlFor="leverage-5" className="cursor-pointer font-medium flex items-center">
+                  <AlertTriangle className="h-4 w-4 mr-2 text-amber-600" />
+                  Advanced (5x)
+                </Label>
+                <p className="text-sm text-gray-600 mt-1">
+                  Quintuple your position size with higher risk.
+                </p>
+                <Badge variant="destructive" className="mt-2">High Risk</Badge>
               </div>
-            </Card>
-          </div>
+            </div>
+          </Card>
         </RadioGroup>
       </div>
 

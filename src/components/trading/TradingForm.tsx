@@ -17,6 +17,7 @@ import TradingValiditySelection from "./sections/TradingValiditySelection";
 const TradingForm: React.FC = () => {
   const [orderType, setOrderTypeLocal] = useState<OrderType>("buy");
   const [renderError, setRenderError] = useState<string | null>(null);
+  const [nextButtonDisabled, setNextButtonDisabled] = useState(true);
   
   const {
     currentStep,
@@ -54,6 +55,24 @@ const TradingForm: React.FC = () => {
   useEffect(() => {
     setOrderType(orderType);
   }, [orderType, setOrderType]);
+
+  // Control Next button disabled state based on current step validation
+  useEffect(() => {
+    const validateCurrentStep = () => {
+      switch (currentStep) {
+        case 0: // Instrument Selection
+          return !selectedInstrument;
+        case 1: // Order Type
+          return !orderExecutionType || !timeInForce;
+        case 2: // Quantity & Price
+          return !quantity;
+        default:
+          return false;
+      }
+    };
+    
+    setNextButtonDisabled(validateCurrentStep());
+  }, [currentStep, selectedInstrument, orderExecutionType, timeInForce, quantity]);
 
   // Define the step components with conditions
   const steps = [
@@ -178,6 +197,7 @@ const TradingForm: React.FC = () => {
               onPrevious={handlePreviousStep}
               onNext={handleNextStep}
               onSubmit={handleSubmitOrder}
+              disabled={nextButtonDisabled}
             />
           </div>
         </motion.div>

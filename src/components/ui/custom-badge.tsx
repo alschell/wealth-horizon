@@ -3,9 +3,10 @@ import React from "react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
-type CustomBadgeVariant = "default" | "destructive" | "outline" | "secondary" | "success";
+// Define a variant type that extends the base Badge variants
+export type CustomBadgeVariant = "default" | "destructive" | "outline" | "secondary" | "success";
 
-interface CustomBadgeProps extends React.ComponentProps<typeof Badge> {
+interface CustomBadgeProps extends Omit<React.ComponentProps<typeof Badge>, 'variant'> {
   variant?: CustomBadgeVariant;
 }
 

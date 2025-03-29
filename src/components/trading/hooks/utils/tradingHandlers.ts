@@ -77,9 +77,12 @@ export const useTradingHandlers = ({
     }
 
     // Step 4: Broker Selection
-    if (currentStep === 4 && !validateBrokerSelection(selectedBroker)) {
-      console.log("Validation failed: broker selection");
-      return;
+    if (currentStep === 4) {
+      console.log("Validating broker:", selectedBroker);
+      if (!validateBrokerSelection(selectedBroker)) {
+        console.log("Validation failed: broker selection");
+        return;
+      }
     }
 
     // Step 5: Allocation
@@ -111,8 +114,9 @@ export const useTradingHandlers = ({
       return updatedOrder;
     });
 
-    console.log("Moving to next step:", currentStep + 1);
     // Move to next step
+    const nextStep = currentStep + 1;
+    console.log("Moving to next step:", nextStep);
     setCurrentStep(prev => Math.min(prev + 1, 6));
   }, [
     currentStep, 

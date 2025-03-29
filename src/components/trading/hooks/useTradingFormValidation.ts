@@ -53,12 +53,12 @@ export const useTradingFormValidation = ({
           return false;
         
         case 3: // Leverage
-          // Fix: leverage is valid as long as it's a number greater than 0
           return leverage === undefined || leverage === null || leverage <= 0;
         
         case 4: // Broker Selection
-          // Both "best" and any other broker ID are valid selections
-          return selectedBroker === undefined || selectedBroker === null;
+          console.log("Broker selection validation:", selectedBroker);
+          // Valid as long as selectedBroker is either "best" or any string (broker ID)
+          return selectedBroker === undefined || selectedBroker === null || selectedBroker === "";
         
         case 5: // Allocation
           // Basic validation - we'll let the allocation section handle more complex validation

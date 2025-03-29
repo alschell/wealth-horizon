@@ -45,7 +45,9 @@ export const useTradingValidations = () => {
 
   const validateBrokerSelection = (selectedBroker: string | "best") => {
     console.log("Validating broker selection:", selectedBroker);
-    if (selectedBroker === undefined || selectedBroker === null) {
+    
+    // Check if broker is valid - either "best" or a non-empty string
+    if (selectedBroker === undefined || selectedBroker === null || selectedBroker === "") {
       toast({
         title: "Error",
         description: "Please select a broker to proceed",
@@ -53,6 +55,8 @@ export const useTradingValidations = () => {
       });
       return false;
     }
+    
+    console.log("Broker validation passed:", selectedBroker);
     return true;
   };
 

@@ -85,6 +85,9 @@ const TradingAllocation: React.FC<TradingAllocationProps> = ({
     ? quantity * (typeof price === 'number' ? price : selectedInstrument?.currentPrice || 0)
     : 0;
 
+  // Default currency from the selected instrument or fallback to USD
+  const currency = selectedInstrument?.currency || "USD";
+
   // Render a simple placeholder if there's an error or we're waiting for initialization
   if (hasRenderError || !isInitialized) {
     return (
@@ -124,13 +127,15 @@ const TradingAllocation: React.FC<TradingAllocationProps> = ({
               totalAmount={totalAmount}
               order={order}
               setOrder={setOrder}
+              currency={currency}
+              viewMode="portfolios"
+              instrumentPrice={typeof price === 'number' ? price : selectedInstrument?.currentPrice || 0}
             />
             
             <DestinationPortfoliosSection
               totalQuantity={typeof quantity === 'number' ? quantity : 0}
               order={order}
               setOrder={setOrder}
-              viewMode="portfolios"
             />
           </>
         ) : (
@@ -140,12 +145,16 @@ const TradingAllocation: React.FC<TradingAllocationProps> = ({
               selectedInstrument={selectedInstrument}
               order={order}
               setOrder={setOrder}
+              viewMode="portfolios"
+              price={typeof price === 'number' ? price : selectedInstrument?.currentPrice || 0}
             />
             
             <DestinationCashAccountsSection
               totalAmount={totalAmount}
               order={order}
               setOrder={setOrder}
+              currency={currency}
+              viewMode="portfolios"
             />
           </>
         )}

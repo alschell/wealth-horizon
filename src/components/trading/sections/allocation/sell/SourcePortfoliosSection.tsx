@@ -19,6 +19,9 @@ import {
 import { TradeOrder } from "../../../types";
 import { QuantityAllocationSummary } from "../AllocationSummary";
 import { mockPortfoliosFlat, mockPortfoliosByInstitution } from "../../../data";
+import { Check, Info } from "lucide-react";
+import { Tooltip } from "@/components/ui/tooltip";
+import { Badge } from "@/components/ui/badge";
 
 interface SourcePortfoliosSectionProps {
   totalQuantity: number;
@@ -40,7 +43,8 @@ const SourcePortfoliosSection: React.FC<SourcePortfoliosSectionProps> = ({
   const [allocations, setAllocations] = useState<Record<string, number>>({});
   const [currentAllocation, setCurrentAllocation] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedPortfolioId, setSelectedPortfolioId] = useState<string | null>(null);
+  const [selectedPortfolios, setSelectedPortfolios] = useState<string[]>([]);
+  const [tempAllocations, setTempAllocations] = useState<Record<string, number>>({});
 
   // Initialize with existing allocations if any
   useEffect(() => {
@@ -99,30 +103,95 @@ const SourcePortfoliosSection: React.FC<SourcePortfoliosSectionProps> = ({
   // Calculate the remaining quantity to allocate
   const remainingQuantity = totalQuantity - currentAllocation;
 
-  // Open modal for selecting a portfolio
+  // Open modal for selecting portfolios
   const openPortfolioSelectionModal = () => {
+    // Initialize temporary allocations with existing ones
+    setTempAllocations({ ...allocations });
+    
+    // Initialize selected portfolios from existing allocations
+    setSelectedPortfolios(
+      Object.keys(allocations).filter(id => allocations[id] > 0)
+    );
+    
     setIsModalOpen(true);
+  };
+
+  // Handle portfolio selection in modal
+  const handlePortfolioSelect = (portfolioId: string) => {
+    setSelectedPortfolios(prev => {
+      if (prev.includes(portfolioId)) {
+        return prev.filter(id => id !== portfolioId);
+      } else {
+        return [...prev, portfolioId];
+      }
+    });
+    
+    // Initialize quantity with a default value if not already set
+    if (!tempAllocations[portfolioId]) {
+      const availableQty = availableHoldings[portfolioId] || 0;
+      const suggestedQty = Math.min(
+        availableQty, 
+        remainingQuantity > 0 ? remainingQuantity : 0
+      );
+      setTempAllocations(prev => ({ ...prev, [portfolioId]: suggestedQty }));
+    }
+  };
+  
+  // Handle temp allocation change in modal
+  const handleTempAllocationChange = (portfolioId: string, quantity: number) => {
+    setTempAllocations(prev => ({ ...prev, [portfolioId]: quantity }));
   };
 
   // Close modal and reset selection
   const closeModal = () => {
     setIsModalOpen(false);
-    setSelectedPortfolioId(null);
+    setSelectedPortfolios([]);
+    setTempAllocations({});
   };
 
-  // Confirm selection and add allocation
-  const confirmPortfolioSelection = () => {
-    if (selectedPortfolioId) {
-      const availableQuantity = availableHoldings[selectedPortfolioId] || 0;
-      const suggestedAllocation = Math.min(
-        availableQuantity,
-        remainingQuantity > 0 ? remainingQuantity : 0
-      );
-      
-      handleAllocationChange(selectedPortfolioId, suggestedAllocation);
-    }
+  // Confirm selections and allocations from modal
+  const confirmPortfolioSelections = () => {
+    // Update allocations with temp allocations for selected portfolios
+    const newAllocations = { ...allocations };
+    
+    // Clear allocations for portfolios that are no longer selected
+    Object.keys(newAllocations).forEach(portfolioId => {
+      if (!selectedPortfolios.includes(portfolioId)) {
+        delete newAllocations[portfolioId];
+      }
+    });
+    
+    // Add or update allocations for selected portfolios
+    selectedPortfolios.forEach(portfolioId => {
+      newAllocations[portfolioId] = tempAllocations[portfolioId] || 0;
+    });
+    
+    // Update state and order
+    setAllocations(newAllocations);
+    updateCurrentAllocation(newAllocations);
+    
+    const instrumentAllocations = Object.entries(newAllocations)
+      .filter(([_, quantity]) => quantity > 0)
+      .map(([portfolioId, quantity]) => ({
+        portfolioId,
+        quantity
+      }));
+    
+    setOrder({ ...order, instrumentAllocations });
+    
+    // Close modal
     closeModal();
   };
+
+  // Calculate total temporary allocation
+  const tempTotalAllocation = selectedPortfolios.reduce(
+    (sum, portfolioId) => sum + (tempAllocations[portfolioId] || 0), 
+    0
+  );
+  
+  // Check if the total matches the required quantity
+  const isAllocationComplete = tempTotalAllocation === totalQuantity;
+  const isAllocationExceeded = tempTotalAllocation > totalQuantity;
 
   // Render selected portfolios table
   const renderSelectedPortfolios = () => {
@@ -173,7 +242,7 @@ const SourcePortfoliosSection: React.FC<SourcePortfoliosSectionProps> = ({
                       <Input
                         type="number"
                         min="0"
-                        max={Math.min(availableQuantity, remainingQuantity + quantity)}
+                        max={availableQuantity}
                         value={quantity}
                         onChange={(e) => handleAllocationChange(portfolioId, Number(e.target.value))}
                         className="w-24"
@@ -208,7 +277,7 @@ const SourcePortfoliosSection: React.FC<SourcePortfoliosSectionProps> = ({
             className="bg-black text-white hover:bg-gray-800"
             disabled={!selectedInstrument}
           >
-            Add Source Portfolio
+            Manage Source Portfolios
           </Button>
         </div>
       </div>
@@ -217,20 +286,48 @@ const SourcePortfoliosSection: React.FC<SourcePortfoliosSectionProps> = ({
 
   // Portfolio selection modal
   const renderPortfolioSelectionModal = () => {
-    // Filter portfolios with available holdings
-    const availablePortfolios = mockPortfoliosFlat
+    // Get all portfolios with available holdings
+    const portfoliosWithHoldings = mockPortfoliosFlat
       .filter(portfolio => {
-        const hasHoldings = availableHoldings[portfolio.id] && availableHoldings[portfolio.id] > 0;
-        const notSelected = !Object.keys(allocations).includes(portfolio.id) || allocations[portfolio.id] === 0;
-        return hasHoldings && notSelected;
+        return availableHoldings[portfolio.id] && availableHoldings[portfolio.id] > 0;
       });
     
     return (
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="max-w-3xl max-h-[80vh] overflow-auto">
+        <DialogContent className="max-w-4xl max-h-[80vh] overflow-auto">
           <DialogHeader>
-            <DialogTitle>Select Source Portfolio</DialogTitle>
+            <DialogTitle>Select Source Portfolios</DialogTitle>
           </DialogHeader>
+          
+          <div className="mb-4">
+            <p className="text-sm text-gray-600">
+              Select which portfolios to sell shares from and specify the quantity from each. 
+              The total must match the order quantity of {totalQuantity} shares.
+            </p>
+            
+            <div className="mt-2 flex items-center justify-between">
+              <div>
+                <Badge variant={isAllocationComplete ? "success" : isAllocationExceeded ? "destructive" : "outline"}>
+                  {tempTotalAllocation} / {totalQuantity} shares allocated
+                </Badge>
+              </div>
+              <div className="text-sm text-gray-600">
+                {isAllocationComplete ? (
+                  <span className="text-green-600 flex items-center">
+                    <Check className="h-4 w-4 mr-1" /> Perfect allocation
+                  </span>
+                ) : isAllocationExceeded ? (
+                  <span className="text-red-600">
+                    Over-allocated by {tempTotalAllocation - totalQuantity} shares
+                  </span>
+                ) : (
+                  <span className="text-amber-600">
+                    {totalQuantity - tempTotalAllocation} shares remaining to allocate
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
           
           <Table>
             <TableHeader>
@@ -239,39 +336,52 @@ const SourcePortfoliosSection: React.FC<SourcePortfoliosSectionProps> = ({
                 <TableHead>Portfolio</TableHead>
                 <TableHead>Institution</TableHead>
                 <TableHead>Available Shares</TableHead>
+                <TableHead>Quantity to Sell</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {availablePortfolios.length > 0 ? (
-                availablePortfolios.map(portfolio => {
+              {portfoliosWithHoldings.length > 0 ? (
+                portfoliosWithHoldings.map(portfolio => {
                   const institution = mockPortfoliosByInstitution.find(
                     inst => inst.id === portfolio.institutionId
                   );
                   
                   const availableQuantity = availableHoldings[portfolio.id] || 0;
+                  const isSelected = selectedPortfolios.includes(portfolio.id);
                   
                   return (
                     <TableRow 
                       key={portfolio.id} 
-                      className={selectedPortfolioId === portfolio.id ? "bg-gray-100" : ""}
-                      onClick={() => setSelectedPortfolioId(portfolio.id)}
+                      className={isSelected ? "bg-gray-50" : ""}
                     >
                       <TableCell>
                         <input 
-                          type="radio" 
-                          checked={selectedPortfolioId === portfolio.id}
-                          onChange={() => setSelectedPortfolioId(portfolio.id)}
+                          type="checkbox" 
+                          checked={isSelected}
+                          onChange={() => handlePortfolioSelect(portfolio.id)}
+                          className="h-4 w-4"
                         />
                       </TableCell>
                       <TableCell>{portfolio.name}</TableCell>
                       <TableCell>{institution?.name || "Unknown"}</TableCell>
                       <TableCell>{availableQuantity} shares</TableCell>
+                      <TableCell>
+                        <Input
+                          type="number"
+                          min="0"
+                          max={availableQuantity}
+                          value={tempAllocations[portfolio.id] || 0}
+                          onChange={(e) => handleTempAllocationChange(portfolio.id, Number(e.target.value))}
+                          disabled={!isSelected}
+                          className="w-24"
+                        />
+                      </TableCell>
                     </TableRow>
                   );
                 })
               ) : (
                 <TableRow>
-                  <TableCell colSpan={4} className="text-center">
+                  <TableCell colSpan={5} className="text-center">
                     No portfolios with holdings of this instrument
                   </TableCell>
                 </TableRow>
@@ -285,10 +395,10 @@ const SourcePortfoliosSection: React.FC<SourcePortfoliosSectionProps> = ({
             </Button>
             <Button 
               className="bg-black text-white hover:bg-gray-800"
-              onClick={confirmPortfolioSelection}
-              disabled={!selectedPortfolioId}
+              onClick={confirmPortfolioSelections}
+              disabled={portfoliosWithHoldings.length === 0 || selectedPortfolios.length === 0}
             >
-              Select
+              Confirm Selections
             </Button>
           </div>
         </DialogContent>

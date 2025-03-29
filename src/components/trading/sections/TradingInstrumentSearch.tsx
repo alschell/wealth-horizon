@@ -70,7 +70,10 @@ const TradingInstrumentSearch: React.FC<TradingInstrumentSearchProps> = ({
   };
 
   const handleSelectInstrument = (instrument: Instrument) => {
-    setSelectedInstrument(instrument);
+    // Toggle selection: if already selected, don't deselect
+    if (selectedInstrument?.id !== instrument.id) {
+      setSelectedInstrument(instrument);
+    }
   };
 
   return (

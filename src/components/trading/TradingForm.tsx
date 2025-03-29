@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import TradingInstrumentSearch from "./sections/TradingInstrumentSearch";
 import TradingQuantityPrice from "./sections/TradingQuantityPrice";
@@ -11,7 +12,7 @@ import { useTradingForm } from "./hooks/useTradingForm";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowDownUp, TrendingUp } from "lucide-react";
 import { OrderType } from "./types";
-import TradingValiditySelection from "./sections/TradingValiditySelection";
+import TradingLeverageOptions from "./sections/TradingLeverageOptions";
 
 const TradingForm: React.FC = () => {
   const [orderType, setOrderTypeLocal] = useState<OrderType>("buy");
@@ -74,7 +75,7 @@ const TradingForm: React.FC = () => {
     { title: "Select Instrument", component: TradingInstrumentSearch },
     { title: "Order Type & Validity", component: TradingOrderType },
     { title: "Quantity & Price", component: TradingQuantityPrice },
-    { title: "Leverage", component: TradingValiditySelection },
+    { title: "Set Leverage", component: TradingLeverageOptions },
     { title: "Select Broker", component: TradingBrokerSelection },
     { title: "Allocate", component: TradingAllocation },
     { title: "Review Order", component: TradingReview }

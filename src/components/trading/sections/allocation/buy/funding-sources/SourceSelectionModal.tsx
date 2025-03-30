@@ -68,7 +68,7 @@ export const SourceSelectionModal: React.FC<SourceSelectionModalProps> = ({
   
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-md max-h-[85vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-3xl max-h-[85vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Select Funding Sources</DialogTitle>
         </DialogHeader>
@@ -101,9 +101,9 @@ export const SourceSelectionModal: React.FC<SourceSelectionModalProps> = ({
                 </span>
               </div>
             ) : (
-              <div className="text-xs text-green-600">
-                <Check className="inline-block h-3 w-3 mr-1" />
-                All shares are funded!
+              <div className="text-xs text-green-600 flex items-center">
+                <Check className="h-3 w-3 mr-1" />
+                <span>All shares are funded!</span>
               </div>
             )}
           </div>

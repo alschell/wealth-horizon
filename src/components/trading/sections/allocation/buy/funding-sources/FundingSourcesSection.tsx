@@ -1,31 +1,24 @@
 
 import React from "react";
-import { TradeOrder } from "../../../../types";
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
-import FundingSourceSelectionModal from "./FundingSourceSelectionModal";
+import { FundingSourceSelectionModal } from "../funding-sources/FundingSourceSelectionModal";
 import { useFundingSourcesSection } from "./hooks/useFundingSourcesSection";
-import { AllocationProgress } from "./components/AllocationProgress";
-import { AllocationWarning } from "./components/AllocationWarning";
-import { SelectedSources } from "./components/SelectedSources";
-import { EmptySourcesState } from "./components/EmptySourcesState";
+import FundingSourcesPanel from "../FundingSourcesPanel";
+import { TradeOrder } from "@/components/trading/types";
 
 interface FundingSourcesSectionProps {
   totalAmount: number;
   currency: string;
+  instrumentPrice: number;
   order: Partial<TradeOrder>;
   setOrder: (order: Partial<TradeOrder>) => void;
-  viewMode: "portfolios" | "institutions";
-  instrumentPrice: number;
 }
 
-export const FundingSourcesSection: React.FC<FundingSourcesSectionProps> = ({
+const FundingSourcesSection: React.FC<FundingSourcesSectionProps> = ({
   totalAmount,
   currency,
+  instrumentPrice,
   order,
-  setOrder,
-  viewMode,
-  instrumentPrice
+  setOrder
 }) => {
   const {
     isModalOpen,
@@ -33,8 +26,8 @@ export const FundingSourcesSection: React.FC<FundingSourcesSectionProps> = ({
     allocations,
     totalShares,
     requiredShares,
-    allocationPercentage,
     remainingShares,
+    allocationPercentage,
     handleConfirmSelection
   } = useFundingSourcesSection({
     totalAmount,
@@ -45,46 +38,25 @@ export const FundingSourcesSection: React.FC<FundingSourcesSectionProps> = ({
   });
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h3 className="text-lg font-semibold">Funding Sources</h3>
+    <div className="space-y-4">
+      <div className="mb-6">
+        <h2 className="text-lg font-semibold mb-2">Funding Sources</h2>
+        <p className="text-sm text-gray-600">
+          Specify from which accounts to fund this purchase and where to deposit the acquired assets.
+        </p>
       </div>
-      
-      {/* Allocation Progress */}
-      <AllocationProgress
-        allocationPercentage={allocationPercentage}
-        requiredShares={requiredShares}
+
+      <FundingSourcesPanel
+        fundingAllocations={allocations}
+        onAllocationChange={() => {}}
         totalAmount={totalAmount}
         currency={currency}
+        price={instrumentPrice}
+        order={order}
+        setOrder={setOrder}
       />
 
-      {/* Selected funding sources */}
-      {Object.keys(allocations).length > 0 ? (
-        <div className="border rounded-md p-4 space-y-4">
-          <div className="flex justify-end mb-2">
-            <Button onClick={() => setIsModalOpen(true)}>
-              <Plus className="h-4 w-4 mr-2" />
-              Manage Funding Sources
-            </Button>
-          </div>
-          
-          <SelectedSources 
-            allocations={allocations}
-            instrumentPrice={instrumentPrice}
-            requiredShares={requiredShares}
-            currency={currency}
-          />
-            
-          <AllocationWarning
-            allocationPercentage={allocationPercentage}
-            remainingShares={remainingShares}
-          />
-        </div>
-      ) : (
-        <EmptySourcesState onSelectSources={() => setIsModalOpen(true)} />
-      )}
-
-      {/* Modal for funding source selection */}
+      {/* Selection Modal */}
       <FundingSourceSelectionModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}

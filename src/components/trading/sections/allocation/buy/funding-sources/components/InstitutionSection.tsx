@@ -1,6 +1,5 @@
 
 import React, { ReactNode } from "react";
-import { Institution } from "@/components/trading/types";
 
 interface InstitutionSectionProps {
   name: string;

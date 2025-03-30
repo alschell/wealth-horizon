@@ -1,6 +1,5 @@
 
 import React, { ReactNode } from "react";
-import { LegalEntity } from "@/components/trading/types";
 
 interface LegalEntitySectionProps {
   name: string;

@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Institution } from "@/components/trading/types";
-import { LegalEntitySection } from "./LegalEntitySection";
+import LegalEntitySection from "./LegalEntitySection";
 
 interface InstitutionSectionProps {
   institution: Institution;
@@ -47,7 +47,7 @@ const InstitutionSection: React.FC<InstitutionSectionProps> = ({
           {institution.legalEntities.map(legalEntity => (
             <LegalEntitySection
               key={legalEntity.id}
-              legalEntity={legalEntity}
+              entity={legalEntity}
               allocations={allocations}
               instrumentPrice={instrumentPrice}
               currency={currency}

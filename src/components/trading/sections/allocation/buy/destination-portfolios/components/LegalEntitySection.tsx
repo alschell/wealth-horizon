@@ -26,13 +26,13 @@ const LegalEntitySection: React.FC<LegalEntitySectionProps> = ({
       
       <div className="space-y-2 ml-4">
         {entity.portfolios.map(portfolio => {
-          const currentAllocation = allocations[portfolio.id] || 0;
+          const currentQuantity = allocations[portfolio.id] || 0;
           
           return (
             <PortfolioItem
               key={portfolio.id}
               portfolio={portfolio}
-              allocation={currentAllocation}
+              currentQuantity={currentQuantity}
               instrumentPrice={instrumentPrice}
               currency={currency}
               remainingQuantity={remainingQuantity}

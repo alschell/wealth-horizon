@@ -20,7 +20,7 @@ export const FacilityItem: React.FC<FacilityItemProps> = ({
   remainingShares
 }) => {
   const estimatedAmount = currentShares * instrumentPrice;
-  const availableAmount = facility.availableCredit;
+  const availableAmount = facility.available;
   
   // Calculate max shares that can be allocated from this facility
   const maxSharesFromFacility = Math.floor(availableAmount / instrumentPrice);
@@ -43,7 +43,7 @@ export const FacilityItem: React.FC<FacilityItemProps> = ({
         <div>
           <div className="text-xs text-gray-500 mb-1">Available Credit</div>
           <div className="text-sm font-medium">
-            {facility.availableCredit.toLocaleString('en-US', {
+            {facility.available.toLocaleString('en-US', {
               style: 'currency',
               currency: facility.currency
             })}

@@ -132,4 +132,5 @@ export const SelectedPortfoliosTable: React.FC<SelectedPortfoliosTableProps> = (
   );
 };
 
+// Add a default export as well for backward compatibility
 export default SelectedPortfoliosTable;

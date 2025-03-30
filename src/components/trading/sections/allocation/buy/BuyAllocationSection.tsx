@@ -35,7 +35,6 @@ const BuyAllocationSection: React.FC<BuyAllocationSectionProps> = ({
           currency={currency}
           order={order}
           setOrder={setOrder}
-          viewMode="institutions"
           instrumentPrice={instrumentPrice}
         />
       </div>

@@ -75,7 +75,7 @@ const FundingSourceSelectionModal: React.FC<FundingSourceSelectionModalProps> = 
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen => !setIsOpen && onClose()}>
-      <DialogContent className="sm:max-w-md max-h-[80vh] overflow-auto">
+      <DialogContent className="sm:max-w-xl max-h-[80vh] overflow-auto">
         <FundingSourceModalHeader />
 
         <div className="py-4">

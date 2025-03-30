@@ -1,5 +1,6 @@
 
 export { default as FundingSourcesSection } from './FundingSourcesSection';
-export * from './SourceSelectionModal';
+export { default as FundingSourceSelectionModal } from './FundingSourceSelectionModal';
 export * from './components';
 export { useFundingSources } from './hooks/useFundingSources';
+

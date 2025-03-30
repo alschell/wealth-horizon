@@ -68,7 +68,7 @@ export const SourceSelectionModal: React.FC<SourceSelectionModalProps> = ({
   
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-3xl max-h-[85vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-4xl max-h-[85vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Select Funding Sources</DialogTitle>
         </DialogHeader>

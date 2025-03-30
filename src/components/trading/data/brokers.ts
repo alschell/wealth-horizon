@@ -5,7 +5,7 @@ export const mockBrokers: Broker[] = [
   {
     id: "broker-1",
     name: "Agricultural Bank of China",
-    description: "One of the "Big Four" banks in China",
+    description: "One of the 'Big Four' banks in China",
     fee: "0.12%"
   },
   {
@@ -41,7 +41,7 @@ export const mockBrokers: Broker[] = [
   {
     id: "broker-7",
     name: "China Construction Bank",
-    description: "One of the "Big Four" banks in China",
+    description: "One of the 'Big Four' banks in China",
     fee: "0.12%"
   },
   {
@@ -77,7 +77,7 @@ export const mockBrokers: Broker[] = [
   {
     id: "broker-13",
     name: "Industrial and Commercial Bank of China",
-    description: "One of the "Big Four" banks in China",
+    description: "One of the 'Big Four' banks in China",
     fee: "0.11%"
   },
   {

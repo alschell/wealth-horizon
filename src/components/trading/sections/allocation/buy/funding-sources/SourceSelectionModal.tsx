@@ -6,7 +6,8 @@ import { CashAccountsList } from "./components/CashAccountsList";
 import { CreditFacilitiesList } from "./components/CreditFacilitiesList";
 import { ModalFooter } from "./components/ModalFooter";
 import { Progress } from "@/components/ui/progress";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, Check, Search } from "lucide-react";
+import { Input } from "@/components/ui/input";
 
 interface SourceSelectionModalProps {
   isOpen: boolean;
@@ -30,12 +31,14 @@ export const SourceSelectionModal: React.FC<SourceSelectionModalProps> = ({
   const [activeTab, setActiveTab] = useState<"cash" | "credit">("cash");
   const [tempAllocations, setTempAllocations] = useState<Record<string, number>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   
   // Initialize with current allocations when modal opens
   useEffect(() => {
     if (isOpen) {
       setTempAllocations({ ...currentAllocations });
       setIsSubmitting(false);
+      setSearchQuery("");
     }
   }, [isOpen, currentAllocations]);
   
@@ -99,12 +102,27 @@ export const SourceSelectionModal: React.FC<SourceSelectionModalProps> = ({
               </div>
             ) : (
               <div className="text-xs text-green-600">
+                <Check className="inline-block h-3 w-3 mr-1" />
                 All shares are funded!
               </div>
             )}
           </div>
 
-          <Tabs defaultValue="cash" value={activeTab} onValueChange={(v) => setActiveTab(v as "cash" | "credit")}>
+          {/* Search Bar */}
+          <div className="relative mb-4">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <Input
+              className="pl-9 h-10"
+              placeholder={`Search ${activeTab === "cash" ? "cash accounts" : "credit facilities"}...`}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+
+          <Tabs defaultValue="cash" value={activeTab} onValueChange={(v) => {
+            setActiveTab(v as "cash" | "credit");
+            setSearchQuery(""); // Clear search when switching tabs
+          }}>
             <TabsList className="w-full grid grid-cols-2">
               <TabsTrigger value="cash">Cash Accounts</TabsTrigger>
               <TabsTrigger value="credit">Credit Facilities</TabsTrigger>
@@ -116,6 +134,7 @@ export const SourceSelectionModal: React.FC<SourceSelectionModalProps> = ({
                 handleAllocationChange={handleAllocationChange}
                 instrumentPrice={instrumentPrice}
                 remainingShares={remainingShares}
+                searchQuery={searchQuery}
               />
             </TabsContent>
             
@@ -125,6 +144,7 @@ export const SourceSelectionModal: React.FC<SourceSelectionModalProps> = ({
                 handleAllocationChange={handleAllocationChange}
                 instrumentPrice={instrumentPrice}
                 remainingShares={remainingShares}
+                searchQuery={searchQuery}
               />
             </TabsContent>
           </Tabs>

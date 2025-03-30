@@ -1,13 +1,14 @@
 
-import React, { useState } from "react";
-import { Input } from "@/components/ui/input";
+import React from "react";
 import { CreditFacility } from "@/components/trading/types";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 interface FacilityItemProps {
   facility: CreditFacility;
   currentShares: number;
   instrumentPrice: number;
-  handleAllocationChange: (sourceId: string, quantity: number) => void;
+  handleAllocationChange: (facilityId: string, shares: number) => void;
   remainingShares: number;
 }
 
@@ -18,76 +19,72 @@ export const FacilityItem: React.FC<FacilityItemProps> = ({
   handleAllocationChange,
   remainingShares
 }) => {
-  const [shares, setShares] = useState(currentShares.toString());
+  const estimatedAmount = currentShares * instrumentPrice;
+  const availableAmount = facility.availableCredit;
   
-  // Calculate maximum amount of shares that can be allocated from this facility
-  const maxShares = facility.available / instrumentPrice;
+  // Calculate max shares that can be allocated from this facility
+  const maxSharesFromFacility = Math.floor(availableAmount / instrumentPrice);
   
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = e.target.value;
-    setShares(newValue);
-    
-    const numericValue = parseFloat(newValue) || 0;
-    handleAllocationChange(facility.id, numericValue);
+  const handleMaxClick = () => {
+    const maxShares = Math.min(maxSharesFromFacility, currentShares + remainingShares);
+    handleAllocationChange(facility.id, maxShares);
   };
-  
-  const handleMax = () => {
-    // Calculate the maximum shares to allocate, considering the remaining shares needed
-    const sharesNeeded = Math.min(maxShares, remainingShares + currentShares);
-    setShares(sharesNeeded.toString());
-    handleAllocationChange(facility.id, sharesNeeded);
-  };
-  
-  // Format the estimated amount
-  const estimatedAmount = (parseFloat(shares) || 0) * instrumentPrice;
-  
+
   return (
-    <div className="border rounded-md p-4 hover:bg-gray-50 transition-colors">
-      <div className="grid grid-cols-3 gap-4">
-        <div className="col-span-1">
-          <h3 className="font-medium text-gray-900">{facility.name}</h3>
-          <p className="text-sm text-gray-500">{facility.currency}</p>
-        </div>
-        
-        <div className="col-span-1">
-          <p className="text-sm font-medium text-gray-700 mb-1">Available:</p>
-          <p className="text-sm text-gray-900">
-            {facility.available.toLocaleString('en-US', { 
-              style: 'currency', 
-              currency: facility.currency 
-            })}
-          </p>
-        </div>
-        
-        <div className="col-span-1">
-          <p className="text-sm font-medium text-gray-700 mb-1">Est. borrowed amount:</p>
-          <p className="text-sm text-gray-900">
-            {estimatedAmount.toLocaleString('en-US', { 
-              style: 'currency', 
-              currency: facility.currency 
-            })}
-          </p>
+    <div className={`p-4 border rounded-md ${currentShares > 0 ? 'bg-gray-50 border-gray-400' : 'border-gray-200'}`}>
+      <div className="flex justify-between items-start mb-3">
+        <div>
+          <h4 className="font-medium">{facility.name}</h4>
+          <p className="text-xs text-gray-500">Credit Facility</p>
         </div>
       </div>
       
-      <div className="flex items-center gap-2 mt-4">
-        <Input
-          type="number"
-          value={shares}
-          onChange={handleChange}
-          className="w-full text-right"
-          min="0"
-          max={maxShares.toString()}
-        />
-        <button 
-          onClick={handleMax}
-          className="text-xs text-blue-600 border border-blue-600 rounded px-3 py-1 hover:bg-blue-50 whitespace-nowrap"
-          type="button"
-        >
-          Max
-        </button>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center mt-2">
+        <div>
+          <div className="text-xs text-gray-500 mb-1">Available Credit</div>
+          <div className="text-sm font-medium">
+            {facility.availableCredit.toLocaleString('en-US', {
+              style: 'currency',
+              currency: facility.currency
+            })}
+          </div>
+        </div>
+        
+        <div>
+          <div className="text-xs text-gray-500 mb-1">Shares to fund</div>
+          <div className="flex items-center gap-2">
+            <Input
+              type="number"
+              min="0"
+              max={maxSharesFromFacility}
+              value={currentShares || ""}
+              onChange={(e) => handleAllocationChange(facility.id, Number(e.target.value) || 0)}
+              className="w-full"
+              placeholder="0"
+            />
+            {remainingShares > 0 && (
+              <Button
+                variant="outline"
+                size="sm"
+                className="whitespace-nowrap"
+                onClick={handleMaxClick}
+              >
+                Max
+              </Button>
+            )}
+          </div>
+        </div>
+        
+        <div>
+          <div className="text-xs text-gray-500 mb-1">Estimated Amount</div>
+          <div className="text-sm font-medium">
+            {estimatedAmount.toLocaleString('en-US', {
+              style: 'currency',
+              currency: facility.currency
+            })}
+          </div>
+        </div>
       </div>
-      <p className="text-xs mt-1 text-center text-gray-500">Number of funded shares</p>
     </div>
   );
 };

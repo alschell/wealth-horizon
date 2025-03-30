@@ -7,10 +7,11 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Progress } from "@/components/ui/progress";
-import { AlertCircle, Check } from "lucide-react";
+import { AlertCircle, Check, Search } from "lucide-react";
 import { mockPortfoliosByInstitution } from "../../../../data";
 import { PortfoliosList } from "./components";
 import ModalFooter from "./components/ModalFooter";
+import { Input } from "@/components/ui/input";
 
 interface PortfolioSelectionModalProps {
   isOpen: boolean;
@@ -33,12 +34,14 @@ const PortfolioSelectionModal: React.FC<PortfolioSelectionModalProps> = ({
 }) => {
   const [tempAllocations, setTempAllocations] = useState<Record<string, number>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   
   // Initialize temp allocations when modal opens
   useEffect(() => {
     if (isOpen) {
       setTempAllocations(currentAllocations);
       setIsSubmitting(false);
+      setSearchQuery("");
     }
   }, [isOpen, currentAllocations]);
   
@@ -53,7 +56,6 @@ const PortfolioSelectionModal: React.FC<PortfolioSelectionModalProps> = ({
     // Add a small delay to show loading state
     setTimeout(() => {
       onConfirm(tempAllocations);
-      onClose();
       setIsSubmitting(false);
     }, 300);
   };
@@ -68,6 +70,30 @@ const PortfolioSelectionModal: React.FC<PortfolioSelectionModalProps> = ({
   const isAllocationComplete = Math.abs(totalAllocated - totalQuantity) < 0.001;
   const isAllocationExceeded = totalAllocated > totalQuantity;
   
+  // Filter institutions based on search query
+  const filteredInstitutions = React.useMemo(() => {
+    if (!searchQuery.trim()) return mockPortfoliosByInstitution;
+
+    const query = searchQuery.toLowerCase();
+    return mockPortfoliosByInstitution.map(institution => {
+      // Filter legal entities
+      const filteredLegalEntities = institution.legalEntities.map(le => {
+        // Filter portfolios within legal entities
+        const filteredPortfolios = le.portfolios.filter(portfolio => 
+          portfolio.name.toLowerCase().includes(query) || 
+          institution.name.toLowerCase().includes(query) ||
+          le.name.toLowerCase().includes(query)
+        );
+
+        return filteredPortfolios.length > 0 ? { ...le, portfolios: filteredPortfolios } : null;
+      }).filter(Boolean);
+
+      return filteredLegalEntities.length > 0 
+        ? { ...institution, legalEntities: filteredLegalEntities as any[] } 
+        : null;
+    }).filter(Boolean) as typeof mockPortfoliosByInstitution;
+  }, [searchQuery, mockPortfoliosByInstitution]);
+
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen => !setIsOpen && onClose()}>
       <DialogContent className="sm:max-w-4xl max-h-[80vh] overflow-auto">
@@ -121,8 +147,19 @@ const PortfolioSelectionModal: React.FC<PortfolioSelectionModalProps> = ({
           )}
         </div>
 
+        {/* Search Bar */}
+        <div className="relative mb-4">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <Input
+            className="pl-9 h-10"
+            placeholder="Search portfolios, legal entities, or institutions..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+
         <PortfoliosList 
-          institutions={mockPortfoliosByInstitution}
+          institutions={filteredInstitutions}
           allocations={tempAllocations}
           instrumentPrice={instrumentPrice}
           currency={currency}

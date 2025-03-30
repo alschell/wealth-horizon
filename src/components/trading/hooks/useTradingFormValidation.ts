@@ -74,7 +74,11 @@ export const useTradingFormValidation = ({
           
           return true;
         
-        case 4: // Broker Selection (now step 4 instead of 5)
+        case 4: // Leverage (new step)
+          // Leverage always has a default value, so we can always proceed
+          return false;
+        
+        case 5: // Broker Selection (now step 5 instead of 4)
           // Important: Only check if broker is undefined/null, but allow empty string as valid
           // because "best" is a valid broker selection
           const isBrokerInvalid = selectedBroker === undefined || selectedBroker === null;
@@ -84,7 +88,7 @@ export const useTradingFormValidation = ({
           });
           return isBrokerInvalid;
         
-        case 5: // Review
+        case 6: // Review (updated from step 5)
           // Review step should always allow proceeding to submit
           return false;
         

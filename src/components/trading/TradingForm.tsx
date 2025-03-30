@@ -12,6 +12,7 @@ import { useTradingForm } from "./hooks/useTradingForm";
 import { useTradingFormValidation } from "./hooks/useTradingFormValidation";
 import { OrderType } from "./types";
 import { motion } from "framer-motion";
+import TradingLeverageOptions from "./sections/TradingLeverageOptions";
 
 const TradingForm: React.FC = () => {
   const [orderType, setOrderTypeLocal] = useState<OrderType>("buy");
@@ -59,7 +60,7 @@ const TradingForm: React.FC = () => {
     console.log("TradingForm - Current order state:", JSON.stringify(order));
     
     // Ensure we have a broker selected, defaulting to "best" if not set
-    if (currentStep >= 4 && !selectedBroker) {
+    if (currentStep >= 5 && !selectedBroker) {  // Updated from 4 to 5 due to new Leverage step
       console.log("Setting default broker to 'best'");
       setSelectedBroker("best");
     }
@@ -69,12 +70,13 @@ const TradingForm: React.FC = () => {
     setOrderType(orderType);
   }, [orderType, setOrderType]);
 
-  // Changed first step from "Order & Instrument" to "Instrument"
+  // Added Leverage step between Allocation and Broker
   const steps = [
     { title: "Instrument", component: TradingInstrumentSearch },
     { title: "Type & Validity", component: TradingOrderType },
     { title: "Quantity & Price", component: TradingQuantityPrice },
     { title: "Allocation", component: TradingAllocation },
+    { title: "Leverage", component: TradingLeverageOptions }, // New step
     { title: "Broker", component: TradingBrokerSelection },
     { title: "Review", component: TradingReview }
   ];

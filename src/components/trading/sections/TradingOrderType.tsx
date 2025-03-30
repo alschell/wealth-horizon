@@ -1,10 +1,8 @@
 
 import React from "react";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card } from "@/components/ui/card";
 import { Clock } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { OrderType } from "../types";
 
 interface TradingOrderTypeProps {
@@ -37,9 +35,6 @@ const TradingOrderType: React.FC<TradingOrderTypeProps> = ({
             <div className="flex items-start">
               <div className="w-full">
                 <div className="font-medium">Market Order</div>
-                <p className="text-sm text-gray-600 mt-1">
-                  Execute immediately at the best available market price. Best used when execution speed is your priority.
-                </p>
               </div>
             </div>
           </Card>
@@ -51,9 +46,6 @@ const TradingOrderType: React.FC<TradingOrderTypeProps> = ({
             <div className="flex items-start">
               <div className="w-full">
                 <div className="font-medium">Limit Order</div>
-                <p className="text-sm text-gray-600 mt-1">
-                  Execute only at your specified price or better. Best used when price is your priority.
-                </p>
               </div>
             </div>
           </Card>
@@ -65,9 +57,6 @@ const TradingOrderType: React.FC<TradingOrderTypeProps> = ({
             <div className="flex items-start">
               <div className="w-full">
                 <div className="font-medium">Stop Order</div>
-                <p className="text-sm text-gray-600 mt-1">
-                  Becomes a market order when price reaches or passes your stop price. Used to limit losses or protect profits.
-                </p>
               </div>
             </div>
           </Card>
@@ -82,7 +71,7 @@ const TradingOrderType: React.FC<TradingOrderTypeProps> = ({
         </div>
         
         <Select value={timeInForce} onValueChange={setTimeInForce}>
-          <SelectTrigger className="w-full focus:ring-0">
+          <SelectTrigger className="w-full border-2 focus-visible:ring-0 focus-visible:border-black">
             <SelectValue placeholder="Select duration" />
           </SelectTrigger>
           <SelectContent>

@@ -1,10 +1,10 @@
 
-import React, { useState } from "react";
+import React from "react";
 import { Separator } from "@/components/ui/separator";
 import { TradeOrder } from "../../../types";
 import { AllocationSummary, QuantityAllocationSummary } from "../AllocationSummary";
-import SourcePortfoliosPanel from "./SourcePortfoliosPanel";
-import DestinationCashAccountsPanel from "./DestinationCashAccountsPanel";
+import SourcePortfoliosSection from "./SourcePortfoliosSection";
+import DestinationCashAccountsSection from "./DestinationCashAccountsSection";
 
 interface SellAllocationSectionProps {
   totalAmount: number;
@@ -25,75 +25,6 @@ const SellAllocationSection: React.FC<SellAllocationSectionProps> = ({
   setOrder,
   price
 }) => {
-  const [portfolioAllocations, setPortfolioAllocations] = useState<Record<string, number>>(
-    (order.instrumentAllocations || []).reduce((acc, item) => {
-      acc[item.portfolioId] = item.quantity;
-      return acc;
-    }, {} as Record<string, number>)
-  );
-  
-  const [cashAllocations, setCashAllocations] = useState<Record<string, number>>(
-    (order.depositAllocations || [])
-      .filter(item => item.destinationType === "cash")
-      .reduce((acc, item) => {
-        acc[item.destinationId] = item.amount || 0;
-        return acc;
-      }, {} as Record<string, number>)
-  );
-  
-  // Calculate current allocations
-  const currentPortfolioAllocation = Object.values(portfolioAllocations).reduce((sum, qty) => sum + qty, 0);
-  const remainingPortfolioQuantity = quantity - currentPortfolioAllocation;
-  
-  const currentCashAllocation = Object.values(cashAllocations).reduce((sum, amount) => sum + amount, 0);
-  const remainingCashAmount = totalAmount - currentCashAllocation;
-  
-  // Update portfolio allocations and sync with order state
-  const handlePortfolioAllocationChange = (portfolioId: string, quantity: number) => {
-    const newAllocations = { ...portfolioAllocations, [portfolioId]: quantity };
-    setPortfolioAllocations(newAllocations);
-    
-    // Update order state
-    const updatedInstrumentAllocations = Object.entries(newAllocations)
-      .filter(([_, qty]) => qty > 0)
-      .map(([portfolioId, quantity]) => ({
-        portfolioId,
-        quantity,
-        instrumentId: selectedInstrument.id
-      }));
-    
-    setOrder({
-      ...order,
-      instrumentAllocations: updatedInstrumentAllocations
-    });
-  };
-  
-  // Update cash allocations and sync with order state
-  const handleCashAllocationChange = (accountId: string, amount: number) => {
-    const newAllocations = { ...cashAllocations, [accountId]: amount };
-    setCashAllocations(newAllocations);
-    
-    // Get any non-cash allocations
-    const nonCashAllocations = (order.depositAllocations || [])
-      .filter(item => item.destinationType !== "cash");
-    
-    // Create updated cash allocations
-    const updatedCashAllocations = Object.entries(newAllocations)
-      .filter(([_, amount]) => amount > 0)
-      .map(([destinationId, amount]) => ({
-        destinationId,
-        destinationType: "cash" as const,
-        amount,
-        currency
-      }));
-    
-    // Update order state
-    setOrder({
-      ...order,
-      depositAllocations: [...nonCashAllocations, ...updatedCashAllocations]
-    });
-  };
-
   return (
     <div className="space-y-8">
       <div className="space-y-6">
@@ -102,18 +33,13 @@ const SellAllocationSection: React.FC<SellAllocationSectionProps> = ({
           Select portfolios to sell shares from
         </p>
         
-        <SourcePortfoliosPanel
-          portfolioAllocations={portfolioAllocations}
-          onAllocationChange={handlePortfolioAllocationChange}
+        <SourcePortfoliosSection
           totalQuantity={quantity}
           selectedInstrument={selectedInstrument}
+          order={order}
+          setOrder={setOrder}
+          viewMode="portfolios"
           price={price}
-        />
-        
-        <QuantityAllocationSummary
-          totalQuantity={quantity}
-          currentAllocation={currentPortfolioAllocation}
-          remainingQuantity={remainingPortfolioQuantity}
         />
       </div>
       
@@ -125,18 +51,12 @@ const SellAllocationSection: React.FC<SellAllocationSectionProps> = ({
           Select where to deposit the sale proceeds
         </p>
         
-        <DestinationCashAccountsPanel
-          cashAllocations={cashAllocations}
-          onAllocationChange={handleCashAllocationChange}
+        <DestinationCashAccountsSection
           totalAmount={totalAmount}
           currency={currency}
-        />
-        
-        <AllocationSummary
-          totalAmount={totalAmount}
-          currency={currency}
-          currentAllocation={currentCashAllocation}
-          remainingAmount={remainingCashAmount}
+          order={order}
+          setOrder={setOrder}
+          viewMode="portfolios"
         />
       </div>
     </div>

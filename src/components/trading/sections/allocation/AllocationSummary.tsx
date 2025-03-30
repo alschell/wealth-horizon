@@ -1,8 +1,5 @@
 
 import React from "react";
-import { Progress } from "@/components/ui/progress";
-import { Card } from "@/components/ui/card";
-import { Check, AlertTriangle } from "lucide-react";
 
 export interface AllocationSummaryProps {
   totalAmount: number;
@@ -17,68 +14,51 @@ export const AllocationSummary: React.FC<AllocationSummaryProps> = ({
   currentAllocation,
   remainingAmount
 }) => {
-  const allocationPercentage = Math.min(100, (currentAllocation / totalAmount) * 100);
-  const isComplete = Math.abs(remainingAmount) < 0.01;
-  const isExcess = remainingAmount < 0;
-
+  const allocationPercentage = totalAmount > 0 
+    ? (currentAllocation / totalAmount) * 100 
+    : 0;
+    
   return (
-    <Card className="p-4 border">
-      <div className="space-y-3">
-        <div className="flex justify-between items-center mb-1">
-          <div className="text-sm font-medium">Allocation Progress</div>
-          
-          <div className="flex items-center gap-1">
-            {isComplete ? (
-              <Check size={16} className="text-green-500" />
-            ) : isExcess ? (
-              <AlertTriangle size={16} className="text-amber-500" />
-            ) : null}
-            
-            <span className="text-sm font-medium">
-              {allocationPercentage.toFixed(0)}%
-            </span>
-          </div>
+    <div className="mt-4">
+      <div className="flex items-center justify-between mb-2">
+        <span className="text-sm font-medium">Allocation</span>
+        <span className="text-sm font-medium">{Math.round(allocationPercentage)}%</span>
+      </div>
+      
+      <div className="w-full bg-gray-200 rounded-full h-2.5">
+        <div 
+          className={`h-2.5 rounded-full ${allocationPercentage > 100 ? 'bg-red-500' : 'bg-green-500'}`}
+          style={{ width: `${Math.min(allocationPercentage, 100)}%` }}
+        ></div>
+      </div>
+      
+      <div className="flex justify-between mt-2">
+        <div className="text-sm text-gray-500">
+          <span>Total: {totalAmount.toLocaleString('en-US', { style: 'currency', currency })}</span>
         </div>
-
-        <Progress 
-          value={allocationPercentage} 
-          max={100}
-          className={`h-2 ${isComplete ? 'bg-green-100' : isExcess ? 'bg-amber-100' : 'bg-gray-100'}`}
-        />
-        
-        <div className="grid grid-cols-3 text-sm">
-          <div>
-            <div className="text-gray-500">Allocated</div>
-            <div className="font-medium">
-              {currentAllocation.toLocaleString('en-US', {
-                style: 'currency',
-                currency
-              })}
-            </div>
-          </div>
-          
-          <div>
-            <div className="text-gray-500">Remaining</div>
-            <div className={`font-medium ${isExcess ? 'text-amber-600' : isComplete ? 'text-green-600' : ''}`}>
-              {remainingAmount.toLocaleString('en-US', {
-                style: 'currency',
-                currency
-              })}
-            </div>
-          </div>
-          
-          <div>
-            <div className="text-gray-500">Total</div>
-            <div className="font-medium">
-              {totalAmount.toLocaleString('en-US', {
-                style: 'currency',
-                currency
-              })}
-            </div>
-          </div>
+        <div className="text-sm text-gray-500">
+          <span>Allocated: {currentAllocation.toLocaleString('en-US', { style: 'currency', currency })}</span>
         </div>
       </div>
-    </Card>
+      
+      {remainingAmount > 0 && (
+        <div className="mt-2 text-amber-600 text-sm">
+          {remainingAmount.toLocaleString('en-US', { style: 'currency', currency })} still needs to be allocated
+        </div>
+      )}
+      
+      {remainingAmount < 0 && (
+        <div className="mt-2 text-red-600 text-sm">
+          Over-allocated by {Math.abs(remainingAmount).toLocaleString('en-US', { style: 'currency', currency })}
+        </div>
+      )}
+      
+      {remainingAmount === 0 && (
+        <div className="mt-2 text-green-600 text-sm">
+          All funds have been allocated
+        </div>
+      )}
+    </div>
   );
 };
 
@@ -93,54 +73,50 @@ export const QuantityAllocationSummary: React.FC<QuantityAllocationSummaryProps>
   currentAllocation,
   remainingQuantity
 }) => {
-  const allocationPercentage = Math.min(100, (currentAllocation / totalQuantity) * 100);
-  const isComplete = Math.abs(remainingQuantity) < 0.01;
-  const isExcess = remainingQuantity < 0;
-
+  const allocationPercentage = totalQuantity > 0 
+    ? (currentAllocation / totalQuantity) * 100 
+    : 0;
+    
   return (
-    <Card className="p-4 border">
-      <div className="space-y-3">
-        <div className="flex justify-between items-center mb-1">
-          <div className="text-sm font-medium">Allocation Progress</div>
-          
-          <div className="flex items-center gap-1">
-            {isComplete ? (
-              <Check size={16} className="text-green-500" />
-            ) : isExcess ? (
-              <AlertTriangle size={16} className="text-amber-500" />
-            ) : null}
-            
-            <span className="text-sm font-medium">
-              {allocationPercentage.toFixed(0)}%
-            </span>
-          </div>
+    <div className="mt-4">
+      <div className="flex items-center justify-between mb-2">
+        <span className="text-sm font-medium">Allocation</span>
+        <span className="text-sm font-medium">{Math.round(allocationPercentage)}%</span>
+      </div>
+      
+      <div className="w-full bg-gray-200 rounded-full h-2.5">
+        <div 
+          className={`h-2.5 rounded-full ${allocationPercentage > 100 ? 'bg-red-500' : 'bg-green-500'}`}
+          style={{ width: `${Math.min(allocationPercentage, 100)}%` }}
+        ></div>
+      </div>
+      
+      <div className="flex justify-between mt-2">
+        <div className="text-sm text-gray-500">
+          <span>Total: {totalQuantity} shares</span>
         </div>
-
-        <Progress 
-          value={allocationPercentage} 
-          max={100}
-          className={`h-2 ${isComplete ? 'bg-green-100' : isExcess ? 'bg-amber-100' : 'bg-gray-100'}`}
-        />
-        
-        <div className="grid grid-cols-3 text-sm">
-          <div>
-            <div className="text-gray-500">Allocated</div>
-            <div className="font-medium">{currentAllocation.toLocaleString()} shares</div>
-          </div>
-          
-          <div>
-            <div className="text-gray-500">Remaining</div>
-            <div className={`font-medium ${isExcess ? 'text-amber-600' : isComplete ? 'text-green-600' : ''}`}>
-              {remainingQuantity.toLocaleString()} shares
-            </div>
-          </div>
-          
-          <div>
-            <div className="text-gray-500">Total</div>
-            <div className="font-medium">{totalQuantity.toLocaleString()} shares</div>
-          </div>
+        <div className="text-sm text-gray-500">
+          <span>Allocated: {currentAllocation} shares</span>
         </div>
       </div>
-    </Card>
+      
+      {remainingQuantity > 0 && (
+        <div className="mt-2 text-amber-600 text-sm">
+          {remainingQuantity} shares still need to be allocated
+        </div>
+      )}
+      
+      {remainingQuantity < 0 && (
+        <div className="mt-2 text-red-600 text-sm">
+          Over-allocated by {Math.abs(remainingQuantity)} shares
+        </div>
+      )}
+      
+      {remainingQuantity === 0 && (
+        <div className="mt-2 text-green-600 text-sm">
+          All shares have been allocated
+        </div>
+      )}
+    </div>
   );
 };

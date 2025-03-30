@@ -48,10 +48,6 @@ export const FundingSourcesSection: React.FC<FundingSourcesSectionProps> = ({
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h3 className="text-lg font-semibold">Funding Sources</h3>
-        <Button onClick={() => setIsModalOpen(true)}>
-          <Plus className="h-4 w-4 mr-2" />
-          {Object.keys(allocations).length > 0 ? "Manage Sources" : "Select Funding Sources"}
-        </Button>
       </div>
       
       {/* Allocation Progress */}
@@ -65,6 +61,13 @@ export const FundingSourcesSection: React.FC<FundingSourcesSectionProps> = ({
       {/* Selected funding sources */}
       {Object.keys(allocations).length > 0 ? (
         <div className="border rounded-md p-4 space-y-4">
+          <div className="flex justify-end mb-2">
+            <Button onClick={() => setIsModalOpen(true)}>
+              <Plus className="h-4 w-4 mr-2" />
+              Manage Funding Sources
+            </Button>
+          </div>
+          
           <SelectedSources 
             allocations={allocations}
             instrumentPrice={instrumentPrice}

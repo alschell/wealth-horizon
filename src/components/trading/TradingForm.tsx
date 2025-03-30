@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import TradingInstrumentSearch from "./sections/TradingInstrumentSearch";
 import TradingQuantityPrice from "./sections/quantity-price";
 import TradingBrokerSelection from "./sections/TradingBrokerSelection";
-import TradingAllocation from "./sections/TradingAllocation";
+import TradingAllocation from "./sections/allocation/TradingAllocation";
 import TradingReview from "./sections/TradingReview";
 import TradingOrderType from "./sections/TradingOrderType";
 import TradingStepsProgress from "./components/TradingStepsProgress";
@@ -13,6 +13,7 @@ import { useTradingFormValidation } from "./hooks/useTradingFormValidation";
 import { OrderType } from "./types";
 import TradingLeverageOptions from "./sections/TradingLeverageOptions";
 import { motion } from "framer-motion";
+import MarketInsights from "./sections/MarketInsights";
 
 const TradingForm: React.FC = () => {
   const [orderType, setOrderTypeLocal] = useState<OrderType>("buy");
@@ -70,12 +71,20 @@ const TradingForm: React.FC = () => {
     setOrderType(orderType);
   }, [orderType, setOrderType]);
 
+  // Reordered steps to improve logical flow:
+  // 1. Select Instrument
+  // 2. Specify Order Type & Validity
+  // 3. Enter Quantity & Price
+  // 4. Define Allocations (funding & destination)
+  // 5. Set Leverage (if applicable)
+  // 6. Select Broker
+  // 7. Review & Submit
   const steps = [
     { title: "Instrument", component: TradingInstrumentSearch },
     { title: "Type & Validity", component: TradingOrderType },
     { title: "Quantity & Price", component: TradingQuantityPrice },
-    { title: "Leverage", component: TradingLeverageOptions },
     { title: "Allocation", component: TradingAllocation },
+    { title: "Leverage", component: TradingLeverageOptions },
     { title: "Broker", component: TradingBrokerSelection },
     { title: "Review", component: TradingReview }
   ];
@@ -97,6 +106,8 @@ const TradingForm: React.FC = () => {
           currentStep={currentStep}
         />
       </div>
+
+      {currentStep === 0 && <MarketInsights className="mb-8" />}
 
       <TradingFormContent
         currentStep={currentStep}

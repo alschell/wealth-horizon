@@ -104,6 +104,15 @@ const DestinationPortfoliosSection: React.FC<DestinationPortfoliosSectionProps> 
         
         {selectedPortfolioIds.length > 0 ? (
           <div className="border rounded-md overflow-hidden">
+            <div className="flex justify-end p-3 border-b">
+              <Button 
+                onClick={openModal}
+                className="bg-black text-white hover:bg-gray-800"
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Manage Destination Portfolios
+              </Button>
+            </div>
             <SelectedPortfoliosTable
               selectedPortfolioIds={selectedPortfolioIds}
               allocations={allocations}
@@ -124,16 +133,6 @@ const DestinationPortfoliosSection: React.FC<DestinationPortfoliosSectionProps> 
             </Button>
           </div>
         )}
-      </div>
-      
-      <div className="flex justify-end">
-        <Button 
-          onClick={openModal}
-          className="bg-black text-white hover:bg-gray-800"
-        >
-          <Plus className="h-4 w-4 mr-2" />
-          {selectedPortfolioIds.length > 0 ? "Manage Destination Portfolios" : "Add Destination Portfolio"}
-        </Button>
       </div>
       
       <QuantityAllocationSummary

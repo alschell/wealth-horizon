@@ -22,10 +22,15 @@ export const CreditFacilitiesList: React.FC<CreditFacilitiesListProps> = ({
   const filteredFacilities = mockCreditFacilitiesFlat.filter(facility => {
     if (!searchQuery) return true;
     
+    // Map ID to names for filtering
+    const institutionName = facility.institutionId?.toLowerCase();
+    const legalEntityName = facility.legalEntityId?.toLowerCase();
+    const searchLower = searchQuery.toLowerCase();
+    
     return (
-      facility.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      facility.institution?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      facility.legalEntity?.toLowerCase().includes(searchQuery.toLowerCase())
+      facility.name.toLowerCase().includes(searchLower) ||
+      (institutionName && institutionName.includes(searchLower)) ||
+      (legalEntityName && legalEntityName.includes(searchLower))
     );
   });
   
@@ -61,7 +66,7 @@ export const CreditFacilitiesList: React.FC<CreditFacilitiesListProps> = ({
               <div className="flex justify-between mb-2">
                 <div>
                   <h4 className="font-medium">{facility.name}</h4>
-                  <p className="text-xs text-gray-500">{facility.legalEntity} • {facility.institution}</p>
+                  <p className="text-xs text-gray-500">{facility.legalEntityId} • {facility.institutionId}</p>
                 </div>
                 <div className="text-right">
                   <p className="font-medium">

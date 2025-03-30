@@ -22,10 +22,15 @@ export const CashAccountsList: React.FC<CashAccountsListProps> = ({
   const filteredAccounts = mockCashAccountsFlat.filter(account => {
     if (!searchQuery) return true;
     
+    // Map ID to names for filtering
+    const institutionName = account.institutionId?.toLowerCase();
+    const legalEntityName = account.legalEntityId?.toLowerCase();
+    const searchLower = searchQuery.toLowerCase();
+    
     return (
-      account.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      account.institution?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      account.legalEntity?.toLowerCase().includes(searchQuery.toLowerCase())
+      account.name.toLowerCase().includes(searchLower) ||
+      (institutionName && institutionName.includes(searchLower)) ||
+      (legalEntityName && legalEntityName.includes(searchLower))
     );
   });
   
@@ -61,7 +66,7 @@ export const CashAccountsList: React.FC<CashAccountsListProps> = ({
               <div className="flex justify-between mb-2">
                 <div>
                   <h4 className="font-medium">{account.name}</h4>
-                  <p className="text-xs text-gray-500">{account.legalEntity} • {account.institution}</p>
+                  <p className="text-xs text-gray-500">{account.legalEntityId} • {account.institutionId}</p>
                 </div>
                 <div className="text-right">
                   <p className="font-medium">

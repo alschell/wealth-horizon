@@ -1,14 +1,15 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { useInstrumentSearch } from "../hooks/useInstrumentSearch";
 import SearchBar from "../components/instrument-search/SearchBar";
 import InstrumentResultsTable from "../components/instrument-search/InstrumentResultsTable";
 import SelectedInstrumentCard from "../components/instrument-search/SelectedInstrumentCard";
 import NoResultsMessage from "../components/instrument-search/NoResultsMessage";
+import { Instrument } from "../types";
 
 interface TradingInstrumentSearchProps {
-  setSelectedInstrument: (instrument: any) => void;
-  selectedInstrument: any;
+  setSelectedInstrument: (instrument: Instrument | null) => void;
+  selectedInstrument: Instrument | null;
   orderType: string;
 }
 
@@ -44,18 +45,19 @@ const TradingInstrumentSearch: React.FC<TradingInstrumentSearchProps> = ({
       {!selectedInstrument ? (
         <div className="space-y-4">
           <SearchBar
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            isLoading={isLoading}
+            searchTerm={searchQuery}
+            setSearchTerm={setSearchQuery}
+            isSearching={isLoading}
           />
 
           {error ? (
             <div className="text-red-500 text-sm">{error}</div>
           ) : searchQuery && searchResults.length === 0 && !isLoading ? (
-            <NoResultsMessage searchQuery={searchQuery} />
+            <NoResultsMessage searchTerm={searchQuery} />
           ) : searchResults.length > 0 ? (
             <InstrumentResultsTable
               searchResults={searchResults}
+              selectedInstrument={selectedInstrument}
               onSelectInstrument={handleSelectInstrument}
             />
           ) : null}

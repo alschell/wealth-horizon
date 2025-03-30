@@ -89,8 +89,9 @@ const SourcePortfoliosSection: React.FC<SourcePortfoliosSectionProps> = ({
       
       <QuantityAllocationSummary
         totalQuantity={totalQuantity}
-        currentAllocation={currentAllocation}
+        allocatedQuantity={currentAllocation}
         remainingQuantity={remainingQuantity}
+        isComplete={currentAllocation === totalQuantity}
       />
     </div>
   );

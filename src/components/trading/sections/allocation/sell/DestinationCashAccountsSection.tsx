@@ -84,9 +84,10 @@ const DestinationCashAccountsSection: React.FC<DestinationCashAccountsSectionPro
       
       <AllocationSummary
         totalAmount={totalAmount}
+        allocated={currentAllocation}
+        remaining={remainingAmount}
+        isComplete={currentAllocation === totalAmount}
         currency={currency}
-        currentAllocation={currentAllocation}
-        remainingAmount={remainingAmount}
       />
     </div>
   );

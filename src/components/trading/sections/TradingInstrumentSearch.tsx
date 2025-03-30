@@ -1,8 +1,5 @@
 
 import React, { useState, useEffect } from "react";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Search } from "lucide-react";
 import { useInstrumentSearch } from "../hooks/useInstrumentSearch";
 import InstrumentResultsTable from "../components/instrument-search/InstrumentResultsTable";
 import SelectedInstrumentCard from "../components/instrument-search/SelectedInstrumentCard";
@@ -54,21 +51,11 @@ const TradingInstrumentSearch: React.FC<TradingInstrumentSearchProps> = ({
           </div>
 
           <div className="relative">
-            <Label htmlFor="search" className="text-base mb-1 block">
-              Search <span className="text-red-500">*</span>
-            </Label>
-            <div className="relative">
-              <Input
-                id="search"
-                type="text"
-                placeholder="Enter ticker symbol, name, or ISIN"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10"
-                required
-              />
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-            </div>
+            <SearchBar
+              searchTerm={searchQuery}
+              setSearchTerm={setSearchQuery}
+              isSearching={isSearching}
+            />
           </div>
 
           {results.length > 0 && (

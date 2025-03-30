@@ -1,5 +1,4 @@
-
-export type OrderType = "buy" | "sell";
+export type OrderType = "buy" | "sell" | "sell_short" | "exchange";
 
 export type ViewMode = "portfolios" | "institutions";
 

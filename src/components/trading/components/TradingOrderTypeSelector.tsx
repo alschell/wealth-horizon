@@ -47,7 +47,10 @@ const TradingOrderTypeSelector: React.FC<TradingOrderTypeSelectorProps> = ({
           </div>
         </Card>
         
-        <Card className="p-4 cursor-pointer transition-all hover:bg-gray-50 opacity-70">
+        <Card 
+          className={`p-4 cursor-pointer transition-all ${orderType === 'sell_short' ? 'ring-2 ring-black' : 'hover:bg-gray-50'}`}
+          onClick={() => setOrderType('sell_short')}
+        >
           <div className="flex flex-col items-center">
             <div className="mb-2">
               <Circle className="h-5 w-5 text-amber-600" />
@@ -59,7 +62,10 @@ const TradingOrderTypeSelector: React.FC<TradingOrderTypeSelectorProps> = ({
           </div>
         </Card>
 
-        <Card className="p-4 cursor-pointer transition-all hover:bg-gray-50 opacity-70">
+        <Card 
+          className={`p-4 cursor-pointer transition-all ${orderType === 'exchange' ? 'ring-2 ring-black' : 'hover:bg-gray-50'}`}
+          onClick={() => setOrderType('exchange')}
+        >
           <div className="flex flex-col items-center">
             <div className="mb-2">
               <RefreshCcw className="h-5 w-5 text-blue-600" />

@@ -84,17 +84,6 @@ const TradingQuantityPrice: React.FC<TradingQuantityPriceProps> = ({
 
   return (
     <div className="space-y-6">
-      {orderExecutionType === "market" && (
-        <div className="bg-yellow-50 p-4 rounded-md border border-yellow-100 mb-6">
-          <div className="flex items-start">
-            <Info className="h-5 w-5 text-yellow-600 mt-0.5 mr-2 flex-shrink-0" />
-            <p className="text-sm text-yellow-700">
-              Market orders execute immediately at the best available price. The final price may differ from the current market price shown.
-            </p>
-          </div>
-        </div>
-      )}
-
       {selectedInstrument ? (
         <>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -153,6 +142,17 @@ const TradingQuantityPrice: React.FC<TradingQuantityPriceProps> = ({
                   </p>
                 </div>
               )}
+              
+              {orderExecutionType === "market" && (
+                <div className="bg-yellow-50 p-4 rounded-md border border-yellow-100">
+                  <div className="flex items-start">
+                    <Info className="h-5 w-5 text-yellow-600 mt-0.5 mr-2 flex-shrink-0" />
+                    <p className="text-sm text-yellow-700">
+                      Market orders execute immediately at the best available price. The final price may differ from the current market price shown.
+                    </p>
+                  </div>
+                </div>
+              )}
             </div>
 
             <Card className="bg-gray-50 p-5 rounded-md border space-y-4">
@@ -166,7 +166,7 @@ const TradingQuantityPrice: React.FC<TradingQuantityPriceProps> = ({
               <div>
                 <p className="text-sm text-gray-500">Order Type</p>
                 <p className="font-medium capitalize">
-                  {orderType} ({orderExecutionType})
+                  {orderType.replace('_', ' ')} ({orderExecutionType})
                 </p>
               </div>
               

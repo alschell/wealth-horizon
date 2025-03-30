@@ -6,7 +6,6 @@ import InstrumentResultsTable from "../components/instrument-search/InstrumentRe
 import SelectedInstrumentCard from "../components/instrument-search/SelectedInstrumentCard";
 import NoResultsMessage from "../components/instrument-search/NoResultsMessage";
 import { Instrument } from "../types";
-import { Button } from "@/components/ui/button";
 
 interface TradingInstrumentSearchProps {
   setSelectedInstrument: (instrument: Instrument | null) => void;
@@ -55,19 +54,10 @@ const TradingInstrumentSearch: React.FC<TradingInstrumentSearchProps> = ({
           ) : null}
         </div>
       ) : (
-        <div className="space-y-4">
-          <SelectedInstrumentCard
-            instrument={selectedInstrument}
-          />
-          <div className="flex justify-end">
-            <Button 
-              variant="outline" 
-              onClick={clearSelectedInstrument}
-            >
-              Choose another instrument
-            </Button>
-          </div>
-        </div>
+        <SelectedInstrumentCard
+          instrument={selectedInstrument}
+          onClear={clearSelectedInstrument}
+        />
       )}
     </div>
   );

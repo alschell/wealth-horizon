@@ -13,8 +13,8 @@ import { EmptySourcesState } from "./funding-sources/components/EmptySourcesStat
 import { TradeOrder } from "@/components/trading/types";
 
 interface FundingSourcesPanelProps {
-  fundingAllocations: Record<string, number>;
-  onAllocationChange: (sourceId: string, amount: number) => void;
+  fundingAllocations?: Record<string, number>;
+  onAllocationChange?: (sourceId: string, amount: number) => void;
   totalAmount: number;
   currency: string;
   price: number;
@@ -23,7 +23,7 @@ interface FundingSourcesPanelProps {
 }
 
 const FundingSourcesPanel: React.FC<FundingSourcesPanelProps> = ({
-  fundingAllocations,
+  fundingAllocations = {},
   onAllocationChange,
   totalAmount,
   currency,

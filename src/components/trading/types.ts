@@ -69,6 +69,8 @@ export type Instrument = {
 export type Broker = {
   id: string;
   name: string;
+  description?: string; // Added description as optional
+  fee?: string; // Added fee as optional
 };
 
 export type AllocationItem = {

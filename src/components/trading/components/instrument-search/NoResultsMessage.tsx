@@ -8,7 +8,8 @@ interface NoResultsMessageProps {
 const NoResultsMessage: React.FC<NoResultsMessageProps> = ({ searchTerm }) => {
   return (
     <div className="text-center p-4 border rounded-md">
-      No instruments found. Try a different search term.
+      No instruments found matching "<span className="font-medium">{searchTerm}</span>". 
+      Try a different search term.
     </div>
   );
 };

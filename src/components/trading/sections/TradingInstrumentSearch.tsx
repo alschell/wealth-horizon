@@ -79,13 +79,14 @@ const TradingInstrumentSearch: React.FC<TradingInstrumentSearchProps> = ({
 
           {results.length > 0 && (
             <InstrumentResultsTable 
-              results={results} 
+              searchResults={results} 
+              selectedInstrument={selectedInstrument}
               onSelectInstrument={handleSelectInstrument}
             />
           )}
           
           {results.length === 0 && searchQuery.trim() !== "" && !isSearching && (
-            <NoResultsMessage searchQuery={searchQuery} />
+            <NoResultsMessage searchTerm={searchQuery} />
           )}
 
         </div>
@@ -96,9 +97,14 @@ const TradingInstrumentSearch: React.FC<TradingInstrumentSearchProps> = ({
           </div>
           
           <SelectedInstrumentCard 
-            instrument={selectedInstrument} 
-            onClear={handleClearSelection}
+            instrument={selectedInstrument}
           />
+          
+          <div className="flex justify-end">
+            <Button variant="outline" onClick={handleClearSelection}>
+              Change Security
+            </Button>
+          </div>
           
           <div className="bg-blue-50 p-4 rounded-md border border-blue-100">
             <div className="flex items-start">

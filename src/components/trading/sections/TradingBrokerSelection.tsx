@@ -6,7 +6,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
-import { brokers } from "../data/brokers";
+import { mockBrokers } from "../data/brokers";
 
 interface TradingBrokerSelectionProps {
   selectedBroker: string | "best";
@@ -22,12 +22,12 @@ const TradingBrokerSelection: React.FC<TradingBrokerSelectionProps> = ({
   
   // Filter brokers by search query
   const filteredBrokers = searchQuery
-    ? brokers.filter(
+    ? mockBrokers.filter(
         (broker) =>
           broker.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
           broker.id.toLowerCase().includes(searchQuery.toLowerCase())
       )
-    : brokers;
+    : mockBrokers;
 
   const handleBrokerSelect = (brokerId: string) => {
     setSelectedBroker(brokerId);

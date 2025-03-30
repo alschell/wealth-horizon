@@ -4,9 +4,10 @@ import { Instrument } from "../../types";
 
 interface SelectedInstrumentCardProps {
   instrument: Instrument;
+  onClear?: () => void;
 }
 
-const SelectedInstrumentCard: React.FC<SelectedInstrumentCardProps> = ({ instrument }) => {
+const SelectedInstrumentCard: React.FC<SelectedInstrumentCardProps> = ({ instrument, onClear }) => {
   return (
     <div className="mt-6 p-4 border rounded-md bg-gray-50">
       <h3 className="font-semibold mb-2">Selected Instrument</h3>

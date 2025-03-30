@@ -4,6 +4,7 @@ import { InstitutionSection } from "./InstitutionSection";
 import { LegalEntitySection } from "./LegalEntitySection";
 import { FacilityItem } from "./FacilityItem";
 import { mockCreditFacilitiesByInstitution } from "@/components/trading/data";
+import { CreditFacility, Institution, LegalEntity } from "@/components/trading/types";
 
 interface CreditFacilitiesListProps {
   tempAllocations: Record<string, number>;
@@ -31,8 +32,8 @@ export const CreditFacilitiesList: React.FC<CreditFacilitiesListProps> = ({
         // Filter legal entities within each institution
         const filteredLegalEntities = institution.legalEntities
           .map(legalEntity => {
-            // Filter facilities within each legal entity
-            const filteredFacilities = legalEntity.facilities.filter(facility =>
+            // Filter creditFacilities (not facilities) within each legal entity
+            const filteredFacilities = legalEntity.creditFacilities.filter(facility =>
               facility.name.toLowerCase().includes(lowercaseQuery) ||
               facility.id.toLowerCase().includes(lowercaseQuery) ||
               legalEntity.name.toLowerCase().includes(lowercaseQuery) ||
@@ -40,7 +41,7 @@ export const CreditFacilitiesList: React.FC<CreditFacilitiesListProps> = ({
             );
             
             if (filteredFacilities.length === 0) return null;
-            return { ...legalEntity, facilities: filteredFacilities };
+            return { ...legalEntity, creditFacilities: filteredFacilities };
           })
           .filter(Boolean);
           
@@ -61,28 +62,28 @@ export const CreditFacilitiesList: React.FC<CreditFacilitiesListProps> = ({
   return (
     <div className="space-y-6">
       {filteredData.map(institution => (
-        <InstitutionSection
-          key={institution.id}
-          name={institution.name}
-          icon={institution.icon}
-        >
+        <div key={institution.id} className="space-y-4">
+          <h3 className="text-md font-medium">{institution.name}</h3>
+          
           {institution.legalEntities.map(legalEntity => (
-            <LegalEntitySection key={legalEntity.id} name={legalEntity.name}>
+            <div key={legalEntity.id} className="pl-4 border-l-2 border-gray-200 space-y-4">
+              <h4 className="text-sm font-medium">{legalEntity.name}</h4>
+              
               <div className="space-y-2">
-                {legalEntity.facilities.map(facility => (
+                {legalEntity.creditFacilities.map(facility => (
                   <FacilityItem
                     key={facility.id}
                     facility={facility}
-                    allocation={tempAllocations[facility.id] || 0}
-                    onAllocationChange={handleAllocationChange}
+                    currentShares={tempAllocations[facility.id] || 0}
                     instrumentPrice={instrumentPrice}
+                    handleAllocationChange={handleAllocationChange}
                     remainingShares={remainingShares}
                   />
                 ))}
               </div>
-            </LegalEntitySection>
+            </div>
           ))}
-        </InstitutionSection>
+        </div>
       ))}
     </div>
   );

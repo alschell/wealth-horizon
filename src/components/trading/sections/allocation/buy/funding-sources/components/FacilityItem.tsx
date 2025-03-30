@@ -61,6 +61,8 @@ export const FacilityItem: React.FC<FacilityItemProps> = ({
               onChange={(e) => handleAllocationChange(facility.id, Number(e.target.value) || 0)}
               className="w-full"
               placeholder="0"
+              // Remove spinner arrows
+              style={{ appearance: "textfield" }}
             />
             {remainingShares > 0 && (
               <Button

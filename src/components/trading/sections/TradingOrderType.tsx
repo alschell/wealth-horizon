@@ -9,7 +9,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Card } from "@/components/ui/card";
-import { AlertCircle, DollarSign } from "lucide-react";
+import { AlertCircle, DollarSign, Clock, BarChart2 } from "lucide-react";
 
 interface TradingOrderTypeProps {
   orderExecutionType: string;
@@ -29,75 +29,98 @@ const TradingOrderType: React.FC<TradingOrderTypeProps> = ({
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-medium mb-2">Order Execution</h3>
+        <h3 className="text-lg font-medium mb-3">Order Execution Type</h3>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <Card 
+            className={`p-4 cursor-pointer transition-all ${orderExecutionType === 'market' ? 'ring-2 ring-black' : 'hover:bg-gray-50'}`}
+            onClick={() => setOrderExecutionType('market')}
+          >
+            <div className="flex flex-col items-center">
+              <div className="mb-2">
+                <BarChart2 className="h-5 w-5 text-blue-600" />
+              </div>
+              <h3 className="font-medium text-center mb-2">Market</h3>
+              <p className="text-sm text-gray-600 text-center">
+                Execute immediately at current market price.
+              </p>
+            </div>
+          </Card>
+          
+          <Card 
+            className={`p-4 cursor-pointer transition-all ${orderExecutionType === 'limit' ? 'ring-2 ring-black' : 'hover:bg-gray-50'}`}
+            onClick={() => setOrderExecutionType('limit')}
+          >
+            <div className="flex flex-col items-center">
+              <div className="mb-2">
+                <DollarSign className="h-5 w-5 text-green-600" />
+              </div>
+              <h3 className="font-medium text-center mb-2">Limit</h3>
+              <p className="text-sm text-gray-600 text-center">
+                Execute at specified price or better.
+              </p>
+            </div>
+          </Card>
+          
+          <Card 
+            className={`p-4 cursor-pointer transition-all ${orderExecutionType === 'stop' ? 'ring-2 ring-black' : 'hover:bg-gray-50'}`}
+            onClick={() => setOrderExecutionType('stop')}
+          >
+            <div className="flex flex-col items-center">
+              <div className="mb-2">
+                <AlertCircle className="h-5 w-5 text-amber-600" />
+              </div>
+              <h3 className="font-medium text-center mb-2">Stop</h3>
+              <p className="text-sm text-gray-600 text-center">
+                Becomes market order when price reaches stop price.
+              </p>
+            </div>
+          </Card>
+
+          <Card 
+            className={`p-4 cursor-pointer transition-all ${orderExecutionType === 'stop_limit' ? 'ring-2 ring-black' : 'hover:bg-gray-50'}`}
+            onClick={() => setOrderExecutionType('stop_limit')}
+          >
+            <div className="flex flex-col items-center">
+              <div className="mb-2">
+                <Clock className="h-5 w-5 text-purple-600" />
+              </div>
+              <h3 className="font-medium text-center mb-2">Stop Limit</h3>
+              <p className="text-sm text-gray-600 text-center">
+                Becomes limit order when price reaches stop price.
+              </p>
+            </div>
+          </Card>
+        </div>
+      </div>
+      
+      <div>
+        <h3 className="text-lg font-medium mb-3">Time in Force</h3>
         <Card className="p-4">
-          <div className="space-y-4">
-            <div>
-              <label className="text-sm font-medium mb-1 block">
-                Order Type
-              </label>
-              <Select
-                value={orderExecutionType}
-                onValueChange={setOrderExecutionType}
-              >
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select order type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectItem value="market">Market Order</SelectItem>
-                    <SelectItem value="limit">Limit Order</SelectItem>
-                    <SelectItem value="stop">Stop Order</SelectItem>
-                    <SelectItem value="stop_limit">Stop Limit Order</SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-              <p className="text-xs text-gray-500 mt-1">
-                {orderExecutionType === "market" && "Execute immediately at current market price."}
-                {orderExecutionType === "limit" && 
-                  `Execute only at specified price or better. ${
-                    orderType === "buy" ? "Buy at maximum price" : "Sell at minimum price"
-                  }.`
-                }
-                {orderExecutionType === "stop" && 
-                  `Becomes market order when price crosses specified stop price. ${
-                    orderType === "buy" ? "Buy above" : "Sell below"
-                  } stop price.`
-                }
-                {orderExecutionType === "stop_limit" && 
-                  `Becomes limit order when price crosses specified stop price. ${
-                    orderType === "buy" ? "Buy above" : "Sell below"
-                  } stop price at limit.`
-                }
-              </p>
-            </div>
-            
-            <div>
-              <label className="text-sm font-medium mb-1 block">
-                Time in Force
-              </label>
-              <Select value={timeInForce} onValueChange={setTimeInForce}>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select time in force" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectItem value="day">Day Order</SelectItem>
-                    <SelectItem value="gtc">Good Till Canceled (GTC)</SelectItem>
-                    <SelectItem value="gtd">Good Till Date (GTD)</SelectItem>
-                    <SelectItem value="ioc">Immediate or Cancel (IOC)</SelectItem>
-                    <SelectItem value="fok">Fill or Kill (FOK)</SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-              <p className="text-xs text-gray-500 mt-1">
-                {timeInForce === "day" && "Order valid until end of current trading day."}
-                {timeInForce === "gtc" && "Order valid until executed or canceled."}
-                {timeInForce === "gtd" && "Order valid until specified date."}
-                {timeInForce === "ioc" && "Fill whatever portion possible immediately, cancel rest."}
-                {timeInForce === "fok" && "Must be filled immediately and completely or canceled."}
-              </p>
-            </div>
+          <div>
+            <label className="text-sm font-medium mb-1 block">
+              Duration of the Order
+            </label>
+            <Select value={timeInForce} onValueChange={setTimeInForce}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select time in force" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectItem value="day">Day Order</SelectItem>
+                  <SelectItem value="gtc">Good Till Canceled (GTC)</SelectItem>
+                  <SelectItem value="gtd">Good Till Date (GTD)</SelectItem>
+                  <SelectItem value="ioc">Immediate or Cancel (IOC)</SelectItem>
+                  <SelectItem value="fok">Fill or Kill (FOK)</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+            <p className="text-xs text-gray-500 mt-1">
+              {timeInForce === "day" && "Order valid until end of current trading day."}
+              {timeInForce === "gtc" && "Order valid until executed or canceled."}
+              {timeInForce === "gtd" && "Order valid until specified date."}
+              {timeInForce === "ioc" && "Fill whatever portion possible immediately, cancel rest."}
+              {timeInForce === "fok" && "Must be filled immediately and completely or canceled."}
+            </p>
           </div>
         </Card>
       </div>

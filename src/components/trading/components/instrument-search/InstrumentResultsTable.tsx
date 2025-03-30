@@ -7,7 +7,7 @@ import { Instrument } from "../../types";
 interface InstrumentResultsTableProps {
   searchResults: Instrument[];
   selectedInstrument: Instrument | null;
-  onSelectInstrument: (instrument: Instrument) => void;
+  onSelectInstrument: (instrument: Instrument | null) => void;
 }
 
 const InstrumentResultsTable: React.FC<InstrumentResultsTableProps> = ({

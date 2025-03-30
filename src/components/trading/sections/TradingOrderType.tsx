@@ -35,6 +35,9 @@ const TradingOrderType: React.FC<TradingOrderTypeProps> = ({
             <div className="flex items-start">
               <div className="w-full">
                 <div className="font-medium">Market Order</div>
+                <p className="text-sm text-gray-600 mt-1">
+                  Execute at the current market price. The order is filled immediately at the best available price.
+                </p>
               </div>
             </div>
           </Card>
@@ -46,6 +49,9 @@ const TradingOrderType: React.FC<TradingOrderTypeProps> = ({
             <div className="flex items-start">
               <div className="w-full">
                 <div className="font-medium">Limit Order</div>
+                <p className="text-sm text-gray-600 mt-1">
+                  Execute at a specified price or better. The order will only be filled at your price or better.
+                </p>
               </div>
             </div>
           </Card>
@@ -57,6 +63,9 @@ const TradingOrderType: React.FC<TradingOrderTypeProps> = ({
             <div className="flex items-start">
               <div className="w-full">
                 <div className="font-medium">Stop Order</div>
+                <p className="text-sm text-gray-600 mt-1">
+                  Becomes a market order when a specified price is reached. Helps limit losses or protect profits.
+                </p>
               </div>
             </div>
           </Card>

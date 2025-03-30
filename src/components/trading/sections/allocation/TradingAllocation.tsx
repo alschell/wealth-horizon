@@ -58,7 +58,7 @@ const TradingAllocation: React.FC<TradingAllocationProps> = ({
           <div className="mb-4">
             <h2 className="text-xl font-medium mb-2">Destination Portfolio(s)</h2>
             <p className="text-sm text-gray-600">
-              Specify into which portfolio(s) you would like to deposit the purchased assets.
+              Specify into which portfolio(s) to deposit the purchased assets.
             </p>
           </div>
           

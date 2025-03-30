@@ -62,7 +62,7 @@ const DestinationPortfoliosPanel: React.FC<DestinationPortfoliosPanelProps> = ({
             <TableHeader>
               <TableRow>
                 <TableHead>Portfolio</TableHead>
-                <TableHead>Type</TableHead>
+                <TableHead>Institution</TableHead>
                 <TableHead>Quantity</TableHead>
                 <TableHead>Actions</TableHead>
               </TableRow>
@@ -77,7 +77,7 @@ const DestinationPortfoliosPanel: React.FC<DestinationPortfoliosPanelProps> = ({
                 return (
                   <TableRow key={portfolioId}>
                     <TableCell>{portfolio.name}</TableCell>
-                    <TableCell>{portfolio.type}</TableCell>
+                    <TableCell>{portfolio.institutionId}</TableCell>
                     <TableCell>
                       <Input
                         type="number"
@@ -142,7 +142,7 @@ const DestinationPortfoliosPanel: React.FC<DestinationPortfoliosPanelProps> = ({
                   <div className="flex justify-between items-start mb-2">
                     <div>
                       <h4 className="font-medium">{portfolio.name}</h4>
-                      <p className="text-xs text-gray-500">{portfolio.type} Portfolio</p>
+                      <p className="text-xs text-gray-500">Portfolio</p>
                     </div>
                   </div>
                   

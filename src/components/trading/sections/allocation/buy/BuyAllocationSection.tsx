@@ -60,7 +60,7 @@ const BuyAllocationSection: React.FC<BuyAllocationSectionProps> = ({
       .filter(([_, amount]) => amount > 0)
       .map(([sourceId, amount]) => ({
         sourceId,
-        sourceType: sourceId.startsWith("cash-") ? "cash" : "credit",
+        sourceType: sourceId.startsWith("cash-") ? "cash" as const : "credit" as const,
         amount,
         currency
       }));

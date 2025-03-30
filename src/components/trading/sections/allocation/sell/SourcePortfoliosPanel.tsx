@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
@@ -33,16 +32,13 @@ const SourcePortfoliosPanel: React.FC<SourcePortfoliosPanelProps> = ({
   const [tempAllocations, setTempAllocations] = useState<Record<string, number>>({});
   const [availableHoldings, setAvailableHoldings] = useState<Record<string, number>>({});
   
-  // Get selected portfolio IDs
   const selectedPortfolioIds = Object.keys(portfolioAllocations).filter(id => portfolioAllocations[id] > 0);
   
-  // Initialize available holdings (mock data)
   useEffect(() => {
     if (selectedInstrument) {
       const mockAvailable: Record<string, number> = {};
       
       mockPortfoliosFlat.forEach(portfolio => {
-        // Simulate random holdings between 10 and 1000 shares
         mockAvailable[portfolio.id] = Math.floor(Math.random() * 990) + 10;
       });
       
@@ -50,13 +46,11 @@ const SourcePortfoliosPanel: React.FC<SourcePortfoliosPanelProps> = ({
     }
   }, [selectedInstrument]);
   
-  // Open portfolios selection sheet
   const openPortfoliosSheet = () => {
     setTempAllocations({ ...portfolioAllocations });
     setPortfoliosSheetOpen(true);
   };
   
-  // Apply temporary allocations to the actual allocations
   const applyAllocations = () => {
     Object.entries(tempAllocations).forEach(([portfolioId, quantity]) => {
       if (quantity > 0) {
@@ -66,7 +60,6 @@ const SourcePortfoliosPanel: React.FC<SourcePortfoliosPanelProps> = ({
     setPortfoliosSheetOpen(false);
   };
   
-  // Handle temporary allocation changes
   const handleTempAllocationChange = (portfolioId: string, quantity: number) => {
     setTempAllocations(prev => ({ ...prev, [portfolioId]: quantity }));
   };
@@ -154,7 +147,6 @@ const SourcePortfoliosPanel: React.FC<SourcePortfoliosPanelProps> = ({
         </Button>
       </div>
       
-      {/* Portfolios Sheet */}
       <Sheet open={isPortfoliosSheetOpen} onOpenChange={setPortfoliosSheetOpen}>
         <SheetContent className="sm:max-w-md" side="right">
           <SheetHeader>
@@ -170,7 +162,7 @@ const SourcePortfoliosPanel: React.FC<SourcePortfoliosPanelProps> = ({
                   <div className="flex justify-between items-start mb-2">
                     <div>
                       <h4 className="font-medium">{portfolio.name}</h4>
-                      <p className="text-xs text-gray-500">{portfolio.type} Portfolio</p>
+                      <p className="text-xs text-gray-500">Portfolio</p>
                     </div>
                     <div className="text-sm text-right">
                       <div>Available</div>

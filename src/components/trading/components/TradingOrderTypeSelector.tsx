@@ -57,7 +57,7 @@ const TradingOrderTypeSelector: React.FC<TradingOrderTypeSelectorProps> = ({
             </div>
             <h3 className="font-medium text-center mb-2">Sell Short</h3>
             <p className="text-sm text-gray-600 text-center w-full">
-              Borrow and sell securities anticipating price drop.
+              Borrow and sell securities you anticipate to drop in price.
             </p>
           </div>
         </Card>

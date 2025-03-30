@@ -51,23 +51,23 @@ export const useTradingFormContent = ({
 
   // Helper to ensure order has proper allocation arrays
   const ensureOrderHasAllocations = () => {
-    if (currentStep === 5) {
+    if (currentStep === 4) {
       console.log("Ensuring order has proper allocation arrays before rendering allocation step");
       
       // Make sure allocations are initialized before rendering
-      if (orderType === "buy" && (!order.fundingAllocations || !order.depositAllocations)) {
-        const updatedOrder = { ...order };
+      const updatedOrder = { ...order };
+      
+      if (orderType === "buy") {
         if (!updatedOrder.fundingAllocations) updatedOrder.fundingAllocations = [];
         if (!updatedOrder.depositAllocations) updatedOrder.depositAllocations = [];
-        setOrder(updatedOrder);
       }
       
-      if (orderType === "sell" && (!order.instrumentAllocations || !order.depositAllocations)) {
-        const updatedOrder = { ...order };
+      if (orderType === "sell") {
         if (!updatedOrder.instrumentAllocations) updatedOrder.instrumentAllocations = [];
         if (!updatedOrder.depositAllocations) updatedOrder.depositAllocations = [];
-        setOrder(updatedOrder);
       }
+      
+      setOrder(updatedOrder);
     }
   };
 

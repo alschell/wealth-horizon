@@ -12,6 +12,7 @@ import { useTradingForm } from "./hooks/useTradingForm";
 import { useTradingFormValidation } from "./hooks/useTradingFormValidation";
 import { OrderType } from "./types";
 import TradingLeverageOptions from "./sections/TradingLeverageOptions";
+import FormHeader from "@/components/onboarding/common/FormHeader";
 
 const TradingForm: React.FC = () => {
   const [orderType, setOrderTypeLocal] = useState<OrderType>("buy");
@@ -59,13 +60,13 @@ const TradingForm: React.FC = () => {
     console.log("TradingForm - Current order state:", JSON.stringify(order));
     
     // Ensure we have a broker selected, defaulting to "best" if not set
-    if (currentStep >= 4 && !selectedBroker) {
+    if (currentStep >= 5 && !selectedBroker) {
       console.log("Setting default broker to 'best'");
       setSelectedBroker("best");
     }
     
     // Initialize allocation data when reaching the allocation step
-    if (currentStep === 5) {
+    if (currentStep === 4) {
       console.log("Preparing allocation data");
       setOrder(prevOrder => {
         const updatedOrder = { ...prevOrder };
@@ -105,7 +106,10 @@ const TradingForm: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto py-8">
       <div className="mb-6">
-        <h2 className="text-2xl font-bold mb-8">New Trade</h2>
+        <FormHeader 
+          title="New Trade"
+          className="mb-8"
+        />
         <TradingStepsProgress 
           steps={steps}
           currentStep={currentStep}

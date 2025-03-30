@@ -34,10 +34,6 @@ const TradingInstrumentSearch: React.FC<TradingInstrumentSearchProps> = ({
     setSelectedInstrument(instrument);
   };
 
-  const handleClearSelection = () => {
-    setSelectedInstrument(null);
-  };
-
   return (
     <div className="space-y-6">
       {!selectedInstrument ? (
@@ -72,12 +68,6 @@ const TradingInstrumentSearch: React.FC<TradingInstrumentSearchProps> = ({
           <SelectedInstrumentCard 
             instrument={selectedInstrument}
           />
-          
-          <div className="flex justify-start">
-            <button className="text-blue-600 hover:underline" onClick={handleClearSelection}>
-              Change Security
-            </button>
-          </div>
         </div>
       )}
     </div>

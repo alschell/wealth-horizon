@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
-import { mockPortfoliosFlat } from "../../../../data";
+import { mockPortfoliosByInstitution } from "../../../../data";
+import PortfoliosList from "./components/PortfoliosList";
 
 interface PortfolioSelectionModalProps {
   isOpen: boolean;
@@ -53,13 +54,22 @@ const PortfolioSelectionModal: React.FC<PortfolioSelectionModalProps> = ({
   // Calculate current total allocation
   const totalAllocated = Object.values(tempAllocations).reduce((sum, qty) => sum + qty, 0);
   const allocationPercentage = Math.min(100, (totalAllocated / totalQuantity) * 100);
+  const remainingQuantity = totalQuantity - totalAllocated;
   
-  // Filter portfolios based on search query
-  const filteredPortfolios = mockPortfoliosFlat.filter(portfolio => {
-    if (!searchQuery) return true;
-    return portfolio.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-           portfolio.institutionId.toLowerCase().includes(searchQuery.toLowerCase());
-  });
+  // Filter institutions based on search query
+  const filteredInstitutions = searchQuery.length > 0 ? 
+    mockPortfoliosByInstitution.map(institution => ({
+      ...institution,
+      legalEntities: institution.legalEntities.map(entity => ({
+        ...entity,
+        portfolios: entity.portfolios.filter(portfolio => 
+          portfolio.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          institution.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          entity.name.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+      })).filter(entity => entity.portfolios.length > 0)
+    })).filter(inst => inst.legalEntities.length > 0)
+    : mockPortfoliosByInstitution;
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
@@ -71,7 +81,7 @@ const PortfolioSelectionModal: React.FC<PortfolioSelectionModalProps> = ({
         <div className="py-4">
           <div className="mb-6 space-y-3">
             <div className="flex justify-between text-sm">
-              <span>Total shares to allocate: {totalQuantity}</span>
+              <span>Total number of shares to be allocated: {totalQuantity}</span>
               <span>Shares allocated: {totalAllocated}</span>
             </div>
             
@@ -89,43 +99,20 @@ const PortfolioSelectionModal: React.FC<PortfolioSelectionModalProps> = ({
             />
           </div>
           
-          <div className="space-y-4 mt-4">
-            {filteredPortfolios.map(portfolio => (
-              <div key={portfolio.id} className="border rounded-md p-4">
-                <div className="flex justify-between">
-                  <div>
-                    <h4 className="font-medium text-base truncate w-48 sm:w-auto">{portfolio.name}</h4>
-                    <p className="text-xs text-gray-500">{portfolio.institutionId}</p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Input
-                      type="number"
-                      min="0"
-                      max={totalQuantity}
-                      value={tempAllocations[portfolio.id] || 0}
-                      onChange={(e) => handleAllocationChange(portfolio.id, Number(e.target.value))}
-                      placeholder="Number of funded shares"
-                      className="w-44 sm:w-56"
-                    />
-                    <Button 
-                      variant="outline" 
-                      size="sm"
-                      onClick={() => handleAllocationChange(portfolio.id, totalQuantity)}
-                      className="whitespace-nowrap"
-                    >
-                      Max
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            ))}
-            
-            {filteredPortfolios.length === 0 && (
-              <div className="text-center py-8 text-gray-500">
-                No portfolios match your search
-              </div>
-            )}
-          </div>
+          <PortfoliosList
+            institutions={filteredInstitutions}
+            allocations={tempAllocations}
+            instrumentPrice={instrumentPrice}
+            currency={currency}
+            remainingQuantity={remainingQuantity}
+            onAllocationChange={handleAllocationChange}
+          />
+          
+          {filteredInstitutions.length === 0 && (
+            <div className="text-center py-8 text-gray-500">
+              No portfolios match your search
+            </div>
+          )}
         </div>
         
         <div className="flex justify-end gap-2 mt-4">

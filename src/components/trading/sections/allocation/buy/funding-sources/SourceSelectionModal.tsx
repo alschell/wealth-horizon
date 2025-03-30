@@ -42,7 +42,7 @@ export const SourceSelectionModal: React.FC<SourceSelectionModalProps> = ({
     }
   }, [isOpen, currentAllocations]);
   
-  const handleAllocationChange = (sourceId: string, amount: number) => {
+  const handleTempAllocationChange = (sourceId: string, amount: number) => {
     setTempAllocations(prev => ({
       ...prev,
       [sourceId]: amount
@@ -131,7 +131,7 @@ export const SourceSelectionModal: React.FC<SourceSelectionModalProps> = ({
             <TabsContent value="cash" className="mt-4">
               <CashAccountsList 
                 tempAllocations={tempAllocations}
-                handleTempAllocationChange={handleAllocationChange}
+                handleTempAllocationChange={handleTempAllocationChange}
                 instrumentPrice={instrumentPrice}
                 remainingShares={remainingShares}
                 searchQuery={searchQuery}
@@ -141,7 +141,7 @@ export const SourceSelectionModal: React.FC<SourceSelectionModalProps> = ({
             <TabsContent value="credit" className="mt-4">
               <CreditFacilitiesList
                 tempAllocations={tempAllocations}
-                handleTempAllocationChange={handleAllocationChange}
+                handleTempAllocationChange={handleTempAllocationChange}
                 instrumentPrice={instrumentPrice}
                 remainingShares={remainingShares}
                 searchQuery={searchQuery}

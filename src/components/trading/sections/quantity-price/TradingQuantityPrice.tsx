@@ -4,7 +4,6 @@ import { Instrument, OrderType } from "../../types";
 import NoInstrumentSelected from "./components/NoInstrumentSelected";
 import QuantityInput from "./components/QuantityInput";
 import PriceInput from "./components/PriceInput";
-import MarketOrderAlert from "./components/MarketOrderAlert";
 import OrderSummary from "./components/OrderSummary";
 import { useQuantityPrice } from "./hooks/useQuantityPrice";
 
@@ -50,9 +49,7 @@ const TradingQuantityPrice: React.FC<TradingQuantityPriceProps> = ({
   });
 
   // Conditionally set description text based on order execution type
-  const descriptionText = orderExecutionType === "market" 
-    ? "Enter the quantity" 
-    : "Enter the quantity and price details for this order";
+  const descriptionText = "Enter the quantity" + (orderExecutionType !== "market" ? " and price details for this order" : "");
 
   return (
     <div className="space-y-6">
@@ -65,8 +62,6 @@ const TradingQuantityPrice: React.FC<TradingQuantityPriceProps> = ({
           {descriptionText}
         </p>
       </div>
-
-      {orderExecutionType === "market" && <MarketOrderAlert />}
 
       <div className="space-y-4">
         <QuantityInput

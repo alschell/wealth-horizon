@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Instrument, OrderType } from "../types";
 import { Card } from "@/components/ui/card";
-import { AlertCircle, Info } from "lucide-react";
+import { AlertCircle } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 
 interface TradingQuantityPriceProps {
@@ -140,17 +140,6 @@ const TradingQuantityPrice: React.FC<TradingQuantityPriceProps> = ({
                       currency: selectedInstrument.currency
                     })}
                   </p>
-                </div>
-              )}
-              
-              {orderExecutionType === "market" && (
-                <div className="bg-yellow-50 p-4 rounded-md border border-yellow-100">
-                  <div className="flex items-start">
-                    <Info className="h-5 w-5 text-yellow-600 mt-0.5 mr-2 flex-shrink-0" />
-                    <p className="text-sm text-yellow-700">
-                      Market orders execute immediately at the best available price. The final price may differ from the current market price shown.
-                    </p>
-                  </div>
                 </div>
               )}
             </div>

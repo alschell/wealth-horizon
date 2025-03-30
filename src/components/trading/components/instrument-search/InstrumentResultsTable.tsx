@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
@@ -15,6 +14,14 @@ const InstrumentResultsTable: React.FC<InstrumentResultsTableProps> = ({
   selectedInstrument,
   onSelectInstrument
 }) => {
+  const handleSelectToggle = (instrument: Instrument) => {
+    if (selectedInstrument?.id === instrument.id) {
+      onSelectInstrument(null);
+    } else {
+      onSelectInstrument(instrument);
+    }
+  };
+
   return (
     <div className="border rounded-md overflow-hidden">
       <Table>
@@ -50,10 +57,10 @@ const InstrumentResultsTable: React.FC<InstrumentResultsTableProps> = ({
                 <Button
                   variant={selectedInstrument?.id === instrument.id ? "outline" : "default"}
                   size="sm"
-                  onClick={() => onSelectInstrument(instrument)}
-                  className={`w-20 ${selectedInstrument?.id === instrument.id ? "bg-white border-gray-300 hover:bg-gray-100" : "bg-black text-white hover:bg-gray-800"}`}
+                  onClick={() => handleSelectToggle(instrument)}
+                  className="w-20"
                 >
-                  {selectedInstrument?.id === instrument.id ? "Selected" : "Select"}
+                  {selectedInstrument?.id === instrument.id ? "Unselect" : "Select"}
                 </Button>
               </TableCell>
             </TableRow>

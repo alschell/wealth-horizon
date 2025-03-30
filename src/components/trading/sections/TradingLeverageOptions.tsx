@@ -31,6 +31,8 @@ const TradingLeverageOptions: React.FC<TradingLeverageOptionsProps> = ({
     }
   };
 
+  console.log("Current leverage:", leverage);
+
   return (
     <div className="space-y-6">
       <div className="space-y-4">
@@ -44,7 +46,7 @@ const TradingLeverageOptions: React.FC<TradingLeverageOptionsProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-4">
           <Card 
             className={`p-4 cursor-pointer transition-all ${leverage === 1 ? 'ring-2 ring-black' : 'hover:bg-gray-50'}`}
-            onClick={handleLeverageSelect(1)}
+            onClick={() => setLeverage(1)}
           >
             <div className="flex flex-col items-center">
               <Shield className="h-5 w-5 text-green-600 mb-2" />
@@ -58,7 +60,7 @@ const TradingLeverageOptions: React.FC<TradingLeverageOptionsProps> = ({
 
           <Card 
             className={`p-4 cursor-pointer transition-all ${leverage === 2 ? 'ring-2 ring-black' : 'hover:bg-gray-50'}`}
-            onClick={handleLeverageSelect(2)}
+            onClick={() => setLeverage(2)}
           >
             <div className="flex flex-col items-center">
               <TrendingUp className="h-5 w-5 text-blue-600 mb-2" />
@@ -72,7 +74,7 @@ const TradingLeverageOptions: React.FC<TradingLeverageOptionsProps> = ({
 
           <Card 
             className={`p-4 cursor-pointer transition-all ${leverage === 5 ? 'ring-2 ring-black' : 'hover:bg-gray-50'}`}
-            onClick={handleLeverageSelect(5)}
+            onClick={() => setLeverage(5)}
           >
             <div className="flex flex-col items-center">
               <AlertTriangle className="h-5 w-5 text-amber-600 mb-2" />

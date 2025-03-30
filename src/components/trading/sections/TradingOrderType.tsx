@@ -4,7 +4,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card } from "@/components/ui/card";
-import { AlertCircle, Clock } from "lucide-react";
+import { Clock } from "lucide-react";
 import { OrderType } from "../types";
 
 interface TradingOrderTypeProps {
@@ -25,16 +25,6 @@ const TradingOrderType: React.FC<TradingOrderTypeProps> = ({
 }) => {
   return (
     <div className="space-y-6">
-      <div className="bg-blue-50 p-4 rounded-md border border-blue-100 mb-6">
-        <div className="flex items-start">
-          <AlertCircle className="h-5 w-5 text-blue-600 mt-0.5 mr-2 flex-shrink-0" />
-          <p className="text-sm text-blue-700">
-            Order type determines how your trade is executed. Market orders execute immediately at the best available price, 
-            while limit orders only execute at or better than your specified price.
-          </p>
-        </div>
-      </div>
-
       <div>
         <h3 className="text-lg font-medium mb-4">
           Execution Type <span className="text-red-500">*</span>
@@ -92,7 +82,7 @@ const TradingOrderType: React.FC<TradingOrderTypeProps> = ({
         </div>
         
         <Select value={timeInForce} onValueChange={setTimeInForce}>
-          <SelectTrigger className="w-full">
+          <SelectTrigger className="w-full focus:ring-0">
             <SelectValue placeholder="Select duration" />
           </SelectTrigger>
           <SelectContent>

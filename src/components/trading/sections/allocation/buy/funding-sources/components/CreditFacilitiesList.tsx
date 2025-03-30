@@ -1,7 +1,7 @@
 
 import React from "react";
-import { mockPortfoliosByInstitution } from "@/components/trading/data";
-import { InstitutionSection } from "./InstitutionSection";
+import { FacilityItem } from "./FacilityItem";
+import { mockCreditFacilitiesFlat } from "@/components/trading/data";
 
 interface CreditFacilitiesListProps {
   tempAllocations: Record<string, number>;
@@ -17,18 +17,19 @@ export const CreditFacilitiesList: React.FC<CreditFacilitiesListProps> = ({
   remainingShares
 }) => {
   return (
-    <div className="space-y-6 max-h-[50vh] overflow-y-auto">
-      {mockPortfoliosByInstitution.map(institution => (
-        <InstitutionSection
-          key={institution.id}
-          institution={institution}
-          activeTab="credit"
-          tempAllocations={tempAllocations}
-          handleAllocationChange={handleAllocationChange}
+    <div className="space-y-4 max-h-96 overflow-y-auto pr-1">
+      {mockCreditFacilitiesFlat.map((facility) => (
+        <FacilityItem
+          key={facility.id}
+          facility={facility}
+          currentShares={tempAllocations[facility.id] || 0}
           instrumentPrice={instrumentPrice}
+          handleAllocationChange={handleAllocationChange}
           remainingShares={remainingShares}
         />
       ))}
     </div>
   );
 };
+
+export default CreditFacilitiesList;

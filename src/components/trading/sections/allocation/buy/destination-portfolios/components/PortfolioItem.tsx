@@ -24,39 +24,41 @@ const PortfolioItem: React.FC<PortfolioItemProps> = ({
   const estimatedValue = allocation * instrumentPrice;
   
   return (
-    <div className="p-3 border rounded-md">
-      <div className="flex flex-col mb-2">
-        <h5 className="text-sm font-medium">{portfolio.name}</h5>
-      </div>
-      
-      <div className="space-y-2">
-        <div className="flex items-center gap-2">
-          <Input
-            type="number"
-            min="0"
-            value={allocation}
-            onChange={(e) => onAllocationChange(portfolio.id, Number(e.target.value))}
-            className="w-full"
-            placeholder="Number of shares"
-          />
-          <Button
-            variant="outline"
-            size="sm"
-            className="whitespace-nowrap"
-            onClick={() => onAllocationChange(portfolio.id, remainingQuantity > 0 ? remainingQuantity : 0)}
-          >
-            Max
-          </Button>
+    <div className="p-4 border rounded-md hover:bg-gray-50 transition-colors">
+      <div className="grid grid-cols-2 gap-4 mb-3">
+        <div className="col-span-1">
+          <h3 className="font-medium text-gray-900">{portfolio.name}</h3>
+          <p className="text-sm text-gray-500">Portfolio</p>
         </div>
         
-        {allocation > 0 && (
-          <p className="text-sm text-gray-600">
-            Est. value: {estimatedValue.toLocaleString('en-US', {
+        <div className="col-span-1">
+          <p className="text-sm font-medium text-gray-700 mb-1">Est. value:</p>
+          <p className="text-sm text-gray-900">
+            {estimatedValue.toLocaleString('en-US', {
               style: 'currency', 
               currency
             })}
           </p>
-        )}
+        </div>
+      </div>
+      
+      <div className="flex items-center gap-2">
+        <Input
+          type="number"
+          min="0"
+          value={allocation}
+          onChange={(e) => onAllocationChange(portfolio.id, Number(e.target.value))}
+          className="w-full"
+          placeholder="Number of shares"
+        />
+        <Button
+          variant="outline"
+          size="sm"
+          className="whitespace-nowrap"
+          onClick={() => onAllocationChange(portfolio.id, remainingQuantity > 0 ? allocation + remainingQuantity : allocation)}
+        >
+          Max
+        </Button>
       </div>
     </div>
   );

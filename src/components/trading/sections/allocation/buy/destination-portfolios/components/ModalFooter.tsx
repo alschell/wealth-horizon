@@ -5,12 +5,14 @@ import { Button } from "@/components/ui/button";
 interface ModalFooterProps {
   onClose: () => void;
   onConfirm: () => void;
+  isLoading?: boolean;
   isConfirmDisabled?: boolean;
 }
 
 const ModalFooter: React.FC<ModalFooterProps> = ({ 
   onClose, 
   onConfirm, 
+  isLoading = false,
   isConfirmDisabled = false 
 }) => {
   return (
@@ -19,15 +21,16 @@ const ModalFooter: React.FC<ModalFooterProps> = ({
         variant="outline" 
         onClick={onClose}
         className="min-w-[100px] h-10"
+        disabled={isLoading}
       >
         Cancel
       </Button>
       <Button
-        disabled={isConfirmDisabled}
+        disabled={isLoading || isConfirmDisabled}
         onClick={onConfirm}
         className="min-w-[100px] h-10 bg-black text-white hover:bg-gray-800"
       >
-        Confirm
+        {isLoading ? "Processing..." : "Confirm"}
       </Button>
     </div>
   );

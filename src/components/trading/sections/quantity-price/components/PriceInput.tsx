@@ -9,18 +9,21 @@ interface PriceInputProps {
   onPriceChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   orderExecutionType: string;
   selectedInstrument: Instrument;
+  required?: boolean;
 }
 
 const PriceInput: React.FC<PriceInputProps> = ({
   price,
   onPriceChange,
   orderExecutionType,
-  selectedInstrument
+  selectedInstrument,
+  required = false
 }) => {
   return (
     <div>
       <Label htmlFor="price" className="text-base">
         {orderExecutionType === "limit" ? "Limit Price" : orderExecutionType === "stop" ? "Stop Price" : "Price per Share"}
+        {required && <span className="text-red-500 ml-1">*</span>}
       </Label>
       <Input
         id="price"
@@ -31,6 +34,7 @@ const PriceInput: React.FC<PriceInputProps> = ({
         onChange={onPriceChange}
         placeholder="Enter price"
         className="mt-1"
+        required={required}
       />
       <p className="text-sm text-gray-500 mt-1">
         Current market price: {selectedInstrument.currentPrice.toLocaleString('en-US', {

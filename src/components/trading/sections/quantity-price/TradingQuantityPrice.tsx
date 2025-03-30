@@ -49,6 +49,11 @@ const TradingQuantityPrice: React.FC<TradingQuantityPriceProps> = ({
     orderExecutionType
   });
 
+  // Conditionally set description text based on order execution type
+  const descriptionText = orderExecutionType === "market" 
+    ? "Enter the quantity" 
+    : "Enter the quantity and price details for this order";
+
   return (
     <div className="space-y-6">
       <div>
@@ -57,7 +62,7 @@ const TradingQuantityPrice: React.FC<TradingQuantityPriceProps> = ({
           {selectedInstrument.name} ({selectedInstrument.symbol})
         </h2>
         <p className="text-sm text-gray-500">
-          Enter the quantity and price details for this order
+          {descriptionText}
         </p>
       </div>
 
@@ -71,6 +76,7 @@ const TradingQuantityPrice: React.FC<TradingQuantityPriceProps> = ({
           onSliderChange={handleQuantitySliderChange}
           orderType={orderType}
           maxRecommendedQuantity={maxRecommendedQuantity}
+          required={true}
         />
 
         {orderExecutionType !== "market" && (
@@ -79,6 +85,7 @@ const TradingQuantityPrice: React.FC<TradingQuantityPriceProps> = ({
             onPriceChange={handlePriceChange}
             selectedInstrument={selectedInstrument}
             orderExecutionType={orderExecutionType}
+            required={true}
           />
         )}
 

@@ -37,23 +37,18 @@ const TradingOrderType: React.FC<TradingOrderTypeProps> = ({
 
       <div>
         <h3 className="text-lg font-medium mb-4">Execution Type</h3>
-        <RadioGroup 
-          value={orderExecutionType} 
-          onValueChange={setOrderExecutionType}
-          className="space-y-4"
-        >
+        <div className="space-y-4">
           <Card 
             className={`p-4 cursor-pointer transition-all ${orderExecutionType === 'market' ? 'ring-2 ring-black' : 'hover:bg-gray-50'}`}
             onClick={() => setOrderExecutionType('market')}
           >
             <div className="flex items-start">
-              <RadioGroupItem value="market" id="market" className="mr-2" />
-              <Label htmlFor="market" className="cursor-pointer font-medium w-full">
-                Market Order
-                <p className="font-normal text-sm text-gray-600 mt-1">
+              <div className="w-full">
+                <div className="font-medium">Market Order</div>
+                <p className="text-sm text-gray-600 mt-1">
                   Execute immediately at the best available market price. Best used when execution speed is your priority.
                 </p>
-              </Label>
+              </div>
             </div>
           </Card>
 
@@ -62,13 +57,12 @@ const TradingOrderType: React.FC<TradingOrderTypeProps> = ({
             onClick={() => setOrderExecutionType('limit')}
           >
             <div className="flex items-start">
-              <RadioGroupItem value="limit" id="limit" className="mr-2" />
-              <Label htmlFor="limit" className="cursor-pointer font-medium w-full">
-                Limit Order
-                <p className="font-normal text-sm text-gray-600 mt-1">
+              <div className="w-full">
+                <div className="font-medium">Limit Order</div>
+                <p className="text-sm text-gray-600 mt-1">
                   Execute only at your specified price or better. Best used when price is your priority.
                 </p>
-              </Label>
+              </div>
             </div>
           </Card>
 
@@ -77,22 +71,22 @@ const TradingOrderType: React.FC<TradingOrderTypeProps> = ({
             onClick={() => setOrderExecutionType('stop')}
           >
             <div className="flex items-start">
-              <RadioGroupItem value="stop" id="stop" className="mr-2" />
-              <Label htmlFor="stop" className="cursor-pointer font-medium w-full">
-                Stop Order
-                <p className="font-normal text-sm text-gray-600 mt-1">
+              <div className="w-full">
+                <div className="font-medium">Stop Order</div>
+                <p className="text-sm text-gray-600 mt-1">
                   Becomes a market order when price reaches or passes your stop price. Used to limit losses or protect profits.
                 </p>
-              </Label>
+              </div>
             </div>
           </Card>
-        </RadioGroup>
+        </div>
       </div>
 
       <div className="mt-8">
         <div className="flex items-center gap-2 mb-4">
           <Clock className="h-5 w-5 text-gray-600" />
           <h3 className="text-lg font-medium">Time in Force</h3>
+          <span className="text-red-500">*</span>
         </div>
         
         <Select value={timeInForce} onValueChange={setTimeInForce}>

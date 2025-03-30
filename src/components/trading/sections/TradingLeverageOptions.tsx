@@ -3,8 +3,6 @@ import React from "react";
 import { Card } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
 import { Badge } from "@/components/ui/badge";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
 import { Shield, TrendingUp, AlertTriangle, DollarSign } from "lucide-react";
 
 interface TradingLeverageOptionsProps {
@@ -19,6 +17,20 @@ const TradingLeverageOptions: React.FC<TradingLeverageOptionsProps> = ({
   setLeverage,
   orderType
 }) => {
+  // Handle safe click on leverage option
+  const handleLeverageSelect = (value: number) => (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setLeverage(value);
+  };
+
+  // Handle slider change safely
+  const handleSliderChange = (values: number[]) => {
+    if (values && values.length > 0) {
+      setLeverage(values[0]);
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="space-y-4">
@@ -29,68 +41,49 @@ const TradingLeverageOptions: React.FC<TradingLeverageOptionsProps> = ({
           <span className="text-amber-600 font-medium"> Higher leverage increases both potential returns and risks.</span>
         </p>
 
-        <RadioGroup 
-          value={leverage.toString()} 
-          onValueChange={(value) => setLeverage(Number(value))}
-          className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-4"
-        >
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-4">
           <Card 
             className={`p-4 cursor-pointer transition-all ${leverage === 1 ? 'ring-2 ring-black' : 'hover:bg-gray-50'}`}
-            onClick={() => setLeverage(1)}
+            onClick={handleLeverageSelect(1)}
           >
-            <div className="flex items-start">
-              <RadioGroupItem value="1" id="leverage-1" className="mr-2 mt-1" />
-              <div className="w-full">
-                <Label htmlFor="leverage-1" className="cursor-pointer font-medium flex items-center">
-                  <Shield className="h-4 w-4 mr-2 text-green-600" />
-                  No Leverage (1x)
-                </Label>
-                <p className="text-sm text-gray-600 mt-1">
-                  Standard trading with your available capital.
-                </p>
-                <Badge variant="secondary" className="mt-2">Conservative</Badge>
-              </div>
+            <div className="flex flex-col items-center">
+              <Shield className="h-5 w-5 text-green-600 mb-2" />
+              <h3 className="font-medium mb-2">No Leverage (1x)</h3>
+              <p className="text-sm text-gray-600 text-center">
+                Standard trading with your available capital.
+              </p>
+              <Badge variant="secondary" className="mt-2">Conservative</Badge>
             </div>
           </Card>
 
           <Card 
             className={`p-4 cursor-pointer transition-all ${leverage === 2 ? 'ring-2 ring-black' : 'hover:bg-gray-50'}`}
-            onClick={() => setLeverage(2)}
+            onClick={handleLeverageSelect(2)}
           >
-            <div className="flex items-start">
-              <RadioGroupItem value="2" id="leverage-2" className="mr-2 mt-1" />
-              <div className="w-full">
-                <Label htmlFor="leverage-2" className="cursor-pointer font-medium flex items-center">
-                  <TrendingUp className="h-4 w-4 mr-2 text-blue-600" />
-                  Moderate (2x)
-                </Label>
-                <p className="text-sm text-gray-600 mt-1">
-                  Double your buying power with moderate risk.
-                </p>
-                <Badge variant="outline" className="mt-2">Standard</Badge>
-              </div>
+            <div className="flex flex-col items-center">
+              <TrendingUp className="h-5 w-5 text-blue-600 mb-2" />
+              <h3 className="font-medium mb-2">Moderate (2x)</h3>
+              <p className="text-sm text-gray-600 text-center">
+                Double your buying power with moderate risk.
+              </p>
+              <Badge variant="outline" className="mt-2">Standard</Badge>
             </div>
           </Card>
 
           <Card 
             className={`p-4 cursor-pointer transition-all ${leverage === 5 ? 'ring-2 ring-black' : 'hover:bg-gray-50'}`}
-            onClick={() => setLeverage(5)}
+            onClick={handleLeverageSelect(5)}
           >
-            <div className="flex items-start">
-              <RadioGroupItem value="5" id="leverage-5" className="mr-2 mt-1" />
-              <div className="w-full">
-                <Label htmlFor="leverage-5" className="cursor-pointer font-medium flex items-center">
-                  <AlertTriangle className="h-4 w-4 mr-2 text-amber-600" />
-                  Advanced (5x)
-                </Label>
-                <p className="text-sm text-gray-600 mt-1">
-                  Quintuple your position size with higher risk.
-                </p>
-                <Badge variant="destructive" className="mt-2">High Risk</Badge>
-              </div>
+            <div className="flex flex-col items-center">
+              <AlertTriangle className="h-5 w-5 text-amber-600 mb-2" />
+              <h3 className="font-medium mb-2">Advanced (5x)</h3>
+              <p className="text-sm text-gray-600 text-center">
+                Quintuple your position size with higher risk.
+              </p>
+              <Badge variant="destructive" className="mt-2">High Risk</Badge>
             </div>
           </Card>
-        </RadioGroup>
+        </div>
       </div>
 
       <div className="pt-6 border-t border-gray-200 space-y-4">
@@ -107,7 +100,7 @@ const TradingLeverageOptions: React.FC<TradingLeverageOptionsProps> = ({
             min={1} 
             max={10} 
             step={0.5} 
-            onValueChange={([value]) => setLeverage(value)}
+            onValueChange={handleSliderChange}
             className="py-4"
           />
           <div className="flex justify-between text-xs text-gray-500">

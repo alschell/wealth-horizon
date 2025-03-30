@@ -1,170 +1,115 @@
 
-import React, { useState, useEffect } from "react";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
+import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
-import { BarChart3, Building } from "lucide-react";
-import { mockBrokers } from "../data";
-import { Badge } from "@/components/ui/badge";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Input } from "@/components/ui/input";
+import { Search } from "lucide-react";
+import { brokers } from "../data/brokers";
 
 interface TradingBrokerSelectionProps {
   selectedBroker: string | "best";
-  setSelectedBroker: (brokerId: string | "best") => void;
-  setCurrentStep?: (step: number) => void;
+  setSelectedBroker: (broker: string | "best") => void;
   [key: string]: any;
 }
 
 const TradingBrokerSelection: React.FC<TradingBrokerSelectionProps> = ({
   selectedBroker,
   setSelectedBroker,
-  setCurrentStep
 }) => {
-  const [selectedBrokerDetails, setSelectedBrokerDetails] = useState<any>(null);
-
-  // When component mounts, ensure a default selection is made if none exists
-  useEffect(() => {
-    if (selectedBroker === undefined || selectedBroker === null) {
-      console.log("Setting default broker to 'best'");
-      setSelectedBroker("best");
-    } else {
-      console.log("Broker already selected:", selectedBroker);
-    }
-  }, [selectedBroker, setSelectedBroker]);
-
-  useEffect(() => {
-    if (selectedBroker !== "best" && selectedBroker) {
-      const broker = mockBrokers.find(b => b.id === selectedBroker);
-      setSelectedBrokerDetails(broker);
-    } else {
-      setSelectedBrokerDetails(null);
-    }
-    
-    // Debug
-    console.log("Selected broker updated:", selectedBroker);
-  }, [selectedBroker]);
+  const [searchQuery, setSearchQuery] = useState("");
+  
+  // Filter brokers by search query
+  const filteredBrokers = searchQuery
+    ? brokers.filter(
+        (broker) =>
+          broker.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          broker.id.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : brokers;
 
   const handleBrokerSelect = (brokerId: string) => {
-    console.log("Setting broker to:", brokerId);
     setSelectedBroker(brokerId);
-  };
-
-  const getBrokerScore = (brokerId: string): number => {
-    // In a real app, this would be calculated based on performance metrics
-    const scores: Record<string, number> = {
-      "broker-1": 92,
-      "broker-2": 93,
-      "broker-3": 90,
-      "broker-4": 89,
-      "broker-5": 91,
-      "broker-6": 90,
-      "broker-7": 93,
-      "broker-8": 88,
-      "broker-9": 94,
-      "broker-10": 87,
-      "broker-11": 95,
-      "broker-12": 92,
-      "broker-13": 94,
-      "broker-14": 96,
-      "broker-15": 91,
-      "broker-16": 93,
-      "broker-17": 90,
-      "broker-18": 89,
-      "broker-19": 91,
-      "broker-20": 92
-    };
-    
-    return scores[brokerId] || 90;
   };
 
   return (
     <div className="space-y-6">
       <div>
-        <p className="mb-4">Select a broker to execute your trade or choose "Best Execution" to automatically select the broker offering the best price.</p>
+        <h3 className="text-lg font-medium mb-2">Select Broker</h3>
+        <p className="text-sm text-gray-600">
+          Choose which broker should execute this trade or select "Best Execution" to automatically route to the most favorable broker.
+        </p>
       </div>
 
-      <RadioGroup 
-        value={selectedBroker || "best"} 
-        onValueChange={handleBrokerSelect}
-        className="space-y-4"
-      >
-        <Card 
-          className={`p-4 cursor-pointer transition-all ${selectedBroker === 'best' ? 'ring-2 ring-black' : 'hover:bg-gray-50'}`}
-          onClick={() => setSelectedBroker("best")}
-        >
-          <div className="flex items-start">
-            <RadioGroupItem value="best" id="best" className="mr-2 mt-1" />
-            <div className="w-full">
-              <Label htmlFor="best" className="cursor-pointer font-medium flex items-center">
-                <BarChart3 className="h-5 w-5 mr-2 text-blue-600" />
-                Best Execution
-                <Badge className="ml-2 bg-blue-100 text-blue-800 hover:bg-blue-200">Recommended</Badge>
-              </Label>
-              <p className="text-sm text-gray-600 mt-1 ml-7">
-                Automatically routes your order to the broker offering the best price.
-                Considers price, speed, and execution quality.
+      <Tabs defaultValue="best" className="w-full">
+        <TabsList className="mb-4">
+          <TabsTrigger value="best">Best Execution</TabsTrigger>
+          <TabsTrigger value="specific">Specific Broker</TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="best">
+          <Card className={`p-5 ${selectedBroker === "best" ? "ring-2 ring-black" : ""}`} onClick={() => handleBrokerSelect("best")}>
+            <div className="cursor-pointer">
+              <div className="flex items-center mb-2">
+                <h4 className="text-base font-semibold">Best Execution</h4>
+                <span className="text-green-600 text-sm ml-2">Recommended</span>
+              </div>
+              <p className="text-sm text-gray-600">
+                Automatically route your order to the broker offering the best execution quality, price, and lowest fees for this specific trade.
               </p>
+              <ul className="mt-3 text-sm text-gray-600 list-disc list-inside">
+                <li>Optimizes for best price and lowest transaction costs</li>
+                <li>Considers current market conditions</li>
+                <li>Evaluates broker execution speed and reliability</li>
+              </ul>
+            </div>
+          </Card>
+        </TabsContent>
+        
+        <TabsContent value="specific" className="space-y-4">
+          <div className="mb-4">
+            <Label htmlFor="broker-search" className="text-base mb-1 block">
+              Search Brokers <span className="text-red-500">*</span>
+            </Label>
+            <div className="relative">
+              <Input
+                id="broker-search"
+                type="text"
+                placeholder="Search by broker name"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10"
+              />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
             </div>
           </div>
-        </Card>
 
-        <div className="mt-4">
-          <h3 className="font-medium mb-3">Or select a specific broker:</h3>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {mockBrokers.map((broker) => {
-              const score = getBrokerScore(broker.id);
-              return (
-                <Card 
-                  key={broker.id} 
-                  className={`p-4 cursor-pointer transition-all ${selectedBroker === broker.id ? 'ring-2 ring-black' : 'hover:bg-gray-50'}`}
-                  onClick={() => setSelectedBroker(broker.id)}
-                >
-                  <div className="flex items-start">
-                    <RadioGroupItem value={broker.id} id={broker.id} className="mr-2 mt-1" />
-                    <div className="w-full">
-                      <div className="flex justify-between items-center">
-                        <Label htmlFor={broker.id} className="cursor-pointer flex items-center">
-                          <Building className="h-4 w-4 mr-1.5 text-gray-600" />
-                          {broker.name}
-                        </Label>
-                        <div className="flex items-center">
-                          <Badge variant="outline" className={`text-xs ${score >= 90 ? 'bg-green-50 border-green-200 text-green-700' : 'bg-amber-50 border-amber-200 text-amber-700'}`}>
-                            {score}/100
-                          </Badge>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </Card>
-              );
-            })}
-          </div>
-        </div>
-      </RadioGroup>
-
-      {selectedBrokerDetails && (
-        <div className="bg-gray-50 p-4 rounded-md border mt-6">
-          <h3 className="font-semibold mb-2">{selectedBrokerDetails.name} Details</h3>
-          <div className="grid grid-cols-2 gap-2 text-sm">
-            <div>
-              <p className="text-gray-500">Commission Rate</p>
-              <p className="font-medium">0.25% per trade</p>
-            </div>
-            <div>
-              <p className="text-gray-500">Settlement Period</p>
-              <p className="font-medium">T+2</p>
-            </div>
-            <div>
-              <p className="text-gray-500">Execution Speed</p>
-              <p className="font-medium">~0.8 seconds</p>
-            </div>
-            <div>
-              <p className="text-gray-500">Markets</p>
-              <p className="font-medium">Global</p>
-            </div>
-          </div>
-        </div>
-      )}
+          <RadioGroup
+            value={selectedBroker}
+            onValueChange={handleBrokerSelect}
+            className="space-y-3"
+          >
+            {filteredBrokers.map((broker) => (
+              <Card 
+                key={broker.id} 
+                className={`p-4 cursor-pointer transition-all ${selectedBroker === broker.id ? 'ring-2 ring-black' : 'hover:bg-gray-50'}`}
+                onClick={() => handleBrokerSelect(broker.id)}
+              >
+                <div className="w-full">
+                  <div className="font-medium">{broker.name}</div>
+                  <p className="text-sm text-gray-600 mt-1">{broker.description}</p>
+                  {broker.fee && <p className="text-sm text-gray-700 mt-1">Fee: {broker.fee}</p>}
+                </div>
+              </Card>
+            ))}
+            
+            {filteredBrokers.length === 0 && (
+              <p className="text-gray-500 text-center py-4">No brokers found matching your search</p>
+            )}
+          </RadioGroup>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };

@@ -11,6 +11,7 @@ interface QuantityInputProps {
   onSliderChange: (value: number[]) => void;
   orderType: string;
   maxRecommendedQuantity: number;
+  required?: boolean;
 }
 
 const QuantityInput: React.FC<QuantityInputProps> = ({
@@ -19,11 +20,15 @@ const QuantityInput: React.FC<QuantityInputProps> = ({
   quantityPercent,
   onSliderChange,
   orderType,
-  maxRecommendedQuantity
+  maxRecommendedQuantity,
+  required = false
 }) => {
   return (
     <div>
-      <Label htmlFor="quantity" className="text-base">Quantity</Label>
+      <Label htmlFor="quantity" className="text-base">
+        Quantity
+        {required && <span className="text-red-500 ml-1">*</span>}
+      </Label>
       <Input
         id="quantity"
         type="number"
@@ -33,6 +38,7 @@ const QuantityInput: React.FC<QuantityInputProps> = ({
         onChange={onQuantityChange}
         placeholder="Enter quantity"
         className="mt-1"
+        required={required}
       />
       <div className="mt-3">
         <div className="flex justify-between text-xs text-gray-500 mb-1">

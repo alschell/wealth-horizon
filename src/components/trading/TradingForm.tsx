@@ -69,7 +69,7 @@ const TradingForm: React.FC = () => {
     setOrderType(orderType);
   }, [orderType, setOrderType]);
 
-  // Reordered steps and removed Leverage step
+  // Renamed first step to "Order & Instrument"
   const steps = [
     { title: "Order & Instrument", component: TradingInstrumentSearch },
     { title: "Type & Validity", component: TradingOrderType },

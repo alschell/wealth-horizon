@@ -10,7 +10,7 @@ import { Progress } from "@/components/ui/progress";
 import { AlertCircle, Check } from "lucide-react";
 import { mockPortfoliosByInstitution } from "../../../../data";
 import { PortfoliosList } from "./components";
-import { ModalFooter } from "./components/ModalFooter";
+import ModalFooter from "./components/ModalFooter";
 
 interface PortfolioSelectionModalProps {
   isOpen: boolean;

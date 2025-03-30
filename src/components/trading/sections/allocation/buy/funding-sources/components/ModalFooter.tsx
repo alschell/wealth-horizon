@@ -4,16 +4,18 @@ import { Button } from "@/components/ui/button";
 
 interface ModalFooterProps {
   onApply: () => void;
-  disabled?: boolean;
+  onClose: () => void;
 }
 
-export const ModalFooter: React.FC<ModalFooterProps> = ({ onApply, disabled = false }) => {
+export const ModalFooter: React.FC<ModalFooterProps> = ({ onApply, onClose }) => {
   return (
-    <div className="mt-6 flex justify-end">
+    <div className="flex justify-end gap-2 mt-6">
+      <Button variant="outline" onClick={onClose}>
+        Cancel
+      </Button>
       <Button 
-        onClick={onApply} 
         className="bg-black text-white hover:bg-gray-800"
-        disabled={disabled}
+        onClick={onApply}
       >
         Apply
       </Button>

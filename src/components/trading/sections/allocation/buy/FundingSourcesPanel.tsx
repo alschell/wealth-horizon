@@ -4,14 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { 
-  SelectedSourcesTable, 
-  useFundingSources
-} from "./funding-sources";
+import { useFundingSources } from "./funding-sources/hooks/useFundingSources";
+import { SelectedSourcesTable } from "./funding-sources/components/SelectedSourcesTable";
 import { CashAccountsPanel } from "./funding-sources/components/CashAccountsPanel";
 import { CreditFacilitiesPanel } from "./funding-sources/components/CreditFacilitiesPanel";
 import { ModalFooter } from "./funding-sources/components/ModalFooter";
-import { mockCashAccountsFlat, mockCreditFacilitiesFlat } from "@/components/trading/data";
 
 interface FundingSourcesPanelProps {
   fundingAllocations: Record<string, number>;
@@ -50,9 +47,9 @@ const FundingSourcesPanel: React.FC<FundingSourcesPanelProps> = ({
   // Helper function to get source by ID
   const getSourceById = (sourceId: string) => {
     if (sourceId.startsWith('cash-')) {
-      return mockCashAccountsFlat.find(item => item.id === sourceId);
+      return getSources("cash").find((item: any) => item.id === sourceId);
     } else {
-      return mockCreditFacilitiesFlat.find(item => item.id === sourceId);
+      return getSources("credit").find((item: any) => item.id === sourceId);
     }
   };
 
@@ -78,7 +75,7 @@ const FundingSourcesPanel: React.FC<FundingSourcesPanelProps> = ({
       </div>
       
       {/* Funding Sources Sheet */}
-      <Sheet open={isSourcesSheetOpen} onOpenChange={setSourcesSheetOpen}>
+      <Sheet open={isSourcesSheetOpen} onOpenChange={setIsOpen => !setIsOpen && setSourcesSheetOpen(false)}>
         <SheetContent className="sm:max-w-md" side="right">
           <SheetHeader>
             <SheetTitle>Select Funding Sources</SheetTitle>
@@ -109,7 +106,7 @@ const FundingSourcesPanel: React.FC<FundingSourcesPanelProps> = ({
             </Tabs>
           </div>
           
-          <ModalFooter onApply={applyAllocations} />
+          <ModalFooter onApply={applyAllocations} onClose={() => setSourcesSheetOpen(false)} />
         </SheetContent>
       </Sheet>
     </div>

@@ -9,8 +9,9 @@ import {
 
 export interface UseFundingSourcesProps {
   totalAmount: number;
-  onAllocationChange: (sourceId: string, amount: number) => void;
+  onAllocationChange?: (sourceId: string, amount: number) => void;
   fundingAllocations?: Record<string, number>;
+  instrumentPrice?: number;
 }
 
 export const useFundingSources = ({
@@ -41,7 +42,9 @@ export const useFundingSources = ({
     const updatedAllocations = { ...allocations, [sourceId]: amount };
     setAllocations(updatedAllocations);
     updateCurrentAllocation(updatedAllocations);
-    onAllocationChange(sourceId, amount);
+    if (onAllocationChange) {
+      onAllocationChange(sourceId, amount);
+    }
   };
 
   const handleTempAllocationChange = (sourceId: string, amount: number) => {
@@ -106,3 +109,4 @@ export const useFundingSources = ({
     getSources
   };
 };
+

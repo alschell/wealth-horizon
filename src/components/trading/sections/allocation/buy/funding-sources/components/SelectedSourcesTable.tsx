@@ -13,19 +13,19 @@ import {
 
 interface SelectedSourcesTableProps {
   selectedSourceIds: string[];
-  fundingAllocations: Record<string, number>;
-  onAllocationChange: (sourceId: string, amount: number) => void;
-  getSources: (type: "cash" | "credit") => any[];
-  totalAmount: number;
+  allocations: Record<string, number>;
+  handleAllocationChange: (sourceId: string, shares: number) => void;
+  getSourceById: (sourceId: string) => any;
+  instrumentPrice: number;
   currency: string;
 }
 
 export const SelectedSourcesTable: React.FC<SelectedSourcesTableProps> = ({
   selectedSourceIds,
-  fundingAllocations,
-  onAllocationChange,
-  getSources,
-  totalAmount,
+  allocations,
+  handleAllocationChange,
+  getSourceById,
+  instrumentPrice,
   currency
 }) => {
   if (selectedSourceIds.length === 0) {
@@ -44,49 +44,66 @@ export const SelectedSourcesTable: React.FC<SelectedSourcesTableProps> = ({
             <TableHead>Source</TableHead>
             <TableHead>Type</TableHead>
             <TableHead>Available</TableHead>
-            <TableHead>Allocation</TableHead>
+            <TableHead>Shares</TableHead>
+            <TableHead>Est. Amount</TableHead>
             <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {selectedSourceIds.map(sourceId => {
-            const isCash = sourceId.startsWith("cash-");
-            const sources = getSources(isCash ? "cash" : "credit");
-            const source = sources.find(s => s.id === sourceId);
-            
+            const source = getSourceById(sourceId);
             if (!source) return null;
             
-            const available = isCash 
-              ? source.balance
-              : source.available;
+            const sourceType = sourceId.startsWith("cash-") ? "Cash" : "Credit";
+            const available = sourceId.startsWith("cash-") 
+              ? (source as any).balance 
+              : (source as any).available;
             
-            const amount = fundingAllocations[sourceId];
+            const maxShares = Math.floor(available / instrumentPrice);
+            const shares = allocations[sourceId] || 0;
+            const estimatedAmount = shares * instrumentPrice;
             
             return (
               <TableRow key={sourceId}>
-                <TableCell>{source.name}</TableCell>
-                <TableCell>{isCash ? "Cash Account" : "Credit Facility"}</TableCell>
+                <TableCell className="font-medium">{source.name}</TableCell>
+                <TableCell>{sourceType}</TableCell>
                 <TableCell>
                   {available.toLocaleString('en-US', {
                     style: 'currency',
-                    currency: source.currency
+                    currency: source.currency || currency
                   })}
                 </TableCell>
                 <TableCell>
-                  <Input
-                    type="number"
-                    min="0"
-                    max={available}
-                    value={amount}
-                    onChange={(e) => onAllocationChange(sourceId, Number(e.target.value))}
-                    className="w-28"
-                  />
+                  <div className="flex items-center gap-2">
+                    <Input
+                      type="number"
+                      min="0"
+                      max={maxShares}
+                      value={shares}
+                      onChange={(e) => handleAllocationChange(sourceId, Number(e.target.value))}
+                      className="w-24"
+                    />
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="text-xs whitespace-nowrap"
+                      onClick={() => handleAllocationChange(sourceId, maxShares)}
+                    >
+                      Max
+                    </Button>
+                  </div>
+                </TableCell>
+                <TableCell>
+                  {estimatedAmount.toLocaleString('en-US', {
+                    style: 'currency',
+                    currency: source.currency || currency
+                  })}
                 </TableCell>
                 <TableCell>
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => onAllocationChange(sourceId, 0)}
+                    onClick={() => handleAllocationChange(sourceId, 0)}
                     className="text-xs"
                   >
                     Remove

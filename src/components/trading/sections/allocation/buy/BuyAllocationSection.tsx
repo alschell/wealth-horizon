@@ -1,12 +1,9 @@
 
 import React, { useState } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { TradeOrder } from "../../../types";
-import { AllocationSummary } from "../AllocationSummary";
-import { QuantityAllocationSummary } from "../AllocationSummary";
-import FundingSourcesPanel from "./FundingSourcesPanel";
-import DestinationPortfoliosPanel from "./DestinationPortfoliosPanel";
+import FundingSourcesSection from "./funding-sources/FundingSourcesSection";
+import DestinationPortfoliosSection from "./destination-portfolios/DestinationPortfoliosSection";
 
 interface BuyAllocationSectionProps {
   totalAmount: number;
@@ -27,118 +24,33 @@ const BuyAllocationSection: React.FC<BuyAllocationSectionProps> = ({
   setOrder,
   price
 }) => {
-  const [fundingAllocations, setFundingAllocations] = useState<Record<string, number>>(
-    (order.fundingAllocations || []).reduce((acc, item) => {
-      acc[item.sourceId] = item.amount;
-      return acc;
-    }, {} as Record<string, number>)
-  );
+  const [viewMode, setViewMode] = useState<"portfolios" | "institutions">("portfolios");
   
-  const [portfolioAllocations, setPortfolioAllocations] = useState<Record<string, number>>(
-    (order.depositAllocations || [])
-      .filter(item => item.destinationType === "portfolio")
-      .reduce((acc, item) => {
-        acc[item.destinationId] = item.quantity || 0;
-        return acc;
-      }, {} as Record<string, number>)
-  );
-  
-  // Calculate current allocations
-  const currentFundingAmount = Object.values(fundingAllocations).reduce((sum, amount) => sum + amount, 0);
-  const remainingFundingAmount = totalAmount - currentFundingAmount;
-  
-  const currentPortfolioAllocation = Object.values(portfolioAllocations).reduce((sum, qty) => sum + qty, 0);
-  const remainingPortfolioQuantity = quantity - currentPortfolioAllocation;
-  
-  // Update funding allocations and sync with order state
-  const handleFundingAllocationChange = (sourceId: string, amount: number) => {
-    const newAllocations = { ...fundingAllocations, [sourceId]: amount };
-    setFundingAllocations(newAllocations);
-    
-    // Update order state
-    const updatedFundingAllocations = Object.entries(newAllocations)
-      .filter(([_, amount]) => amount > 0)
-      .map(([sourceId, amount]) => ({
-        sourceId,
-        sourceType: sourceId.startsWith("cash-") ? "cash" as const : "credit" as const,
-        amount,
-        currency
-      }));
-    
-    setOrder({
-      ...order,
-      fundingAllocations: updatedFundingAllocations
-    });
-  };
-  
-  // Update portfolio allocations and sync with order state
-  const handlePortfolioAllocationChange = (portfolioId: string, quantity: number) => {
-    const newAllocations = { ...portfolioAllocations, [portfolioId]: quantity };
-    setPortfolioAllocations(newAllocations);
-    
-    // Get any non-portfolio allocations
-    const nonPortfolioAllocations = (order.depositAllocations || [])
-      .filter(item => item.destinationType !== "portfolio");
-    
-    // Create updated portfolio allocations
-    const updatedPortfolioAllocations = Object.entries(newAllocations)
-      .filter(([_, qty]) => qty > 0)
-      .map(([destinationId, quantity]) => ({
-        destinationId,
-        destinationType: "portfolio" as const,
-        quantity
-      }));
-    
-    // Update order state
-    setOrder({
-      ...order,
-      depositAllocations: [...nonPortfolioAllocations, ...updatedPortfolioAllocations]
-    });
-  };
+  // Calculate instrument price (market price or specified price)
+  const instrumentPrice = price > 0 ? price : selectedInstrument?.currentPrice || 0;
 
   return (
     <div className="space-y-8">
       <div className="space-y-6">
-        <h3 className="text-base font-medium">1. Funding Sources</h3>
-        <p className="text-sm text-gray-500 -mt-4">
-          Select accounts to fund this purchase
-        </p>
-        
-        <FundingSourcesPanel
-          fundingAllocations={fundingAllocations}
-          onAllocationChange={handleFundingAllocationChange}
+        <FundingSourcesSection 
           totalAmount={totalAmount}
           currency={currency}
-          price={price}
-        />
-        
-        <AllocationSummary
-          totalAmount={totalAmount}
-          currency={currency}
-          currentAllocation={currentFundingAmount}
-          remainingAmount={remainingFundingAmount}
+          order={order}
+          setOrder={setOrder}
+          viewMode={viewMode}
+          instrumentPrice={instrumentPrice}
         />
       </div>
       
       <Separator />
       
       <div className="space-y-6">
-        <h3 className="text-base font-medium">2. Destination Portfolios</h3>
-        <p className="text-sm text-gray-500 -mt-4">
-          Select where to deposit the purchased assets
-        </p>
-        
-        <DestinationPortfoliosPanel
-          portfolioAllocations={portfolioAllocations}
-          onAllocationChange={handlePortfolioAllocationChange}
+        <DestinationPortfoliosSection 
           totalQuantity={quantity}
-          selectedInstrument={selectedInstrument}
-        />
-        
-        <QuantityAllocationSummary
-          totalQuantity={quantity}
-          currentAllocation={currentPortfolioAllocation}
-          remainingQuantity={remainingPortfolioQuantity}
+          order={order}
+          setOrder={setOrder}
+          instrumentPrice={instrumentPrice}
+          currency={currency}
         />
       </div>
     </div>

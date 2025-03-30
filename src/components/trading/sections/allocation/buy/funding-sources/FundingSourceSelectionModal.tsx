@@ -54,9 +54,12 @@ const FundingSourceSelectionModal: React.FC<FundingSourceSelectionModalProps> = 
     onClose();
   };
 
-  // Get remaining shares needed to fully fund the order
+  // Get required shares needed to fully fund the order
   const requiredShares = totalAmount / instrumentPrice;
   const remainingShares = requiredShares - totalShares;
+  
+  // Check if allocations exactly equal required shares
+  const isAllocationComplete = Math.abs(totalShares - requiredShares) < 0.001;
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen => !setIsOpen && onClose()}>
@@ -77,7 +80,7 @@ const FundingSourceSelectionModal: React.FC<FundingSourceSelectionModalProps> = 
               </p>
             </div>
             <div>
-              <p className="text-sm font-medium">Required shares</p>
+              <p className="text-sm font-medium">Total number of shares</p>
               <p className="text-lg font-bold">
                 {Math.ceil(requiredShares)}
               </p>
@@ -130,7 +133,7 @@ const FundingSourceSelectionModal: React.FC<FundingSourceSelectionModalProps> = 
                           type="number"
                           min="0"
                           max={maxSharesFromAccount}
-                          value={currentShares}
+                          value={currentShares || ""}
                           onChange={(e) => handleAllocationChange(account.id, Number(e.target.value))}
                           className="w-full"
                           placeholder="Number of shares"
@@ -192,7 +195,7 @@ const FundingSourceSelectionModal: React.FC<FundingSourceSelectionModalProps> = 
                           type="number"
                           min="0"
                           max={maxSharesFromFacility}
-                          value={currentShares}
+                          value={currentShares || ""}
                           onChange={(e) => handleAllocationChange(facility.id, Number(e.target.value))}
                           className="w-full"
                           placeholder="Number of shares"
@@ -231,7 +234,7 @@ const FundingSourceSelectionModal: React.FC<FundingSourceSelectionModalProps> = 
             Cancel
           </Button>
           <Button 
-            className="bg-black text-white hover:bg-gray-800"
+            disabled={!isAllocationComplete}
             onClick={handleConfirm}
           >
             Confirm

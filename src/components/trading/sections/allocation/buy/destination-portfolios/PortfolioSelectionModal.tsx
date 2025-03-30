@@ -71,8 +71,8 @@ const PortfolioSelectionModal: React.FC<PortfolioSelectionModalProps> = ({
         <div className="py-4">
           <div className="mb-6 space-y-3">
             <div className="flex justify-between text-sm">
-              <span>Total shares: {totalQuantity}</span>
-              <span>Allocated: {totalAllocated} shares</span>
+              <span>Total shares to allocate: {totalQuantity}</span>
+              <span>Shares allocated: {totalAllocated}</span>
             </div>
             
             <Progress value={allocationPercentage} className="h-2" />

@@ -67,7 +67,7 @@ const PortfolioItem: React.FC<PortfolioItemProps> = ({
 
         <div>
           <div className="text-xs text-gray-500 mb-1">Estimated value</div>
-          <div className="text-sm font-medium">
+          <div className="text-sm font-medium mt-2">
             {estimatedValue.toLocaleString('en-US', {
               style: 'currency',
               currency

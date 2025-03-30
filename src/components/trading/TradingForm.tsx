@@ -97,15 +97,13 @@ const TradingForm: React.FC = () => {
         transition={{ duration: 0.5 }}
         className="mb-10 text-center"
       >
-        <h1 className="text-3xl font-bold text-gray-900">New Trade</h1>
+        <h1 className="text-3xl font-bold text-black mb-8">New Trade</h1>
       </motion.div>
 
-      <div className="mb-8">
-        <TradingStepsProgress 
-          steps={steps}
-          currentStep={currentStep}
-        />
-      </div>
+      <TradingStepsProgress 
+        steps={steps}
+        currentStep={currentStep}
+      />
 
       <TradingFormContent
         currentStep={currentStep}

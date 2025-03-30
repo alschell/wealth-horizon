@@ -16,11 +16,11 @@ const AllocationSummary: React.FC<AllocationSummaryProps> = ({
     <div className="py-4">
       <div className="flex items-center justify-between mb-4">
         <div>
-          <p className="text-sm font-medium">Total shares</p>
+          <p className="text-sm font-medium">Total shares to allocate</p>
           <p className="text-lg font-bold">{totalQuantity}</p>
         </div>
         <div>
-          <p className="text-sm font-medium">Allocated</p>
+          <p className="text-sm font-medium">Shares allocated</p>
           <p className="text-lg font-bold">
             {totalAllocated} <span className="text-sm font-normal text-gray-500">of {totalQuantity}</span>
           </p>

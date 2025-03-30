@@ -1,147 +1,81 @@
 
-import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import React from "react";
+import { AllocationSummary } from "../../AllocationSummary";
 import { TradeOrder } from "../../../../types";
+import SelectedPortfoliosTable from "./SelectedPortfoliosTable";
 import PortfolioSelectionModal from "./PortfolioSelectionModal";
-import { SelectedPortfoliosTable } from "./SelectedPortfoliosTable";
+import { useDestinationPortfolios } from "./useDestinationPortfolios";
 
 interface DestinationPortfoliosSectionProps {
   totalQuantity: number;
+  selectedInstrument: any;
   order: Partial<TradeOrder>;
   setOrder: (order: Partial<TradeOrder>) => void;
-  instrumentPrice: number;
-  currency: string;
 }
 
-const DestinationPortfoliosSection: React.FC<DestinationPortfoliosSectionProps> = ({ 
-  totalQuantity, 
-  order, 
-  setOrder,
-  instrumentPrice,
-  currency
+const DestinationPortfoliosSection: React.FC<DestinationPortfoliosSectionProps> = ({
+  totalQuantity,
+  selectedInstrument,
+  order,
+  setOrder
 }) => {
-  const [allocations, setAllocations] = useState<Record<string, number>>(
-    (order.depositAllocations || [])
-      .filter(allocation => allocation.destinationType === "portfolio")
-      .reduce((acc, item) => {
-        acc[item.destinationId] = item.quantity || 0;
-        return acc;
-      }, {} as Record<string, number>)
-  );
-  
-  const [currentAllocation, setCurrentAllocation] = useState(0);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  
-  // Initialize current allocation
-  React.useEffect(() => {
-    const total = Object.values(allocations).reduce((sum, quantity) => sum + quantity, 0);
-    setCurrentAllocation(total);
-  }, [allocations]);
-  
-  // Update allocations and order state
-  const handleAllocationChange = (portfolioId: string, quantity: number) => {
-    updateAllocations({ ...allocations, [portfolioId]: quantity });
-  };
-  
-  const updateAllocations = (newAllocations: Record<string, number>) => {
-    setAllocations(newAllocations);
-    
-    // Calculate new total allocation
-    const total = Object.values(newAllocations).reduce((sum, quantity) => sum + quantity, 0);
-    setCurrentAllocation(total);
-    
-    // Get non-portfolio allocations
-    const nonPortfolioAllocations = (order.depositAllocations || [])
-      .filter(alloc => alloc.destinationType !== "portfolio");
-    
-    // Add updated portfolio allocations
-    const portfolioAllocations = Object.entries(newAllocations)
-      .filter(([_, quantity]) => quantity > 0)
-      .map(([destinationId, quantity]) => ({
-        destinationId,
-        destinationType: "portfolio" as const,
-        quantity
-      }));
-    
-    // Update order
-    setOrder({
-      ...order,
-      depositAllocations: [...nonPortfolioAllocations, ...portfolioAllocations]
-    });
-  };
-  
-  // Open modal
-  const openModal = () => {
-    setIsModalOpen(true);
-  };
-  
-  // Close modal
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
-  
-  // Handle confirmation from modal
-  const handleConfirmSelections = (selections: Record<string, number>) => {
-    updateAllocations(selections);
-  };
-  
-  // Calculate remaining quantity
-  const remainingQuantity = totalQuantity - currentAllocation;
-  
-  // Get selected portfolio IDs (with allocations > 0)
-  const selectedPortfolioIds = Object.keys(allocations).filter(id => allocations[id] > 0);
-  
+  const {
+    allocations,
+    currentAllocation,
+    remainingQuantity,
+    isModalOpen,
+    setIsModalOpen,
+    selectedPortfolios,
+    tempAllocations,
+    tempTotalAllocation,
+    isAllocationComplete,
+    isAllocationExceeded,
+    handleAllocationChange,
+    openPortfolioSelectionModal,
+    handlePortfolioSelect,
+    handleTempAllocationChange,
+    closeModal,
+    confirmPortfolioSelections
+  } = useDestinationPortfolios({
+    totalQuantity,
+    selectedInstrument,
+    order,
+    setOrder
+  });
+
+  // Get selected portfolio IDs
+  const selectedPortfolioIds = Object.keys(allocations);
+
   return (
     <div className="space-y-4">
       <div>
         <h3 className="text-base font-medium mb-1">Destination Portfolios</h3>
         <p className="text-sm text-gray-500 mb-3">
-          Select which portfolios to deposit the purchased shares into
+          Select which portfolios to deposit the purchased shares into.
         </p>
-        
-        {selectedPortfolioIds.length > 0 ? (
-          <div className="border rounded-md overflow-hidden">
-            <div className="flex justify-end p-3 border-b">
-              <Button 
-                onClick={openModal}
-                className="bg-black text-white hover:bg-gray-800"
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                Manage Destination Portfolios
-              </Button>
-            </div>
-            <SelectedPortfoliosTable
-              selectedPortfolioIds={selectedPortfolioIds}
-              allocations={allocations}
-              handleAllocationChange={handleAllocationChange}
-              instrumentPrice={instrumentPrice}
-              currency={currency}
-            />
-          </div>
-        ) : (
-          <div className="text-center py-6 border border-dashed rounded-md">
-            <p className="text-gray-500 mb-2">No destination portfolios selected</p>
-            <Button 
-              onClick={openModal}
-              className="bg-black text-white hover:bg-gray-800"
-            >
-              <Plus className="h-4 w-4 mr-2" />
-              Add Destination Portfolio
-            </Button>
-          </div>
-        )}
+
+        <SelectedPortfoliosTable 
+          selectedPortfolioIds={selectedPortfolioIds}
+          allocations={allocations}
+          handleAllocationChange={handleAllocationChange}
+          openPortfolioSelectionModal={openPortfolioSelectionModal}
+        />
+
+        {/* Portfolio selection modal */}
+        <PortfolioSelectionModal 
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          selectedPortfolios={selectedPortfolios}
+          tempAllocations={tempAllocations}
+          totalQuantity={totalQuantity}
+          tempTotalAllocation={tempTotalAllocation}
+          isAllocationComplete={isAllocationComplete}
+          isAllocationExceeded={isAllocationExceeded}
+          onSelectPortfolio={handlePortfolioSelect}
+          onAllocationChange={handleTempAllocationChange}
+          onConfirm={confirmPortfolioSelections}
+        />
       </div>
-      
-      <PortfolioSelectionModal 
-        isOpen={isModalOpen}
-        onClose={closeModal}
-        onConfirm={handleConfirmSelections}
-        totalQuantity={totalQuantity}
-        currentAllocations={allocations}
-        instrumentPrice={instrumentPrice}
-        currency={currency}
-      />
     </div>
   );
 };

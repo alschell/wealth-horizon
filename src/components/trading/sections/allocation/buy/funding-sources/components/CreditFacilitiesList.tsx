@@ -1,8 +1,6 @@
 
 import React from "react";
 import { mockPortfoliosByInstitution } from "@/components/trading/data";
-import { InstitutionSection } from "./InstitutionSection";
-import { LegalEntitySection } from "./LegalEntitySection";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
@@ -24,7 +22,7 @@ const FacilityItem: React.FC<FacilityItemProps> = ({
   const handleMaxClick = () => {
     const maxAvailable = Math.min(
       facility.availableAmount / instrumentPrice,
-      remainingShares
+      remainingShares + (currentShares || 0)
     );
     onAllocationChange(facility.id, maxAvailable);
   };
@@ -114,12 +112,12 @@ export const CreditFacilitiesList: React.FC<CreditFacilitiesListProps> = ({
   return (
     <div className="space-y-6">
       {filteredInstitutions.map(institution => (
-        <div key={institution.id}>
+        <div key={institution.id} className="mb-6">
           <h3 className="text-md font-medium mb-3">{institution.name}</h3>
           
           <div className="space-y-6">
             {institution.legalEntities?.map(entity => (
-              <div key={entity.id} className="pl-4 border-l-2 border-gray-200">
+              <div key={entity.id} className="pl-4 border-l-2 border-gray-200 mb-4">
                 <h4 className="text-sm font-medium mb-3">{entity.name}</h4>
                 
                 <div className="space-y-2">

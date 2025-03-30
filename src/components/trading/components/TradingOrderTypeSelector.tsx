@@ -16,7 +16,7 @@ const TradingOrderTypeSelector: React.FC<TradingOrderTypeSelectorProps> = ({
   return (
     <div className="mb-6">
       <div className="flex flex-col sm:flex-row items-center gap-4">
-        <span className="font-medium text-gray-700 text-lg mr-2">Order Type:</span>
+        <span className="font-medium text-gray-700 text-xl mr-2">Order:</span>
         <div className="flex gap-4">
           <Button
             type="button"

@@ -1,6 +1,6 @@
 
 import React from "react";
-import FundingSourceSelectionModal from "../funding-sources/FundingSourceSelectionModal";
+import FundingSourceSelectionModal from "./FundingSourceSelectionModal";
 import { useFundingSourcesSection } from "./hooks/useFundingSourcesSection";
 import FundingSourcesPanel from "../FundingSourcesPanel";
 import { TradeOrder } from "@/components/trading/types";

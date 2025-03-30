@@ -1,8 +1,8 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { mockCashAccountsFlat, mockCreditFacilitiesFlat } from "@/components/trading/data";
 
-interface UseFundingSourcesProps {
+interface UseFundingSourcesPanelProps {
   fundingAllocations: Record<string, number>;
   onAllocationChange: (sourceId: string, amount: number) => void;
   totalAmount: number;
@@ -12,47 +12,58 @@ export const useFundingSources = ({
   fundingAllocations,
   onAllocationChange,
   totalAmount
-}: UseFundingSourcesProps) => {
-  const [isSourcesSheetOpen, setSourcesSheetOpen] = useState(false);
+}: UseFundingSourcesPanelProps) => {
   const [activeTab, setActiveTab] = useState<"cash" | "credit">("cash");
   const [tempAllocations, setTempAllocations] = useState<Record<string, number>>({});
-  
-  // Get selected source IDs
-  const selectedSourceIds = Object.keys(fundingAllocations).filter(id => fundingAllocations[id] > 0);
-  
-  // Open sources selection sheet
+  const [isSourcesSheetOpen, setSourcesSheetOpen] = useState(false);
+
+  // Initialize temp allocations with current allocations when sheet opens
+  useEffect(() => {
+    if (isSourcesSheetOpen) {
+      setTempAllocations({...fundingAllocations});
+    }
+  }, [isSourcesSheetOpen, fundingAllocations]);
+
+  // Open sheet for source selection
   const openSourcesSheet = () => {
-    setTempAllocations({ ...fundingAllocations });
     setSourcesSheetOpen(true);
   };
-  
-  // Apply temporary allocations to the actual allocations
+
+  // Apply temporary allocations to actual allocations
   const applyAllocations = () => {
+    // Update each allocation
     Object.entries(tempAllocations).forEach(([sourceId, amount]) => {
-      if (amount > 0) {
-        onAllocationChange(sourceId, amount);
-      }
+      onAllocationChange(sourceId, amount);
     });
+    
     setSourcesSheetOpen(false);
   };
-  
-  // Handle temporary allocation changes
+
+  // Handle allocation changes in temp state
   const handleTempAllocationChange = (sourceId: string, amount: number) => {
-    setTempAllocations(prev => ({ ...prev, [sourceId]: amount }));
+    setTempAllocations(prev => ({
+      ...prev,
+      [sourceId]: amount
+    }));
   };
 
-  // Helper function to get sources by type
+  // Get sources by type
   const getSources = (type: "cash" | "credit") => {
     return type === "cash" ? mockCashAccountsFlat : mockCreditFacilitiesFlat;
   };
 
+  // Get selected source IDs (sources with allocations > 0)
+  const selectedSourceIds = Object.entries(fundingAllocations)
+    .filter(([_, amount]) => amount > 0)
+    .map(([id]) => id);
+
   return {
-    isSourcesSheetOpen,
-    setSourcesSheetOpen,
     activeTab,
     setActiveTab,
     tempAllocations,
     selectedSourceIds,
+    isSourcesSheetOpen,
+    setSourcesSheetOpen,
     openSourcesSheet,
     applyAllocations,
     handleTempAllocationChange,

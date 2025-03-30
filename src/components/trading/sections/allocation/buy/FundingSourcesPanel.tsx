@@ -91,7 +91,7 @@ const FundingSourcesPanel: React.FC<FundingSourcesPanelProps> = ({
       >
         <SheetContent className="overflow-y-auto w-full max-w-3xl" side="right">
           <SheetHeader>
-            <SheetTitle>Select Funding Sources</SheetTitle>
+            <SheetTitle>Select Funding Source(s)</SheetTitle>
           </SheetHeader>
           
           <div className="mt-6 space-y-6">

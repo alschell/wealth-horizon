@@ -38,7 +38,7 @@ const TradingAllocation: React.FC<TradingAllocationProps> = ({
         {/* Funding Sources Section */}
         <div className="mb-6">
           <div className="mb-4">
-            <h2 className="text-xl font-medium mb-2">Funding Sources</h2>
+            <h2 className="text-xl font-medium mb-2">Funding Source(s)</h2>
             <p className="text-sm text-gray-600">
               Specify from which account(s) to fund this purchase.
             </p>

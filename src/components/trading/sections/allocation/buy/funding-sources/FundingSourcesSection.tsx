@@ -39,13 +39,6 @@ const FundingSourcesSection: React.FC<FundingSourcesSectionProps> = ({
 
   return (
     <div className="space-y-4">
-      <div className="mb-6">
-        <h2 className="text-lg font-semibold mb-2">Funding Sources</h2>
-        <p className="text-sm text-gray-600">
-          Specify from which accounts to fund this purchase.
-        </p>
-      </div>
-
       <FundingSourcesPanel
         fundingAllocations={allocations}
         onAllocationChange={() => {}}

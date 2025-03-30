@@ -19,7 +19,7 @@ export const EmptySourcesState: React.FC<EmptySourcesStateProps> = ({
           className="bg-black text-white hover:bg-gray-800 flex items-center gap-2"
         >
           <Plus className="h-4 w-4" />
-          Add Funding Source
+          Add Funding Source(s)
         </Button>
       </div>
     </div>

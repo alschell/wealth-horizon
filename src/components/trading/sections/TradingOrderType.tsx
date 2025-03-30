@@ -36,7 +36,9 @@ const TradingOrderType: React.FC<TradingOrderTypeProps> = ({
       </div>
 
       <div>
-        <h3 className="text-lg font-medium mb-4">Execution Type</h3>
+        <h3 className="text-lg font-medium mb-4">
+          Execution Type <span className="text-red-500">*</span>
+        </h3>
         <div className="space-y-4">
           <Card 
             className={`p-4 cursor-pointer transition-all ${orderExecutionType === 'market' ? 'ring-2 ring-black' : 'hover:bg-gray-50'}`}

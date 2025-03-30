@@ -10,7 +10,8 @@ export const mockCreditFacilitiesFlat: CreditFacility[] = [
     currency: "USD",
     limit: 10000000,
     used: 2500000,
-    available: 7500000
+    available: 7500000,
+    type: "Credit Line"
   },
   {
     id: "credit-2",
@@ -20,7 +21,8 @@ export const mockCreditFacilitiesFlat: CreditFacility[] = [
     currency: "EUR",
     limit: 5000000,
     used: 1000000,
-    available: 4000000
+    available: 4000000,
+    type: "Credit Facility"
   },
   {
     id: "credit-3",
@@ -30,7 +32,8 @@ export const mockCreditFacilitiesFlat: CreditFacility[] = [
     currency: "USD",
     limit: 3000000,
     used: 1500000,
-    available: 1500000
+    available: 1500000,
+    type: "Credit Line"
   },
   {
     id: "credit-4",
@@ -40,7 +43,8 @@ export const mockCreditFacilitiesFlat: CreditFacility[] = [
     currency: "USD",
     limit: 7500000,
     used: 3000000,
-    available: 4500000
+    available: 4500000,
+    type: "Multi-currency Facility"
   },
   {
     id: "credit-5",
@@ -50,7 +54,8 @@ export const mockCreditFacilitiesFlat: CreditFacility[] = [
     currency: "GBP",
     limit: 4000000,
     used: 1200000,
-    available: 2800000
+    available: 2800000,
+    type: "Credit Line"
   },
   {
     id: "credit-6",
@@ -60,6 +65,7 @@ export const mockCreditFacilitiesFlat: CreditFacility[] = [
     currency: "EUR",
     limit: 6000000,
     used: 2000000,
-    available: 4000000
+    available: 4000000,
+    type: "Investment Facility"
   }
 ];

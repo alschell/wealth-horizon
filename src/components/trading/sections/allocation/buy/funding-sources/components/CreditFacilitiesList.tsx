@@ -63,7 +63,7 @@ export const CreditFacilitiesList: React.FC<CreditFacilitiesListProps> = ({
               <div className="flex justify-between items-start mb-2">
                 <div>
                   <h4 className="font-medium text-sm">{facility.name}</h4>
-                  <p className="text-xs text-gray-500">{facility.type}</p>
+                  {facility.type && <p className="text-xs text-gray-500">{facility.type}</p>}
                 </div>
                 <div className="text-right">
                   <p className="text-sm font-medium">

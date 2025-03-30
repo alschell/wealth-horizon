@@ -15,8 +15,9 @@ interface SourceSelectionModalProps {
   onConfirm: (selections: Record<string, number>) => void;
   currentAllocations: Record<string, number>;
   instrumentPrice: number;
-  totalRequiredAmount: number;
   currency: string;
+  totalAmount?: number; // Making this prop optional with the same name as used in FundingSourcesSection
+  totalRequiredAmount: number; // Keep this existing prop too
 }
 
 export const SourceSelectionModal: React.FC<SourceSelectionModalProps> = ({
@@ -26,6 +27,7 @@ export const SourceSelectionModal: React.FC<SourceSelectionModalProps> = ({
   currentAllocations,
   instrumentPrice,
   totalRequiredAmount,
+  totalAmount = totalRequiredAmount, // Default to totalRequiredAmount if totalAmount not provided
   currency
 }) => {
   const [activeTab, setActiveTab] = useState<"cash" | "credit">("cash");

@@ -25,7 +25,7 @@ export const CashAccountsList: React.FC<CashAccountsListProps> = ({
     ? mockCashAccountsFlat.filter(
         account =>
           account.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          account.accountNumber.toLowerCase().includes(searchQuery.toLowerCase())
+          (account.accountNumber?.toLowerCase().includes(searchQuery.toLowerCase()) || false)
       )
     : mockCashAccountsFlat;
     
@@ -50,14 +50,16 @@ export const CashAccountsList: React.FC<CashAccountsListProps> = ({
       ) : (
         filteredAccounts.map(account => {
           const maxAvailableShares = Math.floor(account.balance / instrumentPrice);
-          const currentAllocation = tempAllocations[accountId] || 0;
+          const currentAllocation = tempAllocations[account.id] || 0;
           
           return (
             <div key={account.id} className="border rounded-md p-3">
               <div className="flex justify-between items-start mb-2">
                 <div>
                   <h4 className="font-medium text-sm">{account.name}</h4>
-                  <p className="text-xs text-gray-500">{account.accountNumber}</p>
+                  {account.accountNumber && (
+                    <p className="text-xs text-gray-500">{account.accountNumber}</p>
+                  )}
                 </div>
                 <div className="text-right">
                   <p className="text-sm font-medium">

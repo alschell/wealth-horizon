@@ -41,6 +41,7 @@ export type CashAccount = {
   legalEntityId: string;
   currency: string;
   balance: number;
+  accountNumber?: string; // Add this property as optional
 };
 
 export type CreditFacility = {
@@ -52,6 +53,7 @@ export type CreditFacility = {
   limit: number;
   used: number;
   available: number;
+  type?: string; // Add this property as optional
 };
 
 export type Instrument = {

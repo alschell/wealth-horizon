@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { SelectedSourcesTable } from "./components";
@@ -22,37 +22,48 @@ export const FundingSourcesSection: React.FC<FundingSourcesSectionProps> = ({
   order,
   setOrder,
 }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  
   const { 
-    fundingSources,
-    handleAddSources,
-    handleRemoveSource,
-    isModalOpen,
-    setIsModalOpen,
-    selectedSources,
-    handleAmountChange,
+    allocations,
+    handleAllocationChange,
     remainingAmount,
-    totalAllocated,
+    selectedSourceIds,
+    getSourceById,
+    currentAllocation
   } = useFundingSources({
     totalAmount,
+    instrumentPrice,
+    currency,
     order,
     setOrder
   });
 
+  // Handle adding sources from the modal
+  const handleAddSources = (selections: Record<string, number>) => {
+    // Apply each selection to the allocations
+    Object.entries(selections).forEach(([sourceId, amount]) => {
+      handleAllocationChange(sourceId, amount);
+    });
+  };
+
   return (
     <div className="space-y-4">
-      {fundingSources?.length > 0 ? (
+      {selectedSourceIds?.length > 0 ? (
         <>
           <SelectedSourcesTable 
-            sources={fundingSources} 
-            onRemove={handleRemoveSource} 
-            onAmountChange={handleAmountChange}
+            selectedSourceIds={selectedSourceIds}
+            allocations={allocations}
+            handleAllocationChange={handleAllocationChange}
+            getSourceById={getSourceById}
+            instrumentPrice={instrumentPrice}
             currency={currency}
           />
           
           <AllocationSummary
-            allocated={totalAllocated}
-            remaining={remainingAmount}
             totalAmount={totalAmount}
+            allocated={currentAllocation}
+            remaining={remainingAmount}
             isComplete={remainingAmount === 0}
             currency={currency}
           />
@@ -84,12 +95,14 @@ export const FundingSourcesSection: React.FC<FundingSourcesSectionProps> = ({
       <FundingSourceSelectionModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        onSelect={handleAddSources}
+        onConfirm={handleAddSources}
         totalAmount={totalAmount}
         currency={currency}
-        selectedSources={selectedSources}
-        remainingAmount={remainingAmount}
+        currentAllocations={allocations}
+        instrumentPrice={instrumentPrice}
       />
     </div>
   );
 };
+
+export default FundingSourcesSection;

@@ -2,7 +2,7 @@
 import React from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { TradeOrder } from "@/components/trading/types";
-import FundingSourcesSection from "./funding-sources/FundingSourcesSection";
+import { FundingSourcesSection } from "./funding-sources";
 import DestinationPortfoliosSection from "./destination-portfolios/DestinationPortfoliosSection";
 
 interface BuyAllocationSectionProps {
@@ -53,7 +53,7 @@ const BuyAllocationSection: React.FC<BuyAllocationSectionProps> = ({
           <div className="mb-6">
             <h2 className="text-xl font-medium mb-2">Destination Portfolios</h2>
             <p className="text-sm text-gray-600">
-              Select which portfolios to deposit the purchased shares into.
+              Specify into which portfolio(s) to deposit the purchased assets.
             </p>
           </div>
           

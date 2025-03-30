@@ -12,7 +12,7 @@ import {
   mockCreditFacilitiesFlat 
 } from "../../../../data";
 
-interface FundingSourceSelectionModalProps {
+export interface FundingSourceSelectionModalProps {
   isOpen: boolean;
   onClose: () => void;
   onConfirm: (selections: Record<string, number>) => void;

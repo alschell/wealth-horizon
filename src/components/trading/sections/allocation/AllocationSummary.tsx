@@ -1,61 +1,54 @@
 
 import React from "react";
+import { Progress } from "@/components/ui/progress";
+import { AlertCircle, Check } from "lucide-react";
 
 export interface AllocationSummaryProps {
   totalAmount: number;
+  allocated: number;
+  remaining: number;
+  isComplete: boolean;
   currency: string;
-  currentAllocation: number;
-  remainingAmount: number;
 }
 
 export const AllocationSummary: React.FC<AllocationSummaryProps> = ({
   totalAmount,
-  currency,
-  currentAllocation,
-  remainingAmount
+  allocated,
+  remaining,
+  isComplete,
+  currency
 }) => {
-  const allocationPercentage = totalAmount > 0 
-    ? (currentAllocation / totalAmount) * 100 
-    : 0;
-    
+  const percentComplete = Math.min(100, (allocated / totalAmount) * 100);
+  
   return (
-    <div className="mt-4">
-      <div className="flex items-center justify-between mb-2">
-        <span className="text-sm font-medium">Allocation</span>
-        <span className="text-sm font-medium">{Math.round(allocationPercentage)}%</span>
+    <div className="mb-6 space-y-3">
+      <div className="flex justify-between text-sm">
+        <span>Total funds: {totalAmount.toLocaleString('en-US', {
+          style: 'currency',
+          currency
+        })}</span>
+        <span>Allocated: {allocated.toLocaleString('en-US', {
+          style: 'currency',
+          currency
+        })}</span>
       </div>
       
-      <div className="w-full bg-gray-200 rounded-full h-2.5">
-        <div 
-          className={`h-2.5 rounded-full ${allocationPercentage > 100 ? 'bg-red-500' : 'bg-green-500'}`}
-          style={{ width: `${Math.min(allocationPercentage, 100)}%` }}
-        ></div>
-      </div>
+      <Progress value={percentComplete} className="h-2" />
       
-      <div className="flex justify-between mt-2">
-        <div className="text-sm text-gray-500">
-          <span>Total: {totalAmount.toLocaleString('en-US', { style: 'currency', currency })}</span>
+      {!isComplete ? (
+        <div className="flex items-center text-xs text-amber-600">
+          <AlertCircle className="h-3 w-3 mr-1" />
+          <span>
+            {remaining.toLocaleString('en-US', {
+              style: 'currency',
+              currency
+            })} still needs to be allocated
+          </span>
         </div>
-        <div className="text-sm text-gray-500">
-          <span>Allocated: {currentAllocation.toLocaleString('en-US', { style: 'currency', currency })}</span>
-        </div>
-      </div>
-      
-      {remainingAmount > 0 && (
-        <div className="mt-2 text-amber-600 text-sm">
-          {remainingAmount.toLocaleString('en-US', { style: 'currency', currency })} still needs to be allocated
-        </div>
-      )}
-      
-      {remainingAmount < 0 && (
-        <div className="mt-2 text-red-600 text-sm">
-          Over-allocated by {Math.abs(remainingAmount).toLocaleString('en-US', { style: 'currency', currency })}
-        </div>
-      )}
-      
-      {remainingAmount === 0 && (
-        <div className="mt-2 text-green-600 text-sm">
-          All funds have been allocated
+      ) : (
+        <div className="flex items-center text-xs text-green-600">
+          <Check className="h-3 w-3 mr-1" />
+          <span>All funds are allocated!</span>
         </div>
       )}
     </div>
@@ -64,57 +57,37 @@ export const AllocationSummary: React.FC<AllocationSummaryProps> = ({
 
 export interface QuantityAllocationSummaryProps {
   totalQuantity: number;
-  currentAllocation: number;
+  allocatedQuantity: number;
   remainingQuantity: number;
+  isComplete: boolean;
 }
 
 export const QuantityAllocationSummary: React.FC<QuantityAllocationSummaryProps> = ({
   totalQuantity,
-  currentAllocation,
-  remainingQuantity
+  allocatedQuantity,
+  remainingQuantity,
+  isComplete
 }) => {
-  const allocationPercentage = totalQuantity > 0 
-    ? (currentAllocation / totalQuantity) * 100 
-    : 0;
-    
+  const percentComplete = Math.min(100, (allocatedQuantity / totalQuantity) * 100);
+  
   return (
-    <div className="mt-4">
-      <div className="flex items-center justify-between mb-2">
-        <span className="text-sm font-medium">Allocation</span>
-        <span className="text-sm font-medium">{Math.round(allocationPercentage)}%</span>
+    <div className="mb-6 space-y-3">
+      <div className="flex justify-between text-sm">
+        <span>Total shares: {totalQuantity.toFixed(2)}</span>
+        <span>Allocated: {allocatedQuantity.toFixed(2)}</span>
       </div>
       
-      <div className="w-full bg-gray-200 rounded-full h-2.5">
-        <div 
-          className={`h-2.5 rounded-full ${allocationPercentage > 100 ? 'bg-red-500' : 'bg-green-500'}`}
-          style={{ width: `${Math.min(allocationPercentage, 100)}%` }}
-        ></div>
-      </div>
+      <Progress value={percentComplete} className="h-2" />
       
-      <div className="flex justify-between mt-2">
-        <div className="text-sm text-gray-500">
-          <span>Total: {totalQuantity} shares</span>
+      {!isComplete ? (
+        <div className="flex items-center text-xs text-amber-600">
+          <AlertCircle className="h-3 w-3 mr-1" />
+          <span>{remainingQuantity.toFixed(2)} shares still need to be allocated</span>
         </div>
-        <div className="text-sm text-gray-500">
-          <span>Allocated: {currentAllocation} shares</span>
-        </div>
-      </div>
-      
-      {remainingQuantity > 0 && (
-        <div className="mt-2 text-amber-600 text-sm">
-          {remainingQuantity} shares still need to be allocated
-        </div>
-      )}
-      
-      {remainingQuantity < 0 && (
-        <div className="mt-2 text-red-600 text-sm">
-          Over-allocated by {Math.abs(remainingQuantity)} shares
-        </div>
-      )}
-      
-      {remainingQuantity === 0 && (
-        <div className="mt-2 text-green-600 text-sm">
-          All shares have been allocated
+      ) : (
+        <div className="flex items-center text-xs text-green-600">
+          <Check className="h-3 w-3 mr-1" />
+          <span>All shares are allocated!</span>
         </div>
       )}
     </div>

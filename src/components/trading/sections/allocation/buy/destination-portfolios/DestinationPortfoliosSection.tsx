@@ -55,17 +55,19 @@ const DestinationPortfoliosSection: React.FC<DestinationPortfoliosSectionProps> 
       ) : (
         <div className="text-center py-4 border rounded-md">
           <p className="text-gray-500">No destination portfolios selected</p>
-          <Button 
-            onClick={openPortfolioSelectionModal} 
-            className="mt-2 bg-black text-white hover:bg-gray-800 flex items-center gap-1"
-          >
-            <Plus className="h-4 w-4" /> Add Destination Portfolio(s)
-          </Button>
+          <div className="flex justify-center mt-2">
+            <Button 
+              onClick={openPortfolioSelectionModal} 
+              className="bg-black text-white hover:bg-gray-800 flex items-center gap-1"
+            >
+              <Plus className="h-4 w-4" /> Add Destination Portfolio(s)
+            </Button>
+          </div>
         </div>
       )}
       
       {selectedPortfolios.length > 0 && (
-        <div className="flex justify-end">
+        <div className="flex justify-center">
           <Button 
             onClick={openPortfolioSelectionModal}
             className="flex items-center gap-2 bg-black text-white hover:bg-gray-800"

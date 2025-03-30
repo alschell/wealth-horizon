@@ -17,16 +17,16 @@ const TradingLeverageOptions: React.FC<TradingLeverageOptionsProps> = ({
   setLeverage,
   orderType
 }) => {
-  // Handle slider change safely
+  // Simple event handler with primitive value that won't cause browser freezes
+  const handleLeverageCardClick = (value: number) => {
+    setLeverage(value);
+  };
+  
+  // Simple slider handler that directly passes the value without complex processing
   const handleSliderChange = (values: number[]) => {
     if (values && values.length > 0) {
       setLeverage(values[0]);
     }
-  };
-
-  // Fixed the event handling to prevent browser freezing
-  const handleLeverageSelect = (value: number) => {
-    setLeverage(value);
   };
 
   return (
@@ -40,38 +40,50 @@ const TradingLeverageOptions: React.FC<TradingLeverageOptionsProps> = ({
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-4">
-          <LeverageCard 
-            value={1}
-            currentLeverage={leverage}
-            title="No Leverage (1x)"
-            description="Standard trading with your available capital."
-            badgeText="Conservative"
-            badgeVariant="secondary"
-            icon={<Shield className="h-5 w-5 text-green-600 mb-2" />}
-            onSelect={handleLeverageSelect}
-          />
+          {/* Conservative Option */}
+          <Card 
+            className={`p-4 cursor-pointer transition-all ${leverage === 1 ? 'ring-2 ring-black' : 'hover:bg-gray-50'}`}
+            onClick={() => handleLeverageCardClick(1)}
+          >
+            <div className="flex flex-col items-center">
+              <Shield className="h-5 w-5 text-green-600 mb-2" />
+              <h3 className="font-medium mb-2">No Leverage (1x)</h3>
+              <p className="text-sm text-gray-600 text-center">
+                Standard trading with your available capital.
+              </p>
+              <Badge variant="secondary" className="mt-2">Conservative</Badge>
+            </div>
+          </Card>
 
-          <LeverageCard 
-            value={2}
-            currentLeverage={leverage}
-            title="Moderate (2x)"
-            description="Double your buying power with moderate risk."
-            badgeText="Standard"
-            badgeVariant="outline"
-            icon={<TrendingUp className="h-5 w-5 text-blue-600 mb-2" />}
-            onSelect={handleLeverageSelect}
-          />
+          {/* Moderate Option */}
+          <Card 
+            className={`p-4 cursor-pointer transition-all ${leverage === 2 ? 'ring-2 ring-black' : 'hover:bg-gray-50'}`}
+            onClick={() => handleLeverageCardClick(2)}
+          >
+            <div className="flex flex-col items-center">
+              <TrendingUp className="h-5 w-5 text-blue-600 mb-2" />
+              <h3 className="font-medium mb-2">Moderate (2x)</h3>
+              <p className="text-sm text-gray-600 text-center">
+                Double your buying power with moderate risk.
+              </p>
+              <Badge variant="outline" className="mt-2">Standard</Badge>
+            </div>
+          </Card>
 
-          <LeverageCard 
-            value={5}
-            currentLeverage={leverage}
-            title="Advanced (5x)"
-            description="Quintuple your position size with higher risk."
-            badgeText="High Risk"
-            badgeVariant="destructive"
-            icon={<AlertTriangle className="h-5 w-5 text-amber-600 mb-2" />}
-            onSelect={handleLeverageSelect}
-          />
+          {/* Advanced Option */}
+          <Card 
+            className={`p-4 cursor-pointer transition-all ${leverage === 5 ? 'ring-2 ring-black' : 'hover:bg-gray-50'}`}
+            onClick={() => handleLeverageCardClick(5)}
+          >
+            <div className="flex flex-col items-center">
+              <AlertTriangle className="h-5 w-5 text-amber-600 mb-2" />
+              <h3 className="font-medium mb-2">Advanced (5x)</h3>
+              <p className="text-sm text-gray-600 text-center">
+                Quintuple your position size with higher risk.
+              </p>
+              <Badge variant="destructive" className="mt-2">High Risk</Badge>
+            </div>
+          </Card>
         </div>
       </div>
 
@@ -113,45 +125,6 @@ const TradingLeverageOptions: React.FC<TradingLeverageOptionsProps> = ({
         </div>
       </div>
     </div>
-  );
-};
-
-// Extract leverage card to a separate component to improve render performance
-interface LeverageCardProps {
-  value: number;
-  currentLeverage: number;
-  title: string;
-  description: string;
-  badgeText: string;
-  badgeVariant: "secondary" | "outline" | "destructive";
-  icon: React.ReactNode;
-  onSelect: (value: number) => void;
-}
-
-const LeverageCard: React.FC<LeverageCardProps> = ({
-  value,
-  currentLeverage,
-  title,
-  description,
-  badgeText,
-  badgeVariant,
-  icon,
-  onSelect
-}) => {
-  return (
-    <Card 
-      className={`p-4 cursor-pointer transition-all ${currentLeverage === value ? 'ring-2 ring-black' : 'hover:bg-gray-50'}`}
-      onClick={() => onSelect(value)}
-    >
-      <div className="flex flex-col items-center">
-        {icon}
-        <h3 className="font-medium mb-2">{title}</h3>
-        <p className="text-sm text-gray-600 text-center">
-          {description}
-        </p>
-        <Badge variant={badgeVariant} className="mt-2">{badgeText}</Badge>
-      </div>
-    </Card>
   );
 };
 

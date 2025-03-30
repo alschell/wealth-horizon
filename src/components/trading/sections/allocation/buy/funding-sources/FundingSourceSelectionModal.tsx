@@ -4,7 +4,11 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { mockCashAccountsFlat, mockCreditFacilitiesFlat } from "../../../../data";
+import { 
+  mockPortfoliosByInstitution, 
+  mockCashAccountsFlat, 
+  mockCreditFacilitiesFlat 
+} from "../../../../data";
 
 interface FundingSourceSelectionModalProps {
   isOpen: boolean;
@@ -103,128 +107,170 @@ const FundingSourceSelectionModal: React.FC<FundingSourceSelectionModalProps> = 
               <TabsTrigger value="credit">Credit Facilities</TabsTrigger>
             </TabsList>
             
-            <TabsContent value="cash" className="mt-4 space-y-4 max-h-[50vh] overflow-y-auto">
-              {mockCashAccountsFlat.map(account => {
-                const maxSharesFromAccount = Math.floor(account.balance / instrumentPrice);
-                const currentShares = tempAllocations[account.id] || 0;
-                const estimatedAmount = currentShares * instrumentPrice;
-                
-                return (
-                  <div key={account.id} className="p-4 border rounded-md">
-                    <div className="flex justify-between items-start mb-3">
-                      <div>
-                        <h4 className="font-medium">{account.name}</h4>
-                        <p className="text-xs text-gray-500">{account.currency} Account</p>
-                      </div>
-                      <div className="text-sm text-right">
-                        <div>Available</div>
-                        <div className="font-semibold">
-                          {account.balance.toLocaleString('en-US', {
-                            style: 'currency',
-                            currency: account.currency
-                          })}
-                        </div>
-                      </div>
-                    </div>
+            <TabsContent value="cash" className="mt-4 space-y-6 max-h-[50vh] overflow-y-auto">
+              {mockPortfoliosByInstitution.map(institution => (
+                <div key={institution.id} className="space-y-4">
+                  <h3 className="text-md font-medium">{institution.name}</h3>
+                  
+                  {institution.legalEntities.map(legalEntity => {
+                    // Filter cash accounts for this legal entity
+                    const legalEntityCashAccounts = mockCashAccountsFlat.filter(
+                      account => account.legalEntityId === legalEntity.id
+                    );
                     
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-2">
-                        <Input
-                          type="number"
-                          min="0"
-                          max={maxSharesFromAccount}
-                          value={currentShares || ""}
-                          onChange={(e) => handleAllocationChange(account.id, Number(e.target.value))}
-                          className="w-full"
-                          placeholder="Number of shares"
-                        />
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="whitespace-nowrap"
-                          onClick={() => handleAllocationChange(
-                            account.id,
-                            Math.min(maxSharesFromAccount, Math.ceil(remainingShares > 0 ? remainingShares : 0))
-                          )}
-                        >
-                          Max
-                        </Button>
+                    if (legalEntityCashAccounts.length === 0) return null;
+                    
+                    return (
+                      <div key={legalEntity.id} className="pl-4 border-l-2 border-gray-200 space-y-4">
+                        <h4 className="text-sm font-medium">{legalEntity.name}</h4>
+                        
+                        {legalEntityCashAccounts.map(account => {
+                          const maxSharesFromAccount = Math.floor(account.balance / instrumentPrice);
+                          const currentShares = tempAllocations[account.id] || 0;
+                          const estimatedAmount = currentShares * instrumentPrice;
+                          
+                          return (
+                            <div key={account.id} className="p-4 border rounded-md ml-2">
+                              <div className="flex justify-between items-start mb-3">
+                                <div>
+                                  <h4 className="font-medium">{account.name}</h4>
+                                  <p className="text-xs text-gray-500">{account.currency} Account</p>
+                                </div>
+                                <div className="text-sm text-right">
+                                  <div>Available</div>
+                                  <div className="font-semibold">
+                                    {account.balance.toLocaleString('en-US', {
+                                      style: 'currency',
+                                      currency: account.currency
+                                    })}
+                                  </div>
+                                </div>
+                              </div>
+                              
+                              <div className="space-y-2">
+                                <div className="flex items-center gap-2">
+                                  <Input
+                                    type="number"
+                                    min="0"
+                                    max={maxSharesFromAccount}
+                                    value={currentShares || ""}
+                                    onChange={(e) => handleAllocationChange(account.id, Number(e.target.value))}
+                                    className="w-full"
+                                    placeholder="Number of shares"
+                                  />
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    className="whitespace-nowrap"
+                                    onClick={() => handleAllocationChange(
+                                      account.id,
+                                      Math.min(maxSharesFromAccount, Math.ceil(remainingShares > 0 ? remainingShares : 0))
+                                    )}
+                                  >
+                                    Max
+                                  </Button>
+                                </div>
+                                
+                                {currentShares > 0 && (
+                                  <p className="text-sm text-gray-600">
+                                    Est. amount: {estimatedAmount.toLocaleString('en-US', {
+                                      style: 'currency', 
+                                      currency: account.currency
+                                    })}
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+                          );
+                        })}
                       </div>
-                      
-                      {currentShares > 0 && (
-                        <p className="text-sm text-gray-600">
-                          Est. amount: {estimatedAmount.toLocaleString('en-US', {
-                            style: 'currency', 
-                            currency: account.currency
-                          })}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
+                    );
+                  })}
+                </div>
+              ))}
             </TabsContent>
             
-            <TabsContent value="credit" className="mt-4 space-y-4 max-h-[50vh] overflow-y-auto">
-              {mockCreditFacilitiesFlat.map(facility => {
-                const maxSharesFromFacility = Math.floor(facility.available / instrumentPrice);
-                const currentShares = tempAllocations[facility.id] || 0;
-                const estimatedAmount = currentShares * instrumentPrice;
-                
-                return (
-                  <div key={facility.id} className="p-4 border rounded-md">
-                    <div className="flex justify-between items-start mb-3">
-                      <div>
-                        <h4 className="font-medium">{facility.name}</h4>
-                        <p className="text-xs text-gray-500">{facility.currency} Credit Line</p>
-                      </div>
-                      <div className="text-sm text-right">
-                        <div>Available</div>
-                        <div className="font-semibold">
-                          {facility.available.toLocaleString('en-US', {
-                            style: 'currency',
-                            currency: facility.currency
-                          })}
-                        </div>
-                      </div>
-                    </div>
+            <TabsContent value="credit" className="mt-4 space-y-6 max-h-[50vh] overflow-y-auto">
+              {mockPortfoliosByInstitution.map(institution => (
+                <div key={institution.id} className="space-y-4">
+                  <h3 className="text-md font-medium">{institution.name}</h3>
+                  
+                  {institution.legalEntities.map(legalEntity => {
+                    // Filter credit facilities for this legal entity
+                    const legalEntityFacilities = mockCreditFacilitiesFlat.filter(
+                      facility => facility.legalEntityId === legalEntity.id
+                    );
                     
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-2">
-                        <Input
-                          type="number"
-                          min="0"
-                          max={maxSharesFromFacility}
-                          value={currentShares || ""}
-                          onChange={(e) => handleAllocationChange(facility.id, Number(e.target.value))}
-                          className="w-full"
-                          placeholder="Number of shares"
-                        />
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="whitespace-nowrap"
-                          onClick={() => handleAllocationChange(
-                            facility.id,
-                            Math.min(maxSharesFromFacility, Math.ceil(remainingShares > 0 ? remainingShares : 0))
-                          )}
-                        >
-                          Max
-                        </Button>
+                    if (legalEntityFacilities.length === 0) return null;
+                    
+                    return (
+                      <div key={legalEntity.id} className="pl-4 border-l-2 border-gray-200 space-y-4">
+                        <h4 className="text-sm font-medium">{legalEntity.name}</h4>
+                        
+                        {legalEntityFacilities.map(facility => {
+                          const maxSharesFromFacility = Math.floor(facility.available / instrumentPrice);
+                          const currentShares = tempAllocations[facility.id] || 0;
+                          const estimatedAmount = currentShares * instrumentPrice;
+                          
+                          return (
+                            <div key={facility.id} className="p-4 border rounded-md ml-2">
+                              <div className="flex justify-between items-start mb-3">
+                                <div>
+                                  <h4 className="font-medium">{facility.name}</h4>
+                                  <p className="text-xs text-gray-500">{facility.currency} Credit Line</p>
+                                </div>
+                                <div className="text-sm text-right">
+                                  <div>Available</div>
+                                  <div className="font-semibold">
+                                    {facility.available.toLocaleString('en-US', {
+                                      style: 'currency',
+                                      currency: facility.currency
+                                    })}
+                                  </div>
+                                </div>
+                              </div>
+                              
+                              <div className="space-y-2">
+                                <div className="flex items-center gap-2">
+                                  <Input
+                                    type="number"
+                                    min="0"
+                                    max={maxSharesFromFacility}
+                                    value={currentShares || ""}
+                                    onChange={(e) => handleAllocationChange(facility.id, Number(e.target.value))}
+                                    className="w-full"
+                                    placeholder="Number of shares"
+                                  />
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    className="whitespace-nowrap"
+                                    onClick={() => handleAllocationChange(
+                                      facility.id,
+                                      Math.min(maxSharesFromFacility, Math.ceil(remainingShares > 0 ? remainingShares : 0))
+                                    )}
+                                  >
+                                    Max
+                                  </Button>
+                                </div>
+                                
+                                {currentShares > 0 && (
+                                  <p className="text-sm text-gray-600">
+                                    Est. amount: {estimatedAmount.toLocaleString('en-US', {
+                                      style: 'currency', 
+                                      currency: facility.currency
+                                    })}
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+                          );
+                        })}
                       </div>
-                      
-                      {currentShares > 0 && (
-                        <p className="text-sm text-gray-600">
-                          Est. amount: {estimatedAmount.toLocaleString('en-US', {
-                            style: 'currency', 
-                            currency: facility.currency
-                          })}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
+                    );
+                  })}
+                </div>
+              ))}
             </TabsContent>
           </Tabs>
         </div>

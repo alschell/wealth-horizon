@@ -45,13 +45,6 @@ const TradingInstrumentSearch: React.FC<TradingInstrumentSearchProps> = ({
           />
         </div>
 
-        {selectedInstrument && (
-          <div className="mb-6">
-            <h3 className="text-lg font-medium mb-4">Selected Security</h3>
-            <SelectedInstrumentCard instrument={selectedInstrument} />
-          </div>
-        )}
-
         {results.length > 0 && (
           <InstrumentResultsTable 
             searchResults={results} 

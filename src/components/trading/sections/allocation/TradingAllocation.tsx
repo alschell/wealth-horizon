@@ -1,6 +1,5 @@
 
 import React from "react";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { TradeOrder } from "../../types";
 import { FundingSourcesSection } from "../allocation/buy/funding-sources";
 import DestinationPortfoliosSection from "../allocation/buy/destination-portfolios/DestinationPortfoliosSection";
@@ -35,47 +34,42 @@ const TradingAllocation: React.FC<TradingAllocationProps> = ({
 
   if (orderType === "buy") {
     return (
-      <div className="space-y-6">
-        <Tabs defaultValue="funding" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="funding">Funding Sources</TabsTrigger>
-            <TabsTrigger value="destination">Destination Portfolios</TabsTrigger>
-          </TabsList>
+      <div className="space-y-8">
+        {/* Funding Sources Section */}
+        <div className="mb-6">
+          <div className="mb-4">
+            <h2 className="text-xl font-medium mb-2">Funding Sources</h2>
+            <p className="text-sm text-gray-600">
+              Specify from which account(s) to fund this purchase.
+            </p>
+          </div>
           
-          <TabsContent value="funding" className="pt-2">
-            <div className="mb-6">
-              <h2 className="text-xl font-medium mb-2">Funding Sources</h2>
-              <p className="text-sm text-gray-600">
-                Specify from which account(s) to fund this purchase.
-              </p>
-            </div>
-            
-            <FundingSourcesSection
-              totalAmount={totalAmount}
-              currency={currency}
-              instrumentPrice={instrumentPrice}
-              order={order}
-              setOrder={setOrder}
-            />
-          </TabsContent>
+          <FundingSourcesSection
+            totalAmount={totalAmount}
+            currency={currency}
+            instrumentPrice={instrumentPrice}
+            order={order}
+            setOrder={setOrder}
+          />
+        </div>
+        
+        {/* Destination Portfolios Section */}
+        <div>
+          <div className="mb-4">
+            <h2 className="text-xl font-medium mb-2">Destination Portfolio(s)</h2>
+            <p className="text-sm text-gray-600">
+              Specify into which portfolio(s) you would like to deposit the purchased assets.
+            </p>
+          </div>
           
-          <TabsContent value="destination" className="pt-2">
-            <div className="mb-6">
-              <h2 className="text-xl font-medium mb-2">Destination Portfolio(s)</h2>
-              <p className="text-sm text-gray-600">
-                Specify into which portfolio(s) you would like to deposit the purchased assets.
-              </p>
-            </div>
-            
-            <DestinationPortfoliosSection
-              totalQuantity={typeof quantity === "number" ? quantity : 0}
-              order={order}
-              setOrder={setOrder}
-              instrumentPrice={instrumentPrice}
-              currency={currency}
-            />
-          </TabsContent>
-        </Tabs>
+          <DestinationPortfoliosSection
+            totalQuantity={typeof quantity === "number" ? quantity : 0}
+            order={order}
+            setOrder={setOrder}
+            instrumentPrice={instrumentPrice}
+            currency={currency}
+          />
+        </div>
       </div>
     );
   } else {

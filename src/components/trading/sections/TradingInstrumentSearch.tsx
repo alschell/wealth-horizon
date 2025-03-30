@@ -6,6 +6,7 @@ import InstrumentResultsTable from "../components/instrument-search/InstrumentRe
 import SelectedInstrumentCard from "../components/instrument-search/SelectedInstrumentCard";
 import NoResultsMessage from "../components/instrument-search/NoResultsMessage";
 import { Instrument } from "../types";
+import { Button } from "@/components/ui/button";
 
 interface TradingInstrumentSearchProps {
   setSelectedInstrument: (instrument: Instrument | null) => void;
@@ -33,15 +34,6 @@ const TradingInstrumentSearch: React.FC<TradingInstrumentSearchProps> = ({
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-xl font-medium mb-2">
-          Instrument <span className="text-red-500">*</span>
-        </h2>
-        <p className="text-sm text-gray-600">
-          Search for an instrument to {orderType === "buy" ? "buy" : "sell"}.
-        </p>
-      </div>
-
       {!selectedInstrument ? (
         <div className="space-y-4">
           <SearchBar
@@ -63,10 +55,19 @@ const TradingInstrumentSearch: React.FC<TradingInstrumentSearchProps> = ({
           ) : null}
         </div>
       ) : (
-        <SelectedInstrumentCard
-          instrument={selectedInstrument}
-          onClear={clearSelectedInstrument}
-        />
+        <div className="space-y-4">
+          <SelectedInstrumentCard
+            instrument={selectedInstrument}
+          />
+          <div className="flex justify-end">
+            <Button 
+              variant="outline" 
+              onClick={clearSelectedInstrument}
+            >
+              Choose another instrument
+            </Button>
+          </div>
+        </div>
       )}
     </div>
   );

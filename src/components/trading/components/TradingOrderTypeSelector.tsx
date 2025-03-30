@@ -26,7 +26,7 @@ const TradingOrderTypeSelector: React.FC<TradingOrderTypeSelectorProps> = ({
               <ArrowUp className="h-5 w-5 text-green-600" />
             </div>
             <h3 className="font-medium text-center mb-2">Buy</h3>
-            <p className="text-sm text-gray-600 text-left w-full">
+            <p className="text-sm text-gray-600 text-center w-full">
               Purchase securities to add to your portfolio.
             </p>
           </div>
@@ -41,7 +41,7 @@ const TradingOrderTypeSelector: React.FC<TradingOrderTypeSelectorProps> = ({
               <ArrowDown className="h-5 w-5 text-red-600" />
             </div>
             <h3 className="font-medium text-center mb-2">Sell</h3>
-            <p className="text-sm text-gray-600 text-left w-full">
+            <p className="text-sm text-gray-600 text-center w-full">
               Sell securities from your existing holdings.
             </p>
           </div>
@@ -56,7 +56,7 @@ const TradingOrderTypeSelector: React.FC<TradingOrderTypeSelectorProps> = ({
               <Circle className="h-5 w-5 text-amber-600" />
             </div>
             <h3 className="font-medium text-center mb-2">Sell Short</h3>
-            <p className="text-sm text-gray-600 text-left w-full">
+            <p className="text-sm text-gray-600 text-center w-full">
               Borrow and sell securities anticipating price drop.
             </p>
           </div>
@@ -71,7 +71,7 @@ const TradingOrderTypeSelector: React.FC<TradingOrderTypeSelectorProps> = ({
               <RefreshCcw className="h-5 w-5 text-blue-600" />
             </div>
             <h3 className="font-medium text-center mb-2">Exchange</h3>
-            <p className="text-sm text-gray-600 text-left w-full">
+            <p className="text-sm text-gray-600 text-center w-full">
               Swap one security for another in a single transaction.
             </p>
           </div>

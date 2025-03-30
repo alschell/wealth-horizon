@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { useInstrumentSearch } from "../hooks/useInstrumentSearch";
 import SearchBar from "../components/instrument-search/SearchBar";
 import InstrumentResultsTable from "../components/instrument-search/InstrumentResultsTable";
-import SelectedInstrumentCard from "../components/instrument-search/SelectedInstrumentCard";
 import NoResultsMessage from "../components/instrument-search/NoResultsMessage";
 import { Instrument } from "../types";
 
@@ -40,12 +39,7 @@ const TradingInstrumentSearch: React.FC<TradingInstrumentSearchProps> = ({
           isSearching={isLoading}
         />
 
-        {selectedInstrument && (
-          <SelectedInstrumentCard
-            instrument={selectedInstrument}
-            onClear={clearSelectedInstrument}
-          />
-        )}
+        {/* Removed the SelectedInstrumentCard component */}
 
         {error ? (
           <div className="text-red-500 text-sm">{error}</div>

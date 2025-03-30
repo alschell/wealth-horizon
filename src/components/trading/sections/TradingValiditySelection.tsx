@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useCallback } from "react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
@@ -21,6 +21,18 @@ const TradingValiditySelection: React.FC<TradingValiditySelectionProps> = ({
   setLeverage,
   orderType
 }) => {
+  // Memoized leverage handler to prevent unnecessary re-renders
+  const handleLeverageChange = useCallback((value: number) => {
+    setLeverage(value);
+  }, [setLeverage]);
+
+  // Memoized slider handler to prevent unnecessary re-renders
+  const handleSliderChange = useCallback((values: number[]) => {
+    if (values.length > 0 && values[0] !== leverage) {
+      setLeverage(values[0]);
+    }
+  }, [leverage, setLeverage]);
+
   return (
     <div className="space-y-6">
       <div className="space-y-4">
@@ -33,12 +45,12 @@ const TradingValiditySelection: React.FC<TradingValiditySelectionProps> = ({
 
         <RadioGroup 
           value={leverage.toString()} 
-          onValueChange={(value) => setLeverage(Number(value))}
+          onValueChange={(value) => handleLeverageChange(Number(value))}
           className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-4"
         >
           <Card 
             className={`p-4 cursor-pointer transition-all ${leverage === 1 ? 'ring-2 ring-black' : 'hover:bg-gray-50'}`}
-            onClick={() => setLeverage(1)}
+            onClick={() => handleLeverageChange(1)}
           >
             <div className="flex items-start">
               <RadioGroupItem value="1" id="leverage-1" className="mr-2 mt-1" />
@@ -57,7 +69,7 @@ const TradingValiditySelection: React.FC<TradingValiditySelectionProps> = ({
 
           <Card 
             className={`p-4 cursor-pointer transition-all ${leverage === 2 ? 'ring-2 ring-black' : 'hover:bg-gray-50'}`}
-            onClick={() => setLeverage(2)}
+            onClick={() => handleLeverageChange(2)}
           >
             <div className="flex items-start">
               <RadioGroupItem value="2" id="leverage-2" className="mr-2 mt-1" />
@@ -76,7 +88,7 @@ const TradingValiditySelection: React.FC<TradingValiditySelectionProps> = ({
 
           <Card 
             className={`p-4 cursor-pointer transition-all ${leverage === 5 ? 'ring-2 ring-black' : 'hover:bg-gray-50'}`}
-            onClick={() => setLeverage(5)}
+            onClick={() => handleLeverageChange(5)}
           >
             <div className="flex items-start">
               <RadioGroupItem value="5" id="leverage-5" className="mr-2 mt-1" />
@@ -109,7 +121,7 @@ const TradingValiditySelection: React.FC<TradingValiditySelectionProps> = ({
             min={1} 
             max={10} 
             step={0.5} 
-            onValueChange={([value]) => setLeverage(value)}
+            onValueChange={handleSliderChange}
             className="py-4"
           />
           <div className="flex justify-between text-xs text-gray-500">

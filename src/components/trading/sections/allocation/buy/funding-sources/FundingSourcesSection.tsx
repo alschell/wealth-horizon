@@ -1,66 +1,95 @@
 
 import React from "react";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
+import { SelectedSourcesTable } from "./components";
+import { useFundingSources } from "./hooks/useFundingSources";
 import FundingSourceSelectionModal from "./FundingSourceSelectionModal";
-import { useFundingSourcesSection } from "./hooks/useFundingSourcesSection";
-import FundingSourcesPanel from "../FundingSourcesPanel";
-import { TradeOrder } from "@/components/trading/types";
+import { AllocationSummary } from "../../AllocationSummary";
 
 interface FundingSourcesSectionProps {
   totalAmount: number;
   currency: string;
   instrumentPrice: number;
-  order: Partial<TradeOrder>;
-  setOrder: (order: Partial<TradeOrder>) => void;
+  order: any;
+  setOrder: (order: any) => void;
 }
 
-const FundingSourcesSection: React.FC<FundingSourcesSectionProps> = ({
+export const FundingSourcesSection: React.FC<FundingSourcesSectionProps> = ({
   totalAmount,
   currency,
   instrumentPrice,
   order,
-  setOrder
+  setOrder,
 }) => {
-  const {
+  const { 
+    fundingSources,
+    handleAddSources,
+    handleRemoveSource,
     isModalOpen,
     setIsModalOpen,
-    allocations,
-    totalShares,
-    requiredShares,
-    remainingShares,
-    allocationPercentage,
-    handleConfirmSelection
-  } = useFundingSourcesSection({
+    selectedSources,
+    handleAmountChange,
+    remainingAmount,
+    totalAllocated,
+  } = useFundingSources({
     totalAmount,
-    currency,
     order,
-    setOrder,
-    instrumentPrice
+    setOrder
   });
 
   return (
     <div className="space-y-4">
-      <FundingSourcesPanel
-        fundingAllocations={allocations}
-        onAllocationChange={() => {}}
-        totalAmount={totalAmount}
-        currency={currency}
-        price={instrumentPrice}
-        order={order}
-        setOrder={setOrder}
-      />
-
-      {/* Selection Modal */}
+      {fundingSources?.length > 0 ? (
+        <>
+          <SelectedSourcesTable 
+            sources={fundingSources} 
+            onRemove={handleRemoveSource} 
+            onAmountChange={handleAmountChange}
+            currency={currency}
+          />
+          
+          <AllocationSummary
+            allocated={totalAllocated}
+            remaining={remainingAmount}
+            totalAmount={totalAmount}
+            isComplete={remainingAmount === 0}
+            currency={currency}
+          />
+          
+          {/* Check if there's still amount to allocate before showing the "Add" button */}
+          {remainingAmount > 0 && (
+            <div className="flex justify-end mt-4">
+              <Button 
+                variant="outline" 
+                onClick={() => setIsModalOpen(true)} 
+                className="flex items-center gap-2"
+              >
+                <Plus size={16} />
+                Add Funding Source(s)
+              </Button>
+            </div>
+          )}
+        </>
+      ) : (
+        <div className="flex flex-col items-center py-6 space-y-4 bg-gray-50 rounded-lg border border-dashed border-gray-300">
+          <p className="text-gray-500 text-center">No funding sources selected yet.</p>
+          <Button onClick={() => setIsModalOpen(true)} className="flex items-center gap-2">
+            <Plus size={16} />
+            Add Funding Source(s)
+          </Button>
+        </div>
+      )}
+      
       <FundingSourceSelectionModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        onConfirm={handleConfirmSelection}
+        onSelect={handleAddSources}
         totalAmount={totalAmount}
-        currentAllocations={allocations}
-        instrumentPrice={instrumentPrice}
         currency={currency}
+        selectedSources={selectedSources}
+        remainingAmount={remainingAmount}
       />
     </div>
   );
 };
-
-export default FundingSourcesSection;

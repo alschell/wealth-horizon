@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useCallback } from "react";
 import { Card } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
 import { Badge } from "@/components/ui/badge";
@@ -44,19 +44,19 @@ const TradingLeverageOptions: React.FC<TradingLeverageOptionsProps> = ({
     }
   ];
 
-  // Function to handle card selection - reimplemented to avoid issues
-  const handleCardSelection = (value: number) => {
+  // Memoized card selection handler to prevent re-renders
+  const handleCardSelection = useCallback((value: number) => {
     if (value !== leverage) {
       setLeverage(value);
     }
-  };
+  }, [leverage, setLeverage]);
 
-  // Function to handle slider change - reimplemented to avoid issues
-  const handleSliderChange = (values: number[]) => {
+  // Memoized slider change handler to prevent re-renders
+  const handleSliderChange = useCallback((values: number[]) => {
     if (values.length > 0 && values[0] !== leverage) {
       setLeverage(values[0]);
     }
-  };
+  }, [leverage, setLeverage]);
 
   // Function to get badge variant based on leverage value
   const getBadgeVariant = (value: number) => {
@@ -77,35 +77,39 @@ const TradingLeverageOptions: React.FC<TradingLeverageOptionsProps> = ({
         </p>
       </div>
 
-      {/* Leverage option cards */}
+      {/* Leverage option cards - Using button elements to avoid event handling issues */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {leverageOptions.map((option) => (
-          <Card 
-            key={option.value}
-            onClick={() => handleCardSelection(option.value)}
-            className={`p-4 cursor-pointer transition-all ${
-              leverage === option.value 
-                ? 'ring-2 ring-black' 
-                : 'hover:bg-gray-50'
-            }`}
-          >
-            <div className="flex flex-col items-center text-center">
-              <option.icon className={`h-5 w-5 ${option.iconColor} mb-2`} />
-              <h3 className="font-medium mb-2">{option.title}</h3>
-              <p className="text-sm text-gray-600 mb-3">
-                {option.description}
-              </p>
-              <Badge 
-                variant={(leverage === option.value ? "default" : getBadgeVariant(option.value)) as any}
-              >
-                {option.badge}
-              </Badge>
-            </div>
-          </Card>
-        ))}
+        {leverageOptions.map((option) => {
+          const isSelected = leverage === option.value;
+          const Icon = option.icon;
+          
+          return (
+            <button
+              type="button"
+              key={option.value}
+              onClick={() => handleCardSelection(option.value)}
+              className={`w-full text-left p-4 rounded-lg border transition-all ${
+                isSelected ? 'ring-2 ring-black bg-white' : 'bg-white hover:bg-gray-50'
+              }`}
+            >
+              <div className="flex flex-col items-center text-center">
+                <Icon className={`h-5 w-5 ${option.iconColor} mb-2`} />
+                <h3 className="font-medium mb-2">{option.title}</h3>
+                <p className="text-sm text-gray-600 mb-3">
+                  {option.description}
+                </p>
+                <Badge 
+                  variant={(isSelected ? "default" : getBadgeVariant(option.value)) as any}
+                >
+                  {option.badge}
+                </Badge>
+              </div>
+            </button>
+          );
+        })}
       </div>
 
-      {/* Custom leverage slider - rewritten to avoid state update issues */}
+      {/* Custom leverage slider - Using simple input elements to avoid event propagation issues */}
       <div className="pt-8 border-t border-gray-200 space-y-4">
         <div className="flex justify-between items-center">
           <h3 className="text-md font-medium">Custom Leverage</h3>
@@ -131,7 +135,7 @@ const TradingLeverageOptions: React.FC<TradingLeverageOptionsProps> = ({
           </div>
         </div>
 
-        {/* Risk information */}
+        {/* Risk information - Static content with no event handlers */}
         <div className="bg-amber-50 p-4 rounded-md border border-amber-200 mt-6">
           <div className="flex">
             <Info className="h-5 w-5 text-amber-600 mr-2 flex-shrink-0" />

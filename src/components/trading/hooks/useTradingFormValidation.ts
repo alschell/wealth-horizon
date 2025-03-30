@@ -1,6 +1,6 @@
 
 import { useEffect, useState } from "react";
-import { Instrument } from "../types";
+import { Instrument, TradeOrder, OrderType } from "../types";
 
 interface UseTradingFormValidationProps {
   currentStep: number;
@@ -11,6 +11,7 @@ interface UseTradingFormValidationProps {
   price?: number | "";
   selectedBroker?: string | "best";
   leverage?: number;
+  order?: Partial<TradeOrder>;
 }
 
 export const useTradingFormValidation = ({
@@ -21,7 +22,8 @@ export const useTradingFormValidation = ({
   quantity,
   price,
   selectedBroker,
-  leverage
+  leverage,
+  order
 }: UseTradingFormValidationProps) => {
   const [nextButtonDisabled, setNextButtonDisabled] = useState(true);
 
@@ -34,7 +36,8 @@ export const useTradingFormValidation = ({
         quantity,
         price,
         selectedBroker,
-        leverage
+        leverage,
+        order
       });
 
       switch (currentStep) {
@@ -52,10 +55,32 @@ export const useTradingFormValidation = ({
           }
           return false;
         
-        case 3: // Leverage
+        case 3: // Allocation
+          // Check if proper allocations have been made based on order type
+          if (!order) return true;
+          
+          // For buy orders, check both funding and destination
+          if (order.orderType === 'buy') {
+            const hasFunding = order.fundingAllocations && order.fundingAllocations.length > 0;
+            const hasDestination = order.depositAllocations && order.depositAllocations.length > 0;
+            return !(hasFunding && hasDestination);
+          } 
+          // For sell orders, check source and cash destination
+          else if (order.orderType === 'sell') {
+            const hasInstrumentSource = order.instrumentAllocations && order.instrumentAllocations.length > 0;
+            
+            const hasCashDestination = order.depositAllocations && 
+              order.depositAllocations.some(allocation => allocation.destinationType === 'cash');
+            
+            return !(hasInstrumentSource && hasCashDestination);
+          }
+          
+          return true;
+        
+        case 4: // Leverage
           return leverage === undefined || leverage === null || leverage <= 0;
         
-        case 4: // Broker Selection
+        case 5: // Broker Selection
           // Important: Only check if broker is undefined/null, but allow empty string as valid
           // because "best" is a valid broker selection
           const isBrokerInvalid = selectedBroker === undefined || selectedBroker === null;
@@ -64,10 +89,6 @@ export const useTradingFormValidation = ({
             isBrokerInvalid
           });
           return isBrokerInvalid;
-        
-        case 5: // Allocation
-          // Always allow proceeding from allocation step (validation happens in handlers)
-          return false;
         
         case 6: // Review
           // Review step should always allow proceeding to submit
@@ -89,7 +110,8 @@ export const useTradingFormValidation = ({
     quantity, 
     price, 
     selectedBroker, 
-    leverage
+    leverage,
+    order
   ]);
 
   return { nextButtonDisabled };

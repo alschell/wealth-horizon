@@ -13,7 +13,6 @@ import { useTradingFormValidation } from "./hooks/useTradingFormValidation";
 import { OrderType } from "./types";
 import TradingLeverageOptions from "./sections/TradingLeverageOptions";
 import { motion } from "framer-motion";
-import MarketInsights from "./sections/MarketInsights";
 
 const TradingForm: React.FC = () => {
   const [orderType, setOrderTypeLocal] = useState<OrderType>("buy");
@@ -53,7 +52,8 @@ const TradingForm: React.FC = () => {
     quantity,
     price,
     selectedBroker,
-    leverage
+    leverage,
+    order
   });
 
   useEffect(() => {
@@ -106,8 +106,6 @@ const TradingForm: React.FC = () => {
           currentStep={currentStep}
         />
       </div>
-
-      {currentStep === 0 && <MarketInsights />}
 
       <TradingFormContent
         currentStep={currentStep}

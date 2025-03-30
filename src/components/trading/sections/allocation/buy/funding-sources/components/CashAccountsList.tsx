@@ -3,10 +3,73 @@ import React from "react";
 import { mockPortfoliosByInstitution } from "@/components/trading/data";
 import { InstitutionSection } from "./InstitutionSection";
 import { LegalEntitySection } from "./LegalEntitySection";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+
+interface AccountItemProps {
+  account: any;
+  currentShares: number;
+  onAllocationChange: (accountId: string, quantity: number) => void;
+  instrumentPrice: number;
+  remainingShares: number;
+}
+
+const AccountItem: React.FC<AccountItemProps> = ({
+  account,
+  currentShares,
+  onAllocationChange,
+  instrumentPrice,
+  remainingShares
+}) => {
+  // Calculate max number of shares that can be allocated
+  const handleMaxClick = () => {
+    const maxShares = Math.min(
+      account.balance / instrumentPrice,
+      remainingShares + (currentShares || 0)
+    );
+    onAllocationChange(account.id, maxShares);
+  };
+
+  return (
+    <div className="p-4 border rounded-md mb-3 last:mb-0">
+      <div className="flex justify-between items-start space-x-4">
+        <div className="flex-1">
+          <div className="font-medium text-md truncate w-full">{account.name}</div>
+          <div className="text-sm text-gray-500">
+            Balance: {account.balance.toLocaleString('en-US', {
+              style: 'currency',
+              currency: account.currency
+            })}
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="w-32 sm:w-44">
+            <Input 
+              type="number" 
+              min="0"
+              placeholder="Number of funded shares"
+              value={currentShares || ''}
+              onChange={(e) => onAllocationChange(account.id, Number(e.target.value))}
+              className="w-full"
+            />
+          </div>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={handleMaxClick}
+            className="whitespace-nowrap"
+          >
+            Max
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 interface CashAccountsListProps {
   tempAllocations: Record<string, number>;
-  handleAllocationChange: (sourceId: string, quantity: number) => void;
+  handleTempAllocationChange: (sourceId: string, quantity: number) => void;
   instrumentPrice: number;
   remainingShares: number;
   searchQuery?: string;
@@ -14,125 +77,77 @@ interface CashAccountsListProps {
 
 export const CashAccountsList: React.FC<CashAccountsListProps> = ({
   tempAllocations,
-  handleAllocationChange,
+  handleTempAllocationChange,
   instrumentPrice,
   remainingShares,
   searchQuery = ""
 }) => {
   // Filter institutions based on search query
-  const filteredInstitutions = React.useMemo(() => {
-    if (!searchQuery.trim()) return mockPortfoliosByInstitution;
+  const filteredInstitutions = mockPortfoliosByInstitution.filter(institution => {
+    if (!searchQuery) return true;
+    
+    // Check if institution name matches
+    if (institution.name.toLowerCase().includes(searchQuery.toLowerCase())) {
+      return true;
+    }
+    
+    // Check if any legal entity or account matches
+    for (const entity of institution.legalEntities || []) {
+      if (entity.name.toLowerCase().includes(searchQuery.toLowerCase())) {
+        return true;
+      }
+      
+      // Check accounts
+      for (const account of entity.cashAccounts || []) {
+        if (account.name.toLowerCase().includes(searchQuery.toLowerCase())) {
+          return true;
+        }
+      }
+    }
+    
+    return false;
+  });
 
-    const query = searchQuery.toLowerCase();
-    return mockPortfoliosByInstitution.map(institution => {
-      // Filter legal entities
-      const filteredLegalEntities = institution.legalEntities.map(le => {
-        // Filter cash accounts within legal entities
-        const filteredAccounts = le.cashAccounts.filter(account => 
-          account.name.toLowerCase().includes(query) || 
-          institution.name.toLowerCase().includes(query) ||
-          le.name.toLowerCase().includes(query)
-        );
-
-        return filteredAccounts.length > 0 ? { ...le, cashAccounts: filteredAccounts } : null;
-      }).filter(Boolean);
-
-      return filteredLegalEntities.length > 0 
-        ? { ...institution, legalEntities: filteredLegalEntities as any[] } 
-        : null;
-    }).filter(Boolean) as typeof mockPortfoliosByInstitution;
-  }, [searchQuery]);
+  if (filteredInstitutions.length === 0) {
+    return <div className="text-center py-8 text-gray-500">No cash accounts found</div>;
+  }
 
   return (
-    <div className="space-y-6 max-h-[50vh] overflow-y-auto">
+    <div className="space-y-6">
       {filteredInstitutions.map(institution => (
-        <InstitutionSection
-          key={institution.id}
-          name={institution.name}
-        >
-          {institution.legalEntities.map(legalEntity => (
-            <LegalEntitySection
-              key={legalEntity.id}
-              name={legalEntity.name}
-            >
-              <div className="space-y-3">
-                {legalEntity.cashAccounts.map(account => (
-                  <div 
-                    key={account.id}
-                    className={`p-4 border rounded-md ${tempAllocations[account.id] > 0 ? 'bg-gray-50 border-gray-400' : 'border-gray-200'}`}
-                  >
-                    <div className="flex justify-between items-start mb-3">
-                      <div>
-                        <h4 className="font-medium">{account.name}</h4>
-                        <p className="text-xs text-gray-500">Cash Account</p>
-                      </div>
-                    </div>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center mt-2">
-                      <div>
-                        <div className="text-xs text-gray-500 mb-1">Available Balance</div>
-                        <div className="text-sm font-medium">
-                          {account.balance.toLocaleString('en-US', {
-                            style: 'currency',
-                            currency: account.currency
-                          })}
-                        </div>
-                      </div>
-                      
-                      <div>
-                        <div className="text-xs text-gray-500 mb-1">Shares to fund</div>
-                        <div className="flex items-center gap-2">
-                          <input
-                            type="number"
-                            min="0"
-                            max={Math.floor(account.balance / instrumentPrice)}
-                            value={tempAllocations[account.id] || ""}
-                            onChange={(e) => handleAllocationChange(account.id, Number(e.target.value) || 0)}
-                            className="w-full h-9 rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-                            placeholder="0"
-                            // Remove spinner arrows
-                            style={{ appearance: "textfield" }}
-                          />
-                          {remainingShares > 0 && (
-                            <button
-                              className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground px-4 py-2 h-9"
-                              onClick={() => {
-                                const maxShares = Math.min(
-                                  Math.floor(account.balance / instrumentPrice),
-                                  remainingShares + (tempAllocations[account.id] || 0)
-                                );
-                                handleAllocationChange(account.id, maxShares);
-                              }}
-                            >
-                              Max
-                            </button>
-                          )}
-                        </div>
-                      </div>
-                      
-                      <div>
-                        <div className="text-xs text-gray-500 mb-1">Estimated Amount</div>
-                        <div className="text-sm font-medium">
-                          {((tempAllocations[account.id] || 0) * instrumentPrice).toLocaleString('en-US', {
-                            style: 'currency',
-                            currency: account.currency
-                          })}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
+        <div key={institution.id}>
+          <h3 className="text-md font-medium mb-3">{institution.name}</h3>
+          
+          <div className="space-y-6">
+            {institution.legalEntities?.map(entity => (
+              <div key={entity.id} className="pl-4 border-l-2 border-gray-200">
+                <h4 className="text-sm font-medium mb-3">{entity.name}</h4>
+                
+                <div className="space-y-2">
+                  {entity.cashAccounts?.map(account => (
+                    <AccountItem
+                      key={account.id}
+                      account={account}
+                      currentShares={tempAllocations[account.id] || 0}
+                      onAllocationChange={handleTempAllocationChange}
+                      instrumentPrice={instrumentPrice}
+                      remainingShares={remainingShares}
+                    />
+                  ))}
+                  
+                  {(!entity.cashAccounts || entity.cashAccounts.length === 0) && (
+                    <div className="text-sm text-gray-500 pl-4">No cash accounts available</div>
+                  )}
+                </div>
               </div>
-            </LegalEntitySection>
-          ))}
-        </InstitutionSection>
-      ))}
-      
-      {filteredInstitutions.length === 0 && (
-        <div className="text-center p-4">
-          <p className="text-gray-500">No cash accounts found matching your search.</p>
+            ))}
+            
+            {(!institution.legalEntities || institution.legalEntities.length === 0) && (
+              <div className="text-sm text-gray-500 pl-4">No legal entities available</div>
+            )}
+          </div>
         </div>
-      )}
+      ))}
     </div>
   );
 };

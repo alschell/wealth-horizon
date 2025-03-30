@@ -9,6 +9,7 @@ import { SelectedSourcesTable } from "./funding-sources/components/SelectedSourc
 import { CashAccountsPanel } from "./funding-sources/components/CashAccountsPanel";
 import { CreditFacilitiesPanel } from "./funding-sources/components/CreditFacilitiesPanel";
 import { ModalFooter } from "./funding-sources/components/ModalFooter";
+import { EmptySourcesState } from "./funding-sources/components/EmptySourcesState";
 import { TradeOrder } from "@/components/trading/types";
 
 interface FundingSourcesPanelProps {
@@ -56,24 +57,30 @@ const FundingSourcesPanel: React.FC<FundingSourcesPanelProps> = ({
 
   return (
     <div className="space-y-4">
-      <SelectedSourcesTable
-        selectedSourceIds={selectedSourceIds}
-        allocations={allocations}
-        handleAllocationChange={handleAllocationChange}
-        getSourceById={getSourceById}
-        instrumentPrice={price}
-        currency={currency}
-      />
+      {selectedSourceIds.length > 0 ? (
+        <SelectedSourcesTable
+          selectedSourceIds={selectedSourceIds}
+          allocations={allocations}
+          handleAllocationChange={handleAllocationChange}
+          getSourceById={getSourceById}
+          instrumentPrice={price}
+          currency={currency}
+        />
+      ) : (
+        <EmptySourcesState onSelectSources={openSourcesSheet} />
+      )}
       
-      <div className="flex justify-end">
-        <Button 
-          onClick={openSourcesSheet}
-          className="flex items-center gap-2 bg-black text-white hover:bg-gray-800"
-        >
-          <Plus className="h-4 w-4" />
-          {selectedSourceIds.length > 0 ? "Manage Funding Sources" : "Add Funding Source"}
-        </Button>
-      </div>
+      {selectedSourceIds.length > 0 && (
+        <div className="flex justify-end">
+          <Button 
+            onClick={openSourcesSheet}
+            className="flex items-center gap-2 bg-black text-white hover:bg-gray-800"
+          >
+            <Plus className="h-4 w-4" />
+            Manage Funding Sources
+          </Button>
+        </div>
+      )}
       
       {/* Funding Sources Sheet */}
       <Sheet 
@@ -82,7 +89,7 @@ const FundingSourcesPanel: React.FC<FundingSourcesPanelProps> = ({
           if (!open) setSourcesSheetOpen(false);
         }}
       >
-        <SheetContent className="overflow-y-auto" side="right">
+        <SheetContent className="overflow-y-auto w-full max-w-3xl" side="right">
           <SheetHeader>
             <SheetTitle>Select Funding Sources</SheetTitle>
           </SheetHeader>

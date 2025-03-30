@@ -68,7 +68,7 @@ export const SourceSelectionModal: React.FC<SourceSelectionModalProps> = ({
   
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-4xl max-h-[85vh] overflow-y-auto">
+      <DialogContent className="max-w-5xl max-h-[85vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Select Funding Sources</DialogTitle>
         </DialogHeader>
@@ -131,7 +131,7 @@ export const SourceSelectionModal: React.FC<SourceSelectionModalProps> = ({
             <TabsContent value="cash" className="mt-4">
               <CashAccountsList 
                 tempAllocations={tempAllocations}
-                handleAllocationChange={handleAllocationChange}
+                handleTempAllocationChange={handleAllocationChange}
                 instrumentPrice={instrumentPrice}
                 remainingShares={remainingShares}
                 searchQuery={searchQuery}
@@ -141,7 +141,7 @@ export const SourceSelectionModal: React.FC<SourceSelectionModalProps> = ({
             <TabsContent value="credit" className="mt-4">
               <CreditFacilitiesList
                 tempAllocations={tempAllocations}
-                handleAllocationChange={handleAllocationChange}
+                handleTempAllocationChange={handleAllocationChange}
                 instrumentPrice={instrumentPrice}
                 remainingShares={remainingShares}
                 searchQuery={searchQuery}

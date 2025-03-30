@@ -36,40 +36,35 @@ const TradingInstrumentSearch: React.FC<TradingInstrumentSearchProps> = ({
 
   return (
     <div className="space-y-6">
-      {!selectedInstrument ? (
-        <div className="space-y-6">
-          <div className="relative">
-            <SearchBar
-              searchTerm={searchQuery}
-              setSearchTerm={setSearchQuery}
-              isSearching={isSearching}
-            />
-          </div>
-
-          {results.length > 0 && (
-            <InstrumentResultsTable 
-              searchResults={results} 
-              selectedInstrument={selectedInstrument}
-              onSelectInstrument={handleSelectInstrument}
-            />
-          )}
-          
-          {results.length === 0 && searchQuery.trim() !== "" && !isSearching && (
-            <NoResultsMessage searchTerm={searchQuery} />
-          )}
-
-        </div>
-      ) : (
-        <div className="space-y-6">
-          <div className="mb-4">
-            <h3 className="text-lg font-medium">Selected Security</h3>
-          </div>
-          
-          <SelectedInstrumentCard 
-            instrument={selectedInstrument}
+      <div className="space-y-6">
+        <div className="relative">
+          <SearchBar
+            searchTerm={searchQuery}
+            setSearchTerm={setSearchQuery}
+            isSearching={isSearching}
           />
         </div>
-      )}
+
+        {selectedInstrument && (
+          <div className="mb-6">
+            <h3 className="text-lg font-medium mb-4">Selected Security</h3>
+            <SelectedInstrumentCard instrument={selectedInstrument} />
+          </div>
+        )}
+
+        {results.length > 0 && (
+          <InstrumentResultsTable 
+            searchResults={results} 
+            selectedInstrument={selectedInstrument}
+            onSelectInstrument={handleSelectInstrument}
+          />
+        )}
+        
+        {results.length === 0 && searchQuery.trim() !== "" && !isSearching && (
+          <NoResultsMessage searchTerm={searchQuery} />
+        )}
+
+      </div>
     </div>
   );
 };

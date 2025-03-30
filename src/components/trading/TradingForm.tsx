@@ -94,18 +94,18 @@ const TradingForm: React.FC = () => {
 
   const steps = [
     { title: "Select Instrument", component: TradingInstrumentSearch },
-    { title: "Order Type & Validity", component: TradingOrderType },
-    { title: "Quantity & Price", component: TradingQuantityPrice },
+    { title: "Select Order Type & Validity", component: TradingOrderType },
+    { title: "Enter Quantity & Price", component: TradingQuantityPrice },
     { title: "Set Leverage", component: TradingLeverageOptions },
-    { title: "Select Broker", component: TradingBrokerSelection },
     { title: "Allocate", component: TradingAllocation },
+    { title: "Select Broker", component: TradingBrokerSelection },
     { title: "Review Order", component: TradingReview }
   ];
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <div className="mb-8">
-        <h2 className="text-2xl font-bold mb-6">New Trading Order</h2>
+    <div className="max-w-4xl mx-auto py-8">
+      <div className="mb-6">
+        <h2 className="text-2xl font-bold mb-8">New Trade</h2>
         <TradingStepsProgress 
           steps={steps}
           currentStep={currentStep}

@@ -17,8 +17,8 @@ const TradingStepsProgress: React.FC<TradingStepsProgressProps> = ({
   currentStep
 }) => {
   return (
-    <div className="w-full mb-6">
-      <div className="hidden md:flex w-full justify-between relative mb-2">
+    <div className="w-full mb-8">
+      <div className="hidden md:flex w-full justify-between relative mb-3">
         {steps.map((step, i) => (
           <div 
             key={step.title} 
@@ -31,7 +31,7 @@ const TradingStepsProgress: React.FC<TradingStepsProgressProps> = ({
                   ? 'bg-black text-white' 
                   : i === currentStep 
                     ? 'bg-white text-black border-2 border-black' 
-                    : 'bg-white text-gray-500 border border-gray-300'
+                    : 'bg-white text-gray-500 border-2 border-gray-300'
               )}
             >
               {i < currentStep ? (
@@ -42,7 +42,7 @@ const TradingStepsProgress: React.FC<TradingStepsProgressProps> = ({
             </div>
             <span 
               className={cn(
-                "mt-2 text-sm font-medium",
+                "mt-3 text-sm font-medium",
                 i <= currentStep ? 'text-black' : 'text-gray-500'
               )}
             >
@@ -67,7 +67,7 @@ const TradingStepsProgress: React.FC<TradingStepsProgressProps> = ({
             Step {currentStep + 1} of {steps.length}
           </span>
         </div>
-        <div className="w-full h-2 bg-gray-200 rounded-full mt-2">
+        <div className="w-full h-2 bg-gray-200 rounded-full mt-2 overflow-hidden">
           <div 
             className="h-full bg-black rounded-full transition-all duration-700 ease-in-out"
             style={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}

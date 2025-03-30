@@ -1,13 +1,12 @@
 
 import React from "react";
-import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import TradingInterface from "@/components/trading/TradingInterface";
 
 const Trading = () => {
   return (
-    <DashboardLayout>
+    <div className="min-h-screen bg-gray-50 p-4">
       <TradingInterface />
-    </DashboardLayout>
+    </div>
   );
 };
 

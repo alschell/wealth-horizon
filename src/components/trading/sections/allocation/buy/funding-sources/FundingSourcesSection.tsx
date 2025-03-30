@@ -34,12 +34,13 @@ export const FundingSourcesSection: React.FC<FundingSourcesSectionProps> = ({
     // Extract funding source allocations from order
     if (order.fundingAllocations) {
       order.fundingAllocations.forEach(allocation => {
-        initialAllocations[allocation.sourceId] = allocation.shares || 0;
+        // Convert amount to shares based on instrumentPrice
+        initialAllocations[allocation.sourceId] = allocation.amount / instrumentPrice;
       });
     }
     
     setAllocations(initialAllocations);
-  }, [order.fundingAllocations]);
+  }, [order.fundingAllocations, instrumentPrice]);
 
   const handleConfirmSelection = (selections: Record<string, number>) => {
     // Update local state
@@ -52,7 +53,8 @@ export const FundingSourcesSection: React.FC<FundingSourcesSectionProps> = ({
         return {
           sourceId,
           sourceType: sourceId.startsWith("cash-") ? "cash" : "credit",
-          shares
+          amount: shares * instrumentPrice,
+          currency: currency
         };
       });
     

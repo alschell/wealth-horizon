@@ -8,7 +8,7 @@ interface UseInstrumentSearchProps {
   orderType?: string;
 }
 
-export const useInstrumentSearch = ({ setSelectedInstrument, orderType }: UseInstrumentSearchProps = {}) => {
+export const useInstrumentSearch = ({ setSelectedInstrument, orderType }: UseInstrumentSearchProps) => {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [searchResults, setSearchResults] = useState<Instrument[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -55,16 +55,12 @@ export const useInstrumentSearch = ({ setSelectedInstrument, orderType }: UseIns
 
   // Handle selecting an instrument
   const handleSelectInstrument = useCallback((instrument: Instrument | null) => {
-    if (setSelectedInstrument) {
-      setSelectedInstrument(instrument);
-    }
+    setSelectedInstrument(instrument);
   }, [setSelectedInstrument]);
 
   // Clear selected instrument
   const clearSelectedInstrument = useCallback(() => {
-    if (setSelectedInstrument) {
-      setSelectedInstrument(null);
-    }
+    setSelectedInstrument(null);
   }, [setSelectedInstrument]);
 
   return {

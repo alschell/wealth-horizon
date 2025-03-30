@@ -94,19 +94,6 @@ const TradingAllocation: React.FC<TradingAllocationProps> = ({
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col space-y-2">
-        <h3 className="text-lg font-medium">
-          {orderType === "buy" 
-            ? "Allocate Funding & Destination" 
-            : "Allocate Source & Proceeds"}
-        </h3>
-        <p className="text-sm text-gray-500">
-          {orderType === "buy" 
-            ? "Specify from which accounts to fund this purchase and where to deposit the acquired assets." 
-            : "Select which portfolios to sell from and where to deposit the proceeds."}
-        </p>
-      </div>
-      
       <Card className="p-4 bg-blue-50 border-blue-100">
         <div className="flex items-start gap-2">
           <Info className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />

@@ -1,13 +1,14 @@
 
 import React, { useState, useEffect } from "react";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
+import { Search } from "lucide-react";
 import { 
-  FundingSourceModalHeader, 
-  AllocationSummary, 
   CashAccountsList, 
-  CreditFacilitiesList, 
-  ModalFooter 
+  CreditFacilitiesList 
 } from "./components";
 
 interface FundingSourceSelectionModalProps {
@@ -32,6 +33,7 @@ const FundingSourceSelectionModal: React.FC<FundingSourceSelectionModalProps> = 
   const [activeTab, setActiveTab] = useState<"cash" | "credit">("cash");
   const [tempAllocations, setTempAllocations] = useState<Record<string, number>>({});
   const [totalShares, setTotalShares] = useState(0);
+  const [searchQuery, setSearchQuery] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Initialize temporary allocations when modal opens
@@ -43,6 +45,7 @@ const FundingSourceSelectionModal: React.FC<FundingSourceSelectionModalProps> = 
       const total = Object.values(currentAllocations).reduce((sum, qty) => sum + qty, 0);
       setTotalShares(total);
       setIsSubmitting(false);
+      setSearchQuery("");
     }
   }, [isOpen, currentAllocations]);
 
@@ -70,24 +73,41 @@ const FundingSourceSelectionModal: React.FC<FundingSourceSelectionModalProps> = 
   const requiredShares = totalAmount / instrumentPrice;
   const remainingShares = requiredShares - totalShares;
   
-  // Check if allocations exactly equal required shares
-  const isAllocationComplete = Math.abs(totalShares - requiredShares) < 0.001;
+  // Calculate allocation percentage
+  const allocationPercentage = Math.min(100, (totalShares / requiredShares) * 100);
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen => !setIsOpen && onClose()}>
       <DialogContent className="max-w-5xl max-h-[80vh] overflow-auto">
-        <FundingSourceModalHeader />
+        <DialogHeader>
+          <DialogTitle>Select Funding Sources</DialogTitle>
+        </DialogHeader>
 
         <div className="py-4">
-          <AllocationSummary 
-            totalAmount={totalAmount}
-            requiredShares={requiredShares}
-            remainingShares={remainingShares}
-            currency={currency}
-            isAllocationComplete={isAllocationComplete}
-          />
+          <div className="mb-6 space-y-3">
+            <div className="flex justify-between text-sm">
+              <span>Total number of shares to be allocated: {Math.ceil(requiredShares)}</span>
+              <span>Shares allocated: {totalShares.toFixed(2)}</span>
+            </div>
+            
+            <Progress value={allocationPercentage} className="h-2" />
+          </div>
+          
+          {/* Search Bar */}
+          <div className="relative mb-4">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <Input
+              className="pl-9 h-10"
+              placeholder={`Search ${activeTab === "cash" ? "cash accounts" : "credit facilities"}...`}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
 
-          <Tabs defaultValue="cash" value={activeTab} onValueChange={(v) => setActiveTab(v as "cash" | "credit")}>
+          <Tabs defaultValue="cash" value={activeTab} onValueChange={(v) => {
+            setActiveTab(v as "cash" | "credit");
+            setSearchQuery("");
+          }}>
             <TabsList className="w-full grid grid-cols-2">
               <TabsTrigger value="cash">Cash Accounts</TabsTrigger>
               <TabsTrigger value="credit">Credit Facilities</TabsTrigger>
@@ -99,6 +119,7 @@ const FundingSourceSelectionModal: React.FC<FundingSourceSelectionModalProps> = 
                 handleTempAllocationChange={handleTempAllocationChange}
                 instrumentPrice={instrumentPrice}
                 remainingShares={remainingShares}
+                searchQuery={searchQuery}
               />
             </TabsContent>
             
@@ -108,16 +129,24 @@ const FundingSourceSelectionModal: React.FC<FundingSourceSelectionModalProps> = 
                 handleTempAllocationChange={handleTempAllocationChange}
                 instrumentPrice={instrumentPrice}
                 remainingShares={remainingShares}
+                searchQuery={searchQuery}
               />
             </TabsContent>
           </Tabs>
         </div>
 
-        <ModalFooter
-          onApply={handleConfirm}
-          onClose={onClose}
-          isLoading={isSubmitting}
-        />
+        <div className="flex justify-end gap-2 mt-4">
+          <Button variant="outline" onClick={onClose}>
+            Cancel
+          </Button>
+          <Button 
+            className="bg-black text-white hover:bg-gray-800"
+            onClick={handleConfirm}
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? "Confirming..." : "Confirm"}
+          </Button>
+        </div>
       </DialogContent>
     </Dialog>
   );

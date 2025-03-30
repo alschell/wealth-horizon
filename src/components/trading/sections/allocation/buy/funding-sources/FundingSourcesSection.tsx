@@ -42,7 +42,7 @@ const FundingSourcesSection: React.FC<FundingSourcesSectionProps> = ({
       <div className="mb-6">
         <h2 className="text-lg font-semibold mb-2">Funding Sources</h2>
         <p className="text-sm text-gray-600">
-          Specify from which accounts to fund this purchase and where to deposit the acquired assets.
+          Specify from which accounts to fund this purchase.
         </p>
       </div>
 

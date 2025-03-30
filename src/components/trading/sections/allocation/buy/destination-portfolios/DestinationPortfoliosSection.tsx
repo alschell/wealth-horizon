@@ -3,8 +3,6 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { TradeOrder } from "../../../../types";
-import { QuantityAllocationSummary } from "../../AllocationSummary";
-import { mockPortfoliosByInstitution } from "../../../../data";
 import PortfolioSelectionModal from "./PortfolioSelectionModal";
 import { SelectedPortfoliosTable } from "./SelectedPortfoliosTable";
 
@@ -134,12 +132,6 @@ const DestinationPortfoliosSection: React.FC<DestinationPortfoliosSectionProps> 
           </div>
         )}
       </div>
-      
-      <QuantityAllocationSummary
-        totalQuantity={totalQuantity}
-        currentAllocation={currentAllocation}
-        remainingQuantity={remainingQuantity}
-      />
       
       <PortfolioSelectionModal 
         isOpen={isModalOpen}

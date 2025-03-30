@@ -1,14 +1,12 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Search, Plus, ChevronRight } from "lucide-react";
 import { 
-  mockPortfoliosByInstitution, 
-  mockPortfoliosFlat
+  mockPortfoliosByInstitution
 } from "../../../../data";
 
 interface PortfolioSelectionModalProps {
@@ -35,6 +33,18 @@ const PortfolioSelectionModal: React.FC<PortfolioSelectionModalProps> = ({
   const [searchQuery, setSearchQuery] = useState("");
   const [institutionsExpanded, setInstitutionsExpanded] = useState<Record<string, boolean>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // Initialize all institutions as expanded when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      const expandedState: Record<string, boolean> = {};
+      mockPortfoliosByInstitution.forEach(institution => {
+        expandedState[institution.id] = true;
+      });
+      setInstitutionsExpanded(expandedState);
+      setSearchQuery("");
+    }
+  }, [isOpen]);
   
   // Calculate total allocation
   const totalAllocated = Object.values(tempAllocations).reduce((sum, qty) => sum + qty, 0);

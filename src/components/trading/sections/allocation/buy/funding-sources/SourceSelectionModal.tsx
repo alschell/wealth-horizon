@@ -2,12 +2,13 @@
 import React, { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
+import { Search, AlertCircle, Check, ChevronRight } from "lucide-react";
+import { mockPortfoliosByInstitution } from "@/components/trading/data";
 import { CashAccountsList } from "./components/CashAccountsList";
 import { CreditFacilitiesList } from "./components/CreditFacilitiesList";
-import { ModalFooter } from "./components/ModalFooter";
-import { Progress } from "@/components/ui/progress";
-import { AlertCircle, Check, Search } from "lucide-react";
-import { Input } from "@/components/ui/input";
 
 interface SourceSelectionModalProps {
   isOpen: boolean;
@@ -32,6 +33,7 @@ export const SourceSelectionModal: React.FC<SourceSelectionModalProps> = ({
   const [tempAllocations, setTempAllocations] = useState<Record<string, number>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [institutionsExpanded, setInstitutionsExpanded] = useState<Record<string, boolean>>({});
   
   // Initialize with current allocations when modal opens
   useEffect(() => {
@@ -39,6 +41,13 @@ export const SourceSelectionModal: React.FC<SourceSelectionModalProps> = ({
       setTempAllocations({ ...currentAllocations });
       setIsSubmitting(false);
       setSearchQuery("");
+      
+      // Initialize all institutions as expanded
+      const expandedState: Record<string, boolean> = {};
+      mockPortfoliosByInstitution.forEach(institution => {
+        expandedState[institution.id] = true;
+      });
+      setInstitutionsExpanded(expandedState);
     }
   }, [isOpen, currentAllocations]);
   
@@ -58,6 +67,13 @@ export const SourceSelectionModal: React.FC<SourceSelectionModalProps> = ({
       onClose();
       setIsSubmitting(false);
     }, 300);
+  };
+  
+  const toggleInstitution = (institutionId: string) => {
+    setInstitutionsExpanded(prev => ({
+      ...prev,
+      [institutionId]: !prev[institutionId]
+    }));
   };
   
   // Calculate remaining shares needed
@@ -150,11 +166,18 @@ export const SourceSelectionModal: React.FC<SourceSelectionModalProps> = ({
           </Tabs>
         </div>
         
-        <ModalFooter 
-          onApply={handleApply} 
-          onClose={onClose}
-          isLoading={isSubmitting}
-        />
+        <div className="flex justify-end gap-2 mt-4">
+          <Button variant="outline" onClick={onClose}>
+            Cancel
+          </Button>
+          <Button 
+            className="bg-black text-white hover:bg-gray-800"
+            onClick={handleApply}
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? "Confirming..." : "Confirm"}
+          </Button>
+        </div>
       </DialogContent>
     </Dialog>
   );

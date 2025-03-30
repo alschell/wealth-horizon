@@ -33,32 +33,32 @@ const TradingInstrumentSearch: React.FC<TradingInstrumentSearchProps> = ({
 
   return (
     <div className="space-y-6">
-      {!selectedInstrument ? (
-        <div className="space-y-4">
-          <SearchBar
-            searchTerm={searchQuery}
-            setSearchTerm={setSearchQuery}
-            isSearching={isLoading}
-          />
-
-          {error ? (
-            <div className="text-red-500 text-sm">{error}</div>
-          ) : searchQuery && searchResults.length === 0 && !isLoading ? (
-            <NoResultsMessage searchTerm={searchQuery} />
-          ) : searchResults.length > 0 ? (
-            <InstrumentResultsTable
-              searchResults={searchResults}
-              selectedInstrument={selectedInstrument}
-              onSelectInstrument={handleSelectInstrument}
-            />
-          ) : null}
-        </div>
-      ) : (
-        <SelectedInstrumentCard
-          instrument={selectedInstrument}
-          onClear={clearSelectedInstrument}
+      <div className="space-y-4">
+        <SearchBar
+          searchTerm={searchQuery}
+          setSearchTerm={setSearchQuery}
+          isSearching={isLoading}
         />
-      )}
+
+        {selectedInstrument && (
+          <SelectedInstrumentCard
+            instrument={selectedInstrument}
+            onClear={clearSelectedInstrument}
+          />
+        )}
+
+        {error ? (
+          <div className="text-red-500 text-sm">{error}</div>
+        ) : searchQuery && searchResults.length === 0 && !isLoading ? (
+          <NoResultsMessage searchTerm={searchQuery} />
+        ) : searchResults.length > 0 ? (
+          <InstrumentResultsTable
+            searchResults={searchResults}
+            selectedInstrument={selectedInstrument}
+            onSelectInstrument={handleSelectInstrument}
+          />
+        ) : null}
+      </div>
     </div>
   );
 };

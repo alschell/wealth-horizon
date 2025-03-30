@@ -10,7 +10,6 @@ interface UseTradingFormValidationProps {
   quantity: number | "";
   price?: number | "";
   selectedBroker?: string | "best";
-  leverage?: number;
   order?: Partial<TradeOrder>;
 }
 
@@ -22,7 +21,6 @@ export const useTradingFormValidation = ({
   quantity,
   price,
   selectedBroker,
-  leverage,
   order
 }: UseTradingFormValidationProps) => {
   const [nextButtonDisabled, setNextButtonDisabled] = useState(true);
@@ -36,7 +34,6 @@ export const useTradingFormValidation = ({
         quantity,
         price,
         selectedBroker,
-        leverage,
         order
       });
 
@@ -77,11 +74,7 @@ export const useTradingFormValidation = ({
           
           return true;
         
-        case 4: // Leverage
-          // Fix: Make sure we handle undefined/null leverage properly
-          return leverage === undefined || leverage === null || leverage <= 0;
-        
-        case 5: // Broker Selection (now step 5 instead of 4)
+        case 4: // Broker Selection (now step 4 instead of 5)
           // Important: Only check if broker is undefined/null, but allow empty string as valid
           // because "best" is a valid broker selection
           const isBrokerInvalid = selectedBroker === undefined || selectedBroker === null;
@@ -91,7 +84,7 @@ export const useTradingFormValidation = ({
           });
           return isBrokerInvalid;
         
-        case 6: // Review
+        case 5: // Review
           // Review step should always allow proceeding to submit
           return false;
         
@@ -111,7 +104,6 @@ export const useTradingFormValidation = ({
     quantity, 
     price, 
     selectedBroker, 
-    leverage,
     order
   ]);
 

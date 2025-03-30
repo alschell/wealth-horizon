@@ -11,7 +11,6 @@ import TradingFormContent from "./components/TradingFormContent";
 import { useTradingForm } from "./hooks/useTradingForm";
 import { useTradingFormValidation } from "./hooks/useTradingFormValidation";
 import { OrderType } from "./types";
-import TradingLeverageOptions from "./sections/TradingLeverageOptions";
 import { motion } from "framer-motion";
 
 const TradingForm: React.FC = () => {
@@ -43,7 +42,7 @@ const TradingForm: React.FC = () => {
     setLeverage
   } = useTradingForm(orderType);
 
-  // Validation hook - Pass leverage to ensure proper validation
+  // Validation hook - Remove leverage from validation
   const { nextButtonDisabled } = useTradingFormValidation({
     currentStep,
     selectedInstrument,
@@ -52,7 +51,6 @@ const TradingForm: React.FC = () => {
     quantity,
     price,
     selectedBroker,
-    leverage,
     order
   });
 
@@ -61,7 +59,7 @@ const TradingForm: React.FC = () => {
     console.log("TradingForm - Current order state:", JSON.stringify(order));
     
     // Ensure we have a broker selected, defaulting to "best" if not set
-    if (currentStep >= 5 && !selectedBroker) {
+    if (currentStep >= 4 && !selectedBroker) {
       console.log("Setting default broker to 'best'");
       setSelectedBroker("best");
     }
@@ -71,20 +69,12 @@ const TradingForm: React.FC = () => {
     setOrderType(orderType);
   }, [orderType, setOrderType]);
 
-  // Reordered steps to improve logical flow:
-  // 1. Select Instrument
-  // 2. Specify Order Type & Validity
-  // 3. Enter Quantity & Price
-  // 4. Define Allocations (funding & destination)
-  // 5. Set Leverage (if applicable)
-  // 6. Select Broker
-  // 7. Review & Submit
+  // Reordered steps and removed Leverage step
   const steps = [
     { title: "Instrument", component: TradingInstrumentSearch },
     { title: "Type & Validity", component: TradingOrderType },
     { title: "Quantity & Price", component: TradingQuantityPrice },
     { title: "Allocation", component: TradingAllocation },
-    { title: "Leverage", component: TradingLeverageOptions },
     { title: "Broker", component: TradingBrokerSelection },
     { title: "Review", component: TradingReview }
   ];

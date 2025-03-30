@@ -10,7 +10,7 @@ interface NextStepHandlerProps {
   orderExecutionType: string;
   selectedBroker: string | "best";
   timeInForce: string;
-  currentOrderType: OrderType; // Changed from string to OrderType
+  currentOrderType: OrderType;
   leverage: number;
   setCurrentStep: (value: React.SetStateAction<number>) => void;
   setOrder: (value: React.SetStateAction<Partial<TradeOrder>>) => void;
@@ -69,21 +69,9 @@ export const useNextStepHandler = ({
       }
       
       // Step 3: Allocation validation
-      // (This is step 3 now, not 4)
       
-      // Step 4: Leverage validation
-      if (currentStep === 4 && (leverage === undefined || leverage === null || leverage <= 0)) {
-        console.log("Validation failed: leverage must be greater than 0");
-        toast({
-          title: "Error",
-          description: "Please set a valid leverage value greater than 0",
-          variant: "destructive"
-        });
-        return;
-      }
-
-      // Step 5: Broker Selection (previously step 4)
-      if (currentStep === 5) {
+      // Step 4: Broker Selection
+      if (currentStep === 4) {
         console.log("Validating broker:", selectedBroker);
         // Only validate if defined (undefined means no selection has been made)
         if (selectedBroker === undefined || selectedBroker === null) {
@@ -103,7 +91,7 @@ export const useNextStepHandler = ({
         // Create updated order with all current values
         const updatedOrder: Partial<TradeOrder> = {
           ...prev,
-          orderType: currentOrderType, // This is now of type OrderType
+          orderType: currentOrderType,
           instrumentId: selectedInstrument?.id || "",
           quantity: Number(quantity),
           price: Number(price || (selectedInstrument?.currentPrice || 0)),
@@ -111,7 +99,7 @@ export const useNextStepHandler = ({
           brokerId: selectedBroker || "best",
           executionType: orderExecutionType || "market", 
           timeInForce: timeInForce || "day",
-          leverage: leverage || 1
+          leverage: 1 // Just set a default value of 1, no longer using leverage
         };
         console.log("Updated order:", updatedOrder);
         return updatedOrder;

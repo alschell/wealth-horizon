@@ -1,13 +1,14 @@
 
 import React from "react";
-import { TradeOrder } from "../../../../types";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
+import { TradeOrder } from "@/components/trading/types";
 import { useDestinationPortfolios } from "./useDestinationPortfolios";
 import { SelectedPortfoliosTable } from "./SelectedPortfoliosTable";
 import PortfolioSelectionModal from "./PortfolioSelectionModal";
 
 interface DestinationPortfoliosSectionProps {
   totalQuantity: number;
-  selectedInstrument?: any;
   order: Partial<TradeOrder>;
   setOrder: (order: Partial<TradeOrder>) => void;
   instrumentPrice: number;
@@ -16,7 +17,6 @@ interface DestinationPortfoliosSectionProps {
 
 const DestinationPortfoliosSection: React.FC<DestinationPortfoliosSectionProps> = ({
   totalQuantity,
-  selectedInstrument,
   order,
   setOrder,
   instrumentPrice,
@@ -24,60 +24,68 @@ const DestinationPortfoliosSection: React.FC<DestinationPortfoliosSectionProps> 
 }) => {
   const {
     allocations,
-    currentAllocation,
-    remainingQuantity,
+    selectedPortfolioIds,
+    handleAllocationChange,
     isModalOpen,
     setIsModalOpen,
-    selectedPortfolios,
-    tempAllocations,
-    tempTotalAllocation,
-    isAllocationComplete,
-    isAllocationExceeded,
-    handleAllocationChange,
     openPortfolioSelectionModal,
     handlePortfolioSelect,
     handleTempAllocationChange,
-    closeModal,
+    tempAllocations,
     confirmPortfolioSelections
   } = useDestinationPortfolios({
     totalQuantity,
-    selectedInstrument,
+    selectedInstrument: null, // We don't need the instrument for destination
     order,
     setOrder,
     instrumentPrice,
     currency
   });
 
-  // Get selected portfolio IDs
-  const selectedPortfolioIds = Object.keys(allocations);
-
   return (
     <div className="space-y-4">
-      <div>
-        <h3 className="text-lg font-semibold mb-2">Destination Portfolios</h3>
-        <p className="text-sm text-gray-600 mb-3">
-          Select which portfolios to deposit the purchased shares into.
-        </p>
-
-        <SelectedPortfoliosTable 
+      {selectedPortfolioIds.length > 0 ? (
+        <SelectedPortfoliosTable
           selectedPortfolioIds={selectedPortfolioIds}
           allocations={allocations}
           handleAllocationChange={handleAllocationChange}
           instrumentPrice={instrumentPrice}
           currency={currency}
         />
+      ) : (
+        <div className="text-center py-4 border rounded-md">
+          <p className="text-gray-500">No destination portfolios selected</p>
+          <Button 
+            onClick={openPortfolioSelectionModal} 
+            className="mt-2 bg-black text-white hover:bg-gray-800 flex items-center gap-1"
+          >
+            <Plus className="h-4 w-4" /> Add Destination Portfolio(s)
+          </Button>
+        </div>
+      )}
+      
+      {selectedPortfolioIds.length > 0 && (
+        <div className="flex justify-end">
+          <Button 
+            onClick={openPortfolioSelectionModal}
+            className="flex items-center gap-2 bg-black text-white hover:bg-gray-800"
+          >
+            <Plus className="h-4 w-4" />
+            Manage Destination Portfolios
+          </Button>
+        </div>
+      )}
 
-        {/* Portfolio selection modal */}
-        <PortfolioSelectionModal 
-          isOpen={isModalOpen}
-          onClose={closeModal}
-          onConfirm={confirmPortfolioSelections}
-          currentAllocations={allocations}
-          totalQuantity={totalQuantity}
-          instrumentPrice={instrumentPrice}
-          currency={currency}
-        />
-      </div>
+      <PortfolioSelectionModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={confirmPortfolioSelections}
+        onSelectPortfolio={handlePortfolioSelect}
+        onAllocationChange={handleTempAllocationChange}
+        selectedPortfolios={selectedPortfolioIds}
+        tempAllocations={tempAllocations}
+        totalQuantity={totalQuantity}
+      />
     </div>
   );
 };

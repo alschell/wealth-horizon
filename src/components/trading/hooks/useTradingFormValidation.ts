@@ -78,9 +78,10 @@ export const useTradingFormValidation = ({
           return true;
         
         case 4: // Leverage
+          // Fix: Make sure we handle undefined/null leverage properly
           return leverage === undefined || leverage === null || leverage <= 0;
         
-        case 5: // Broker Selection
+        case 5: // Broker Selection (now step 5 instead of 4)
           // Important: Only check if broker is undefined/null, but allow empty string as valid
           // because "best" is a valid broker selection
           const isBrokerInvalid = selectedBroker === undefined || selectedBroker === null;

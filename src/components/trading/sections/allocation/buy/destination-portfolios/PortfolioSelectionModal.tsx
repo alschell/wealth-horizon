@@ -1,97 +1,196 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { mockPortfoliosByInstitution } from "../../../../data";
-import PortfoliosList from "./components/PortfoliosList";
+import { Search, Plus, ChevronRight } from "lucide-react";
+import { 
+  mockPortfoliosByInstitution, 
+  mockPortfoliosFlat
+} from "../../../../data";
 
 interface PortfolioSelectionModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onConfirm: (portfolios?: Record<string, number>) => void;
-  currentAllocations: Record<string, number>;
+  onConfirm: () => void;
+  onSelectPortfolio: (portfolioId: string) => void;
+  onAllocationChange: (portfolioId: string, quantity: number) => void;
+  selectedPortfolios: string[];
+  tempAllocations: Record<string, number>;
   totalQuantity: number;
-  instrumentPrice: number;
-  currency: string;
 }
 
 const PortfolioSelectionModal: React.FC<PortfolioSelectionModalProps> = ({
   isOpen,
   onClose,
   onConfirm,
-  currentAllocations,
-  totalQuantity,
-  instrumentPrice,
-  currency
+  onSelectPortfolio,
+  onAllocationChange,
+  selectedPortfolios,
+  tempAllocations,
+  totalQuantity
 }) => {
-  const [tempAllocations, setTempAllocations] = useState<Record<string, number>>({});
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedPortfolios, setSelectedPortfolios] = useState<string[]>([]);
+  const [institutionsExpanded, setInstitutionsExpanded] = useState<Record<string, boolean>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
   
-  // Initialize with current allocations when modal opens
-  useEffect(() => {
-    if (isOpen) {
-      setTempAllocations({ ...currentAllocations });
-      setSelectedPortfolios(Object.keys(currentAllocations).filter(id => currentAllocations[id] > 0));
-      setSearchQuery("");
-    }
-  }, [isOpen, currentAllocations]);
-  
-  const handleAllocationChange = (portfolioId: string, quantity: number) => {
-    setTempAllocations(prev => ({
-      ...prev,
-      [portfolioId]: quantity
-    }));
-    
-    if (quantity > 0 && !selectedPortfolios.includes(portfolioId)) {
-      setSelectedPortfolios(prev => [...prev, portfolioId]);
-    } else if (quantity === 0 && selectedPortfolios.includes(portfolioId)) {
-      setSelectedPortfolios(prev => prev.filter(id => id !== portfolioId));
-    }
-  };
-  
-  // Apply portfolio selections
-  const handleConfirm = () => {
-    onConfirm(tempAllocations);
-  };
-  
-  // Calculate current total allocation
+  // Calculate total allocation
   const totalAllocated = Object.values(tempAllocations).reduce((sum, qty) => sum + qty, 0);
-  const allocationPercentage = Math.min(100, (totalAllocated / totalQuantity) * 100);
   const remainingQuantity = totalQuantity - totalAllocated;
   
-  const isAllocationComplete = totalAllocated === totalQuantity;
-  const isAllocationExceeded = totalAllocated > totalQuantity;
+  // Calculate allocation percentage
+  const allocationPercentage = Math.min(100, (totalAllocated / totalQuantity) * 100);
   
-  // Filter institutions based on search query
-  const filteredInstitutions = searchQuery.length > 0 ? 
-    mockPortfoliosByInstitution.map(institution => ({
-      ...institution,
-      legalEntities: institution.legalEntities.map(entity => ({
-        ...entity,
-        portfolios: entity.portfolios.filter(portfolio => 
-          portfolio.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          institution.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          entity.name.toLowerCase().includes(searchQuery.toLowerCase())
+  const handleConfirm = () => {
+    setIsSubmitting(true);
+    setTimeout(() => {
+      onConfirm();
+      setIsSubmitting(false);
+    }, 300);
+  };
+  
+  const toggleInstitution = (institutionId: string) => {
+    setInstitutionsExpanded(prev => ({
+      ...prev,
+      [institutionId]: !prev[institutionId]
+    }));
+  };
+  
+  // Helper to check if a portfolio is selected
+  const isPortfolioSelected = (portfolioId: string) => {
+    return selectedPortfolios.includes(portfolioId);
+  };
+
+  // Render hierarchical portfolios list
+  const renderPortfolios = () => {
+    return mockPortfoliosByInstitution.map(institution => {
+      // Filter based on search query if present
+      const institutionMatches = institution.name.toLowerCase().includes(searchQuery.toLowerCase());
+      const hasMatchingEntities = institution.legalEntities.some(entity => 
+        entity.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        entity.portfolios?.some(portfolio => 
+          portfolio.name.toLowerCase().includes(searchQuery.toLowerCase())
         )
-      })).filter(entity => entity.portfolios.length > 0)
-    })).filter(inst => inst.legalEntities.length > 0)
-    : mockPortfoliosByInstitution;
+      );
+      
+      if (searchQuery && !institutionMatches && !hasMatchingEntities) {
+        return null;
+      }
+      
+      return (
+        <div key={institution.id} className="mb-4 border rounded-md overflow-hidden">
+          <div
+            className="flex justify-between items-center p-3 bg-gray-50 cursor-pointer hover:bg-gray-100"
+            onClick={() => toggleInstitution(institution.id)}
+          >
+            <h3 className="font-medium">{institution.name}</h3>
+            <ChevronRight 
+              className={`h-5 w-5 transition-transform ${institutionsExpanded[institution.id] ? 'rotate-90' : ''}`} 
+            />
+          </div>
+          
+          {institutionsExpanded[institution.id] && (
+            <div className="p-2">
+              {institution.legalEntities.map(entity => {
+                // Filter entity's portfolios based on search
+                const entityPortfolios = entity.portfolios?.filter(portfolio => 
+                  !searchQuery || 
+                  portfolio.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                  entity.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                  institution.name.toLowerCase().includes(searchQuery.toLowerCase())
+                );
+                
+                if (entityPortfolios?.length === 0 && searchQuery) {
+                  return null;
+                }
+                
+                return (
+                  <div key={entity.id} className="ml-4 mb-3">
+                    <h4 className="text-sm font-medium mb-2">{entity.name}</h4>
+                    <div className="space-y-2">
+                      {entityPortfolios?.map(portfolio => {
+                        const isSelected = isPortfolioSelected(portfolio.id);
+                        const currentQuantity = tempAllocations[portfolio.id] || 0;
+                        
+                        return (
+                          <div key={portfolio.id} 
+                               className={`pl-4 py-2 border-l-2 ${isSelected ? 'border-blue-400 bg-blue-50' : 'border-gray-200'}`}>
+                            <div className="flex justify-between items-center mb-1">
+                              <div className="flex items-center">
+                                <input
+                                  type="checkbox"
+                                  id={`portfolio-${portfolio.id}`}
+                                  checked={isSelected}
+                                  onChange={() => onSelectPortfolio(portfolio.id)}
+                                  className="mr-2 h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                />
+                                <label htmlFor={`portfolio-${portfolio.id}`} className="text-sm cursor-pointer">
+                                  {portfolio.name}
+                                </label>
+                              </div>
+                            </div>
+                            
+                            {isSelected && (
+                              <div className="flex items-center gap-2 mt-2 pl-6">
+                                <Input
+                                  type="number"
+                                  min="0"
+                                  max={totalQuantity}
+                                  value={currentQuantity || ""}
+                                  onChange={(e) => onAllocationChange(portfolio.id, Number(e.target.value))}
+                                  className="w-24 h-8"
+                                  placeholder="0"
+                                />
+                                
+                                {remainingQuantity > 0 ? (
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="text-xs h-8"
+                                    onClick={() => onAllocationChange(portfolio.id, currentQuantity + Math.min(remainingQuantity, 1))}
+                                  >
+                                    <Plus className="h-3 w-3 mr-1" /> Add 1
+                                  </Button>
+                                ) : null}
+                                
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  className="text-xs h-8"
+                                  onClick={() => onAllocationChange(portfolio.id, remainingQuantity > 0 ? currentQuantity + remainingQuantity : totalQuantity)}
+                                  disabled={remainingQuantity <= 0}
+                                >
+                                  <Plus className="h-3 w-3 mr-1" /> Add All Remaining
+                                </Button>
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      );
+    });
+  };
 
   return (
-    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="max-w-5xl max-h-[85vh] overflow-y-auto">
+    <Dialog open={isOpen} onOpenChange={isOpen => !isOpen && onClose()}>
+      <DialogContent className="max-w-3xl max-h-[80vh] overflow-auto">
         <DialogHeader>
           <DialogTitle>Select Destination Portfolios</DialogTitle>
         </DialogHeader>
-        
+
         <div className="py-4">
           <div className="mb-6 space-y-3">
             <div className="flex justify-between text-sm">
-              <span>Total number of shares to be allocated: {totalQuantity}</span>
+              <span>Total shares to allocate: {totalQuantity}</span>
               <span>Shares allocated: {totalAllocated}</span>
             </div>
             
@@ -108,29 +207,22 @@ const PortfolioSelectionModal: React.FC<PortfolioSelectionModalProps> = ({
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          
-          <PortfoliosList
-            institutions={filteredInstitutions}
-            allocations={tempAllocations}
-            instrumentPrice={instrumentPrice}
-            currency={currency}
-            remainingQuantity={remainingQuantity}
-            onAllocationChange={handleAllocationChange}
-          />
-          
-          {filteredInstitutions.length === 0 && (
-            <div className="text-center py-8 text-gray-500">
-              No portfolios match your search
-            </div>
-          )}
+
+          <div className="max-h-[40vh] overflow-y-auto pr-1">
+            {renderPortfolios()}
+          </div>
         </div>
-        
+
         <div className="flex justify-end gap-2 mt-4">
           <Button variant="outline" onClick={onClose}>
             Cancel
           </Button>
-          <Button onClick={handleConfirm} className="bg-black text-white hover:bg-gray-800">
-            Confirm
+          <Button 
+            className="bg-black text-white hover:bg-gray-800"
+            onClick={handleConfirm}
+            disabled={isSubmitting || selectedPortfolios.length === 0}
+          >
+            {isSubmitting ? "Confirming..." : "Confirm"}
           </Button>
         </div>
       </DialogContent>

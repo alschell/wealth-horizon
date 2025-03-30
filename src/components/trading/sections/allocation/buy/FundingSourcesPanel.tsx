@@ -77,7 +77,7 @@ const FundingSourcesPanel: React.FC<FundingSourcesPanelProps> = ({
             className="flex items-center gap-2 bg-black text-white hover:bg-gray-800"
           >
             <Plus className="h-4 w-4" />
-            Manage Funding Sources
+            Manage Funding Source(s)
           </Button>
         </div>
       )}

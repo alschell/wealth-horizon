@@ -68,8 +68,11 @@ export const useNextStepHandler = ({
         return;
       }
       
-      // Step 3: Leverage validation
-      if (currentStep === 3 && (leverage === undefined || leverage === null || leverage <= 0)) {
+      // Step 3: Allocation validation
+      // (This is step 3 now, not 4)
+      
+      // Step 4: Leverage validation
+      if (currentStep === 4 && (leverage === undefined || leverage === null || leverage <= 0)) {
         console.log("Validation failed: leverage must be greater than 0");
         toast({
           title: "Error",
@@ -79,8 +82,8 @@ export const useNextStepHandler = ({
         return;
       }
 
-      // Step 4: Broker Selection
-      if (currentStep === 4) {
+      // Step 5: Broker Selection (previously step 4)
+      if (currentStep === 5) {
         console.log("Validating broker:", selectedBroker);
         // Only validate if defined (undefined means no selection has been made)
         if (selectedBroker === undefined || selectedBroker === null) {

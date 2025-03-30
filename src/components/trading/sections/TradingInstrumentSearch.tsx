@@ -33,7 +33,7 @@ const TradingInstrumentSearch: React.FC<TradingInstrumentSearchProps> = ({
 
   return (
     <div className="space-y-6">
-      <div className="space-y-2 mb-6">
+      <div>
         <p className="text-sm text-gray-600">
           Search and select the financial instrument you wish to trade
         </p>

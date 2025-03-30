@@ -1,6 +1,5 @@
 
 import React, { useState } from "react";
-import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
@@ -27,9 +26,8 @@ const TradingBrokerSelection: React.FC<TradingBrokerSelectionProps> = ({
       )
     : mockBrokers;
 
-  // Fixed the click handler to use a callback to avoid state issues
+  // Fixed: Direct event handler that doesn't use a callback
   const handleBrokerSelect = (brokerId: string) => {
-    console.log("Selecting broker:", brokerId);
     setSelectedBroker(brokerId);
   };
 
@@ -51,7 +49,7 @@ const TradingBrokerSelection: React.FC<TradingBrokerSelectionProps> = ({
           <Input
             id="broker-search"
             type="text"
-            placeholder="Search by broker name"
+            placeholder="Search by name"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-10"
@@ -61,13 +59,14 @@ const TradingBrokerSelection: React.FC<TradingBrokerSelectionProps> = ({
       </div>
 
       {/* Best Execution Card - Made it more visible */}
-      <div 
-        className={`p-4 cursor-pointer transition-all mb-6 border rounded-lg ${
+      <button 
+        className={`w-full text-left p-4 cursor-pointer transition-all mb-6 border rounded-lg ${
           selectedBroker === "best" 
             ? "ring-2 ring-black bg-gray-50" 
             : "hover:bg-gray-50"
         }`} 
         onClick={() => handleBrokerSelect("best")}
+        type="button"
       >
         <div className="flex items-center">
           <div>
@@ -84,7 +83,7 @@ const TradingBrokerSelection: React.FC<TradingBrokerSelectionProps> = ({
             )}
           </div>
         </div>
-      </div>
+      </button>
       
       {/* Specific Brokers Section */}
       <div>
@@ -92,7 +91,7 @@ const TradingBrokerSelection: React.FC<TradingBrokerSelectionProps> = ({
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
           {filteredBrokers.map((broker) => (
-            <div 
+            <button 
               key={broker.id} 
               onClick={() => handleBrokerSelect(broker.id)}
               className={`p-4 cursor-pointer transition-all h-full rounded-lg border ${
@@ -100,6 +99,7 @@ const TradingBrokerSelection: React.FC<TradingBrokerSelectionProps> = ({
                   ? 'ring-2 ring-black bg-gray-50' 
                   : 'hover:bg-gray-50'
               }`}
+              type="button"
             >
               <div className="w-full">
                 <div className="font-medium text-sm">{broker.name}</div>
@@ -112,7 +112,7 @@ const TradingBrokerSelection: React.FC<TradingBrokerSelectionProps> = ({
                   </div>
                 )}
               </div>
-            </div>
+            </button>
           ))}
         </div>
         

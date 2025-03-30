@@ -44,19 +44,17 @@ const TradingLeverageOptions: React.FC<TradingLeverageOptionsProps> = ({
     }
   ];
 
-  // Memoized card selection handler to prevent re-renders
-  const handleCardSelection = useCallback((value: number) => {
-    if (value !== leverage) {
-      setLeverage(value);
-    }
-  }, [leverage, setLeverage]);
+  // Fixed: Use regular function declaration instead of useCallback to prevent event propagation issues
+  const handleCardSelection = (value: number) => {
+    setLeverage(value);
+  };
 
-  // Memoized slider change handler to prevent re-renders
-  const handleSliderChange = useCallback((values: number[]) => {
-    if (values.length > 0 && values[0] !== leverage) {
+  // Fixed: Use regular function declaration
+  const handleSliderChange = (values: number[]) => {
+    if (values.length > 0) {
       setLeverage(values[0]);
     }
-  }, [leverage, setLeverage]);
+  };
 
   // Function to get badge variant based on leverage value
   const getBadgeVariant = (value: number) => {
@@ -77,16 +75,17 @@ const TradingLeverageOptions: React.FC<TradingLeverageOptionsProps> = ({
         </p>
       </div>
 
-      {/* Leverage option cards - Using div elements with onClick handlers instead of button elements */}
+      {/* Leverage option cards - Wrapped in button elements for better accessibility and click handling */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {leverageOptions.map((option) => {
           const isSelected = leverage === option.value;
           const Icon = option.icon;
           
           return (
-            <div
+            <button
               key={option.value}
               onClick={() => handleCardSelection(option.value)}
+              type="button"
               className={`w-full text-left p-4 rounded-lg border transition-all cursor-pointer ${
                 isSelected ? 'ring-2 ring-black bg-white' : 'bg-white hover:bg-gray-50'
               }`}
@@ -99,12 +98,12 @@ const TradingLeverageOptions: React.FC<TradingLeverageOptionsProps> = ({
                 </p>
                 <Badge 
                   variant={(isSelected ? "default" : getBadgeVariant(option.value)) as any}
-                  className="text-white bg-opacity-90"
+                  className={isSelected ? "bg-black text-white" : ""}
                 >
                   {option.badge}
                 </Badge>
               </div>
-            </div>
+            </button>
           );
         })}
       </div>
@@ -113,7 +112,7 @@ const TradingLeverageOptions: React.FC<TradingLeverageOptionsProps> = ({
       <div className="pt-8 border-t border-gray-200 space-y-4">
         <div className="flex justify-between items-center">
           <h3 className="text-md font-medium">Custom Leverage</h3>
-          <Badge variant={getBadgeVariant(leverage) as any} className="text-white">
+          <Badge variant={getBadgeVariant(leverage) as any} className={leverage > 3 ? "bg-red-500 text-white" : ""}>
             {leverage}x
           </Badge>
         </div>

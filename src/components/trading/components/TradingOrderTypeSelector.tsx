@@ -20,7 +20,7 @@ const TradingOrderTypeSelector: React.FC<TradingOrderTypeSelectorProps> = ({
         <div className="flex gap-4">
           <Button
             type="button"
-            className={`relative flex items-center gap-2 px-4 py-2 text-sm rounded-md transition-all ${orderType === 'buy' ? 'bg-green-600 hover:bg-green-700 text-white' : 'bg-gray-100 hover:bg-gray-200 text-gray-700'}`}
+            className={`relative flex items-center gap-2 px-5 py-2.5 text-sm rounded-md transition-all ${orderType === 'buy' ? 'bg-green-600 hover:bg-green-700 text-white' : 'bg-gray-100 hover:bg-gray-200 text-gray-700'}`}
             onClick={() => setOrderType('buy')}
           >
             <ArrowDownRight className="h-4 w-4" />
@@ -29,7 +29,7 @@ const TradingOrderTypeSelector: React.FC<TradingOrderTypeSelectorProps> = ({
 
           <Button
             type="button"
-            className={`relative flex items-center gap-2 px-4 py-2 text-sm rounded-md transition-all ${orderType === 'sell' ? 'bg-red-600 hover:bg-red-700 text-white' : 'bg-gray-100 hover:bg-gray-200 text-gray-700'}`}
+            className={`relative flex items-center gap-2 px-5 py-2.5 text-sm rounded-md transition-all ${orderType === 'sell' ? 'bg-red-600 hover:bg-red-700 text-white' : 'bg-gray-100 hover:bg-gray-200 text-gray-700'}`}
             onClick={() => setOrderType('sell')}
           >
             <ArrowUpRight className="h-4 w-4" />

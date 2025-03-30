@@ -1,14 +1,15 @@
 
 import React, { useState, useEffect } from "react";
-import { 
-  OrderType,
-  TradeOrder
-} from "../types";
+import { OrderType, TradeOrder } from "../types";
 import { useToast } from "@/components/ui/use-toast";
-import { FundingSourcesSection } from "./allocation/buy/funding-sources";
-import { DestinationPortfoliosSection } from "./allocation/buy/destination-portfolios";
-import SourcePortfoliosSection from "./allocation/sell/SourcePortfoliosSection";
-import DestinationCashAccountsSection from "./allocation/sell/DestinationCashAccountsSection";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Card } from "@/components/ui/card";
+import { InfoCircle, AlertCircle } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
+// Import new allocation components
+import BuyAllocationSection from "./allocation/buy/BuyAllocationSection";
+import SellAllocationSection from "./allocation/sell/SellAllocationSection";
 
 interface TradingAllocationProps {
   orderType: OrderType;
@@ -28,110 +29,120 @@ const TradingAllocation: React.FC<TradingAllocationProps> = ({
   order,
   setOrder
 }) => {
-  console.log("TradingAllocation rendering with props:", { 
-    orderType, 
-    selectedInstrument: selectedInstrument?.symbol, 
-    quantity, 
-    price,
-    order: JSON.stringify(order)
-  });
-  
   const { toast } = useToast();
+  const [initialized, setInitialized] = useState(false);
   
-  // Initialize the allocations immediately when the component mounts
+  // Initialize order allocations on component mount
   useEffect(() => {
-    console.log("TradingAllocation initialization effect running");
-    
+    console.log("TradingAllocation - Initializing allocations");
     try {
-      // Create a new order object with initialized properties
       const updatedOrder = { ...order };
       
-      // Initialize any required allocations if they don't exist
-      if (orderType === "buy" && (!updatedOrder.fundingAllocations || updatedOrder.fundingAllocations.length === 0)) {
-        console.log("Initializing empty funding allocations");
-        updatedOrder.fundingAllocations = [];
+      // Initialize allocation arrays based on order type
+      if (orderType === "buy") {
+        updatedOrder.fundingAllocations = updatedOrder.fundingAllocations || [];
+        updatedOrder.depositAllocations = updatedOrder.depositAllocations || [];
+      } else {
+        updatedOrder.instrumentAllocations = updatedOrder.instrumentAllocations || [];
+        updatedOrder.depositAllocations = updatedOrder.depositAllocations || [];
       }
       
-      if (!updatedOrder.depositAllocations || updatedOrder.depositAllocations.length === 0) {
-        console.log("Initializing empty deposit allocations");
-        updatedOrder.depositAllocations = [];
-      }
-      
-      if (orderType === "sell" && (!updatedOrder.instrumentAllocations || updatedOrder.instrumentAllocations.length === 0)) {
-        console.log("Initializing empty instrument allocations");
-        updatedOrder.instrumentAllocations = [];
-      }
-
-      // Update the order state
-      console.log("Setting initialized order:", updatedOrder);
       setOrder(updatedOrder);
+      setInitialized(true);
     } catch (error) {
       console.error("Error initializing allocations:", error);
       toast({
-        title: "Initialization Error",
-        description: "Failed to initialize allocations. Please try again.",
+        title: "Allocation Error",
+        description: "Failed to initialize allocations. Please try refreshing.",
         variant: "destructive"
       });
     }
-  }, [orderType, setOrder, toast, order]);  // Include dependencies
-  
+  }, []);
+
+  // Calculate total amount from quantity and price
   const totalAmount = typeof quantity === 'number' && (typeof price === 'number' || selectedInstrument?.currentPrice)
     ? quantity * (typeof price === 'number' ? price : selectedInstrument?.currentPrice || 0)
     : 0;
 
-  // Default currency from the selected instrument or fallback to USD
+  // Fallback to USD if no currency specified
   const currency = selectedInstrument?.currency || "USD";
+
+  // Show loading state while initializing
+  if (!initialized) {
+    return (
+      <div className="space-y-4">
+        <h3 className="text-lg font-medium">Loading Allocation Options...</h3>
+        <div className="h-60 flex items-center justify-center">
+          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-black"></div>
+        </div>
+      </div>
+    );
+  }
+  
+  // If no instrument is selected or quantity is not set
+  if (!selectedInstrument || typeof quantity !== 'number' || quantity <= 0) {
+    return (
+      <div className="space-y-4">
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>
+            Please select an instrument and specify a valid quantity before allocating.
+          </AlertDescription>
+        </Alert>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
-      <div>
+      <div className="flex flex-col space-y-2">
         <h3 className="text-lg font-medium">
           {orderType === "buy" 
             ? "Allocate Funding & Destination" 
             : "Allocate Source & Proceeds"}
         </h3>
+        <p className="text-sm text-gray-500">
+          {orderType === "buy" 
+            ? "Specify which accounts to fund this purchase and where to deposit the acquired assets." 
+            : "Select which portfolios to sell from and where to deposit the proceeds."}
+        </p>
       </div>
+      
+      <Card className="p-4 bg-blue-50 border-blue-100">
+        <div className="flex items-start gap-2">
+          <InfoCircle className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
+          <div>
+            <p className="text-blue-700 text-sm">
+              {orderType === "buy" 
+                ? `You're allocating ${quantity} shares with a total value of approximately ${totalAmount.toLocaleString('en-US', { style: 'currency', currency })}.`
+                : `You're selling ${quantity} shares with expected proceeds of approximately ${totalAmount.toLocaleString('en-US', { style: 'currency', currency })}.`}
+            </p>
+          </div>
+        </div>
+      </Card>
 
-      {/* Allocation functionality based on order type */}
-      <div className="space-y-6">
-        {orderType === "buy" ? (
-          <>
-            <FundingSourcesSection
-              totalAmount={totalAmount}
-              order={order}
-              setOrder={setOrder}
-              currency={currency}
-              viewMode="portfolios"
-              instrumentPrice={typeof price === 'number' ? price : selectedInstrument?.currentPrice || 0}
-            />
-            
-            <DestinationPortfoliosSection
-              totalQuantity={typeof quantity === 'number' ? quantity : 0}
-              order={order}
-              setOrder={setOrder}
-            />
-          </>
-        ) : (
-          <>
-            <SourcePortfoliosSection
-              totalQuantity={typeof quantity === 'number' ? quantity : 0}
-              selectedInstrument={selectedInstrument}
-              order={order}
-              setOrder={setOrder}
-              viewMode="portfolios"
-              price={typeof price === 'number' ? price : selectedInstrument?.currentPrice || 0}
-            />
-            
-            <DestinationCashAccountsSection
-              totalAmount={totalAmount}
-              order={order}
-              setOrder={setOrder}
-              currency={currency}
-              viewMode="portfolios"
-            />
-          </>
-        )}
-      </div>
+      {/* Render appropriate allocation component based on order type */}
+      {orderType === "buy" ? (
+        <BuyAllocationSection
+          totalAmount={totalAmount}
+          quantity={typeof quantity === 'number' ? quantity : 0}
+          currency={currency}
+          selectedInstrument={selectedInstrument}
+          order={order}
+          setOrder={setOrder}
+          price={typeof price === 'number' ? price : selectedInstrument?.currentPrice || 0}
+        />
+      ) : (
+        <SellAllocationSection
+          totalAmount={totalAmount}
+          quantity={typeof quantity === 'number' ? quantity : 0}
+          currency={currency}
+          selectedInstrument={selectedInstrument}
+          order={order}
+          setOrder={setOrder}
+          price={typeof price === 'number' ? price : selectedInstrument?.currentPrice || 0}
+        />
+      )}
     </div>
   );
 };

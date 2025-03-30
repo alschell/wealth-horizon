@@ -12,7 +12,7 @@ import { useTradingForm } from "./hooks/useTradingForm";
 import { useTradingFormValidation } from "./hooks/useTradingFormValidation";
 import { OrderType } from "./types";
 import TradingLeverageOptions from "./sections/TradingLeverageOptions";
-import FormHeader from "@/components/onboarding/common/FormHeader";
+import { motion } from "framer-motion";
 
 const TradingForm: React.FC = () => {
   const [orderType, setOrderTypeLocal] = useState<OrderType>("buy");
@@ -64,30 +64,7 @@ const TradingForm: React.FC = () => {
       console.log("Setting default broker to 'best'");
       setSelectedBroker("best");
     }
-    
-    // Initialize allocation data when reaching the allocation step
-    if (currentStep === 4) {
-      console.log("Preparing allocation data");
-      setOrder(prevOrder => {
-        const updatedOrder = { ...prevOrder };
-        
-        // Initialize empty arrays for allocations if they don't exist
-        if (!updatedOrder.fundingAllocations) {
-          updatedOrder.fundingAllocations = [];
-        }
-        
-        if (!updatedOrder.depositAllocations) {
-          updatedOrder.depositAllocations = [];
-        }
-        
-        if (!updatedOrder.instrumentAllocations) {
-          updatedOrder.instrumentAllocations = [];
-        }
-        
-        return updatedOrder;
-      });
-    }
-  }, [currentStep, selectedBroker, setSelectedBroker, setOrder]);
+  }, [currentStep, selectedBroker, setSelectedBroker]);
 
   useEffect(() => {
     setOrderType(orderType);
@@ -95,7 +72,7 @@ const TradingForm: React.FC = () => {
 
   const steps = [
     { title: "Select Instrument", component: TradingInstrumentSearch },
-    { title: "Select Order Type & Validity", component: TradingOrderType },
+    { title: "Select Type & Validity", component: TradingOrderType },
     { title: "Enter Quantity & Price", component: TradingQuantityPrice },
     { title: "Set Leverage", component: TradingLeverageOptions },
     { title: "Allocate", component: TradingAllocation },
@@ -105,11 +82,16 @@ const TradingForm: React.FC = () => {
 
   return (
     <div className="max-w-4xl mx-auto py-8">
-      <div className="mb-6">
-        <FormHeader 
-          title="New Trade"
-          className="mb-8"
-        />
+      <motion.div 
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="mb-10"
+      >
+        <h1 className="text-3xl font-bold text-gray-900">New Trade</h1>
+      </motion.div>
+
+      <div className="mb-8">
         <TradingStepsProgress 
           steps={steps}
           currentStep={currentStep}

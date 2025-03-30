@@ -17,11 +17,10 @@ const SearchBar: React.FC<SearchBarProps> = ({
   return (
     <div className="relative w-full">
       <Input
-        placeholder="Search by symbol, company name, or ISIN"
+        placeholder="Search by symbol (AAPL), company name (Apple) or ISIN (US0378331005)"
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         className="pl-10"
-        disabled={isSearching}
       />
       <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
       {isSearching && (

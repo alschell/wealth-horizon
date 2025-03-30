@@ -8,7 +8,10 @@ export const useInstrumentSearch = () => {
   const [isSearching, setIsSearching] = useState(false);
 
   const performSearch = useCallback((query: string) => {
-    setIsSearching(true);
+    // Only show loading for non-empty queries
+    if (query.trim() !== "") {
+      setIsSearching(true);
+    }
     
     // Simulate API search with a timeout
     setTimeout(() => {

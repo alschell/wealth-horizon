@@ -24,12 +24,7 @@ const TradingInstrumentSearch: React.FC<TradingInstrumentSearchProps> = ({
   // Live search after each keystroke
   useEffect(() => {
     const timer = setTimeout(() => {
-      if (searchQuery) {
-        performSearch(searchQuery);
-      } else {
-        // Clear results when search is empty
-        performSearch("");
-      }
+      performSearch(searchQuery);
     }, 300); // Small debounce for better UX
 
     return () => clearTimeout(timer);

@@ -1,11 +1,10 @@
 
 import React, { useState } from "react";
+import { TradeOrder } from "../../../../types";
+import { Progress } from "@/components/ui/progress";
+import { CustomBadge } from "@/components/ui/custom-badge";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
-import { TradeOrder } from "../../../../types";
-import { AllocationSummary } from "../../AllocationSummary";
-import { mockCashAccountsFlat, mockCreditFacilitiesFlat } from "../../../../data";
-import { SelectedSourcesTable } from "./SelectedSourcesTable";
 import FundingSourceSelectionModal from "./FundingSourceSelectionModal";
 
 interface FundingSourcesSectionProps {
@@ -17,143 +16,153 @@ interface FundingSourcesSectionProps {
   instrumentPrice: number;
 }
 
-const FundingSourcesSection: React.FC<FundingSourcesSectionProps> = ({ 
-  totalAmount, 
-  currency, 
-  order, 
-  setOrder, 
-  viewMode, 
-  instrumentPrice 
+export const FundingSourcesSection: React.FC<FundingSourcesSectionProps> = ({
+  totalAmount,
+  currency,
+  order,
+  setOrder,
+  viewMode,
+  instrumentPrice
 }) => {
-  const [allocations, setAllocations] = useState<Record<string, number>>(
-    (order.fundingAllocations || []).reduce((acc, item) => {
-      acc[item.sourceId] = item.amount / instrumentPrice; // Convert amount to shares
-      return acc;
-    }, {} as Record<string, number>)
-  );
-  
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [currentAllocation, setCurrentAllocation] = useState(0);
+  const [allocations, setAllocations] = useState<Record<string, number>>({});
   
-  // Initialize current allocation
+  // Initialize allocations from order when component mounts or order changes
   React.useEffect(() => {
-    const totalShares = Object.values(allocations).reduce((sum, shares) => sum + shares, 0);
-    const totalAmount = totalShares * instrumentPrice;
-    setCurrentAllocation(totalAmount);
-  }, [allocations, instrumentPrice]);
-  
-  // Get source by ID from either cash or credit
-  const getSourceById = (sourceId: string) => {
-    return sourceId.startsWith("cash-")
-      ? mockCashAccountsFlat.find(item => item.id === sourceId)
-      : mockCreditFacilitiesFlat.find(item => item.id === sourceId);
-  };
-  
-  const handleAllocationChange = (sourceId: string, quantity: number) => {
-    updateAllocations({ ...allocations, [sourceId]: quantity });
-  };
-  
-  const updateAllocations = (newAllocations: Record<string, number>) => {
-    setAllocations(newAllocations);
+    const initialAllocations: Record<string, number> = {};
     
-    // Convert share allocations to amounts and update order
-    const fundingAllocations = Object.entries(newAllocations)
+    // Extract funding source allocations from order
+    if (order.fundingSourceAllocations) {
+      order.fundingSourceAllocations.forEach(allocation => {
+        initialAllocations[allocation.sourceId] = allocation.shares || 0;
+      });
+    }
+    
+    setAllocations(initialAllocations);
+  }, [order.fundingSourceAllocations]);
+
+  const handleConfirmSelection = (selections: Record<string, number>) => {
+    // Update local state
+    setAllocations(selections);
+    
+    // Convert to the format expected by the order
+    const fundingSourceAllocations = Object.entries(selections)
       .filter(([_, shares]) => shares > 0)
       .map(([sourceId, shares]) => {
-        const source = getSourceById(sourceId);
-        const amount = shares * instrumentPrice;
-        
         return {
           sourceId,
-          sourceType: sourceId.startsWith("cash-") ? "cash" as const : "credit" as const,
-          amount,
-          currency: source?.currency || currency
+          sourceType: sourceId.startsWith("cash-") ? "cash" : "credit",
+          shares
         };
       });
     
-    const totalShares = Object.values(newAllocations).reduce((sum, shares) => sum + shares, 0);
-    const totalAllocatedAmount = totalShares * instrumentPrice;
-    setCurrentAllocation(totalAllocatedAmount);
-    
+    // Update the order
     setOrder({
       ...order,
-      fundingAllocations
+      fundingSourceAllocations
     });
-  };
-  
-  const openModal = () => {
-    setIsModalOpen(true);
-  };
-  
-  const closeModal = () => {
+    
     setIsModalOpen(false);
   };
+
+  // Calculate total allocated shares
+  const totalShares = Object.values(allocations).reduce((sum, shares) => sum + shares, 0);
   
-  // Handle confirmation from modal
-  const handleConfirmSelections = (selections: Record<string, number>) => {
-    updateAllocations(selections);
-  };
-  
-  // Calculate remaining amount
-  const remainingAmount = totalAmount - currentAllocation;
-  
-  // Get selected source IDs (with allocations > 0)
-  const selectedSourceIds = Object.keys(allocations).filter(id => allocations[id] > 0);
+  // Calculate allocation percentage
+  const requiredShares = totalAmount / instrumentPrice;
+  const allocationPercentage = (totalShares / requiredShares) * 100;
   
   return (
-    <div className="space-y-4">
-      <div>
-        <h3 className="text-base font-medium mb-1">Funding Sources</h3>
-        <p className="text-sm text-gray-500 mb-3">
-          Select which accounts to use for funding this purchase
-        </p>
-        
-        {selectedSourceIds.length > 0 ? (
-          <div className="border rounded-md overflow-hidden">
-            <SelectedSourcesTable 
-              selectedSourceIds={selectedSourceIds}
-              allocations={allocations}
-              handleAllocationChange={handleAllocationChange}
-              getSourceById={getSourceById}
-              instrumentPrice={instrumentPrice}
-              currency={currency}
-            />
-          </div>
-        ) : (
-          <div className="text-center py-6 border border-dashed rounded-md">
-            <p className="text-gray-500 mb-2">No funding sources selected</p>
-            <Button 
-              onClick={openModal}
-              className="bg-black text-white hover:bg-gray-800"
-            >
-              <Plus className="h-4 w-4 mr-2" />
-              Add Funding Source
-            </Button>
-          </div>
-        )}
-      </div>
-      
-      <div className="flex justify-end">
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h3 className="text-lg font-semibold">Funding Sources</h3>
         <Button 
-          onClick={openModal}
-          className="bg-black text-white hover:bg-gray-800"
+          className="bg-black text-white hover:bg-gray-800 flex items-center gap-2"
+          onClick={() => setIsModalOpen(true)}
         >
-          <Plus className="h-4 w-4 mr-2" />
-          {selectedSourceIds.length > 0 ? "Manage Funding Sources" : "Add Funding Source"}
+          <Plus className="h-4 w-4" />
+          {Object.keys(allocations).length > 0 ? "Manage Sources" : "Add Sources"}
         </Button>
       </div>
       
-      <AllocationSummary
-        totalAmount={totalAmount}
-        currency={currency}
-        currentAllocation={currentAllocation}
-        remainingAmount={remainingAmount}
-      />
-      
-      <FundingSourceSelectionModal 
+      {/* Allocation Progress */}
+      <div className="space-y-2">
+        <div className="flex justify-between">
+          <span className="text-sm font-medium">Allocation Progress</span>
+          <span className="text-sm font-medium">
+            {Math.round(allocationPercentage)}% complete
+          </span>
+        </div>
+        <Progress value={allocationPercentage} />
+        <div className="flex justify-between text-sm text-gray-500">
+          <span>0 shares</span>
+          <span>
+            {Math.ceil(requiredShares)} shares ({totalAmount.toLocaleString('en-US', { 
+              style: 'currency', 
+              currency 
+            })})
+          </span>
+        </div>
+      </div>
+
+      {/* Selected funding sources */}
+      {Object.keys(allocations).length > 0 ? (
+        <div className="border rounded-md p-4 space-y-4">
+          {Object.entries(allocations)
+            .filter(([_, shares]) => shares > 0)
+            .map(([sourceId, shares]) => {
+              const sourceType = sourceId.startsWith("cash-") ? "Cash" : "Credit";
+              const estimatedAmount = shares * instrumentPrice;
+              
+              return (
+                <div key={sourceId} className="flex justify-between items-center">
+                  <div>
+                    <p className="font-medium">{sourceId}</p>
+                    <p className="text-sm text-gray-500">{sourceType} Account</p>
+                    <p className="text-sm text-gray-600">
+                      {shares} shares ({estimatedAmount.toLocaleString('en-US', { 
+                        style: 'currency', 
+                        currency 
+                      })})
+                    </p>
+                  </div>
+                  <CustomBadge variant="outline">
+                    {Math.round((shares / requiredShares) * 100)}%
+                  </CustomBadge>
+                </div>
+              );
+            })}
+            
+          {allocationPercentage < 100 && (
+            <div className="p-2 bg-amber-50 text-amber-800 text-sm rounded">
+              Warning: You still need to allocate {Math.ceil(requiredShares - totalShares)} more shares
+            </div>
+          )}
+          
+          {allocationPercentage > 100 && (
+            <div className="p-2 bg-red-50 text-red-800 text-sm rounded">
+              Warning: You've over-allocated by {Math.floor(totalShares - requiredShares)} shares
+            </div>
+          )}
+        </div>
+      ) : (
+        <div className="border border-dashed rounded-md p-8 text-center text-gray-500">
+          <p className="mb-4">No funding sources selected yet</p>
+          <Button 
+            variant="outline" 
+            className="mx-auto"
+            onClick={() => setIsModalOpen(true)}
+          >
+            Select Funding Sources
+          </Button>
+        </div>
+      )}
+
+      {/* Modal for funding source selection */}
+      <FundingSourceSelectionModal
         isOpen={isModalOpen}
-        onClose={closeModal}
-        onConfirm={handleConfirmSelections}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={handleConfirmSelection}
         totalAmount={totalAmount}
         currentAllocations={allocations}
         instrumentPrice={instrumentPrice}

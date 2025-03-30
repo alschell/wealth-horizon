@@ -59,8 +59,8 @@ const FundingSourceSelectionModal: React.FC<FundingSourceSelectionModalProps> = 
   const remainingShares = requiredShares - totalShares;
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md">
+    <Dialog open={isOpen} onOpenChange={setIsOpen => !setIsOpen && onClose()}>
+      <DialogContent className="sm:max-w-md max-h-[80vh] overflow-auto">
         <DialogHeader>
           <DialogTitle>Select Funding Sources</DialogTitle>
         </DialogHeader>

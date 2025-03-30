@@ -63,8 +63,8 @@ export const PortfolioSelectionModal: React.FC<PortfolioSelectionModalProps> = (
   const remainingQuantity = totalQuantity - totalAllocated;
   
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-4xl">
+    <Dialog open={isOpen} onOpenChange={setIsOpen => !setIsOpen && onClose()}>
+      <DialogContent className="sm:max-w-4xl max-h-[80vh] overflow-auto">
         <DialogHeader>
           <DialogTitle>Select Destination Portfolios</DialogTitle>
         </DialogHeader>

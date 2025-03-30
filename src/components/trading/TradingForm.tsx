@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from "react";
 import TradingInstrumentSearch from "./sections/TradingInstrumentSearch";
-import TradingQuantityPrice from "./sections/TradingQuantityPrice";
+import TradingQuantityPrice from "./sections/quantity-price";
 import TradingBrokerSelection from "./sections/TradingBrokerSelection";
 import TradingAllocation from "./sections/TradingAllocation";
 import TradingReview from "./sections/TradingReview";

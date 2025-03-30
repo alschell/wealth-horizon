@@ -32,21 +32,21 @@ export const FundingSourcesSection: React.FC<FundingSourcesSectionProps> = ({
     const initialAllocations: Record<string, number> = {};
     
     // Extract funding source allocations from order
-    if (order.fundingSourceAllocations) {
-      order.fundingSourceAllocations.forEach(allocation => {
+    if (order.fundingAllocations) {
+      order.fundingAllocations.forEach(allocation => {
         initialAllocations[allocation.sourceId] = allocation.shares || 0;
       });
     }
     
     setAllocations(initialAllocations);
-  }, [order.fundingSourceAllocations]);
+  }, [order.fundingAllocations]);
 
   const handleConfirmSelection = (selections: Record<string, number>) => {
     // Update local state
     setAllocations(selections);
     
     // Convert to the format expected by the order
-    const fundingSourceAllocations = Object.entries(selections)
+    const fundingAllocations = Object.entries(selections)
       .filter(([_, shares]) => shares > 0)
       .map(([sourceId, shares]) => {
         return {
@@ -59,7 +59,7 @@ export const FundingSourcesSection: React.FC<FundingSourcesSectionProps> = ({
     // Update the order
     setOrder({
       ...order,
-      fundingSourceAllocations
+      fundingAllocations
     });
     
     setIsModalOpen(false);

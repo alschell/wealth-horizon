@@ -71,13 +71,13 @@ const TradingForm: React.FC = () => {
   }, [orderType, setOrderType]);
 
   const steps = [
-    { title: "Select Instrument", component: TradingInstrumentSearch },
-    { title: "Select Type & Validity", component: TradingOrderType },
-    { title: "Enter Quantity & Price", component: TradingQuantityPrice },
-    { title: "Set Leverage", component: TradingLeverageOptions },
-    { title: "Allocate", component: TradingAllocation },
-    { title: "Select Broker", component: TradingBrokerSelection },
-    { title: "Review Order", component: TradingReview }
+    { title: "Instrument", component: TradingInstrumentSearch },
+    { title: "Type & Validity", component: TradingOrderType },
+    { title: "Quantity & Price", component: TradingQuantityPrice },
+    { title: "Leverage", component: TradingLeverageOptions },
+    { title: "Allocation", component: TradingAllocation },
+    { title: "Broker", component: TradingBrokerSelection },
+    { title: "Review", component: TradingReview }
   ];
 
   return (
@@ -86,7 +86,7 @@ const TradingForm: React.FC = () => {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="mb-10"
+        className="mb-10 text-center"
       >
         <h1 className="text-3xl font-bold text-gray-900">New Trade</h1>
       </motion.div>

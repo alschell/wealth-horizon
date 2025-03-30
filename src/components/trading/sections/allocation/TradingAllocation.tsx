@@ -1,15 +1,14 @@
 
 import React, { useState, useEffect } from "react";
-import { OrderType, TradeOrder } from "../types";
+import { OrderType, TradeOrder } from "../../types";
 import { useToast } from "@/components/ui/use-toast";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Card } from "@/components/ui/card";
 import { Info, AlertCircle } from "lucide-react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-// Import new allocation components
-import BuyAllocationSection from "./allocation/buy/BuyAllocationSection";
-import SellAllocationSection from "./allocation/sell/SellAllocationSection";
+// Import allocation section components from their correct paths
+import BuyAllocationSection from "./buy/BuyAllocationSection";
+import SellAllocationSection from "./sell/SellAllocationSection";
 
 interface TradingAllocationProps {
   orderType: OrderType;

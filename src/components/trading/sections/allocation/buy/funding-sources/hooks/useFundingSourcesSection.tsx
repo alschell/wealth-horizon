@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from "react";
-import { TradeOrder, FundingAllocation } from "@/components/trading/types";
+import { TradeOrder } from "../../../../../types";
 
 interface UseFundingSourcesSectionProps {
   totalAmount: number;
@@ -19,64 +19,77 @@ export const useFundingSourcesSection = ({
 }: UseFundingSourcesSectionProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [allocations, setAllocations] = useState<Record<string, number>>({});
-  
-  // Initialize allocations from order when component mounts or order changes
+  const [totalShares, setTotalShares] = useState(0);
+
+  // Initialize with existing allocations when component mounts
   useEffect(() => {
-    const initialAllocations: Record<string, number> = {};
-    
-    // Extract funding source allocations from order
     if (order.fundingAllocations) {
-      order.fundingAllocations.forEach(allocation => {
-        // Convert amount to shares based on instrumentPrice
-        initialAllocations[allocation.sourceId] = allocation.amount / instrumentPrice;
-      });
+      const initialAllocations = order.fundingAllocations.reduce((acc, allocation) => {
+        // Convert amount to shares based on instrument price
+        const shares = allocation.amount / instrumentPrice;
+        acc[allocation.sourceId] = shares;
+        return acc;
+      }, {} as Record<string, number>);
+      
+      setAllocations(initialAllocations);
+      
+      // Calculate total shares
+      const totalAllocatedShares = Object.values(initialAllocations)
+        .reduce((sum, shares) => sum + shares, 0);
+      
+      setTotalShares(totalAllocatedShares);
     }
-    
-    setAllocations(initialAllocations);
   }, [order.fundingAllocations, instrumentPrice]);
 
-  const handleConfirmSelection = (selections: Record<string, number>) => {
-    // Update local state
-    setAllocations(selections);
+  // Calculate required shares needed to fully fund the order
+  const requiredShares = totalAmount / instrumentPrice;
+  
+  // Calculate remaining shares needed
+  const remainingShares = requiredShares - totalShares;
+  
+  // Calculate allocation percentage
+  const allocationPercentage = Math.min(100, (totalShares / requiredShares) * 100);
+  
+  // Handle confirmation of source selection
+  const handleConfirmSelection = (newAllocations: Record<string, number>) => {
+    setAllocations(newAllocations);
     
-    // Convert to the format expected by the order
-    const fundingAllocations = Object.entries(selections)
+    // Calculate total shares in new allocations
+    const newTotalShares = Object.values(newAllocations)
+      .reduce((sum, shares) => sum + shares, 0);
+    
+    setTotalShares(newTotalShares);
+    
+    // Convert shares to amounts based on instrument price
+    const fundingAllocations = Object.entries(newAllocations)
       .filter(([_, shares]) => shares > 0)
-      .map(([sourceId, shares]): FundingAllocation => {
-        // Explicitly type the sourceType as the union type expected by FundingAllocation
-        const sourceType: "cash" | "credit" = sourceId.startsWith("cash-") ? "cash" : "credit";
+      .map(([sourceId, shares]) => {
+        // Determine source type based on sourceId prefix if available
+        const sourceType = sourceId.startsWith('cash_') ? 'cash' : 'credit';
         
         return {
           sourceId,
-          sourceType,
+          sourceType: sourceType as 'cash' | 'credit',
           amount: shares * instrumentPrice,
-          currency: currency
+          currency
         };
       });
     
-    // Update the order
+    // Update order state
     setOrder({
       ...order,
       fundingAllocations
     });
-    
-    setIsModalOpen(false);
   };
-  
-  // Calculate allocation statistics
-  const totalShares = Object.values(allocations).reduce((sum, shares) => sum + shares, 0);
-  const requiredShares = totalAmount / instrumentPrice;
-  const allocationPercentage = (totalShares / requiredShares) * 100;
-  const remainingShares = requiredShares - totalShares;
-  
+
   return {
     isModalOpen,
     setIsModalOpen,
     allocations,
     totalShares,
     requiredShares,
-    allocationPercentage,
     remainingShares,
+    allocationPercentage,
     handleConfirmSelection
   };
 };

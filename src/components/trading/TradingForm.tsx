@@ -107,7 +107,7 @@ const TradingForm: React.FC = () => {
         />
       </div>
 
-      {currentStep === 0 && <MarketInsights className="mb-8" />}
+      {currentStep === 0 && <MarketInsights />}
 
       <TradingFormContent
         currentStep={currentStep}

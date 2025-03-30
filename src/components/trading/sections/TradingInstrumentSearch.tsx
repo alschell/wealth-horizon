@@ -1,63 +1,71 @@
 
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useInstrumentSearch } from "../hooks/useInstrumentSearch";
+import SearchBar from "../components/instrument-search/SearchBar";
 import InstrumentResultsTable from "../components/instrument-search/InstrumentResultsTable";
 import SelectedInstrumentCard from "../components/instrument-search/SelectedInstrumentCard";
 import NoResultsMessage from "../components/instrument-search/NoResultsMessage";
-import { OrderType } from "../types";
-import SearchBar from "../components/instrument-search/SearchBar";
 
 interface TradingInstrumentSearchProps {
-  orderType: OrderType;
-  selectedInstrument: any;
   setSelectedInstrument: (instrument: any) => void;
+  selectedInstrument: any;
+  orderType: string;
 }
 
-const TradingInstrumentSearch: React.FC<TradingInstrumentSearchProps> = ({
-  orderType, 
+const TradingInstrumentSearch: React.FC<TradingInstrumentSearchProps> = ({ 
+  setSelectedInstrument, 
   selectedInstrument,
-  setSelectedInstrument
+  orderType
 }) => {
-  const [searchQuery, setSearchQuery] = useState("");
-  const { results, isSearching, performSearch } = useInstrumentSearch();
-
-  // Live search after each keystroke
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      performSearch(searchQuery);
-    }, 300); // Small debounce for better UX
-
-    return () => clearTimeout(timer);
-  }, [searchQuery, performSearch]);
-
-  const handleSelectInstrument = (instrument: any) => {
-    setSelectedInstrument(instrument);
-  };
+  const {
+    searchQuery,
+    setSearchQuery,
+    searchResults,
+    isLoading,
+    error,
+    handleSelectInstrument,
+    clearSelectedInstrument
+  } = useInstrumentSearch({
+    setSelectedInstrument,
+    orderType
+  });
 
   return (
     <div className="space-y-6">
-      <div className="space-y-6">
-        <div className="relative">
-          <SearchBar
-            searchTerm={searchQuery}
-            setSearchTerm={setSearchQuery}
-            isSearching={isSearching}
-          />
-        </div>
-
-        {results.length > 0 && (
-          <InstrumentResultsTable 
-            searchResults={results} 
-            selectedInstrument={selectedInstrument}
-            onSelectInstrument={handleSelectInstrument}
-          />
-        )}
-        
-        {results.length === 0 && searchQuery.trim() !== "" && !isSearching && (
-          <NoResultsMessage searchTerm={searchQuery} />
-        )}
-
+      <div>
+        <h2 className="text-xl font-medium mb-2">
+          Instrument <span className="text-red-500">*</span>
+        </h2>
+        <p className="text-sm text-gray-600">
+          Search for an instrument to {orderType === "buy" ? "buy" : "sell"}.
+        </p>
       </div>
+
+      {!selectedInstrument ? (
+        <div className="space-y-4">
+          <SearchBar
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            isLoading={isLoading}
+          />
+
+          {error ? (
+            <div className="text-red-500 text-sm">{error}</div>
+          ) : searchQuery && searchResults.length === 0 && !isLoading ? (
+            <NoResultsMessage searchQuery={searchQuery} />
+          ) : searchResults.length > 0 ? (
+            <InstrumentResultsTable
+              searchResults={searchResults}
+              onSelectInstrument={handleSelectInstrument}
+            />
+          ) : null}
+        </div>
+      ) : (
+        <SelectedInstrumentCard
+          instrument={selectedInstrument}
+          onClear={clearSelectedInstrument}
+        />
+      )}
     </div>
   );
 };

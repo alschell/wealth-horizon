@@ -5,8 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { Search, AlertCircle, Check, ChevronRight } from "lucide-react";
-import { mockPortfoliosByInstitution } from "@/components/trading/data";
+import { Search, AlertCircle, Check } from "lucide-react";
 import { CashAccountsList } from "./components/CashAccountsList";
 import { CreditFacilitiesList } from "./components/CreditFacilitiesList";
 
@@ -33,7 +32,6 @@ export const SourceSelectionModal: React.FC<SourceSelectionModalProps> = ({
   const [tempAllocations, setTempAllocations] = useState<Record<string, number>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [institutionsExpanded, setInstitutionsExpanded] = useState<Record<string, boolean>>({});
   
   // Initialize with current allocations when modal opens
   useEffect(() => {
@@ -41,13 +39,6 @@ export const SourceSelectionModal: React.FC<SourceSelectionModalProps> = ({
       setTempAllocations({ ...currentAllocations });
       setIsSubmitting(false);
       setSearchQuery("");
-      
-      // Initialize all institutions as expanded
-      const expandedState: Record<string, boolean> = {};
-      mockPortfoliosByInstitution.forEach(institution => {
-        expandedState[institution.id] = true;
-      });
-      setInstitutionsExpanded(expandedState);
     }
   }, [isOpen, currentAllocations]);
   
@@ -67,13 +58,6 @@ export const SourceSelectionModal: React.FC<SourceSelectionModalProps> = ({
       onClose();
       setIsSubmitting(false);
     }, 300);
-  };
-  
-  const toggleInstitution = (institutionId: string) => {
-    setInstitutionsExpanded(prev => ({
-      ...prev,
-      [institutionId]: !prev[institutionId]
-    }));
   };
   
   // Calculate remaining shares needed

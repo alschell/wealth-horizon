@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { Search, Plus, ChevronRight } from "lucide-react";
+import { Search, Plus, ChevronRight, Check } from "lucide-react";
 import { 
   mockPortfoliosByInstitution
 } from "../../../../data";
@@ -73,6 +73,20 @@ const PortfolioSelectionModal: React.FC<PortfolioSelectionModalProps> = ({
     return selectedPortfolios.includes(portfolioId);
   };
 
+  const handleInputChange = (portfolioId: string, value: string) => {
+    // Allow empty value to clear the input
+    if (value === '') {
+      onAllocationChange(portfolioId, 0);
+      return;
+    }
+    
+    // Convert to number and update
+    const numValue = Number(value);
+    if (!isNaN(numValue)) {
+      onAllocationChange(portfolioId, numValue);
+    }
+  };
+
   // Render hierarchical portfolios list
   const renderPortfolios = () => {
     return mockPortfoliosByInstitution.map(institution => {
@@ -112,7 +126,7 @@ const PortfolioSelectionModal: React.FC<PortfolioSelectionModalProps> = ({
                   institution.name.toLowerCase().includes(searchQuery.toLowerCase())
                 );
                 
-                if (entityPortfolios?.length === 0 && searchQuery) {
+                if (!entityPortfolios || entityPortfolios.length === 0 && searchQuery) {
                   return null;
                 }
                 
@@ -126,8 +140,8 @@ const PortfolioSelectionModal: React.FC<PortfolioSelectionModalProps> = ({
                         
                         return (
                           <div key={portfolio.id} 
-                               className={`pl-4 py-2 border-l-2 ${isSelected ? 'border-blue-400 bg-blue-50' : 'border-gray-200'}`}>
-                            <div className="flex justify-between items-center mb-1">
+                               className={`p-3 border rounded-md ${isSelected ? 'bg-blue-50 border-blue-200' : ''}`}>
+                            <div className="flex items-center justify-between">
                               <div className="flex items-center">
                                 <input
                                   type="checkbox"
@@ -142,40 +156,40 @@ const PortfolioSelectionModal: React.FC<PortfolioSelectionModalProps> = ({
                               </div>
                             </div>
                             
-                            {isSelected && (
-                              <div className="flex items-center gap-2 mt-2 pl-6">
-                                <Input
-                                  type="number"
-                                  min="0"
-                                  max={totalQuantity}
-                                  value={currentQuantity || ""}
-                                  onChange={(e) => onAllocationChange(portfolio.id, Number(e.target.value))}
-                                  className="w-24 h-8"
-                                  placeholder="0"
-                                />
-                                
-                                {remainingQuantity > 0 ? (
-                                  <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    className="text-xs h-8"
-                                    onClick={() => onAllocationChange(portfolio.id, currentQuantity + Math.min(remainingQuantity, 1))}
-                                  >
-                                    <Plus className="h-3 w-3 mr-1" /> Add 1
-                                  </Button>
-                                ) : null}
-                                
+                            <div className="flex flex-wrap gap-2 items-center mt-3">
+                              <Input
+                                type="number"
+                                min="0"
+                                max={totalQuantity}
+                                value={currentQuantity || ''}
+                                onChange={(e) => handleInputChange(portfolio.id, e.target.value)}
+                                className="w-24 h-9"
+                                placeholder="0"
+                                disabled={!isSelected}
+                              />
+                              
+                              {isSelected && remainingQuantity > 0 && (
                                 <Button
-                                  variant="ghost"
+                                  variant="outline"
                                   size="sm"
-                                  className="text-xs h-8"
-                                  onClick={() => onAllocationChange(portfolio.id, remainingQuantity > 0 ? currentQuantity + remainingQuantity : totalQuantity)}
-                                  disabled={remainingQuantity <= 0}
+                                  className="h-9 text-xs"
+                                  onClick={() => onAllocationChange(portfolio.id, currentQuantity + 1)}
+                                >
+                                  <Plus className="h-3 w-3 mr-1" /> Add 1
+                                </Button>
+                              )}
+                              
+                              {isSelected && remainingQuantity > 0 && (
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  className="h-9 text-xs"
+                                  onClick={() => onAllocationChange(portfolio.id, currentQuantity + remainingQuantity)}
                                 >
                                   <Plus className="h-3 w-3 mr-1" /> Add All Remaining
                                 </Button>
-                              </div>
-                            )}
+                              )}
+                            </div>
                           </div>
                         );
                       })}

@@ -1,21 +1,17 @@
 
 import React from "react";
-import { Card } from "@/components/ui/card";
-import { Clock } from "lucide-react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { OrderType } from "../types";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
+import { cn } from "@/lib/utils";
 
 interface TradingOrderTypeProps {
-  orderType: OrderType;
   orderExecutionType: string;
   setOrderExecutionType: (type: string) => void;
   timeInForce: string;
-  setTimeInForce: (time: string) => void;
-  [key: string]: any;
+  setTimeInForce: (timeInForce: string) => void;
 }
 
 const TradingOrderType: React.FC<TradingOrderTypeProps> = ({
-  orderType,
   orderExecutionType,
   setOrderExecutionType,
   timeInForce,
@@ -24,79 +20,68 @@ const TradingOrderType: React.FC<TradingOrderTypeProps> = ({
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-medium mb-4">
-          Execution Type <span className="text-red-500">*</span>
-        </h3>
-        <div className="space-y-4">
-          <Card 
-            className={`p-4 cursor-pointer transition-all ${orderExecutionType === 'market' ? 'ring-2 ring-black' : 'hover:bg-gray-50'}`}
-            onClick={() => setOrderExecutionType('market')}
-          >
-            <div className="flex items-start">
-              <div className="w-full">
-                <div className="font-medium">Market Order</div>
-                <p className="text-sm text-gray-600 mt-1">
-                  Execute at the current market price. The order is filled immediately at the best available price.
-                </p>
-              </div>
-            </div>
-          </Card>
-
-          <Card 
-            className={`p-4 cursor-pointer transition-all ${orderExecutionType === 'limit' ? 'ring-2 ring-black' : 'hover:bg-gray-50'}`}
-            onClick={() => setOrderExecutionType('limit')}
-          >
-            <div className="flex items-start">
-              <div className="w-full">
-                <div className="font-medium">Limit Order</div>
-                <p className="text-sm text-gray-600 mt-1">
-                  Execute at a specified price or better. The order will only be filled at your price or better.
-                </p>
-              </div>
-            </div>
-          </Card>
-
-          <Card 
-            className={`p-4 cursor-pointer transition-all ${orderExecutionType === 'stop' ? 'ring-2 ring-black' : 'hover:bg-gray-50'}`}
-            onClick={() => setOrderExecutionType('stop')}
-          >
-            <div className="flex items-start">
-              <div className="w-full">
-                <div className="font-medium">Stop Order</div>
-                <p className="text-sm text-gray-600 mt-1">
-                  Becomes a market order when a specified price is reached. Helps limit losses or protect profits.
-                </p>
-              </div>
-            </div>
-          </Card>
-        </div>
+        <h2 className="text-xl font-medium mb-2">
+          Order <span className="text-red-500">*</span>
+        </h2>
+        <p className="text-sm text-gray-600">Select order execution type and time-in-force.</p>
       </div>
-
-      <div className="mt-8">
-        <div className="flex items-center gap-2 mb-4">
-          <Clock className="h-5 w-5 text-gray-600" />
-          <h3 className="text-lg font-medium">Time in Force</h3>
-          <span className="text-red-500">*</span>
+      
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="space-y-4">
+          <h3 className="font-medium">Execution Type</h3>
+          
+          <RadioGroup 
+            defaultValue={orderExecutionType}
+            value={orderExecutionType}
+            onValueChange={setOrderExecutionType}
+            className="space-y-3"
+          >
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="market" id="market" />
+              <Label htmlFor="market" className="cursor-pointer">Market</Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="limit" id="limit" />
+              <Label htmlFor="limit" className="cursor-pointer">Limit</Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="stop" id="stop" />
+              <Label htmlFor="stop" className="cursor-pointer">Stop</Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="stop-limit" id="stop-limit" />
+              <Label htmlFor="stop-limit" className="cursor-pointer">Stop-Limit</Label>
+            </div>
+          </RadioGroup>
         </div>
         
-        <Select value={timeInForce} onValueChange={setTimeInForce}>
-          <SelectTrigger className="w-full data-[state=open]:ring-2 data-[state=open]:ring-black">
-            <SelectValue placeholder="Select duration" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="day">Day Only (expires at end of trading day)</SelectItem>
-            <SelectItem value="gtc">Good Till Canceled (GTC)</SelectItem>
-            <SelectItem value="fok">Fill or Kill (FOK)</SelectItem>
-            <SelectItem value="ioc">Immediate or Cancel (IOC)</SelectItem>
-          </SelectContent>
-        </Select>
-        
-        <p className="text-sm text-gray-500 mt-2">
-          {timeInForce === 'day' && "Order will be active until the end of the current trading day."}
-          {timeInForce === 'gtc' && "Order will remain active until it is executed or you cancel it."}
-          {timeInForce === 'fok' && "Order must be filled immediately in its entirety or it will be canceled."}
-          {timeInForce === 'ioc' && "Any portion of the order that cannot be filled immediately will be canceled."}
-        </p>
+        <div className="space-y-4">
+          <h3 className="font-medium">Time in Force</h3>
+          
+          <RadioGroup 
+            defaultValue={timeInForce}
+            value={timeInForce}
+            onValueChange={setTimeInForce}
+            className="space-y-3"
+          >
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="day" id="day" />
+              <Label htmlFor="day" className="cursor-pointer">Day</Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="gtc" id="gtc" />
+              <Label htmlFor="gtc" className="cursor-pointer">Good Till Cancelled (GTC)</Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="ioc" id="ioc" />
+              <Label htmlFor="ioc" className="cursor-pointer">Immediate or Cancel (IOC)</Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="fok" id="fok" />
+              <Label htmlFor="fok" className="cursor-pointer">Fill or Kill (FOK)</Label>
+            </div>
+          </RadioGroup>
+        </div>
       </div>
     </div>
   );

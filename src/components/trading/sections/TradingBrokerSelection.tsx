@@ -36,9 +36,9 @@ const TradingBrokerSelection: React.FC<TradingBrokerSelectionProps> = ({
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-medium mb-2">Select Broker</h3>
+        <h3 className="text-lg font-medium mb-2">Select Execution Method</h3>
         <p className="text-sm text-gray-600">
-          Choose which broker should execute this trade or select "Best Execution" to automatically route to the most favorable broker.
+          Choose either "Best Execution" to automatically route to the most favorable broker, or select a specific broker to execute this trade.
         </p>
       </div>
 
@@ -60,47 +60,59 @@ const TradingBrokerSelection: React.FC<TradingBrokerSelectionProps> = ({
         </div>
       </div>
 
-      {/* Best Execution Card */}
-      <Card 
-        className={`p-3 cursor-pointer transition-all mb-4 ${selectedBroker === "best" ? "ring-2 ring-black" : "hover:bg-gray-50"}`} 
+      {/* Best Execution Card - Made it more visible */}
+      <div 
+        className={`p-4 cursor-pointer transition-all mb-6 border rounded-lg ${
+          selectedBroker === "best" 
+            ? "ring-2 ring-black bg-gray-50" 
+            : "hover:bg-gray-50"
+        }`} 
         onClick={() => handleBrokerSelect("best")}
       >
         <div className="flex items-center">
           <div>
             <h4 className="text-base font-semibold">Best Execution</h4>
-            <p className="text-xs text-gray-600">Automatically route to optimal broker</p>
+            <p className="text-xs text-gray-600 mt-1">Automatically route to optimal broker</p>
+            {selectedBroker === "best" && (
+              <p className="text-green-600 text-xs mt-2">Currently selected</p>
+            )}
           </div>
           <div className="ml-auto flex items-center">
-            <span className="text-green-600 text-xs mr-2">Recommended</span>
+            <span className="text-green-600 text-xs mr-2 font-medium">Recommended</span>
             {selectedBroker === "best" && (
-              <span className="bg-black text-white text-xs px-2 py-0.5 rounded">Selected</span>
+              <span className="bg-black text-white text-xs px-2 py-1 rounded">Selected</span>
             )}
           </div>
         </div>
-      </Card>
+      </div>
       
-      {/* Specific Brokers Grid */}
+      {/* Specific Brokers Section */}
       <div>
         <h4 className="text-base font-medium mb-3">Specific Brokers</h4>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
           {filteredBrokers.map((broker) => (
-            <Card 
+            <div 
               key={broker.id} 
-              className={`p-3 cursor-pointer transition-all h-full ${selectedBroker === broker.id ? 'ring-2 ring-black' : 'hover:bg-gray-50'}`}
               onClick={() => handleBrokerSelect(broker.id)}
+              className={`p-4 cursor-pointer transition-all h-full rounded-lg border ${
+                selectedBroker === broker.id 
+                  ? 'ring-2 ring-black bg-gray-50' 
+                  : 'hover:bg-gray-50'
+              }`}
             >
               <div className="w-full">
                 <div className="font-medium text-sm">{broker.name}</div>
                 <p className="text-xs text-gray-600 mt-1 line-clamp-2">{broker.description}</p>
                 {broker.fee && <p className="text-xs text-gray-700 mt-1">Fee: {broker.fee}</p>}
                 {selectedBroker === broker.id && (
-                  <div className="mt-2">
+                  <div className="mt-2 flex justify-between items-center">
+                    <span className="text-green-600 text-xs">Currently selected</span>
                     <span className="bg-black text-white text-xs px-2 py-0.5 rounded">Selected</span>
                   </div>
                 )}
               </div>
-            </Card>
+            </div>
           ))}
         </div>
         

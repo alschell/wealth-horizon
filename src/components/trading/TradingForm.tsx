@@ -43,7 +43,7 @@ const TradingForm: React.FC = () => {
     setLeverage
   } = useTradingForm(orderType);
 
-  // Validation hook - Remove leverage from validation
+  // Validation hook
   const { nextButtonDisabled } = useTradingFormValidation({
     currentStep,
     selectedInstrument,
@@ -72,11 +72,11 @@ const TradingForm: React.FC = () => {
 
   // Added Leverage step between Allocation and Broker
   const steps = [
-    { title: "Instrument", component: TradingInstrumentSearch },
+    { title: "Order & Instrument", component: TradingInstrumentSearch },
     { title: "Type & Validity", component: TradingOrderType },
     { title: "Quantity & Price", component: TradingQuantityPrice },
     { title: "Allocation", component: TradingAllocation },
-    { title: "Leverage", component: TradingLeverageOptions }, // New step
+    { title: "Leverage", component: TradingLeverageOptions }, 
     { title: "Broker", component: TradingBrokerSelection },
     { title: "Review", component: TradingReview }
   ];

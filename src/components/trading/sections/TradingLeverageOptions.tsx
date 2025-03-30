@@ -44,14 +44,16 @@ const TradingLeverageOptions: React.FC<TradingLeverageOptionsProps> = ({
     }
   ];
 
-  // Function to handle card selection
+  // Function to handle card selection - reimplemented to avoid issues
   const handleCardSelection = (value: number) => {
-    setLeverage(value);
+    if (value !== leverage) {
+      setLeverage(value);
+    }
   };
 
-  // Function to handle slider change
+  // Function to handle slider change - reimplemented to avoid issues
   const handleSliderChange = (values: number[]) => {
-    if (values.length > 0) {
+    if (values.length > 0 && values[0] !== leverage) {
       setLeverage(values[0]);
     }
   };
@@ -103,7 +105,7 @@ const TradingLeverageOptions: React.FC<TradingLeverageOptionsProps> = ({
         ))}
       </div>
 
-      {/* Custom leverage slider */}
+      {/* Custom leverage slider - rewritten to avoid state update issues */}
       <div className="pt-8 border-t border-gray-200 space-y-4">
         <div className="flex justify-between items-center">
           <h3 className="text-md font-medium">Custom Leverage</h3>
@@ -120,6 +122,7 @@ const TradingLeverageOptions: React.FC<TradingLeverageOptionsProps> = ({
             step={0.5} 
             onValueChange={handleSliderChange}
             className="py-4"
+            aria-label="Adjust leverage"
           />
           <div className="flex justify-between text-xs text-gray-500">
             <span>1x (No Leverage)</span>

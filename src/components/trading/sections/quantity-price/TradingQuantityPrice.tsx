@@ -1,11 +1,12 @@
 
 import React from "react";
-import { Instrument, OrderType, TradeOrder } from "../../types";
+import { Instrument, OrderType } from "../../types";
 import NoInstrumentSelected from "./components/NoInstrumentSelected";
 import QuantityInput from "./components/QuantityInput";
 import PriceInput from "./components/PriceInput";
 import MarketOrderAlert from "./components/MarketOrderAlert";
 import OrderSummary from "./components/OrderSummary";
+import { useQuantityPrice } from "./hooks/useQuantityPrice";
 
 interface TradingQuantityPriceProps {
   selectedInstrument: Instrument | null;
@@ -31,16 +32,22 @@ const TradingQuantityPrice: React.FC<TradingQuantityPriceProps> = ({
     return <NoInstrumentSelected />;
   }
 
-  // Calculate total amount if both quantity and price are valid numbers
-  const totalAmount =
-    typeof quantity === "number" &&
-    ((typeof price === "number" && price > 0) ||
-      (orderExecutionType === "market" && selectedInstrument.currentPrice > 0))
-      ? quantity *
-        (orderExecutionType === "market" && typeof price !== "number"
-          ? selectedInstrument.currentPrice
-          : price)
-      : 0;
+  // Use our custom hook for quantity and price logic
+  const {
+    total,
+    quantityPercent,
+    maxRecommendedQuantity,
+    handleQuantityChange,
+    handleQuantitySliderChange,
+    handlePriceChange
+  } = useQuantityPrice({
+    selectedInstrument,
+    quantity,
+    setQuantity,
+    price,
+    setPrice,
+    orderExecutionType
+  });
 
   return (
     <div className="space-y-6">
@@ -59,25 +66,32 @@ const TradingQuantityPrice: React.FC<TradingQuantityPriceProps> = ({
       <div className="space-y-4">
         <QuantityInput
           quantity={quantity}
-          setQuantity={setQuantity}
-          selectedInstrument={selectedInstrument}
+          onQuantityChange={handleQuantityChange}
+          quantityPercent={quantityPercent}
+          onSliderChange={handleQuantitySliderChange}
+          orderType={orderType}
+          maxRecommendedQuantity={maxRecommendedQuantity}
         />
 
-        <PriceInput
-          price={price}
-          setPrice={setPrice}
-          selectedInstrument={selectedInstrument}
-          orderExecutionType={orderExecutionType}
-        />
+        {orderExecutionType !== "market" && (
+          <PriceInput
+            price={price}
+            onPriceChange={handlePriceChange}
+            selectedInstrument={selectedInstrument}
+            orderExecutionType={orderExecutionType}
+          />
+        )}
 
         {(typeof quantity === "number" && quantity > 0) &&
           ((typeof price === "number" && price > 0) ||
             (orderExecutionType === "market" && selectedInstrument.currentPrice > 0)) && (
             <OrderSummary
-              quantity={quantity}
-              totalAmount={totalAmount}
-              currency={selectedInstrument.currency}
+              selectedInstrument={selectedInstrument}
               orderType={orderType}
+              orderExecutionType={orderExecutionType}
+              quantity={quantity}
+              price={price}
+              total={total}
             />
           )}
       </div>

@@ -49,7 +49,7 @@ export const AccountItem: React.FC<AccountItemProps> = ({
             value={currentShares || ""}
             onChange={(e) => handleAllocationChange(account.id, Number(e.target.value))}
             className="w-full"
-            placeholder="Number of shares"
+            placeholder="Number of funded shares"
           />
           <Button
             variant="outline"
@@ -66,7 +66,7 @@ export const AccountItem: React.FC<AccountItemProps> = ({
         
         {currentShares > 0 && (
           <p className="text-sm text-gray-600">
-            Est. amount: {estimatedAmount.toLocaleString('en-US', {
+            Est. debit amount: {estimatedAmount.toLocaleString('en-US', {
               style: 'currency', 
               currency: account.currency
             })}

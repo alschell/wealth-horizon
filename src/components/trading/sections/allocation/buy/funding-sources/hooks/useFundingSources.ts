@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from "react";
-import { TradeOrder } from "@/components/trading/types";
+import { TradeOrder, FundingAllocation } from "@/components/trading/types";
 import { 
   mockPortfoliosByInstitution, 
   mockCashAccountsFlat,
@@ -57,7 +57,7 @@ export const useFundingSources = ({
     if (order && setOrder) {
       const fundingAllocations = Object.entries(updatedAllocations)
         .filter(([_, amount]) => amount > 0)
-        .map(([sourceId, amount]) => {
+        .map(([sourceId, amount]): FundingAllocation => {
           // Explicitly cast sourceType as "cash" | "credit" to ensure type safety
           const sourceType = sourceId.startsWith('cash-') ? 'cash' : 'credit' as "cash" | "credit";
           const source = getSourceById(sourceId);
@@ -99,7 +99,7 @@ export const useFundingSources = ({
   // Open sheet for selecting a funding source
   const openSourcesSheet = () => {
     setSourcesSheetOpen(true);
-    setTempAllocations(allocations);
+    setTempAllocations({...allocations});
   };
 
   // Apply temporary allocations

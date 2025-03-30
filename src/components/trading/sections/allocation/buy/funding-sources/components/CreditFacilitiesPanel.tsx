@@ -1,71 +1,40 @@
 
 import React from "react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { FacilityItem } from "./FacilityItem";
 import { mockCreditFacilitiesFlat } from "@/components/trading/data";
 
 interface CreditFacilitiesPanelProps {
   tempAllocations: Record<string, number>;
-  handleTempAllocationChange: (sourceId: string, amount: number) => void;
+  handleTempAllocationChange: (sourceId: string, quantity: number) => void;
   totalAmount: number;
   instrumentPrice: number;
 }
 
-export const CreditFacilitiesPanel: React.FC<CreditFacilitiesPanelProps> = ({
+export const CreditFacilitiesList: React.FC<CreditFacilitiesPanelProps> = ({
   tempAllocations,
   handleTempAllocationChange,
   totalAmount,
   instrumentPrice
 }) => {
+  // Calculate remaining shares
+  const requiredShares = totalAmount / instrumentPrice;
+  const allocatedShares = Object.values(tempAllocations).reduce((sum, qty) => sum + qty, 0);
+  const remainingShares = requiredShares - allocatedShares;
+  
   return (
-    <div className="mt-4 space-y-4">
-      {mockCreditFacilitiesFlat.map(facility => {
-        const isSelected = Boolean(tempAllocations[facility.id]);
-        const maxSharesAllowed = Math.floor(facility.available / instrumentPrice);
-        
-        return (
-          <div key={facility.id} className="p-4 border rounded-md">
-            <div className="flex justify-between items-start mb-2">
-              <div>
-                <h4 className="font-medium">{facility.name}</h4>
-                <p className="text-xs text-gray-500">{facility.currency} Credit Line</p>
-              </div>
-              <div className="text-sm text-right">
-                <div>Available</div>
-                <div className="font-semibold">
-                  {facility.available.toLocaleString('en-US', {
-                    style: 'currency',
-                    currency: facility.currency
-                  })}
-                </div>
-              </div>
-            </div>
-            
-            <div className="flex items-center gap-2 mt-4">
-              <Input
-                type="number"
-                min="0"
-                max={maxSharesAllowed}
-                value={tempAllocations[facility.id] || ""}
-                onChange={(e) => handleTempAllocationChange(facility.id, Number(e.target.value))}
-                className="w-full"
-                placeholder="0.00"
-              />
-              <Button
-                variant="outline"
-                size="sm"
-                className="whitespace-nowrap"
-                onClick={() => handleTempAllocationChange(
-                  facility.id,
-                  Math.min(maxSharesAllowed, totalAmount / instrumentPrice)
-                )}
-              >
-                Max
-              </Button>
-            </div>
-          </div>
-        );
-      })}
+    <div className="space-y-4 mt-4 max-h-96 overflow-y-auto pr-1">
+      {mockCreditFacilitiesFlat.map((facility) => (
+        <FacilityItem
+          key={facility.id}
+          facility={facility}
+          currentShares={tempAllocations[facility.id] || 0}
+          instrumentPrice={instrumentPrice}
+          handleAllocationChange={handleTempAllocationChange}
+          remainingShares={remainingShares}
+        />
+      ))}
     </div>
   );
 };
+
+export const CreditFacilitiesPanel = CreditFacilitiesList;

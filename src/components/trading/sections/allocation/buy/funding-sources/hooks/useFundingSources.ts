@@ -58,7 +58,8 @@ export const useFundingSources = ({
       const fundingAllocations = Object.entries(updatedAllocations)
         .filter(([_, amount]) => amount > 0)
         .map(([sourceId, amount]) => {
-          const sourceType = sourceId.startsWith('cash-') ? 'cash' : 'credit';
+          // Explicitly cast sourceType as "cash" | "credit" to ensure type safety
+          const sourceType = sourceId.startsWith('cash-') ? 'cash' : 'credit' as "cash" | "credit";
           const source = getSourceById(sourceId);
           return {
             sourceId,

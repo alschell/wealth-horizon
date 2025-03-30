@@ -8,17 +8,20 @@ interface CashAccountsPanelProps {
   tempAllocations: Record<string, number>;
   handleTempAllocationChange: (sourceId: string, amount: number) => void;
   totalAmount: number;
+  instrumentPrice: number;
 }
 
 export const CashAccountsPanel: React.FC<CashAccountsPanelProps> = ({
   tempAllocations,
   handleTempAllocationChange,
-  totalAmount
+  totalAmount,
+  instrumentPrice
 }) => {
   return (
     <div className="mt-4 space-y-4">
       {mockCashAccountsFlat.map(account => {
         const isSelected = Boolean(tempAllocations[account.id]);
+        const maxSharesAllowed = Math.floor(account.balance / instrumentPrice);
         
         return (
           <div key={account.id} className="p-4 border rounded-md">
@@ -42,7 +45,7 @@ export const CashAccountsPanel: React.FC<CashAccountsPanelProps> = ({
               <Input
                 type="number"
                 min="0"
-                max={account.balance}
+                max={maxSharesAllowed}
                 value={tempAllocations[account.id] || ""}
                 onChange={(e) => handleTempAllocationChange(account.id, Number(e.target.value))}
                 className="w-full"
@@ -54,7 +57,7 @@ export const CashAccountsPanel: React.FC<CashAccountsPanelProps> = ({
                 className="whitespace-nowrap"
                 onClick={() => handleTempAllocationChange(
                   account.id,
-                  Math.min(account.balance, totalAmount)
+                  Math.min(maxSharesAllowed, totalAmount / instrumentPrice)
                 )}
               >
                 Max

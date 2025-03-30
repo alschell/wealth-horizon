@@ -8,17 +8,20 @@ interface CreditFacilitiesPanelProps {
   tempAllocations: Record<string, number>;
   handleTempAllocationChange: (sourceId: string, amount: number) => void;
   totalAmount: number;
+  instrumentPrice: number;
 }
 
 export const CreditFacilitiesPanel: React.FC<CreditFacilitiesPanelProps> = ({
   tempAllocations,
   handleTempAllocationChange,
-  totalAmount
+  totalAmount,
+  instrumentPrice
 }) => {
   return (
     <div className="mt-4 space-y-4">
       {mockCreditFacilitiesFlat.map(facility => {
         const isSelected = Boolean(tempAllocations[facility.id]);
+        const maxSharesAllowed = Math.floor(facility.available / instrumentPrice);
         
         return (
           <div key={facility.id} className="p-4 border rounded-md">
@@ -42,7 +45,7 @@ export const CreditFacilitiesPanel: React.FC<CreditFacilitiesPanelProps> = ({
               <Input
                 type="number"
                 min="0"
-                max={facility.available}
+                max={maxSharesAllowed}
                 value={tempAllocations[facility.id] || ""}
                 onChange={(e) => handleTempAllocationChange(facility.id, Number(e.target.value))}
                 className="w-full"
@@ -54,7 +57,7 @@ export const CreditFacilitiesPanel: React.FC<CreditFacilitiesPanelProps> = ({
                 className="whitespace-nowrap"
                 onClick={() => handleTempAllocationChange(
                   facility.id,
-                  Math.min(facility.available, totalAmount)
+                  Math.min(maxSharesAllowed, totalAmount / instrumentPrice)
                 )}
               >
                 Max

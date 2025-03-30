@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { Instrument } from "../types";
 import { mockInstruments } from "../data/instruments";
 
@@ -7,7 +7,7 @@ export const useInstrumentSearch = () => {
   const [results, setResults] = useState<Instrument[]>([]);
   const [isSearching, setIsSearching] = useState(false);
 
-  const performSearch = (query: string) => {
+  const performSearch = useCallback((query: string) => {
     setIsSearching(true);
     
     // Simulate API search with a timeout
@@ -25,7 +25,7 @@ export const useInstrumentSearch = () => {
       }
       setIsSearching(false);
     }, 300);
-  };
+  }, []);
 
   return {
     results,

@@ -3,7 +3,7 @@ import React from "react";
 import { Card } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { ArrowUp, ArrowDown, ReceiptRefund, Circle } from "lucide-react";
+import { ArrowUp, ArrowDown, RefreshCcw, Circle } from "lucide-react";
 import { OrderType } from "../types";
 
 interface TradingOrderTypeSelectorProps {
@@ -53,9 +53,9 @@ const TradingOrderTypeSelector: React.FC<TradingOrderTypeSelectorProps> = ({
           </div>
         </Card>
         
-        <Card className={`p-4 cursor-pointer transition-all ${orderType === 'sellshort' ? 'ring-2 ring-black' : 'hover:bg-gray-50'}`}>
+        <Card className={`p-4 cursor-pointer transition-all ${orderType === 'sell' && orderType === 'sellshort' ? 'ring-2 ring-black' : 'hover:bg-gray-50'}`}>
           <div className="flex items-start">
-            <RadioGroupItem value="sellshort" id="sellshort" className="mr-2 mt-1" />
+            <RadioGroupItem value="sell" id="sellshort" className="mr-2 mt-1" />
             <div>
               <Label htmlFor="sellshort" className="cursor-pointer font-medium flex items-center">
                 <Circle className="h-4 w-4 mr-2 text-amber-600" />
@@ -68,12 +68,12 @@ const TradingOrderTypeSelector: React.FC<TradingOrderTypeSelectorProps> = ({
           </div>
         </Card>
 
-        <Card className={`p-4 cursor-pointer transition-all ${orderType === 'exchange' ? 'ring-2 ring-black' : 'hover:bg-gray-50'}`}>
+        <Card className={`p-4 cursor-pointer transition-all ${orderType === 'sell' && orderType === 'exchange' ? 'ring-2 ring-black' : 'hover:bg-gray-50'}`}>
           <div className="flex items-start">
-            <RadioGroupItem value="exchange" id="exchange" className="mr-2 mt-1" />
+            <RadioGroupItem value="sell" id="exchange" className="mr-2 mt-1" />
             <div>
               <Label htmlFor="exchange" className="cursor-pointer font-medium flex items-center">
-                <ReceiptRefund className="h-4 w-4 mr-2 text-blue-600" />
+                <RefreshCcw className="h-4 w-4 mr-2 text-blue-600" />
                 Exchange
               </Label>
               <p className="text-sm text-gray-600 mt-1">

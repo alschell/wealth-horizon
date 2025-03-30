@@ -1,10 +1,10 @@
 
 import React from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { TradeOrder } from "../types";
-import { FundingSourcesSection } from "./allocation/buy/funding-sources";
-import DestinationPortfoliosSection from "./allocation/buy/destination-portfolios/DestinationPortfoliosSection";
-import SellAllocationSection from "./allocation/sell/SellAllocationSection";
+import { TradeOrder } from "../../types";
+import { FundingSourcesSection } from "../allocation/buy/funding-sources";
+import DestinationPortfoliosSection from "../allocation/buy/destination-portfolios/DestinationPortfoliosSection";
+import SellAllocationSection from "../allocation/sell/SellAllocationSection";
 
 interface TradingAllocationProps {
   orderType: string;

@@ -1,4 +1,5 @@
 
+// Re-export the FundingSourcesSection component
 export { FundingSourcesSection } from './FundingSourcesSection';
 export { default as FundingSourceSelectionModal } from './FundingSourceSelectionModal';
 export * from './components';

@@ -104,5 +104,3 @@ export const FundingSourcesSection: React.FC<FundingSourcesSectionProps> = ({
     </div>
   );
 };
-
-export default FundingSourcesSection;

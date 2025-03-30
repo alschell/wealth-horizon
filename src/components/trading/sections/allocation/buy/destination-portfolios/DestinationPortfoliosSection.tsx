@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { TradeOrder } from "../../../../types";
 import { QuantityAllocationSummary } from "../../AllocationSummary";
-import { mockPortfoliosFlat } from "../../../../data";
+import { mockPortfoliosByInstitution } from "../../../../data";
 import PortfolioSelectionModal from "./PortfolioSelectionModal";
 import { SelectedPortfoliosTable } from "./SelectedPortfoliosTable";
 

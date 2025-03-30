@@ -27,13 +27,28 @@ export const SelectedPortfoliosTable: React.FC<SelectedPortfoliosTableProps> = (
   instrumentPrice,
   currency
 }) => {
+  // Helper function to find legal entity name
+  const findLegalEntityName = (legalEntityId: string): string => {
+    for (const institution of mockPortfoliosByInstitution) {
+      const entity = institution.legalEntities.find(e => e.id === legalEntityId);
+      if (entity) return entity.name;
+    }
+    return "Unknown";
+  };
+
+  // Helper function to find institution name
+  const findInstitutionName = (institutionId: string): string => {
+    const institution = mockPortfoliosByInstitution.find(i => i.id === institutionId);
+    return institution ? institution.name : "Unknown";
+  };
+
   return (
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead>Portfolio</TableHead>
           <TableHead>Institution</TableHead>
           <TableHead>Legal Entity</TableHead>
+          <TableHead>Portfolio</TableHead>
           <TableHead>Shares</TableHead>
           <TableHead>Est. Value</TableHead>
           <TableHead>Actions</TableHead>
@@ -44,26 +59,17 @@ export const SelectedPortfoliosTable: React.FC<SelectedPortfoliosTableProps> = (
           const portfolio = mockPortfoliosFlat.find(p => p.id === portfolioId);
           if (!portfolio) return null;
           
-          const institution = mockPortfoliosByInstitution.find(
-            inst => inst.id === portfolio.institutionId
-          );
-          
-          let legalEntity;
-          for (const inst of mockPortfoliosByInstitution) {
-            legalEntity = inst.legalEntities.find(
-              entity => entity.id === portfolio.legalEntityId
-            );
-            if (legalEntity) break;
-          }
+          const institutionName = findInstitutionName(portfolio.institutionId);
+          const legalEntityName = findLegalEntityName(portfolio.legalEntityId);
           
           const shares = allocations[portfolioId] || 0;
           const estimatedValue = shares * instrumentPrice;
           
           return (
             <TableRow key={portfolioId}>
+              <TableCell>{institutionName}</TableCell>
+              <TableCell>{legalEntityName}</TableCell>
               <TableCell className="font-medium">{portfolio.name}</TableCell>
-              <TableCell>{institution?.name || "Unknown"}</TableCell>
-              <TableCell>{legalEntity?.name || "Unknown"}</TableCell>
               <TableCell>
                 <div className="flex items-center gap-2">
                   <Input

@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React from "react";
 import { Separator } from "@/components/ui/separator";
 import { TradeOrder } from "../../../types";
 import FundingSourcesSection from "./funding-sources/FundingSourcesSection";
@@ -24,8 +24,6 @@ const BuyAllocationSection: React.FC<BuyAllocationSectionProps> = ({
   setOrder,
   price
 }) => {
-  const [viewMode, setViewMode] = useState<"portfolios" | "institutions">("portfolios");
-  
   // Calculate instrument price (market price or specified price)
   const instrumentPrice = price > 0 ? price : selectedInstrument?.currentPrice || 0;
 
@@ -37,7 +35,7 @@ const BuyAllocationSection: React.FC<BuyAllocationSectionProps> = ({
           currency={currency}
           order={order}
           setOrder={setOrder}
-          viewMode={viewMode}
+          viewMode="institutions"
           instrumentPrice={instrumentPrice}
         />
       </div>

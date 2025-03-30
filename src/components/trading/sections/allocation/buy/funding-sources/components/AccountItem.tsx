@@ -1,7 +1,6 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { CashAccount } from "@/components/trading/types";
 
 interface AccountItemProps {
@@ -19,59 +18,68 @@ export const AccountItem: React.FC<AccountItemProps> = ({
   handleAllocationChange,
   remainingShares
 }) => {
-  const maxSharesFromAccount = Math.floor(account.balance / instrumentPrice);
-  const estimatedAmount = currentShares * instrumentPrice;
+  const [shares, setShares] = useState(currentShares.toString());
+  
+  // Calculate maximum amount of shares that can be allocated from this account
+  const maxShares = account.balance / instrumentPrice;
+  
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value;
+    setShares(newValue);
+    
+    const numericValue = parseFloat(newValue) || 0;
+    handleAllocationChange(account.id, numericValue);
+  };
+  
+  const handleMax = () => {
+    // Calculate the maximum shares to allocate, considering the remaining shares needed
+    const sharesNeeded = Math.min(maxShares, remainingShares + currentShares);
+    setShares(sharesNeeded.toString());
+    handleAllocationChange(account.id, sharesNeeded);
+  };
+  
+  // Format the estimated amount
+  const estimatedAmount = (parseFloat(shares) || 0) * instrumentPrice;
   
   return (
-    <div className="p-4 border rounded-md ml-2">
-      <div className="flex justify-between items-start mb-3">
+    <div className="border rounded-md p-3 hover:bg-gray-50 transition-colors">
+      <div className="flex justify-between items-start">
         <div>
-          <h4 className="font-medium">{account.name}</h4>
-          <p className="text-xs text-gray-500">{account.currency} Account</p>
-        </div>
-        <div className="text-sm text-right">
-          <div>Available</div>
-          <div className="font-semibold">
-            {account.balance.toLocaleString('en-US', {
-              style: 'currency',
-              currency: account.currency
-            })}
-          </div>
-        </div>
-      </div>
-      
-      <div className="space-y-2">
-        <div className="flex items-center gap-2">
-          <Input
-            type="number"
-            min="0"
-            max={maxSharesFromAccount}
-            value={currentShares || ""}
-            onChange={(e) => handleAllocationChange(account.id, Number(e.target.value))}
-            className="w-full"
-            placeholder="Number of funded shares"
-          />
-          <Button
-            variant="outline"
-            size="sm"
-            className="whitespace-nowrap"
-            onClick={() => handleAllocationChange(
-              account.id,
-              Math.min(maxSharesFromAccount, Math.ceil(remainingShares > 0 ? remainingShares : 0))
-            )}
-          >
-            Max
-          </Button>
-        </div>
-        
-        {currentShares > 0 && (
-          <p className="text-sm text-gray-600">
-            Est. debit amount: {estimatedAmount.toLocaleString('en-US', {
+          <h3 className="font-medium text-gray-900">{account.name}</h3>
+          <p className="text-sm text-gray-500">{account.currency}</p>
+          <p className="text-sm mt-1">
+            Balance: {account.balance.toLocaleString('en-US', { 
               style: 'currency', 
-              currency: account.currency
+              currency: account.currency 
             })}
           </p>
-        )}
+        </div>
+        <div className="text-right min-w-[150px]">
+          <div className="flex items-center gap-2">
+            <Input
+              type="number"
+              value={shares}
+              onChange={handleChange}
+              className="w-28 text-right"
+              min="0"
+              max={maxShares.toString()}
+            />
+            <button 
+              onClick={handleMax}
+              className="text-xs text-blue-600 border border-blue-600 rounded px-2 py-1 hover:bg-blue-50"
+              type="button"
+            >
+              Max
+            </button>
+          </div>
+          <p className="text-xs mt-1 text-gray-500">Number of funded shares</p>
+          <p className="text-xs mt-1 text-gray-600">
+            Est. debit amount: {estimatedAmount.toLocaleString('en-US', { 
+              style: 'currency', 
+              currency: account.currency 
+            })}
+          </p>
+        </div>
       </div>
     </div>
   );

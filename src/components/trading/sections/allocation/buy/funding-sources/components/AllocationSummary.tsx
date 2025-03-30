@@ -1,5 +1,7 @@
 
 import React from "react";
+import { Progress } from "@/components/ui/progress";
+import { AlertCircle, Check } from "lucide-react";
 
 interface AllocationSummaryProps {
   totalAmount: number;
@@ -16,35 +18,41 @@ export const AllocationSummary: React.FC<AllocationSummaryProps> = ({
   currency,
   isAllocationComplete
 }) => {
+  const percentComplete = Math.min(100, ((requiredShares - remainingShares) / requiredShares) * 100);
+  const allocatedAmount = (requiredShares - remainingShares) * (totalAmount / requiredShares);
+  
   return (
-    <>
-      <div className="flex items-center justify-between mb-4">
-        <div>
-          <p className="text-sm font-medium">Required funds</p>
-          <p className="text-lg font-bold">
-            {totalAmount.toLocaleString('en-US', {
+    <div className="mb-6 space-y-3">
+      <div className="flex justify-between text-sm">
+        <span>Total funds: {totalAmount.toLocaleString('en-US', {
+          style: 'currency',
+          currency
+        })}</span>
+        <span>Allocated: {allocatedAmount.toLocaleString('en-US', {
+          style: 'currency',
+          currency
+        })}</span>
+      </div>
+      
+      <Progress value={percentComplete} className="h-2" />
+      
+      {remainingShares > 0 ? (
+        <div className="flex items-center text-xs text-amber-600">
+          <AlertCircle className="h-3 w-3 mr-1" />
+          <span>
+            {remainingShares.toFixed(2)} shares still need funding 
+            ({(remainingShares * (totalAmount / requiredShares)).toLocaleString('en-US', {
               style: 'currency',
               currency
-            })}
-          </p>
+            })})
+          </span>
         </div>
-        <div>
-          <p className="text-sm font-medium">Total number of shares</p>
-          <p className="text-lg font-bold">
-            {Math.ceil(requiredShares)}
-          </p>
+      ) : (
+        <div className="flex items-center text-xs text-green-600">
+          <Check className="h-3 w-3 mr-1" />
+          <span>All shares are funded!</span>
         </div>
-      </div>
-
-      <div className={`p-2 mb-4 text-sm rounded-md ${
-        remainingShares > 0 
-          ? "bg-yellow-50 text-yellow-800" 
-          : "bg-green-50 text-green-800"
-      }`}>
-        {remainingShares > 0 
-          ? `Still need to allocate ${Math.ceil(remainingShares)} more shares`
-          : "All shares have been allocated"}
-      </div>
-    </>
+      )}
+    </div>
   );
 };

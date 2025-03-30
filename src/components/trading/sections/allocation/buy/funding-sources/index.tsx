@@ -2,7 +2,7 @@
 // Re-export all components from their respective files
 export * from "./components/SelectedSourcesTable";
 export * from "./components/CashAccountsPanel";
-export * from "./components/CreditFacilitiesPanel";
+export { CreditFacilitiesPanel } from "./components/CreditFacilitiesPanel";
 export * from "./components/ModalFooter";
 export { useFundingSources } from './hooks/useFundingSources';
 export type { UseFundingSourcesProps } from './hooks/useFundingSources';

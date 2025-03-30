@@ -2,12 +2,12 @@
 import React, { useState, useEffect } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import ModalFooter from "../destination-portfolios/components/ModalFooter";
-import {
-  FundingSourceModalHeader,
-  AllocationSummary,
-  CashAccountsList,
-  CreditFacilitiesList
+import { 
+  FundingSourceModalHeader, 
+  AllocationSummary, 
+  CashAccountsList, 
+  CreditFacilitiesList, 
+  ModalFooter 
 } from "./components";
 
 interface FundingSourceSelectionModalProps {
@@ -32,6 +32,7 @@ const FundingSourceSelectionModal: React.FC<FundingSourceSelectionModalProps> = 
   const [activeTab, setActiveTab] = useState<"cash" | "credit">("cash");
   const [tempAllocations, setTempAllocations] = useState<Record<string, number>>({});
   const [totalShares, setTotalShares] = useState(0);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Initialize temporary allocations when modal opens
   useEffect(() => {
@@ -41,6 +42,7 @@ const FundingSourceSelectionModal: React.FC<FundingSourceSelectionModalProps> = 
       // Calculate total shares from current allocations
       const total = Object.values(currentAllocations).reduce((sum, qty) => sum + qty, 0);
       setTotalShares(total);
+      setIsSubmitting(false);
     }
   }, [isOpen, currentAllocations]);
 
@@ -54,8 +56,14 @@ const FundingSourceSelectionModal: React.FC<FundingSourceSelectionModalProps> = 
   };
 
   const handleConfirm = () => {
-    onConfirm(tempAllocations);
-    onClose();
+    setIsSubmitting(true);
+    
+    // Add a small delay to show loading state
+    setTimeout(() => {
+      onConfirm(tempAllocations);
+      onClose();
+      setIsSubmitting(false);
+    }, 300);
   };
 
   // Get required shares needed to fully fund the order
@@ -106,9 +114,9 @@ const FundingSourceSelectionModal: React.FC<FundingSourceSelectionModalProps> = 
         </div>
 
         <ModalFooter
+          onApply={handleConfirm}
           onClose={onClose}
-          onConfirm={handleConfirm}
-          isConfirmDisabled={!isAllocationComplete}
+          isLoading={isSubmitting}
         />
       </DialogContent>
     </Dialog>

@@ -10,7 +10,7 @@ interface CreditFacilitiesPanelProps {
   instrumentPrice: number;
 }
 
-export const CreditFacilitiesList: React.FC<CreditFacilitiesPanelProps> = ({
+export const CreditFacilitiesPanel: React.FC<CreditFacilitiesPanelProps> = ({
   tempAllocations,
   handleTempAllocationChange,
   totalAmount,
@@ -37,4 +37,5 @@ export const CreditFacilitiesList: React.FC<CreditFacilitiesPanelProps> = ({
   );
 };
 
-export const CreditFacilitiesPanel = CreditFacilitiesList;
+// Don't export both with the same name
+export default CreditFacilitiesPanel;

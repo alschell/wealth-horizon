@@ -4,7 +4,7 @@ export * from "./AllocationWarning";
 export * from "./SelectedSources";
 export * from "./EmptySourcesState";
 export * from "./CashAccountsPanel";
-export * from "./CreditFacilitiesPanel";
+export { CreditFacilitiesPanel } from "./CreditFacilitiesPanel";
 export * from "./ModalFooter";
 export * from "./SelectedSourcesTable";
 export * from "./FundingSourceModalHeader";

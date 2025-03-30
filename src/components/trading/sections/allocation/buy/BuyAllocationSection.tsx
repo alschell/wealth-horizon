@@ -48,6 +48,7 @@ const BuyAllocationSection: React.FC<BuyAllocationSectionProps> = ({
           setOrder={setOrder}
           instrumentPrice={instrumentPrice}
           currency={currency}
+          selectedInstrument={selectedInstrument}
         />
       </div>
     </div>

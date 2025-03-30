@@ -11,7 +11,7 @@ import PortfoliosList from "./components/PortfoliosList";
 interface PortfolioSelectionModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onConfirm: (portfolios: Record<string, number>) => void;
+  onConfirm: (portfolios?: Record<string, number>) => void;
   currentAllocations: Record<string, number>;
   totalQuantity: number;
   instrumentPrice: number;
@@ -29,11 +29,13 @@ const PortfolioSelectionModal: React.FC<PortfolioSelectionModalProps> = ({
 }) => {
   const [tempAllocations, setTempAllocations] = useState<Record<string, number>>({});
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedPortfolios, setSelectedPortfolios] = useState<string[]>([]);
   
   // Initialize with current allocations when modal opens
   useEffect(() => {
     if (isOpen) {
       setTempAllocations({ ...currentAllocations });
+      setSelectedPortfolios(Object.keys(currentAllocations).filter(id => currentAllocations[id] > 0));
       setSearchQuery("");
     }
   }, [isOpen, currentAllocations]);
@@ -43,18 +45,26 @@ const PortfolioSelectionModal: React.FC<PortfolioSelectionModalProps> = ({
       ...prev,
       [portfolioId]: quantity
     }));
+    
+    if (quantity > 0 && !selectedPortfolios.includes(portfolioId)) {
+      setSelectedPortfolios(prev => [...prev, portfolioId]);
+    } else if (quantity === 0 && selectedPortfolios.includes(portfolioId)) {
+      setSelectedPortfolios(prev => prev.filter(id => id !== portfolioId));
+    }
   };
   
   // Apply portfolio selections
   const handleConfirm = () => {
     onConfirm(tempAllocations);
-    onClose();
   };
   
   // Calculate current total allocation
   const totalAllocated = Object.values(tempAllocations).reduce((sum, qty) => sum + qty, 0);
   const allocationPercentage = Math.min(100, (totalAllocated / totalQuantity) * 100);
   const remainingQuantity = totalQuantity - totalAllocated;
+  
+  const isAllocationComplete = totalAllocated === totalQuantity;
+  const isAllocationExceeded = totalAllocated > totalQuantity;
   
   // Filter institutions based on search query
   const filteredInstitutions = searchQuery.length > 0 ? 

@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { TradeOrder } from "../../../../types";
 
@@ -6,8 +7,8 @@ interface UseDestinationPortfoliosProps {
   selectedInstrument: any;
   order: Partial<TradeOrder>;
   setOrder: (order: Partial<TradeOrder>) => void;
-  instrumentPrice: number; // Add instrumentPrice as required
-  currency: string; // Add currency as required
+  instrumentPrice: number;
+  currency: string;
 }
 
 export const useDestinationPortfolios = ({
@@ -39,6 +40,7 @@ export const useDestinationPortfolios = ({
     }
     
     setAllocations(initialAllocations);
+    setSelectedPortfolios(Object.keys(initialAllocations));
     updateCurrentAllocation(initialAllocations);
   }, [order.depositAllocations]);
   
@@ -175,7 +177,7 @@ export const useDestinationPortfolios = ({
     remainingQuantity,
     isModalOpen,
     setIsModalOpen,
-    selectedPortfolios,
+    selectedPortfolios, // Changed from selectedPortfolioIds to selectedPortfolios
     tempAllocations,
     tempTotalAllocation,
     isAllocationComplete,

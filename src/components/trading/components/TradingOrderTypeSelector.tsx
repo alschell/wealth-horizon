@@ -53,7 +53,7 @@ const TradingOrderTypeSelector: React.FC<TradingOrderTypeSelectorProps> = ({
           </div>
         </Card>
         
-        <Card className={`p-4 cursor-pointer transition-all ${orderType === 'sell' && orderType === 'sellshort' ? 'ring-2 ring-black' : 'hover:bg-gray-50'}`}>
+        <Card className={`p-4 cursor-pointer transition-all hover:bg-gray-50`}>
           <div className="flex items-start">
             <RadioGroupItem value="sell" id="sellshort" className="mr-2 mt-1" />
             <div>
@@ -68,7 +68,7 @@ const TradingOrderTypeSelector: React.FC<TradingOrderTypeSelectorProps> = ({
           </div>
         </Card>
 
-        <Card className={`p-4 cursor-pointer transition-all ${orderType === 'sell' && orderType === 'exchange' ? 'ring-2 ring-black' : 'hover:bg-gray-50'}`}>
+        <Card className={`p-4 cursor-pointer transition-all hover:bg-gray-50`}>
           <div className="flex items-start">
             <RadioGroupItem value="sell" id="exchange" className="mr-2 mt-1" />
             <div>

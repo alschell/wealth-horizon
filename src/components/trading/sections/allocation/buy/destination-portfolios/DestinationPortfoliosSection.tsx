@@ -24,7 +24,7 @@ const DestinationPortfoliosSection: React.FC<DestinationPortfoliosSectionProps> 
 }) => {
   const {
     allocations,
-    selectedPortfolioIds,
+    selectedPortfolios,
     handleAllocationChange,
     isModalOpen,
     setIsModalOpen,
@@ -44,9 +44,9 @@ const DestinationPortfoliosSection: React.FC<DestinationPortfoliosSectionProps> 
 
   return (
     <div className="space-y-4">
-      {selectedPortfolioIds.length > 0 ? (
+      {selectedPortfolios.length > 0 ? (
         <SelectedPortfoliosTable
-          selectedPortfolioIds={selectedPortfolioIds}
+          selectedPortfolioIds={selectedPortfolios}
           allocations={allocations}
           handleAllocationChange={handleAllocationChange}
           instrumentPrice={instrumentPrice}
@@ -64,7 +64,7 @@ const DestinationPortfoliosSection: React.FC<DestinationPortfoliosSectionProps> 
         </div>
       )}
       
-      {selectedPortfolioIds.length > 0 && (
+      {selectedPortfolios.length > 0 && (
         <div className="flex justify-end">
           <Button 
             onClick={openPortfolioSelectionModal}
@@ -82,7 +82,7 @@ const DestinationPortfoliosSection: React.FC<DestinationPortfoliosSectionProps> 
         onConfirm={confirmPortfolioSelections}
         onSelectPortfolio={handlePortfolioSelect}
         onAllocationChange={handleTempAllocationChange}
-        selectedPortfolios={selectedPortfolioIds}
+        selectedPortfolios={selectedPortfolios}
         tempAllocations={tempAllocations}
         totalQuantity={totalQuantity}
       />

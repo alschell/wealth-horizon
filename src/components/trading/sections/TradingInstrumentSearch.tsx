@@ -44,12 +44,6 @@ const TradingInstrumentSearch: React.FC<TradingInstrumentSearchProps> = ({
     <div className="space-y-6">
       {!selectedInstrument ? (
         <div className="space-y-6">
-          <div>
-            <h3 className="text-lg font-medium mb-2">
-              Select an instrument
-            </h3>
-          </div>
-
           <div className="relative">
             <SearchBar
               searchTerm={searchQuery}
@@ -81,7 +75,7 @@ const TradingInstrumentSearch: React.FC<TradingInstrumentSearchProps> = ({
             instrument={selectedInstrument}
           />
           
-          <div className="flex justify-end">
+          <div className="flex justify-start">
             <button className="text-blue-600 hover:underline" onClick={handleClearSelection}>
               Change Security
             </button>

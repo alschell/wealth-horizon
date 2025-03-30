@@ -5,12 +5,13 @@ import { Plus } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
-  SelectedSourcesTable,
-  CashAccountsPanel, 
-  CreditFacilitiesPanel, 
-  ModalFooter,
+  SelectedSourcesTable, 
   useFundingSources
 } from "./funding-sources";
+import { CashAccountsPanel } from "./funding-sources/components/CashAccountsPanel";
+import { CreditFacilitiesPanel } from "./funding-sources/components/CreditFacilitiesPanel";
+import { ModalFooter } from "./funding-sources/components/ModalFooter";
+import { mockCashAccountsFlat, mockCreditFacilitiesFlat } from "@/components/trading/data";
 
 interface FundingSourcesPanelProps {
   fundingAllocations: Record<string, number>;
@@ -37,21 +38,32 @@ const FundingSourcesPanel: React.FC<FundingSourcesPanelProps> = ({
     openSourcesSheet,
     applyAllocations,
     handleTempAllocationChange,
-    getSources
+    getSources,
+    allocations,
+    handleAllocationChange
   } = useFundingSources({
-    fundingAllocations,
+    totalAmount,
     onAllocationChange,
-    totalAmount
+    fundingAllocations
   });
+
+  // Helper function to get source by ID
+  const getSourceById = (sourceId: string) => {
+    if (sourceId.startsWith('cash-')) {
+      return mockCashAccountsFlat.find(item => item.id === sourceId);
+    } else {
+      return mockCreditFacilitiesFlat.find(item => item.id === sourceId);
+    }
+  };
 
   return (
     <div className="space-y-4">
       <SelectedSourcesTable
         selectedSourceIds={selectedSourceIds}
-        fundingAllocations={fundingAllocations}
-        onAllocationChange={onAllocationChange}
-        getSources={getSources}
-        totalAmount={totalAmount}
+        allocations={allocations}
+        handleAllocationChange={handleAllocationChange}
+        getSourceById={getSourceById}
+        instrumentPrice={price}
         currency={currency}
       />
       

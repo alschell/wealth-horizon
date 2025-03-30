@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface FormNavigationProps {
@@ -10,6 +10,7 @@ interface FormNavigationProps {
   isSubmitting?: boolean;
   submitText?: string;
   className?: string;
+  disableBack?: boolean;
 }
 
 const FormNavigation: React.FC<FormNavigationProps> = ({ 
@@ -17,7 +18,8 @@ const FormNavigation: React.FC<FormNavigationProps> = ({
   showRequiredFieldsNote = true,
   isSubmitting = false,
   submitText = "Continue",
-  className
+  className,
+  disableBack = false
 }) => {
   const handleBack = () => {
     // Scroll to top before navigating back
@@ -39,19 +41,28 @@ const FormNavigation: React.FC<FormNavigationProps> = ({
           size="lg" 
           className="rounded-lg"
           onClick={handleBack}
-          disabled={isSubmitting}
+          disabled={isSubmitting || disableBack}
         >
-          <ArrowLeft className="mr-2 h-4 w-4 text-black" />
+          <ArrowLeft className="mr-2 h-4 w-4" />
           Back
         </Button>
         <Button 
           type="submit" 
           size="lg" 
-          className={`rounded-lg transition-shadow ${isSubmitting ? 'bg-gray-300 text-gray-500' : 'bg-black hover:bg-gray-800 text-white hover:shadow-md'}`}
+          className="rounded-lg transition-shadow bg-black hover:bg-gray-800 text-white"
           disabled={isSubmitting}
         >
-          {submitText}
-          <ArrowRight className="ml-2 h-4 w-4" />
+          {isSubmitting ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Processing...
+            </>
+          ) : (
+            <>
+              {submitText}
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </>
+          )}
         </Button>
       </div>
     </div>

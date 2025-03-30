@@ -12,12 +12,19 @@ export interface UseFundingSourcesProps {
   onAllocationChange?: (sourceId: string, amount: number) => void;
   fundingAllocations?: Record<string, number>;
   instrumentPrice?: number;
+  currency?: string;
+  order?: Partial<TradeOrder>;
+  setOrder?: (order: Partial<TradeOrder>) => void;
 }
 
 export const useFundingSources = ({
   totalAmount,
   onAllocationChange,
-  fundingAllocations = {}
+  fundingAllocations = {},
+  instrumentPrice = 0,
+  currency = "USD",
+  order,
+  setOrder
 }: UseFundingSourcesProps) => {
   const [activeTab, setActiveTab] = useState<"cash" | "credit">("cash");
   const [allocations, setAllocations] = useState<Record<string, number>>({});
@@ -28,9 +35,9 @@ export const useFundingSources = ({
   
   // Initialize with existing allocations if any
   useEffect(() => {
-    setAllocations(fundingAllocations);
-    updateCurrentAllocation(fundingAllocations);
-    setTempAllocations(fundingAllocations);
+    setAllocations(fundingAllocations || {});
+    updateCurrentAllocation(fundingAllocations || {});
+    setTempAllocations(fundingAllocations || {});
   }, [fundingAllocations]);
   
   const updateCurrentAllocation = (allocs: Record<string, number>) => {
@@ -44,6 +51,23 @@ export const useFundingSources = ({
     updateCurrentAllocation(updatedAllocations);
     if (onAllocationChange) {
       onAllocationChange(sourceId, amount);
+    }
+    
+    // Update the order if setOrder is provided
+    if (order && setOrder) {
+      const fundingAllocations = Object.entries(updatedAllocations)
+        .filter(([_, amount]) => amount > 0)
+        .map(([sourceId, amount]) => {
+          const sourceType = sourceId.startsWith('cash-') ? 'cash' : 'credit';
+          const source = getSourceById(sourceId);
+          return {
+            sourceId,
+            sourceType,
+            amount,
+            currency: source?.currency || currency
+          };
+        });
+      setOrder({ ...order, fundingAllocations });
     }
   };
 
@@ -109,4 +133,3 @@ export const useFundingSources = ({
     getSources
   };
 };
-

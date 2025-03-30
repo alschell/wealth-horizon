@@ -9,6 +9,7 @@ import { SelectedSourcesTable } from "./funding-sources/components/SelectedSourc
 import { CashAccountsPanel } from "./funding-sources/components/CashAccountsPanel";
 import { CreditFacilitiesPanel } from "./funding-sources/components/CreditFacilitiesPanel";
 import { ModalFooter } from "./funding-sources/components/ModalFooter";
+import { TradeOrder } from "@/components/trading/types";
 
 interface FundingSourcesPanelProps {
   fundingAllocations: Record<string, number>;
@@ -16,6 +17,8 @@ interface FundingSourcesPanelProps {
   totalAmount: number;
   currency: string;
   price: number;
+  order?: Partial<TradeOrder>;
+  setOrder?: (order: Partial<TradeOrder>) => void;
 }
 
 const FundingSourcesPanel: React.FC<FundingSourcesPanelProps> = ({
@@ -23,7 +26,9 @@ const FundingSourcesPanel: React.FC<FundingSourcesPanelProps> = ({
   onAllocationChange,
   totalAmount,
   currency,
-  price
+  price,
+  order,
+  setOrder
 }) => {
   const {
     isSourcesSheetOpen,
@@ -37,21 +42,17 @@ const FundingSourcesPanel: React.FC<FundingSourcesPanelProps> = ({
     handleTempAllocationChange,
     getSources,
     allocations,
-    handleAllocationChange
+    handleAllocationChange,
+    getSourceById
   } = useFundingSources({
     totalAmount,
     onAllocationChange,
-    fundingAllocations
+    fundingAllocations,
+    instrumentPrice: price,
+    currency,
+    order,
+    setOrder
   });
-
-  // Helper function to get source by ID
-  const getSourceById = (sourceId: string) => {
-    if (sourceId.startsWith('cash-')) {
-      return getSources("cash").find((item: any) => item.id === sourceId);
-    } else {
-      return getSources("credit").find((item: any) => item.id === sourceId);
-    }
-  };
 
   return (
     <div className="space-y-4">
@@ -75,8 +76,13 @@ const FundingSourcesPanel: React.FC<FundingSourcesPanelProps> = ({
       </div>
       
       {/* Funding Sources Sheet */}
-      <Sheet open={isSourcesSheetOpen} onOpenChange={setIsOpen => !setIsOpen && setSourcesSheetOpen(false)}>
-        <SheetContent className="sm:max-w-md" side="right">
+      <Sheet 
+        open={isSourcesSheetOpen} 
+        onOpenChange={(open) => {
+          if (!open) setSourcesSheetOpen(false);
+        }}
+      >
+        <SheetContent className="sm:max-w-md overflow-y-auto" side="right">
           <SheetHeader>
             <SheetTitle>Select Funding Sources</SheetTitle>
           </SheetHeader>
@@ -93,6 +99,7 @@ const FundingSourcesPanel: React.FC<FundingSourcesPanelProps> = ({
                   tempAllocations={tempAllocations}
                   handleTempAllocationChange={handleTempAllocationChange}
                   totalAmount={totalAmount}
+                  instrumentPrice={price}
                 />
               </TabsContent>
               
@@ -101,12 +108,16 @@ const FundingSourcesPanel: React.FC<FundingSourcesPanelProps> = ({
                   tempAllocations={tempAllocations}
                   handleTempAllocationChange={handleTempAllocationChange}
                   totalAmount={totalAmount}
+                  instrumentPrice={price}
                 />
               </TabsContent>
             </Tabs>
           </div>
           
-          <ModalFooter onApply={applyAllocations} onClose={() => setSourcesSheetOpen(false)} />
+          <ModalFooter 
+            onApply={applyAllocations} 
+            onClose={() => setSourcesSheetOpen(false)} 
+          />
         </SheetContent>
       </Sheet>
     </div>

@@ -80,7 +80,7 @@ const TradingOrderType: React.FC<TradingOrderTypeProps> = ({
         </div>
         
         <Select value={timeInForce} onValueChange={setTimeInForce}>
-          <SelectTrigger className="w-full">
+          <SelectTrigger className="w-full data-[state=open]:ring-2 data-[state=open]:ring-black">
             <SelectValue placeholder="Select duration" />
           </SelectTrigger>
           <SelectContent>

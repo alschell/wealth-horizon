@@ -50,7 +50,13 @@ const InstrumentResultsTable: React.FC<InstrumentResultsTableProps> = ({
                 <Button
                   variant={selectedInstrument?.id === instrument.id ? "outline" : "default"}
                   size="sm"
-                  onClick={() => onSelectInstrument(selectedInstrument?.id === instrument.id ? null : instrument)}
+                  onClick={() => {
+                    if (selectedInstrument?.id === instrument.id) {
+                      onSelectInstrument(null);
+                    } else {
+                      onSelectInstrument(instrument);
+                    }
+                  }}
                   className="w-20"
                 >
                   {selectedInstrument?.id === instrument.id ? "Unselect" : "Select"}

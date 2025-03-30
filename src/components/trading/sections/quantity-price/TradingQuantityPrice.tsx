@@ -1,88 +1,85 @@
 
 import React from "react";
-import { OrderType, Instrument } from "../../types";
-import { useQuantityPrice } from "./hooks/useQuantityPrice";
-import MarketOrderAlert from "./components/MarketOrderAlert";
+import { Instrument, OrderType, TradeOrder } from "../../types";
+import NoInstrumentSelected from "./components/NoInstrumentSelected";
 import QuantityInput from "./components/QuantityInput";
 import PriceInput from "./components/PriceInput";
+import MarketOrderAlert from "./components/MarketOrderAlert";
 import OrderSummary from "./components/OrderSummary";
-import NoInstrumentSelected from "./components/NoInstrumentSelected";
 
 interface TradingQuantityPriceProps {
-  orderType: OrderType;
   selectedInstrument: Instrument | null;
+  orderType: OrderType;
   quantity: number | "";
   setQuantity: (quantity: number | "") => void;
   price: number | "";
   setPrice: (price: number | "") => void;
   orderExecutionType: string;
-  [key: string]: any;
 }
 
 const TradingQuantityPrice: React.FC<TradingQuantityPriceProps> = ({
-  orderType,
   selectedInstrument,
+  orderType,
   quantity,
   setQuantity,
   price,
   setPrice,
-  orderExecutionType
+  orderExecutionType,
 }) => {
-  const {
-    total,
-    quantityPercent,
-    maxRecommendedQuantity,
-    handleQuantityChange,
-    handleQuantitySliderChange,
-    handlePriceChange
-  } = useQuantityPrice({
-    selectedInstrument,
-    quantity,
-    setQuantity,
-    price,
-    setPrice,
-    orderExecutionType
-  });
-
-  const showPriceInput = orderExecutionType !== "market";
-
+  // If no instrument is selected, show a warning
   if (!selectedInstrument) {
     return <NoInstrumentSelected />;
   }
 
+  // Calculate total amount if both quantity and price are valid numbers
+  const totalAmount =
+    typeof quantity === "number" &&
+    ((typeof price === "number" && price > 0) ||
+      (orderExecutionType === "market" && selectedInstrument.currentPrice > 0))
+      ? quantity *
+        (orderExecutionType === "market" && typeof price !== "number"
+          ? selectedInstrument.currentPrice
+          : price)
+      : 0;
+
   return (
     <div className="space-y-6">
+      <div>
+        <h2 className="text-lg font-medium mb-2">
+          {orderType === "buy" ? "Buy" : "Sell"}{" "}
+          {selectedInstrument.name} ({selectedInstrument.symbol})
+        </h2>
+        <p className="text-sm text-gray-500">
+          Enter the quantity and price details for this order
+        </p>
+      </div>
+
       {orderExecutionType === "market" && <MarketOrderAlert />}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="space-y-6">
-          <QuantityInput
-            quantity={quantity}
-            onQuantityChange={handleQuantityChange}
-            quantityPercent={quantityPercent}
-            onSliderChange={handleQuantitySliderChange}
-            orderType={orderType}
-            maxRecommendedQuantity={maxRecommendedQuantity}
-          />
+      <div className="space-y-4">
+        <QuantityInput
+          quantity={quantity}
+          setQuantity={setQuantity}
+          selectedInstrument={selectedInstrument}
+        />
 
-          {showPriceInput && selectedInstrument && (
-            <PriceInput
-              price={price}
-              onPriceChange={handlePriceChange}
-              orderExecutionType={orderExecutionType}
-              selectedInstrument={selectedInstrument}
+        <PriceInput
+          price={price}
+          setPrice={setPrice}
+          selectedInstrument={selectedInstrument}
+          orderExecutionType={orderExecutionType}
+        />
+
+        {(typeof quantity === "number" && quantity > 0) &&
+          ((typeof price === "number" && price > 0) ||
+            (orderExecutionType === "market" && selectedInstrument.currentPrice > 0)) && (
+            <OrderSummary
+              quantity={quantity}
+              totalAmount={totalAmount}
+              currency={selectedInstrument.currency}
+              orderType={orderType}
             />
           )}
-        </div>
-
-        <OrderSummary
-          selectedInstrument={selectedInstrument}
-          orderType={orderType}
-          orderExecutionType={orderExecutionType}
-          quantity={quantity}
-          price={price}
-          total={total}
-        />
       </div>
     </div>
   );

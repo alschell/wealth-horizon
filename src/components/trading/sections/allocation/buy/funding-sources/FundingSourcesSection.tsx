@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import { TradeOrder } from "../../../../types";
+import { TradeOrder, FundingAllocation } from "../../../../types";
 import { Progress } from "@/components/ui/progress";
 import { CustomBadge } from "@/components/ui/custom-badge";
 import { Button } from "@/components/ui/button";
@@ -49,10 +49,13 @@ export const FundingSourcesSection: React.FC<FundingSourcesSectionProps> = ({
     // Convert to the format expected by the order
     const fundingAllocations = Object.entries(selections)
       .filter(([_, shares]) => shares > 0)
-      .map(([sourceId, shares]) => {
+      .map(([sourceId, shares]): FundingAllocation => {
+        // Explicitly type the sourceType as the union type expected by FundingAllocation
+        const sourceType: "cash" | "credit" = sourceId.startsWith("cash-") ? "cash" : "credit";
+        
         return {
           sourceId,
-          sourceType: sourceId.startsWith("cash-") ? "cash" : "credit",
+          sourceType,
           amount: shares * instrumentPrice,
           currency: currency
         };

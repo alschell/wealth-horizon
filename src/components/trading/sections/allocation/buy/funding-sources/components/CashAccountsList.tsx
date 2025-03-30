@@ -1,12 +1,13 @@
 
 import React from "react";
+import { mockCashAccountsFlat } from "@/components/trading/data";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { mockCashAccountsFlat } from "@/components/trading/data";
+import { formatCurrency } from "@/lib/utils";
 
 interface CashAccountsListProps {
   tempAllocations: Record<string, number>;
-  handleTempAllocationChange: (sourceId: string, amount: number) => void;
+  handleTempAllocationChange: (sourceId: string, quantity: number) => void;
   instrumentPrice: number;
   remainingShares: number;
   searchQuery: string;
@@ -19,96 +20,86 @@ export const CashAccountsList: React.FC<CashAccountsListProps> = ({
   remainingShares,
   searchQuery
 }) => {
-  const filteredAccounts = mockCashAccountsFlat.filter(account => {
-    if (!searchQuery) return true;
+  // Filter cash accounts by search query
+  const filteredAccounts = searchQuery
+    ? mockCashAccountsFlat.filter(
+        account =>
+          account.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          account.accountNumber.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : mockCashAccountsFlat;
     
-    // Map ID to names for filtering
-    const institutionName = account.institutionId?.toLowerCase();
-    const legalEntityName = account.legalEntityId?.toLowerCase();
-    const searchLower = searchQuery.toLowerCase();
-    
-    return (
-      account.name.toLowerCase().includes(searchLower) ||
-      (institutionName && institutionName.includes(searchLower)) ||
-      (legalEntityName && legalEntityName.includes(searchLower))
-    );
-  });
-  
-  const handleInputChange = (sourceId: string, value: string) => {
-    // Allow empty value to clear the input
-    if (value === '') {
-      handleTempAllocationChange(sourceId, 0);
-      return;
-    }
-    
-    // Convert to number and update
-    const numValue = parseFloat(value);
-    if (!isNaN(numValue)) {
-      handleTempAllocationChange(sourceId, numValue);
-    }
+  // Handle setting allocation to maximum available for an account
+  const handleSetMax = (accountId: string, maxShares: number) => {
+    handleTempAllocationChange(accountId, maxShares);
   };
   
-  const handleMaxClick = (sourceId: string, maxShares: number) => {
-    handleTempAllocationChange(sourceId, maxShares);
+  // Handle adding the remaining shares needed to an account
+  const handleAddRemaining = (accountId: string, maxAvailableShares: number) => {
+    const sharesToAdd = Math.min(remainingShares, maxAvailableShares);
+    if (sharesToAdd > 0) {
+      const currentAllocation = tempAllocations[accountId] || 0;
+      handleTempAllocationChange(accountId, currentAllocation + sharesToAdd);
+    }
   };
   
   return (
     <div className="space-y-4">
       {filteredAccounts.length === 0 ? (
-        <p className="text-center py-4 text-gray-500">No cash accounts found matching your search.</p>
+        <div className="text-center py-4 text-gray-500">No cash accounts found matching your search</div>
       ) : (
         filteredAccounts.map(account => {
-          const maxShares = Math.floor(account.balance / instrumentPrice);
-          const currentShares = tempAllocations[account.id] || 0;
+          const maxAvailableShares = Math.floor(account.balance / instrumentPrice);
+          const currentAllocation = tempAllocations[accountId] || 0;
           
           return (
-            <div key={account.id} className="p-3 border rounded-md">
-              <div className="flex justify-between mb-2">
+            <div key={account.id} className="border rounded-md p-3">
+              <div className="flex justify-between items-start mb-2">
                 <div>
-                  <h4 className="font-medium">{account.name}</h4>
-                  <p className="text-xs text-gray-500">{account.legalEntityId} • {account.institutionId}</p>
+                  <h4 className="font-medium text-sm">{account.name}</h4>
+                  <p className="text-xs text-gray-500">{account.accountNumber}</p>
                 </div>
                 <div className="text-right">
-                  <p className="font-medium">
-                    {account.balance.toLocaleString('en-US', {
-                      style: 'currency',
-                      currency: account.currency
-                    })}
+                  <p className="text-sm font-medium">
+                    {formatCurrency(account.balance, account.currency)}
                   </p>
                   <p className="text-xs text-gray-500">
-                    Available: {maxShares.toLocaleString()} shares
+                    Max: {maxAvailableShares.toFixed(2)} shares
                   </p>
                 </div>
               </div>
               
-              <div className="flex flex-wrap gap-2 items-center mt-3">
-                <Input
-                  type="text"
-                  min="0"
-                  max={maxShares}
-                  value={currentShares || ''}
-                  onChange={(e) => handleInputChange(account.id, e.target.value)}
-                  className="w-24 h-9"
-                  placeholder="0"
-                />
-                
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="h-9 text-xs"
-                  onClick={() => handleMaxClick(account.id, maxShares)}
+              <div className="flex items-center gap-2">
+                <div className="w-24">
+                  <Input
+                    type="number"
+                    min="0"
+                    max={maxAvailableShares}
+                    value={tempAllocations[account.id] || 0}
+                    onChange={(e) => {
+                      const value = parseFloat(e.target.value);
+                      const validValue = isNaN(value) ? 0 : Math.min(value, maxAvailableShares);
+                      handleTempAllocationChange(account.id, validValue);
+                    }}
+                    className="text-right h-8"
+                  />
+                </div>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="text-xs"
+                  onClick={() => handleSetMax(account.id, maxAvailableShares)}
                 >
-                  Max ({maxShares})
+                  Max
                 </Button>
-                
                 {remainingShares > 0 && (
                   <Button
                     variant="outline"
                     size="sm"
-                    className="h-9 text-xs"
-                    onClick={() => handleTempAllocationChange(account.id, Math.min(maxShares, currentShares + Math.ceil(remainingShares)))}
+                    className="text-xs"
+                    onClick={() => handleAddRemaining(account.id, maxAvailableShares)}
                   >
-                    Add Remaining ({Math.ceil(remainingShares)})
+                    Add Remaining
                   </Button>
                 )}
               </div>
@@ -119,3 +110,5 @@ export const CashAccountsList: React.FC<CashAccountsListProps> = ({
     </div>
   );
 };
+
+export default CashAccountsList;

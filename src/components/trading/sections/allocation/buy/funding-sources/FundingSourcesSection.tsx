@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { SelectedSourcesTable } from "./components";
 import { useFundingSources } from "./hooks/useFundingSources";
-import FundingSourceSelectionModal from "./FundingSourceSelectionModal";
+import SourceSelectionModal from "./SourceSelectionModal";
 import { AllocationSummary } from "../../AllocationSummary";
 
 interface FundingSourcesSectionProps {
@@ -64,23 +64,21 @@ export const FundingSourcesSection: React.FC<FundingSourcesSectionProps> = ({
             totalAmount={totalAmount}
             allocated={currentAllocation}
             remaining={remainingAmount}
-            isComplete={remainingAmount === 0}
+            isComplete={remainingAmount <= 0}
             currency={currency}
           />
           
           {/* Check if there's still amount to allocate before showing the "Add" button */}
-          {remainingAmount > 0 && (
-            <div className="flex justify-end mt-4">
-              <Button 
-                variant="outline" 
-                onClick={() => setIsModalOpen(true)} 
-                className="flex items-center gap-2"
-              >
-                <Plus size={16} />
-                Add Funding Source(s)
-              </Button>
-            </div>
-          )}
+          <div className="flex justify-end mt-4">
+            <Button 
+              variant="outline" 
+              onClick={() => setIsModalOpen(true)} 
+              className="flex items-center gap-2"
+            >
+              <Plus size={16} />
+              {remainingAmount > 0 ? 'Add Funding Source(s)' : 'Edit Funding Sources'}
+            </Button>
+          </div>
         </>
       ) : (
         <div className="flex flex-col items-center py-6 space-y-4 bg-gray-50 rounded-lg border border-dashed border-gray-300">
@@ -92,7 +90,7 @@ export const FundingSourcesSection: React.FC<FundingSourcesSectionProps> = ({
         </div>
       )}
       
-      <FundingSourceSelectionModal
+      <SourceSelectionModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onConfirm={handleAddSources}
@@ -100,7 +98,10 @@ export const FundingSourcesSection: React.FC<FundingSourcesSectionProps> = ({
         currency={currency}
         currentAllocations={allocations}
         instrumentPrice={instrumentPrice}
+        totalRequiredAmount={totalAmount}
       />
     </div>
   );
 };
+
+export default FundingSourcesSection;

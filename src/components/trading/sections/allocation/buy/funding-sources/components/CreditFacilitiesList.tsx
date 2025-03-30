@@ -1,12 +1,13 @@
 
 import React from "react";
+import { mockCreditFacilitiesFlat } from "@/components/trading/data";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { mockCreditFacilitiesFlat } from "@/components/trading/data";
+import { formatCurrency } from "@/lib/utils";
 
 interface CreditFacilitiesListProps {
   tempAllocations: Record<string, number>;
-  handleTempAllocationChange: (sourceId: string, amount: number) => void;
+  handleTempAllocationChange: (sourceId: string, quantity: number) => void;
   instrumentPrice: number;
   remainingShares: number;
   searchQuery: string;
@@ -19,96 +20,94 @@ export const CreditFacilitiesList: React.FC<CreditFacilitiesListProps> = ({
   remainingShares,
   searchQuery
 }) => {
-  const filteredFacilities = mockCreditFacilitiesFlat.filter(facility => {
-    if (!searchQuery) return true;
+  // Filter facilities by search query
+  const filteredFacilities = searchQuery
+    ? mockCreditFacilitiesFlat.filter(
+        facility =>
+          facility.name.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : mockCreditFacilitiesFlat;
     
-    // Map ID to names for filtering
-    const institutionName = facility.institutionId?.toLowerCase();
-    const legalEntityName = facility.legalEntityId?.toLowerCase();
-    const searchLower = searchQuery.toLowerCase();
-    
-    return (
-      facility.name.toLowerCase().includes(searchLower) ||
-      (institutionName && institutionName.includes(searchLower)) ||
-      (legalEntityName && legalEntityName.includes(searchLower))
-    );
-  });
-  
-  const handleInputChange = (sourceId: string, value: string) => {
-    // Allow empty value to clear the input
-    if (value === '') {
-      handleTempAllocationChange(sourceId, 0);
-      return;
-    }
-    
-    // Convert to number and update
-    const numValue = parseFloat(value);
-    if (!isNaN(numValue)) {
-      handleTempAllocationChange(sourceId, numValue);
-    }
+  // Handle setting allocation to maximum available for a facility
+  const handleSetMax = (facilityId: string, maxShares: number) => {
+    handleTempAllocationChange(facilityId, maxShares);
   };
   
-  const handleMaxClick = (sourceId: string, maxShares: number) => {
-    handleTempAllocationChange(sourceId, maxShares);
+  // Handle adding the remaining shares needed to a facility
+  const handleAddRemaining = (facilityId: string, maxAvailableShares: number) => {
+    const sharesToAdd = Math.min(remainingShares, maxAvailableShares);
+    if (sharesToAdd > 0) {
+      const currentAllocation = tempAllocations[facilityId] || 0;
+      handleTempAllocationChange(facilityId, currentAllocation + sharesToAdd);
+    }
+  };
+
+  // Format currency utility function if not available
+  const formatCurrencyFallback = (amount: number, currency: string) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: currency || 'USD'
+    }).format(amount);
   };
   
   return (
     <div className="space-y-4">
       {filteredFacilities.length === 0 ? (
-        <p className="text-center py-4 text-gray-500">No credit facilities found matching your search.</p>
+        <div className="text-center py-4 text-gray-500">No credit facilities found matching your search</div>
       ) : (
         filteredFacilities.map(facility => {
-          const maxShares = Math.floor(facility.available / instrumentPrice);
-          const currentShares = tempAllocations[facility.id] || 0;
+          const maxAvailableShares = Math.floor(facility.available / instrumentPrice);
           
           return (
-            <div key={facility.id} className="p-3 border rounded-md">
-              <div className="flex justify-between mb-2">
+            <div key={facility.id} className="border rounded-md p-3">
+              <div className="flex justify-between items-start mb-2">
                 <div>
-                  <h4 className="font-medium">{facility.name}</h4>
-                  <p className="text-xs text-gray-500">{facility.legalEntityId} • {facility.institutionId}</p>
+                  <h4 className="font-medium text-sm">{facility.name}</h4>
+                  <p className="text-xs text-gray-500">{facility.type}</p>
                 </div>
                 <div className="text-right">
-                  <p className="font-medium">
-                    {facility.available.toLocaleString('en-US', {
-                      style: 'currency',
-                      currency: facility.currency
-                    })}
+                  <p className="text-sm font-medium">
+                    {typeof formatCurrency === 'function' 
+                      ? formatCurrency(facility.available, facility.currency) 
+                      : formatCurrencyFallback(facility.available, facility.currency)}
                   </p>
                   <p className="text-xs text-gray-500">
-                    Available: {maxShares.toLocaleString()} shares
+                    Max: {maxAvailableShares.toFixed(2)} shares
                   </p>
                 </div>
               </div>
               
-              <div className="flex flex-wrap gap-2 items-center mt-3">
-                <Input
-                  type="text"
-                  min="0"
-                  max={maxShares}
-                  value={currentShares || ''}
-                  onChange={(e) => handleInputChange(facility.id, e.target.value)}
-                  className="w-24 h-9"
-                  placeholder="0"
-                />
-                
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="h-9 text-xs"
-                  onClick={() => handleMaxClick(facility.id, maxShares)}
+              <div className="flex items-center gap-2">
+                <div className="w-24">
+                  <Input
+                    type="number"
+                    min="0"
+                    max={maxAvailableShares}
+                    value={tempAllocations[facility.id] || 0}
+                    onChange={(e) => {
+                      const value = parseFloat(e.target.value);
+                      const validValue = isNaN(value) ? 0 : Math.min(value, maxAvailableShares);
+                      handleTempAllocationChange(facility.id, validValue);
+                    }}
+                    className="text-right h-8"
+                  />
+                </div>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="text-xs"
+                  onClick={() => handleSetMax(facility.id, maxAvailableShares)}
                 >
-                  Max ({maxShares})
+                  Max
                 </Button>
-                
                 {remainingShares > 0 && (
                   <Button
                     variant="outline"
                     size="sm"
-                    className="h-9 text-xs"
-                    onClick={() => handleTempAllocationChange(facility.id, Math.min(maxShares, currentShares + Math.ceil(remainingShares)))}
+                    className="text-xs"
+                    onClick={() => handleAddRemaining(facility.id, maxAvailableShares)}
                   >
-                    Add Remaining ({Math.ceil(remainingShares)})
+                    Add Remaining
                   </Button>
                 )}
               </div>
@@ -119,3 +118,5 @@ export const CreditFacilitiesList: React.FC<CreditFacilitiesListProps> = ({
     </div>
   );
 };
+
+export default CreditFacilitiesList;

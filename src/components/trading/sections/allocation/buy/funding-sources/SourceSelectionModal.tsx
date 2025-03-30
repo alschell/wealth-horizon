@@ -66,9 +66,6 @@ export const SourceSelectionModal: React.FC<SourceSelectionModalProps> = ({
   const remainingShares = requiredShares - (allocatedAmount / instrumentPrice);
   const allocationPercentage = Math.min(100, (allocatedAmount / totalRequiredAmount) * 100);
   
-  console.log("Current temp allocations:", tempAllocations);
-  console.log("Remaining shares:", remainingShares);
-  
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="max-w-5xl max-h-[85vh] overflow-y-auto">
@@ -169,3 +166,5 @@ export const SourceSelectionModal: React.FC<SourceSelectionModalProps> = ({
     </Dialog>
   );
 };
+
+export default SourceSelectionModal;

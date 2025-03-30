@@ -28,6 +28,8 @@ const TradingBrokerSelection: React.FC<TradingBrokerSelectionProps> = ({
     : mockBrokers;
 
   const handleBrokerSelect = (brokerId: string) => {
+    // The issue is likely here - we need to make sure this doesn't cause infinite re-renders
+    console.log("Selecting broker:", brokerId);
     setSelectedBroker(brokerId);
   };
 

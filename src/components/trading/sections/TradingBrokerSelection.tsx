@@ -70,7 +70,12 @@ const TradingBrokerSelection: React.FC<TradingBrokerSelectionProps> = ({
             <h4 className="text-base font-semibold">Best Execution</h4>
             <p className="text-xs text-gray-600">Automatically route to optimal broker</p>
           </div>
-          <span className="text-green-600 text-xs ml-auto">Recommended</span>
+          <div className="ml-auto flex items-center">
+            <span className="text-green-600 text-xs mr-2">Recommended</span>
+            {selectedBroker === "best" && (
+              <span className="bg-black text-white text-xs px-2 py-0.5 rounded">Selected</span>
+            )}
+          </div>
         </div>
       </Card>
       
@@ -89,6 +94,11 @@ const TradingBrokerSelection: React.FC<TradingBrokerSelectionProps> = ({
                 <div className="font-medium text-sm">{broker.name}</div>
                 <p className="text-xs text-gray-600 mt-1 line-clamp-2">{broker.description}</p>
                 {broker.fee && <p className="text-xs text-gray-700 mt-1">Fee: {broker.fee}</p>}
+                {selectedBroker === broker.id && (
+                  <div className="mt-2">
+                    <span className="bg-black text-white text-xs px-2 py-0.5 rounded">Selected</span>
+                  </div>
+                )}
               </div>
             </Card>
           ))}

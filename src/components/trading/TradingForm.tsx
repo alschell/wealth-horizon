@@ -69,9 +69,9 @@ const TradingForm: React.FC = () => {
     setOrderType(orderType);
   }, [orderType, setOrderType]);
 
-  // Renamed first step to "Order & Instrument"
+  // Changed first step from "Order & Instrument" to "Instrument"
   const steps = [
-    { title: "Order & Instrument", component: TradingInstrumentSearch },
+    { title: "Instrument", component: TradingInstrumentSearch },
     { title: "Type & Validity", component: TradingOrderType },
     { title: "Quantity & Price", component: TradingQuantityPrice },
     { title: "Allocation", component: TradingAllocation },

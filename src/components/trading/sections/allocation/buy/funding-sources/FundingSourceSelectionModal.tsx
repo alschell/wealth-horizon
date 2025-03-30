@@ -46,7 +46,7 @@ const FundingSourceSelectionModal: React.FC<FundingSourceSelectionModalProps> = 
     }
   }, [isOpen, currentAllocations]);
 
-  const handleAllocationChange = (sourceId: string, quantity: number) => {
+  const handleTempAllocationChange = (sourceId: string, quantity: number) => {
     const newAllocations = { ...tempAllocations, [sourceId]: quantity };
     setTempAllocations(newAllocations);
     
@@ -96,7 +96,7 @@ const FundingSourceSelectionModal: React.FC<FundingSourceSelectionModalProps> = 
             <TabsContent value="cash" className="mt-4">
               <CashAccountsList
                 tempAllocations={tempAllocations}
-                handleAllocationChange={handleAllocationChange}
+                handleTempAllocationChange={handleTempAllocationChange}
                 instrumentPrice={instrumentPrice}
                 remainingShares={remainingShares}
               />
@@ -105,7 +105,7 @@ const FundingSourceSelectionModal: React.FC<FundingSourceSelectionModalProps> = 
             <TabsContent value="credit" className="mt-4">
               <CreditFacilitiesList
                 tempAllocations={tempAllocations}
-                handleAllocationChange={handleAllocationChange}
+                handleTempAllocationChange={handleTempAllocationChange}
                 instrumentPrice={instrumentPrice}
                 remainingShares={remainingShares}
               />

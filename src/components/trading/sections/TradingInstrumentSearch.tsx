@@ -39,7 +39,7 @@ const TradingInstrumentSearch: React.FC<TradingInstrumentSearchProps> = ({
           isSearching={isLoading}
         />
 
-        {/* Removed the SelectedInstrumentCard component */}
+        {/* We've removed the SelectedInstrumentCard component */}
 
         {error ? (
           <div className="text-red-500 text-sm">{error}</div>

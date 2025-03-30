@@ -71,7 +71,7 @@ const TradingForm: React.FC = () => {
 
   // Reordered steps and removed Leverage step
   const steps = [
-    { title: "Instrument", component: TradingInstrumentSearch },
+    { title: "Order & Instrument", component: TradingInstrumentSearch },
     { title: "Type & Validity", component: TradingOrderType },
     { title: "Quantity & Price", component: TradingQuantityPrice },
     { title: "Allocation", component: TradingAllocation },

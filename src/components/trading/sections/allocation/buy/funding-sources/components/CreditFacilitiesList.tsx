@@ -42,7 +42,7 @@ export const CreditFacilitiesList: React.FC<CreditFacilitiesListProps> = ({
     }
     
     // Convert to number and update
-    const numValue = Number(value);
+    const numValue = parseFloat(value);
     if (!isNaN(numValue)) {
       handleTempAllocationChange(sourceId, numValue);
     }
@@ -83,7 +83,7 @@ export const CreditFacilitiesList: React.FC<CreditFacilitiesListProps> = ({
               
               <div className="flex flex-wrap gap-2 items-center mt-3">
                 <Input
-                  type="number"
+                  type="text"
                   min="0"
                   max={maxShares}
                   value={currentShares || ''}

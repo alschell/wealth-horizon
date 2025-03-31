@@ -73,7 +73,7 @@ const TradingStepRenderer: React.FC<StepRendererProps> = ({
 
     return (
       <>
-        <h2 className="text-xl font-semibold mb-6">{stepTitle}</h2>
+        {stepTitle && <h2 className="text-xl font-semibold mb-6">{stepTitle}</h2>}
         
         <CurrentStepComponent 
           orderType={orderType}

@@ -111,7 +111,7 @@ const TradingFormContent: React.FC<TradingFormContentProps> = ({
         
         <TradingStepRenderer
           CurrentStepComponent={CurrentStepComponent}
-          stepTitle={steps[currentStep]?.title || ""}
+          stepTitle={currentStep === 0 ? "" : steps[currentStep]?.title || ""}
           orderType={orderType}
           selectedInstrument={selectedInstrument}
           setSelectedInstrument={setSelectedInstrument}

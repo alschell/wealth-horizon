@@ -44,12 +44,12 @@ const TradingLeverageOptions: React.FC<TradingLeverageOptionsProps> = ({
     }
   ];
 
-  // Direct function declaration for clear event handling
+  // Direct function for handling card selection without any wrapping
   const handleCardSelection = (value: number) => {
     setLeverage(value);
   };
 
-  // Direct function declaration for slider
+  // Direct function for slider
   const handleSliderChange = (values: number[]) => {
     if (values.length > 0) {
       setLeverage(values[0]);
@@ -76,7 +76,7 @@ const TradingLeverageOptions: React.FC<TradingLeverageOptionsProps> = ({
         </p>
       </div>
 
-      {/* Leverage option cards - Wrapped in button elements for better accessibility and click handling */}
+      {/* Leverage option cards - Using buttons for better accessibility */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {leverageOptions.map((option) => {
           const isSelected = leverage === option.value;
@@ -85,8 +85,8 @@ const TradingLeverageOptions: React.FC<TradingLeverageOptionsProps> = ({
           return (
             <button
               key={option.value}
-              onClick={() => handleCardSelection(option.value)}
               type="button"
+              onClick={() => handleCardSelection(option.value)}
               className={`w-full text-left p-4 rounded-lg border transition-all cursor-pointer ${
                 isSelected ? 'ring-2 ring-black bg-white' : 'bg-white hover:bg-gray-50'
               }`}

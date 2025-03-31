@@ -95,34 +95,32 @@ const TradingOrderType: React.FC<TradingOrderTypeProps> = ({
       
       <div>
         <h3 className="text-lg font-medium mb-3">Time in Force</h3>
-        <Card className="p-4">
-          <div>
-            <label className="text-sm font-medium mb-1 block">
-              Duration of the Order
-            </label>
-            <Select value={timeInForce} onValueChange={setTimeInForce}>
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Select time in force" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectItem value="day">Day Order</SelectItem>
-                  <SelectItem value="gtc">Good Till Canceled (GTC)</SelectItem>
-                  <SelectItem value="gtd">Good Till Date (GTD)</SelectItem>
-                  <SelectItem value="ioc">Immediate or Cancel (IOC)</SelectItem>
-                  <SelectItem value="fok">Fill or Kill (FOK)</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-            <p className="text-xs text-gray-500 mt-1">
-              {timeInForce === "day" && "Order valid until end of current trading day."}
-              {timeInForce === "gtc" && "Order valid until executed or canceled."}
-              {timeInForce === "gtd" && "Order valid until specified date."}
-              {timeInForce === "ioc" && "Fill whatever portion possible immediately, cancel rest."}
-              {timeInForce === "fok" && "Must be filled immediately and completely or canceled."}
-            </p>
-          </div>
-        </Card>
+        <div>
+          <label className="text-sm font-medium mb-1 block">
+            Duration of the Order
+          </label>
+          <Select value={timeInForce} onValueChange={setTimeInForce}>
+            <SelectTrigger className="w-full h-11 bg-white focus:ring-2 focus:ring-black focus:border-black">
+              <SelectValue placeholder="Select time in force" />
+            </SelectTrigger>
+            <SelectContent className="bg-white border shadow-md z-[999]">
+              <SelectGroup>
+                <SelectItem value="day">Day Order</SelectItem>
+                <SelectItem value="gtc">Good Till Canceled (GTC)</SelectItem>
+                <SelectItem value="gtd">Good Till Date (GTD)</SelectItem>
+                <SelectItem value="ioc">Immediate or Cancel (IOC)</SelectItem>
+                <SelectItem value="fok">Fill or Kill (FOK)</SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+          <p className="text-xs text-gray-500 mt-1">
+            {timeInForce === "day" && "Order valid until end of current trading day."}
+            {timeInForce === "gtc" && "Order valid until executed or canceled."}
+            {timeInForce === "gtd" && "Order valid until specified date."}
+            {timeInForce === "ioc" && "Fill whatever portion possible immediately, cancel rest."}
+            {timeInForce === "fok" && "Must be filled immediately and completely or canceled."}
+          </p>
+        </div>
       </div>
 
       {orderType === "sell_short" && (

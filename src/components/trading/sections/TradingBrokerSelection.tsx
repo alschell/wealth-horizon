@@ -60,13 +60,13 @@ const TradingBrokerSelection: React.FC<TradingBrokerSelectionProps> = ({
 
       {/* Best Execution Card - Made it more visible */}
       <button 
+        type="button"
         className={`w-full text-left p-4 cursor-pointer transition-all mb-6 border rounded-lg ${
           selectedBroker === "best" 
             ? "ring-2 ring-black bg-gray-50" 
             : "hover:bg-gray-50"
         }`} 
         onClick={() => handleBrokerSelect("best")}
-        type="button"
       >
         <div className="flex items-center">
           <div>
@@ -93,13 +93,13 @@ const TradingBrokerSelection: React.FC<TradingBrokerSelectionProps> = ({
           {filteredBrokers.map((broker) => (
             <button 
               key={broker.id} 
+              type="button"
               onClick={() => handleBrokerSelect(broker.id)}
               className={`p-4 cursor-pointer transition-all h-full rounded-lg border ${
                 selectedBroker === broker.id 
                   ? 'ring-2 ring-black bg-gray-50' 
                   : 'hover:bg-gray-50'
               }`}
-              type="button"
             >
               <div className="w-full">
                 <div className="font-medium text-sm">{broker.name}</div>

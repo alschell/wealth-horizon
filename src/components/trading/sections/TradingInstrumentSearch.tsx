@@ -34,6 +34,7 @@ const TradingInstrumentSearch: React.FC<TradingInstrumentSearchProps> = ({
   return (
     <div className="space-y-6">
       <div>
+        <h2 className="text-xl font-semibold mb-6">Type & Instrument</h2>
         <h3 className="text-lg font-medium mb-2">Instrument</h3>
       </div>
 

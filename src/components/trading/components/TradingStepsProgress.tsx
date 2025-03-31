@@ -20,7 +20,7 @@ const TradingStepsProgress: React.FC<TradingStepsProgressProps> = ({
   return (
     <div className="w-full mb-12">
       {/* Desktop view - full steps with names */}
-      <div className="hidden md:flex w-full max-w-5xl justify-between relative mb-2">
+      <div className="hidden md:grid md:grid-cols-7 w-full max-w-5xl justify-between relative mb-2">
         {/* Progress line */}
         <div className="absolute top-5 left-0 w-full h-0.5 bg-gray-100 -z-0">
           <div 
@@ -29,7 +29,7 @@ const TradingStepsProgress: React.FC<TradingStepsProgressProps> = ({
           ></div>
         </div>
         
-        {/* Step circles - distributed evenly across the full width */}
+        {/* Step circles - using grid for even spacing */}
         {steps.map((step, index) => (
           <div 
             key={index} 

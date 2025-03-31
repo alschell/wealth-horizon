@@ -61,6 +61,7 @@ export const useInstrumentSearch = ({ setSelectedInstrument, orderType }: UseIns
   // Clear selected instrument
   const clearSelectedInstrument = useCallback(() => {
     setSelectedInstrument(null);
+    // We don't clear the search query after unselecting
   }, [setSelectedInstrument]);
 
   return {

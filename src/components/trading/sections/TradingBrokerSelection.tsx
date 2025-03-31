@@ -158,25 +158,21 @@ const TradingBrokerSelection: React.FC<TradingBrokerSelectionProps> = ({
         </div>
       </div>
       
-      {/* Specific Brokers Section */}
-      <div>
-        <h4 className="text-base font-medium mb-3">Specific Brokers</h4>
-        
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-          {filteredBrokers.map((broker) => (
-            <BrokerCard 
-              key={broker.id}
-              broker={broker}
-              isSelected={selectedBroker === broker.id}
-              onSelect={() => handleBrokerSelect(broker.id)}
-            />
-          ))}
-        </div>
-        
-        {filteredBrokers.length === 0 && (
-          <p className="text-gray-500 text-center py-4">No brokers found matching your search</p>
-        )}
+      {/* Brokers Grid - removed the "Specific Brokers" header */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        {filteredBrokers.map((broker) => (
+          <BrokerCard 
+            key={broker.id}
+            broker={broker}
+            isSelected={selectedBroker === broker.id}
+            onSelect={() => handleBrokerSelect(broker.id)}
+          />
+        ))}
       </div>
+      
+      {filteredBrokers.length === 0 && (
+        <p className="text-gray-500 text-center py-4">No brokers found matching your search</p>
+      )}
     </div>
   );
 };

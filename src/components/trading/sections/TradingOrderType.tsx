@@ -7,7 +7,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Button } from "@/components/ui/button";
 import { CustomSelect } from "@/components/ui/custom-select";
 import { format } from "date-fns";
-import { CalendarIcon, TrendingUp, Timer, StopCircle } from "lucide-react";
+import { CalendarIcon, TrendingUp, Timer, StopCircle, ArrowRightLeft, Clock, BarChart2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Card } from "@/components/ui/card";
 
@@ -51,56 +51,87 @@ const TradingOrderType: React.FC<OrderTypeProps> = ({
     "aon": "Order must be executed in its entirety or not at all."
   };
 
+  // Define execution type options with more sophisticated choices
+  const executionTypeOptions = [
+    { 
+      value: 'market', 
+      title: 'Market',
+      description: 'Execute at the current market price.',
+      icon: TrendingUp,
+      iconColor: 'text-green-600',
+    },
+    { 
+      value: 'limit', 
+      title: 'Limit',
+      description: 'Execute at a specified price or better.',
+      icon: Timer,
+      iconColor: 'text-blue-600',
+    },
+    { 
+      value: 'stop', 
+      title: 'Stop',
+      description: 'Triggers when price reaches stop level.',
+      icon: StopCircle,
+      iconColor: 'text-amber-600',
+    },
+    { 
+      value: 'stop_limit', 
+      title: 'Stop Limit',
+      description: 'Combines stop and limit orders.',
+      icon: BarChart2,
+      iconColor: 'text-purple-600',
+    },
+    { 
+      value: 'trailing_stop', 
+      title: 'Trailing Stop',
+      description: 'Stop price adjusts as market price changes.',
+      icon: ArrowRightLeft,
+      iconColor: 'text-indigo-600',
+    },
+    { 
+      value: 'iceberg', 
+      title: 'Iceberg',
+      description: 'Shows only part of the total quantity to the market.',
+      icon: Clock,
+      iconColor: 'text-cyan-600',
+    }
+  ];
+
   return (
     <div className="space-y-8">
       <div className="space-y-4">
         <h3 className="text-lg font-medium">Order Execution</h3>
         
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <Card 
-            className={`p-4 cursor-pointer transition-all ${orderExecutionType === 'market' ? 'ring-2 ring-black bg-white' : 'bg-white hover:bg-gray-50'}`}
-            onClick={() => setOrderExecutionType('market')}
-          >
-            <div className="flex flex-col items-center">
-              <div className="mb-2">
-                <TrendingUp className={`h-5 w-5 text-green-600 ${orderExecutionType === "market" ? "text-green-600" : "text-gray-600"}`} />
-              </div>
-              <h3 className="font-medium text-center mb-2">Market</h3>
-              <p className="text-sm text-gray-600 text-center">
-                Execute at the current market price.
-              </p>
-            </div>
-          </Card>
-          
-          <Card 
-            className={`p-4 cursor-pointer transition-all ${orderExecutionType === 'limit' ? 'ring-2 ring-black bg-white' : 'bg-white hover:bg-gray-50'}`}
-            onClick={() => setOrderExecutionType('limit')}
-          >
-            <div className="flex flex-col items-center">
-              <div className="mb-2">
-                <Timer className={`h-5 w-5 ${orderExecutionType === "limit" ? "text-blue-600" : "text-gray-600"}`} />
-              </div>
-              <h3 className="font-medium text-center mb-2">Limit</h3>
-              <p className="text-sm text-gray-600 text-center">
-                Execute at a specified price or better.
-              </p>
-            </div>
-          </Card>
-          
-          <Card 
-            className={`p-4 cursor-pointer transition-all ${orderExecutionType === 'stop' ? 'ring-2 ring-black bg-white' : 'bg-white hover:bg-gray-50'}`}
-            onClick={() => setOrderExecutionType('stop')}
-          >
-            <div className="flex flex-col items-center">
-              <div className="mb-2">
-                <StopCircle className={`h-5 w-5 ${orderExecutionType === "stop" ? "text-amber-600" : "text-gray-600"}`} />
-              </div>
-              <h3 className="font-medium text-center mb-2">Stop</h3>
-              <p className="text-sm text-gray-600 text-center">
-                Triggers when price reaches stop level.
-              </p>
-            </div>
-          </Card>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {executionTypeOptions.map((option) => {
+            const isSelected = orderExecutionType === option.value;
+            const Icon = option.icon;
+            
+            return (
+              <button 
+                key={option.value}
+                type="button"
+                className="text-left w-full focus:outline-none"
+                onClick={() => setOrderExecutionType(option.value)}
+              >
+                <Card
+                  className={`p-4 transition-all ${
+                    isSelected ? 'ring-2 ring-black bg-white' : 'bg-white hover:bg-gray-50'
+                  }`}
+                >
+                  <div className="flex flex-col items-center text-center">
+                    <div className="mb-2">
+                      <Icon className={`h-5 w-5 ${option.iconColor}`} />
+                    </div>
+                    <h3 className="font-medium mb-2">{option.title}</h3>
+                    <p className="text-sm text-gray-600 mb-2">
+                      {option.description}
+                    </p>
+                  </div>
+                </Card>
+              </button>
+            );
+          })}
         </div>
       </div>
 

@@ -51,7 +51,7 @@ const TradingLeverageOptions: React.FC<TradingLeverageOptionsProps> = ({
     }
   }, [setLeverage]);
   
-  // Card selection handler
+  // Card selection handler - now uses React's onClick pattern properly
   const handleCardClick = useCallback((value: number) => {
     setLeverage(value);
   }, [setLeverage]);
@@ -85,7 +85,7 @@ const TradingLeverageOptions: React.FC<TradingLeverageOptionsProps> = ({
             <div key={option.value} className="relative">
               <button 
                 type="button"
-                className="text-left w-full focus:outline-none"
+                className="w-full text-left focus:outline-none"
                 onClick={() => handleCardClick(option.value)}
               >
                 <Card

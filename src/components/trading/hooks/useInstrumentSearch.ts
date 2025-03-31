@@ -66,13 +66,16 @@ export const useInstrumentSearch = ({ setSelectedInstrument, orderType }: UseIns
   // Handle selecting an instrument
   const handleSelectInstrument = useCallback((instrument: Instrument | null) => {
     setSelectedInstrument(instrument);
-    // Don't clear search results when selecting or unselecting
+    // When an instrument is selected, keep the results to maintain UI consistency
+    if (instrument) {
+      setSearchResults(prev => prev.length ? prev : [instrument]);
+      setHasSearched(true);
+    }
   }, [setSelectedInstrument]);
 
   // Clear selected instrument
   const clearSelectedInstrument = useCallback(() => {
     setSelectedInstrument(null);
-    // Don't clear search results when unselecting
   }, [setSelectedInstrument]);
 
   return {

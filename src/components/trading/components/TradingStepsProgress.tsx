@@ -58,7 +58,7 @@ const TradingStepsProgress: React.FC<TradingStepsProgressProps> = ({
                 </div>
                 <span 
                   className={cn(
-                    "hidden sm:block text-xs text-center",
+                    "text-xs text-center",
                     isActive ? "text-black font-medium" : "text-gray-600"
                   )}
                 >

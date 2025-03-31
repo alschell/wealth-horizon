@@ -32,7 +32,7 @@ const TradingOrderType: React.FC<TradingOrderTypeProps> = ({
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-medium mb-3">Order Execution Type</h3>
+        <h3 className="text-lg font-medium mb-3">Execution</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <Card 
             className={`p-4 cursor-pointer transition-all ${orderExecutionType === 'market' ? 'ring-2 ring-black' : 'hover:bg-gray-50'}`}

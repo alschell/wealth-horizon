@@ -24,7 +24,8 @@ const TradingInstrumentSearch: React.FC<TradingInstrumentSearchProps> = ({
     isLoading,
     error,
     handleSelectInstrument,
-    clearSelectedInstrument
+    clearSelectedInstrument,
+    hasSearched
   } = useInstrumentSearch({
     setSelectedInstrument,
     orderType
@@ -47,9 +48,9 @@ const TradingInstrumentSearch: React.FC<TradingInstrumentSearchProps> = ({
           <div className="text-red-500 text-sm">{error}</div>
         ) : searchQuery && searchResults.length === 0 && !isLoading ? (
           <NoResultsMessage searchTerm={searchQuery} />
-        ) : searchResults.length > 0 ? (
+        ) : (searchResults.length > 0 || selectedInstrument) ? (
           <InstrumentResultsTable
-            searchResults={searchResults}
+            searchResults={searchResults.length > 0 ? searchResults : (selectedInstrument ? [selectedInstrument] : [])}
             selectedInstrument={selectedInstrument}
             onSelectInstrument={handleSelectInstrument}
           />

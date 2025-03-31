@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import TradingInstrumentSearch from "./sections/TradingInstrumentSearch";
 import TradingQuantityPrice from "./sections/quantity-price";
@@ -44,7 +43,6 @@ const TradingForm: React.FC = () => {
     setLeverage
   } = useTradingForm(orderType);
 
-  // Validation hook with added gtdDate
   const { nextButtonDisabled } = useTradingFormValidation({
     currentStep,
     selectedInstrument,
@@ -62,7 +60,6 @@ const TradingForm: React.FC = () => {
     console.log("TradingForm - Current order state:", JSON.stringify(order));
     console.log("TradingForm - GTD Date:", gtdDate);
     
-    // Ensure we have a broker selected, defaulting to "best" if not set
     if (currentStep >= 5 && !selectedBroker) {
       console.log("Setting default broker to 'best'");
       setSelectedBroker("best");
@@ -73,7 +70,6 @@ const TradingForm: React.FC = () => {
     setOrderType(orderType);
   }, [orderType, setOrderType]);
 
-  // Added Leverage step between Allocation and Broker with updated step names
   const steps = [
     { title: "Type & Instrument", component: TradingInstrumentSearch },
     { title: "Execution & Validity", component: TradingOrderType },
@@ -93,7 +89,7 @@ const TradingForm: React.FC = () => {
           transition={{ duration: 0.5 }}
           className="mb-10 text-center"
         >
-          <h1 className="text-3xl font-bold text-black mb-8">Wealth Horizon</h1>
+          <h1 className="text-3xl font-bold text-black mb-8">New Trade</h1>
         </motion.div>
 
         <TradingStepsProgress 

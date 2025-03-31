@@ -49,15 +49,12 @@ const LeveragePresets: React.FC<LeveragePresetsProps> = ({
     }
   ], []);
 
-  // Define a direct card click handler with useCallback and performance optimizations
+  // Optimized card click handler with performance improvements
   const handleCardClick = useCallback((value: number) => {
-    // Use requestAnimationFrame to defer state update to next frame
-    requestAnimationFrame(() => {
-      // Only update if the value has changed
-      if (leverage !== value) {
-        setLeverage(value);
-      }
-    });
+    // Only update if the value has changed
+    if (leverage !== value) {
+      setLeverage(value);
+    }
   }, [setLeverage, leverage]);
 
   return (

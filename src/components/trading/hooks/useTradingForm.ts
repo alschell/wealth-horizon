@@ -40,7 +40,7 @@ export const useTradingForm = (orderType: OrderType, gtdDate?: Date): UseTrading
     order
   };
 
-  // Use the extracted handler hooks
+  // Use the extracted handler hooks with optimized state updates
   const { 
     handleNextStep, 
     handlePreviousStep, 

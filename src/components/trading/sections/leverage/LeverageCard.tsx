@@ -25,23 +25,21 @@ const LeverageCard: React.FC<LeverageCardProps> = ({
   isSelected,
   onClick
 }) => {
-  // Optimize the click handler with useCallback and event handling improvements
-  const handleClick = useCallback((e: React.MouseEvent) => {
-    // Stop event propagation to prevent bubbling
-    e.preventDefault();
-    e.stopPropagation();
-    
-    // Use requestAnimationFrame to defer setting state
-    requestAnimationFrame(() => {
-      onClick(value);
-    });
-  }, [onClick, value]);
+  // Optimize the click handler with useCallback
+  const handleClick = useCallback(() => {
+    if (!isSelected) {
+      // Use setTimeout to defer setting state
+      setTimeout(() => {
+        onClick(value);
+      }, 0);
+    }
+  }, [onClick, value, isSelected]);
 
   // Optimize the keyboard handler
   const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
-      handleClick(e as unknown as React.MouseEvent);
+      handleClick();
     }
   }, [handleClick]);
 

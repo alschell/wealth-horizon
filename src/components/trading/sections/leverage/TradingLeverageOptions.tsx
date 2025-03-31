@@ -15,20 +15,21 @@ const TradingLeverageOptions: React.FC<TradingLeverageOptionsProps> = ({
   setLeverage,
   orderType
 }) => {
-  // Create a safe leverage handler with useCallback and performance optimizations
+  // Create a safe leverage handler with debouncing
   const handleLeverageChange = useCallback((value: number) => {
-    // Use requestAnimationFrame to defer state update
-    requestAnimationFrame(() => {
-      // Ensure the value is valid before updating state
-      if (typeof value === 'number' && !isNaN(value) && value >= 1) {
-        // Only update if the value actually changed
-        if (value !== leverage) {
-          // Round to nearest 0.5 to match the slider step
-          const roundedValue = Math.round(value * 2) / 2;
+    // Ensure the value is valid
+    if (typeof value === 'number' && !isNaN(value) && value >= 1) {
+      // Only update if the value actually changed
+      if (value !== leverage) {
+        // Round to nearest 0.5 to match the slider step
+        const roundedValue = Math.round(value * 2) / 2;
+        
+        // Use setTimeout to avoid blocking the UI thread
+        setTimeout(() => {
           setLeverage(roundedValue);
-        }
+        }, 0);
       }
-    });
+    }
   }, [setLeverage, leverage]);
 
   return (

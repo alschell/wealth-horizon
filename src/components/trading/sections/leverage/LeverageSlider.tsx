@@ -19,17 +19,16 @@ const LeverageSlider: React.FC<LeverageSliderProps> = ({
     return "destructive";
   };
 
-  // Handle slider change with proper event handling and performance optimizations
+  // Handle slider change with optimized state updates
   const handleSliderChange = useCallback((values: number[]) => {
     if (values && values.length > 0) {
       const newValue = Math.round(values[0] * 2) / 2; // Ensure values match the step (0.5)
       
-      // Only update if the value actually changed and use requestAnimationFrame
-      // to prevent UI blocking
+      // Only update if the value actually changed
       if (newValue !== leverage) {
-        requestAnimationFrame(() => {
+        setTimeout(() => {
           setLeverage(newValue);
-        });
+        }, 0);
       }
     }
   }, [setLeverage, leverage]);

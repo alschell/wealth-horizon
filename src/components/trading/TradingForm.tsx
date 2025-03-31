@@ -57,17 +57,10 @@ const TradingForm: React.FC = () => {
   });
 
   useEffect(() => {
-    console.log("TradingForm - Current step:", currentStep);
-    console.log("TradingForm - Current order state:", JSON.stringify(order));
-    console.log("TradingForm - GTD Date:", gtdDate);
-    console.log("TradingForm - Time in force:", timeInForce);
-    console.log("TradingForm - Next button disabled:", nextButtonDisabled);
-    
     if (currentStep >= 5 && !selectedBroker) {
-      console.log("Setting default broker to 'best'");
       setSelectedBroker("best");
     }
-  }, [currentStep, selectedBroker, setSelectedBroker, order, gtdDate, timeInForce, nextButtonDisabled]);
+  }, [currentStep, selectedBroker, setSelectedBroker]);
 
   useEffect(() => {
     setOrderType(orderType);
@@ -83,14 +76,14 @@ const TradingForm: React.FC = () => {
     }
   }, [gtdDate, timeInForce, setOrder]);
 
-  // Reordered steps - moved Leverage after Broker
+  // Reordered steps - moved Leverage before Broker
   const steps = [
     { title: "Type & Instrument", component: TradingInstrumentSearch },
     { title: "Execution & Validity", component: TradingOrderType },
     { title: "Quantity & Price", component: TradingQuantityPrice },
     { title: "Allocation", component: TradingAllocation },
-    { title: "Broker", component: TradingBrokerSelection },
     { title: "Leverage", component: TradingLeverageOptions },
+    { title: "Broker", component: TradingBrokerSelection },
     { title: "Review", component: TradingReview }
   ];
 

@@ -1,5 +1,4 @@
 
-// Added to fix issues with step navigation after adding new Leverage step
 import { Instrument, OrderType } from "../../../types";
 
 interface NextStepHandlerProps {
@@ -62,18 +61,17 @@ export const useNextStepHandler = ({
       case 3: // Allocation step handled by form validation
         break;
         
-      case 4: // Broker selection step handled by form validation
-        // Ensure the broker selection is valid - it can be "best" or any string value
-        // but not undefined/null
-        if (selectedBroker === undefined || selectedBroker === null) {
-          console.log("Invalid broker selection:", selectedBroker);
+      case 4: // Leverage step has no specific validation
+        if (typeof leverage !== 'number' || leverage < 1) {
+          console.log("Invalid leverage value:", leverage);
           return;
         }
         break;
         
-      case 5: // Leverage step has no specific validation
-        if (typeof leverage !== 'number' || leverage < 1) {
-          console.log("Invalid leverage value:", leverage);
+      case 5: // Broker selection step
+        // Ensure the broker selection is valid - it can be "best" or any string value
+        if (selectedBroker === undefined || selectedBroker === null) {
+          console.log("Invalid broker selection:", selectedBroker);
           return;
         }
         break;
@@ -83,7 +81,7 @@ export const useNextStepHandler = ({
         return; // Should use submit handler instead
     }
 
-    // Update the order object with the latest values - using a shallow copy to prevent manipulation of nested objects
+    // Update the order object with the latest values using setTimeout to avoid blocking the UI
     setTimeout(() => {
       setOrder(prevOrder => ({
         ...prevOrder,
@@ -98,9 +96,9 @@ export const useNextStepHandler = ({
         gtdDate: timeInForce === "gtd" ? gtdDate : undefined
       }));
 
-      // Proceed to next step - use setTimeout to ensure UI updates before navigation
+      // Wait for state update before navigating
       setTimeout(() => {
-        setCurrentStep(currentStep + 1);
+        setCurrentStep(current => current + 1);
         console.log(`Successfully moved to step ${currentStep + 1}`);
       }, 0);
     }, 0);

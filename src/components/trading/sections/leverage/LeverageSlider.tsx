@@ -1,5 +1,5 @@
 
-import React, { useCallback, memo } from "react";
+import React, { useCallback } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Slider } from "@/components/ui/slider";
 
@@ -19,18 +19,14 @@ const LeverageSlider: React.FC<LeverageSliderProps> = ({
     return "destructive";
   };
 
-  // Handle slider change with proper memoization to prevent recreation on every render
+  // Handle slider change with memoization
   const handleSliderChange = useCallback((values: number[]) => {
     if (values && values.length > 0) {
       const newValue = Math.round(values[0] * 2) / 2; // Ensure values match the step (0.5)
-      console.log("Slider value changed to:", newValue);
-      
-      // Only update if the value has changed
-      if (newValue !== leverage) {
-        setLeverage(newValue);
-      }
+      console.log("Slider value changing to:", newValue);
+      setLeverage(newValue);
     }
-  }, [setLeverage, leverage]);
+  }, [setLeverage]);
 
   return (
     <div className="space-y-4">
@@ -53,11 +49,6 @@ const LeverageSlider: React.FC<LeverageSliderProps> = ({
           onValueChange={handleSliderChange}
           className="py-4"
           aria-label="Leverage slider"
-          // Prevent excessive rendering with correct value commit handling
-          onValueCommit={(values) => {
-            const committedValue = Math.round(values[0] * 2) / 2;
-            console.log("Slider value committed:", committedValue);
-          }}
         />
         
         <div className="flex justify-between text-xs text-gray-500">
@@ -70,8 +61,4 @@ const LeverageSlider: React.FC<LeverageSliderProps> = ({
   );
 };
 
-// Use React.memo correctly with a custom comparison function
-export default memo(LeverageSlider, (prevProps, nextProps) => {
-  // Only re-render if the leverage actually changed
-  return prevProps.leverage === nextProps.leverage;
-});
+export default React.memo(LeverageSlider);

@@ -35,6 +35,25 @@ const ValiditySelector: React.FC<ValiditySelectorProps> = ({
     "Fill or Kill (FOK)",
     "All or None (AON)"
   ];
+  
+  // Reset gtdDate when switching away from GTD
+  const handleTimeInForceChange = (value: string) => {
+    let newTimeInForce = "";
+    
+    if (value.includes("Day Only")) newTimeInForce = "day";
+    else if (value.includes("Good Till Canceled")) newTimeInForce = "gtc";
+    else if (value.includes("Good Till Date")) newTimeInForce = "gtd";
+    else if (value.includes("Immediate or Cancel")) newTimeInForce = "ioc";
+    else if (value.includes("Fill or Kill")) newTimeInForce = "fok";
+    else if (value.includes("All or None")) newTimeInForce = "aon";
+    
+    setTimeInForce(newTimeInForce);
+    
+    // Reset date if switching away from GTD
+    if (newTimeInForce !== "gtd" && gtdDate) {
+      setGtdDate(undefined);
+    }
+  };
 
   return (
     <div className="space-y-3">
@@ -52,14 +71,7 @@ const ValiditySelector: React.FC<ValiditySelectorProps> = ({
                 timeInForce === "aon" ? "All or None (AON)" : timeInForce}
           placeholder="Select validity option"
           options={validityOptions}
-          onChange={(value) => {
-            if (value.includes("Day Only")) setTimeInForce("day");
-            else if (value.includes("Good Till Canceled")) setTimeInForce("gtc");
-            else if (value.includes("Good Till Date")) setTimeInForce("gtd");
-            else if (value.includes("Immediate or Cancel")) setTimeInForce("ioc");
-            else if (value.includes("Fill or Kill")) setTimeInForce("fok");
-            else if (value.includes("All or None")) setTimeInForce("aon");
-          }}
+          onChange={handleTimeInForceChange}
           className="w-full text-sm focus-within:ring-black focus-within:border-black"
         />
         {timeInForce && (

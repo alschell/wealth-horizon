@@ -61,7 +61,7 @@ export const useNextStepHandler = ({
       case 3: // Allocation step handled by form validation
         break;
         
-      case 4: // Leverage step has no specific validation
+      case 4: // Leverage step - make sure leverage value is valid
         if (typeof leverage !== 'number' || leverage < 1) {
           console.log("Invalid leverage value:", leverage);
           return;
@@ -81,27 +81,32 @@ export const useNextStepHandler = ({
         return; // Should use submit handler instead
     }
 
-    // Update the order object with the latest values using setTimeout to avoid blocking the UI
-    setTimeout(() => {
-      setOrder(prevOrder => ({
-        ...prevOrder,
-        instrumentId: selectedInstrument?.id,
-        quantity: Number(quantity),
-        price: orderExecutionType === "market" ? selectedInstrument?.currentPrice : Number(price),
-        brokerId: selectedBroker,
-        executionType: orderExecutionType,
-        timeInForce,
-        orderType: currentOrderType,
-        leverage,
-        gtdDate: timeInForce === "gtd" ? gtdDate : undefined
-      }));
+    // Update the order object with the latest values using a more efficient approach
+    // First collect the changes
+    const orderUpdates = {
+      instrumentId: selectedInstrument?.id,
+      quantity: Number(quantity),
+      price: orderExecutionType === "market" ? selectedInstrument?.currentPrice : Number(price),
+      brokerId: selectedBroker,
+      executionType: orderExecutionType,
+      timeInForce,
+      orderType: currentOrderType,
+      leverage,
+      gtdDate: timeInForce === "gtd" ? gtdDate : undefined
+    };
 
-      // Wait for state update before navigating
-      setTimeout(() => {
-        setCurrentStep(current => current + 1);
-        console.log(`Successfully moved to step ${currentStep + 1}`);
-      }, 0);
-    }, 0);
+    // Then apply them once
+    setOrder(prevOrder => ({
+      ...prevOrder,
+      ...orderUpdates
+    }));
+
+    // Use requestAnimationFrame for smoother UI transitions
+    requestAnimationFrame(() => {
+      // Wait until next animation frame before navigating
+      setCurrentStep(current => current + 1);
+      console.log(`Successfully moved to step ${currentStep + 1}`);
+    });
   };
 
   return handleNextStep;

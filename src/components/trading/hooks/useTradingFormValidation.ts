@@ -87,19 +87,14 @@ export const useTradingFormValidation = ({
           
           return true;
         
-        case 4: // Broker Selection
-          // Check if broker is undefined/null, but allow empty string as valid
-          // because "best" is a valid broker selection
-          const isBrokerInvalid = selectedBroker === undefined || selectedBroker === null;
-          console.log("Broker selection validation:", {
-            selectedBroker, 
-            isBrokerInvalid
-          });
-          return isBrokerInvalid;
-        
-        case 5: // Leverage
+        case 4: // Leverage - Now before broker
           // Make sure leverage has a valid value (greater than or equal to 1)
           return !(order?.leverage !== undefined && order.leverage >= 1);
+          
+        case 5: // Broker Selection - Now after leverage
+          // Check if broker is undefined/null, but allow empty string as valid
+          // because "best" is a valid broker selection
+          return selectedBroker === undefined || selectedBroker === null;
           
         case 6: // Review
           // Review step should always allow proceeding to submit

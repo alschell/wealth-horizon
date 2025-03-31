@@ -72,7 +72,7 @@ export const useTradingHandlers = ({
     timeInForce: state.timeInForce,
     order: state.order,
     leverage: state.leverage,
-    gtdDate, // Pass gtdDate to submit handler
+    gtdDate,
     resetForm
   });
   

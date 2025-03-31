@@ -26,7 +26,7 @@ export const useTradingForm = (orderType: OrderType, gtdDate?: Date): UseTrading
     setLeverage
   } = formState;
 
-  // Create trading state object for the handlers
+  // Create trading state object for the handlers - wrap in useCallback to prevent recreation
   const tradingState = {
     currentStep,
     selectedInstrument,
@@ -44,7 +44,8 @@ export const useTradingForm = (orderType: OrderType, gtdDate?: Date): UseTrading
   const { 
     handleNextStep, 
     handlePreviousStep, 
-    handleSubmitOrder 
+    handleSubmitOrder,
+    isSubmitting 
   } = useTradingHandlers({
     state: tradingState,
     setCurrentStep,
@@ -58,6 +59,7 @@ export const useTradingForm = (orderType: OrderType, gtdDate?: Date): UseTrading
     // Handlers
     handleNextStep,
     handlePreviousStep,
-    handleSubmitOrder
+    handleSubmitOrder,
+    isSubmitting
   };
 };

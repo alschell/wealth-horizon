@@ -12,6 +12,7 @@ interface SubmitOrderHandlerProps {
   timeInForce: string;
   order: Partial<TradeOrder>;
   leverage: number;
+  gtdDate?: Date; // Added gtdDate property
   resetForm: () => void;
 }
 
@@ -25,6 +26,7 @@ export const useSubmitOrderHandler = ({
   timeInForce,
   order,
   leverage,
+  gtdDate,
   resetForm
 }: SubmitOrderHandlerProps) => {
   const { toast } = useToast();
@@ -48,6 +50,11 @@ export const useSubmitOrderHandler = ({
       timeInForce: timeInForce || "day", 
       leverage: leverage || 1
     };
+
+    // Add gtdDate to the completeOrder if timeInForce is gtd
+    if (timeInForce === "gtd" && gtdDate) {
+      (completeOrder as any).gtdDate = gtdDate;
+    }
 
     // In a real app, you would submit this order to your backend
     console.log("Submitting order:", completeOrder);

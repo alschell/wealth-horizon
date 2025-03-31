@@ -22,7 +22,9 @@ const LeverageSlider: React.FC<LeverageSliderProps> = ({
   // Handle slider change with memoization to prevent recreation on every render
   const handleSliderChange = useCallback((values: number[]) => {
     if (values && values.length > 0) {
-      setLeverage(values[0]);
+      const newValue = values[0];
+      console.log("Slider value changed to:", newValue);
+      setLeverage(newValue);
     }
   }, [setLeverage]);
 
@@ -46,6 +48,11 @@ const LeverageSlider: React.FC<LeverageSliderProps> = ({
           step={0.5} 
           onValueChange={handleSliderChange}
           className="py-4"
+          aria-label="Leverage slider"
+          // Ensure slider is properly accessible and interactive
+          onValueCommit={(values) => {
+            console.log("Slider value committed:", values[0]);
+          }}
         />
         
         <div className="flex justify-between text-xs text-gray-500">

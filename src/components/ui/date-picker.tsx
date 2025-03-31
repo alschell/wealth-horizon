@@ -55,7 +55,7 @@ export function DatePicker({
             className={cn(
               "w-full h-11 justify-start text-left font-normal bg-white border-gray-300 hover:bg-gray-50",
               "focus:outline-none focus:ring-2 focus:ring-black focus:border-black",
-              "data-[state=open]:border-black data-[state=open]:ring-2 data-[state=open]:ring-black",
+              open ? "border-black ring-2 ring-black" : "", // Updated to use open state instead of data-[state=open]
               !value && "text-muted-foreground"
             )}
           >

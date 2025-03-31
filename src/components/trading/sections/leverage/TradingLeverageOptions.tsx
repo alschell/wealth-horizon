@@ -20,6 +20,8 @@ const TradingLeverageOptions: React.FC<TradingLeverageOptionsProps> = ({
     console.log("Setting leverage to:", value);
     if (typeof value === 'number' && !isNaN(value)) {
       setLeverage(value);
+    } else {
+      console.warn("Invalid leverage value:", value);
     }
   }, [setLeverage]);
 
@@ -55,4 +57,5 @@ const TradingLeverageOptions: React.FC<TradingLeverageOptionsProps> = ({
   );
 };
 
+// Using React.memo to prevent unnecessary re-renders, but without interfering with event handlers
 export default memo(TradingLeverageOptions);

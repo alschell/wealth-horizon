@@ -22,7 +22,8 @@ export const useTradingForm = (orderType: OrderType, gtdDate?: Date): UseTrading
     order,
     setCurrentStep,
     setOrder,
-    resetForm
+    resetForm,
+    setLeverage
   } = formState;
 
   // Create trading state object for the handlers

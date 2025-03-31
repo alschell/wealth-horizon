@@ -21,14 +21,30 @@ const TradingStepsProgress: React.FC<TradingStepsProgressProps> = ({
     <div className="mb-8">
       {/* Desktop view */}
       <div className="hidden md:flex w-full justify-between relative mb-2">
-        {steps.map((step, index) => {
-          const isActive = index === currentStep;
-          const isCompleted = index < currentStep;
+        {/* Progress line - positioned to connect circles */}
+        <div className="absolute top-5 left-0 w-full h-0.5 bg-gray-100 -z-0">
+          <div 
+            className="h-full bg-black transition-all duration-700 ease-in-out"
+            style={{ width: `${(currentStep / (steps.length - 1)) * 100}%` }}
+          ></div>
+        </div>
+        
+        {/* Step circles with equal spacing */}
+        <div className="flex w-full absolute">
+          {steps.map((step, index) => {
+            const isActive = index === currentStep;
+            const isCompleted = index < currentStep;
 
-          return (
-            <React.Fragment key={index}>
-              {/* Step circle */}
-              <div className="flex flex-col items-center relative z-10">
+            return (
+              <div 
+                key={index}
+                className="flex flex-col items-center relative z-10"
+                style={{ 
+                  position: 'absolute', 
+                  left: `calc(${(index / (steps.length - 1)) * 100}% - 20px)`,
+                  width: '40px' 
+                }}
+              >
                 <div
                   className={cn(
                     "w-10 h-10 rounded-full flex items-center justify-center font-medium transition-all duration-300",
@@ -47,24 +63,19 @@ const TradingStepsProgress: React.FC<TradingStepsProgressProps> = ({
                 </div>
                 <span 
                   className={cn(
-                    "mt-2 text-sm font-medium",
+                    "mt-2 text-sm font-medium text-center",
                     isActive || isCompleted ? "text-black" : "text-gray-500"
                   )}
                 >
                   {step.title}
                 </span>
               </div>
-            </React.Fragment>
-          );
-        })}
-        
-        {/* Progress line - positioned to connect circles evenly */}
-        <div className="absolute top-5 left-0 w-full h-0.5 bg-gray-100 -z-0">
-          <div 
-            className="h-full bg-black transition-all duration-700 ease-in-out"
-            style={{ width: `${(currentStep / (steps.length - 1)) * 100}%` }}
-          ></div>
+            );
+          })}
         </div>
+        
+        {/* Empty space to maintain layout height */}
+        <div className="w-full h-24"></div>
       </div>
 
       {/* Mobile version */}

@@ -44,16 +44,19 @@ const TradingLeverageOptions: React.FC<TradingLeverageOptionsProps> = ({
     }
   ];
 
-  // Handle slider change with type checking
+  // Handle slider change with type checking - fixed to prevent unresponsiveness
   const handleSliderChange = (values: number[]) => {
     if (values && values.length > 0) {
       setLeverage(values[0]);
     }
   };
   
-  // Simple handler for card selection
+  // Simple handler for card selection - modified to prevent unresponsiveness
   const handleCardClick = (value: number) => {
-    setLeverage(value);
+    // Prevent continuous re-renders by only updating if value changes
+    if (leverage !== value) {
+      setLeverage(value);
+    }
   };
 
   // Get badge variant based on leverage value
@@ -82,27 +85,35 @@ const TradingLeverageOptions: React.FC<TradingLeverageOptionsProps> = ({
           const Icon = option.icon;
           
           return (
-            <Card
+            <button
               key={option.value}
-              className={`p-4 cursor-pointer border transition-all hover:border-gray-300 ${
-                isSelected ? 'ring-2 ring-black bg-white' : 'bg-white hover:bg-gray-50'
-              }`}
-              onClick={() => handleCardClick(option.value)}
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                handleCardClick(option.value);
+              }}
+              className={`block w-full text-left focus:outline-none`}
             >
-              <div className="flex flex-col items-center text-center">
-                <Icon className={`h-5 w-5 ${option.iconColor} mb-2`} />
-                <h3 className="font-medium mb-2">{option.title}</h3>
-                <p className="text-sm text-gray-600 mb-3">
-                  {option.description}
-                </p>
-                <Badge 
-                  variant={isSelected ? "default" : getBadgeVariant(option.value)}
-                  className={isSelected ? "bg-black text-white" : ""}
-                >
-                  {option.badge}
-                </Badge>
-              </div>
-            </Card>
+              <Card
+                className={`p-4 transition-all ${
+                  isSelected ? 'ring-2 ring-black bg-white' : 'bg-white hover:bg-gray-50'
+                }`}
+              >
+                <div className="flex flex-col items-center text-center">
+                  <Icon className={`h-5 w-5 ${option.iconColor} mb-2`} />
+                  <h3 className="font-medium mb-2">{option.title}</h3>
+                  <p className="text-sm text-gray-600 mb-3">
+                    {option.description}
+                  </p>
+                  <Badge 
+                    variant={isSelected ? "default" : getBadgeVariant(option.value)}
+                    className={isSelected ? "bg-black text-white" : ""}
+                  >
+                    {option.badge}
+                  </Badge>
+                </div>
+              </Card>
+            </button>
           );
         })}
       </div>

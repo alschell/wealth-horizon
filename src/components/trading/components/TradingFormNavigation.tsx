@@ -83,7 +83,7 @@ const TradingFormNavigation: React.FC<TradingFormNavigationProps> = ({
           disabled={currentStep === 0 || isLoading}
         >
           <ArrowLeft className="mr-2 h-4 w-4 text-black" />
-          Previous
+          Back
         </Button>
         
         {renderNextButton()}

@@ -18,6 +18,8 @@ interface TradingOrderTypeProps {
   timeInForce: string;
   setTimeInForce: (timeInForce: string) => void;
   orderType: string;
+  gtdDate?: Date;
+  setGtdDate?: (date?: Date) => void;
 }
 
 const TradingOrderType: React.FC<TradingOrderTypeProps> = ({
@@ -25,15 +27,17 @@ const TradingOrderType: React.FC<TradingOrderTypeProps> = ({
   setOrderExecutionType,
   timeInForce,
   setTimeInForce,
-  orderType
+  orderType,
+  gtdDate,
+  setGtdDate
 }) => {
-  const [gtdDate, setGtdDate] = useState<Date | undefined>(undefined);
-  
-  // Set GTD date on the parent component's order object
-  useEffect(() => {
-    // This effect is just to demonstrate the date was selected
-    console.log("GTD Date updated:", gtdDate);
-  }, [gtdDate]);
+  // Ensure we have access to gtdDate and setGtdDate
+  const handleGtdDateChange = (date?: Date) => {
+    if (setGtdDate) {
+      setGtdDate(date);
+    }
+    console.log("GTD Date updated:", date);
+  };
 
   return (
     <div className="space-y-6">
@@ -103,16 +107,16 @@ const TradingOrderType: React.FC<TradingOrderTypeProps> = ({
       </div>
       
       <div>
-        <h3 className="text-lg font-medium mb-3">Time in Force</h3>
+        <h3 className="text-lg font-medium mb-3">Validity</h3>
         <div className="space-y-4">
           <Select value={timeInForce} onValueChange={(value) => {
             setTimeInForce(value);
-            if (value !== 'gtd') {
+            if (value !== 'gtd' && setGtdDate) {
               setGtdDate(undefined);
             }
           }}>
             <SelectTrigger className="w-full h-11 border-gray-300 focus:border-black focus:ring-2 focus:ring-black rounded-md">
-              <SelectValue placeholder="Select time in force" />
+              <SelectValue placeholder="Select validity option" />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
@@ -129,11 +133,11 @@ const TradingOrderType: React.FC<TradingOrderTypeProps> = ({
             <div className="mt-4">
               <DatePicker
                 value={gtdDate}
-                onChange={setGtdDate}
+                onChange={handleGtdDateChange}
                 label="Expiration Date*"
                 placeholder="Select expiration date"
               />
-              {!gtdDate && (
+              {timeInForce === "gtd" && !gtdDate && (
                 <p className="text-xs text-red-500 mt-1">
                   Expiration date is required for Good Till Date orders
                 </p>

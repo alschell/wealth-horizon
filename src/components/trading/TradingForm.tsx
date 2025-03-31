@@ -60,13 +60,14 @@ const TradingForm: React.FC = () => {
   useEffect(() => {
     console.log("TradingForm - Current step:", currentStep);
     console.log("TradingForm - Current order state:", JSON.stringify(order));
+    console.log("TradingForm - GTD Date:", gtdDate);
     
     // Ensure we have a broker selected, defaulting to "best" if not set
     if (currentStep >= 5 && !selectedBroker) {
       console.log("Setting default broker to 'best'");
       setSelectedBroker("best");
     }
-  }, [currentStep, selectedBroker, setSelectedBroker, order]);
+  }, [currentStep, selectedBroker, setSelectedBroker, order, gtdDate]);
 
   useEffect(() => {
     setOrderType(orderType);

@@ -74,11 +74,11 @@ const TradingValiditySelection: React.FC<TradingValiditySelectionProps> = ({
             
             <div>
               <label className="text-sm font-medium mb-1 block">
-                Time in Force
+                Validity
               </label>
               <Select value={timeInForce} onValueChange={setTimeInForce}>
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select time in force" />
+                  <SelectValue placeholder="Select validity option" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>

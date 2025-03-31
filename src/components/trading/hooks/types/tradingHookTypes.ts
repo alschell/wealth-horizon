@@ -31,6 +31,7 @@ export interface TradingFormHandlers {
   handleNextStep: () => void;
   handlePreviousStep: () => void;
   handleSubmitOrder: () => void;
+  isSubmitting: boolean; // Added isSubmitting property
 }
 
 export type UseTradingFormReturn = TradingFormState & TradingFormActions & TradingFormHandlers;

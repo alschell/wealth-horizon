@@ -28,7 +28,7 @@ const TradingBrokerSelection: React.FC<TradingBrokerSelectionProps> = ({
 
   // Use useCallback to avoid recreation of function on every render
   const handleBrokerSelect = useCallback((brokerId: string, e: React.MouseEvent | React.KeyboardEvent) => {
-    // Prevent event propagation to avoid bubbling
+    // Prevent default behavior and stop propagation
     e.preventDefault();
     e.stopPropagation();
     
@@ -38,7 +38,7 @@ const TradingBrokerSelection: React.FC<TradingBrokerSelectionProps> = ({
     }
   }, [setSelectedBroker, selectedBroker]);
 
-  // Input change handler to prevent event bubbling issues
+  // Input change handler with stopPropagation to prevent bubbling
   const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     e.stopPropagation();
     setSearchQuery(e.target.value);

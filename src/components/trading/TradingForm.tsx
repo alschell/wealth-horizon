@@ -83,13 +83,14 @@ const TradingForm: React.FC = () => {
     }
   }, [gtdDate, timeInForce, setOrder]);
 
+  // Reordered steps - moved Leverage after Broker
   const steps = [
     { title: "Type & Instrument", component: TradingInstrumentSearch },
     { title: "Execution & Validity", component: TradingOrderType },
     { title: "Quantity & Price", component: TradingQuantityPrice },
     { title: "Allocation", component: TradingAllocation },
-    { title: "Leverage", component: TradingLeverageOptions }, 
     { title: "Broker", component: TradingBrokerSelection },
+    { title: "Leverage", component: TradingLeverageOptions },
     { title: "Review", component: TradingReview }
   ];
 

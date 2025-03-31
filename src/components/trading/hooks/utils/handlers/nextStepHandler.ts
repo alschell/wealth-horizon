@@ -59,12 +59,13 @@ export const useNextStepHandler = ({
         if (!validateQuantityPrice(quantity, price, orderExecutionType)) return;
         break;
         
-      // Allocation step handled by form validation
-      case 3:
-      // Leverage step has no specific validation
-      case 4:
-      // Broker selection step handled by form validation
-      case 5:
+      case 3: // Allocation step handled by form validation
+        break;
+        
+      case 4: // Broker selection step handled by form validation  
+        break;
+        
+      case 5: // Leverage step has no specific validation
         break;
         
       // Review step -> Submit

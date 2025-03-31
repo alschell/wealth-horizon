@@ -45,16 +45,21 @@ export const useTradingFormValidation = ({
           return !selectedInstrument;
         
         case 1: // Execution & Validity
+          // Check if execution type and timeInForce are set
+          if (!orderExecutionType || !timeInForce) {
+            return true;
+          }
           // Check if GTD is selected but no date is set
           if (timeInForce === "gtd" && !gtdDate) {
             return true;
           }
-          return !orderExecutionType || !timeInForce;
+          return false;
         
         case 2: // Quantity & Price
           if (!quantity) return true;
           // For limit and stop orders, price is required
-          if (orderExecutionType === "limit" || orderExecutionType === "stop") {
+          if (orderExecutionType === "limit" || orderExecutionType === "stop" || 
+              orderExecutionType === "stop_limit" || orderExecutionType === "trailing_stop") {
             return !price;
           }
           return false;

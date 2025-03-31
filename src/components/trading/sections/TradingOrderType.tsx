@@ -30,7 +30,11 @@ const TradingOrderType: React.FC<OrderTypeProps> = ({
 }) => {
   const handleDateSelect = (date?: Date) => {
     setGtdDate(date);
+    // Close the popover immediately after selection
+    setOpenDatePopover(false);
   };
+
+  const [openDatePopover, setOpenDatePopover] = React.useState(false);
 
   const validityOptions = [
     "Day Only",
@@ -97,6 +101,10 @@ const TradingOrderType: React.FC<OrderTypeProps> = ({
     }
   ];
 
+  const handleCardClick = (value: string) => {
+    setOrderExecutionType(value);
+  };
+
   return (
     <div className="space-y-8">
       <div className="space-y-4">
@@ -108,28 +116,28 @@ const TradingOrderType: React.FC<OrderTypeProps> = ({
             const Icon = option.icon;
             
             return (
-              <button 
-                key={option.value}
-                type="button"
-                className="text-left w-full focus:outline-none"
-                onClick={() => setOrderExecutionType(option.value)}
-              >
+              <div key={option.value} className="h-full">
                 <Card
-                  className={`p-4 transition-all ${
-                    isSelected ? 'ring-2 ring-black bg-white' : 'bg-white hover:bg-gray-50'
+                  onClick={() => handleCardClick(option.value)}
+                  className={`p-4 h-full flex flex-col cursor-pointer transition-all ${
+                    isSelected 
+                      ? 'ring-2 ring-black bg-white' 
+                      : 'bg-white hover:bg-gray-50'
                   }`}
                 >
-                  <div className="flex flex-col items-center text-center">
-                    <div className="mb-2">
-                      <Icon className={`h-5 w-5 ${option.iconColor}`} />
+                  <div className="flex flex-col items-center text-center h-full justify-center">
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-3 ${
+                      isSelected ? 'bg-black' : 'bg-gray-100'
+                    }`}>
+                      <Icon className={`h-5 w-5 ${isSelected ? 'text-white' : option.iconColor}`} />
                     </div>
                     <h3 className="font-medium mb-2">{option.title}</h3>
-                    <p className="text-sm text-gray-600 mb-2">
+                    <p className="text-xs text-gray-600">
                       {option.description}
                     </p>
                   </div>
                 </Card>
-              </button>
+              </div>
             );
           })}
         </div>
@@ -172,7 +180,7 @@ const TradingOrderType: React.FC<OrderTypeProps> = ({
             <Label htmlFor="date" className="block text-sm font-medium mb-2">
               Select Expiry Date
             </Label>
-            <Popover>
+            <Popover open={openDatePopover} onOpenChange={setOpenDatePopover}>
               <PopoverTrigger asChild>
                 <Button
                   variant={"outline"}
@@ -192,6 +200,7 @@ const TradingOrderType: React.FC<OrderTypeProps> = ({
                   onSelect={handleDateSelect}
                   initialFocus
                   disabled={(date) => date < new Date()}
+                  className={cn("p-3 pointer-events-auto")}
                 />
               </PopoverContent>
             </Popover>

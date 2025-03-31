@@ -12,6 +12,7 @@ import Onboarding from "./pages/Onboarding";
 import Dashboard from "./pages/Dashboard";
 import Trading from "./pages/Trading";
 import Advice from "./pages/Advice";
+import Index from "./pages/Index";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -20,11 +21,12 @@ function App() {
   return (
     <React.StrictMode>
       <QueryClientProvider client={queryClient}>
-        <TooltipProvider>
-          <OnboardingProvider>
-            <BrowserRouter>
+        {/* Move TooltipProvider inside React context */}
+        <OnboardingProvider>
+          <BrowserRouter>
+            <TooltipProvider>
               <Routes>
-                <Route path="/" element={<LandingPage />} />
+                <Route path="/" element={<Index />} />
                 <Route path="/onboarding/*" element={<Onboarding />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/dashboard/*" element={<Dashboard />} />
@@ -32,11 +34,11 @@ function App() {
                 <Route path="/advice" element={<Advice />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
-            </BrowserRouter>
-            <Toaster />
-            <Sonner />
-          </OnboardingProvider>
-        </TooltipProvider>
+              <Toaster />
+              <Sonner />
+            </TooltipProvider>
+          </BrowserRouter>
+        </OnboardingProvider>
       </QueryClientProvider>
     </React.StrictMode>
   );

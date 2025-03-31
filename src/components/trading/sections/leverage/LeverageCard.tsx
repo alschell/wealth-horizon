@@ -1,8 +1,8 @@
 
-import React, { memo } from "react";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import React, { useCallback, memo } from "react";
+import { cn } from "@/lib/utils";
 import { LucideIcon } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 interface LeverageCardProps {
   value: number;
@@ -15,7 +15,7 @@ interface LeverageCardProps {
   onClick: (value: number) => void;
 }
 
-const LeverageCard = React.forwardRef<HTMLDivElement, LeverageCardProps>(({
+const LeverageCard: React.FC<LeverageCardProps> = ({
   value,
   title,
   description,
@@ -24,75 +24,66 @@ const LeverageCard = React.forwardRef<HTMLDivElement, LeverageCardProps>(({
   badge,
   isSelected,
   onClick
-}, ref) => {
-  // Function to determine badge variant based on leverage value
-  const getBadgeVariant = (value: number): "default" | "secondary" | "outline" | "destructive" => {
-    if (value <= 1) return "secondary";
-    if (value <= 3) return "outline";
-    return "destructive";
-  };
-  
-  // Handle click with optimized event handling to prevent freezing
-  const handleClick = (e: React.MouseEvent) => {
+}) => {
+  // Optimize the click handler with useCallback and event handling improvements
+  const handleClick = useCallback((e: React.MouseEvent) => {
+    // Stop event propagation to prevent bubbling
     e.preventDefault();
     e.stopPropagation();
     
-    // Use requestAnimationFrame to defer state update
+    // Use requestAnimationFrame to defer setting state
     requestAnimationFrame(() => {
-      // Only trigger onClick if not already selected
-      if (!isSelected) {
-        onClick(value);
-      }
+      onClick(value);
     });
-  };
-  
-  // Handle keyboard accessibility with proper event handling
-  const handleKeyDown = (e: React.KeyboardEvent) => {
+  }, [onClick, value]);
+
+  // Optimize the keyboard handler
+  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
-      e.stopPropagation();
-      
-      // Use requestAnimationFrame to defer state update
-      requestAnimationFrame(() => {
-        // Only trigger onClick if not already selected
-        if (!isSelected) {
-          onClick(value);
-        }
-      });
+      handleClick(e as unknown as React.MouseEvent);
     }
-  };
-  
+  }, [handleClick]);
+
   return (
-    <div className="h-full" ref={ref}>
-      <Card
-        role="button"
-        tabIndex={0}
-        className={`p-4 h-full cursor-pointer transition-all ${
-          isSelected ? 'ring-2 ring-black bg-white' : 'bg-white hover:bg-gray-50'
-        }`}
-        onClick={handleClick}
-        onKeyDown={handleKeyDown}
-      >
-        <div className="flex flex-col items-center text-center h-full justify-center">
-          <div className="mb-3">
-            <Icon className={`h-5 w-5 ${iconColor}`} />
-          </div>
-          <h3 className="font-medium mb-2">{title}</h3>
-          <p className="text-sm text-gray-600 mb-3">
-            {description}
-          </p>
-          <Badge 
-            variant={isSelected ? "default" : getBadgeVariant(value)}
-            className={isSelected ? "bg-black text-white" : ""}
-          >
-            {badge}
-          </Badge>
+    <div
+      role="button"
+      tabIndex={0}
+      onClick={handleClick}
+      onKeyDown={handleKeyDown}
+      className={cn(
+        "border p-4 rounded-lg cursor-pointer transition-all relative h-full",
+        isSelected
+          ? "ring-2 ring-black bg-gray-50"
+          : "hover:bg-gray-50"
+      )}
+      aria-pressed={isSelected}
+    >
+      <div className="flex justify-between items-start">
+        <div className={cn("p-2 rounded-full bg-white", iconColor)}>
+          <Icon className={cn("h-5 w-5", iconColor)} />
         </div>
-      </Card>
+        <Badge
+          variant={value > 1 ? (value > 2 ? "destructive" : "outline") : "secondary"}
+          className={value > 3 ? "bg-red-500 text-white" : ""}
+        >
+          {value}x
+        </Badge>
+      </div>
+
+      <div className="mt-3">
+        <h4 className="font-medium text-sm">{title}</h4>
+        <p className="text-xs text-gray-600 mt-1">{description}</p>
+        
+        {isSelected && (
+          <div className="mt-2 text-xs text-green-600">
+            Selected
+          </div>
+        )}
+      </div>
     </div>
   );
-});
+};
 
-LeverageCard.displayName = "LeverageCard";
-
+// Use memo to prevent unnecessary re-renders
 export default memo(LeverageCard);

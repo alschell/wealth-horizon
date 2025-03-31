@@ -29,7 +29,13 @@ const TradingBrokerSelection: React.FC<TradingBrokerSelectionProps> = ({
   }, [searchQuery]);
 
   // Create an optimized broker selection handler that won't cause performance issues
-  const handleBrokerSelect = useCallback((brokerId: string) => {
+  const handleBrokerSelect = useCallback((brokerId: string, e?: React.MouseEvent | React.KeyboardEvent) => {
+    // Stop event propagation to prevent bubbling
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    
     // Use RAF to defer state update to next frame to prevent UI blocking
     requestAnimationFrame(() => {
       // Don't update if already selected to prevent unnecessary renders
@@ -49,8 +55,7 @@ const TradingBrokerSelection: React.FC<TradingBrokerSelectionProps> = ({
   // Keyboard handler with performance optimizations
   const handleKeyDown = useCallback((brokerId: string, e: React.KeyboardEvent) => {
     if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      handleBrokerSelect(brokerId);
+      handleBrokerSelect(brokerId, e);
     }
   }, [handleBrokerSelect]);
 
@@ -60,11 +65,7 @@ const TradingBrokerSelection: React.FC<TradingBrokerSelectionProps> = ({
       key={broker.id} 
       role="button"
       tabIndex={0}
-      onClick={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        handleBrokerSelect(broker.id);
-      }}
+      onClick={(e) => handleBrokerSelect(broker.id, e)}
       onKeyDown={(e) => handleKeyDown(broker.id, e)}
       className={`p-4 cursor-pointer transition-all h-full rounded-lg border ${
         isSelected ? 'ring-2 ring-black bg-gray-50' : 'hover:bg-gray-50'
@@ -93,11 +94,7 @@ const TradingBrokerSelection: React.FC<TradingBrokerSelectionProps> = ({
       className={`w-full text-left p-4 cursor-pointer transition-all mb-6 border rounded-lg ${
         isSelected ? "ring-2 ring-black bg-gray-50" : "hover:bg-gray-50"
       }`} 
-      onClick={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        handleBrokerSelect("best");
-      }}
+      onClick={(e) => handleBrokerSelect("best", e)}
       onKeyDown={(e) => handleKeyDown("best", e)}
     >
       <div className="flex items-center">
@@ -169,7 +166,7 @@ const TradingBrokerSelection: React.FC<TradingBrokerSelectionProps> = ({
       </div>
     </div>
   );
-};
+});
 
 // Use React.memo to prevent unnecessary re-renders of the entire component
 export default memo(TradingBrokerSelection);

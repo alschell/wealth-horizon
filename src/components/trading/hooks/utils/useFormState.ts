@@ -1,5 +1,5 @@
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import { OrderType, Instrument, TradeOrder } from "../../types";
 
 export const useFormState = (initialOrderType: OrderType) => {
@@ -13,6 +13,18 @@ export const useFormState = (initialOrderType: OrderType) => {
   const [timeInForce, setTimeInForce] = useState<string>("day");
   const [currentOrderType, setOrderType] = useState<OrderType>(initialOrderType);
   const [leverage, setLeverage] = useState<number>(1);
+  
+  // Use a ref to track previous leverage for performance optimization
+  const previousLeverageRef = useRef<number>(1);
+  
+  // Optimized leverage setter
+  const setLeverageOptimized = useCallback((newLeverage: number) => {
+    // Only update if the value has actually changed
+    if (newLeverage !== previousLeverageRef.current) {
+      previousLeverageRef.current = newLeverage;
+      setLeverage(newLeverage);
+    }
+  }, []);
   
   const [order, setOrder] = useState<Partial<TradeOrder>>({
     orderType: initialOrderType,
@@ -34,6 +46,7 @@ export const useFormState = (initialOrderType: OrderType) => {
     setOrderExecutionType("market");
     setTimeInForce("day");
     setLeverage(1);
+    previousLeverageRef.current = 1;
     setOrder({
       orderType: currentOrderType,
       instrumentAllocations: [],
@@ -69,7 +82,7 @@ export const useFormState = (initialOrderType: OrderType) => {
     setOrderExecutionType,
     setTimeInForce,
     setOrderType,
-    setLeverage,
+    setLeverage: setLeverageOptimized,
     setOrder,
     
     // Utilities

@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { memo } from "react";
 import { Info } from "lucide-react";
 
 interface LeverageWarningProps {
@@ -7,6 +7,9 @@ interface LeverageWarningProps {
 }
 
 const LeverageWarning: React.FC<LeverageWarningProps> = ({ leverage }) => {
+  // Calculate margin percentage only when needed
+  const marginRequirement = Math.round(100/leverage);
+  
   return (
     <div className="bg-amber-50 p-4 rounded-md border border-amber-200 mt-6">
       <div className="flex">
@@ -14,7 +17,7 @@ const LeverageWarning: React.FC<LeverageWarningProps> = ({ leverage }) => {
         <div>
           <h4 className="font-medium text-amber-800">Margin Requirement</h4>
           <p className="text-sm text-amber-700 mt-1">
-            Trading with {leverage}x leverage requires a minimum margin of {Math.round(100/leverage)}% of the position value.
+            Trading with {leverage}x leverage requires a minimum margin of {marginRequirement}% of the position value.
             Higher leverage increases the risk of liquidation if the market moves against your position.
           </p>
         </div>
@@ -23,4 +26,4 @@ const LeverageWarning: React.FC<LeverageWarningProps> = ({ leverage }) => {
   );
 };
 
-export default LeverageWarning;
+export default memo(LeverageWarning);

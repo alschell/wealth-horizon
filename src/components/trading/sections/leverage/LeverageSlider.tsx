@@ -1,5 +1,5 @@
 
-import React, { useCallback } from "react";
+import React, { useCallback, memo } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Slider } from "@/components/ui/slider";
 
@@ -19,7 +19,7 @@ const LeverageSlider: React.FC<LeverageSliderProps> = ({
     return "destructive";
   };
 
-  // Handle slider change
+  // Handle slider change with memoization to prevent recreation on every render
   const handleSliderChange = useCallback((values: number[]) => {
     if (values && values.length > 0) {
       setLeverage(values[0]);
@@ -58,4 +58,4 @@ const LeverageSlider: React.FC<LeverageSliderProps> = ({
   );
 };
 
-export default LeverageSlider;
+export default memo(LeverageSlider);

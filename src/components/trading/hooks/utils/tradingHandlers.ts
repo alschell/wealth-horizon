@@ -61,7 +61,7 @@ export const useTradingHandlers = ({
     setCurrentStep
   });
   
-  // Use the submitOrderHandler hook - Fix by passing the correct props
+  // Use the submitOrderHandler hook with optimized memo dependencies
   const submitHandler = useSubmitOrderHandler({
     selectedInstrument: state.selectedInstrument,
     price: state.price,

@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useCallback, memo } from "react";
 import LeveragePresets from "./LeveragePresets";
 import LeverageSlider from "./LeverageSlider";
 import LeverageWarning from "./LeverageWarning";
@@ -16,10 +16,12 @@ const TradingLeverageOptions: React.FC<TradingLeverageOptionsProps> = ({
   orderType
 }) => {
   // Create a safe leverage handler that ensures we always pass a number
-  const handleLeverageChange = (value: number) => {
+  const handleLeverageChange = useCallback((value: number) => {
     console.log("Setting leverage to:", value);
-    setLeverage(value);
-  };
+    if (typeof value === 'number' && !isNaN(value)) {
+      setLeverage(value);
+    }
+  }, [setLeverage]);
 
   return (
     <div className="space-y-8">
@@ -53,4 +55,4 @@ const TradingLeverageOptions: React.FC<TradingLeverageOptionsProps> = ({
   );
 };
 
-export default TradingLeverageOptions;
+export default memo(TradingLeverageOptions);

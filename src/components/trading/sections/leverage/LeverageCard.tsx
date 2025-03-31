@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { memo } from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { LucideIcon } from "lucide-react";
@@ -12,7 +12,7 @@ interface LeverageCardProps {
   iconColor: string;
   badge: string;
   isSelected: boolean;
-  onClick: (value: number, e: React.MouseEvent) => void;
+  onClick: (value: number) => void;
 }
 
 const LeverageCard: React.FC<LeverageCardProps> = ({
@@ -32,12 +32,10 @@ const LeverageCard: React.FC<LeverageCardProps> = ({
     return "destructive";
   };
   
-  // Handle click with specific event handling to prevent bubbling
-  const handleClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    onClick(value, e);
-  };
+  // Optimize click handler to prevent rerenders
+  const handleClick = React.useCallback(() => {
+    onClick(value);
+  }, [onClick, value]);
   
   return (
     <div className="h-full">
@@ -67,4 +65,5 @@ const LeverageCard: React.FC<LeverageCardProps> = ({
   );
 };
 
-export default LeverageCard;
+// Memoize the component to prevent unnecessary re-renders
+export default memo(LeverageCard);

@@ -26,11 +26,10 @@ const LeverageSlider: React.FC<LeverageSliderProps> = ({
       
       // Only update if the value actually changed
       if (newValue !== leverage) {
-        // Use setTimeout with 0ms to defer the state update
-        // This prevents UI freezing by moving the update to the next event loop
-        setTimeout(() => {
+        // Use requestAnimationFrame for smoother UI updates
+        requestAnimationFrame(() => {
           setLeverage(newValue);
-        }, 0);
+        });
       }
     }
   }, [setLeverage, leverage]);

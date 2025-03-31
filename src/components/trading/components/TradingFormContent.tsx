@@ -1,5 +1,5 @@
 
-import React, { memo } from "react";
+import React, { memo, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import TradingFormNavigation from "./TradingFormNavigation";
 import { OrderType, Instrument, TradeOrder } from "../types";
@@ -74,6 +74,7 @@ const TradingFormContent: React.FC<TradingFormContentProps> = ({
   const {
     renderError,
     isLoading,
+    setRenderError,
     handleNext,
     ensureOrderHasAllocations
   } = useTradingFormContent({
@@ -84,6 +85,22 @@ const TradingFormContent: React.FC<TradingFormContentProps> = ({
     setOrder,
     handleNextStep
   });
+  
+  // Optimize navigation handlers
+  const handleNextClick = useCallback(() => {
+    // Add a small delay to prevent UI blocking
+    setTimeout(handleNext, 5);
+  }, [handleNext]);
+  
+  const handlePreviousClick = useCallback(() => {
+    // Add a small delay to prevent UI blocking
+    setTimeout(handlePreviousStep, 5);
+  }, [handlePreviousStep]);
+  
+  const handleSubmit = useCallback(() => {
+    // Add a small delay to prevent UI blocking
+    setTimeout(handleSubmitOrder, 5);
+  }, [handleSubmitOrder]);
   
   const CurrentStepComponent = steps[currentStep]?.component;
 
@@ -150,9 +167,9 @@ const TradingFormContent: React.FC<TradingFormContentProps> = ({
           <TradingFormNavigation
             currentStep={currentStep}
             totalSteps={steps.length}
-            onPrevious={handlePreviousStep}
-            onNext={handleNext}
-            onSubmit={handleSubmitOrder}
+            onPrevious={handlePreviousClick}
+            onNext={handleNextClick}
+            onSubmit={handleSubmit}
             disabled={nextButtonDisabled}
             isLoading={isLoading}
           />

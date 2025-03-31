@@ -82,8 +82,7 @@ export const useNextStepHandler = ({
           return; // Should use submit handler instead
       }
 
-      // Update the order object with the latest values using a more efficient approach
-      // First collect the changes
+      // Update the order object with the latest values - collect changes first
       const orderUpdates = {
         instrumentId: selectedInstrument?.id,
         quantity: Number(quantity),
@@ -96,20 +95,18 @@ export const useNextStepHandler = ({
         gtdDate: timeInForce === "gtd" ? gtdDate : undefined
       };
 
-      // Then use setTimeout to defer the state update
-      setTimeout(() => {
-        // Update order first
-        setOrder(prevOrder => ({
-          ...prevOrder,
-          ...orderUpdates
-        }));
-        
-        // Then use another setTimeout to ensure order state is updated before navigating
-        setTimeout(() => {
-          setCurrentStep(current => current + 1);
-          console.log(`Successfully moved to step ${currentStep + 1}`);
-        }, 0);
-      }, 0);
+      // Critical performance optimization:
+      // 1. First, update the order state without triggering navigation yet
+      setOrder(prevOrder => ({...prevOrder, ...orderUpdates}));
+      
+      // 2. Then use requestAnimationFrame to schedule the step navigation after the state update
+      //    This allows the browser to complete the state update and any UI renders before navigation
+      requestAnimationFrame(() => {
+        // Schedule the navigation after a brief delay to prevent UI blocking
+        setCurrentStep(current => current + 1);
+        console.log(`Successfully moved to step ${currentStep + 1}`);
+      });
+      
     } catch (error) {
       console.error("Error in next step navigation:", error);
     }

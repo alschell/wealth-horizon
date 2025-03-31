@@ -7,7 +7,7 @@ export interface TradingFormContentProps {
   selectedInstrument: Instrument | null;
   orderType: OrderType;
   order: Partial<TradeOrder>;
-  setOrder: (order: Partial<TradeOrder>) => void;
+  setOrder: (order: Partial<TradeOrder> | ((prevOrder: Partial<TradeOrder>) => Partial<TradeOrder>)) => void;
   handleNextStep: () => void;
 }
 
@@ -65,7 +65,7 @@ export const useTradingFormContent = ({
       console.log("Ensuring order has proper allocation arrays before rendering allocation step");
       
       // Make sure allocations are initialized before rendering
-      setOrder(prevOrder => {
+      setOrder((prevOrder) => {
         // Only update if needed to avoid unnecessary renders
         const needsUpdate = (
           (orderType === "buy" && (!prevOrder.fundingAllocations || !prevOrder.depositAllocations)) ||

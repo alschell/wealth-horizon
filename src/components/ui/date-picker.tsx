@@ -53,7 +53,8 @@ export function DatePicker({
             variant={"outline"}
             disabled={disabled}
             className={cn(
-              "w-full h-11 justify-start text-left font-normal bg-white border-gray-300 hover:bg-gray-50 focus-visible:ring-black",
+              "w-full h-11 justify-start text-left font-normal bg-white border-gray-300 hover:bg-gray-50",
+              "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-black focus-visible:border-black",
               !value && "text-muted-foreground"
             )}
           >

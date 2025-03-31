@@ -51,6 +51,7 @@ export const useTradingFormValidation = ({
           }
           // Check if GTD is selected but no date is set
           if (timeInForce === "gtd" && !gtdDate) {
+            console.log("GTD selected but no date set, disabling next button");
             return true;
           }
           return false;

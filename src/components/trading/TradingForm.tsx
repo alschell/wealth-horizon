@@ -60,16 +60,28 @@ const TradingForm: React.FC = () => {
     console.log("TradingForm - Current step:", currentStep);
     console.log("TradingForm - Current order state:", JSON.stringify(order));
     console.log("TradingForm - GTD Date:", gtdDate);
+    console.log("TradingForm - Time in force:", timeInForce);
+    console.log("TradingForm - Next button disabled:", nextButtonDisabled);
     
     if (currentStep >= 5 && !selectedBroker) {
       console.log("Setting default broker to 'best'");
       setSelectedBroker("best");
     }
-  }, [currentStep, selectedBroker, setSelectedBroker, order, gtdDate]);
+  }, [currentStep, selectedBroker, setSelectedBroker, order, gtdDate, timeInForce, nextButtonDisabled]);
 
   useEffect(() => {
     setOrderType(orderType);
   }, [orderType, setOrderType]);
+
+  // Set the order's gtdDate whenever it changes
+  useEffect(() => {
+    if (timeInForce === "gtd") {
+      setOrder(prev => ({
+        ...prev,
+        gtdDate
+      }));
+    }
+  }, [gtdDate, timeInForce, setOrder]);
 
   const steps = [
     { title: "Type & Instrument", component: TradingInstrumentSearch },

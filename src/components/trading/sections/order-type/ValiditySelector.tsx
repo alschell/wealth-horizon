@@ -1,8 +1,8 @@
 
-import React, { useState } from "react";
+import React from "react";
 import { CustomSelect } from "@/components/ui/custom-select";
 import { Label } from "@/components/ui/label";
-import DateField from "@/components/onboarding/common/fields/DateField";
+import { DatePicker } from "@/components/ui/date-picker";
 
 interface ValiditySelectorProps {
   timeInForce: string;
@@ -36,15 +36,6 @@ const ValiditySelector: React.FC<ValiditySelectorProps> = ({
     "All or None (AON)"
   ];
 
-  // Handler for date changes
-  const handleDateChange = (dateString: string) => {
-    if (dateString) {
-      setGtdDate(new Date(dateString));
-    } else {
-      setGtdDate(undefined);
-    }
-  };
-
   return (
     <div className="space-y-3">
       <h3 className="text-lg font-medium">Validity</h3>
@@ -69,7 +60,7 @@ const ValiditySelector: React.FC<ValiditySelectorProps> = ({
             else if (value.includes("Fill or Kill")) setTimeInForce("fok");
             else if (value.includes("All or None")) setTimeInForce("aon");
           }}
-          className="w-full text-sm"
+          className="w-full text-sm focus-within:ring-black focus-within:border-black"
         />
         {timeInForce && (
           <p className="mt-2 text-xs text-gray-600">
@@ -80,13 +71,14 @@ const ValiditySelector: React.FC<ValiditySelectorProps> = ({
       
       {timeInForce === "gtd" && (
         <div className="pt-2 text-left">
-          <DateField
+          <DatePicker
             id="expiryDate"
             label="Select Expiry Date"
-            value={gtdDate ? gtdDate.toISOString() : ""}
-            onChange={handleDateChange}
-            required={timeInForce === "gtd"}
-            closeOnSelect={true}
+            value={gtdDate}
+            onChange={setGtdDate}
+            placeholder="Select date"
+            optional={false}
+            className="w-full"
           />
         </div>
       )}

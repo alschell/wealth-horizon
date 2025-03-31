@@ -72,12 +72,23 @@ export const useTradingHandlers = ({
     timeInForce: state.timeInForce,
     order: state.order,
     leverage: state.leverage,
+    gtdDate,
     resetForm
   });
   
   // Wrap the submit handler to ensure we validate everything before submitting
   const handleSubmitOrder = useCallback(() => {
     console.log("Submitting order");
+    
+    // Special validation for GTD when timeInForce is set to gtd
+    if (state.timeInForce === "gtd" && !gtdDate) {
+      toast({
+        title: "Error",
+        description: "Please select an expiry date for your Good Till Date order",
+        variant: "destructive"
+      });
+      return;
+    }
     
     // Final validation before submission
     if (
@@ -106,12 +117,15 @@ export const useTradingHandlers = ({
     state.selectedBroker,
     state.currentOrderType,
     state.order,
+    state.timeInForce,
+    gtdDate,
     validateInstrumentSelection,
     validateOrderExecution,
     validateQuantityPrice,
     validateBrokerSelection,
     validateAllocations,
-    submitHandler
+    submitHandler,
+    toast
   ]);
   
   return {

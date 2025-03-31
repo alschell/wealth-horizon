@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import TradingInstrumentSearch from "./sections/TradingInstrumentSearch";
 import TradingQuantityPrice from "./sections/quantity-price";
@@ -12,7 +11,7 @@ import { useTradingForm } from "./hooks/useTradingForm";
 import { useTradingFormValidation } from "./hooks/useTradingFormValidation";
 import { OrderType } from "./types";
 import { motion } from "framer-motion";
-import TradingLeverageOptions from "./sections/TradingLeverageOptions";
+import TradingLeverageOptions from "./sections/leverage/TradingLeverageOptions";
 
 const TradingForm: React.FC = () => {
   const [orderType, setOrderTypeLocal] = useState<OrderType>("buy");

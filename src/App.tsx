@@ -11,6 +11,7 @@ import NotFound from "./pages/NotFound";
 import Onboarding from "./pages/Onboarding";
 import Dashboard from "./pages/Dashboard";
 import Trading from "./pages/Trading";
+import Advice from "./pages/Advice";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -28,6 +29,7 @@ function App() {
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/dashboard/*" element={<Dashboard />} />
                 <Route path="/trading" element={<Trading />} />
+                <Route path="/advice" element={<Advice />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </BrowserRouter>

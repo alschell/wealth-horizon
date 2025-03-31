@@ -1,4 +1,3 @@
-
 import { useState, useCallback, useEffect } from "react";
 import { Instrument } from "../types";
 import { mockInstruments } from "../data/instruments";
@@ -56,6 +55,7 @@ export const useInstrumentSearch = ({ setSelectedInstrument, orderType }: UseIns
   // Handle selecting an instrument
   const handleSelectInstrument = useCallback((instrument: Instrument | null) => {
     setSelectedInstrument(instrument);
+    // Don't clear the search query after selecting, keep it visible
   }, [setSelectedInstrument]);
 
   // Clear selected instrument

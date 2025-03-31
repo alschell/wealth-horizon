@@ -101,12 +101,15 @@ const TradingFormContent: React.FC<TradingFormContentProps> = ({
         className="w-full p-6 border border-gray-200 rounded-md shadow-sm bg-white"
       >
         {currentStep === 0 && (
-          <div className="mb-6">
-            <TradingOrderTypeSelector 
-              orderType={orderType} 
-              setOrderType={setOrderType} 
-            />
-          </div>
+          <>
+            <h2 className="text-xl font-semibold mb-6">Type & Instrument</h2>
+            <div className="mb-6">
+              <TradingOrderTypeSelector 
+                orderType={orderType} 
+                setOrderType={setOrderType} 
+              />
+            </div>
+          </>
         )}
         
         <TradingStepRenderer

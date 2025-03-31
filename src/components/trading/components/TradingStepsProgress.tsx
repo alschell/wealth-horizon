@@ -53,7 +53,7 @@ const TradingStepsProgress: React.FC<TradingStepsProgressProps> = ({
             </div>
             <span 
               className={cn(
-                "mt-2 text-sm font-medium",
+                "mt-2 text-sm font-medium text-center",
                 index <= currentStep ? "text-black" : "text-gray-500"
               )}
             >

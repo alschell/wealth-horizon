@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState } from "react";
 import {
   Select,
   SelectContent,
@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/select";
 import { Card } from "@/components/ui/card";
 import { AlertCircle, DollarSign, Clock, BarChart2 } from "lucide-react";
+import { DatePicker } from "@/components/ui/date-picker";
 
 interface TradingOrderTypeProps {
   orderExecutionType: string;
@@ -26,6 +27,8 @@ const TradingOrderType: React.FC<TradingOrderTypeProps> = ({
   setTimeInForce,
   orderType
 }) => {
+  const [gtdDate, setGtdDate] = useState<Date | undefined>(undefined);
+
   return (
     <div className="space-y-6">
       <div>
@@ -95,15 +98,17 @@ const TradingOrderType: React.FC<TradingOrderTypeProps> = ({
       
       <div>
         <h3 className="text-lg font-medium mb-3">Time in Force</h3>
-        <div>
-          <label className="text-sm font-medium mb-1 block">
-            Duration of the Order
-          </label>
-          <Select value={timeInForce} onValueChange={setTimeInForce}>
-            <SelectTrigger className="w-full h-11 bg-white focus:ring-2 focus:ring-black focus:border-black">
+        <div className="space-y-4">
+          <Select value={timeInForce} onValueChange={(value) => {
+            setTimeInForce(value);
+            if (value !== 'gtd') {
+              setGtdDate(undefined);
+            }
+          }}>
+            <SelectTrigger className="w-full h-11 border border-gray-300 focus:border-black focus:ring-2 focus:ring-black rounded-md">
               <SelectValue placeholder="Select time in force" />
             </SelectTrigger>
-            <SelectContent className="bg-white border shadow-md z-[999]">
+            <SelectContent>
               <SelectGroup>
                 <SelectItem value="day">Day Order</SelectItem>
                 <SelectItem value="gtc">Good Till Canceled (GTC)</SelectItem>
@@ -113,6 +118,18 @@ const TradingOrderType: React.FC<TradingOrderTypeProps> = ({
               </SelectGroup>
             </SelectContent>
           </Select>
+          
+          {timeInForce === "gtd" && (
+            <div className="mt-4">
+              <DatePicker
+                value={gtdDate}
+                onChange={setGtdDate}
+                label="Expiration Date"
+                placeholder="Select expiration date"
+              />
+            </div>
+          )}
+          
           <p className="text-xs text-gray-500 mt-1">
             {timeInForce === "day" && "Order valid until end of current trading day."}
             {timeInForce === "gtc" && "Order valid until executed or canceled."}

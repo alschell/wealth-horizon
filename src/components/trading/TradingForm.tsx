@@ -42,7 +42,7 @@ const TradingForm: React.FC = () => {
     setOrderType,
     leverage,
     setLeverage
-  } = useTradingForm(orderType);
+  } = useTradingForm(orderType, gtdDate);
 
   const { nextButtonDisabled } = useTradingFormValidation({
     currentStep,

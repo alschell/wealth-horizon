@@ -5,7 +5,7 @@ import { useFormState } from "./utils/useFormState";
 import { useTradingHandlers } from "./utils/tradingHandlers";
 import { UseTradingFormReturn } from "./types/tradingHookTypes";
 
-export const useTradingForm = (orderType: OrderType): UseTradingFormReturn => {
+export const useTradingForm = (orderType: OrderType, gtdDate?: Date): UseTradingFormReturn => {
   // Use the extracted form state hook
   const formState = useFormState(orderType);
   
@@ -48,7 +48,8 @@ export const useTradingForm = (orderType: OrderType): UseTradingFormReturn => {
     state: tradingState,
     setCurrentStep,
     setOrder,
-    resetForm
+    resetForm,
+    gtdDate
   });
 
   return {

@@ -39,12 +39,6 @@ const BrokerCard = memo(({
       <div className="font-medium text-sm">{broker.name}</div>
       <p className="text-xs text-gray-600 mt-1 line-clamp-2">{broker.description}</p>
       {broker.fee && <p className="text-xs text-gray-700 mt-1">Fee: {broker.fee}</p>}
-      {isSelected && (
-        <div className="mt-2 flex justify-between items-center">
-          <span className="text-green-600 text-xs">Currently selected</span>
-          <span className="bg-black text-white text-xs px-2 py-0.5 rounded">Selected</span>
-        </div>
-      )}
     </div>
   </div>
 ));
@@ -77,15 +71,9 @@ const BestExecutionCard = memo(({
       <div>
         <h4 className="text-base font-semibold">Best Execution</h4>
         <p className="text-xs text-gray-600 mt-1">Automatically route to optimal broker</p>
-        {isSelected && (
-          <p className="text-green-600 text-xs mt-2">Currently selected</p>
-        )}
       </div>
       <div className="ml-auto flex items-center">
         <span className="text-green-600 text-xs mr-2 font-medium">Recommended</span>
-        {isSelected && (
-          <span className="bg-black text-white text-xs px-2 py-1 rounded">Selected</span>
-        )}
       </div>
     </div>
   </div>
@@ -146,7 +134,13 @@ const TradingBrokerSelection: React.FC<TradingBrokerSelectionProps> = ({
         </p>
       </div>
 
-      {/* Search Bar */}
+      {/* Best Execution Card */}
+      <BestExecutionCard 
+        isSelected={selectedBroker === "best"} 
+        onSelect={handleBestExecutionSelect}
+      />
+      
+      {/* Search Bar - moved below Best Execution */}
       <div className="mb-4">
         <Label htmlFor="broker-search" className="text-sm mb-1 block">
           Search Brokers
@@ -163,12 +157,6 @@ const TradingBrokerSelection: React.FC<TradingBrokerSelectionProps> = ({
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
         </div>
       </div>
-
-      {/* Best Execution Card */}
-      <BestExecutionCard 
-        isSelected={selectedBroker === "best"} 
-        onSelect={handleBestExecutionSelect}
-      />
       
       {/* Specific Brokers Section */}
       <div>

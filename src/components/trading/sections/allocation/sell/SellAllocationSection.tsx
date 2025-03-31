@@ -28,10 +28,7 @@ const SellAllocationSection: React.FC<SellAllocationSectionProps> = ({
   return (
     <div className="space-y-8">
       <div className="space-y-6">
-        <h3 className="text-base font-medium">1. Source Portfolios</h3>
-        <p className="text-sm text-gray-500 -mt-4">
-          Select portfolios to sell shares from
-        </p>
+        <h3 className="text-base font-medium">Source Portfolios</h3>
         
         <SourcePortfoliosSection
           totalQuantity={quantity}
@@ -46,10 +43,7 @@ const SellAllocationSection: React.FC<SellAllocationSectionProps> = ({
       <Separator />
       
       <div className="space-y-6">
-        <h3 className="text-base font-medium">2. Destination Cash Accounts</h3>
-        <p className="text-sm text-gray-500 -mt-4">
-          Select where to deposit the sale proceeds
-        </p>
+        <h3 className="text-base font-medium">Destination Cash Accounts</h3>
         
         <DestinationCashAccountsSection
           totalAmount={totalAmount}

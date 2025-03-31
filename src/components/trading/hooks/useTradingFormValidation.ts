@@ -76,7 +76,8 @@ export const useTradingFormValidation = ({
         
         case 4: // Leverage
           // Make sure leverage has a valid value
-          return leverage === undefined || leverage === null || leverage < 1;
+          const leverageValue = order?.leverage || 0;
+          return leverageValue < 1;
         
         case 5: // Broker Selection (now step 5 instead of 4)
           // Check if broker is undefined/null, but allow empty string as valid
@@ -112,9 +113,4 @@ export const useTradingFormValidation = ({
   ]);
 
   return { nextButtonDisabled };
-};
-
-// Add the missing leverage variable to the function scope
-const leverage = (order?: Partial<TradeOrder>) => {
-  return order?.leverage || 1;
 };

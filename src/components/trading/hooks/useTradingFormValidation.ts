@@ -38,10 +38,10 @@ export const useTradingFormValidation = ({
       });
 
       switch (currentStep) {
-        case 0: // Instrument Selection
+        case 0: // Type & Instrument
           return !selectedInstrument;
         
-        case 1: // Order Type & Validity
+        case 1: // Execution & Validity
           return !orderExecutionType || !timeInForce;
         
         case 2: // Quantity & Price
@@ -74,12 +74,12 @@ export const useTradingFormValidation = ({
           
           return true;
         
-        case 4: // Leverage (new step)
-          // Leverage always has a default value, so we can always proceed
-          return false;
+        case 4: // Leverage
+          // Make sure leverage has a valid value
+          return leverage === undefined || leverage === null || leverage < 1;
         
         case 5: // Broker Selection (now step 5 instead of 4)
-          // Important: Only check if broker is undefined/null, but allow empty string as valid
+          // Check if broker is undefined/null, but allow empty string as valid
           // because "best" is a valid broker selection
           const isBrokerInvalid = selectedBroker === undefined || selectedBroker === null;
           console.log("Broker selection validation:", {
@@ -112,4 +112,9 @@ export const useTradingFormValidation = ({
   ]);
 
   return { nextButtonDisabled };
+};
+
+// Add the missing leverage variable to the function scope
+const leverage = (order?: Partial<TradeOrder>) => {
+  return order?.leverage || 1;
 };

@@ -105,7 +105,7 @@ const TradingOrderType: React.FC<TradingOrderTypeProps> = ({
               setGtdDate(undefined);
             }
           }}>
-            <SelectTrigger className="w-full h-11 border border-gray-300 focus:border-black focus:ring-2 focus:ring-black rounded-md">
+            <SelectTrigger className="w-full h-11 border-gray-300 focus:border-black focus:ring-2 focus:ring-black rounded-md">
               <SelectValue placeholder="Select time in force" />
             </SelectTrigger>
             <SelectContent>
@@ -130,13 +130,13 @@ const TradingOrderType: React.FC<TradingOrderTypeProps> = ({
             </div>
           )}
           
-          <p className="text-xs text-gray-500 mt-1">
+          <div className="text-xs text-gray-500 mt-1">
             {timeInForce === "day" && "Order valid until end of current trading day."}
             {timeInForce === "gtc" && "Order valid until executed or canceled."}
             {timeInForce === "gtd" && "Order valid until specified date."}
             {timeInForce === "ioc" && "Fill whatever portion possible immediately, cancel rest."}
             {timeInForce === "fok" && "Must be filled immediately and completely or canceled."}
-          </p>
+          </div>
         </div>
       </div>
 

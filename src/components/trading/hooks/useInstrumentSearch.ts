@@ -12,15 +12,24 @@ export const useInstrumentSearch = ({ setSelectedInstrument, orderType }: UseIns
   const [searchResults, setSearchResults] = useState<Instrument[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [hasSearched, setHasSearched] = useState<boolean>(false);
 
   // Effect to trigger search when query changes
   useEffect(() => {
     const timer = setTimeout(() => {
-      performSearch(searchQuery);
+      if (searchQuery) {
+        performSearch(searchQuery);
+      } else if (hasSearched) {
+        // Keep showing all instruments when searchQuery is empty but user has searched before
+        setSearchResults(mockInstruments);
+        setIsLoading(false);
+      } else {
+        setSearchResults([]);
+      }
     }, 300);
 
     return () => clearTimeout(timer);
-  }, [searchQuery]);
+  }, [searchQuery, hasSearched]);
 
   const performSearch = useCallback((query: string) => {
     setError(null);
@@ -28,13 +37,15 @@ export const useInstrumentSearch = ({ setSelectedInstrument, orderType }: UseIns
     // Only show loading for non-empty queries
     if (query.trim() !== "") {
       setIsLoading(true);
+      setHasSearched(true);
     }
     
     try {
       // Simulate API search with a timeout
       setTimeout(() => {
         if (query.trim() === "") {
-          setSearchResults([]);
+          // Show all instruments when search query is empty after having searched
+          setSearchResults(mockInstruments);
         } else {
           const results = mockInstruments.filter(
             (instrument) =>
@@ -55,13 +66,13 @@ export const useInstrumentSearch = ({ setSelectedInstrument, orderType }: UseIns
   // Handle selecting an instrument
   const handleSelectInstrument = useCallback((instrument: Instrument | null) => {
     setSelectedInstrument(instrument);
-    // Don't clear the search query after selecting, keep it visible
+    // Don't clear search results when selecting or unselecting
   }, [setSelectedInstrument]);
 
   // Clear selected instrument
   const clearSelectedInstrument = useCallback(() => {
     setSelectedInstrument(null);
-    // We don't clear the search query after unselecting
+    // Don't clear search results when unselecting
   }, [setSelectedInstrument]);
 
   return {
@@ -71,6 +82,7 @@ export const useInstrumentSearch = ({ setSelectedInstrument, orderType }: UseIns
     isLoading,
     error,
     handleSelectInstrument,
-    clearSelectedInstrument
+    clearSelectedInstrument,
+    hasSearched
   };
 };

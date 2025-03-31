@@ -5,7 +5,6 @@ import SearchBar from "../components/instrument-search/SearchBar";
 import InstrumentResultsTable from "../components/instrument-search/InstrumentResultsTable";
 import NoResultsMessage from "../components/instrument-search/NoResultsMessage";
 import { Instrument } from "../types";
-import SelectedInstrumentCard from "../components/instrument-search/SelectedInstrumentCard";
 
 interface TradingInstrumentSearchProps {
   setSelectedInstrument: (instrument: Instrument | null) => void;
@@ -43,15 +42,6 @@ const TradingInstrumentSearch: React.FC<TradingInstrumentSearchProps> = ({
           setSearchTerm={setSearchQuery}
           isSearching={isLoading}
         />
-
-        {selectedInstrument && (
-          <div className="mb-6">
-            <SelectedInstrumentCard 
-              instrument={selectedInstrument} 
-              onClear={clearSelectedInstrument}
-            />
-          </div>
-        )}
 
         {error ? (
           <div className="text-red-500 text-sm">{error}</div>

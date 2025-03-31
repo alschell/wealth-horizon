@@ -64,7 +64,7 @@ const TradingForm: React.FC = () => {
       console.log("Setting default broker to 'best'");
       setSelectedBroker("best");
     }
-  }, [currentStep, selectedBroker, setSelectedBroker]);
+  }, [currentStep, selectedBroker, setSelectedBroker, order]);
 
   useEffect(() => {
     setOrderType(orderType);

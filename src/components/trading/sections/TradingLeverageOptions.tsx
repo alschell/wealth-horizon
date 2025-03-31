@@ -44,14 +44,16 @@ const TradingLeverageOptions: React.FC<TradingLeverageOptionsProps> = ({
     }
   ];
 
-  // Direct function for handling card selection without any wrapping
+  // Safe handler for card selection
   const handleCardSelection = (value: number) => {
-    setLeverage(value);
+    if (value !== null && value !== undefined) {
+      setLeverage(value);
+    }
   };
 
-  // Direct function for slider
+  // Safe handler for slider
   const handleSliderChange = (values: number[]) => {
-    if (values.length > 0) {
+    if (values && values.length > 0 && values[0] !== null && values[0] !== undefined) {
       setLeverage(values[0]);
     }
   };
@@ -67,7 +69,6 @@ const TradingLeverageOptions: React.FC<TradingLeverageOptionsProps> = ({
     <div className="space-y-8">
       {/* Explanation text */}
       <div className="mb-6">
-        <h3 className="text-lg font-medium mb-2">Leverage Options</h3>
         <p className="text-sm text-gray-600">
           {orderType === "buy" 
             ? "Apply leverage to increase your buying power and potential returns." 
@@ -76,20 +77,19 @@ const TradingLeverageOptions: React.FC<TradingLeverageOptionsProps> = ({
         </p>
       </div>
 
-      {/* Leverage option cards - Using buttons for better accessibility */}
+      {/* Leverage option cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {leverageOptions.map((option) => {
           const isSelected = leverage === option.value;
           const Icon = option.icon;
           
           return (
-            <button
+            <div
               key={option.value}
-              type="button"
-              onClick={() => handleCardSelection(option.value)}
               className={`w-full text-left p-4 rounded-lg border transition-all cursor-pointer ${
                 isSelected ? 'ring-2 ring-black bg-white' : 'bg-white hover:bg-gray-50'
               }`}
+              onClick={() => handleCardSelection(option.value)}
             >
               <div className="flex flex-col items-center text-center">
                 <Icon className={`h-5 w-5 ${option.iconColor} mb-2`} />
@@ -104,7 +104,7 @@ const TradingLeverageOptions: React.FC<TradingLeverageOptionsProps> = ({
                   {option.badge}
                 </Badge>
               </div>
-            </button>
+            </div>
           );
         })}
       </div>
@@ -118,7 +118,7 @@ const TradingLeverageOptions: React.FC<TradingLeverageOptionsProps> = ({
           </Badge>
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-6">
           <Slider 
             value={[leverage]} 
             min={1} 

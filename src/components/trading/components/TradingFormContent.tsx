@@ -100,21 +100,24 @@ const TradingFormContent: React.FC<TradingFormContentProps> = ({
         transition={{ duration: 0.3 }}
         className="w-full p-6 border border-gray-200 rounded-md shadow-sm bg-white"
       >
+        {/* Step Header - Consistent across all steps */}
+        <h2 className="text-xl font-semibold mb-6">
+          {steps[currentStep]?.title || ""}
+        </h2>
+        
         {currentStep === 0 && (
-          <>
-            <h2 className="text-xl font-semibold mb-6">Type & Instrument</h2>
-            <div className="mb-6">
-              <TradingOrderTypeSelector 
-                orderType={orderType} 
-                setOrderType={setOrderType} 
-              />
-            </div>
-          </>
+          <div className="mb-6">
+            <h3 className="text-lg font-medium mb-4">Type</h3>
+            <TradingOrderTypeSelector 
+              orderType={orderType} 
+              setOrderType={setOrderType} 
+            />
+          </div>
         )}
         
         <TradingStepRenderer
           CurrentStepComponent={CurrentStepComponent}
-          stepTitle={currentStep === 0 ? "" : steps[currentStep]?.title || ""}
+          stepTitle=""
           orderType={orderType}
           selectedInstrument={selectedInstrument}
           setSelectedInstrument={setSelectedInstrument}

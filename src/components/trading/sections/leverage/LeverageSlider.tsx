@@ -28,19 +28,19 @@ const LeverageSlider: React.FC<LeverageSliderProps> = memo(({
   };
 
   return (
-    <div className="space-y-4 pointer-events-auto">
-      <div className="flex justify-between items-center pointer-events-auto">
+    <div className="space-y-4">
+      <div className="flex justify-between items-center">
         <h3 className="text-md font-medium">Custom Leverage</h3>
         <Badge 
           variant={getBadgeVariant(leverage)}
-          className={leverage > 3 ? "bg-red-500 text-white pointer-events-auto" : "pointer-events-auto"}
+          className={leverage > 3 ? "bg-red-500 text-white" : ""}
         >
           {leverage}x
         </Badge>
       </div>
 
-      <div className="space-y-6 pointer-events-auto">
-        <div className="py-4 pointer-events-auto">
+      <div className="space-y-6">
+        <div className="py-4">
           <Slider 
             value={[leverage]} 
             min={1} 
@@ -48,11 +48,10 @@ const LeverageSlider: React.FC<LeverageSliderProps> = memo(({
             step={0.5} 
             onValueChange={handleSliderChange}
             aria-label="Leverage slider"
-            className="pointer-events-auto"
           />
         </div>
         
-        <div className="flex justify-between text-xs text-gray-500 pointer-events-auto">
+        <div className="flex justify-between text-xs text-gray-500">
           <span>1x (No Leverage)</span>
           <span>5x</span>
           <span>10x (Max)</span>

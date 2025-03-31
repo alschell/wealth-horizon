@@ -26,9 +26,9 @@ const TradingLeverageOptions: React.FC<TradingLeverageOptionsProps> = memo(({
   };
 
   return (
-    <div className="space-y-8 pointer-events-auto">
+    <div className="space-y-8">
       {/* Explanation text */}
-      <div className="mb-6 pointer-events-auto">
+      <div className="mb-6">
         <p className="text-sm text-gray-600">
           {orderType === "buy" 
             ? "Apply leverage to increase your buying power and potential returns." 
@@ -44,7 +44,7 @@ const TradingLeverageOptions: React.FC<TradingLeverageOptionsProps> = memo(({
       />
 
       {/* Custom leverage slider */}
-      <div className="pt-8 border-t border-gray-200 space-y-4 pointer-events-auto">
+      <div className="pt-8 border-t border-gray-200 space-y-4">
         <LeverageSlider
           leverage={leverage}
           setLeverage={handleLeverageChange}

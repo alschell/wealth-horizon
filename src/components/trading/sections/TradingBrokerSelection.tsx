@@ -166,7 +166,7 @@ const TradingBrokerSelection: React.FC<TradingBrokerSelectionProps> = ({
       </div>
     </div>
   );
-});
+};
 
 // Use React.memo to prevent unnecessary re-renders of the entire component
 export default memo(TradingBrokerSelection);

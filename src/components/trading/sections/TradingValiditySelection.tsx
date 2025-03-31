@@ -29,7 +29,7 @@ const TradingValiditySelection: React.FC<TradingValiditySelectionProps> = ({
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-medium mb-2">Order Execution</h3>
+        <h3 className="text-lg font-medium mb-2">Execution</h3>
         <Card className="p-4">
           <div className="space-y-4">
             <div>

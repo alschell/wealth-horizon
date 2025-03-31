@@ -6,7 +6,7 @@ interface LeverageWarningProps {
   leverage: number;
 }
 
-const LeverageWarning: React.FC<LeverageWarningProps> = ({ leverage }) => {
+const LeverageWarning: React.FC<LeverageWarningProps> = React.memo(({ leverage }) => {
   // Calculate margin percentage
   const marginRequirement = Math.round(100/leverage);
   
@@ -24,6 +24,8 @@ const LeverageWarning: React.FC<LeverageWarningProps> = ({ leverage }) => {
       </div>
     </div>
   );
-};
+});
 
-export default React.memo(LeverageWarning);
+LeverageWarning.displayName = 'LeverageWarning';
+
+export default LeverageWarning;

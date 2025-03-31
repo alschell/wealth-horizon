@@ -32,19 +32,13 @@ const LeverageCard: React.FC<LeverageCardProps> = ({
     return "destructive";
   };
   
-  // Handle card click
-  const handleClick = () => {
-    console.log("Card clicked with value:", value);
-    onClick(value);
-  };
-  
   return (
     <div className="h-full">
       <Card
         className={`p-4 h-full cursor-pointer transition-all ${
           isSelected ? 'ring-2 ring-black bg-white' : 'bg-white hover:bg-gray-50'
         }`}
-        onClick={handleClick}
+        onClick={() => onClick(value)}
       >
         <div className="flex flex-col items-center text-center h-full justify-center">
           <div className="mb-3">

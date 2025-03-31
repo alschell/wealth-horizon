@@ -1,5 +1,5 @@
 
-import React, { useCallback } from "react";
+import React from "react";
 import { Badge } from "@/components/ui/badge";
 import { Slider } from "@/components/ui/slider";
 
@@ -19,14 +19,13 @@ const LeverageSlider: React.FC<LeverageSliderProps> = ({
     return "destructive";
   };
 
-  // Handle slider change with memoization
-  const handleSliderChange = useCallback((values: number[]) => {
+  // Handle slider change - simplified to avoid any lag
+  const handleSliderChange = (values: number[]) => {
     if (values && values.length > 0) {
       const newValue = Math.round(values[0] * 2) / 2; // Ensure values match the step (0.5)
-      console.log("Slider value changing to:", newValue);
       setLeverage(newValue);
     }
-  }, [setLeverage]);
+  };
 
   return (
     <div className="space-y-4">
@@ -41,15 +40,16 @@ const LeverageSlider: React.FC<LeverageSliderProps> = ({
       </div>
 
       <div className="space-y-6">
-        <Slider 
-          value={[leverage]} 
-          min={1} 
-          max={10} 
-          step={0.5} 
-          onValueChange={handleSliderChange}
-          className="py-4"
-          aria-label="Leverage slider"
-        />
+        <div className="py-4">
+          <Slider 
+            value={[leverage]} 
+            min={1} 
+            max={10} 
+            step={0.5} 
+            onValueChange={handleSliderChange}
+            aria-label="Leverage slider"
+          />
+        </div>
         
         <div className="flex justify-between text-xs text-gray-500">
           <span>1x (No Leverage)</span>
@@ -61,4 +61,5 @@ const LeverageSlider: React.FC<LeverageSliderProps> = ({
   );
 };
 
-export default React.memo(LeverageSlider);
+// Export without React.memo to avoid any memoization issues
+export default LeverageSlider;

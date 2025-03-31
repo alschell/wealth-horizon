@@ -49,9 +49,8 @@ const LeveragePresets: React.FC<LeveragePresetsProps> = ({
     }
   ];
 
-  // Card selection handler
+  // Define a direct card click handler without unnecessary closures
   const handleCardClick = (value: number) => {
-    console.log("Leverage card clicked with value:", value);
     setLeverage(value);
   };
 

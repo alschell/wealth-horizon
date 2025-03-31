@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { CustomSelect } from "@/components/ui/custom-select";
 import { Label } from "@/components/ui/label";
 import { DatePicker } from "@/components/ui/date-picker";
@@ -17,6 +17,9 @@ const ValiditySelector: React.FC<ValiditySelectorProps> = ({
   gtdDate,
   setGtdDate
 }) => {
+  // Track popover state separately from the actual DatePicker component
+  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
+  
   // Descriptions for each validity option
   const validityDescriptions: Record<string, string> = {
     "day": "Order valid only for the current trading day.",
@@ -91,6 +94,8 @@ const ValiditySelector: React.FC<ValiditySelectorProps> = ({
             placeholder="Select date"
             optional={false}
             className="w-full"
+            open={isDatePickerOpen}
+            onOpenChange={setIsDatePickerOpen}
           />
         </div>
       )}

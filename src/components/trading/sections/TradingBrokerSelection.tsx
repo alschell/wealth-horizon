@@ -27,16 +27,30 @@ const TradingBrokerSelection: React.FC<TradingBrokerSelectionProps> = ({
     : mockBrokers;
 
   // Use useCallback to avoid recreation of function on every render
-  const handleBrokerSelect = useCallback((brokerId: string) => {
-    // Simple direct setter
-    setSelectedBroker(brokerId);
-  }, [setSelectedBroker]);
+  const handleBrokerSelect = useCallback((brokerId: string, e: React.MouseEvent | React.KeyboardEvent) => {
+    // Prevent event propagation to avoid bubbling
+    e.preventDefault();
+    e.stopPropagation();
+    
+    // Don't update if already selected to prevent unnecessary renders
+    if (selectedBroker !== brokerId) {
+      setSelectedBroker(brokerId);
+    }
+  }, [setSelectedBroker, selectedBroker]);
 
   // Input change handler to prevent event bubbling issues
   const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    e.stopPropagation();
     setSearchQuery(e.target.value);
   }, []);
   
+  // Create a memoized handler for keyboard navigation
+  const handleKeyDown = useCallback((brokerId: string, e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      handleBrokerSelect(brokerId, e);
+    }
+  }, [handleBrokerSelect]);
+
   return (
     <div className="space-y-6">
       <div>
@@ -64,7 +78,7 @@ const TradingBrokerSelection: React.FC<TradingBrokerSelectionProps> = ({
         </div>
       </div>
 
-      {/* Best Execution Card */}
+      {/* Best Execution Card - Optimized */}
       <div 
         role="button"
         tabIndex={0}
@@ -73,12 +87,8 @@ const TradingBrokerSelection: React.FC<TradingBrokerSelectionProps> = ({
             ? "ring-2 ring-black bg-gray-50" 
             : "hover:bg-gray-50"
         }`} 
-        onClick={() => handleBrokerSelect("best")}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            handleBrokerSelect("best");
-          }
-        }}
+        onClick={(e) => handleBrokerSelect("best", e)}
+        onKeyDown={(e) => handleKeyDown("best", e)}
       >
         <div className="flex items-center">
           <div>
@@ -97,7 +107,7 @@ const TradingBrokerSelection: React.FC<TradingBrokerSelectionProps> = ({
         </div>
       </div>
       
-      {/* Specific Brokers Section */}
+      {/* Specific Brokers Section - Optimized */}
       <div>
         <h4 className="text-base font-medium mb-3">Specific Brokers</h4>
         
@@ -107,12 +117,8 @@ const TradingBrokerSelection: React.FC<TradingBrokerSelectionProps> = ({
               key={broker.id} 
               role="button"
               tabIndex={0}
-              onClick={() => handleBrokerSelect(broker.id)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  handleBrokerSelect(broker.id);
-                }
-              }}
+              onClick={(e) => handleBrokerSelect(broker.id, e)}
+              onKeyDown={(e) => handleKeyDown(broker.id, e)}
               className={`p-4 cursor-pointer transition-all h-full rounded-lg border ${
                 selectedBroker === broker.id 
                   ? 'ring-2 ring-black bg-gray-50' 

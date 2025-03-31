@@ -1,5 +1,5 @@
 
-import React, { useCallback } from "react";
+import React, { useCallback, memo } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Slider } from "@/components/ui/slider";
 
@@ -19,13 +19,17 @@ const LeverageSlider: React.FC<LeverageSliderProps> = ({
     return "destructive";
   };
 
-  // Handle slider change with proper event handling
+  // Handle slider change with proper event handling and memoization
   const handleSliderChange = useCallback((values: number[]) => {
     if (values && values.length > 0) {
       const newValue = Math.round(values[0] * 2) / 2; // Ensure values match the step (0.5)
-      setLeverage(newValue);
+      
+      // Only update if the value actually changed
+      if (newValue !== leverage) {
+        setLeverage(newValue);
+      }
     }
-  }, [setLeverage]);
+  }, [setLeverage, leverage]);
 
   return (
     <div className="space-y-4">
@@ -62,4 +66,4 @@ const LeverageSlider: React.FC<LeverageSliderProps> = ({
   );
 };
 
-export default React.memo(LeverageSlider);
+export default memo(LeverageSlider);

@@ -1,5 +1,5 @@
 
-import React, { useMemo } from "react";
+import React, { useMemo, useCallback } from "react";
 import { Shield, TrendingUp, AlertTriangle } from "lucide-react";
 import LeverageCard from "./LeverageCard";
 
@@ -49,10 +49,13 @@ const LeveragePresets: React.FC<LeveragePresetsProps> = ({
     }
   ], []);
 
-  // Define a direct card click handler with useCallback
-  const handleCardClick = React.useCallback((value: number) => {
-    setLeverage(value);
-  }, [setLeverage]);
+  // Define a direct card click handler with useCallback, preventing unnecessary updates
+  const handleCardClick = useCallback((value: number) => {
+    // Only update if the value has changed
+    if (leverage !== value) {
+      setLeverage(value);
+    }
+  }, [setLeverage, leverage]);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

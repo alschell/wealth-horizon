@@ -35,14 +35,24 @@ const LeverageCard = React.forwardRef<HTMLDivElement, LeverageCardProps>(({
   // Handle click with stopPropagation to prevent event bubbling
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    onClick(value);
+    e.stopPropagation();
+    
+    // Only trigger onClick if not already selected
+    if (!isSelected) {
+      onClick(value);
+    }
   };
   
-  // Handle keyboard accessibility
+  // Handle keyboard accessibility with proper event handling
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
-      onClick(value);
+      e.stopPropagation();
+      
+      // Only trigger onClick if not already selected
+      if (!isSelected) {
+        onClick(value);
+      }
     }
   };
   

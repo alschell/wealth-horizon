@@ -18,8 +18,10 @@ const TradingLeverageOptions: React.FC<TradingLeverageOptionsProps> = ({
   // Create a safe leverage handler that ensures we always pass a number
   const handleLeverageChange = useCallback((value: number) => {
     console.log("Setting leverage to:", value);
-    if (typeof value === 'number' && !isNaN(value)) {
-      setLeverage(value);
+    if (typeof value === 'number' && !isNaN(value) && value >= 1) {
+      // Round to nearest 0.5 to match the slider step
+      const roundedValue = Math.round(value * 2) / 2;
+      setLeverage(roundedValue);
     } else {
       console.warn("Invalid leverage value:", value);
     }
@@ -57,5 +59,10 @@ const TradingLeverageOptions: React.FC<TradingLeverageOptionsProps> = ({
   );
 };
 
-// Using React.memo to prevent unnecessary re-renders, but without interfering with event handlers
-export default memo(TradingLeverageOptions);
+// Using React.memo with custom comparison to prevent unnecessary re-renders
+export default memo(TradingLeverageOptions, (prevProps, nextProps) => {
+  return (
+    prevProps.leverage === nextProps.leverage && 
+    prevProps.orderType === nextProps.orderType
+  );
+});

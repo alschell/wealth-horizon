@@ -1,5 +1,5 @@
 
-import React, { memo } from "react";
+import React, { memo, useCallback } from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { LucideIcon } from "lucide-react";
@@ -32,8 +32,9 @@ const LeverageCard: React.FC<LeverageCardProps> = ({
     return "destructive";
   };
   
-  // Optimize click handler to prevent rerenders
-  const handleClick = React.useCallback(() => {
+  // Optimize click handler to prevent rerenders with useCallback
+  const handleClick = useCallback(() => {
+    console.log("Card clicked with value:", value);
     onClick(value);
   }, [onClick, value]);
   
@@ -65,5 +66,10 @@ const LeverageCard: React.FC<LeverageCardProps> = ({
   );
 };
 
-// Memoize the component to prevent unnecessary re-renders
-export default memo(LeverageCard);
+// Memoize the component with custom comparison to prevent unnecessary re-renders
+export default memo(LeverageCard, (prevProps, nextProps) => {
+  return (
+    prevProps.value === nextProps.value &&
+    prevProps.isSelected === nextProps.isSelected
+  );
+});

@@ -19,14 +19,18 @@ const LeverageSlider: React.FC<LeverageSliderProps> = ({
     return "destructive";
   };
 
-  // Handle slider change with memoization to prevent recreation on every render
+  // Handle slider change with proper memoization to prevent recreation on every render
   const handleSliderChange = useCallback((values: number[]) => {
     if (values && values.length > 0) {
-      const newValue = values[0];
+      const newValue = Math.round(values[0] * 2) / 2; // Ensure values match the step (0.5)
       console.log("Slider value changed to:", newValue);
-      setLeverage(newValue);
+      
+      // Only update if the value has changed
+      if (newValue !== leverage) {
+        setLeverage(newValue);
+      }
     }
-  }, [setLeverage]);
+  }, [setLeverage, leverage]);
 
   return (
     <div className="space-y-4">
@@ -49,9 +53,10 @@ const LeverageSlider: React.FC<LeverageSliderProps> = ({
           onValueChange={handleSliderChange}
           className="py-4"
           aria-label="Leverage slider"
-          // Ensure slider is properly accessible and interactive
+          // Prevent excessive rendering with correct value commit handling
           onValueCommit={(values) => {
-            console.log("Slider value committed:", values[0]);
+            const committedValue = Math.round(values[0] * 2) / 2;
+            console.log("Slider value committed:", committedValue);
           }}
         />
         
@@ -65,4 +70,8 @@ const LeverageSlider: React.FC<LeverageSliderProps> = ({
   );
 };
 
-export default memo(LeverageSlider);
+// Use React.memo correctly with a custom comparison function
+export default memo(LeverageSlider, (prevProps, nextProps) => {
+  // Only re-render if the leverage actually changed
+  return prevProps.leverage === nextProps.leverage;
+});

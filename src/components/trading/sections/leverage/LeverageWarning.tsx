@@ -1,5 +1,5 @@
 
-import React, { memo } from "react";
+import React, { memo, useMemo } from "react";
 import { Info } from "lucide-react";
 
 interface LeverageWarningProps {
@@ -7,8 +7,8 @@ interface LeverageWarningProps {
 }
 
 const LeverageWarning: React.FC<LeverageWarningProps> = ({ leverage }) => {
-  // Calculate margin percentage only when needed
-  const marginRequirement = Math.round(100/leverage);
+  // Calculate margin percentage with useMemo to prevent recalculation on every render
+  const marginRequirement = useMemo(() => Math.round(100/leverage), [leverage]);
   
   return (
     <div className="bg-amber-50 p-4 rounded-md border border-amber-200 mt-6">
@@ -26,4 +26,7 @@ const LeverageWarning: React.FC<LeverageWarningProps> = ({ leverage }) => {
   );
 };
 
-export default memo(LeverageWarning);
+// Memoize component to prevent unnecessary re-renders when leverage hasn't changed
+export default memo(LeverageWarning, (prevProps, nextProps) => {
+  return prevProps.leverage === nextProps.leverage;
+});

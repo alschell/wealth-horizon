@@ -51,6 +51,7 @@ const LeveragePresets: React.FC<LeveragePresetsProps> = ({
 
   // Card selection handler with memoization to prevent recreating function
   const handleCardClick = useCallback((value: number) => {
+    console.log("Leverage card clicked with value:", value);
     setLeverage(value);
   }, [setLeverage]);
 
@@ -73,4 +74,6 @@ const LeveragePresets: React.FC<LeveragePresetsProps> = ({
   );
 };
 
-export default React.memo(LeveragePresets);
+export default React.memo(LeveragePresets, (prevProps, nextProps) => {
+  return prevProps.leverage === nextProps.leverage;
+});

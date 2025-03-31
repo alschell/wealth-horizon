@@ -1,18 +1,10 @@
 
 import React, { useState, useEffect } from "react";
-import TradingInstrumentSearch from "./sections/TradingInstrumentSearch";
-import TradingQuantityPrice from "./sections/quantity-price";
-import TradingBrokerSelection from "./sections/TradingBrokerSelection";
-import TradingAllocation from "./sections/allocation/TradingAllocation";
-import TradingReview from "./sections/TradingReview";
-import TradingOrderType from "./sections/order-type/TradingOrderType";
-import TradingStepsProgress from "./components/TradingStepsProgress";
+import TradingFormHeader from "./components/TradingFormHeader";
 import TradingFormContent from "./components/TradingFormContent";
 import { useTradingForm } from "./hooks/useTradingForm";
 import { useTradingFormValidation } from "./hooks/useTradingFormValidation";
 import { OrderType } from "./types";
-import { motion } from "framer-motion";
-import TradingLeverageOptions from "./sections/leverage/TradingLeverageOptions";
 
 const TradingForm: React.FC = () => {
   const [orderType, setOrderTypeLocal] = useState<OrderType>("buy");
@@ -76,38 +68,16 @@ const TradingForm: React.FC = () => {
     }
   }, [gtdDate, timeInForce, setOrder]);
 
-  // Reordered steps - moved Leverage before Broker
-  const steps = [
-    { title: "Type & Instrument", component: TradingInstrumentSearch },
-    { title: "Execution & Validity", component: TradingOrderType },
-    { title: "Quantity & Price", component: TradingQuantityPrice },
-    { title: "Allocation", component: TradingAllocation },
-    { title: "Leverage", component: TradingLeverageOptions },
-    { title: "Broker", component: TradingBrokerSelection },
-    { title: "Review", component: TradingReview }
-  ];
-
   return (
     <div className="max-w-4xl mx-auto">
-      <header className="max-w-4xl mx-auto py-8">
-        <motion.div 
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="mb-10 text-center"
-        >
-          <h1 className="text-3xl font-bold text-black mb-8">New Trade</h1>
-        </motion.div>
-
-        <TradingStepsProgress 
-          steps={steps}
-          currentStep={currentStep}
-        />
-      </header>
-
+      <TradingFormHeader 
+        currentStep={currentStep}
+        orderType={orderType}
+        setOrderType={setOrderTypeLocal}
+      />
+      
       <TradingFormContent
         currentStep={currentStep}
-        steps={steps}
         orderType={orderType}
         setOrderType={setOrderTypeLocal}
         selectedInstrument={selectedInstrument}

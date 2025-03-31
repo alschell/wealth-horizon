@@ -1,44 +1,50 @@
 
 import React from "react";
-import { ArrowDownUp, TrendingUp } from "lucide-react";
+import { motion } from "framer-motion";
 import { OrderType } from "../types";
+import TradingStepsProgress from "./TradingStepsProgress";
+
+// Import order type selector
+import TradingOrderTypeSelector from "./TradingOrderTypeSelector";
+
+// Define the trading steps
+const steps = [
+  { title: "Type & Instrument", component: null },
+  { title: "Execution & Validity", component: null },
+  { title: "Quantity & Price", component: null },
+  { title: "Allocation", component: null },
+  { title: "Leverage", component: null },
+  { title: "Broker", component: null },
+  { title: "Review", component: null }
+];
 
 interface TradingFormHeaderProps {
+  currentStep: number;
   orderType: OrderType;
-  setOrderType: (orderType: OrderType) => void;
+  setOrderType: (type: OrderType) => void;
 }
 
 const TradingFormHeader: React.FC<TradingFormHeaderProps> = ({
+  currentStep,
   orderType,
   setOrderType
 }) => {
   return (
-    <div className="flex space-x-4 mb-6">
-      <button
-        type="button"
-        className={`flex-1 py-3 px-4 rounded-md flex items-center justify-center font-medium transition-colors ${
-          orderType === "buy" 
-            ? "bg-green-600 text-white hover:bg-green-700" 
-            : "bg-gray-100 text-gray-800 hover:bg-gray-200"
-        }`}
-        onClick={() => setOrderType("buy")}
+    <header className="max-w-4xl mx-auto py-8">
+      <motion.div 
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="mb-10 text-center"
       >
-        <TrendingUp className="mr-2 h-5 w-5" />
-        Buy
-      </button>
-      <button
-        type="button"
-        className={`flex-1 py-3 px-4 rounded-md flex items-center justify-center font-medium transition-colors ${
-          orderType === "sell" 
-            ? "bg-red-600 text-white hover:bg-red-700" 
-            : "bg-gray-100 text-gray-800 hover:bg-gray-200"
-        }`}
-        onClick={() => setOrderType("sell")}
-      >
-        <ArrowDownUp className="mr-2 h-5 w-5" />
-        Sell
-      </button>
-    </div>
+        <h1 className="text-3xl font-bold text-black mb-8">New Trade</h1>
+      </motion.div>
+
+      <TradingStepsProgress 
+        steps={steps}
+        currentStep={currentStep}
+      />
+    </header>
   );
 };
 

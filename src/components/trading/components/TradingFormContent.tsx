@@ -7,6 +7,15 @@ import TradingStepRenderer from "./TradingStepRenderer";
 import { useTradingFormContent } from "../hooks/useTradingFormContent";
 import TradingOrderTypeSelector from "./TradingOrderTypeSelector";
 
+// Import all step components
+import TradingInstrumentSearch from "../sections/TradingInstrumentSearch";
+import TradingQuantityPrice from "../sections/quantity-price";
+import TradingBrokerSelection from "../sections/TradingBrokerSelection";
+import TradingAllocation from "../sections/allocation/TradingAllocation";
+import TradingReview from "../sections/TradingReview";
+import TradingOrderType from "../sections/order-type/TradingOrderType";
+import TradingLeverageOptions from "../sections/leverage/TradingLeverageOptions";
+
 interface Step {
   title: string;
   component: React.ComponentType<any>;
@@ -14,7 +23,6 @@ interface Step {
 
 interface TradingFormContentProps {
   currentStep: number;
-  steps: Step[];
   orderType: OrderType;
   setOrderType: (type: OrderType) => void;
   selectedInstrument: Instrument | null;
@@ -44,7 +52,6 @@ interface TradingFormContentProps {
 
 const TradingFormContent: React.FC<TradingFormContentProps> = ({
   currentStep,
-  steps,
   orderType,
   setOrderType,
   selectedInstrument,
@@ -85,6 +92,17 @@ const TradingFormContent: React.FC<TradingFormContentProps> = ({
     setOrder,
     handleNextStep
   });
+  
+  // Define the trading steps with their components
+  const steps: Step[] = [
+    { title: "Type & Instrument", component: TradingInstrumentSearch },
+    { title: "Execution & Validity", component: TradingOrderType },
+    { title: "Quantity & Price", component: TradingQuantityPrice },
+    { title: "Allocation", component: TradingAllocation },
+    { title: "Leverage", component: TradingLeverageOptions },
+    { title: "Broker", component: TradingBrokerSelection },
+    { title: "Review", component: TradingReview }
+  ];
   
   // Optimize navigation handlers
   const handleNextClick = useCallback(() => {

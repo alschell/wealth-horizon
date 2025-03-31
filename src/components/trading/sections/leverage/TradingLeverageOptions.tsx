@@ -1,5 +1,5 @@
 
-import React, { memo } from "react";
+import React, { useCallback } from "react";
 import LeveragePresets from "./LeveragePresets";
 import LeverageSlider from "./LeverageSlider";
 import LeverageWarning from "./LeverageWarning";
@@ -10,20 +10,20 @@ interface TradingLeverageOptionsProps {
   orderType: string;
 }
 
-const TradingLeverageOptions: React.FC<TradingLeverageOptionsProps> = memo(({
+const TradingLeverageOptions: React.FC<TradingLeverageOptionsProps> = ({
   leverage,
   setLeverage,
   orderType
 }) => {
-  // Create a safe leverage handler that directly updates the state
-  const handleLeverageChange = (value: number) => {
+  // Create a safe leverage handler with useCallback
+  const handleLeverageChange = useCallback((value: number) => {
     // Ensure the value is valid before updating state
     if (typeof value === 'number' && !isNaN(value) && value >= 1) {
       // Round to nearest 0.5 to match the slider step
       const roundedValue = Math.round(value * 2) / 2;
       setLeverage(roundedValue);
     }
-  };
+  }, [setLeverage]);
 
   return (
     <div className="space-y-8">
@@ -55,8 +55,6 @@ const TradingLeverageOptions: React.FC<TradingLeverageOptionsProps> = memo(({
       </div>
     </div>
   );
-});
+};
 
-TradingLeverageOptions.displayName = "TradingLeverageOptions";
-
-export default TradingLeverageOptions;
+export default React.memo(TradingLeverageOptions);

@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
@@ -26,11 +26,17 @@ const TradingBrokerSelection: React.FC<TradingBrokerSelectionProps> = ({
       )
     : mockBrokers;
 
-  // Direct event handler that doesn't use a callback
-  const handleBrokerSelect = (brokerId: string) => {
+  // Use useCallback to avoid recreation of function on every render
+  const handleBrokerSelect = useCallback((brokerId: string) => {
+    // Simple direct setter
     setSelectedBroker(brokerId);
-  };
+  }, [setSelectedBroker]);
 
+  // Input change handler to prevent event bubbling issues
+  const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+  }, []);
+  
   return (
     <div className="space-y-6">
       <div>
@@ -51,22 +57,28 @@ const TradingBrokerSelection: React.FC<TradingBrokerSelectionProps> = ({
             type="text"
             placeholder="Search by name"
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={handleSearchChange}
             className="pl-10"
           />
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
         </div>
       </div>
 
-      {/* Best Execution Card - Made it more visible */}
-      <button 
-        type="button"
+      {/* Best Execution Card */}
+      <div 
+        role="button"
+        tabIndex={0}
         className={`w-full text-left p-4 cursor-pointer transition-all mb-6 border rounded-lg ${
           selectedBroker === "best" 
             ? "ring-2 ring-black bg-gray-50" 
             : "hover:bg-gray-50"
         }`} 
         onClick={() => handleBrokerSelect("best")}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            handleBrokerSelect("best");
+          }
+        }}
       >
         <div className="flex items-center">
           <div>
@@ -83,7 +95,7 @@ const TradingBrokerSelection: React.FC<TradingBrokerSelectionProps> = ({
             )}
           </div>
         </div>
-      </button>
+      </div>
       
       {/* Specific Brokers Section */}
       <div>
@@ -91,10 +103,16 @@ const TradingBrokerSelection: React.FC<TradingBrokerSelectionProps> = ({
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
           {filteredBrokers.map((broker) => (
-            <button 
+            <div 
               key={broker.id} 
-              type="button"
+              role="button"
+              tabIndex={0}
               onClick={() => handleBrokerSelect(broker.id)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  handleBrokerSelect(broker.id);
+                }
+              }}
               className={`p-4 cursor-pointer transition-all h-full rounded-lg border ${
                 selectedBroker === broker.id 
                   ? 'ring-2 ring-black bg-gray-50' 
@@ -112,7 +130,7 @@ const TradingBrokerSelection: React.FC<TradingBrokerSelectionProps> = ({
                   </div>
                 )}
               </div>
-            </button>
+            </div>
           ))}
         </div>
         
@@ -124,4 +142,4 @@ const TradingBrokerSelection: React.FC<TradingBrokerSelectionProps> = ({
   );
 };
 
-export default TradingBrokerSelection;
+export default React.memo(TradingBrokerSelection);

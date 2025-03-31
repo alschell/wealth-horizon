@@ -1,5 +1,5 @@
 
-import React, { memo } from "react";
+import React, { useCallback } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Slider } from "@/components/ui/slider";
 
@@ -8,7 +8,7 @@ interface LeverageSliderProps {
   setLeverage: (value: number) => void;
 }
 
-const LeverageSlider: React.FC<LeverageSliderProps> = memo(({
+const LeverageSlider: React.FC<LeverageSliderProps> = ({
   leverage,
   setLeverage
 }) => {
@@ -19,13 +19,13 @@ const LeverageSlider: React.FC<LeverageSliderProps> = memo(({
     return "destructive";
   };
 
-  // Handle slider change - simple direct update
-  const handleSliderChange = (values: number[]) => {
+  // Handle slider change with proper event handling
+  const handleSliderChange = useCallback((values: number[]) => {
     if (values && values.length > 0) {
       const newValue = Math.round(values[0] * 2) / 2; // Ensure values match the step (0.5)
       setLeverage(newValue);
     }
-  };
+  }, [setLeverage]);
 
   return (
     <div className="space-y-4">
@@ -47,6 +47,7 @@ const LeverageSlider: React.FC<LeverageSliderProps> = memo(({
             max={10} 
             step={0.5} 
             onValueChange={handleSliderChange}
+            className="relative z-10" // Added z-index to ensure it's clickable
             aria-label="Leverage slider"
           />
         </div>
@@ -59,8 +60,6 @@ const LeverageSlider: React.FC<LeverageSliderProps> = memo(({
       </div>
     </div>
   );
-});
+};
 
-LeverageSlider.displayName = "LeverageSlider";
-
-export default LeverageSlider;
+export default React.memo(LeverageSlider);

@@ -17,7 +17,7 @@ interface LeveragePresetsProps {
   setLeverage: (value: number) => void;
 }
 
-const LeveragePresets: React.FC<LeveragePresetsProps> = React.memo(({
+const LeveragePresets: React.FC<LeveragePresetsProps> = ({
   leverage,
   setLeverage
 }) => {
@@ -49,7 +49,7 @@ const LeveragePresets: React.FC<LeveragePresetsProps> = React.memo(({
     }
   ], []);
 
-  // Define a direct card click handler
+  // Define a direct card click handler with useCallback
   const handleCardClick = React.useCallback((value: number) => {
     setLeverage(value);
   }, [setLeverage]);
@@ -71,8 +71,6 @@ const LeveragePresets: React.FC<LeveragePresetsProps> = React.memo(({
       ))}
     </div>
   );
-}, (prevProps, nextProps) => prevProps.leverage === nextProps.leverage);
+};
 
-LeveragePresets.displayName = "LeveragePresets";
-
-export default LeveragePresets;
+export default React.memo(LeveragePresets);

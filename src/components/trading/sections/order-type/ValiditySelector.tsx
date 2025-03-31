@@ -2,12 +2,7 @@
 import React, { useState } from "react";
 import { CustomSelect } from "@/components/ui/custom-select";
 import { Label } from "@/components/ui/label";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
-import { cn } from "@/lib/utils";
+import DateField from "@/components/onboarding/common/fields/DateField";
 
 interface ValiditySelectorProps {
   timeInForce: string;
@@ -22,8 +17,6 @@ const ValiditySelector: React.FC<ValiditySelectorProps> = ({
   gtdDate,
   setGtdDate
 }) => {
-  const [openDatePopover, setOpenDatePopover] = useState(false);
-
   // Descriptions for each validity option
   const validityDescriptions: Record<string, string> = {
     "day": "Order valid only for the current trading day.",
@@ -43,10 +36,13 @@ const ValiditySelector: React.FC<ValiditySelectorProps> = ({
     "All or None (AON)"
   ];
 
-  const handleDateSelect = (date?: Date) => {
-    setGtdDate(date);
-    // Close the popover immediately after selection
-    setOpenDatePopover(false);
+  // Handler for date changes
+  const handleDateChange = (dateString: string) => {
+    if (dateString) {
+      setGtdDate(new Date(dateString));
+    } else {
+      setGtdDate(undefined);
+    }
   };
 
   return (
@@ -84,33 +80,14 @@ const ValiditySelector: React.FC<ValiditySelectorProps> = ({
       
       {timeInForce === "gtd" && (
         <div className="pt-2 text-left">
-          <Label htmlFor="date" className="block text-sm font-medium mb-2">
-            Select Expiry Date
-          </Label>
-          <Popover open={openDatePopover} onOpenChange={setOpenDatePopover}>
-            <PopoverTrigger asChild>
-              <Button
-                variant={"outline"}
-                className={cn(
-                  "w-full pl-3 text-left font-normal text-sm",
-                  !gtdDate && "text-muted-foreground"
-                )}
-              >
-                <CalendarIcon className="mr-2 h-4 w-4" />
-                {gtdDate ? format(gtdDate, "PPP") : "Select a date"}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="start">
-              <Calendar
-                mode="single"
-                selected={gtdDate}
-                onSelect={handleDateSelect}
-                initialFocus
-                disabled={(date) => date < new Date()}
-                className={cn("p-3 pointer-events-auto")}
-              />
-            </PopoverContent>
-          </Popover>
+          <DateField
+            id="expiryDate"
+            label="Select Expiry Date"
+            value={gtdDate ? gtdDate.toISOString() : ""}
+            onChange={handleDateChange}
+            required={timeInForce === "gtd"}
+            closeOnSelect={true}
+          />
         </div>
       )}
     </div>

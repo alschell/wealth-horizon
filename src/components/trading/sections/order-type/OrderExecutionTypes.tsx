@@ -1,7 +1,7 @@
 
 import React from "react";
 import ExecutionTypeCard from "./ExecutionTypeCard";
-import { TrendingUp, Timer, StopCircle, BarChart2, ArrowRightLeft, Clock } from "lucide-react";
+import { TrendingUp, Timer, StopCircle, BarChart2, ArrowRightLeft, Clock, Layers, Percent } from "lucide-react";
 
 interface OrderExecutionTypesProps {
   orderExecutionType: string;
@@ -12,7 +12,7 @@ const OrderExecutionTypes: React.FC<OrderExecutionTypesProps> = ({
   orderExecutionType,
   setOrderExecutionType
 }) => {
-  // Define execution type options with more sophisticated choices
+  // Enhanced execution type options tailored for sophisticated traders
   const executionTypeOptions = [
     { 
       value: 'market', 
@@ -53,8 +53,22 @@ const OrderExecutionTypes: React.FC<OrderExecutionTypesProps> = ({
       value: 'iceberg', 
       title: 'Iceberg',
       description: 'Shows only part of the total quantity to the market.',
-      icon: Clock,
+      icon: Layers,
       iconColor: 'text-cyan-600',
+    },
+    { 
+      value: 'pegged', 
+      title: 'Pegged',
+      description: 'Order price pegged to a reference price.',
+      icon: Percent,
+      iconColor: 'text-teal-600',
+    },
+    { 
+      value: 'twap', 
+      title: 'TWAP',
+      description: 'Time-Weighted Average Price execution.',
+      icon: Clock,
+      iconColor: 'text-rose-600',
     }
   ];
 
@@ -62,7 +76,7 @@ const OrderExecutionTypes: React.FC<OrderExecutionTypesProps> = ({
     <div className="space-y-4">
       <h3 className="text-lg font-medium">Order Execution</h3>
       
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {executionTypeOptions.map((option) => {
           const isSelected = orderExecutionType === option.value;
           

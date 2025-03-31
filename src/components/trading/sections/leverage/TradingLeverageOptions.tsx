@@ -15,6 +15,12 @@ const TradingLeverageOptions: React.FC<TradingLeverageOptionsProps> = ({
   setLeverage,
   orderType
 }) => {
+  // Create a safe leverage handler that ensures we always pass a number
+  const handleLeverageChange = (value: number) => {
+    console.log("Setting leverage to:", value);
+    setLeverage(value);
+  };
+
   return (
     <div className="space-y-8">
       {/* Explanation text */}
@@ -30,14 +36,14 @@ const TradingLeverageOptions: React.FC<TradingLeverageOptionsProps> = ({
       {/* Leverage option cards */}
       <LeveragePresets 
         leverage={leverage}
-        setLeverage={setLeverage}
+        setLeverage={handleLeverageChange}
       />
 
       {/* Custom leverage slider */}
       <div className="pt-8 border-t border-gray-200 space-y-4">
         <LeverageSlider
           leverage={leverage}
-          setLeverage={setLeverage}
+          setLeverage={handleLeverageChange}
         />
 
         {/* Risk information */}

@@ -49,8 +49,9 @@ const LeveragePresets: React.FC<LeveragePresetsProps> = ({
     }
   ];
 
-  // Card selection handler - fixed to prevent event propagation issues
+  // Card selection handler with proper event handling
   const handleCardClick = useCallback((value: number, e: React.MouseEvent) => {
+    console.log("Leverage card clicked:", value);
     e.preventDefault();
     e.stopPropagation();
     setLeverage(value);

@@ -32,19 +32,24 @@ const LeverageCard: React.FC<LeverageCardProps> = ({
     return "destructive";
   };
   
+  // Handle click with specific event handling to prevent bubbling
+  const handleClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onClick(value, e);
+  };
+  
   return (
     <div className="h-full">
       <Card
         className={`p-4 h-full cursor-pointer transition-all ${
           isSelected ? 'ring-2 ring-black bg-white' : 'bg-white hover:bg-gray-50'
         }`}
-        onClick={(e: React.MouseEvent) => onClick(value, e)}
+        onClick={handleClick}
       >
         <div className="flex flex-col items-center text-center h-full justify-center">
-          <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-3 ${
-            isSelected ? 'bg-black' : 'bg-gray-100'
-          }`}>
-            <Icon className={`h-5 w-5 ${isSelected ? 'text-white' : iconColor}`} />
+          <div className="mb-3">
+            <Icon className={`h-5 w-5 ${iconColor}`} />
           </div>
           <h3 className="font-medium mb-2">{title}</h3>
           <p className="text-sm text-gray-600 mb-3">

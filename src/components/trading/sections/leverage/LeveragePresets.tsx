@@ -53,7 +53,10 @@ const LeveragePresets: React.FC<LeveragePresetsProps> = ({
   const handleCardClick = useCallback((value: number) => {
     // Only update if the value has changed
     if (leverage !== value) {
-      setLeverage(value);
+      // Use setTimeout to defer the state update
+      setTimeout(() => {
+        setLeverage(value);
+      }, 0);
     }
   }, [setLeverage, leverage]);
 

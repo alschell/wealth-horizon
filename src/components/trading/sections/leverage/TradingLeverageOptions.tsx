@@ -24,10 +24,11 @@ const TradingLeverageOptions: React.FC<TradingLeverageOptionsProps> = ({
         // Round to nearest 0.5 to match the slider step
         const roundedValue = Math.round(value * 2) / 2;
         
-        // Use requestAnimationFrame to avoid blocking the UI thread
-        requestAnimationFrame(() => {
+        // Use setTimeout to defer the state update
+        // This prevents UI freezing by moving the update to the next event loop
+        setTimeout(() => {
           setLeverage(roundedValue);
-        });
+        }, 0);
       }
     }
   }, [setLeverage, leverage]);

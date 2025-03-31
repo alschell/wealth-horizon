@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { Instrument, TradeOrder, OrderType } from "../types";
 
 interface UseTradingFormValidationProps {
@@ -26,20 +26,22 @@ export const useTradingFormValidation = ({
   gtdDate
 }: UseTradingFormValidationProps) => {
   const [nextButtonDisabled, setNextButtonDisabled] = useState(true);
+  const debounceTimerRef = useRef<number | null>(null);
 
-  useEffect(() => {
-    const validateCurrentStep = () => {
-      console.log("Validating step:", currentStep, {
-        selectedInstrument: selectedInstrument?.symbol,
-        orderExecutionType,
-        timeInForce, 
-        quantity,
-        price,
-        selectedBroker,
-        order,
-        gtdDate
-      });
+  // Debounced validation function
+  const validateCurrentStep = useCallback(() => {
+    console.log("Validating step:", currentStep, {
+      selectedInstrument: selectedInstrument?.symbol,
+      orderExecutionType,
+      timeInForce, 
+      quantity,
+      price,
+      selectedBroker,
+      order,
+      gtdDate
+    });
 
+    try {
       switch (currentStep) {
         case 0: // Type & Instrument
           return !selectedInstrument;
@@ -103,11 +105,10 @@ export const useTradingFormValidation = ({
         default:
           return false;
       }
-    };
-    
-    const isDisabled = validateCurrentStep();
-    console.log(`Step ${currentStep} button disabled:`, isDisabled);
-    setNextButtonDisabled(isDisabled);
+    } catch (error) {
+      console.error("Validation error:", error);
+      return true; // Disable button on error
+    }
   }, [
     currentStep, 
     selectedInstrument, 
@@ -118,6 +119,33 @@ export const useTradingFormValidation = ({
     selectedBroker, 
     order,
     gtdDate
+  ]);
+
+  useEffect(() => {
+    // Clear any previous timer
+    if (debounceTimerRef.current !== null) {
+      clearTimeout(debounceTimerRef.current);
+    }
+    
+    // Set a new timer to debounce validation
+    debounceTimerRef.current = window.setTimeout(() => {
+      const isDisabled = validateCurrentStep();
+      console.log(`Step ${currentStep} button disabled:`, isDisabled);
+      setNextButtonDisabled(isDisabled);
+      
+      // Clear the timer reference after execution
+      debounceTimerRef.current = null;
+    }, 300); // Debounce by 300ms
+    
+    // Clean up the timer on unmount or when dependencies change
+    return () => {
+      if (debounceTimerRef.current !== null) {
+        clearTimeout(debounceTimerRef.current);
+      }
+    };
+  }, [
+    validateCurrentStep,
+    currentStep
   ]);
 
   return { nextButtonDisabled };

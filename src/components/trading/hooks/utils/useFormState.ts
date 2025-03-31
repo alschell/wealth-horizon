@@ -22,7 +22,10 @@ export const useFormState = (initialOrderType: OrderType) => {
     // Only update if the value has actually changed
     if (newLeverage !== previousLeverageRef.current) {
       previousLeverageRef.current = newLeverage;
-      setLeverage(newLeverage);
+      // Use setTimeout to defer the state update
+      setTimeout(() => {
+        setLeverage(newLeverage);
+      }, 0);
     }
   }, []);
   

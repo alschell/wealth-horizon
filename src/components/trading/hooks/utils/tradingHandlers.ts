@@ -90,24 +90,43 @@ export const useTradingHandlers = ({
       return;
     }
     
-    // Final validation before submission
-    if (
-      !validateInstrumentSelection(state.selectedInstrument) ||
-      !validateOrderExecution(state.orderExecutionType) ||
-      !validateQuantityPrice(state.quantity, state.price, state.orderExecutionType) ||
-      !validateBrokerSelection(state.selectedBroker) ||
-      !validateAllocations(state.currentOrderType, state.order)
-    ) {
-      return;
-    }
-    
-    setIsSubmitting(true);
-    
-    // If we pass all validations, submit the order
+    // Final validation before submission in a try/catch to prevent crashes
     try {
-      submitHandler();
-    } finally {
-      setIsSubmitting(false);
+      if (
+        !validateInstrumentSelection(state.selectedInstrument) ||
+        !validateOrderExecution(state.orderExecutionType) ||
+        !validateQuantityPrice(state.quantity, state.price, state.orderExecutionType) ||
+        !validateBrokerSelection(state.selectedBroker) ||
+        !validateAllocations(state.currentOrderType, state.order)
+      ) {
+        return;
+      }
+      
+      setIsSubmitting(true);
+      
+      // If we pass all validations, submit the order with setTimeout
+      // to prevent UI freeze
+      setTimeout(() => {
+        try {
+          submitHandler();
+        } catch (error) {
+          console.error("Error submitting order:", error);
+          toast({
+            title: "Error",
+            description: "There was an error submitting your order. Please try again.",
+            variant: "destructive"
+          });
+        } finally {
+          setIsSubmitting(false);
+        }
+      }, 0);
+    } catch (error) {
+      console.error("Error in submit validation:", error);
+      toast({
+        title: "Error",
+        description: "There was an error validating your order. Please check your inputs and try again.",
+        variant: "destructive"
+      });
     }
   }, [
     state.selectedInstrument,

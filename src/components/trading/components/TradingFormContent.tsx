@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { memo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import TradingFormNavigation from "./TradingFormNavigation";
 import { OrderType, Instrument, TradeOrder } from "../types";
@@ -162,4 +162,4 @@ const TradingFormContent: React.FC<TradingFormContentProps> = ({
   );
 };
 
-export default TradingFormContent;
+export default memo(TradingFormContent);

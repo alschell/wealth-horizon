@@ -85,20 +85,22 @@ const TradingForm: React.FC = () => {
   ];
 
   return (
-    <div className="max-w-4xl mx-auto py-8">
-      <motion.div 
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="mb-10 text-center"
-      >
-        <h1 className="text-3xl font-bold text-black mb-8">New Trade</h1>
-      </motion.div>
+    <div className="max-w-4xl mx-auto">
+      <header className="max-w-4xl mx-auto py-8">
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="mb-10 text-center"
+        >
+          <h1 className="text-3xl font-bold text-black mb-8">Wealth Horizon</h1>
+        </motion.div>
 
-      <TradingStepsProgress 
-        steps={steps}
-        currentStep={currentStep}
-      />
+        <TradingStepsProgress 
+          steps={steps}
+          currentStep={currentStep}
+        />
+      </header>
 
       <TradingFormContent
         currentStep={currentStep}

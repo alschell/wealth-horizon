@@ -30,7 +30,7 @@ const TradingStepsProgress: React.FC<TradingStepsProgressProps> = ({
         </div>
         
         {/* Step circles with equal spacing */}
-        <div className="flex w-full absolute">
+        <div className="flex w-full">
           {steps.map((step, index) => {
             const isActive = index === currentStep;
             const isCompleted = index < currentStep;

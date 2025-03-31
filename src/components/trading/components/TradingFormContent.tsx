@@ -33,6 +33,8 @@ interface TradingFormContentProps {
   setTimeInForce: (time: string) => void;
   leverage: number;
   setLeverage: (leverage: number) => void;
+  gtdDate?: Date;
+  setGtdDate: (date?: Date) => void;
   setCurrentStep: (step: number) => void;
   handleNextStep: () => void;
   handlePreviousStep: () => void;
@@ -61,6 +63,8 @@ const TradingFormContent: React.FC<TradingFormContentProps> = ({
   setTimeInForce,
   leverage,
   setLeverage,
+  gtdDate,
+  setGtdDate,
   setCurrentStep,
   handleNextStep,
   handlePreviousStep,
@@ -135,6 +139,8 @@ const TradingFormContent: React.FC<TradingFormContentProps> = ({
           setTimeInForce={setTimeInForce}
           leverage={leverage}
           setLeverage={setLeverage}
+          gtdDate={gtdDate}
+          setGtdDate={setGtdDate}
           setCurrentStep={setCurrentStep}
           renderError={renderError}
           ensureOrderHasAllocations={ensureOrderHasAllocations}

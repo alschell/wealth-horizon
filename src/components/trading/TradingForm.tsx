@@ -16,6 +16,7 @@ import TradingLeverageOptions from "./sections/TradingLeverageOptions";
 
 const TradingForm: React.FC = () => {
   const [orderType, setOrderTypeLocal] = useState<OrderType>("buy");
+  const [gtdDate, setGtdDate] = useState<Date | undefined>(undefined);
   
   const {
     currentStep,
@@ -43,7 +44,7 @@ const TradingForm: React.FC = () => {
     setLeverage
   } = useTradingForm(orderType);
 
-  // Validation hook
+  // Validation hook with added gtdDate
   const { nextButtonDisabled } = useTradingFormValidation({
     currentStep,
     selectedInstrument,
@@ -52,7 +53,8 @@ const TradingForm: React.FC = () => {
     quantity,
     price,
     selectedBroker,
-    order
+    order,
+    gtdDate
   });
 
   useEffect(() => {
@@ -60,7 +62,7 @@ const TradingForm: React.FC = () => {
     console.log("TradingForm - Current order state:", JSON.stringify(order));
     
     // Ensure we have a broker selected, defaulting to "best" if not set
-    if (currentStep >= 5 && !selectedBroker) {  // Updated from 4 to 5 due to new Leverage step
+    if (currentStep >= 5 && !selectedBroker) {
       console.log("Setting default broker to 'best'");
       setSelectedBroker("best");
     }
@@ -118,6 +120,8 @@ const TradingForm: React.FC = () => {
         setTimeInForce={setTimeInForce}
         leverage={leverage}
         setLeverage={setLeverage}
+        gtdDate={gtdDate}
+        setGtdDate={setGtdDate}
         setCurrentStep={setCurrentStep}
         handleNextStep={handleNextStep}
         handlePreviousStep={handlePreviousStep}

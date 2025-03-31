@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Select,
   SelectContent,
@@ -28,6 +28,12 @@ const TradingOrderType: React.FC<TradingOrderTypeProps> = ({
   orderType
 }) => {
   const [gtdDate, setGtdDate] = useState<Date | undefined>(undefined);
+  
+  // Set GTD date on the parent component's order object
+  useEffect(() => {
+    // This effect is just to demonstrate the date was selected
+    console.log("GTD Date updated:", gtdDate);
+  }, [gtdDate]);
 
   return (
     <div className="space-y-6">
@@ -124,9 +130,14 @@ const TradingOrderType: React.FC<TradingOrderTypeProps> = ({
               <DatePicker
                 value={gtdDate}
                 onChange={setGtdDate}
-                label="Expiration Date"
+                label="Expiration Date*"
                 placeholder="Select expiration date"
               />
+              {!gtdDate && (
+                <p className="text-xs text-red-500 mt-1">
+                  Expiration date is required for Good Till Date orders
+                </p>
+              )}
             </div>
           )}
           

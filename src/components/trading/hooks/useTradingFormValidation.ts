@@ -11,6 +11,7 @@ interface UseTradingFormValidationProps {
   price?: number | "";
   selectedBroker?: string | "best";
   order?: Partial<TradeOrder>;
+  gtdDate?: Date;
 }
 
 export const useTradingFormValidation = ({
@@ -21,7 +22,8 @@ export const useTradingFormValidation = ({
   quantity,
   price,
   selectedBroker,
-  order
+  order,
+  gtdDate
 }: UseTradingFormValidationProps) => {
   const [nextButtonDisabled, setNextButtonDisabled] = useState(true);
 
@@ -34,7 +36,8 @@ export const useTradingFormValidation = ({
         quantity,
         price,
         selectedBroker,
-        order
+        order,
+        gtdDate
       });
 
       switch (currentStep) {
@@ -42,6 +45,10 @@ export const useTradingFormValidation = ({
           return !selectedInstrument;
         
         case 1: // Execution & Validity
+          // Check if GTD is selected but no date is set
+          if (timeInForce === "gtd" && !gtdDate) {
+            return true;
+          }
           return !orderExecutionType || !timeInForce;
         
         case 2: // Quantity & Price
@@ -79,7 +86,7 @@ export const useTradingFormValidation = ({
           const leverageValue = order?.leverage || 0;
           return leverageValue < 1;
         
-        case 5: // Broker Selection (now step 5 instead of 4)
+        case 5: // Broker Selection
           // Check if broker is undefined/null, but allow empty string as valid
           // because "best" is a valid broker selection
           const isBrokerInvalid = selectedBroker === undefined || selectedBroker === null;
@@ -89,7 +96,7 @@ export const useTradingFormValidation = ({
           });
           return isBrokerInvalid;
         
-        case 6: // Review (updated from step 5)
+        case 6: // Review
           // Review step should always allow proceeding to submit
           return false;
         
@@ -109,7 +116,8 @@ export const useTradingFormValidation = ({
     quantity, 
     price, 
     selectedBroker, 
-    order
+    order,
+    gtdDate
   ]);
 
   return { nextButtonDisabled };

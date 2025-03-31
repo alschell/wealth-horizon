@@ -22,6 +22,8 @@ interface StepRendererProps {
   setTimeInForce: (time: string) => void;
   leverage: number;
   setLeverage: (leverage: number) => void;
+  gtdDate?: Date;
+  setGtdDate?: (date?: Date) => void;
   setCurrentStep: (step: number) => void;
   renderError: string | null;
   ensureOrderHasAllocations: () => void;
@@ -47,6 +49,8 @@ const TradingStepRenderer: React.FC<StepRendererProps> = ({
   setTimeInForce,
   leverage,
   setLeverage,
+  gtdDate,
+  setGtdDate,
   setCurrentStep,
   renderError,
   ensureOrderHasAllocations
@@ -93,6 +97,8 @@ const TradingStepRenderer: React.FC<StepRendererProps> = ({
           setTimeInForce={setTimeInForce}
           leverage={leverage}
           setLeverage={setLeverage}
+          gtdDate={gtdDate}
+          setGtdDate={setGtdDate}
           setCurrentStep={setCurrentStep}
         />
       </>

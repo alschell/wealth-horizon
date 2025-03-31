@@ -12,6 +12,7 @@ interface NextStepHandlerProps {
   timeInForce: string;
   currentOrderType: OrderType;
   leverage: number;
+  gtdDate?: Date;
   setCurrentStep: (value: React.SetStateAction<number>) => void;
   setOrder: (value: React.SetStateAction<any>) => void;
   validateInstrumentSelection: (instrument: Instrument | null) => boolean;
@@ -29,6 +30,7 @@ export const useNextStepHandler = ({
   timeInForce,
   currentOrderType,
   leverage,
+  gtdDate,
   setCurrentStep,
   setOrder,
   validateInstrumentSelection,
@@ -46,6 +48,11 @@ export const useNextStepHandler = ({
         
       case 1: // Order type & validity
         if (!validateOrderExecution(orderExecutionType)) return;
+        // Additional validation for GTD orders
+        if (timeInForce === "gtd" && !gtdDate) {
+          console.log("GTD selected but no date specified");
+          return;
+        }
         break;
         
       case 2: // Quantity & Price
@@ -75,7 +82,8 @@ export const useNextStepHandler = ({
       executionType: orderExecutionType,
       timeInForce,
       orderType: currentOrderType,
-      leverage
+      leverage,
+      gtdDate: timeInForce === "gtd" ? gtdDate : undefined
     }));
 
     // Proceed to next step

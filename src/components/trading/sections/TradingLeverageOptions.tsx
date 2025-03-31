@@ -44,22 +44,20 @@ const TradingLeverageOptions: React.FC<TradingLeverageOptionsProps> = ({
     }
   ];
 
-  // Safe handler for card selection
-  const handleCardSelection = (value: number) => {
-    if (value !== null && value !== undefined) {
-      setLeverage(value);
-    }
-  };
-
-  // Safe handler for slider
+  // Handle slider change with type checking
   const handleSliderChange = (values: number[]) => {
-    if (values && values.length > 0 && values[0] !== null && values[0] !== undefined) {
+    if (values && values.length > 0) {
       setLeverage(values[0]);
     }
   };
+  
+  // Simple handler for card selection
+  const handleCardClick = (value: number) => {
+    setLeverage(value);
+  };
 
-  // Function to get badge variant based on leverage value
-  const getBadgeVariant = (value: number) => {
+  // Get badge variant based on leverage value
+  const getBadgeVariant = (value: number): "default" | "secondary" | "outline" | "destructive" => {
     if (value <= 1) return "secondary";
     if (value <= 3) return "outline";
     return "destructive";
@@ -84,12 +82,12 @@ const TradingLeverageOptions: React.FC<TradingLeverageOptionsProps> = ({
           const Icon = option.icon;
           
           return (
-            <div
+            <Card
               key={option.value}
-              className={`w-full text-left p-4 rounded-lg border transition-all cursor-pointer ${
+              className={`p-4 cursor-pointer border transition-all hover:border-gray-300 ${
                 isSelected ? 'ring-2 ring-black bg-white' : 'bg-white hover:bg-gray-50'
               }`}
-              onClick={() => handleCardSelection(option.value)}
+              onClick={() => handleCardClick(option.value)}
             >
               <div className="flex flex-col items-center text-center">
                 <Icon className={`h-5 w-5 ${option.iconColor} mb-2`} />
@@ -98,13 +96,13 @@ const TradingLeverageOptions: React.FC<TradingLeverageOptionsProps> = ({
                   {option.description}
                 </p>
                 <Badge 
-                  variant={(isSelected ? "default" : getBadgeVariant(option.value)) as any}
+                  variant={isSelected ? "default" : getBadgeVariant(option.value)}
                   className={isSelected ? "bg-black text-white" : ""}
                 >
                   {option.badge}
                 </Badge>
               </div>
-            </div>
+            </Card>
           );
         })}
       </div>
@@ -113,7 +111,10 @@ const TradingLeverageOptions: React.FC<TradingLeverageOptionsProps> = ({
       <div className="pt-8 border-t border-gray-200 space-y-4">
         <div className="flex justify-between items-center">
           <h3 className="text-md font-medium">Custom Leverage</h3>
-          <Badge variant={getBadgeVariant(leverage) as any} className={leverage > 3 ? "bg-red-500 text-white" : ""}>
+          <Badge 
+            variant={getBadgeVariant(leverage)}
+            className={leverage > 3 ? "bg-red-500 text-white" : ""}
+          >
             {leverage}x
           </Badge>
         </div>
@@ -125,9 +126,9 @@ const TradingLeverageOptions: React.FC<TradingLeverageOptionsProps> = ({
             max={10} 
             step={0.5} 
             onValueChange={handleSliderChange}
-            className="py-4 cursor-pointer"
-            aria-label="Adjust leverage"
+            className="py-4"
           />
+          
           <div className="flex justify-between text-xs text-gray-500">
             <span>1x (No Leverage)</span>
             <span>5x</span>
@@ -135,7 +136,7 @@ const TradingLeverageOptions: React.FC<TradingLeverageOptionsProps> = ({
           </div>
         </div>
 
-        {/* Risk information with improved text contrast */}
+        {/* Risk information */}
         <div className="bg-amber-50 p-4 rounded-md border border-amber-200 mt-6">
           <div className="flex">
             <Info className="h-5 w-5 text-amber-600 mr-2 flex-shrink-0" />

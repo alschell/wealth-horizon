@@ -1,5 +1,5 @@
 
-import React, { useCallback } from "react";
+import React from "react";
 import { Card } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
 import { Badge } from "@/components/ui/badge";
@@ -44,12 +44,12 @@ const TradingLeverageOptions: React.FC<TradingLeverageOptionsProps> = ({
     }
   ];
 
-  // Fixed: Use regular function declaration instead of useCallback to prevent event propagation issues
+  // Direct function declaration for clear event handling
   const handleCardSelection = (value: number) => {
     setLeverage(value);
   };
 
-  // Fixed: Use regular function declaration
+  // Direct function declaration for slider
   const handleSliderChange = (values: number[]) => {
     if (values.length > 0) {
       setLeverage(values[0]);
@@ -67,6 +67,7 @@ const TradingLeverageOptions: React.FC<TradingLeverageOptionsProps> = ({
     <div className="space-y-8">
       {/* Explanation text */}
       <div className="mb-6">
+        <h3 className="text-lg font-medium mb-2">Leverage Options</h3>
         <p className="text-sm text-gray-600">
           {orderType === "buy" 
             ? "Apply leverage to increase your buying power and potential returns." 

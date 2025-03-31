@@ -70,10 +70,10 @@ const TradingForm: React.FC = () => {
     setOrderType(orderType);
   }, [orderType, setOrderType]);
 
-  // Added Leverage step between Allocation and Broker
+  // Added Leverage step between Allocation and Broker with updated step names
   const steps = [
-    { title: "Order & Instrument", component: TradingInstrumentSearch },
-    { title: "Type & Validity", component: TradingOrderType },
+    { title: "Type & Instrument", component: TradingInstrumentSearch },
+    { title: "Execution & Validity", component: TradingOrderType },
     { title: "Quantity & Price", component: TradingQuantityPrice },
     { title: "Allocation", component: TradingAllocation },
     { title: "Leverage", component: TradingLeverageOptions }, 

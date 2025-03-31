@@ -34,39 +34,37 @@ const TradingInstrumentSearch: React.FC<TradingInstrumentSearchProps> = ({
   return (
     <div className="space-y-6">
       <div>
-        <p className="text-sm text-gray-600">
-          Search and select the financial instrument you wish to trade
-        </p>
+        <h3 className="text-lg font-medium mb-2">Instrument</h3>
       </div>
 
-      {selectedInstrument ? (
-        <div className="mb-6">
-          <SelectedInstrumentCard 
-            instrument={selectedInstrument} 
-            onClear={clearSelectedInstrument}
-          />
-        </div>
-      ) : (
-        <div className="space-y-4">
-          <SearchBar
-            searchTerm={searchQuery}
-            setSearchTerm={setSearchQuery}
-            isSearching={isLoading}
-          />
+      <div className="space-y-4">
+        <SearchBar
+          searchTerm={searchQuery}
+          setSearchTerm={setSearchQuery}
+          isSearching={isLoading}
+        />
 
-          {error ? (
-            <div className="text-red-500 text-sm">{error}</div>
-          ) : searchQuery && searchResults.length === 0 && !isLoading ? (
-            <NoResultsMessage searchTerm={searchQuery} />
-          ) : searchResults.length > 0 ? (
-            <InstrumentResultsTable
-              searchResults={searchResults}
-              selectedInstrument={selectedInstrument}
-              onSelectInstrument={handleSelectInstrument}
+        {selectedInstrument && (
+          <div className="mb-6">
+            <SelectedInstrumentCard 
+              instrument={selectedInstrument} 
+              onClear={clearSelectedInstrument}
             />
-          ) : null}
-        </div>
-      )}
+          </div>
+        )}
+
+        {error ? (
+          <div className="text-red-500 text-sm">{error}</div>
+        ) : searchQuery && searchResults.length === 0 && !isLoading ? (
+          <NoResultsMessage searchTerm={searchQuery} />
+        ) : searchResults.length > 0 ? (
+          <InstrumentResultsTable
+            searchResults={searchResults}
+            selectedInstrument={selectedInstrument}
+            onSelectInstrument={handleSelectInstrument}
+          />
+        ) : null}
+      </div>
     </div>
   );
 };

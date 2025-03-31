@@ -26,7 +26,7 @@ const TradingBrokerSelection: React.FC<TradingBrokerSelectionProps> = ({
       )
     : mockBrokers;
 
-  // Fixed: Direct event handler that doesn't use a callback
+  // Direct event handler that doesn't use a callback
   const handleBrokerSelect = (brokerId: string) => {
     setSelectedBroker(brokerId);
   };

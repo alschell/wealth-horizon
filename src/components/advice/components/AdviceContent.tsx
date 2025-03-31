@@ -4,6 +4,7 @@ import { AdviceState, Bank, Asset } from "../types";
 import MandateSetup from "../sections/MandateSetup";
 import AssetSelection from "../sections/AssetSelection";
 import AdviceReview from "../sections/AdviceReview";
+import BankSelector from "../sections/BankSelector";
 import { Button } from "@/components/ui/button";
 
 interface AdviceContentProps {
@@ -32,6 +33,8 @@ const AdviceContent: React.FC<AdviceContentProps> = ({
       }
       setActiveTab("mandate");
     } else if (currentTab === "mandate") {
+      setActiveTab("advisor");
+    } else if (currentTab === "advisor") {
       if (!adviceState.selectedBank) {
         return;
       }
@@ -42,8 +45,10 @@ const AdviceContent: React.FC<AdviceContentProps> = ({
   const handleBack = (currentTab: string) => {
     if (currentTab === "mandate") {
       setActiveTab("assets");
-    } else if (currentTab === "review") {
+    } else if (currentTab === "advisor") {
       setActiveTab("mandate");
+    } else if (currentTab === "review") {
+      setActiveTab("advisor");
     }
   };
 
@@ -61,10 +66,17 @@ const AdviceContent: React.FC<AdviceContentProps> = ({
       {activeTab === "mandate" && (
         <MandateSetup 
           mandateType={adviceState.mandateType} 
-          selectedBank={adviceState.selectedBank}
           onMandateTypeChange={onMandateTypeChange}
-          onBankSelection={onBankSelection}
           onNext={() => handleNext("mandate")}
+        />
+      )}
+      
+      {activeTab === "advisor" && (
+        <BankSelector
+          selectedBank={adviceState.selectedBank}
+          mandateType={adviceState.mandateType}
+          onBankSelection={onBankSelection}
+          onNext={() => handleNext("advisor")}
         />
       )}
 
@@ -76,7 +88,6 @@ const AdviceContent: React.FC<AdviceContentProps> = ({
       )}
 
       <div className="flex justify-between mt-8">
-        {/* Always show back button, but disable it in the first step */}
         <Button 
           variant="outline" 
           onClick={() => handleBack(activeTab)}
@@ -99,6 +110,15 @@ const AdviceContent: React.FC<AdviceContentProps> = ({
           {activeTab === "mandate" && (
             <Button 
               onClick={() => handleNext("mandate")}
+              className="bg-black text-white"
+            >
+              Continue
+            </Button>
+          )}
+          
+          {activeTab === "advisor" && (
+            <Button 
+              onClick={() => handleNext("advisor")}
               className="bg-black text-white"
               disabled={!adviceState.selectedBank}
             >

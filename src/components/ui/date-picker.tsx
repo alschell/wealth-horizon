@@ -54,7 +54,8 @@ export function DatePicker({
             disabled={disabled}
             className={cn(
               "w-full h-11 justify-start text-left font-normal bg-white border-gray-300 hover:bg-gray-50",
-              "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-black focus-visible:border-black data-[state=open]:border-black",
+              "focus:outline-none focus:ring-2 focus:ring-black focus:border-black",
+              "data-[state=open]:border-black data-[state=open]:ring-2 data-[state=open]:ring-black",
               !value && "text-muted-foreground"
             )}
           >

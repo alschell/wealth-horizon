@@ -63,7 +63,12 @@ const CustomSelect = ({
           type="button"
           id={id}
           onClick={() => setIsOpen(!isOpen)}
-          className="flex items-center justify-between w-full h-11 px-3 py-2 text-left bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          className={cn(
+            "flex items-center justify-between w-full h-11 px-3 py-2 text-left bg-white border border-gray-300 rounded-md shadow-sm",
+            "focus:outline-none focus:ring-2 focus:ring-black focus:border-black",
+            isOpen ? "border-black ring-2 ring-black" : "",
+            "hover:bg-gray-50"
+          )}
           aria-haspopup="listbox"
           aria-expanded={isOpen}
         >

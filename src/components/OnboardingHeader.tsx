@@ -1,6 +1,7 @@
 
 import { useOnboarding } from "@/context/OnboardingContext";
 import { CheckIcon } from "lucide-react";
+import { motion } from "framer-motion";
 
 const OnboardingHeader = () => {
   const { currentStep } = useOnboarding();
@@ -16,50 +17,75 @@ const OnboardingHeader = () => {
   ];
 
   return (
-    <header className="w-full mb-12">
-      <div className="flex flex-col items-center">
-        <h1 className="text-3xl font-bold mb-8 text-black">Wealth Horizon</h1>
-        
-        <div className="hidden md:flex w-full max-w-5xl justify-between relative mb-2">
-          {steps.map((step, i) => (
-            <div 
-              key={step.number} 
-              className="flex flex-col items-center relative z-10"
-            >
-              <div 
-                className={`w-10 h-10 rounded-full flex items-center justify-center font-medium 
-                  ${i < currentStep 
-                    ? 'bg-black text-white' 
-                    : i === currentStep 
-                      ? 'bg-gray-100 text-black border-2 border-gray-400' 
-                      : 'bg-gray-100 text-gray-500'
-                  } transition-all duration-300`}
-              >
-                {i < currentStep ? (
-                  <CheckIcon className="h-5 w-5" />
-                ) : (
-                  step.number
-                )}
-              </div>
-              <span 
-                className={`mt-2 text-sm font-medium
-                  ${i <= currentStep ? 'text-black' : 'text-gray-500'}`}
-              >
-                {step.name}
-              </span>
-            </div>
-          ))}
-          
-          {/* Progress line */}
+    <header className="max-w-4xl mx-auto py-8">
+      <motion.div 
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="mb-10 text-center"
+      >
+        <h1 className="text-3xl font-bold text-black mb-8">Wealth Horizon</h1>
+      </motion.div>
+
+      <div className="mb-8">
+        {/* Desktop view */}
+        <div className="hidden md:flex w-full justify-between relative mb-2">
+          {/* Progress line - positioned to connect circles */}
           <div className="absolute top-5 left-0 w-full h-0.5 bg-gray-100 -z-0">
             <div 
               className="h-full bg-black transition-all duration-700 ease-in-out"
               style={{ width: `${(currentStep / (steps.length - 1)) * 100}%` }}
             ></div>
           </div>
+          
+          {/* Step circles with equal spacing */}
+          <div className="flex w-full absolute">
+            {steps.map((step, index) => {
+              const isActive = index === currentStep;
+              const isCompleted = index < currentStep;
+
+              return (
+                <div 
+                  key={index}
+                  className="flex flex-col items-center relative z-10"
+                  style={{ 
+                    position: 'absolute', 
+                    left: `calc(${(index / (steps.length - 1)) * 100}% - 20px)`,
+                    width: '40px' 
+                  }}
+                >
+                  <div
+                    className={`w-10 h-10 rounded-full flex items-center justify-center font-medium transition-all duration-300 ${
+                      isActive
+                        ? "bg-gray-100 text-black border-2 border-gray-400"
+                        : isCompleted
+                        ? "bg-black text-white"
+                        : "bg-gray-100 text-gray-500"
+                    }`}
+                  >
+                    {isCompleted ? (
+                      <CheckIcon className="h-5 w-5" />
+                    ) : (
+                      step.number
+                    )}
+                  </div>
+                  <span 
+                    className={`mt-2 text-sm font-medium text-center ${
+                      isActive || isCompleted ? "text-black" : "text-gray-500"
+                    }`}
+                  >
+                    {step.name}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+          
+          {/* Empty space to maintain layout height */}
+          <div className="w-full h-24"></div>
         </div>
-        
-        {/* Mobile version - Just show current step */}
+
+        {/* Mobile version */}
         <div className="md:hidden w-full">
           <div className="flex items-center justify-center">
             <span className="text-sm text-gray-500">

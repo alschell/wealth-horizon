@@ -93,7 +93,7 @@ const Onboarding = () => {
     <Layout className="min-h-screen py-12 bg-gradient-to-b from-gray-50/30 to-white">
       <OnboardingHeader />
       
-      <div className="max-w-3xl mx-auto">
+      <div className="max-w-4xl mx-auto">
         <AnimatedTransition>
           {renderCurrentStep()}
         </AnimatedTransition>

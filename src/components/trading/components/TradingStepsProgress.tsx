@@ -41,7 +41,8 @@ const TradingStepsProgress: React.FC<TradingStepsProgressProps> = ({
                 className="flex flex-col items-center relative z-10"
                 style={{ 
                   position: 'absolute', 
-                  left: `calc(${(index / (steps.length - 1)) * 100}% - 20px)`,
+                  left: `${(index / (steps.length - 1)) * 100}%`,
+                  transform: 'translateX(-50%)',
                   width: '40px' 
                 }}
               >

@@ -9,8 +9,10 @@ export const usePreviousStepHandler = ({
   setCurrentStep
 }: PreviousStepHandlerProps) => {
   const handlePreviousStep = () => {
-    console.log("Moving to previous step:", currentStep - 1);
-    setCurrentStep(prev => Math.max(prev - 1, 0));
+    // Don't go below step 0
+    if (currentStep > 0) {
+      setCurrentStep(currentStep - 1);
+    }
   };
 
   return handlePreviousStep;

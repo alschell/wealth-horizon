@@ -1,187 +1,189 @@
 
-import React, { useState, useEffect } from "react";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Card } from "@/components/ui/card";
-import { AlertCircle, DollarSign, Clock, BarChart2 } from "lucide-react";
-import { DatePicker } from "@/components/ui/date-picker";
+import React from "react";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Button } from "@/components/ui/button";
+import { format } from "date-fns";
+import { CalendarIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
 
-interface TradingOrderTypeProps {
+interface OrderTypeProps {
   orderExecutionType: string;
   setOrderExecutionType: (type: string) => void;
   timeInForce: string;
   setTimeInForce: (timeInForce: string) => void;
-  orderType: string;
   gtdDate?: Date;
-  setGtdDate?: (date?: Date) => void;
+  setGtdDate: (date?: Date) => void;
 }
 
-const TradingOrderType: React.FC<TradingOrderTypeProps> = ({
+const TradingOrderType: React.FC<OrderTypeProps> = ({
   orderExecutionType,
   setOrderExecutionType,
   timeInForce,
   setTimeInForce,
-  orderType,
   gtdDate,
   setGtdDate
 }) => {
-  // Ensure we have access to gtdDate and setGtdDate
-  const handleGtdDateChange = (date?: Date) => {
-    if (setGtdDate) {
-      setGtdDate(date);
-    }
-    console.log("GTD Date updated:", date);
+  const handleDateSelect = (date?: Date) => {
+    setGtdDate(date);
   };
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h3 className="text-lg font-medium mb-3">Execution</h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <Card 
-            className={`p-4 cursor-pointer transition-all ${orderExecutionType === 'market' ? 'ring-2 ring-black' : 'hover:bg-gray-50'}`}
-            onClick={() => setOrderExecutionType('market')}
-          >
-            <div className="flex flex-col items-center">
-              <div className="mb-2">
-                <BarChart2 className="h-5 w-5 text-blue-600" />
-              </div>
-              <h3 className="font-medium text-center mb-2">Market</h3>
-              <p className="text-sm text-gray-600 text-center">
-                Execute immediately at current market price.
-              </p>
-            </div>
-          </Card>
-          
-          <Card 
-            className={`p-4 cursor-pointer transition-all ${orderExecutionType === 'limit' ? 'ring-2 ring-black' : 'hover:bg-gray-50'}`}
-            onClick={() => setOrderExecutionType('limit')}
-          >
-            <div className="flex flex-col items-center">
-              <div className="mb-2">
-                <DollarSign className="h-5 w-5 text-green-600" />
-              </div>
-              <h3 className="font-medium text-center mb-2">Limit</h3>
-              <p className="text-sm text-gray-600 text-center">
-                Execute at specified price or better.
-              </p>
-            </div>
-          </Card>
-          
-          <Card 
-            className={`p-4 cursor-pointer transition-all ${orderExecutionType === 'stop' ? 'ring-2 ring-black' : 'hover:bg-gray-50'}`}
-            onClick={() => setOrderExecutionType('stop')}
-          >
-            <div className="flex flex-col items-center">
-              <div className="mb-2">
-                <AlertCircle className="h-5 w-5 text-amber-600" />
-              </div>
-              <h3 className="font-medium text-center mb-2">Stop</h3>
-              <p className="text-sm text-gray-600 text-center">
-                Becomes market order when price reaches stop price.
-              </p>
-            </div>
-          </Card>
-
-          <Card 
-            className={`p-4 cursor-pointer transition-all ${orderExecutionType === 'stop_limit' ? 'ring-2 ring-black' : 'hover:bg-gray-50'}`}
-            onClick={() => setOrderExecutionType('stop_limit')}
-          >
-            <div className="flex flex-col items-center">
-              <div className="mb-2">
-                <Clock className="h-5 w-5 text-purple-600" />
-              </div>
-              <h3 className="font-medium text-center mb-2">Stop Limit</h3>
-              <p className="text-sm text-gray-600 text-center">
-                Becomes limit order when price reaches stop price.
-              </p>
-            </div>
-          </Card>
-        </div>
-      </div>
-      
-      <div>
-        <h3 className="text-lg font-medium mb-3">Validity</h3>
-        <div className="space-y-4">
-          <Select value={timeInForce} onValueChange={(value) => {
-            setTimeInForce(value);
-            if (value !== 'gtd' && setGtdDate) {
-              setGtdDate(undefined);
-            }
-          }}>
-            <SelectTrigger className="w-full h-11 border-gray-300 focus:border-black focus:ring-2 focus:ring-black rounded-md">
-              <SelectValue placeholder="Select validity option" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectItem value="day">Day Order</SelectItem>
-                <SelectItem value="gtc">Good Till Canceled (GTC)</SelectItem>
-                <SelectItem value="gtd">Good Till Date (GTD)</SelectItem>
-                <SelectItem value="ioc">Immediate or Cancel (IOC)</SelectItem>
-                <SelectItem value="fok">Fill or Kill (FOK)</SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-          
-          {timeInForce === "gtd" && (
-            <div className="mt-4">
-              <DatePicker
-                value={gtdDate}
-                onChange={handleGtdDateChange}
-                label="Expiration Date*"
-                placeholder="Select expiration date"
-              />
-              {timeInForce === "gtd" && !gtdDate && (
-                <p className="text-xs text-red-500 mt-1">
-                  Expiration date is required for Good Till Date orders
-                </p>
-              )}
-            </div>
-          )}
-          
-          <div className="text-xs text-gray-500 mt-1">
-            {timeInForce === "day" && "Order valid until end of current trading day."}
-            {timeInForce === "gtc" && "Order valid until executed or canceled."}
-            {timeInForce === "gtd" && "Order valid until specified date."}
-            {timeInForce === "ioc" && "Fill whatever portion possible immediately, cancel rest."}
-            {timeInForce === "fok" && "Must be filled immediately and completely or canceled."}
+    <div className="space-y-8">
+      <div className="space-y-4">
+        <h3 className="text-lg font-medium">Order Execution</h3>
+        
+        <RadioGroup
+          value={orderExecutionType}
+          onValueChange={setOrderExecutionType}
+          className="grid grid-cols-1 gap-4 sm:grid-cols-3"
+        >
+          <div>
+            <RadioGroupItem
+              value="market"
+              id="market"
+              className="peer sr-only"
+            />
+            <Label
+              htmlFor="market"
+              className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-black [&:has([data-state=checked])]:border-black"
+            >
+              <span className="font-medium">Market</span>
+              <span className="text-xs text-gray-500 mt-1 text-center">
+                Execute immediately at current price
+              </span>
+            </Label>
           </div>
-        </div>
+
+          <div>
+            <RadioGroupItem
+              value="limit"
+              id="limit"
+              className="peer sr-only"
+            />
+            <Label
+              htmlFor="limit"
+              className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-black [&:has([data-state=checked])]:border-black"
+            >
+              <span className="font-medium">Limit</span>
+              <span className="text-xs text-gray-500 mt-1 text-center">
+                Execute at specified price or better
+              </span>
+            </Label>
+          </div>
+
+          <div>
+            <RadioGroupItem
+              value="stop"
+              id="stop"
+              className="peer sr-only"
+            />
+            <Label
+              htmlFor="stop"
+              className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-black [&:has([data-state=checked])]:border-black"
+            >
+              <span className="font-medium">Stop</span>
+              <span className="text-xs text-gray-500 mt-1 text-center">
+                Execute when price reaches stop level
+              </span>
+            </Label>
+          </div>
+        </RadioGroup>
       </div>
 
-      {orderType === "sell_short" && (
-        <div className="bg-amber-50 p-4 rounded-md border border-amber-200">
-          <div className="flex">
-            <AlertCircle className="h-5 w-5 text-amber-600 mr-2 flex-shrink-0" />
-            <div>
-              <h4 className="font-medium text-amber-800">Short Selling Requirements</h4>
-              <p className="text-sm text-amber-700 mt-1">
-                Short selling involves borrowing securities to sell in the market. Ensure your account has margin capabilities and there is borrowable inventory for the selected instrument. Additional fees and margin requirements apply.
-              </p>
-            </div>
+      <div className="space-y-4">
+        <h3 className="text-lg font-medium">Validity</h3>
+        
+        <RadioGroup
+          value={timeInForce}
+          onValueChange={setTimeInForce}
+          className="grid grid-cols-1 gap-4 sm:grid-cols-3"
+        >
+          <div>
+            <RadioGroupItem
+              value="day"
+              id="day"
+              className="peer sr-only"
+            />
+            <Label
+              htmlFor="day"
+              className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-black [&:has([data-state=checked])]:border-black"
+            >
+              <span className="font-medium">Day Only</span>
+              <span className="text-xs text-gray-500 mt-1 text-center">
+                Valid for the current trading day
+              </span>
+            </Label>
           </div>
-        </div>
-      )}
-
-      {orderType === "exchange" && (
-        <div className="bg-blue-50 p-4 rounded-md border border-blue-200">
-          <div className="flex">
-            <DollarSign className="h-5 w-5 text-blue-600 mr-2 flex-shrink-0" />
-            <div>
-              <h4 className="font-medium text-blue-800">Exchange Order Information</h4>
-              <p className="text-sm text-blue-700 mt-1">
-                Exchange orders allow you to swap one security for another in a single transaction. You'll need to specify both the security to sell and the security to buy. Tax implications will be calculated as if you sold and then purchased separately.
-              </p>
-            </div>
+          
+          <div>
+            <RadioGroupItem
+              value="gtc"
+              id="gtc"
+              className="peer sr-only"
+            />
+            <Label
+              htmlFor="gtc"
+              className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-black [&:has([data-state=checked])]:border-black"
+            >
+              <span className="font-medium">Good Till Canceled</span>
+              <span className="text-xs text-gray-500 mt-1 text-center">
+                Valid until canceled
+              </span>
+            </Label>
           </div>
-        </div>
-      )}
+          
+          <div>
+            <RadioGroupItem
+              value="gtd"
+              id="gtd"
+              className="peer sr-only"
+            />
+            <Label
+              htmlFor="gtd"
+              className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-black [&:has([data-state=checked])]:border-black"
+            >
+              <span className="font-medium">Good Till Date</span>
+              <span className="text-xs text-gray-500 mt-1 text-center">
+                Valid until specified date
+              </span>
+            </Label>
+          </div>
+        </RadioGroup>
+        
+        {timeInForce === "gtd" && (
+          <div className="pt-4">
+            <Label htmlFor="date" className="mb-2 block">
+              Select Expiry Date
+            </Label>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant={"outline"}
+                  className={cn(
+                    "w-full pl-3 text-left font-normal",
+                    !gtdDate && "text-muted-foreground"
+                  )}
+                >
+                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  {gtdDate ? format(gtdDate, "PPP") : "Select a date"}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <Calendar
+                  mode="single"
+                  selected={gtdDate}
+                  onSelect={handleDateSelect}
+                  initialFocus
+                  disabled={(date) => date < new Date()}
+                />
+              </PopoverContent>
+            </Popover>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

@@ -1,7 +1,9 @@
 
+import React from "react";
 import { useOnboarding } from "@/context/OnboardingContext";
 import { CheckIcon } from "lucide-react";
 import { motion } from "framer-motion";
+import { cn } from "@/lib/utils";
 
 const OnboardingHeader = () => {
   const { currentStep } = useOnboarding();
@@ -50,18 +52,20 @@ const OnboardingHeader = () => {
                   className="flex flex-col items-center relative z-10"
                   style={{ 
                     position: 'absolute', 
-                    left: `calc(${(index / (steps.length - 1)) * 100}% - 20px)`,
+                    left: `${(index / (steps.length - 1)) * 100}%`,
+                    transform: 'translateX(-50%)',
                     width: '40px' 
                   }}
                 >
                   <div
-                    className={`w-10 h-10 rounded-full flex items-center justify-center font-medium transition-all duration-300 ${
+                    className={cn(
+                      "w-10 h-10 rounded-full flex items-center justify-center font-medium transition-all duration-300",
                       isActive
                         ? "bg-gray-100 text-black border-2 border-gray-400"
                         : isCompleted
                         ? "bg-black text-white"
                         : "bg-gray-100 text-gray-500"
-                    }`}
+                    )}
                   >
                     {isCompleted ? (
                       <CheckIcon className="h-5 w-5" />
@@ -70,9 +74,10 @@ const OnboardingHeader = () => {
                     )}
                   </div>
                   <span 
-                    className={`mt-2 text-sm font-medium text-center ${
+                    className={cn(
+                      "mt-2 text-sm font-medium text-center",
                       isActive || isCompleted ? "text-black" : "text-gray-500"
-                    }`}
+                    )}
                   >
                     {step.name}
                   </span>

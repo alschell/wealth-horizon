@@ -82,9 +82,8 @@ export const useTradingFormValidation = ({
           return true;
         
         case 4: // Leverage
-          // Make sure leverage has a valid value
-          const leverageValue = order?.leverage || 0;
-          return leverageValue < 1;
+          // Make sure leverage has a valid value (greater than or equal to 1)
+          return !(order?.leverage !== undefined && order.leverage >= 1);
         
         case 5: // Broker Selection
           // Check if broker is undefined/null, but allow empty string as valid

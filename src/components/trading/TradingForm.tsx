@@ -1,10 +1,11 @@
+
 import React, { useState, useEffect } from "react";
 import TradingInstrumentSearch from "./sections/TradingInstrumentSearch";
 import TradingQuantityPrice from "./sections/quantity-price";
 import TradingBrokerSelection from "./sections/TradingBrokerSelection";
 import TradingAllocation from "./sections/allocation/TradingAllocation";
 import TradingReview from "./sections/TradingReview";
-import TradingOrderType from "./sections/TradingOrderType";
+import TradingOrderType from "./sections/order-type/TradingOrderType";
 import TradingStepsProgress from "./components/TradingStepsProgress";
 import TradingFormContent from "./components/TradingFormContent";
 import { useTradingForm } from "./hooks/useTradingForm";

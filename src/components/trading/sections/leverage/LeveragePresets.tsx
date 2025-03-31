@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useMemo } from "react";
 import { Shield, TrendingUp, AlertTriangle } from "lucide-react";
 import LeverageCard from "./LeverageCard";
 
@@ -17,12 +17,12 @@ interface LeveragePresetsProps {
   setLeverage: (value: number) => void;
 }
 
-const LeveragePresets: React.FC<LeveragePresetsProps> = ({
+const LeveragePresets: React.FC<LeveragePresetsProps> = React.memo(({
   leverage,
   setLeverage
 }) => {
-  // Define preset leverage options
-  const leverageOptions: LeverageOption[] = [
+  // Define preset leverage options with useMemo to prevent recreating on each render
+  const leverageOptions = useMemo(() => [
     { 
       value: 1, 
       title: "No Leverage (1x)", 
@@ -47,12 +47,12 @@ const LeveragePresets: React.FC<LeveragePresetsProps> = ({
       description: "Quintuple your position size with higher risk.", 
       badge: "High Risk" 
     }
-  ];
+  ], []);
 
-  // Define a direct card click handler without unnecessary closures
-  const handleCardClick = (value: number) => {
+  // Define a direct card click handler
+  const handleCardClick = React.useCallback((value: number) => {
     setLeverage(value);
-  };
+  }, [setLeverage]);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -71,6 +71,8 @@ const LeveragePresets: React.FC<LeveragePresetsProps> = ({
       ))}
     </div>
   );
-};
+}, (prevProps, nextProps) => prevProps.leverage === nextProps.leverage);
 
-export default React.memo(LeveragePresets);
+LeveragePresets.displayName = "LeveragePresets";
+
+export default LeveragePresets;

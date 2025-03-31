@@ -48,8 +48,9 @@ export function DatePicker({
             variant={"outline"}
             disabled={disabled}
             className={cn(
-              "w-full h-11 justify-start text-left font-normal bg-white border-gray-300 hover:bg-gray-50 focus-visible:ring-black",
-              !value && "text-muted-foreground"
+              "w-full h-11 justify-start text-left font-normal bg-white border-gray-300 hover:bg-gray-50",
+              !value && "text-muted-foreground",
+              open ? "border-black ring-2 ring-black" : ""
             )}
           >
             <CalendarIcon className="mr-2 h-4 w-4 text-black" />

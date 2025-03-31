@@ -10,7 +10,7 @@ interface TradingLeverageOptionsProps {
   orderType: string;
 }
 
-const TradingLeverageOptions: React.FC<TradingLeverageOptionsProps> = ({
+const TradingLeverageOptions: React.FC<TradingLeverageOptionsProps> = React.memo(({
   leverage,
   setLeverage,
   orderType
@@ -55,7 +55,11 @@ const TradingLeverageOptions: React.FC<TradingLeverageOptionsProps> = ({
       </div>
     </div>
   );
-};
+}, (prevProps, nextProps) => {
+  return prevProps.leverage === nextProps.leverage && 
+         prevProps.orderType === nextProps.orderType;
+});
 
-// Export without React.memo to avoid any potential memoization issues
+TradingLeverageOptions.displayName = "TradingLeverageOptions";
+
 export default TradingLeverageOptions;

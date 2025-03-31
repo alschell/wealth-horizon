@@ -24,7 +24,7 @@ const LeverageWarning: React.FC<LeverageWarningProps> = React.memo(({ leverage }
       </div>
     </div>
   );
-});
+}, (prevProps, nextProps) => prevProps.leverage === nextProps.leverage);
 
 LeverageWarning.displayName = 'LeverageWarning';
 

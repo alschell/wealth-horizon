@@ -21,8 +21,6 @@ interface DatePickerProps {
   optional?: boolean;
   disabled?: boolean;
   className?: string;
-  open?: boolean;
-  onOpenChange?: (open: boolean) => void;
 }
 
 export function DatePicker({ 
@@ -33,19 +31,13 @@ export function DatePicker({
   placeholder = "Select date", 
   optional = false,
   disabled = false,
-  className,
-  open,
-  onOpenChange
+  className
 }: DatePickerProps) {
-  const [internalOpen, setInternalOpen] = React.useState(false);
-  
-  // Use controlled or uncontrolled open state
-  const isOpen = open !== undefined ? open : internalOpen;
-  const setIsOpen = onOpenChange || setInternalOpen;
+  const [open, setOpen] = React.useState(false);
 
   const handleSelect = (date?: Date) => {
     onChange?.(date);
-    setIsOpen(false); // Close the popover after selection
+    setOpen(false);
   };
 
   return (
@@ -54,7 +46,7 @@ export function DatePicker({
         {label}
         {!optional && <span className="text-red-500 ml-1">*</span>}
       </Label>
-      <Popover open={isOpen} onOpenChange={setIsOpen}>
+      <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
             id={id}
@@ -63,7 +55,7 @@ export function DatePicker({
             className={cn(
               "w-full h-11 justify-start text-left font-normal bg-white border-gray-300 hover:bg-gray-50",
               "focus:outline-none focus:ring-2 focus:ring-black focus:border-black",
-              isOpen ? "border-black ring-2 ring-black" : "", 
+              open ? "border-black ring-2 ring-black" : "",
               !value && "text-muted-foreground"
             )}
           >
@@ -83,7 +75,7 @@ export function DatePicker({
             onSelect={handleSelect}
             initialFocus
             className="rounded-md border shadow-md bg-white pointer-events-auto"
-            weekStartsOn={1} // 1 for Monday (0 is Sunday, 1 is Monday, etc.)
+            weekStartsOn={1}
           />
         </PopoverContent>
       </Popover>

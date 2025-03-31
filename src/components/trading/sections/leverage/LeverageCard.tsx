@@ -15,7 +15,7 @@ interface LeverageCardProps {
   onClick: (value: number) => void;
 }
 
-const LeverageCard: React.FC<LeverageCardProps> = ({
+const LeverageCard: React.FC<LeverageCardProps> = React.memo(({
   value,
   title,
   description,
@@ -32,13 +32,16 @@ const LeverageCard: React.FC<LeverageCardProps> = ({
     return "destructive";
   };
   
+  // Create a simple click handler that doesn't create closures
+  const handleClick = React.useCallback(() => onClick(value), [onClick, value]);
+  
   return (
     <div className="h-full">
       <Card
         className={`p-4 h-full cursor-pointer transition-all ${
           isSelected ? 'ring-2 ring-black bg-white' : 'bg-white hover:bg-gray-50'
         }`}
-        onClick={() => onClick(value)}
+        onClick={handleClick}
       >
         <div className="flex flex-col items-center text-center h-full justify-center">
           <div className="mb-3">
@@ -58,6 +61,14 @@ const LeverageCard: React.FC<LeverageCardProps> = ({
       </Card>
     </div>
   );
-};
+}, (prevProps, nextProps) => {
+  // Only re-render if these props change
+  return (
+    prevProps.value === nextProps.value &&
+    prevProps.isSelected === nextProps.isSelected
+  );
+});
 
-export default React.memo(LeverageCard);
+LeverageCard.displayName = "LeverageCard";
+
+export default LeverageCard;

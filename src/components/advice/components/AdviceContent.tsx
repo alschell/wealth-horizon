@@ -88,15 +88,16 @@ const AdviceContent: React.FC<AdviceContentProps> = ({
       )}
 
       <div className="flex justify-between mt-8">
-        <Button 
-          variant="outline" 
-          onClick={() => handleBack(activeTab)}
-          disabled={activeTab === "assets"}
-        >
-          Back
-        </Button>
+        {activeTab !== "assets" && (
+          <Button 
+            variant="outline" 
+            onClick={() => handleBack(activeTab)}
+          >
+            Back
+          </Button>
+        )}
         
-        <div className="ml-auto">
+        <div className={activeTab === "assets" ? "w-full" : "ml-auto"}>
           {activeTab === "assets" && (
             <Button 
               onClick={() => handleNext("assets")}

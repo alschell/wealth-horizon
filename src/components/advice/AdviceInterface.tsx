@@ -18,7 +18,7 @@ const AdviceInterface: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto py-6 px-4">
       <AdviceHeader activeTab={activeTab} setActiveTab={setActiveTab} />
-      <div className="bg-white rounded-lg shadow-sm p-6 mt-6">
+      <div className="rounded-lg shadow-sm p-6 mt-6 bg-white">
         <AdviceContent 
           activeTab={activeTab}
           adviceState={adviceState}

@@ -16,7 +16,7 @@ const MandateSetup: React.FC<MandateSetupProps> = ({
 }) => {
   return (
     <div className="space-y-8">
-      <div className="bg-white p-6 rounded-lg border border-gray-200">
+      <div className="p-6 rounded-lg border border-gray-200 bg-white">
         <h2 className="text-xl font-semibold mb-6">Select Mandate Type</h2>
         <p className="text-gray-600 mb-6">
           Choose how you would like your assets to be managed.

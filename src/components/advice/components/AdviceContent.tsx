@@ -101,7 +101,6 @@ const AdviceContent: React.FC<AdviceContentProps> = ({
           {activeTab === "assets" && (
             <Button 
               onClick={() => handleNext("assets")}
-              className="bg-black text-white"
               disabled={adviceState.assetsInScope.length === 0}
             >
               Continue
@@ -111,7 +110,6 @@ const AdviceContent: React.FC<AdviceContentProps> = ({
           {activeTab === "mandate" && (
             <Button 
               onClick={() => handleNext("mandate")}
-              className="bg-black text-white"
             >
               Continue
             </Button>
@@ -120,7 +118,6 @@ const AdviceContent: React.FC<AdviceContentProps> = ({
           {activeTab === "advisor" && (
             <Button 
               onClick={() => handleNext("advisor")}
-              className="bg-black text-white"
               disabled={!adviceState.selectedBank}
             >
               Continue

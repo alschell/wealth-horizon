@@ -82,32 +82,33 @@ const TradingLeverageOptions: React.FC<TradingLeverageOptionsProps> = ({
           const Icon = option.icon;
           
           return (
-            <button 
-              key={option.value}
-              className="text-left w-full focus:outline-none"
-              onClick={() => handleCardClick(option.value)}
-              type="button"
-            >
-              <Card
-                className={`p-4 transition-all ${
-                  isSelected ? 'ring-2 ring-black bg-white' : 'bg-white hover:bg-gray-50'
-                }`}
+            <div key={option.value} className="relative">
+              <button 
+                type="button"
+                className="text-left w-full focus:outline-none"
+                onClick={() => handleCardClick(option.value)}
               >
-                <div className="flex flex-col items-center text-center">
-                  <Icon className={`h-5 w-5 ${option.iconColor} mb-2`} />
-                  <h3 className="font-medium mb-2">{option.title}</h3>
-                  <p className="text-sm text-gray-600 mb-3">
-                    {option.description}
-                  </p>
-                  <Badge 
-                    variant={isSelected ? "default" : getBadgeVariant(option.value)}
-                    className={isSelected ? "bg-black text-white" : ""}
-                  >
-                    {option.badge}
-                  </Badge>
-                </div>
-              </Card>
-            </button>
+                <Card
+                  className={`p-4 transition-all ${
+                    isSelected ? 'ring-2 ring-black bg-white' : 'bg-white hover:bg-gray-50'
+                  }`}
+                >
+                  <div className="flex flex-col items-center text-center">
+                    <Icon className={`h-5 w-5 ${option.iconColor} mb-2`} />
+                    <h3 className="font-medium mb-2">{option.title}</h3>
+                    <p className="text-sm text-gray-600 mb-3">
+                      {option.description}
+                    </p>
+                    <Badge 
+                      variant={isSelected ? "default" : getBadgeVariant(option.value)}
+                      className={isSelected ? "bg-black text-white" : ""}
+                    >
+                      {option.badge}
+                    </Badge>
+                  </div>
+                </Card>
+              </button>
+            </div>
           );
         })}
       </div>

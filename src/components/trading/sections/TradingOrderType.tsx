@@ -57,72 +57,57 @@ const TradingOrderType: React.FC<OrderTypeProps> = ({
         <h3 className="text-lg font-medium">Order Execution</h3>
         
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <button 
-            type="button" 
-            className="text-left w-full focus:outline-none"
-            onClick={() => setOrderExecutionType("market")}
+          <Card 
+            className={`p-4 cursor-pointer transition-all ${orderExecutionType === 'market' ? 'ring-2 ring-black bg-white' : 'bg-white hover:bg-gray-50'}`}
+            onClick={() => setOrderExecutionType('market')}
           >
-            <Card
-              className={`p-4 transition-all ${
-                orderExecutionType === "market" ? 'ring-2 ring-black bg-white' : 'bg-white hover:bg-gray-50'
-              }`}
-            >
-              <div className="flex flex-col items-center text-center">
-                <TrendingUp className={`h-5 w-5 ${orderExecutionType === "market" ? "text-black" : "text-gray-600"} mb-2`} />
-                <h3 className="font-medium mb-2">Market</h3>
-                <p className="text-sm text-gray-600">
-                  Execute at the current market price.
-                </p>
+            <div className="flex flex-col items-center">
+              <div className="mb-2">
+                <TrendingUp className={`h-5 w-5 text-green-600 ${orderExecutionType === "market" ? "text-green-600" : "text-gray-600"}`} />
               </div>
-            </Card>
-          </button>
+              <h3 className="font-medium text-center mb-2">Market</h3>
+              <p className="text-sm text-gray-600 text-center">
+                Execute at the current market price.
+              </p>
+            </div>
+          </Card>
           
-          <button 
-            type="button" 
-            className="text-left w-full focus:outline-none"
-            onClick={() => setOrderExecutionType("limit")}
+          <Card 
+            className={`p-4 cursor-pointer transition-all ${orderExecutionType === 'limit' ? 'ring-2 ring-black bg-white' : 'bg-white hover:bg-gray-50'}`}
+            onClick={() => setOrderExecutionType('limit')}
           >
-            <Card
-              className={`p-4 transition-all ${
-                orderExecutionType === "limit" ? 'ring-2 ring-black bg-white' : 'bg-white hover:bg-gray-50'
-              }`}
-            >
-              <div className="flex flex-col items-center text-center">
-                <Timer className={`h-5 w-5 ${orderExecutionType === "limit" ? "text-black" : "text-gray-600"} mb-2`} />
-                <h3 className="font-medium mb-2">Limit</h3>
-                <p className="text-sm text-gray-600">
-                  Execute at a specified price or better.
-                </p>
+            <div className="flex flex-col items-center">
+              <div className="mb-2">
+                <Timer className={`h-5 w-5 ${orderExecutionType === "limit" ? "text-blue-600" : "text-gray-600"}`} />
               </div>
-            </Card>
-          </button>
+              <h3 className="font-medium text-center mb-2">Limit</h3>
+              <p className="text-sm text-gray-600 text-center">
+                Execute at a specified price or better.
+              </p>
+            </div>
+          </Card>
           
-          <button 
-            type="button" 
-            className="text-left w-full focus:outline-none"
-            onClick={() => setOrderExecutionType("stop")}
+          <Card 
+            className={`p-4 cursor-pointer transition-all ${orderExecutionType === 'stop' ? 'ring-2 ring-black bg-white' : 'bg-white hover:bg-gray-50'}`}
+            onClick={() => setOrderExecutionType('stop')}
           >
-            <Card
-              className={`p-4 transition-all ${
-                orderExecutionType === "stop" ? 'ring-2 ring-black bg-white' : 'bg-white hover:bg-gray-50'
-              }`}
-            >
-              <div className="flex flex-col items-center text-center">
-                <StopCircle className={`h-5 w-5 ${orderExecutionType === "stop" ? "text-black" : "text-gray-600"} mb-2`} />
-                <h3 className="font-medium mb-2">Stop</h3>
-                <p className="text-sm text-gray-600">
-                  Triggers when price reaches stop level.
-                </p>
+            <div className="flex flex-col items-center">
+              <div className="mb-2">
+                <StopCircle className={`h-5 w-5 ${orderExecutionType === "stop" ? "text-amber-600" : "text-gray-600"}`} />
               </div>
-            </Card>
-          </button>
+              <h3 className="font-medium text-center mb-2">Stop</h3>
+              <p className="text-sm text-gray-600 text-center">
+                Triggers when price reaches stop level.
+              </p>
+            </div>
+          </Card>
         </div>
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-3">
         <h3 className="text-lg font-medium">Validity</h3>
         
-        <div className="mb-4">
+        <div>
           <CustomSelect
             id="validity"
             label=""
@@ -142,10 +127,10 @@ const TradingOrderType: React.FC<OrderTypeProps> = ({
               else if (value.includes("Fill or Kill")) setTimeInForce("fok");
               else if (value.includes("All or None")) setTimeInForce("aon");
             }}
-            className="w-full"
+            className="w-full text-sm"
           />
           {timeInForce && (
-            <p className="mt-2 text-sm text-gray-600">
+            <p className="mt-2 text-xs text-gray-600">
               {validityDescriptions[timeInForce] || "Select a validity option."}
             </p>
           )}
@@ -153,7 +138,7 @@ const TradingOrderType: React.FC<OrderTypeProps> = ({
         
         {timeInForce === "gtd" && (
           <div className="pt-2">
-            <Label htmlFor="date" className="mb-2 block text-sm font-medium">
+            <Label htmlFor="date" className="block text-sm font-medium mb-2">
               Select Expiry Date
             </Label>
             <Popover>

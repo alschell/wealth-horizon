@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { memo } from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { LucideIcon } from "lucide-react";
@@ -32,15 +32,18 @@ const LeverageCard = React.forwardRef<HTMLDivElement, LeverageCardProps>(({
     return "destructive";
   };
   
-  // Handle click with stopPropagation to prevent event bubbling
+  // Handle click with optimized event handling to prevent freezing
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     
-    // Only trigger onClick if not already selected
-    if (!isSelected) {
-      onClick(value);
-    }
+    // Use requestAnimationFrame to defer state update
+    requestAnimationFrame(() => {
+      // Only trigger onClick if not already selected
+      if (!isSelected) {
+        onClick(value);
+      }
+    });
   };
   
   // Handle keyboard accessibility with proper event handling
@@ -49,10 +52,13 @@ const LeverageCard = React.forwardRef<HTMLDivElement, LeverageCardProps>(({
       e.preventDefault();
       e.stopPropagation();
       
-      // Only trigger onClick if not already selected
-      if (!isSelected) {
-        onClick(value);
-      }
+      // Use requestAnimationFrame to defer state update
+      requestAnimationFrame(() => {
+        // Only trigger onClick if not already selected
+        if (!isSelected) {
+          onClick(value);
+        }
+      });
     }
   };
   
@@ -89,4 +95,4 @@ const LeverageCard = React.forwardRef<HTMLDivElement, LeverageCardProps>(({
 
 LeverageCard.displayName = "LeverageCard";
 
-export default React.memo(LeverageCard);
+export default memo(LeverageCard);

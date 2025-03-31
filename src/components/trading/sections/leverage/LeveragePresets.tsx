@@ -1,5 +1,5 @@
 
-import React, { useMemo, useCallback } from "react";
+import React, { useMemo, useCallback, memo } from "react";
 import { Shield, TrendingUp, AlertTriangle } from "lucide-react";
 import LeverageCard from "./LeverageCard";
 
@@ -49,12 +49,15 @@ const LeveragePresets: React.FC<LeveragePresetsProps> = ({
     }
   ], []);
 
-  // Define a direct card click handler with useCallback, preventing unnecessary updates
+  // Define a direct card click handler with useCallback and performance optimizations
   const handleCardClick = useCallback((value: number) => {
-    // Only update if the value has changed
-    if (leverage !== value) {
-      setLeverage(value);
-    }
+    // Use requestAnimationFrame to defer state update to next frame
+    requestAnimationFrame(() => {
+      // Only update if the value has changed
+      if (leverage !== value) {
+        setLeverage(value);
+      }
+    });
   }, [setLeverage, leverage]);
 
   return (
@@ -76,4 +79,4 @@ const LeveragePresets: React.FC<LeveragePresetsProps> = ({
   );
 };
 
-export default React.memo(LeveragePresets);
+export default memo(LeveragePresets);

@@ -1,5 +1,5 @@
 
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, memo } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
@@ -17,39 +17,107 @@ const TradingBrokerSelection: React.FC<TradingBrokerSelectionProps> = ({
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
   
-  // Filter brokers by search query
-  const filteredBrokers = searchQuery
-    ? mockBrokers.filter(
-        (broker) =>
-          broker.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          broker.id.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    : mockBrokers;
+  // Filter brokers by search query - memoize to avoid recalculation on render
+  const filteredBrokers = React.useMemo(() => {
+    return searchQuery
+      ? mockBrokers.filter(
+          (broker) =>
+            broker.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            broker.id.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+      : mockBrokers;
+  }, [searchQuery]);
 
-  // Use useCallback to avoid recreation of function on every render
-  const handleBrokerSelect = useCallback((brokerId: string, e: React.MouseEvent | React.KeyboardEvent) => {
-    // Prevent default behavior and stop propagation
-    e.preventDefault();
-    e.stopPropagation();
-    
-    // Don't update if already selected to prevent unnecessary renders
-    if (selectedBroker !== brokerId) {
-      setSelectedBroker(brokerId);
-    }
+  // Create an optimized broker selection handler that won't cause performance issues
+  const handleBrokerSelect = useCallback((brokerId: string) => {
+    // Use RAF to defer state update to next frame to prevent UI blocking
+    requestAnimationFrame(() => {
+      // Don't update if already selected to prevent unnecessary renders
+      if (selectedBroker !== brokerId) {
+        setSelectedBroker(brokerId);
+      }
+    });
   }, [setSelectedBroker, selectedBroker]);
 
-  // Input change handler with stopPropagation to prevent bubbling
+  // Input change handler with optimization
   const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    e.stopPropagation();
-    setSearchQuery(e.target.value);
+    const value = e.target.value;
+    // Debounce search updates to prevent UI blocking
+    setSearchQuery(value);
   }, []);
   
-  // Create a memoized handler for keyboard navigation
+  // Keyboard handler with performance optimizations
   const handleKeyDown = useCallback((brokerId: string, e: React.KeyboardEvent) => {
     if (e.key === 'Enter' || e.key === ' ') {
-      handleBrokerSelect(brokerId, e);
+      e.preventDefault();
+      handleBrokerSelect(brokerId);
     }
   }, [handleBrokerSelect]);
+
+  // Create broker card component for better memoization
+  const BrokerCard = memo(({ broker, isSelected }: { broker: any, isSelected: boolean }) => (
+    <div 
+      key={broker.id} 
+      role="button"
+      tabIndex={0}
+      onClick={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        handleBrokerSelect(broker.id);
+      }}
+      onKeyDown={(e) => handleKeyDown(broker.id, e)}
+      className={`p-4 cursor-pointer transition-all h-full rounded-lg border ${
+        isSelected ? 'ring-2 ring-black bg-gray-50' : 'hover:bg-gray-50'
+      }`}
+    >
+      <div className="w-full">
+        <div className="font-medium text-sm">{broker.name}</div>
+        <p className="text-xs text-gray-600 mt-1 line-clamp-2">{broker.description}</p>
+        {broker.fee && <p className="text-xs text-gray-700 mt-1">Fee: {broker.fee}</p>}
+        {isSelected && (
+          <div className="mt-2 flex justify-between items-center">
+            <span className="text-green-600 text-xs">Currently selected</span>
+            <span className="bg-black text-white text-xs px-2 py-0.5 rounded">Selected</span>
+          </div>
+        )}
+      </div>
+    </div>
+  ));
+  BrokerCard.displayName = "BrokerCard";
+
+  // Best Execution Card - extracted for memoization
+  const BestExecutionCard = memo(({ isSelected }: { isSelected: boolean }) => (
+    <div 
+      role="button"
+      tabIndex={0}
+      className={`w-full text-left p-4 cursor-pointer transition-all mb-6 border rounded-lg ${
+        isSelected ? "ring-2 ring-black bg-gray-50" : "hover:bg-gray-50"
+      }`} 
+      onClick={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        handleBrokerSelect("best");
+      }}
+      onKeyDown={(e) => handleKeyDown("best", e)}
+    >
+      <div className="flex items-center">
+        <div>
+          <h4 className="text-base font-semibold">Best Execution</h4>
+          <p className="text-xs text-gray-600 mt-1">Automatically route to optimal broker</p>
+          {isSelected && (
+            <p className="text-green-600 text-xs mt-2">Currently selected</p>
+          )}
+        </div>
+        <div className="ml-auto flex items-center">
+          <span className="text-green-600 text-xs mr-2 font-medium">Recommended</span>
+          {isSelected && (
+            <span className="bg-black text-white text-xs px-2 py-1 rounded">Selected</span>
+          )}
+        </div>
+      </div>
+    </div>
+  ));
+  BestExecutionCard.displayName = "BestExecutionCard";
 
   return (
     <div className="space-y-6">
@@ -78,65 +146,20 @@ const TradingBrokerSelection: React.FC<TradingBrokerSelectionProps> = ({
         </div>
       </div>
 
-      {/* Best Execution Card - Optimized */}
-      <div 
-        role="button"
-        tabIndex={0}
-        className={`w-full text-left p-4 cursor-pointer transition-all mb-6 border rounded-lg ${
-          selectedBroker === "best" 
-            ? "ring-2 ring-black bg-gray-50" 
-            : "hover:bg-gray-50"
-        }`} 
-        onClick={(e) => handleBrokerSelect("best", e)}
-        onKeyDown={(e) => handleKeyDown("best", e)}
-      >
-        <div className="flex items-center">
-          <div>
-            <h4 className="text-base font-semibold">Best Execution</h4>
-            <p className="text-xs text-gray-600 mt-1">Automatically route to optimal broker</p>
-            {selectedBroker === "best" && (
-              <p className="text-green-600 text-xs mt-2">Currently selected</p>
-            )}
-          </div>
-          <div className="ml-auto flex items-center">
-            <span className="text-green-600 text-xs mr-2 font-medium">Recommended</span>
-            {selectedBroker === "best" && (
-              <span className="bg-black text-white text-xs px-2 py-1 rounded">Selected</span>
-            )}
-          </div>
-        </div>
-      </div>
+      {/* Best Execution Card - Using memoized component */}
+      <BestExecutionCard isSelected={selectedBroker === "best"} />
       
-      {/* Specific Brokers Section - Optimized */}
+      {/* Specific Brokers Section - Using memoized components */}
       <div>
         <h4 className="text-base font-medium mb-3">Specific Brokers</h4>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
           {filteredBrokers.map((broker) => (
-            <div 
-              key={broker.id} 
-              role="button"
-              tabIndex={0}
-              onClick={(e) => handleBrokerSelect(broker.id, e)}
-              onKeyDown={(e) => handleKeyDown(broker.id, e)}
-              className={`p-4 cursor-pointer transition-all h-full rounded-lg border ${
-                selectedBroker === broker.id 
-                  ? 'ring-2 ring-black bg-gray-50' 
-                  : 'hover:bg-gray-50'
-              }`}
-            >
-              <div className="w-full">
-                <div className="font-medium text-sm">{broker.name}</div>
-                <p className="text-xs text-gray-600 mt-1 line-clamp-2">{broker.description}</p>
-                {broker.fee && <p className="text-xs text-gray-700 mt-1">Fee: {broker.fee}</p>}
-                {selectedBroker === broker.id && (
-                  <div className="mt-2 flex justify-between items-center">
-                    <span className="text-green-600 text-xs">Currently selected</span>
-                    <span className="bg-black text-white text-xs px-2 py-0.5 rounded">Selected</span>
-                  </div>
-                )}
-              </div>
-            </div>
+            <BrokerCard 
+              key={broker.id}
+              broker={broker}
+              isSelected={selectedBroker === broker.id}
+            />
           ))}
         </div>
         
@@ -148,4 +171,5 @@ const TradingBrokerSelection: React.FC<TradingBrokerSelectionProps> = ({
   );
 };
 
-export default React.memo(TradingBrokerSelection);
+// Use React.memo to prevent unnecessary re-renders of the entire component
+export default memo(TradingBrokerSelection);

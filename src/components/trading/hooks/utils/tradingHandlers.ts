@@ -61,11 +61,17 @@ export const useTradingHandlers = ({
     setCurrentStep
   });
   
-  // Use the submitOrderHandler hook
+  // Use the submitOrderHandler hook - Fix by passing the correct props
   const submitHandler = useSubmitOrderHandler({
+    selectedInstrument: state.selectedInstrument,
+    price: state.price,
+    quantity: state.quantity,
+    orderExecutionType: state.orderExecutionType,
+    currentOrderType: state.currentOrderType,
+    selectedBroker: state.selectedBroker,
+    timeInForce: state.timeInForce,
     order: state.order,
-    setIsSubmitting,
-    toast,
+    leverage: state.leverage,
     resetForm
   });
   
@@ -84,8 +90,14 @@ export const useTradingHandlers = ({
       return;
     }
     
+    setIsSubmitting(true);
+    
     // If we pass all validations, submit the order
-    submitHandler();
+    try {
+      submitHandler();
+    } finally {
+      setIsSubmitting(false);
+    }
   }, [
     state.selectedInstrument,
     state.orderExecutionType,

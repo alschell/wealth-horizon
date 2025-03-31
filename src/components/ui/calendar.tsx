@@ -20,28 +20,28 @@ function Calendar({
       showOutsideDays={showOutsideDays}
       className={cn("p-3 pointer-events-auto", className)}
       classNames={{
-        months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
-        month: "space-y-4",
-        caption: "flex justify-center pt-1 relative items-center",
-        caption_label: "text-sm font-medium",
-        nav: "space-x-1 flex items-center",
+        months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0 pointer-events-auto",
+        month: "space-y-4 pointer-events-auto",
+        caption: "flex justify-center pt-1 relative items-center pointer-events-auto",
+        caption_label: "text-sm font-medium pointer-events-auto",
+        nav: "space-x-1 flex items-center pointer-events-auto",
         nav_button: cn(
           buttonVariants({ variant: "outline" }),
           "h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100 pointer-events-auto"
         ),
         nav_button_previous: "absolute left-1 pointer-events-auto",
         nav_button_next: "absolute right-1 pointer-events-auto",
-        table: "w-full border-collapse space-y-1",
-        head_row: "flex",
+        table: "w-full border-collapse space-y-1 pointer-events-auto",
+        head_row: "flex pointer-events-auto",
         head_cell:
-          "text-muted-foreground rounded-md w-9 font-normal text-[0.8rem]",
-        row: "flex w-full mt-2",
+          "text-muted-foreground rounded-md w-9 font-normal text-[0.8rem] pointer-events-auto",
+        row: "flex w-full mt-2 pointer-events-auto",
         cell: "h-9 w-9 text-center text-sm p-0 relative pointer-events-auto [&:has([aria-selected].day-range-end)]:rounded-r-md [&:has([aria-selected].day-outside)]:bg-accent/50 [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
         day: cn(
           buttonVariants({ variant: "ghost" }),
           "h-9 w-9 p-0 font-normal aria-selected:opacity-100 pointer-events-auto"
         ),
-        day_range_end: "day-range-end",
+        day_range_end: "day-range-end pointer-events-auto",
         day_selected:
           "border-2 border-primary bg-white text-primary-foreground hover:bg-white hover:text-primary-foreground focus:bg-white focus:text-primary-foreground pointer-events-auto",
         day_today: "border border-accent bg-white text-accent-foreground pointer-events-auto",
@@ -50,7 +50,7 @@ function Calendar({
         day_disabled: "text-muted-foreground opacity-50 pointer-events-auto",
         day_range_middle:
           "aria-selected:bg-accent aria-selected:text-accent-foreground pointer-events-auto",
-        day_hidden: "invisible",
+        day_hidden: "invisible pointer-events-auto",
         ...classNames,
       }}
       components={{

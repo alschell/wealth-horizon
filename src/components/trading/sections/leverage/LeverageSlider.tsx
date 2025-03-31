@@ -1,5 +1,5 @@
 
-import React, { useCallback } from "react";
+import React, { memo } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Slider } from "@/components/ui/slider";
 
@@ -8,7 +8,7 @@ interface LeverageSliderProps {
   setLeverage: (value: number) => void;
 }
 
-const LeverageSlider: React.FC<LeverageSliderProps> = React.memo(({
+const LeverageSlider: React.FC<LeverageSliderProps> = memo(({
   leverage,
   setLeverage
 }) => {
@@ -19,28 +19,28 @@ const LeverageSlider: React.FC<LeverageSliderProps> = React.memo(({
     return "destructive";
   };
 
-  // Handle slider change - using useCallback to prevent re-renders
-  const handleSliderChange = useCallback((values: number[]) => {
+  // Handle slider change - simple direct update
+  const handleSliderChange = (values: number[]) => {
     if (values && values.length > 0) {
       const newValue = Math.round(values[0] * 2) / 2; // Ensure values match the step (0.5)
       setLeverage(newValue);
     }
-  }, [setLeverage]);
+  };
 
   return (
-    <div className="space-y-4">
-      <div className="flex justify-between items-center">
+    <div className="space-y-4 pointer-events-auto">
+      <div className="flex justify-between items-center pointer-events-auto">
         <h3 className="text-md font-medium">Custom Leverage</h3>
         <Badge 
           variant={getBadgeVariant(leverage)}
-          className={leverage > 3 ? "bg-red-500 text-white" : ""}
+          className={leverage > 3 ? "bg-red-500 text-white pointer-events-auto" : "pointer-events-auto"}
         >
           {leverage}x
         </Badge>
       </div>
 
-      <div className="space-y-6">
-        <div className="py-4">
+      <div className="space-y-6 pointer-events-auto">
+        <div className="py-4 pointer-events-auto">
           <Slider 
             value={[leverage]} 
             min={1} 
@@ -48,10 +48,11 @@ const LeverageSlider: React.FC<LeverageSliderProps> = React.memo(({
             step={0.5} 
             onValueChange={handleSliderChange}
             aria-label="Leverage slider"
+            className="pointer-events-auto"
           />
         </div>
         
-        <div className="flex justify-between text-xs text-gray-500">
+        <div className="flex justify-between text-xs text-gray-500 pointer-events-auto">
           <span>1x (No Leverage)</span>
           <span>5x</span>
           <span>10x (Max)</span>

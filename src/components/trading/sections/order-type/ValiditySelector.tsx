@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { CustomSelect } from "@/components/ui/custom-select";
 import { Label } from "@/components/ui/label";
 import { DatePicker } from "@/components/ui/date-picker";
@@ -17,6 +17,9 @@ const ValiditySelector: React.FC<ValiditySelectorProps> = ({
   gtdDate,
   setGtdDate
 }) => {
+  // Track focus state for the date picker
+  const [datePickerFocused, setDatePickerFocused] = useState(false);
+  
   // Descriptions for each validity option
   const validityDescriptions: Record<string, string> = {
     "day": "Order valid only for the current trading day.",
@@ -54,6 +57,10 @@ const ValiditySelector: React.FC<ValiditySelectorProps> = ({
       setGtdDate(undefined);
     }
   };
+  
+  // Handle date picker focus and blur
+  const handleDatePickerFocus = () => setDatePickerFocused(true);
+  const handleDatePickerBlur = () => setDatePickerFocused(false);
 
   return (
     <div className="space-y-3">
@@ -87,10 +94,16 @@ const ValiditySelector: React.FC<ValiditySelectorProps> = ({
             id="expiryDate"
             label="Select Expiry Date"
             value={gtdDate}
-            onChange={setGtdDate}
+            onChange={(date) => {
+              setGtdDate(date);
+              setDatePickerFocused(false); // Close the picker after selection
+            }}
             placeholder="Select date"
             optional={false}
             className="w-full"
+            onFocus={handleDatePickerFocus}
+            onBlur={handleDatePickerBlur}
+            focused={datePickerFocused}
           />
         </div>
       )}

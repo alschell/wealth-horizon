@@ -1,5 +1,5 @@
 
-import React, { useCallback } from "react";
+import React, { memo } from "react";
 import LeveragePresets from "./LeveragePresets";
 import LeverageSlider from "./LeverageSlider";
 import LeverageWarning from "./LeverageWarning";
@@ -10,25 +10,25 @@ interface TradingLeverageOptionsProps {
   orderType: string;
 }
 
-const TradingLeverageOptions: React.FC<TradingLeverageOptionsProps> = React.memo(({
+const TradingLeverageOptions: React.FC<TradingLeverageOptionsProps> = memo(({
   leverage,
   setLeverage,
   orderType
 }) => {
-  // Create a safe leverage handler
-  const handleLeverageChange = useCallback((value: number) => {
+  // Create a safe leverage handler that directly updates the state
+  const handleLeverageChange = (value: number) => {
     // Ensure the value is valid before updating state
     if (typeof value === 'number' && !isNaN(value) && value >= 1) {
       // Round to nearest 0.5 to match the slider step
       const roundedValue = Math.round(value * 2) / 2;
       setLeverage(roundedValue);
     }
-  }, [setLeverage]);
+  };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 pointer-events-auto">
       {/* Explanation text */}
-      <div className="mb-6">
+      <div className="mb-6 pointer-events-auto">
         <p className="text-sm text-gray-600">
           {orderType === "buy" 
             ? "Apply leverage to increase your buying power and potential returns." 
@@ -44,7 +44,7 @@ const TradingLeverageOptions: React.FC<TradingLeverageOptionsProps> = React.memo
       />
 
       {/* Custom leverage slider */}
-      <div className="pt-8 border-t border-gray-200 space-y-4">
+      <div className="pt-8 border-t border-gray-200 space-y-4 pointer-events-auto">
         <LeverageSlider
           leverage={leverage}
           setLeverage={handleLeverageChange}
@@ -55,9 +55,6 @@ const TradingLeverageOptions: React.FC<TradingLeverageOptionsProps> = React.memo
       </div>
     </div>
   );
-}, (prevProps, nextProps) => {
-  return prevProps.leverage === nextProps.leverage && 
-         prevProps.orderType === nextProps.orderType;
 });
 
 TradingLeverageOptions.displayName = "TradingLeverageOptions";

@@ -21,6 +21,9 @@ interface DatePickerProps {
   optional?: boolean;
   disabled?: boolean;
   className?: string;
+  onFocus?: () => void;
+  onBlur?: () => void;
+  focused?: boolean; // New prop to control focus state externally
 }
 
 export function DatePicker({ 
@@ -31,13 +34,30 @@ export function DatePicker({
   placeholder = "Select date", 
   optional = false,
   disabled = false,
-  className
+  className,
+  onFocus,
+  onBlur,
+  focused: externalFocused
 }: DatePickerProps) {
-  const [open, setOpen] = React.useState(false);
+  // Use external focused state if provided, otherwise manage internally
+  const [internalOpen, setInternalOpen] = React.useState(false);
+  const open = externalFocused !== undefined ? externalFocused : internalOpen;
+  
+  const handleOpenChange = (isOpen: boolean) => {
+    if (externalFocused === undefined) {
+      setInternalOpen(isOpen);
+    }
+    
+    if (isOpen) {
+      onFocus?.();
+    } else {
+      onBlur?.();
+    }
+  };
 
   const handleSelect = (date?: Date) => {
     onChange?.(date);
-    setOpen(false);
+    handleOpenChange(false);
   };
 
   return (
@@ -46,7 +66,7 @@ export function DatePicker({
         {label}
         {!optional && <span className="text-red-500 ml-1">*</span>}
       </Label>
-      <Popover open={open} onOpenChange={setOpen}>
+      <Popover open={open} onOpenChange={handleOpenChange}>
         <PopoverTrigger asChild>
           <Button
             id={id}
@@ -54,8 +74,9 @@ export function DatePicker({
             disabled={disabled}
             className={cn(
               "w-full h-11 justify-start text-left font-normal bg-white border-gray-300 hover:bg-gray-50",
-              "focus:outline-none focus:ring-2 focus:ring-black focus:border-black",
-              open ? "border-black ring-2 ring-black" : "",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:border-black",
+              // Only show the focus ring when open, not when a date is selected
+              open ? "border-black ring-2 ring-black" : "border-gray-300",
               !value && "text-muted-foreground"
             )}
           >
@@ -64,10 +85,9 @@ export function DatePicker({
           </Button>
         </PopoverTrigger>
         <PopoverContent 
-          className="w-auto p-0 bg-white shadow-lg rounded-md border" 
+          className="w-auto p-0 bg-white shadow-lg rounded-md border z-[100]" 
           align="start" 
           avoidCollisions={true}
-          style={{ zIndex: 100 }}
         >
           <Calendar
             mode="single"

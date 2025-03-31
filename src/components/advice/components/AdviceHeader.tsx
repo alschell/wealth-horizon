@@ -27,7 +27,7 @@ const AdviceHeader: React.FC<AdviceHeaderProps> = ({ activeTab, setActiveTab }) 
         transition={{ duration: 0.5 }}
         className="mb-10 text-center"
       >
-        <h1 className="text-3xl font-bold text-black mb-8">New Advice</h1>
+        <h1 className="text-3xl font-bold text-black mb-8">New Advice Mandate</h1>
       </motion.div>
 
       <div className="mb-8">

@@ -26,6 +26,7 @@ const AdviceInterface: React.FC = () => {
           onBankSelection={handleBankSelection}
           onAssetToggle={handleAssetToggle}
           onSubmit={handleSubmit}
+          setActiveTab={setActiveTab}
         />
       </div>
     </div>

@@ -6,7 +6,7 @@ import { mockBanks } from "../data/banks";
 import { mockAssets } from "../data/assets";
 
 export const useAdvice = () => {
-  const [activeTab, setActiveTab] = useState<string>("mandate");
+  const [activeTab, setActiveTab] = useState<string>("assets");
   
   const [adviceState, setAdviceState] = useState<AdviceState>({
     mandateType: "advisory",

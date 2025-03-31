@@ -4,6 +4,7 @@ import { AdviceState, Bank, Asset } from "../types";
 import MandateSetup from "../sections/MandateSetup";
 import AssetSelection from "../sections/AssetSelection";
 import AdviceReview from "../sections/AdviceReview";
+import { Button } from "@/components/ui/button";
 
 interface AdviceContentProps {
   activeTab: string;
@@ -12,6 +13,7 @@ interface AdviceContentProps {
   onBankSelection: (bank: Bank | null) => void;
   onAssetToggle: (asset: Asset, inScope: boolean) => void;
   onSubmit: () => void;
+  setActiveTab: (tab: string) => void;
 }
 
 const AdviceContent: React.FC<AdviceContentProps> = ({
@@ -20,26 +22,49 @@ const AdviceContent: React.FC<AdviceContentProps> = ({
   onMandateTypeChange,
   onBankSelection,
   onAssetToggle,
-  onSubmit
+  onSubmit,
+  setActiveTab
 }) => {
+  const handleNext = (currentTab: string) => {
+    if (currentTab === "assets") {
+      if (adviceState.assetsInScope.length === 0) {
+        return;
+      }
+      setActiveTab("mandate");
+    } else if (currentTab === "mandate") {
+      if (!adviceState.selectedBank) {
+        return;
+      }
+      setActiveTab("review");
+    }
+  };
+
+  const handleBack = (currentTab: string) => {
+    if (currentTab === "mandate") {
+      setActiveTab("assets");
+    } else if (currentTab === "review") {
+      setActiveTab("mandate");
+    }
+  };
+
   return (
     <>
+      {activeTab === "assets" && (
+        <AssetSelection 
+          assetsInScope={adviceState.assetsInScope}
+          assetsOutOfScope={adviceState.assetsOutOfScope}
+          onAssetToggle={onAssetToggle}
+          onNext={() => handleNext("assets")}
+        />
+      )}
+
       {activeTab === "mandate" && (
         <MandateSetup 
           mandateType={adviceState.mandateType} 
           selectedBank={adviceState.selectedBank}
           onMandateTypeChange={onMandateTypeChange}
           onBankSelection={onBankSelection}
-          onNext={() => {}}
-        />
-      )}
-
-      {activeTab === "assets" && (
-        <AssetSelection 
-          assetsInScope={adviceState.assetsInScope}
-          assetsOutOfScope={adviceState.assetsOutOfScope}
-          onAssetToggle={onAssetToggle}
-          onNext={() => {}}
+          onNext={() => handleNext("mandate")}
         />
       )}
 
@@ -49,6 +74,39 @@ const AdviceContent: React.FC<AdviceContentProps> = ({
           onSubmit={onSubmit}
         />
       )}
+
+      <div className="flex justify-between mt-8">
+        {activeTab !== "assets" && (
+          <Button 
+            variant="outline" 
+            onClick={() => handleBack(activeTab)}
+          >
+            Back
+          </Button>
+        )}
+        
+        <div className="ml-auto">
+          {activeTab === "assets" && (
+            <Button 
+              onClick={() => handleNext("assets")}
+              className="bg-black text-white"
+              disabled={adviceState.assetsInScope.length === 0}
+            >
+              Continue to Mandate Setup
+            </Button>
+          )}
+          
+          {activeTab === "mandate" && (
+            <Button 
+              onClick={() => handleNext("mandate")}
+              className="bg-black text-white"
+              disabled={!adviceState.selectedBank}
+            >
+              Continue to Review
+            </Button>
+          )}
+        </div>
+      </div>
     </>
   );
 };

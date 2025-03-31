@@ -76,14 +76,14 @@ const AdviceContent: React.FC<AdviceContentProps> = ({
       )}
 
       <div className="flex justify-between mt-8">
-        {activeTab !== "assets" && (
-          <Button 
-            variant="outline" 
-            onClick={() => handleBack(activeTab)}
-          >
-            Back
-          </Button>
-        )}
+        {/* Always show back button, but disable it in the first step */}
+        <Button 
+          variant="outline" 
+          onClick={() => handleBack(activeTab)}
+          disabled={activeTab === "assets"}
+        >
+          Back
+        </Button>
         
         <div className="ml-auto">
           {activeTab === "assets" && (
@@ -92,7 +92,7 @@ const AdviceContent: React.FC<AdviceContentProps> = ({
               className="bg-black text-white"
               disabled={adviceState.assetsInScope.length === 0}
             >
-              Continue to Mandate Setup
+              Continue
             </Button>
           )}
           
@@ -102,7 +102,7 @@ const AdviceContent: React.FC<AdviceContentProps> = ({
               className="bg-black text-white"
               disabled={!adviceState.selectedBank}
             >
-              Continue to Review
+              Continue
             </Button>
           )}
         </div>

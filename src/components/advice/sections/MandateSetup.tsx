@@ -22,7 +22,7 @@ const MandateSetup: React.FC<MandateSetupProps> = ({
 }) => {
   return (
     <div className="space-y-8">
-      <div className="bg-gray-50 p-6 rounded-lg border border-gray-100">
+      <div className="bg-white p-6 rounded-lg border border-gray-200">
         <h2 className="text-xl font-semibold mb-6">Select Mandate Type</h2>
         <p className="text-gray-600 mb-6">
           Choose how you would like your assets to be managed.
@@ -34,7 +34,7 @@ const MandateSetup: React.FC<MandateSetupProps> = ({
         />
       </div>
       
-      <div className="bg-gray-50 p-6 rounded-lg border border-gray-100">
+      <div className="bg-white p-6 rounded-lg border border-gray-200">
         <h2 className="text-xl font-semibold mb-6">Select Advisory Bank</h2>
         <p className="text-gray-600 mb-6">
           Choose a bank to provide {mandateType === "discretionary" ? "discretionary management" : "advisory services"} for your assets.

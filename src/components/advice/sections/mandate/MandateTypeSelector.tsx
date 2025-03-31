@@ -22,7 +22,7 @@ const MandateTypeSelector: React.FC<MandateTypeSelectorProps> = ({
       className="grid grid-cols-1 md:grid-cols-2 gap-4"
     >
       <div className={`border rounded-lg p-4 cursor-pointer transition-all ${
-        mandateType === "discretionary" ? "border-black bg-gray-100" : "border-gray-200 hover:bg-gray-50"
+        mandateType === "discretionary" ? "border-black bg-gray-50" : "border-gray-200 hover:bg-gray-50"
       }`}>
         <RadioGroupItem 
           value="discretionary" 
@@ -74,7 +74,7 @@ const MandateTypeSelector: React.FC<MandateTypeSelectorProps> = ({
       </div>
 
       <div className={`border rounded-lg p-4 cursor-pointer transition-all ${
-        mandateType === "advisory" ? "border-black bg-gray-100" : "border-gray-200 hover:bg-gray-50"
+        mandateType === "advisory" ? "border-black bg-gray-50" : "border-gray-200 hover:bg-gray-50"
       }`}>
         <RadioGroupItem 
           value="advisory" 

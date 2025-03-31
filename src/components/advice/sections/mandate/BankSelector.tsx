@@ -36,9 +36,8 @@ const BankCard = memo(({
     aria-pressed={isSelected}
   >
     <div className="w-full">
-      <div className="font-medium text-sm">{bank.name}</div>
-      <p className="text-xs text-gray-600 mt-1 line-clamp-2">{bank.description}</p>
-      {bank.fee && <p className="text-xs text-gray-700 mt-1">Fee: {bank.fee}</p>}
+      <div className="font-medium">{bank.name}</div>
+      {bank.fee && <p className="text-sm text-gray-600 mt-2">Fee: {bank.fee}</p>}
     </div>
   </div>
 ));
@@ -58,7 +57,6 @@ const BankSelector: React.FC<BankSelectorProps> = ({
   // Filter banks by search query
   const filteredBanks = sortedBanks.filter((bank) => {
     return bank.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-           bank.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
            bank.services.some(service => service.toLowerCase().includes(searchQuery.toLowerCase())) ||
            bank.expertise.some(expertise => expertise.toLowerCase().includes(searchQuery.toLowerCase()));
   });

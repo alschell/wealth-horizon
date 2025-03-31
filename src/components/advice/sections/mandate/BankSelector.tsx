@@ -1,8 +1,7 @@
 
-import React, { useState } from "react";
-import { Search, Check, Building } from "lucide-react";
+import React, { useState, memo } from "react";
+import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Bank, MandateType } from "../../types";
 import { mockBanks } from "../../data/banks";
 
@@ -12,14 +11,52 @@ interface BankSelectorProps {
   onBankSelection: (bank: Bank | null) => void;
 }
 
+const BankCard = memo(({ 
+  bank, 
+  isSelected,
+  onSelect
+}: { 
+  bank: Bank;
+  isSelected: boolean;
+  onSelect: () => void;
+}) => (
+  <div 
+    role="button"
+    tabIndex={0}
+    onClick={onSelect}
+    onKeyDown={(e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        onSelect();
+      }
+    }}
+    className={`p-4 cursor-pointer transition-all h-full rounded-lg border ${
+      isSelected ? 'ring-2 ring-black bg-gray-50' : 'hover:bg-gray-50'
+    }`}
+    aria-pressed={isSelected}
+  >
+    <div className="w-full">
+      <div className="font-medium text-sm">{bank.name}</div>
+      <p className="text-xs text-gray-600 mt-1 line-clamp-2">{bank.description}</p>
+      {bank.fee && <p className="text-xs text-gray-700 mt-1">Fee: {bank.fee}</p>}
+    </div>
+  </div>
+));
+
+BankCard.displayName = "BankCard";
+
 const BankSelector: React.FC<BankSelectorProps> = ({
   selectedBank,
   mandateType,
   onBankSelection
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
-
-  const filteredBanks = mockBanks.filter((bank) => {
+  
+  // Sort banks alphabetically
+  const sortedBanks = [...mockBanks].sort((a, b) => a.name.localeCompare(b.name));
+  
+  // Filter banks by search query
+  const filteredBanks = sortedBanks.filter((bank) => {
     return bank.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
            bank.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
            bank.services.some(service => service.toLowerCase().includes(searchQuery.toLowerCase())) ||
@@ -32,78 +69,32 @@ const BankSelector: React.FC<BankSelectorProps> = ({
 
   return (
     <div className="space-y-4">
-      <div className="relative">
-        <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-        <Input
-          placeholder="Search for a bank by name, services or expertise..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="pl-10"
-        />
+      <div className="relative mb-4">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+          <Input
+            placeholder="Search for a bank by name, services or expertise..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-10"
+          />
+        </div>
       </div>
 
-      <ScrollArea className="h-[400px]">
-        <div className="grid grid-cols-1 gap-4">
-          {filteredBanks.length > 0 ? (
-            filteredBanks.map((bank) => (
-              <div
-                key={bank.id}
-                onClick={() => handleBankSelect(bank)}
-                className={`border rounded-lg p-4 cursor-pointer transition-all ${
-                  selectedBank?.id === bank.id
-                    ? "border-black bg-gray-100"
-                    : "border-gray-200 hover:bg-gray-50"
-                }`}
-              >
-                <div className="flex items-start">
-                  <div className="shrink-0 mr-3">
-                    <div className="bg-gray-100 p-2 rounded-full">
-                      <Building className="h-6 w-6 text-gray-600" />
-                    </div>
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex items-start justify-between">
-                      <p className="font-medium text-lg">{bank.name}</p>
-                      {selectedBank?.id === bank.id && (
-                        <Check className="h-5 w-5 text-black" />
-                      )}
-                    </div>
-                    <p className="text-sm text-gray-600 mt-1">{bank.description}</p>
-                    
-                    <div className="mt-3 space-y-2">
-                      <div className="flex flex-wrap gap-2">
-                        <p className="text-xs text-gray-500">Services:</p>
-                        {bank.services.map((service, index) => (
-                          <span key={index} className="text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded">
-                            {service}
-                          </span>
-                        ))}
-                      </div>
-                      <div className="flex flex-wrap gap-2">
-                        <p className="text-xs text-gray-500">Expertise:</p>
-                        {bank.expertise.map((item, index) => (
-                          <span key={index} className="text-xs bg-green-50 text-green-700 px-2 py-0.5 rounded">
-                            {item}
-                          </span>
-                        ))}
-                      </div>
-                      {bank.fee && (
-                        <p className="text-xs text-gray-500">
-                          Fee Range: <span className="text-gray-700">{bank.fee}</span>
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))
-          ) : (
-            <div className="text-center py-12 text-gray-500">
-              No banks found matching your search criteria
-            </div>
-          )}
-        </div>
-      </ScrollArea>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        {filteredBanks.map((bank) => (
+          <BankCard
+            key={bank.id}
+            bank={bank}
+            isSelected={selectedBank?.id === bank.id}
+            onSelect={() => handleBankSelect(bank)}
+          />
+        ))}
+      </div>
+      
+      {filteredBanks.length === 0 && (
+        <p className="text-gray-500 text-center py-4">No banks found matching your search</p>
+      )}
 
       <div className="mt-4 pt-4 border-t border-gray-200">
         <p className="text-sm text-gray-600">

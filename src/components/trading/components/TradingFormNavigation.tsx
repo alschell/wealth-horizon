@@ -51,7 +51,7 @@ const TradingFormNavigation: React.FC<TradingFormNavigationProps> = ({
         <Button 
           type="button"
           size="lg" 
-          className="rounded-lg bg-green-600 hover:bg-green-700 text-white hover:shadow-md"
+          className="rounded-lg bg-black hover:bg-gray-800 text-white hover:shadow-md"
           onClick={onSubmit}
           disabled={disabled || isLoading}
         >

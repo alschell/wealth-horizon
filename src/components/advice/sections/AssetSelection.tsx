@@ -87,14 +87,14 @@ const AssetSelection: React.FC<AssetSelectionProps> = ({
   };
 
   return (
-    <div className="space-y-6">
-      <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-        <h2 className="text-xl font-semibold mb-4">Asset Selection</h2>
-        <p className="text-gray-600 mb-6">
+    <div className="space-y-6 max-w-7xl mx-auto">
+      <div className="bg-white p-8 rounded-lg shadow-md border border-gray-100">
+        <h2 className="text-2xl font-semibold mb-4">Asset Selection</h2>
+        <p className="text-gray-600 mb-8">
           Select the assets you want to include in your investment strategy. You can add or remove assets as needed.
         </p>
         
-        <div className="flex flex-col md:flex-row gap-6">
+        <div className="flex flex-col md:flex-row gap-8">
           <div className="md:w-[45%]">
             <AvailableAssets
               institutions={mockPortfoliosByInstitution}
@@ -108,7 +108,7 @@ const AssetSelection: React.FC<AssetSelectionProps> = ({
             />
           </div>
           
-          <div className="md:w-[10%] flex justify-center my-4 md:my-0">
+          <div className="md:w-[10%] flex justify-center items-center my-4 md:my-0">
             <TransferActions
               moveAssetsToScope={moveAssetsToScope}
               removeAssetsFromScope={removeAssetsFromScope}
@@ -128,11 +128,12 @@ const AssetSelection: React.FC<AssetSelectionProps> = ({
         </div>
       </div>
       
-      <div className="flex justify-end mt-4">
+      <div className="flex justify-end mt-8">
         <Button 
           onClick={onNext}
           disabled={assetsInScope.length === 0}
-          className="px-6"
+          className="px-8 py-2 text-base"
+          size="lg"
         >
           Continue
         </Button>

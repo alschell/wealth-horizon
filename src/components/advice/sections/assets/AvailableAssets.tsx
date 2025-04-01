@@ -43,21 +43,21 @@ const AvailableAssets: React.FC<AvailableAssetsProps> = ({
   };
 
   return (
-    <div className="border rounded-lg shadow-sm p-4 h-full bg-white">
-      <h3 className="text-lg font-medium mb-4">Available Assets</h3>
+    <div className="border rounded-lg shadow-md p-6 h-full bg-white">
+      <h3 className="text-xl font-medium mb-6">Available Assets</h3>
       
       <ScrollArea className="h-[500px] pr-4">
-        <div className="space-y-3">
+        <div className="space-y-4">
           {institutions.map(institution => (
-            <div key={institution.id} className="border border-gray-200 rounded-md overflow-hidden">
+            <div key={institution.id} className="border border-gray-200 rounded-lg overflow-hidden shadow-sm">
               <div 
-                className="flex items-center justify-between p-3 bg-gray-50 cursor-pointer hover:bg-gray-100 transition-colors duration-200"
+                className="flex items-center justify-between p-4 bg-gray-50 cursor-pointer hover:bg-gray-100 transition-colors duration-200"
                 onClick={() => toggleInstitution(institution.id)}
               >
-                <span className="font-medium text-gray-800">{institution.name}</span>
+                <span className="font-semibold text-gray-800">{institution.name}</span>
                 {expandedInstitutions.includes(institution.id) ? 
-                  <ChevronDown className="h-4 w-4 text-gray-500" /> : 
-                  <ChevronRight className="h-4 w-4 text-gray-500" />
+                  <ChevronDown className="h-5 w-5 text-gray-500" /> : 
+                  <ChevronRight className="h-5 w-5 text-gray-500" />
                 }
               </div>
               
@@ -66,13 +66,13 @@ const AvailableAssets: React.FC<AvailableAssetsProps> = ({
                   {institution.legalEntities.map(legalEntity => (
                     <div key={legalEntity.id} className="border-t border-gray-100">
                       <div 
-                        className="flex items-center justify-between p-2.5 bg-gray-50/50 cursor-pointer hover:bg-gray-100/60 transition-colors"
+                        className="flex items-center justify-between p-3 bg-gray-50/50 cursor-pointer hover:bg-gray-100/60 transition-colors"
                         onClick={() => toggleLegalEntity(legalEntity.id)}
                       >
                         <span className="font-medium text-gray-700 text-sm">{legalEntity.name}</span>
                         {expandedLegalEntities.includes(legalEntity.id) ? 
-                          <ChevronDown className="h-3.5 w-3.5 text-gray-500" /> : 
-                          <ChevronRight className="h-3.5 w-3.5 text-gray-500" />
+                          <ChevronDown className="h-4 w-4 text-gray-500" /> : 
+                          <ChevronRight className="h-4 w-4 text-gray-500" />
                         }
                       </div>
                       
@@ -102,12 +102,12 @@ const AvailableAssets: React.FC<AvailableAssetsProps> = ({
                             return (
                               <div 
                                 key={portfolio.id} 
-                                className={`flex items-center justify-between p-3 border-t border-gray-100 cursor-pointer transition-colors duration-150 hover:bg-blue-50/50 ${isSelected ? 'bg-blue-50' : 'bg-white'}`}
+                                className={`flex items-center justify-between p-4 border-t border-gray-100 cursor-pointer transition-colors duration-150 hover:bg-blue-50/50 ${isSelected ? 'bg-blue-50' : 'bg-white'}`}
                                 onClick={() => toggleAssetSelection(asset)}
                               >
                                 <div className="flex-grow">
-                                  <div className="font-medium text-sm">{portfolio.name}</div>
-                                  <div className="text-xs text-gray-500 mt-0.5">
+                                  <div className="font-medium">{portfolio.name}</div>
+                                  <div className="text-sm text-gray-500 mt-1">
                                     {new Intl.NumberFormat('en-US', {
                                       style: 'currency',
                                       currency: currency
@@ -118,7 +118,7 @@ const AvailableAssets: React.FC<AvailableAssetsProps> = ({
                                   type="checkbox"
                                   checked={isSelected}
                                   onChange={() => {}}
-                                  className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                  className="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                                 />
                               </div>
                             );
@@ -133,8 +133,9 @@ const AvailableAssets: React.FC<AvailableAssetsProps> = ({
           ))}
           
           {institutions.length === 0 && (
-            <div className="text-center py-12 text-gray-500">
-              No available assets found
+            <div className="text-center py-16 text-gray-500 bg-gray-50 rounded-lg border border-dashed border-gray-300">
+              <p className="text-lg font-medium mb-2">No available assets found</p>
+              <p className="text-sm">Please check back later or contact support for assistance.</p>
             </div>
           )}
         </div>

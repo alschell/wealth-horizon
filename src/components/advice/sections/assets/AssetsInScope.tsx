@@ -70,7 +70,7 @@ const AssetsInScope: React.FC<AssetsInScopeProps> = ({
           </div>
         </ScrollArea>
         
-        {/* Summary section is now outside the ScrollArea, making it static */}
+        {/* Summary section is outside the ScrollArea, making it static */}
         {assetsInScope.length > 0 && (
           <div className="mt-auto">
             <AssetSummary assetsInScope={assetsInScope} totalValue={totalValue} />

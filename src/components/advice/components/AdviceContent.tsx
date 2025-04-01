@@ -6,7 +6,6 @@ import AssetSelection from "../sections/AssetSelection";
 import AdviceReview from "../sections/AdviceReview";
 import BankSelector from "../sections/BankSelector";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 
 interface AdviceContentProps {
   activeTab: string;
@@ -58,6 +57,9 @@ const AdviceContent: React.FC<AdviceContentProps> = ({
       <div className="rounded-lg shadow-sm p-6 pb-10 bg-white">
         {activeTab === "assets" && (
           <>
+            <div className="mb-6">
+              <h2 className="text-2xl font-semibold">Assets</h2>
+            </div>
             <AssetSelection 
               assetsInScope={adviceState.assetsInScope}
               assetsOutOfScope={adviceState.assetsOutOfScope}
@@ -79,6 +81,9 @@ const AdviceContent: React.FC<AdviceContentProps> = ({
 
         {activeTab === "mandate" && (
           <>
+            <div className="mb-6">
+              <h2 className="text-2xl font-semibold">Mandate</h2>
+            </div>
             <MandateSetup 
               mandateType={adviceState.mandateType} 
               onMandateTypeChange={onMandateTypeChange}

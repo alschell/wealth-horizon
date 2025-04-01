@@ -19,11 +19,11 @@ const AssetsInScope: React.FC<AssetsInScopeProps> = ({
   totalValue
 }) => {
   return (
-    <Card className="rounded-xl shadow-lg p-6 h-[600px] bg-white">
+    <Card className="rounded-xl shadow-lg p-8 h-[650px] bg-white">
       <h3 className="text-xl font-semibold mb-6">Assets in Scope</h3>
       
-      <ScrollArea className="h-[420px] pr-4">
-        <div className="space-y-3">
+      <ScrollArea className="h-[460px] pr-4">
+        <div className="space-y-4">
           {assetsInScope.length > 0 ? (
             assetsInScope.map(asset => {
               const isSelected = selectedAssetsForRemoval.some(a => a.id === asset.id);
@@ -31,7 +31,7 @@ const AssetsInScope: React.FC<AssetsInScopeProps> = ({
               return (
                 <div 
                   key={asset.id} 
-                  className={`flex items-center justify-between p-5 border border-gray-200 rounded-lg cursor-pointer transition-all 
+                  className={`flex items-center justify-between p-6 border border-gray-200 rounded-lg cursor-pointer transition-all 
                              hover:shadow-md ${isSelected ? 'bg-red-50 border-red-200' : 'bg-white hover:bg-gray-50'}`}
                   onClick={() => toggleAssetForRemoval(asset)}
                 >
@@ -61,7 +61,7 @@ const AssetsInScope: React.FC<AssetsInScopeProps> = ({
               );
             })
           ) : (
-            <div className="flex flex-col items-center justify-center py-20 px-6 text-gray-500 bg-gray-50 rounded-xl border border-dashed border-gray-300">
+            <div className="flex flex-col items-center justify-center py-24 px-6 text-gray-500 bg-gray-50 rounded-xl border border-dashed border-gray-300">
               <p className="text-lg font-medium mb-3">No assets added yet</p>
               <p className="text-sm text-center max-w-md">Select assets from the available assets panel and click the arrow to include them in your investment scope.</p>
             </div>
@@ -70,7 +70,7 @@ const AssetsInScope: React.FC<AssetsInScopeProps> = ({
       </ScrollArea>
       
       {assetsInScope.length > 0 && (
-        <div className="mt-6 pt-5 border-t">
+        <div className="mt-8 pt-6 border-t">
           <AssetSummary assetsInScope={assetsInScope} totalValue={totalValue} />
         </div>
       )}

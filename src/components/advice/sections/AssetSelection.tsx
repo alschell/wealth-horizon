@@ -87,15 +87,15 @@ const AssetSelection: React.FC<AssetSelectionProps> = ({
   };
 
   return (
-    <div className="space-y-8 max-w-[1800px] mx-auto px-4">
-      <div className="bg-white p-8 rounded-xl shadow-lg border border-gray-200">
+    <div className="space-y-8 max-w-[2200px] mx-auto px-4">
+      <div className="bg-white p-10 rounded-xl shadow-lg border border-gray-200">
         <h2 className="text-2xl font-semibold mb-4">Asset Selection</h2>
-        <p className="text-gray-600 mb-8 max-w-4xl">
+        <p className="text-gray-600 mb-8">
           Select the assets you want to include in your investment strategy. You can add or remove assets as needed.
         </p>
         
-        <div className="flex flex-col md:flex-row gap-6">
-          <div className="md:w-[45%]">
+        <div className="flex flex-col md:flex-row gap-8">
+          <div className="md:w-[47%]">
             <AvailableAssets
               institutions={mockPortfoliosByInstitution}
               expandedInstitutions={expandedInstitutions}
@@ -108,7 +108,7 @@ const AssetSelection: React.FC<AssetSelectionProps> = ({
             />
           </div>
           
-          <div className="md:w-[10%] flex justify-center items-center my-4 md:my-0">
+          <div className="md:w-[6%] flex justify-center items-center my-4 md:my-0">
             <TransferActions
               moveAssetsToScope={moveAssetsToScope}
               removeAssetsFromScope={removeAssetsFromScope}
@@ -117,7 +117,7 @@ const AssetSelection: React.FC<AssetSelectionProps> = ({
             />
           </div>
           
-          <div className="md:w-[45%]">
+          <div className="md:w-[47%]">
             <AssetsInScope
               assetsInScope={assetsInScope}
               selectedAssetsForRemoval={selectedAssetsForRemoval}
@@ -128,11 +128,11 @@ const AssetSelection: React.FC<AssetSelectionProps> = ({
         </div>
       </div>
       
-      <div className="flex justify-end mt-6 mb-12 px-4">
+      <div className="flex justify-end mt-8 mb-16 px-4">
         <Button 
           onClick={onNext}
           disabled={assetsInScope.length === 0}
-          className="px-8 py-6 text-base font-medium rounded-lg shadow-md hover:shadow-lg transition-all"
+          className="px-10 py-6 text-base font-medium rounded-lg shadow-md hover:shadow-lg transition-all"
           size="lg"
         >
           Continue

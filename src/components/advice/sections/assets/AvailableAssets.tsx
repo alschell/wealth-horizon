@@ -43,10 +43,10 @@ const AvailableAssets: React.FC<AvailableAssetsProps> = ({
   };
 
   return (
-    <div className="border rounded-xl shadow-lg p-6 h-[600px] bg-white">
+    <div className="border rounded-xl shadow-lg p-8 h-[650px] bg-white">
       <h3 className="text-xl font-semibold mb-6">Available Assets</h3>
       
-      <ScrollArea className="h-[540px] pr-4">
+      <ScrollArea className="h-[560px] pr-4">
         <div className="space-y-5">
           {institutions.map(institution => (
             <div key={institution.id} className="border border-gray-200 rounded-xl overflow-hidden shadow-sm">
@@ -77,7 +77,7 @@ const AvailableAssets: React.FC<AvailableAssetsProps> = ({
                       </div>
                       
                       {expandedLegalEntities.includes(legalEntity.id) && (
-                        <div className="p-2">
+                        <div className="p-3">
                           {legalEntity.portfolios.map(portfolio => {
                             // Generate random value and currency for display
                             const value = getRandomValue();
@@ -102,10 +102,10 @@ const AvailableAssets: React.FC<AvailableAssetsProps> = ({
                             return (
                               <div 
                                 key={portfolio.id} 
-                                className={`flex items-center justify-between p-5 mb-2 border border-gray-200 rounded-lg cursor-pointer transition-all hover:shadow-md duration-150 ${isSelected ? 'bg-blue-50 border-blue-200' : 'bg-white hover:bg-gray-50'}`}
+                                className={`flex items-center justify-between p-6 mb-3 border border-gray-200 rounded-lg cursor-pointer transition-all hover:shadow-md duration-150 ${isSelected ? 'bg-blue-50 border-blue-200' : 'bg-white hover:bg-gray-50'}`}
                                 onClick={() => toggleAssetSelection(asset)}
                               >
-                                <div className="flex-grow">
+                                <div className="flex-grow pr-4">
                                   <div className="font-medium text-gray-900">{portfolio.name}</div>
                                   <div className="text-sm text-gray-500 mt-2 flex items-center">
                                     <span className="text-gray-700">{institution.name}</span>
@@ -140,7 +140,7 @@ const AvailableAssets: React.FC<AvailableAssetsProps> = ({
           ))}
           
           {institutions.length === 0 && (
-            <div className="text-center py-16 text-gray-500 bg-gray-50 rounded-lg border border-dashed border-gray-300">
+            <div className="text-center py-20 text-gray-500 bg-gray-50 rounded-lg border border-dashed border-gray-300">
               <p className="text-lg font-medium mb-2">No available assets found</p>
               <p className="text-sm">Please check back later or contact support for assistance.</p>
             </div>

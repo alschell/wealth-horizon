@@ -55,31 +55,74 @@ const AdviceContent: React.FC<AdviceContentProps> = ({
 
   return (
     <>
-      <div className="rounded-lg shadow-sm p-6 bg-white">
+      <div className="rounded-lg shadow-sm p-6 pb-10 bg-white">
         {activeTab === "assets" && (
-          <AssetSelection 
-            assetsInScope={adviceState.assetsInScope}
-            assetsOutOfScope={adviceState.assetsOutOfScope}
-            onAssetToggle={onAssetToggle}
-            onNext={() => handleNext("assets")}
-          />
+          <>
+            <AssetSelection 
+              assetsInScope={adviceState.assetsInScope}
+              assetsOutOfScope={adviceState.assetsOutOfScope}
+              onAssetToggle={onAssetToggle}
+              onNext={() => handleNext("assets")}
+            />
+            
+            <div className="flex justify-between mt-8">
+              <div className="flex-1"></div>
+              <Button 
+                onClick={() => handleNext("assets")}
+                disabled={adviceState.assetsInScope.length === 0}
+              >
+                Continue
+              </Button>
+            </div>
+          </>
         )}
 
         {activeTab === "mandate" && (
-          <MandateSetup 
-            mandateType={adviceState.mandateType} 
-            onMandateTypeChange={onMandateTypeChange}
-            onNext={() => handleNext("mandate")}
-          />
+          <>
+            <MandateSetup 
+              mandateType={adviceState.mandateType} 
+              onMandateTypeChange={onMandateTypeChange}
+              onNext={() => handleNext("mandate")}
+            />
+            
+            <div className="flex justify-between mt-8">
+              <Button 
+                variant="outline" 
+                onClick={() => handleBack(activeTab)}
+              >
+                Back
+              </Button>
+              <Button onClick={() => handleNext("mandate")}>
+                Continue
+              </Button>
+            </div>
+          </>
         )}
         
         {activeTab === "advisor" && (
-          <BankSelector
-            selectedBank={adviceState.selectedBank}
-            mandateType={adviceState.mandateType}
-            onBankSelection={onBankSelection}
-            onNext={() => handleNext("advisor")}
-          />
+          <>
+            <BankSelector
+              selectedBank={adviceState.selectedBank}
+              mandateType={adviceState.mandateType}
+              onBankSelection={onBankSelection}
+              onNext={() => handleNext("advisor")}
+            />
+            
+            <div className="flex justify-between mt-8">
+              <Button 
+                variant="outline" 
+                onClick={() => handleBack(activeTab)}
+              >
+                Back
+              </Button>
+              <Button 
+                onClick={() => handleNext("advisor")}
+                disabled={!adviceState.selectedBank}
+              >
+                Continue
+              </Button>
+            </div>
+          </>
         )}
 
         {activeTab === "review" && (
@@ -89,49 +132,6 @@ const AdviceContent: React.FC<AdviceContentProps> = ({
           />
         )}
       </div>
-
-      {activeTab !== "review" && (
-        <Card className="p-4 mt-8">
-          <div className="flex justify-between">
-            {activeTab !== "assets" && (
-              <Button 
-                variant="outline" 
-                onClick={() => handleBack(activeTab)}
-              >
-                Back
-              </Button>
-            )}
-            
-            {activeTab === "assets" && (
-              <div className="flex justify-end w-full">
-                <Button 
-                  onClick={() => handleNext("assets")}
-                  disabled={adviceState.assetsInScope.length === 0}
-                >
-                  Continue
-                </Button>
-              </div>
-            )}
-
-            {activeTab === "mandate" && (
-              <div className="flex justify-end flex-1">
-                <Button onClick={() => handleNext("mandate")}>
-                  Continue
-                </Button>
-              </div>
-            )}
-              
-            {activeTab === "advisor" && (
-              <Button 
-                onClick={() => handleNext("advisor")}
-                disabled={!adviceState.selectedBank}
-              >
-                Continue
-              </Button>
-            )}
-          </div>
-        </Card>
-      )}
     </>
   );
 };

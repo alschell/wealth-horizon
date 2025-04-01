@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Asset } from "../types";
 import AssetSummary from "./assets/AssetSummary";
 import { mockPortfoliosByInstitution } from "@/components/trading/data/institutions";
-import { Asset as AssetType } from "../types";
+import { Asset as AssetType, AssetType as AssetTypeEnum } from "../types";
 
 interface AssetSelectionProps {
   assetsInScope: Asset[];
@@ -84,7 +84,7 @@ const AssetSelection: React.FC<AssetSelectionProps> = ({
     return {
       id: portfolio.id,
       name: portfolio.name,
-      type: "portfolio",
+      type: "fund" as AssetTypeEnum, // Changed from "portfolio" to "fund" which is a valid AssetTypeEnum
       value: portfolio.value || 0,
       currency: portfolio.currency || "USD",
       institution: portfolio.institution || "",
@@ -134,7 +134,16 @@ const AssetSelection: React.FC<AssetSelectionProps> = ({
                             {legalEntity.portfolios
                               .filter(portfolio => isAssetAvailable(portfolio.id))
                               .map(portfolio => {
-                                const asset = mapPortfolioToAsset(portfolio);
+                                // Add missing properties to portfolio for displaying
+                                const portfolioWithValues = {
+                                  ...portfolio,
+                                  value: 250000, // Default value for display
+                                  currency: "USD", // Default currency for display
+                                  institution: institution.name,
+                                  custodian: legalEntity.name
+                                };
+                                
+                                const asset = mapPortfolioToAsset(portfolioWithValues);
                                 const isSelected = selectedAssets.some(a => a.id === asset.id);
                                 
                                 return (
@@ -148,8 +157,8 @@ const AssetSelection: React.FC<AssetSelectionProps> = ({
                                       <div className="text-sm text-gray-500">
                                         {new Intl.NumberFormat('en-US', {
                                           style: 'currency',
-                                          currency: portfolio.currency || 'USD'
-                                        }).format(portfolio.value || 0)}
+                                          currency: "USD"
+                                        }).format(250000)}
                                       </div>
                                     </div>
                                     <input 

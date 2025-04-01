@@ -54,38 +54,40 @@ const AdviceContent: React.FC<AdviceContentProps> = ({
 
   return (
     <>
-      {activeTab === "assets" && (
-        <AssetSelection 
-          assetsInScope={adviceState.assetsInScope}
-          assetsOutOfScope={adviceState.assetsOutOfScope}
-          onAssetToggle={onAssetToggle}
-          onNext={() => handleNext("assets")}
-        />
-      )}
+      <div className="rounded-lg shadow-sm p-6 bg-white">
+        {activeTab === "assets" && (
+          <AssetSelection 
+            assetsInScope={adviceState.assetsInScope}
+            assetsOutOfScope={adviceState.assetsOutOfScope}
+            onAssetToggle={onAssetToggle}
+            onNext={() => handleNext("assets")}
+          />
+        )}
 
-      {activeTab === "mandate" && (
-        <MandateSetup 
-          mandateType={adviceState.mandateType} 
-          onMandateTypeChange={onMandateTypeChange}
-          onNext={() => handleNext("mandate")}
-        />
-      )}
-      
-      {activeTab === "advisor" && (
-        <BankSelector
-          selectedBank={adviceState.selectedBank}
-          mandateType={adviceState.mandateType}
-          onBankSelection={onBankSelection}
-          onNext={() => handleNext("advisor")}
-        />
-      )}
+        {activeTab === "mandate" && (
+          <MandateSetup 
+            mandateType={adviceState.mandateType} 
+            onMandateTypeChange={onMandateTypeChange}
+            onNext={() => handleNext("mandate")}
+          />
+        )}
+        
+        {activeTab === "advisor" && (
+          <BankSelector
+            selectedBank={adviceState.selectedBank}
+            mandateType={adviceState.mandateType}
+            onBankSelection={onBankSelection}
+            onNext={() => handleNext("advisor")}
+          />
+        )}
 
-      {activeTab === "review" && (
-        <AdviceReview 
-          adviceState={adviceState}
-          onSubmit={onSubmit}
-        />
-      )}
+        {activeTab === "review" && (
+          <AdviceReview 
+            adviceState={adviceState}
+            onSubmit={onSubmit}
+          />
+        )}
+      </div>
 
       <div className="flex justify-between mt-8">
         {activeTab !== "assets" && (
@@ -103,6 +105,14 @@ const AdviceContent: React.FC<AdviceContentProps> = ({
               onClick={() => handleNext("assets")}
               disabled={adviceState.assetsInScope.length === 0}
             >
+              Continue
+            </Button>
+          </div>
+        )}
+
+        {activeTab === "mandate" && (
+          <div className="flex justify-end flex-1">
+            <Button onClick={() => handleNext("mandate")}>
               Continue
             </Button>
           </div>

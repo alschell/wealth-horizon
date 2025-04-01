@@ -19,7 +19,7 @@ const BankSelector: React.FC<BankSelectorProps> = ({
   return (
     <div className="space-y-8">
       <div className="p-6 rounded-lg border border-gray-200 bg-white">
-        <h2 className="text-xl font-semibold mb-6">Select Advisory Bank</h2>
+        <h2 className="text-xl font-semibold mb-6">Advisor</h2>
         <p className="text-gray-600 mb-6">
           Choose a bank to provide {mandateType === "discretionary" ? "discretionary management" : "advisory services"} for your assets.
         </p>

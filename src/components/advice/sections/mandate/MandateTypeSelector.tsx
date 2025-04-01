@@ -5,6 +5,7 @@ import { Check, ShieldCheck, Lightbulb } from "lucide-react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { MandateType } from "../../types";
+import { Card } from "@/components/ui/card";
 
 interface MandateTypeSelectorProps {
   mandateType: MandateType;
@@ -21,11 +22,11 @@ const MandateTypeSelector: React.FC<MandateTypeSelectorProps> = ({
       onValueChange={(value) => onChange(value as MandateType)}
       className="grid grid-cols-1 md:grid-cols-2 gap-6"
     >
-      <div 
-        className={`relative border-2 rounded-xl p-6 cursor-pointer transition-all hover:shadow-md ${
+      <Card 
+        className={`relative p-4 h-full cursor-pointer transition-all ${
           mandateType === "discretionary" 
-            ? "border-black bg-gray-50" 
-            : "border-gray-200 hover:bg-gray-50"
+            ? 'ring-2 ring-black bg-white' 
+            : 'bg-white hover:bg-gray-50'
         }`}
       >
         <RadioGroupItem 
@@ -35,46 +36,41 @@ const MandateTypeSelector: React.FC<MandateTypeSelectorProps> = ({
         />
         <Label 
           htmlFor="discretionary" 
-          className="cursor-pointer flex flex-col h-full"
+          className="cursor-pointer flex flex-col items-center h-full text-center"
         >
-          <div className="flex items-center mb-4">
-            <div className="bg-blue-100 p-3 rounded-full mr-4">
-              <ShieldCheck className="h-6 w-6 text-blue-600" />
-            </div>
-            <h3 className="text-xl font-medium">Discretionary</h3>
-            {mandateType === "discretionary" && (
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                className="absolute top-4 right-4"
-              >
-                <div className="bg-black text-white p-1 rounded-full">
-                  <Check className="h-4 w-4" />
-                </div>
-              </motion.div>
-            )}
+          <div className="mb-3">
+            <ShieldCheck className="h-5 w-5 text-blue-600" />
           </div>
+          <h3 className="font-medium mb-2">Discretionary</h3>
+          <p className="text-sm text-gray-600">
+            Bank manages your assets according to your profile
+          </p>
 
-          <p className="text-sm text-gray-600 mb-4">Bank manages your assets according to your profile</p>
-
-          <div className="mt-auto space-y-2 text-sm">
-            <div className="flex items-center">
-              <Check className="h-4 w-4 text-green-600 mr-2 shrink-0" />
+          <div className="mt-auto pt-4 space-y-2 text-xs">
+            <div className="flex items-center justify-center">
+              <Check className="h-4 w-4 text-green-600 mr-1 shrink-0" />
               <span>Professional portfolio management</span>
-            </div>
-            <div className="flex items-center">
-              <Check className="h-4 w-4 text-green-600 mr-2 shrink-0" />
-              <span>Tactical allocation by experts</span>
             </div>
           </div>
         </Label>
-      </div>
+        {mandateType === "discretionary" && (
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            className="absolute top-2 right-2"
+          >
+            <div className="bg-black text-white p-1 rounded-full">
+              <Check className="h-3 w-3" />
+            </div>
+          </motion.div>
+        )}
+      </Card>
 
-      <div 
-        className={`relative border-2 rounded-xl p-6 cursor-pointer transition-all hover:shadow-md ${
+      <Card 
+        className={`relative p-4 h-full cursor-pointer transition-all ${
           mandateType === "advisory" 
-            ? "border-black bg-gray-50" 
-            : "border-gray-200 hover:bg-gray-50"
+            ? 'ring-2 ring-black bg-white' 
+            : 'bg-white hover:bg-gray-50'
         }`}
       >
         <RadioGroupItem 
@@ -84,40 +80,35 @@ const MandateTypeSelector: React.FC<MandateTypeSelectorProps> = ({
         />
         <Label 
           htmlFor="advisory" 
-          className="cursor-pointer flex flex-col h-full"
+          className="cursor-pointer flex flex-col items-center h-full text-center"
         >
-          <div className="flex items-center mb-4">
-            <div className="bg-amber-100 p-3 rounded-full mr-4">
-              <Lightbulb className="h-6 w-6 text-amber-600" />
-            </div>
-            <h3 className="text-xl font-medium">Advisory</h3>
-            {mandateType === "advisory" && (
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                className="absolute top-4 right-4"
-              >
-                <div className="bg-black text-white p-1 rounded-full">
-                  <Check className="h-4 w-4" />
-                </div>
-              </motion.div>
-            )}
+          <div className="mb-3">
+            <Lightbulb className="h-5 w-5 text-amber-600" />
           </div>
+          <h3 className="font-medium mb-2">Advisory</h3>
+          <p className="text-sm text-gray-600">
+            Get recommendations but maintain control
+          </p>
 
-          <p className="text-sm text-gray-600 mb-4">Get recommendations but maintain control</p>
-
-          <div className="mt-auto space-y-2 text-sm">
-            <div className="flex items-center">
-              <Check className="h-4 w-4 text-green-600 mr-2 shrink-0" />
-              <span>Personalized recommendations</span>
-            </div>
-            <div className="flex items-center">
-              <Check className="h-4 w-4 text-green-600 mr-2 shrink-0" />
+          <div className="mt-auto pt-4 space-y-2 text-xs">
+            <div className="flex items-center justify-center">
+              <Check className="h-4 w-4 text-green-600 mr-1 shrink-0" />
               <span>Full decision-making authority</span>
             </div>
           </div>
         </Label>
-      </div>
+        {mandateType === "advisory" && (
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            className="absolute top-2 right-2"
+          >
+            <div className="bg-black text-white p-1 rounded-full">
+              <Check className="h-3 w-3" />
+            </div>
+          </motion.div>
+        )}
+      </Card>
     </RadioGroup>
   );
 };

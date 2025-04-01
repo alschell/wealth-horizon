@@ -61,6 +61,8 @@ const AssetSelection: React.FC<AssetSelectionProps> = ({
 
   return (
     <div className="space-y-6">
+      <h2 className="text-2xl font-semibold">Assets</h2>
+      
       <div className="flex items-center justify-between">
         <div className="flex space-x-4">
           <Button

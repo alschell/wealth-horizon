@@ -29,12 +29,6 @@ const MandateSetup: React.FC<MandateSetupProps> = ({
             mandateType={mandateType}
             onChange={onMandateTypeChange}
           />
-          
-          <div className="pt-4 flex justify-end">
-            <Button onClick={onNext} className="w-full md:w-auto">
-              Continue
-            </Button>
-          </div>
         </div>
       </FormLayout>
     </FormSection>

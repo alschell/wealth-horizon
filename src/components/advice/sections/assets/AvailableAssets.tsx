@@ -29,84 +29,100 @@ const AvailableAssets: React.FC<AvailableAssetsProps> = ({
 }) => {
   // Helper function to check if an asset is available (not in scope)
   const isAssetAvailable = (assetId: string) => {
-    return assetsOutOfScope.some(asset => asset.id === assetId);
+    return !assetsOutOfScope.some(asset => asset.id === assetId);
+  };
+
+  // Generate random value for each portfolio (for demonstration)
+  const getRandomValue = (min = 100000, max = 5000000) => {
+    return Math.floor(Math.random() * (max - min + 1) + min);
+  };
+
+  const currencies = ["USD", "EUR", "GBP", "CHF"];
+  const getRandomCurrency = () => {
+    return currencies[Math.floor(Math.random() * currencies.length)];
   };
 
   return (
-    <div className="border rounded-md p-4 h-full">
+    <div className="border rounded-lg shadow-sm p-4 h-full bg-white">
       <h3 className="text-lg font-medium mb-4">Available Assets</h3>
       
-      <ScrollArea className="h-[360px] pr-4">
-        <div className="space-y-2">
+      <ScrollArea className="h-[500px] pr-4">
+        <div className="space-y-3">
           {institutions.map(institution => (
-            <div key={institution.id} className="border border-gray-200 rounded-md">
+            <div key={institution.id} className="border border-gray-200 rounded-md overflow-hidden">
               <div 
-                className="flex items-center justify-between p-2.5 bg-gray-50 cursor-pointer hover:bg-gray-100"
+                className="flex items-center justify-between p-3 bg-gray-50 cursor-pointer hover:bg-gray-100 transition-colors duration-200"
                 onClick={() => toggleInstitution(institution.id)}
               >
-                <span className="font-medium">{institution.name}</span>
+                <span className="font-medium text-gray-800">{institution.name}</span>
                 {expandedInstitutions.includes(institution.id) ? 
-                  <ChevronDown className="h-4 w-4" /> : 
-                  <ChevronRight className="h-4 w-4" />
+                  <ChevronDown className="h-4 w-4 text-gray-500" /> : 
+                  <ChevronRight className="h-4 w-4 text-gray-500" />
                 }
               </div>
               
               {expandedInstitutions.includes(institution.id) && (
-                <div className="pl-3">
+                <div className="pl-2">
                   {institution.legalEntities.map(legalEntity => (
-                    <div key={legalEntity.id} className="border-t border-gray-200">
+                    <div key={legalEntity.id} className="border-t border-gray-100">
                       <div 
-                        className="flex items-center justify-between p-2.5 bg-gray-50 cursor-pointer hover:bg-gray-100"
+                        className="flex items-center justify-between p-2.5 bg-gray-50/50 cursor-pointer hover:bg-gray-100/60 transition-colors"
                         onClick={() => toggleLegalEntity(legalEntity.id)}
                       >
-                        <span className="font-medium">{legalEntity.name}</span>
+                        <span className="font-medium text-gray-700 text-sm">{legalEntity.name}</span>
                         {expandedLegalEntities.includes(legalEntity.id) ? 
-                          <ChevronDown className="h-4 w-4" /> : 
-                          <ChevronRight className="h-4 w-4" />
+                          <ChevronDown className="h-3.5 w-3.5 text-gray-500" /> : 
+                          <ChevronRight className="h-3.5 w-3.5 text-gray-500" />
                         }
                       </div>
                       
                       {expandedLegalEntities.includes(legalEntity.id) && (
-                        <div className="pl-3">
-                          {legalEntity.portfolios
-                            .filter(portfolio => isAssetAvailable(portfolio.id))
-                            .map(portfolio => {
-                              // Add missing properties to portfolio for displaying
-                              const portfolioWithValues = {
-                                ...portfolio,
-                                value: 250000, // Default value for display
-                                currency: "USD", // Default currency for display
-                                institution: institution.name,
-                                custodian: legalEntity.name
-                              };
-                              
-                              const asset = mapPortfolioToAsset(portfolioWithValues);
-                              const isSelected = selectedAssets.some(a => a.id === asset.id);
-                              
-                              return (
-                                <div 
-                                  key={portfolio.id} 
-                                  className={`flex items-center justify-between p-2.5 border-t border-gray-100 cursor-pointer hover:bg-blue-50/30 ${isSelected ? 'bg-blue-50' : ''}`}
-                                  onClick={() => toggleAssetSelection(asset)}
-                                >
-                                  <div>
-                                    <div className="font-medium text-sm">{portfolio.name}</div>
-                                    <div className="text-xs text-gray-500">
-                                      {new Intl.NumberFormat('en-US', {
-                                        style: 'currency',
-                                        currency: "USD"
-                                      }).format(250000)}
-                                    </div>
+                        <div className="pl-2">
+                          {legalEntity.portfolios.map(portfolio => {
+                            // Generate random value and currency for display
+                            const value = getRandomValue();
+                            const currency = getRandomCurrency();
+                            
+                            // Add missing properties to portfolio for displaying
+                            const portfolioWithValues = {
+                              ...portfolio,
+                              value,
+                              currency,
+                              institution: institution.name,
+                              custodian: legalEntity.name
+                            };
+                            
+                            const asset = mapPortfolioToAsset(portfolioWithValues);
+                            const isSelected = selectedAssets.some(a => a.id === asset.id);
+                            const isInScope = assetsOutOfScope.some(a => a.id === asset.id);
+                            
+                            // Skip if already in scope
+                            if (isInScope) return null;
+                            
+                            return (
+                              <div 
+                                key={portfolio.id} 
+                                className={`flex items-center justify-between p-3 border-t border-gray-100 cursor-pointer transition-colors duration-150 hover:bg-blue-50/50 ${isSelected ? 'bg-blue-50' : 'bg-white'}`}
+                                onClick={() => toggleAssetSelection(asset)}
+                              >
+                                <div className="flex-grow">
+                                  <div className="font-medium text-sm">{portfolio.name}</div>
+                                  <div className="text-xs text-gray-500 mt-0.5">
+                                    {new Intl.NumberFormat('en-US', {
+                                      style: 'currency',
+                                      currency: currency
+                                    }).format(value)}
                                   </div>
-                                  <input 
-                                    type="checkbox"
-                                    checked={isSelected}
-                                    onChange={() => {}}
-                                    className="h-4 w-4"
-                                  />
                                 </div>
-                              );
-                            })}
+                                <input 
+                                  type="checkbox"
+                                  checked={isSelected}
+                                  onChange={() => {}}
+                                  className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                />
+                              </div>
+                            );
+                          })}
                         </div>
                       )}
                     </div>
@@ -117,7 +133,7 @@ const AvailableAssets: React.FC<AvailableAssetsProps> = ({
           ))}
           
           {institutions.length === 0 && (
-            <div className="text-center py-8 text-gray-500">
+            <div className="text-center py-12 text-gray-500">
               No available assets found
             </div>
           )}

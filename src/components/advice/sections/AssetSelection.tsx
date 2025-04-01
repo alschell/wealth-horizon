@@ -1,11 +1,12 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Asset } from "../types";
 import { mockPortfoliosByInstitution } from "@/components/trading/data/institutions";
 import AvailableAssets from "./assets/AvailableAssets";
 import AssetsInScope from "./assets/AssetsInScope";
 import TransferActions from "./assets/TransferActions";
 import { Button } from "@/components/ui/button";
+import { mapPortfolioToAsset } from "../utils/assetMappings";
 
 interface AssetSelectionProps {
   assetsInScope: Asset[];
@@ -20,10 +21,22 @@ const AssetSelection: React.FC<AssetSelectionProps> = ({
   onAssetToggle,
   onNext
 }) => {
+  // Set all institutions and legal entities as expanded by default
   const [expandedInstitutions, setExpandedInstitutions] = useState<string[]>([]);
   const [expandedLegalEntities, setExpandedLegalEntities] = useState<string[]>([]);
   const [selectedAssets, setSelectedAssets] = useState<Asset[]>([]);
   const [selectedAssetsForRemoval, setSelectedAssetsForRemoval] = useState<Asset[]>([]);
+  
+  // Set all institutions and legal entities expanded by default on mount
+  useEffect(() => {
+    const institutionIds = mockPortfoliosByInstitution.map(inst => inst.id);
+    const legalEntityIds = mockPortfoliosByInstitution.flatMap(inst => 
+      inst.legalEntities.map(le => le.id)
+    );
+    
+    setExpandedInstitutions(institutionIds);
+    setExpandedLegalEntities(legalEntityIds);
+  }, []);
   
   const totalValue = assetsInScope.reduce((total, asset) => total + asset.value, 0);
 
@@ -75,43 +88,51 @@ const AssetSelection: React.FC<AssetSelectionProps> = ({
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col md:flex-row gap-6">
-        <div className="md:w-5/12">
-          <AvailableAssets
-            institutions={mockPortfoliosByInstitution}
-            expandedInstitutions={expandedInstitutions}
-            expandedLegalEntities={expandedLegalEntities}
-            selectedAssets={selectedAssets}
-            assetsOutOfScope={assetsOutOfScope}
-            toggleInstitution={toggleInstitution}
-            toggleLegalEntity={toggleLegalEntity}
-            toggleAssetSelection={toggleAssetSelection}
-          />
-        </div>
+      <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+        <h2 className="text-xl font-semibold mb-4">Asset Selection</h2>
+        <p className="text-gray-600 mb-6">
+          Select the assets you want to include in your investment strategy. You can add or remove assets as needed.
+        </p>
         
-        <div className="md:w-2/12 flex justify-center">
-          <TransferActions
-            moveAssetsToScope={moveAssetsToScope}
-            removeAssetsFromScope={removeAssetsFromScope}
-            selectedAssetsCount={selectedAssets.length}
-            selectedAssetsForRemovalCount={selectedAssetsForRemoval.length}
-          />
-        </div>
-        
-        <div className="md:w-5/12">
-          <AssetsInScope
-            assetsInScope={assetsInScope}
-            selectedAssetsForRemoval={selectedAssetsForRemoval}
-            toggleAssetForRemoval={toggleAssetForRemoval}
-            totalValue={totalValue}
-          />
+        <div className="flex flex-col md:flex-row gap-6">
+          <div className="md:w-5/12">
+            <AvailableAssets
+              institutions={mockPortfoliosByInstitution}
+              expandedInstitutions={expandedInstitutions}
+              expandedLegalEntities={expandedLegalEntities}
+              selectedAssets={selectedAssets}
+              assetsOutOfScope={assetsOutOfScope}
+              toggleInstitution={toggleInstitution}
+              toggleLegalEntity={toggleLegalEntity}
+              toggleAssetSelection={toggleAssetSelection}
+            />
+          </div>
+          
+          <div className="md:w-2/12 flex justify-center my-4 md:my-0">
+            <TransferActions
+              moveAssetsToScope={moveAssetsToScope}
+              removeAssetsFromScope={removeAssetsFromScope}
+              selectedAssetsCount={selectedAssets.length}
+              selectedAssetsForRemovalCount={selectedAssetsForRemoval.length}
+            />
+          </div>
+          
+          <div className="md:w-5/12">
+            <AssetsInScope
+              assetsInScope={assetsInScope}
+              selectedAssetsForRemoval={selectedAssetsForRemoval}
+              toggleAssetForRemoval={toggleAssetForRemoval}
+              totalValue={totalValue}
+            />
+          </div>
         </div>
       </div>
       
-      <div className="flex justify-end mt-8">
+      <div className="flex justify-end mt-4">
         <Button 
           onClick={onNext}
           disabled={assetsInScope.length === 0}
+          className="px-6"
         >
           Continue
         </Button>

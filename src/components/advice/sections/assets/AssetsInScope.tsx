@@ -18,10 +18,10 @@ const AssetsInScope: React.FC<AssetsInScopeProps> = ({
   totalValue
 }) => {
   return (
-    <div className="border rounded-md p-4 h-full">
+    <div className="border rounded-lg shadow-sm p-4 h-full bg-white">
       <h3 className="text-lg font-medium mb-4">Assets in Scope</h3>
       
-      <ScrollArea className="h-[360px] pr-4">
+      <ScrollArea className="h-[400px] pr-4">
         <div className="space-y-2">
           {assetsInScope.length > 0 ? (
             assetsInScope.map(asset => {
@@ -30,14 +30,19 @@ const AssetsInScope: React.FC<AssetsInScopeProps> = ({
               return (
                 <div 
                   key={asset.id} 
-                  className={`flex items-center justify-between p-3 border border-gray-200 rounded-md cursor-pointer hover:bg-blue-50/30 ${isSelected ? 'bg-blue-50' : ''}`}
+                  className={`flex items-center justify-between p-3 border border-gray-200 rounded-md cursor-pointer transition-colors 
+                             hover:bg-blue-50/50 ${isSelected ? 'bg-blue-50' : 'bg-white'}`}
                   onClick={() => toggleAssetForRemoval(asset)}
                 >
-                  <div>
+                  <div className="flex-grow">
                     <div className="font-medium">{asset.name}</div>
                     <div className="text-sm text-gray-500">
-                      <div>{asset.institution}</div>
-                      <div>
+                      <div className="flex items-center gap-2">
+                        <span>{asset.institution}</span>
+                        <span className="w-1.5 h-1.5 bg-gray-300 rounded-full"></span>
+                        <span>{asset.type}</span>
+                      </div>
+                      <div className="mt-1 font-medium text-gray-700">
                         {new Intl.NumberFormat('en-US', {
                           style: 'currency',
                           currency: asset.currency
@@ -49,14 +54,15 @@ const AssetsInScope: React.FC<AssetsInScopeProps> = ({
                     type="checkbox"
                     checked={isSelected}
                     onChange={() => {}}
-                    className="h-4 w-4"
+                    className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                   />
                 </div>
               );
             })
           ) : (
-            <div className="text-center py-12 text-gray-500">
-              No assets added yet
+            <div className="flex flex-col items-center justify-center py-16 text-gray-500 bg-gray-50 rounded-md border border-dashed border-gray-300">
+              <p className="mb-2">No assets added yet</p>
+              <p className="text-sm">Select assets from the left panel and click "Add" to include them in your scope.</p>
             </div>
           )}
         </div>

@@ -16,18 +16,20 @@ const AdviceInterface: React.FC = () => {
   } = useAdvice();
 
   return (
-    <div className="max-w-7xl mx-auto py-6 px-4 w-full">
-      <AdviceHeader activeTab={activeTab} setActiveTab={setActiveTab} />
-      <div className="mt-6">
-        <AdviceContent 
-          activeTab={activeTab}
-          adviceState={adviceState}
-          onMandateTypeChange={handleMandateTypeChange}
-          onBankSelection={handleBankSelection}
-          onAssetToggle={handleAssetToggle}
-          onSubmit={handleSubmit}
-          setActiveTab={setActiveTab}
-        />
+    <div className="min-h-screen py-12 bg-gradient-to-b from-gray-50/30 to-white">
+      <div className="max-w-4xl mx-auto">
+        <AdviceHeader activeTab={activeTab} setActiveTab={setActiveTab} />
+        <div className="mt-6">
+          <AdviceContent 
+            activeTab={activeTab}
+            adviceState={adviceState}
+            onMandateTypeChange={handleMandateTypeChange}
+            onBankSelection={handleBankSelection}
+            onAssetToggle={handleAssetToggle}
+            onSubmit={handleSubmit}
+            setActiveTab={setActiveTab}
+          />
+        </div>
       </div>
     </div>
   );

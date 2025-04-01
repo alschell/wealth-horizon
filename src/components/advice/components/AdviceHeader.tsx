@@ -2,6 +2,7 @@
 import React from "react";
 import { CheckIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
 
 interface AdviceHeaderProps {
   activeTab: string;
@@ -17,8 +18,15 @@ const AdviceHeader: React.FC<AdviceHeaderProps> = ({ activeTab, setActiveTab }) 
   ];
 
   return (
-    <div className="space-y-8">
-      <h1 className="text-3xl font-semibold text-center">New Advice Mandate</h1>
+    <header className="max-w-4xl mx-auto py-8">
+      <motion.div 
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="mb-10 text-center"
+      >
+        <h1 className="text-3xl font-bold text-black mb-8">New Advice Mandate</h1>
+      </motion.div>
       
       <div className="mb-8">
         {/* Desktop view */}
@@ -111,7 +119,7 @@ const AdviceHeader: React.FC<AdviceHeaderProps> = ({ activeTab, setActiveTab }) 
           </div>
         </div>
       </div>
-    </div>
+    </header>
   );
 };
 

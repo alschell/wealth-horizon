@@ -87,48 +87,45 @@ const AssetSelection: React.FC<AssetSelectionProps> = ({
   };
 
   return (
-    <div className="space-y-8 max-w-[2600px] mx-auto px-4">
-      <div className="bg-white p-10 rounded-xl shadow-lg border border-gray-200">
-        <h2 className="text-2xl font-semibold mb-4">Asset Selection</h2>
-        <p className="text-gray-600 mb-8">
-          Select the assets you want to include in your investment strategy. You can add or remove assets as needed.
-        </p>
+    <div className="space-y-8 max-w-[2600px] mx-auto">
+      <p className="text-gray-600 mb-8">
+        Select the assets you want to include in your investment strategy. You can add or remove assets as needed.
+      </p>
+      
+      <div className="flex flex-col md:flex-row gap-6">
+        <div className="md:w-[48%]">
+          <AvailableAssets
+            institutions={mockPortfoliosByInstitution}
+            expandedInstitutions={expandedInstitutions}
+            expandedLegalEntities={expandedLegalEntities}
+            selectedAssets={selectedAssets}
+            assetsOutOfScope={assetsOutOfScope}
+            toggleInstitution={toggleInstitution}
+            toggleLegalEntity={toggleLegalEntity}
+            toggleAssetSelection={toggleAssetSelection}
+          />
+        </div>
         
-        <div className="flex flex-col md:flex-row gap-6">
-          <div className="md:w-[48%]">
-            <AvailableAssets
-              institutions={mockPortfoliosByInstitution}
-              expandedInstitutions={expandedInstitutions}
-              expandedLegalEntities={expandedLegalEntities}
-              selectedAssets={selectedAssets}
-              assetsOutOfScope={assetsOutOfScope}
-              toggleInstitution={toggleInstitution}
-              toggleLegalEntity={toggleLegalEntity}
-              toggleAssetSelection={toggleAssetSelection}
-            />
-          </div>
-          
-          <div className="md:w-[4%] flex justify-center items-center my-4 md:my-0">
-            <TransferActions
-              moveAssetsToScope={moveAssetsToScope}
-              removeAssetsFromScope={removeAssetsFromScope}
-              selectedAssetsCount={selectedAssets.length}
-              selectedAssetsForRemovalCount={selectedAssetsForRemoval.length}
-            />
-          </div>
-          
-          <div className="md:w-[48%]">
-            <AssetsInScope
-              assetsInScope={assetsInScope}
-              selectedAssetsForRemoval={selectedAssetsForRemoval}
-              toggleAssetForRemoval={toggleAssetForRemoval}
-              totalValue={totalValue}
-            />
-          </div>
+        <div className="md:w-[4%] flex justify-center items-center my-4 md:my-0">
+          <TransferActions
+            moveAssetsToScope={moveAssetsToScope}
+            removeAssetsFromScope={removeAssetsFromScope}
+            selectedAssetsCount={selectedAssets.length}
+            selectedAssetsForRemovalCount={selectedAssetsForRemoval.length}
+          />
+        </div>
+        
+        <div className="md:w-[48%]">
+          <AssetsInScope
+            assetsInScope={assetsInScope}
+            selectedAssetsForRemoval={selectedAssetsForRemoval}
+            toggleAssetForRemoval={toggleAssetForRemoval}
+            totalValue={totalValue}
+          />
         </div>
       </div>
       
-      <div className="flex justify-end mt-8 mb-16 px-4">
+      <div className="flex justify-end mt-8 mb-16">
         <Button 
           onClick={onNext}
           disabled={assetsInScope.length === 0}

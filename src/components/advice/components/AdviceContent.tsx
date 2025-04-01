@@ -66,16 +66,6 @@ const AdviceContent: React.FC<AdviceContentProps> = ({
               onAssetToggle={onAssetToggle}
               onNext={() => handleNext("assets")}
             />
-            
-            <div className="flex justify-between mt-8">
-              <div className="flex-1"></div>
-              <Button 
-                onClick={() => handleNext("assets")}
-                disabled={adviceState.assetsInScope.length === 0}
-              >
-                Continue
-              </Button>
-            </div>
           </>
         )}
 

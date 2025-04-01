@@ -19,10 +19,10 @@ const AssetsInScope: React.FC<AssetsInScopeProps> = ({
   totalValue
 }) => {
   return (
-    <Card className="rounded-xl shadow-lg p-8 h-[650px] bg-white">
+    <Card className="rounded-xl shadow-lg p-8 h-[700px] bg-white">
       <h3 className="text-xl font-semibold mb-6">Assets in Scope</h3>
       
-      <ScrollArea className="h-[460px] pr-4">
+      <ScrollArea className="h-[510px] pr-4">
         <div className="space-y-4">
           {assetsInScope.length > 0 ? (
             assetsInScope.map(asset => {

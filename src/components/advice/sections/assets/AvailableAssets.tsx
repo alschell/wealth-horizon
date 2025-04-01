@@ -43,10 +43,10 @@ const AvailableAssets: React.FC<AvailableAssetsProps> = ({
   };
 
   return (
-    <div className="border rounded-xl shadow-lg p-8 h-[650px] bg-white">
+    <div className="border rounded-xl shadow-lg p-8 h-[700px] bg-white">
       <h3 className="text-xl font-semibold mb-6">Available Assets</h3>
       
-      <ScrollArea className="h-[560px] pr-4">
+      <ScrollArea className="h-[610px] pr-4">
         <div className="space-y-5">
           {institutions.map(institution => (
             <div key={institution.id} className="border border-gray-200 rounded-xl overflow-hidden shadow-sm">

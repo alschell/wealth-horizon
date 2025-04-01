@@ -18,7 +18,7 @@ const AdviceHeader: React.FC<AdviceHeaderProps> = ({ activeTab, setActiveTab }) 
 
   return (
     <div className="space-y-8">
-      <h1 className="text-3xl font-semibold">New Advice Mandate</h1>
+      <h1 className="text-3xl font-semibold text-center">New Advice Mandate</h1>
       
       <div className="mb-8">
         {/* Desktop view */}

@@ -97,33 +97,25 @@ const AdviceContent: React.FC<AdviceContentProps> = ({
           </Button>
         )}
         
-        <div className={activeTab === "assets" ? "w-full" : "ml-auto"}>
-          {activeTab === "assets" && (
+        {activeTab === "assets" && (
+          <div className="flex justify-end w-full">
             <Button 
               onClick={() => handleNext("assets")}
               disabled={adviceState.assetsInScope.length === 0}
             >
               Continue
             </Button>
-          )}
+          </div>
+        )}
           
-          {activeTab === "mandate" && (
-            <Button 
-              onClick={() => handleNext("mandate")}
-            >
-              Continue
-            </Button>
-          )}
-          
-          {activeTab === "advisor" && (
-            <Button 
-              onClick={() => handleNext("advisor")}
-              disabled={!adviceState.selectedBank}
-            >
-              Continue
-            </Button>
-          )}
-        </div>
+        {activeTab === "advisor" && (
+          <Button 
+            onClick={() => handleNext("advisor")}
+            disabled={!adviceState.selectedBank}
+          >
+            Continue
+          </Button>
+        )}
       </div>
     </>
   );

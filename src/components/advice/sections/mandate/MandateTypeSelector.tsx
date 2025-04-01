@@ -1,7 +1,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { Check, ShieldCheck, LightbulbIcon } from "lucide-react";
+import { Check, ShieldCheck, Lightbulb } from "lucide-react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { MandateType } from "../../types";
@@ -88,7 +88,7 @@ const MandateTypeSelector: React.FC<MandateTypeSelectorProps> = ({
         >
           <div className="flex items-center mb-4">
             <div className="bg-amber-100 p-3 rounded-full mr-4">
-              <LightbulbIcon className="h-6 w-6 text-amber-600" />
+              <Lightbulb className="h-6 w-6 text-amber-600" />
             </div>
             <h3 className="text-xl font-medium">Advisory</h3>
             {mandateType === "advisory" && (

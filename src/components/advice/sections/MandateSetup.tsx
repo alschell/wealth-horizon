@@ -21,7 +21,7 @@ const MandateSetup: React.FC<MandateSetupProps> = ({
       <FormLayout>
         <div className="space-y-6">
           <div className="space-y-2">
-            <h2 className="text-2xl font-semibold">How would you like your assets managed?</h2>
+            <h2 className="text-2xl font-semibold">Mandate</h2>
             <p className="text-gray-500">Choose the type of management that best fits your needs</p>
           </div>
           
@@ -30,7 +30,7 @@ const MandateSetup: React.FC<MandateSetupProps> = ({
             onChange={onMandateTypeChange}
           />
           
-          <div className="pt-4">
+          <div className="pt-4 flex justify-end">
             <Button onClick={onNext} className="w-full md:w-auto">
               Continue
             </Button>

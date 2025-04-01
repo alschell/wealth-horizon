@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Check, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -147,7 +146,7 @@ const AdviceReview: React.FC<AdviceReviewProps> = ({ adviceState, onSubmit }) =>
           className="bg-black hover:bg-gray-800 text-white flex items-center gap-2 px-6"
         >
           <Check className="h-4 w-4" />
-          Confirm Advice Setup
+          Confirm
         </Button>
       </div>
     </div>

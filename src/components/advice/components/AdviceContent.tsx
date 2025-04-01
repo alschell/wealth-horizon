@@ -6,6 +6,7 @@ import AssetSelection from "../sections/AssetSelection";
 import AdviceReview from "../sections/AdviceReview";
 import BankSelector from "../sections/BankSelector";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 
 interface AdviceContentProps {
   activeTab: string;
@@ -89,44 +90,48 @@ const AdviceContent: React.FC<AdviceContentProps> = ({
         )}
       </div>
 
-      <div className="flex justify-between mt-8">
-        {activeTab !== "assets" && (
-          <Button 
-            variant="outline" 
-            onClick={() => handleBack(activeTab)}
-          >
-            Back
-          </Button>
-        )}
-        
-        {activeTab === "assets" && (
-          <div className="flex justify-end w-full">
-            <Button 
-              onClick={() => handleNext("assets")}
-              disabled={adviceState.assetsInScope.length === 0}
-            >
-              Continue
-            </Button>
-          </div>
-        )}
+      {activeTab !== "review" && (
+        <Card className="p-4 mt-8">
+          <div className="flex justify-between">
+            {activeTab !== "assets" && (
+              <Button 
+                variant="outline" 
+                onClick={() => handleBack(activeTab)}
+              >
+                Back
+              </Button>
+            )}
+            
+            {activeTab === "assets" && (
+              <div className="flex justify-end w-full">
+                <Button 
+                  onClick={() => handleNext("assets")}
+                  disabled={adviceState.assetsInScope.length === 0}
+                >
+                  Continue
+                </Button>
+              </div>
+            )}
 
-        {activeTab === "mandate" && (
-          <div className="flex justify-end flex-1">
-            <Button onClick={() => handleNext("mandate")}>
-              Continue
-            </Button>
+            {activeTab === "mandate" && (
+              <div className="flex justify-end flex-1">
+                <Button onClick={() => handleNext("mandate")}>
+                  Continue
+                </Button>
+              </div>
+            )}
+              
+            {activeTab === "advisor" && (
+              <Button 
+                onClick={() => handleNext("advisor")}
+                disabled={!adviceState.selectedBank}
+              >
+                Continue
+              </Button>
+            )}
           </div>
-        )}
-          
-        {activeTab === "advisor" && (
-          <Button 
-            onClick={() => handleNext("advisor")}
-            disabled={!adviceState.selectedBank}
-          >
-            Continue
-          </Button>
-        )}
-      </div>
+        </Card>
+      )}
     </>
   );
 };

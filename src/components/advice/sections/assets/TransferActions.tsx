@@ -23,21 +23,19 @@ const TransferActions: React.FC<TransferActionsProps> = ({
           onClick={moveAssetsToScope}
           disabled={selectedAssetsCount === 0}
           variant="outline"
-          className="flex items-center gap-2 px-4 py-2"
+          className="flex items-center justify-center w-10 h-10 rounded-full"
           title="Add to scope"
         >
-          <span>Add</span>
           <ArrowRight className="h-4 w-4" />
         </Button>
         <Button 
           onClick={removeAssetsFromScope}
           disabled={selectedAssetsForRemovalCount === 0}
           variant="outline"
-          className="flex items-center gap-2 px-4 py-2"
+          className="flex items-center justify-center w-10 h-10 rounded-full"
           title="Remove from scope"
         >
           <ArrowLeft className="h-4 w-4" />
-          <span>Remove</span>
         </Button>
       </div>
     </div>

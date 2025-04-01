@@ -95,7 +95,7 @@ const AssetSelection: React.FC<AssetSelectionProps> = ({
         </p>
         
         <div className="flex flex-col md:flex-row gap-6">
-          <div className="md:w-5/12">
+          <div className="md:w-[45%]">
             <AvailableAssets
               institutions={mockPortfoliosByInstitution}
               expandedInstitutions={expandedInstitutions}
@@ -108,7 +108,7 @@ const AssetSelection: React.FC<AssetSelectionProps> = ({
             />
           </div>
           
-          <div className="md:w-2/12 flex justify-center my-4 md:my-0">
+          <div className="md:w-[10%] flex justify-center my-4 md:my-0">
             <TransferActions
               moveAssetsToScope={moveAssetsToScope}
               removeAssetsFromScope={removeAssetsFromScope}
@@ -117,7 +117,7 @@ const AssetSelection: React.FC<AssetSelectionProps> = ({
             />
           </div>
           
-          <div className="md:w-5/12">
+          <div className="md:w-[45%]">
             <AssetsInScope
               assetsInScope={assetsInScope}
               selectedAssetsForRemoval={selectedAssetsForRemoval}

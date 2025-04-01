@@ -17,49 +17,28 @@ const TransferActions: React.FC<TransferActionsProps> = ({
   selectedAssetsForRemovalCount
 }) => {
   return (
-    <>
-      {/* Desktop view */}
-      <div className="hidden md:flex flex-col items-center justify-center">
-        <div className="space-y-4">
-          <Button 
-            onClick={moveAssetsToScope}
-            disabled={selectedAssetsCount === 0}
-            variant="outline"
-            className="w-12 h-12 p-0 rounded-full"
-          >
-            <ArrowRight className="h-5 w-5" />
-          </Button>
-          <Button 
-            onClick={removeAssetsFromScope}
-            disabled={selectedAssetsForRemovalCount === 0}
-            variant="outline"
-            className="w-12 h-12 p-0 rounded-full"
-          >
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
-        </div>
-      </div>
-      
-      {/* Mobile view */}
-      <div className="flex md:hidden justify-center space-x-4 my-4">
+    <div className="flex flex-col items-center justify-center h-full">
+      <div className="space-y-4">
         <Button 
           onClick={moveAssetsToScope}
           disabled={selectedAssetsCount === 0}
           variant="outline"
-          className="w-12 h-12 p-0 rounded-full"
+          className="w-10 h-10 p-0 rounded-full"
+          title="Add to scope"
         >
-          <ArrowRight className="h-5 w-5" />
+          <ArrowRight className="h-4 w-4" />
         </Button>
         <Button 
           onClick={removeAssetsFromScope}
           disabled={selectedAssetsForRemovalCount === 0}
           variant="outline"
-          className="w-12 h-12 p-0 rounded-full"
+          className="w-10 h-10 p-0 rounded-full"
+          title="Remove from scope"
         >
-          <ArrowLeft className="h-5 w-5" />
+          <ArrowLeft className="h-4 w-4" />
         </Button>
       </div>
-    </>
+    </div>
   );
 };
 

@@ -18,7 +18,7 @@ const AssetsInScope: React.FC<AssetsInScopeProps> = ({
   totalValue
 }) => {
   return (
-    <div className="border rounded-md p-4">
+    <div className="border rounded-md p-4 h-full">
       <h3 className="text-lg font-medium mb-4">Assets in Scope</h3>
       
       <ScrollArea className="h-[360px] pr-4">
@@ -30,20 +30,19 @@ const AssetsInScope: React.FC<AssetsInScopeProps> = ({
               return (
                 <div 
                   key={asset.id} 
-                  className={`flex items-center justify-between p-3 border border-gray-200 rounded-md ${isSelected ? 'bg-blue-50' : ''}`}
+                  className={`flex items-center justify-between p-3 border border-gray-200 rounded-md cursor-pointer hover:bg-blue-50/30 ${isSelected ? 'bg-blue-50' : ''}`}
                   onClick={() => toggleAssetForRemoval(asset)}
                 >
                   <div>
                     <div className="font-medium">{asset.name}</div>
-                    <div className="text-sm text-gray-500 flex flex-col sm:flex-row sm:gap-2">
-                      <span>{asset.institution}</span>
-                      <span className="hidden sm:inline">•</span>
-                      <span>
+                    <div className="text-sm text-gray-500">
+                      <div>{asset.institution}</div>
+                      <div>
                         {new Intl.NumberFormat('en-US', {
                           style: 'currency',
                           currency: asset.currency
                         }).format(asset.value)}
-                      </span>
+                      </div>
                     </div>
                   </div>
                   <input 
@@ -56,16 +55,18 @@ const AssetsInScope: React.FC<AssetsInScopeProps> = ({
               );
             })
           ) : (
-            <div className="text-center py-8 text-gray-500">
+            <div className="text-center py-12 text-gray-500">
               No assets added yet
             </div>
           )}
         </div>
       </ScrollArea>
       
-      <div className="mt-6 pt-4 border-t">
-        <AssetSummary assetsInScope={assetsInScope} totalValue={totalValue} />
-      </div>
+      {assetsInScope.length > 0 && (
+        <div className="mt-4 pt-4 border-t">
+          <AssetSummary assetsInScope={assetsInScope} totalValue={totalValue} />
+        </div>
+      )}
     </div>
   );
 };

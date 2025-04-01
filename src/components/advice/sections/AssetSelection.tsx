@@ -5,6 +5,7 @@ import { mockPortfoliosByInstitution } from "@/components/trading/data/instituti
 import AvailableAssets from "./assets/AvailableAssets";
 import AssetsInScope from "./assets/AssetsInScope";
 import TransferActions from "./assets/TransferActions";
+import { Button } from "@/components/ui/button";
 
 interface AssetSelectionProps {
   assetsInScope: Asset[];
@@ -73,35 +74,47 @@ const AssetSelection: React.FC<AssetSelectionProps> = ({
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      {/* Left side - Available assets */}
-      <AvailableAssets
-        institutions={mockPortfoliosByInstitution}
-        expandedInstitutions={expandedInstitutions}
-        expandedLegalEntities={expandedLegalEntities}
-        selectedAssets={selectedAssets}
-        assetsOutOfScope={assetsOutOfScope}
-        toggleInstitution={toggleInstitution}
-        toggleLegalEntity={toggleLegalEntity}
-        toggleAssetSelection={toggleAssetSelection}
-      />
+    <div className="space-y-6">
+      <div className="flex flex-col md:flex-row gap-6">
+        <div className="md:w-5/12">
+          <AvailableAssets
+            institutions={mockPortfoliosByInstitution}
+            expandedInstitutions={expandedInstitutions}
+            expandedLegalEntities={expandedLegalEntities}
+            selectedAssets={selectedAssets}
+            assetsOutOfScope={assetsOutOfScope}
+            toggleInstitution={toggleInstitution}
+            toggleLegalEntity={toggleLegalEntity}
+            toggleAssetSelection={toggleAssetSelection}
+          />
+        </div>
+        
+        <div className="md:w-2/12 flex justify-center">
+          <TransferActions
+            moveAssetsToScope={moveAssetsToScope}
+            removeAssetsFromScope={removeAssetsFromScope}
+            selectedAssetsCount={selectedAssets.length}
+            selectedAssetsForRemovalCount={selectedAssetsForRemoval.length}
+          />
+        </div>
+        
+        <div className="md:w-5/12">
+          <AssetsInScope
+            assetsInScope={assetsInScope}
+            selectedAssetsForRemoval={selectedAssetsForRemoval}
+            toggleAssetForRemoval={toggleAssetForRemoval}
+            totalValue={totalValue}
+          />
+        </div>
+      </div>
       
-      {/* Middle - Action buttons */}
-      <TransferActions
-        moveAssetsToScope={moveAssetsToScope}
-        removeAssetsFromScope={removeAssetsFromScope}
-        selectedAssetsCount={selectedAssets.length}
-        selectedAssetsForRemovalCount={selectedAssetsForRemoval.length}
-      />
-      
-      {/* Right side - In scope assets */}
-      <div className="md:col-start-2 md:row-start-1">
-        <AssetsInScope
-          assetsInScope={assetsInScope}
-          selectedAssetsForRemoval={selectedAssetsForRemoval}
-          toggleAssetForRemoval={toggleAssetForRemoval}
-          totalValue={totalValue}
-        />
+      <div className="flex justify-end mt-8">
+        <Button 
+          onClick={onNext}
+          disabled={assetsInScope.length === 0}
+        >
+          Continue
+        </Button>
       </div>
     </div>
   );

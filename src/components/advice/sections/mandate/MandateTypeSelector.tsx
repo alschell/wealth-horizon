@@ -19,11 +19,15 @@ const MandateTypeSelector: React.FC<MandateTypeSelectorProps> = ({
     <RadioGroup 
       value={mandateType} 
       onValueChange={(value) => onChange(value as MandateType)}
-      className="grid grid-cols-1 md:grid-cols-2 gap-4"
+      className="grid grid-cols-1 md:grid-cols-2 gap-6"
     >
-      <div className={`border rounded-lg p-4 cursor-pointer transition-all ${
-        mandateType === "discretionary" ? "border-black bg-gray-50" : "border-gray-200 hover:bg-gray-50"
-      }`}>
+      <div 
+        className={`relative border-2 rounded-xl p-6 cursor-pointer transition-all hover:shadow-md ${
+          mandateType === "discretionary" 
+            ? "border-black bg-gray-50" 
+            : "border-gray-200 hover:bg-gray-50"
+        }`}
+      >
         <RadioGroupItem 
           value="discretionary" 
           id="discretionary" 
@@ -33,49 +37,46 @@ const MandateTypeSelector: React.FC<MandateTypeSelectorProps> = ({
           htmlFor="discretionary" 
           className="cursor-pointer flex flex-col h-full"
         >
-          <div className="flex items-start mb-3">
-            <div className="shrink-0 mr-3">
-              <div className="bg-blue-100 p-2 rounded-full">
-                <ShieldCheck className="h-6 w-6 text-blue-600" />
-              </div>
+          <div className="flex items-center mb-4">
+            <div className="bg-blue-100 p-3 rounded-full mr-4">
+              <ShieldCheck className="h-6 w-6 text-blue-600" />
             </div>
-            <div className="flex-1">
-              <p className="font-medium text-lg mb-1">Discretionary Mandate</p>
-              <p className="text-sm text-gray-600">Bank manages your assets according to your investment profile and objectives</p>
-            </div>
+            <h3 className="text-xl font-medium">Discretionary</h3>
             {mandateType === "discretionary" && (
               <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
-                className="ml-2"
+                className="absolute top-4 right-4"
               >
-                <Check className="h-5 w-5 text-black" />
+                <div className="bg-black text-white p-1 rounded-full">
+                  <Check className="h-4 w-4" />
+                </div>
               </motion.div>
             )}
           </div>
 
-          <div className="mt-auto">
-            <div className="text-sm space-y-2">
-              <div className="flex items-center">
-                <Check className="h-4 w-4 text-green-600 mr-2" />
-                <span>Professional portfolio management</span>
-              </div>
-              <div className="flex items-center">
-                <Check className="h-4 w-4 text-green-600 mr-2" />
-                <span>Dedicated investment team</span>
-              </div>
-              <div className="flex items-center">
-                <Check className="h-4 w-4 text-green-600 mr-2" />
-                <span>Tactical asset allocation</span>
-              </div>
+          <p className="text-sm text-gray-600 mb-4">Bank manages your assets according to your profile</p>
+
+          <div className="mt-auto space-y-2 text-sm">
+            <div className="flex items-center">
+              <Check className="h-4 w-4 text-green-600 mr-2 shrink-0" />
+              <span>Professional portfolio management</span>
+            </div>
+            <div className="flex items-center">
+              <Check className="h-4 w-4 text-green-600 mr-2 shrink-0" />
+              <span>Tactical allocation by experts</span>
             </div>
           </div>
         </Label>
       </div>
 
-      <div className={`border rounded-lg p-4 cursor-pointer transition-all ${
-        mandateType === "advisory" ? "border-black bg-gray-50" : "border-gray-200 hover:bg-gray-50"
-      }`}>
+      <div 
+        className={`relative border-2 rounded-xl p-6 cursor-pointer transition-all hover:shadow-md ${
+          mandateType === "advisory" 
+            ? "border-black bg-gray-50" 
+            : "border-gray-200 hover:bg-gray-50"
+        }`}
+      >
         <RadioGroupItem 
           value="advisory" 
           id="advisory" 
@@ -85,41 +86,34 @@ const MandateTypeSelector: React.FC<MandateTypeSelectorProps> = ({
           htmlFor="advisory" 
           className="cursor-pointer flex flex-col h-full"
         >
-          <div className="flex items-start mb-3">
-            <div className="shrink-0 mr-3">
-              <div className="bg-amber-100 p-2 rounded-full">
-                <LightbulbIcon className="h-6 w-6 text-amber-600" />
-              </div>
+          <div className="flex items-center mb-4">
+            <div className="bg-amber-100 p-3 rounded-full mr-4">
+              <LightbulbIcon className="h-6 w-6 text-amber-600" />
             </div>
-            <div className="flex-1">
-              <p className="font-medium text-lg mb-1">Advisory Mandate</p>
-              <p className="text-sm text-gray-600">Receive recommendations but maintain final decision-making authority</p>
-            </div>
+            <h3 className="text-xl font-medium">Advisory</h3>
             {mandateType === "advisory" && (
               <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
-                className="ml-2"
+                className="absolute top-4 right-4"
               >
-                <Check className="h-5 w-5 text-black" />
+                <div className="bg-black text-white p-1 rounded-full">
+                  <Check className="h-4 w-4" />
+                </div>
               </motion.div>
             )}
           </div>
 
-          <div className="mt-auto">
-            <div className="text-sm space-y-2">
-              <div className="flex items-center">
-                <Check className="h-4 w-4 text-green-600 mr-2" />
-                <span>Personalized recommendations</span>
-              </div>
-              <div className="flex items-center">
-                <Check className="h-4 w-4 text-green-600 mr-2" />
-                <span>Maintain control over decisions</span>
-              </div>
-              <div className="flex items-center">
-                <Check className="h-4 w-4 text-green-600 mr-2" />
-                <span>Direct execution on platform</span>
-              </div>
+          <p className="text-sm text-gray-600 mb-4">Get recommendations but maintain control</p>
+
+          <div className="mt-auto space-y-2 text-sm">
+            <div className="flex items-center">
+              <Check className="h-4 w-4 text-green-600 mr-2 shrink-0" />
+              <span>Personalized recommendations</span>
+            </div>
+            <div className="flex items-center">
+              <Check className="h-4 w-4 text-green-600 mr-2 shrink-0" />
+              <span>Full decision-making authority</span>
             </div>
           </div>
         </Label>

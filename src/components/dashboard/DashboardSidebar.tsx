@@ -7,7 +7,8 @@ import {
   CreditCard,
   Bell,
   Users,
-  DollarSign
+  DollarSign,
+  LineChart
 } from "lucide-react";
 import {
   Sidebar,
@@ -33,7 +34,12 @@ const menuItems = [
   {
     title: "Trading",
     icon: TrendingUp,
-    path: "/dashboard/trading",
+    path: "/trading",
+  },
+  {
+    title: "Market Data",
+    icon: LineChart,
+    path: "/market-data",
   },
   {
     title: "Credit Facilities",

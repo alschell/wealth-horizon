@@ -3,10 +3,10 @@ import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { motion } from "framer-motion";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { riskMetricsData } from "./utils/riskUtils";
 import PortfolioRiskTab from "./tabs/PortfolioRiskTab";
 import RiskExposuresTab from "./exposures/RiskExposuresTab";
 import CorrelationTab from "./correlation/CorrelationTab";
-import { riskMetricsData, exposureRisksData, getRiskColor } from "./utils/riskUtils";
 
 const RiskAssessment = () => {
   const [activeTab, setActiveTab] = useState("portfolio");
@@ -36,10 +36,7 @@ const RiskAssessment = () => {
           </TabsContent>
           
           <TabsContent value="exposures" className="mt-0">
-            <RiskExposuresTab 
-              exposureRisks={exposureRisksData}
-              getRiskColor={getRiskColor}
-            />
+            <RiskExposuresTab />
           </TabsContent>
           
           <TabsContent value="correlation" className="mt-0">

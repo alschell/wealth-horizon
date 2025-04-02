@@ -1,29 +1,28 @@
 
 import React from "react";
-import RiskExposureItem from "./RiskExposureItem";
+import { AlertCircle } from "lucide-react";
+import { Progress } from "@/components/ui/progress";
+import { exposureRisksData, getRiskColor } from "../utils/riskUtils";
 
-type ExposureRisk = {
-  name: string;
-  value: number;
-  warning: string | null;
-};
-
-type RiskExposuresTabProps = {
-  exposureRisks: ExposureRisk[];
-  getRiskColor: (value: number) => string;
-};
-
-const RiskExposuresTab = ({ exposureRisks, getRiskColor }: RiskExposuresTabProps) => {
+const RiskExposuresTab = () => {
   return (
     <div className="space-y-6">
-      {exposureRisks.map((risk) => (
-        <RiskExposureItem
-          key={risk.name}
-          name={risk.name}
-          value={risk.value}
-          warning={risk.warning}
-          riskColor={getRiskColor(risk.value)}
-        />
+      {exposureRisksData.map((risk) => (
+        <div key={risk.name} className="space-y-1">
+          <div className="flex justify-between">
+            <div className="text-sm font-medium">{risk.name}</div>
+            <div className="text-sm font-medium">{risk.value}%</div>
+          </div>
+          <div className="relative w-full">
+            <Progress value={risk.value} className={`h-2 ${getRiskColor(risk.value)}`} />
+          </div>
+          {risk.warning && (
+            <div className="flex items-center mt-1 text-xs text-amber-600">
+              <AlertCircle className="h-3 w-3 mr-1" />
+              {risk.warning}
+            </div>
+          )}
+        </div>
       ))}
       
       <div className="mt-4 p-4 bg-gray-50 rounded-md border border-gray-200">

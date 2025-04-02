@@ -5,7 +5,7 @@ import WealthAnalysisHeader from "./components/WealthAnalysisHeader";
 import AssetAllocation from "./sections/AssetAllocation";
 import PerformanceAnalysis from "./sections/PerformanceAnalysis";
 import ScenarioSimulation from "./sections/ScenarioSimulation";
-import RiskAssessment from "./sections/RiskAssessment";
+import RiskAssessment from "./sections/risk-assessment/RiskAssessment";
 
 const WealthAnalysisInterface = () => {
   return (

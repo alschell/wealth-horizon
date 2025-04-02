@@ -1,8 +1,9 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import { Search } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -24,6 +25,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { formatCurrency } from "@/lib/utils";
+import BankCard from "./BankCard";
 
 // Define our form schema
 const formSchema = z.object({
@@ -48,6 +50,15 @@ interface NewTermDepositFormProps {
   bestRate?: { bank: string; currency: string; term: string; rate: number } | null;
 }
 
+// Bank options for selected currency
+const bankOptions = [
+  { id: "1", name: "JP Morgan Chase", rate: 4.10 },
+  { id: "2", name: "Credit Suisse", rate: 3.75 },
+  { id: "3", name: "HSBC Holdings", rate: 3.90 },
+  { id: "4", name: "UBS Group", rate: 3.80 },
+  { id: "5", name: "Goldman Sachs", rate: 4.05 },
+];
+
 const NewTermDepositForm: React.FC<NewTermDepositFormProps> = ({ bestRate }) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -60,19 +71,17 @@ const NewTermDepositForm: React.FC<NewTermDepositFormProps> = ({ bestRate }) => 
     },
   });
   
+  const [searchQuery, setSearchQuery] = useState("");
+  
   const watchBankSelection = form.watch("bankSelection");
   const watchCurrency = form.watch("currency");
   const watchTerm = form.watch("term");
   const watchAmount = form.watch("amount");
   
-  // Bank options for selected currency
-  const bankOptions = [
-    { id: "1", name: "JP Morgan Chase", rate: 4.10 },
-    { id: "2", name: "Credit Suisse", rate: 3.75 },
-    { id: "3", name: "HSBC Holdings", rate: 3.90 },
-    { id: "4", name: "UBS Group", rate: 3.80 },
-    { id: "5", name: "Goldman Sachs", rate: 4.05 },
-  ];
+  // Filter banks by search query
+  const filteredBanks = bankOptions.filter(bank => 
+    bank.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
   
   // Calculate estimated interest
   const selectedBank = 
@@ -86,6 +95,10 @@ const NewTermDepositForm: React.FC<NewTermDepositFormProps> = ({ bestRate }) => 
   const termInMonths = watchTerm === "3 months" ? 3 : 
                       watchTerm === "6 months" ? 6 : 12;
   const estimatedInterest = (watchAmount * (rate / 100) * termInMonths) / 12;
+
+  const handleBankSelect = (bankName: string) => {
+    form.setValue("bank", bankName);
+  };
   
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
@@ -95,7 +108,7 @@ const NewTermDepositForm: React.FC<NewTermDepositFormProps> = ({ bestRate }) => 
   
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
         <div className="flex gap-4">
           <FormField
             control={form.control}
@@ -192,38 +205,57 @@ const NewTermDepositForm: React.FC<NewTermDepositFormProps> = ({ bestRate }) => 
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Select Bank</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select bank" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {bankOptions.map(bank => (
-                      <SelectItem key={bank.id} value={bank.name}>
-                        {bank.name} - {bank.rate}%
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <FormControl>
+                  <div className="space-y-3">
+                    <div className="relative mb-4">
+                      <div className="relative">
+                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                        <Input
+                          placeholder="Search for a bank..."
+                          value={searchQuery}
+                          onChange={(e) => setSearchQuery(e.target.value)}
+                          className="pl-10"
+                        />
+                      </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-[300px] overflow-y-auto p-1">
+                      {filteredBanks.map((bank) => (
+                        <BankCard
+                          key={bank.id}
+                          bank={bank}
+                          isSelected={field.value === bank.name}
+                          onSelect={() => handleBankSelect(bank.name)}
+                        />
+                      ))}
+                    </div>
+                    
+                    {filteredBanks.length === 0 && (
+                      <p className="text-gray-500 text-center py-4">No banks found matching your search</p>
+                    )}
+                  </div>
+                </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
         )}
         
-        <div className="pt-4 border-t border-gray-200">
-          <div className="flex justify-between items-center">
-            <span className="text-sm font-medium">Estimated Interest:</span>
-            <span className="font-bold">{formatCurrency(estimatedInterest, watchCurrency)}</span>
-          </div>
-          <div className="flex justify-between items-center mt-2">
-            <span className="text-sm font-medium">Interest Rate:</span>
-            <span>{rate}%</span>
-          </div>
-          <div className="flex justify-between items-center mt-2">
-            <span className="text-sm font-medium">Total at Maturity:</span>
-            <span className="font-bold">{formatCurrency(watchAmount + estimatedInterest, watchCurrency)}</span>
+        <div className="mt-6 p-4 bg-gray-50 rounded-lg border">
+          <h3 className="font-medium mb-3">Deposit Summary</h3>
+          <div className="space-y-2">
+            <div className="flex justify-between items-center">
+              <span className="text-sm">Interest Rate:</span>
+              <span className="font-medium">{rate}%</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-sm">Estimated Interest:</span>
+              <span className="font-semibold text-green-600">{formatCurrency(estimatedInterest, watchCurrency)}</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-sm">Total at Maturity:</span>
+              <span className="font-semibold">{formatCurrency(watchAmount + estimatedInterest, watchCurrency)}</span>
+            </div>
           </div>
         </div>
         

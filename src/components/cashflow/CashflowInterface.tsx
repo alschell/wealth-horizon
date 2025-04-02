@@ -6,6 +6,7 @@ import CashflowOverview from "./sections/CashflowOverview";
 import LiquidityPlanner from "./sections/LiquidityPlanner";
 import TermDeposits from "./sections/TermDeposits";
 import RecurringPayments from "./sections/RecurringPayments";
+import { ChartBar, Calendar, Wallet, Coins } from "lucide-react";
 
 const CashflowInterface = () => {
   const [activeTab, setActiveTab] = useState("overview");
@@ -14,29 +15,45 @@ const CashflowInterface = () => {
     <div className="space-y-6">
       <CashflowHeader />
       
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-        <TabsList className="grid grid-cols-4 w-full max-w-3xl">
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="planner">Liquidity Planner</TabsTrigger>
-          <TabsTrigger value="recurring">Recurring Payments</TabsTrigger>
-          <TabsTrigger value="deposits">Term Deposits</TabsTrigger>
-        </TabsList>
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+        <div className="bg-white p-1.5 rounded-lg border shadow-sm">
+          <TabsList className="grid grid-cols-4 w-full">
+            <TabsTrigger value="overview" className="flex items-center gap-2 py-3">
+              <ChartBar className="h-4 w-4" />
+              <span className="hidden sm:inline">Overview</span>
+            </TabsTrigger>
+            <TabsTrigger value="planner" className="flex items-center gap-2 py-3">
+              <Calendar className="h-4 w-4" />
+              <span className="hidden sm:inline">Liquidity Planner</span>
+            </TabsTrigger>
+            <TabsTrigger value="recurring" className="flex items-center gap-2 py-3">
+              <Wallet className="h-4 w-4" />
+              <span className="hidden sm:inline">Recurring Payments</span>
+            </TabsTrigger>
+            <TabsTrigger value="deposits" className="flex items-center gap-2 py-3">
+              <Coins className="h-4 w-4" />
+              <span className="hidden sm:inline">Term Deposits</span>
+            </TabsTrigger>
+          </TabsList>
+        </div>
         
-        <TabsContent value="overview">
-          <CashflowOverview />
-        </TabsContent>
-        
-        <TabsContent value="planner">
-          <LiquidityPlanner />
-        </TabsContent>
-        
-        <TabsContent value="recurring">
-          <RecurringPayments />
-        </TabsContent>
-        
-        <TabsContent value="deposits">
-          <TermDeposits />
-        </TabsContent>
+        <div className="bg-white rounded-lg border shadow-sm p-6">
+          <TabsContent value="overview" className="mt-0 pt-0 animate-fade-in">
+            <CashflowOverview />
+          </TabsContent>
+          
+          <TabsContent value="planner" className="mt-0 pt-0 animate-fade-in">
+            <LiquidityPlanner />
+          </TabsContent>
+          
+          <TabsContent value="recurring" className="mt-0 pt-0 animate-fade-in">
+            <RecurringPayments />
+          </TabsContent>
+          
+          <TabsContent value="deposits" className="mt-0 pt-0 animate-fade-in">
+            <TermDeposits />
+          </TabsContent>
+        </div>
       </Tabs>
     </div>
   );

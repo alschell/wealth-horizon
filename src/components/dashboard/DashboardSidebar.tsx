@@ -9,7 +9,8 @@ import {
   Users,
   DollarSign,
   LineChart,
-  BarChart
+  BarChart,
+  Wallet
 } from "lucide-react";
 import {
   Sidebar,
@@ -36,6 +37,11 @@ const menuItems = [
     title: "Analyze Wealth",
     icon: BarChart,
     path: "/analyze-wealth",
+  },
+  {
+    title: "Cashflow",
+    icon: Wallet,
+    path: "/cashflow",
   },
   {
     title: "Trading",

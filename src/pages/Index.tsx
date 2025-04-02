@@ -52,6 +52,45 @@ const Index = () => {
               </Button>
             </Link>
           </div>
+          
+          <div className="bg-white rounded-lg shadow p-6 hover:shadow-md transition-shadow">
+            <h2 className="text-2xl font-bold mb-4">Cash Flow Management</h2>
+            <p className="text-gray-600 mb-6">
+              Monitor and optimize your liquid assets, manage recurring payments, and plan for future cash needs.
+            </p>
+            <Link to="/cashflow">
+              <Button className="w-full bg-black hover:bg-gray-800 text-white">
+                Manage Cash Flow
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
+          </div>
+          
+          <div className="bg-white rounded-lg shadow p-6 hover:shadow-md transition-shadow">
+            <h2 className="text-2xl font-bold mb-4">Wealth Analysis</h2>
+            <p className="text-gray-600 mb-6">
+              Analyze your wealth portfolio for performance, risk management, and future scenarios.
+            </p>
+            <Link to="/analyze-wealth">
+              <Button className="w-full bg-black hover:bg-gray-800 text-white">
+                Analyze Wealth
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
+          </div>
+          
+          <div className="bg-white rounded-lg shadow p-6 hover:shadow-md transition-shadow">
+            <h2 className="text-2xl font-bold mb-4">Dashboard</h2>
+            <p className="text-gray-600 mb-6">
+              Access your personalized overview of all your assets, accounts, and activities.
+            </p>
+            <Link to="/dashboard">
+              <Button className="w-full bg-black hover:bg-gray-800 text-white">
+                View Dashboard
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
+          </div>
         </div>
       </div>
     </div>

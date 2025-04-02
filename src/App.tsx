@@ -15,6 +15,7 @@ import Advice from "./pages/Advice";
 import MarketData from "./pages/MarketData";
 import AnalyzeWealth from "./pages/AnalyzeWealth";
 import Index from "./pages/Index";
+import CashflowManagement from "./pages/CashflowManagement";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -36,6 +37,7 @@ function App() {
                 <Route path="/advice" element={<Advice />} />
                 <Route path="/market-data" element={<MarketData />} />
                 <Route path="/analyze-wealth" element={<AnalyzeWealth />} />
+                <Route path="/cashflow" element={<CashflowManagement />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
               <Toaster />

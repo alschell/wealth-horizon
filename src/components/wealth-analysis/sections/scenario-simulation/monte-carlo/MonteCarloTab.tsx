@@ -39,7 +39,7 @@ const MonteCarloTab = () => {
         </div>
       </div>
 
-      <div className="h-80">
+      <div className="w-full h-[300px]">
         <MonteCarloChart data={monteCarloData} config={monteCarloConfig} />
       </div>
 

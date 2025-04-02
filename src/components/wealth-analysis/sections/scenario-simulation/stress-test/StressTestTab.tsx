@@ -16,7 +16,7 @@ const StressTestTab = () => {
         <Button variant="outline" size="sm">Custom Scenario</Button>
       </div>
 
-      <div className="h-80">
+      <div className="w-full h-[300px]">
         <StressTestChart data={stressTestData} config={stressTestConfig} />
       </div>
 

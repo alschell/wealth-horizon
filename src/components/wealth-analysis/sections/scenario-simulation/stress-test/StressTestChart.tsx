@@ -15,7 +15,7 @@ type StressTestChartProps = {
 
 const StressTestChart = ({ data, config }: StressTestChartProps) => {
   return (
-    <ChartContainer config={config}>
+    <ChartContainer config={config} className="w-full h-full">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart
           data={data}

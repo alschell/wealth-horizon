@@ -31,17 +31,19 @@ const RiskAssessment = () => {
           </div>
         </CardHeader>
         <CardContent>
-          <TabsContent value="portfolio" className="mt-0">
-            <PortfolioRiskTab riskMetrics={riskMetricsData} />
-          </TabsContent>
-          
-          <TabsContent value="exposures" className="mt-0">
-            <RiskExposuresTab />
-          </TabsContent>
-          
-          <TabsContent value="correlation" className="mt-0">
-            <CorrelationTab />
-          </TabsContent>
+          <Tabs value={activeTab} onValueChange={setActiveTab}>
+            <TabsContent value="portfolio" className="mt-0">
+              <PortfolioRiskTab riskMetrics={riskMetricsData} />
+            </TabsContent>
+            
+            <TabsContent value="exposures" className="mt-0">
+              <RiskExposuresTab />
+            </TabsContent>
+            
+            <TabsContent value="correlation" className="mt-0">
+              <CorrelationTab />
+            </TabsContent>
+          </Tabs>
         </CardContent>
       </Card>
     </motion.div>

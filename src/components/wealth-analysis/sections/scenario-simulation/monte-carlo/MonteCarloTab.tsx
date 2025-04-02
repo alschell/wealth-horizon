@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { generateMonteCarloData, monteCarloConfig } from "../utils/simulationData";
 import MonteCarloChart from "./MonteCarloChart";
+import AnalysisInsights from "../components/AnalysisInsights";
 
 const MonteCarloTab = () => {
   const [riskLevel, setRiskLevel] = useState([50]); // 0-100 risk level

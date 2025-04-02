@@ -8,7 +8,8 @@ import {
   Bell,
   Users,
   DollarSign,
-  LineChart
+  LineChart,
+  BarChart
 } from "lucide-react";
 import {
   Sidebar,
@@ -30,6 +31,11 @@ const menuItems = [
     title: "Wealth",
     icon: DollarSign,
     path: "/dashboard/wealth",
+  },
+  {
+    title: "Analyze Wealth",
+    icon: BarChart,
+    path: "/analyze-wealth",
   },
   {
     title: "Trading",

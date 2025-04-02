@@ -13,6 +13,7 @@ import Dashboard from "./pages/Dashboard";
 import Trading from "./pages/Trading";
 import Advice from "./pages/Advice";
 import MarketData from "./pages/MarketData";
+import AnalyzeWealth from "./pages/AnalyzeWealth";
 import Index from "./pages/Index";
 
 // Create a client
@@ -34,6 +35,7 @@ function App() {
                 <Route path="/trading" element={<Trading />} />
                 <Route path="/advice" element={<Advice />} />
                 <Route path="/market-data" element={<MarketData />} />
+                <Route path="/analyze-wealth" element={<AnalyzeWealth />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
               <Toaster />

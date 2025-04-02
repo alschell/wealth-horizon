@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { motion } from "framer-motion";
@@ -178,7 +177,9 @@ const RiskAssessment = () => {
                     <div className="text-sm font-medium">{risk.name}</div>
                     <div className="text-sm font-medium">{risk.value}%</div>
                   </div>
-                  <Progress value={risk.value} className="h-2" indicatorClassName={getRiskColor(risk.value)} />
+                  <div className="relative w-full">
+                    <Progress value={risk.value} className={`h-2 ${getRiskColor(risk.value)}`} />
+                  </div>
                   {risk.warning && (
                     <div className="flex items-center mt-1 text-xs text-amber-600">
                       <AlertCircle className="h-3 w-3 mr-1" />

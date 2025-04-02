@@ -20,7 +20,7 @@ export const riskMetricsData = [
     score: 12.4,
     unit: "%",
     change: "-0.8",
-    changeDirection: "down",
+    changeDirection: "down" as const,
     tooltip: "Standard deviation of returns"
   },
   {
@@ -28,7 +28,7 @@ export const riskMetricsData = [
     score: 18.2,
     unit: "%",
     change: "+1.5",
-    changeDirection: "up",
+    changeDirection: "up" as const,
     tooltip: "Maximum potential loss in adverse scenarios"
   },
   {
@@ -36,7 +36,7 @@ export const riskMetricsData = [
     score: 7.5,
     unit: "%",
     change: "+0.3",
-    changeDirection: "up",
+    changeDirection: "up" as const,
     tooltip: "Value at Risk - potential loss in 95% of scenarios"
   }
 ];

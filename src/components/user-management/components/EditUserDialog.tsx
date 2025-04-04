@@ -31,14 +31,27 @@ import {
 import { UserType, UserFormData } from "../types";
 import { useToast } from "@/hooks/use-toast";
 
+// Define the data access type to ensure it matches the expected values
+type DataAccessType = "Full" | "Limited" | "Read-only";
+
 const formSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
   email: z.string().email({ message: "Please enter a valid email address." }),
   role: z.enum(["admin", "member", "viewer"], {
     required_error: "Please select a role.",
   }),
-  dataAccess: z.enum(["Full", "Limited", "Read-only"], {
+  dataAccess: z.enum(["Full", "Limited", "Read-only"] as const, {
     required_error: "Please select data access level.",
+  }),
+  permissions: z.object({
+    dashboard: z.boolean().default(true),
+    wealth: z.boolean().default(true),
+    trading: z.boolean().default(true),
+    marketData: z.boolean().default(true),
+    cashflow: z.boolean().default(true),
+    analyzeWealth: z.boolean().default(true),
+    integrations: z.boolean().default(true),
+    settings: z.boolean().default(true),
   }),
 });
 
@@ -57,7 +70,17 @@ const EditUserDialog = ({ open, user, onClose, onSave }: EditUserDialogProps) =>
       name: user?.name || "",
       email: user?.email || "",
       role: (user?.role as "admin" | "member" | "viewer") || "member",
-      dataAccess: user?.dataAccess || "Limited",
+      dataAccess: (user?.dataAccess as DataAccessType) || "Limited",
+      permissions: user?.permissions || {
+        dashboard: true,
+        wealth: true,
+        trading: true,
+        marketData: true,
+        cashflow: true,
+        analyzeWealth: true,
+        integrations: true,
+        settings: true,
+      },
     },
   });
 
@@ -67,13 +90,14 @@ const EditUserDialog = ({ open, user, onClose, onSave }: EditUserDialogProps) =>
         name: user.name,
         email: user.email,
         role: user.role as "admin" | "member" | "viewer",
-        dataAccess: user.dataAccess,
+        dataAccess: user.dataAccess as DataAccessType,
+        permissions: user.permissions,
       });
     }
   }, [user, open, form]);
 
   const onSubmit = (data: z.infer<typeof formSchema>) => {
-    onSave(data);
+    onSave(data as UserFormData);
     toast({
       title: "User updated",
       description: `${data.name} has been successfully updated.`,

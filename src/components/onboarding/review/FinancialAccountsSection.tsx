@@ -14,7 +14,7 @@ const FinancialAccountsSection: React.FC<FinancialAccountsSectionProps> = ({
 }) => {
   return (
     <section className="space-y-3 border-b pb-4">
-      <ReviewSectionHeader title="Financial Accounts" stepIndex={4} />
+      <ReviewSectionHeader title="Financial Accounts" stepIndex={5} />
       {financialAccounts.length > 0 ? (
         <div className="space-y-2">
           {financialAccounts.map((account, index) => (

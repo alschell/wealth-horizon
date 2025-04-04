@@ -13,8 +13,8 @@ const OnboardingHeader = () => {
     { name: "Primary Contact", number: 2 },
     { name: "Address", number: 3 },
     { name: "Legal Documents", number: 4 },
-    { name: "Financial Data", number: 5 },
-    { name: "Beneficial Owners", number: 6 },
+    { name: "Beneficial Owners", number: 5 },
+    { name: "Financial Data", number: 6 },
     { name: "Review", number: 7 },
   ];
 

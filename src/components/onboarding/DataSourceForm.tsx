@@ -134,16 +134,16 @@ const DataSourceForm: React.FC = () => {
     }
 
     // Proceed to next step
-    setCurrentStep(5);
+    setCurrentStep(6);
     // Scroll to top before navigating to the next page
     window.scrollTo(0, 0);
-    navigate("/onboarding/beneficial-owners");
+    navigate("/onboarding/review");
   };
 
   const handleBack = () => {
     // Scroll to top before navigating to the previous page
     window.scrollTo(0, 0);
-    navigate("/onboarding/legal-documents");
+    navigate("/onboarding/beneficial-owners");
   };
 
   return (

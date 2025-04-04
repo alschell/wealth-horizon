@@ -27,8 +27,8 @@ const Onboarding = () => {
     else if (path === "/onboarding/primary-contact") setCurrentStep(1);
     else if (path === "/onboarding/address") setCurrentStep(2);
     else if (path === "/onboarding/legal-documents") setCurrentStep(3);
-    else if (path === "/onboarding/data-source") setCurrentStep(4);
-    else if (path === "/onboarding/beneficial-owners") setCurrentStep(5);
+    else if (path === "/onboarding/beneficial-owners") setCurrentStep(4);
+    else if (path === "/onboarding/data-source") setCurrentStep(5);
     else if (path === "/onboarding/review") setCurrentStep(6);
     else if (path === "/onboarding") setCurrentStep(0);
     
@@ -55,10 +55,10 @@ const Onboarding = () => {
         navigate("/onboarding/legal-documents");
         break;
       case 4:
-        navigate("/onboarding/data-source");
+        navigate("/onboarding/beneficial-owners");
         break;
       case 5:
-        navigate("/onboarding/beneficial-owners");
+        navigate("/onboarding/data-source");
         break;
       case 6:
         navigate("/onboarding/review");
@@ -79,9 +79,9 @@ const Onboarding = () => {
       case 3:
         return <LegalDocumentsForm />;
       case 4:
-        return <DataSourceForm />;
-      case 5:
         return <BeneficialOwnersForm />;
+      case 5:
+        return <DataSourceForm />;
       case 6:
         return <ReviewStep />;
       default:

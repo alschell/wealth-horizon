@@ -12,7 +12,7 @@ const BeneficialOwnersSection: React.FC<BeneficialOwnersSectionProps> = ({
 }) => {
   return (
     <section className="space-y-3">
-      <ReviewSectionHeader title="Beneficial Owners" stepIndex={5} />
+      <ReviewSectionHeader title="Beneficial Owners" stepIndex={4} />
       {beneficialOwners.length > 0 ? (
         <div className="space-y-2">
           {beneficialOwners.map((owner, index) => (

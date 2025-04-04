@@ -11,8 +11,8 @@ const BeneficialOwnersForm = () => {
       owners={onboardingData.beneficialOwners}
       onAddOwner={addBeneficialOwner}
       onRemoveOwner={removeBeneficialOwner}
-      onSubmit={() => setCurrentStep(6)}
-      onBack={() => setCurrentStep(4)}
+      onSubmit={() => setCurrentStep(5)}
+      onBack={() => setCurrentStep(3)}
     />
   );
 };

@@ -29,7 +29,14 @@ interface UsersListProps {
 
 const UsersList = ({ status }: UsersListProps) => {
   const [users, setUsers] = useState<UserType[]>(mockUsers);
-  const { openEditDialog, openDeleteDialog, openDeactivateDialog, openActivateDialog, openResendInviteDialog, openViewPermissionsDialog } = useUserActionDialog();
+  const { 
+    openEditDialog, 
+    openDeleteDialog, 
+    openDeactivateDialog, 
+    openActivateDialog, 
+    openResendInviteDialog, 
+    openViewPermissionsDialog 
+  } = useUserActionDialog();
   
   const filteredUsers = users.filter(user => user.status === status);
   

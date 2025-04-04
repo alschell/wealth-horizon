@@ -12,7 +12,6 @@ import {
   BarChart,
   Wallet,
   Puzzle,
-  PlusCircle,
   Settings
 } from "lucide-react";
 import {
@@ -110,14 +109,20 @@ const menuSections = [
 const DashboardSidebar = () => {
   const location = useLocation();
   
+  // Helper function to check if a path is active (exact match or starts with path)
+  const isActivePath = (path: string) => {
+    return location.pathname === path || 
+           (path !== "/dashboard" && location.pathname.startsWith(path));
+  };
+  
   return (
-    <Sidebar className="border-r border-border bg-secondary">
-      <SidebarHeader className="flex items-center h-14 px-4 border-b border-border">
-        <div className="text-lg font-semibold text-black">Wealth Platform</div>
+    <Sidebar className="border-r border-border bg-background" collapsible="icon">
+      <SidebarHeader className="flex items-center h-14 px-3 border-b border-border">
+        <div className="text-lg font-semibold text-black">WP</div>
       </SidebarHeader>
       <SidebarContent className="py-2">
         {menuSections.map((section, idx) => (
-          <SidebarGroup key={idx} className="mb-4">
+          <SidebarGroup key={idx} className="mb-2">
             <SidebarGroupLabel className="font-medium text-xs text-muted-foreground px-3 mb-1 uppercase tracking-wider">
               {section.label}
             </SidebarGroupLabel>
@@ -127,15 +132,15 @@ const DashboardSidebar = () => {
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton 
                       asChild 
-                      isActive={location.pathname === item.path}
+                      isActive={isActivePath(item.path)}
                       tooltip={item.title}
-                      className="transition-colors hover:bg-accent focus:bg-accent group"
+                      className="transition-colors hover:bg-accent/50 focus:bg-accent/50 group"
                     >
                       <Link to={item.path} className="flex items-center gap-3 p-2 rounded-md text-sm">
-                        <div className="flex items-center justify-center w-6 h-6">
-                          <item.icon className={`h-[18px] w-[18px] ${location.pathname === item.path ? 'text-primary' : 'text-muted-foreground group-hover:text-foreground'}`} />
+                        <div className="flex items-center justify-center w-5 h-5">
+                          <item.icon className={`h-[18px] w-[18px] ${isActivePath(item.path) ? 'text-primary' : 'text-muted-foreground group-hover:text-foreground'}`} />
                         </div>
-                        <span className={`${location.pathname === item.path ? 'font-medium text-foreground' : 'text-muted-foreground group-hover:text-foreground'}`}>
+                        <span className={`${isActivePath(item.path) ? 'font-medium text-foreground' : 'text-muted-foreground group-hover:text-foreground'}`}>
                           {item.title}
                         </span>
                       </Link>
@@ -146,20 +151,6 @@ const DashboardSidebar = () => {
             </SidebarGroupContent>
           </SidebarGroup>
         ))}
-
-        <SidebarSeparator className="my-2" />
-        
-        <SidebarGroup>
-          <SidebarMenuButton 
-            asChild
-            className="mt-2 mx-3 text-sm font-medium w-auto flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground rounded-md py-2 px-3 transition-colors"
-          >
-            <button>
-              <PlusCircle className="h-4 w-4" />
-              <span>Add Integration</span>
-            </button>
-          </SidebarMenuButton>
-        </SidebarGroup>
       </SidebarContent>
       
       <SidebarFooter className="p-3 mt-auto border-t border-border" />

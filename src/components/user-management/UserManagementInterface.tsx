@@ -3,10 +3,36 @@ import React from "react";
 import UserManagementHeader from "./components/UserManagementHeader";
 import UsersList from "./components/UsersList";
 import InviteUserDialog from "./components/InviteUserDialog";
+import EditUserDialog from "./components/EditUserDialog";
+import DeleteUserDialog from "./components/DeleteUserDialog";
+import DeactivateUserDialog from "./components/DeactivateUserDialog";
+import ActivateUserDialog from "./components/ActivateUserDialog";
+import ResendInviteDialog from "./components/ResendInviteDialog";
+import ViewPermissionsDialog from "./components/ViewPermissionsDialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { motion } from "framer-motion";
+import { useUserActionDialog } from "./hooks/useUserActionDialog";
+import { useToast } from "@/hooks/use-toast";
 
 const UserManagementInterface = () => {
+  const {
+    selectedUser,
+    editDialogOpen,
+    deleteDialogOpen,
+    deactivateDialogOpen,
+    activateDialogOpen,
+    resendInviteDialogOpen,
+    viewPermissionsDialogOpen,
+    closeAllDialogs,
+    handleEditUser,
+    handleDeleteUser,
+    handleDeactivateUser,
+    handleActivateUser,
+    handleResendInvite
+  } = useUserActionDialog();
+  
+  const { toast } = useToast();
+  
   return (
     <div className="max-w-7xl mx-auto w-full p-4">
       <UserManagementHeader />
@@ -50,6 +76,72 @@ const UserManagementInterface = () => {
           </TabsContent>
         </Tabs>
       </motion.div>
+      
+      {/* User action dialogs */}
+      <EditUserDialog 
+        open={editDialogOpen} 
+        user={selectedUser} 
+        onClose={closeAllDialogs} 
+        onSave={handleEditUser} 
+      />
+      
+      <DeleteUserDialog 
+        open={deleteDialogOpen} 
+        user={selectedUser} 
+        onClose={closeAllDialogs} 
+        onConfirm={() => {
+          handleDeleteUser();
+          toast({
+            title: "User invitation deleted",
+            description: selectedUser ? `Invitation for ${selectedUser.name} has been deleted.` : "",
+          });
+        }} 
+      />
+      
+      <DeactivateUserDialog 
+        open={deactivateDialogOpen} 
+        user={selectedUser} 
+        onClose={closeAllDialogs} 
+        onConfirm={() => {
+          handleDeactivateUser();
+          toast({
+            title: "User deactivated",
+            description: selectedUser ? `${selectedUser.name} has been deactivated.` : "",
+          });
+        }} 
+      />
+      
+      <ActivateUserDialog 
+        open={activateDialogOpen} 
+        user={selectedUser} 
+        onClose={closeAllDialogs} 
+        onConfirm={() => {
+          handleActivateUser();
+          toast({
+            title: "User activated",
+            description: selectedUser ? `${selectedUser.name} has been activated.` : "",
+          });
+        }} 
+      />
+      
+      <ResendInviteDialog 
+        open={resendInviteDialogOpen} 
+        user={selectedUser} 
+        onClose={closeAllDialogs} 
+        onConfirm={() => {
+          handleResendInvite();
+          toast({
+            title: "Invitation resent",
+            description: selectedUser ? `Invitation has been resent to ${selectedUser.email}.` : "",
+          });
+        }} 
+      />
+      
+      <ViewPermissionsDialog 
+        open={viewPermissionsDialogOpen} 
+        user={selectedUser} 
+        onClose={closeAllDialogs} 
+      />
     </div>
   );
 };

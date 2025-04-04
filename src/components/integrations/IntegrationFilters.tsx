@@ -14,6 +14,9 @@ const IntegrationFilters: React.FC<IntegrationFiltersProps> = ({
   selectedCategory, 
   onSelectCategory 
 }) => {
+  // Log the categories being received by the component
+  console.log('Categories in IntegrationFilters:', categories);
+  
   return (
     <div className="flex flex-wrap gap-2">
       <Button
@@ -23,16 +26,20 @@ const IntegrationFilters: React.FC<IntegrationFiltersProps> = ({
       >
         All
       </Button>
-      {categories.map((category) => (
-        <Button
-          key={category.id}
-          variant={selectedCategory === category.id ? "default" : "outline"}
-          onClick={() => onSelectCategory(category.id)}
-          size="sm"
-        >
-          {category.name}
-        </Button>
-      ))}
+      {categories && categories.length > 0 ? (
+        categories.map((category) => (
+          <Button
+            key={category.id}
+            variant={selectedCategory === category.id ? "default" : "outline"}
+            onClick={() => onSelectCategory(category.id)}
+            size="sm"
+          >
+            {category.name}
+          </Button>
+        ))
+      ) : (
+        <div className="text-sm text-gray-500">No categories available</div>
+      )}
     </div>
   );
 };

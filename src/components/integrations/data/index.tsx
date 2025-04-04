@@ -27,6 +27,10 @@ export const availableIntegrations: IntegrationType[] = [
   ...taxIntegrations
 ];
 
+// Log the integration categories and available integrations for debugging
+console.log('Integration Categories:', integrationCategories);
+console.log('Available Integrations:', availableIntegrations);
+
 export {
   integrationCategories,
   cryptoIntegrations,

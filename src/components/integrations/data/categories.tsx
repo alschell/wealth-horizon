@@ -14,3 +14,6 @@ export const integrationCategories: CategoryType[] = [
   { id: "storage", name: "Storage Providers" },
   { id: "tax", name: "Tax Services" }
 ];
+
+// Log the categories to ensure they're correctly defined
+console.log("Integration categories defined:", integrationCategories);

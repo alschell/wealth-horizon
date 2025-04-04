@@ -19,6 +19,7 @@ import CashflowManagement from "./pages/CashflowManagement";
 import Integrations from "./pages/Integrations";
 import IntegrationCallback from "./pages/IntegrationCallback";
 import TradingInterface from "@/components/trading/TradingInterface";
+import UserManagement from "./pages/UserManagement";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -45,6 +46,7 @@ function App() {
                 <Route path="/cashflow" element={<CashflowManagement />} />
                 <Route path="/integrations" element={<Integrations />} />
                 <Route path="/integrations/oauth-callback" element={<IntegrationCallback />} />
+                <Route path="/dashboard/users" element={<UserManagement />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
               <Toaster />

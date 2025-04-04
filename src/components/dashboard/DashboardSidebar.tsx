@@ -13,8 +13,7 @@ import {
   Wallet,
   Puzzle,
   PlusCircle,
-  Settings,
-  LogOut
+  Settings
 } from "lucide-react";
 import {
   Sidebar,
@@ -70,11 +69,6 @@ const menuSections = [
         path: "/market-data",
       },
       {
-        title: "Integrations",
-        icon: Puzzle,
-        path: "/integrations",
-      },
-      {
         title: "Credit Facilities",
         icon: CreditCard,
         path: "/dashboard/credit",
@@ -82,7 +76,7 @@ const menuSections = [
     ]
   },
   {
-    label: "Account",
+    label: "Management",
     items: [
       {
         title: "Notifications",
@@ -93,6 +87,21 @@ const menuSections = [
         title: "User Management",
         icon: Users,
         path: "/dashboard/users",
+      },
+    ]
+  },
+  {
+    label: "Settings & Integrations",
+    items: [
+      {
+        title: "Integrations",
+        icon: Puzzle,
+        path: "/integrations",
+      },
+      {
+        title: "Settings",
+        icon: Settings,
+        path: "/settings",
       },
     ]
   }
@@ -153,39 +162,7 @@ const DashboardSidebar = () => {
         </SidebarGroup>
       </SidebarContent>
       
-      <SidebarFooter className="p-3 mt-auto border-t border-border">
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton 
-              asChild 
-              tooltip="Settings"
-              className="transition-colors hover:bg-accent focus:bg-accent group"
-            >
-              <Link to="/settings" className="flex items-center gap-3 p-2 rounded-md text-sm">
-                <div className="flex items-center justify-center w-6 h-6">
-                  <Settings className="h-[18px] w-[18px] text-muted-foreground group-hover:text-foreground" />
-                </div>
-                <span className="text-muted-foreground group-hover:text-foreground">Settings</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-          
-          <SidebarMenuItem>
-            <SidebarMenuButton 
-              asChild 
-              tooltip="Log Out"
-              className="transition-colors hover:bg-accent focus:bg-accent group"
-            >
-              <button className="flex items-center gap-3 p-2 rounded-md text-sm w-full text-left">
-                <div className="flex items-center justify-center w-6 h-6">
-                  <LogOut className="h-[18px] w-[18px] text-muted-foreground group-hover:text-foreground" />
-                </div>
-                <span className="text-muted-foreground group-hover:text-foreground">Log Out</span>
-              </button>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarFooter>
+      <SidebarFooter className="p-3 mt-auto border-t border-border" />
     </Sidebar>
   );
 };

@@ -2,6 +2,7 @@
 import React from "react";
 import UserManagementHeader from "./components/UserManagementHeader";
 import UsersList from "./components/UsersList";
+import InviteUserDialog from "./components/InviteUserDialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { motion } from "framer-motion";
 
@@ -9,6 +10,7 @@ const UserManagementInterface = () => {
   return (
     <div className="max-w-7xl mx-auto w-full p-4">
       <UserManagementHeader />
+      <InviteUserDialog />
       
       <motion.div
         initial={{ opacity: 0, y: 10 }}

@@ -1,5 +1,6 @@
 
 import React from "react";
+import DashboardLayout from "@/components/dashboard/DashboardLayout";
 
 interface SettingsLayoutProps {
   children: React.ReactNode;
@@ -7,9 +8,11 @@ interface SettingsLayoutProps {
 
 const SettingsLayout = ({ children }: SettingsLayoutProps) => {
   return (
-    <div className="max-w-7xl mx-auto w-full p-4">
-      {children}
-    </div>
+    <DashboardLayout>
+      <div className="p-6">
+        {children}
+      </div>
+    </DashboardLayout>
   );
 };
 

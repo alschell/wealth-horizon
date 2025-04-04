@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -14,12 +15,14 @@ const AdviceInterface: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="p-6 space-y-6">
+      <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
-          <Lightbulb className="h-8 w-8 text-black" />
+          <div className="p-2 bg-amber-100 rounded-lg">
+            <Lightbulb className="h-6 w-6 text-amber-600" />
+          </div>
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Advisory Services</h1>
+            <h1 className="text-2xl font-bold tracking-tight">Advisory Services</h1>
             <p className="text-muted-foreground">
               Manage your advisory mandates and compare performance across advisors
             </p>

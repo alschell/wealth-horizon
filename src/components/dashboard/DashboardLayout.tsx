@@ -13,9 +13,9 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
     <SidebarProvider defaultOpen={true}>
       <div className="min-h-screen flex w-full bg-background">
         <DashboardSidebar />
-        <div className="flex-1 flex flex-col md:ml-[14rem] overflow-hidden">
+        <div className="flex-1 flex flex-col md:ml-0 overflow-hidden">
           <DashboardHeader />
-          <main className="flex-1 p-6 md:px-8 overflow-auto">
+          <main className="flex-1 overflow-auto">
             {children}
           </main>
         </div>

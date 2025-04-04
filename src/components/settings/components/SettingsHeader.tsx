@@ -1,23 +1,20 @@
 
 import React from "react";
-import { motion } from "framer-motion";
 import { Settings } from "lucide-react";
 
 const SettingsHeader = () => {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: -20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4"
-    >
+    <div className="flex items-start gap-4 mb-6">
+      <div className="p-2 bg-gray-100 rounded-lg">
+        <Settings className="h-6 w-6 text-black" />
+      </div>
       <div>
-        <h1 className="text-3xl font-bold text-black">Settings</h1>
+        <h1 className="text-2xl font-bold text-black">Settings</h1>
         <p className="text-gray-500 mt-1">
           Manage your account settings and preferences
         </p>
       </div>
-    </motion.div>
+    </div>
   );
 };
 

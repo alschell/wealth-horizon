@@ -1,5 +1,6 @@
 
 import React from "react";
+import DashboardLayout from "@/components/dashboard/DashboardLayout";
 
 interface TradingLayoutProps {
   children: React.ReactNode;
@@ -7,9 +8,11 @@ interface TradingLayoutProps {
 
 const TradingLayout: React.FC<TradingLayoutProps> = ({ children }) => {
   return (
-    <div className="min-h-screen py-12 bg-gradient-to-b from-gray-50/30 to-white">
-      {children}
-    </div>
+    <DashboardLayout>
+      <div className="p-6">
+        {children}
+      </div>
+    </DashboardLayout>
   );
 };
 

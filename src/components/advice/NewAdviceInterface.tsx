@@ -16,7 +16,7 @@ const NewAdviceInterface: React.FC = () => {
 
   return (
     <DashboardLayout>
-      <div className="space-y-6">
+      <div className="p-6 space-y-6">
         <div className="flex items-center gap-3">
           <Button 
             variant="ghost" 
@@ -26,8 +26,10 @@ const NewAdviceInterface: React.FC = () => {
             <ChevronLeft className="mr-2 h-4 w-4" />
             Back to Advisory
           </Button>
-          <Lightbulb className="h-8 w-8 text-black" />
-          <h1 className="text-3xl font-bold tracking-tight">Create New Advisory Mandate</h1>
+          <div className="p-2 bg-amber-100 rounded-lg">
+            <Lightbulb className="h-6 w-6 text-amber-600" />
+          </div>
+          <h1 className="text-2xl font-bold tracking-tight">Create New Advisory Mandate</h1>
         </div>
 
         <Tabs defaultValue="bank" className="space-y-4">

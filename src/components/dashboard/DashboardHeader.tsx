@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Bell, LogOut } from "lucide-react";
+import { Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { 
   Tooltip,
@@ -22,19 +22,6 @@ const DashboardHeader = () => {
             </TooltipTrigger>
             <TooltipContent>
               <p>Notifications</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-        
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon" className="text-black">
-                <LogOut className="h-5 w-5" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Log Out</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>

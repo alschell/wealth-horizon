@@ -11,7 +11,9 @@ import {
   Wallet,
   Settings,
   FileText,
-  Users
+  Users,
+  LogOut,
+  Link2
 } from "lucide-react";
 import {
   Sidebar,
@@ -24,6 +26,7 @@ import {
   SidebarHeader,
   SidebarFooter
 } from "@/components/ui/sidebar";
+import { Separator } from "@/components/ui/separator";
 
 const menuItems = [
   {
@@ -32,7 +35,7 @@ const menuItems = [
     path: "/dashboard",
   },
   {
-    title: "Analyze Wealth",
+    title: "Wealth Analysis",
     icon: BarChart,
     path: "/analyze-wealth",
   },
@@ -47,7 +50,7 @@ const menuItems = [
     path: "/trading",
   },
   {
-    title: "View Market Data & News",
+    title: "Market Data & News",
     icon: LineChart,
     path: "/market-data",
   },
@@ -57,9 +60,14 @@ const menuItems = [
     path: "/dashboard/credit",
   },
   {
-    title: "Manage Cashflow & Liquidity",
+    title: "Cashflow & Liquidity",
     icon: Wallet,
     path: "/cashflow",
+  },
+  {
+    title: "Integrations",
+    icon: Link2,
+    path: "/integrations",
   },
   {
     title: "Settings",
@@ -120,7 +128,26 @@ const DashboardSidebar = () => {
         </SidebarGroup>
       </SidebarContent>
       
-      <SidebarFooter className="p-3 mt-auto border-t border-border" />
+      <SidebarFooter className="p-3 mt-auto border-t border-border">
+        <Separator className="my-2" />
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              tooltip="Log Out"
+              className="transition-colors hover:bg-accent/50 focus:bg-accent/50 group whitespace-nowrap"
+            >
+              <Link to="/" className="flex items-center gap-2 p-2 rounded-md text-sm">
+                <div className="flex items-center justify-center w-5 h-5">
+                  <LogOut className="h-[18px] w-[18px] text-muted-foreground group-hover:text-foreground" />
+                </div>
+                <span className="truncate text-muted-foreground group-hover:text-foreground">
+                  Log Out
+                </span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter>
     </Sidebar>
   );
 };

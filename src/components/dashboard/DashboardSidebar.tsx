@@ -12,7 +12,9 @@ import {
   BarChart,
   Wallet,
   Puzzle,
-  PlusCircle
+  PlusCircle,
+  Settings,
+  LogOut
 } from "lucide-react";
 import {
   Sidebar,
@@ -24,7 +26,8 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarHeader,
-  SidebarSeparator
+  SidebarSeparator,
+  SidebarFooter
 } from "@/components/ui/sidebar";
 
 const menuSections = [
@@ -101,7 +104,7 @@ const DashboardSidebar = () => {
   return (
     <Sidebar className="border-r border-border bg-secondary">
       <SidebarHeader className="flex items-center h-14 px-4 border-b border-border">
-        <div className="text-lg font-semibold">Wealth Platform</div>
+        <div className="text-lg font-semibold text-black">Wealth Platform</div>
       </SidebarHeader>
       <SidebarContent className="py-2">
         {menuSections.map((section, idx) => (
@@ -149,6 +152,40 @@ const DashboardSidebar = () => {
           </SidebarMenuButton>
         </SidebarGroup>
       </SidebarContent>
+      
+      <SidebarFooter className="p-3 mt-auto border-t border-border">
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton 
+              asChild 
+              tooltip="Settings"
+              className="transition-colors hover:bg-accent focus:bg-accent group"
+            >
+              <Link to="/settings" className="flex items-center gap-3 p-2 rounded-md text-sm">
+                <div className="flex items-center justify-center w-6 h-6">
+                  <Settings className="h-[18px] w-[18px] text-muted-foreground group-hover:text-foreground" />
+                </div>
+                <span className="text-muted-foreground group-hover:text-foreground">Settings</span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+          
+          <SidebarMenuItem>
+            <SidebarMenuButton 
+              asChild 
+              tooltip="Log Out"
+              className="transition-colors hover:bg-accent focus:bg-accent group"
+            >
+              <button className="flex items-center gap-3 p-2 rounded-md text-sm w-full text-left">
+                <div className="flex items-center justify-center w-6 h-6">
+                  <LogOut className="h-[18px] w-[18px] text-muted-foreground group-hover:text-foreground" />
+                </div>
+                <span className="text-muted-foreground group-hover:text-foreground">Log Out</span>
+              </button>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter>
     </Sidebar>
   );
 };

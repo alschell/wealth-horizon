@@ -9,6 +9,7 @@ import { useOnboarding } from "@/context/OnboardingContext";
 import { connectedIntegrations } from "@/components/integrations/data/connected-integrations";
 import { ConnectedIntegrationType } from "@/components/integrations/types";
 import { Database } from "lucide-react";
+import { motion } from "framer-motion";
 
 const Integrations = () => {
   const [activeTab, setActiveTab] = useState<string>("available");
@@ -56,21 +57,36 @@ const Integrations = () => {
 
   return (
     <DashboardLayout>
-      <div className="space-y-6">
+      <div className="max-w-7xl mx-auto w-full p-4">
         <IntegrationsHeader />
         
-        <Tabs defaultValue="available" value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-2 max-w-md">
-            <TabsTrigger value="available">Available Integrations</TabsTrigger>
-            <TabsTrigger value="connected">Connected Services</TabsTrigger>
-          </TabsList>
-          <TabsContent value="available" className="mt-6">
-            <IntegrationCards />
-          </TabsContent>
-          <TabsContent value="connected" className="mt-6">
-            <ActiveIntegrations connectedIntegrations={updatedConnectedIntegrations} />
-          </TabsContent>
-        </Tabs>
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="mt-6"
+        >
+          <Tabs defaultValue="available" value={activeTab} onValueChange={setActiveTab} className="w-full">
+            <TabsList className="grid grid-cols-2 max-w-md mb-8">
+              <TabsTrigger value="available" className="text-sm">Available Integrations</TabsTrigger>
+              <TabsTrigger value="connected" className="text-sm">Connected Services</TabsTrigger>
+            </TabsList>
+            <TabsContent value="available" className="mt-0">
+              <div className="border rounded-lg shadow-sm bg-white overflow-hidden">
+                <div className="p-4">
+                  <IntegrationCards />
+                </div>
+              </div>
+            </TabsContent>
+            <TabsContent value="connected" className="mt-0">
+              <div className="border rounded-lg shadow-sm bg-white overflow-hidden">
+                <div className="p-4">
+                  <ActiveIntegrations connectedIntegrations={updatedConnectedIntegrations} />
+                </div>
+              </div>
+            </TabsContent>
+          </Tabs>
+        </motion.div>
       </div>
     </DashboardLayout>
   );

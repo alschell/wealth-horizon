@@ -42,6 +42,7 @@ function App() {
                 <Route path="/trading/new" element={<TradingInterface />} />
                 <Route path="/trading/edit/:tradeId" element={<TradingInterface />} />
                 <Route path="/advice" element={<Advice />} />
+                <Route path="/advice/new" element={<AdviceInterface />} />
                 <Route path="/market-data" element={<MarketData />} />
                 <Route path="/analyze-wealth" element={<AnalyzeWealth />} />
                 <Route path="/cashflow" element={<CashflowManagement />} />

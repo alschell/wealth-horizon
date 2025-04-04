@@ -19,6 +19,7 @@ import CashflowManagement from "./pages/CashflowManagement";
 import Integrations from "./pages/Integrations";
 import IntegrationCallback from "./pages/IntegrationCallback";
 import TradingInterface from "@/components/trading/TradingInterface";
+import NewAdviceInterface from "@/components/advice/NewAdviceInterface";
 import UserManagement from "./pages/UserManagement";
 import Settings from "./pages/Settings";
 
@@ -42,7 +43,7 @@ function App() {
                 <Route path="/trading/new" element={<TradingInterface />} />
                 <Route path="/trading/edit/:tradeId" element={<TradingInterface />} />
                 <Route path="/advice" element={<Advice />} />
-                <Route path="/advice/new" element={<AdviceInterface />} />
+                <Route path="/advice/new" element={<NewAdviceInterface />} />
                 <Route path="/market-data" element={<MarketData />} />
                 <Route path="/analyze-wealth" element={<AnalyzeWealth />} />
                 <Route path="/cashflow" element={<CashflowManagement />} />

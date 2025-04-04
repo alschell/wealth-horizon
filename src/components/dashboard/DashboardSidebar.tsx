@@ -3,16 +3,15 @@ import React from "react";
 import { useLocation, Link } from "react-router-dom";
 import {
   LayoutDashboard,
-  TrendingUp,
-  CreditCard,
-  Bell,
-  Users,
-  DollarSign,
-  LineChart,
   BarChart,
+  Lightbulb,
+  TrendingUp,
+  LineChart,
+  CreditCard,
   Wallet,
-  Puzzle,
-  Settings
+  Settings,
+  FileText,
+  Users
 } from "lucide-react";
 import {
   Sidebar,
@@ -33,22 +32,17 @@ const menuItems = [
     path: "/dashboard",
   },
   {
-    title: "Wealth",
-    icon: DollarSign,
-    path: "/dashboard/wealth",
-  },
-  {
     title: "Analyze Wealth",
     icon: BarChart,
     path: "/analyze-wealth",
   },
   {
-    title: "Manage Cashflow & Liquidity",
-    icon: Wallet,
-    path: "/cashflow",
+    title: "Advisory",
+    icon: Lightbulb,
+    path: "/advice",
   },
   {
-    title: "Trade",
+    title: "Trading",
     icon: TrendingUp,
     path: "/trading",
   },
@@ -63,24 +57,24 @@ const menuItems = [
     path: "/dashboard/credit",
   },
   {
-    title: "Notifications",
-    icon: Bell,
-    path: "/dashboard/notifications",
-  },
-  {
-    title: "Manage Users & Permissions",
-    icon: Users,
-    path: "/dashboard/users",
-  },
-  {
-    title: "Connect 3rd Party Services",
-    icon: Puzzle,
-    path: "/integrations",
+    title: "Manage Cashflow & Liquidity",
+    icon: Wallet,
+    path: "/cashflow",
   },
   {
     title: "Settings",
     icon: Settings,
     path: "/settings",
+  },
+  {
+    title: "Reporting",
+    icon: FileText,
+    path: "/reporting",
+  },
+  {
+    title: "User Management",
+    icon: Users,
+    path: "/dashboard/users",
   },
 ];
 

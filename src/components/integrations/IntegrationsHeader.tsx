@@ -15,9 +15,9 @@ const IntegrationsHeader = () => {
       className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4"
     >
       <div>
-        <h1 className="text-3xl font-bold text-black">Third-Party Integrations</h1>
+        <h1 className="text-3xl font-bold text-black">Connect 3rd Party Services</h1>
         <p className="text-gray-500 mt-1">
-          Connect your family office with external service providers and tools to enhance your wealth management capabilities
+          Connect external service providers and tools
         </p>
       </div>
       

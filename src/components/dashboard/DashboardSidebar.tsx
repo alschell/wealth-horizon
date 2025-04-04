@@ -49,7 +49,7 @@ const menuSections = [
         path: "/analyze-wealth",
       },
       {
-        title: "Cashflow",
+        title: "Manage Cashflow & Liquidity",
         icon: Wallet,
         path: "/cashflow",
       },
@@ -59,12 +59,12 @@ const menuSections = [
     label: "Markets & Finance",
     items: [
       {
-        title: "Trading",
+        title: "Trade",
         icon: TrendingUp,
         path: "/trading",
       },
       {
-        title: "Market Data",
+        title: "View Market Data & News",
         icon: LineChart,
         path: "/market-data",
       },
@@ -84,7 +84,7 @@ const menuSections = [
         path: "/dashboard/notifications",
       },
       {
-        title: "User Management",
+        title: "Manage Users & Permissions",
         icon: Users,
         path: "/dashboard/users",
       },
@@ -94,7 +94,7 @@ const menuSections = [
     label: "Settings & Integrations",
     items: [
       {
-        title: "Integrations",
+        title: "Connect 3rd Party Services",
         icon: Puzzle,
         path: "/integrations",
       },

@@ -16,7 +16,7 @@ const Index = () => {
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
           <div className="bg-white rounded-lg shadow p-6 hover:shadow-md transition-shadow">
-            <h2 className="text-2xl font-bold mb-4">Trading</h2>
+            <h2 className="text-2xl font-bold mb-4">Trade</h2>
             <p className="text-gray-600 mb-6">
               Execute trades across multiple asset classes with our advanced trading platform.
             </p>
@@ -42,7 +42,7 @@ const Index = () => {
           </div>
           
           <div className="bg-white rounded-lg shadow p-6 hover:shadow-md transition-shadow">
-            <h2 className="text-2xl font-bold mb-4">Market Data</h2>
+            <h2 className="text-2xl font-bold mb-4">View Market Data & News</h2>
             <p className="text-gray-600 mb-6">
               Track markets, indices, and news for your investments in real-time.
             </p>
@@ -55,20 +55,20 @@ const Index = () => {
           </div>
           
           <div className="bg-white rounded-lg shadow p-6 hover:shadow-md transition-shadow">
-            <h2 className="text-2xl font-bold mb-4">Cash Flow Management</h2>
+            <h2 className="text-2xl font-bold mb-4">Manage Cashflow & Liquidity</h2>
             <p className="text-gray-600 mb-6">
               Monitor and optimize your liquid assets, manage recurring payments, and plan for future cash needs.
             </p>
             <Link to="/cashflow">
               <Button className="w-full bg-black hover:bg-gray-800 text-white">
-                Manage Cash Flow
+                Manage Cashflow
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </Link>
           </div>
           
           <div className="bg-white rounded-lg shadow p-6 hover:shadow-md transition-shadow">
-            <h2 className="text-2xl font-bold mb-4">Wealth Analysis</h2>
+            <h2 className="text-2xl font-bold mb-4">Analyze Wealth</h2>
             <p className="text-gray-600 mb-6">
               Analyze your wealth portfolio for performance, risk management, and future scenarios.
             </p>
@@ -81,9 +81,9 @@ const Index = () => {
           </div>
           
           <div className="bg-white rounded-lg shadow p-6 hover:shadow-md transition-shadow">
-            <h2 className="text-2xl font-bold mb-4">Integrations</h2>
+            <h2 className="text-2xl font-bold mb-4">Connect 3rd Party Services</h2>
             <p className="text-gray-600 mb-6">
-              Connect with third-party services like crypto providers, tax advisors, and accounting platforms.
+              Connect with external service providers like crypto providers, tax advisors, and accounting platforms.
             </p>
             <div className="mb-4 text-sm">
               <span className="font-semibold">Available categories:</span> {integrationCategories.map(cat => cat.name).join(', ')}

@@ -55,12 +55,12 @@ const ReportFilters: React.FC<ReportFiltersProps> = ({
   return (
     <div className="flex flex-col md:flex-row gap-4 justify-between">
       <div className="flex gap-2 flex-1 flex-wrap">
-        <div className="w-full md:w-auto">
+        <div className="w-full md:w-auto flex-grow md:flex-grow-0">
           <Input
             placeholder="Search reports..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full md:w-[250px]"
+            className="w-full"
           />
         </div>
         
@@ -118,7 +118,7 @@ const ReportFilters: React.FC<ReportFiltersProps> = ({
       <div className="flex items-center gap-2">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" className="whitespace-nowrap">
               <ArrowUpDown className="mr-2 h-4 w-4" />
               Sort by: {sortBy.charAt(0).toUpperCase() + sortBy.slice(1)}
               <ChevronDown className="ml-2 h-4 w-4" />

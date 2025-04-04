@@ -45,9 +45,11 @@ const ReportingInterface: React.FC = () => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <FileText className="h-8 w-8 text-black" />
+          <div className="p-2 bg-gray-100 rounded-lg">
+            <FileText className="h-6 w-6 text-black" />
+          </div>
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Reporting</h1>
+            <h1 className="text-2xl font-bold tracking-tight">Reporting</h1>
             <p className="text-muted-foreground">
               Generate, download, and schedule financial reports
             </p>

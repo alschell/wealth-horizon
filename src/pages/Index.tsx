@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, PuzzlePiece } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const Index = () => {
@@ -75,6 +75,19 @@ const Index = () => {
               <Button className="w-full bg-black hover:bg-gray-800 text-white">
                 Analyze Wealth
                 <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
+          </div>
+          
+          <div className="bg-white rounded-lg shadow p-6 hover:shadow-md transition-shadow">
+            <h2 className="text-2xl font-bold mb-4">Integrations</h2>
+            <p className="text-gray-600 mb-6">
+              Connect with third-party services like crypto providers, tax advisors, and accounting platforms.
+            </p>
+            <Link to="/integrations">
+              <Button className="w-full bg-black hover:bg-gray-800 text-white">
+                Manage Integrations
+                <PuzzlePiece className="ml-2 h-4 w-4" />
               </Button>
             </Link>
           </div>

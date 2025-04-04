@@ -10,7 +10,8 @@ import {
   DollarSign,
   LineChart,
   BarChart,
-  Wallet
+  Wallet,
+  PuzzlePiece
 } from "lucide-react";
 import {
   Sidebar,
@@ -52,6 +53,11 @@ const menuItems = [
     title: "Market Data",
     icon: LineChart,
     path: "/market-data",
+  },
+  {
+    title: "Integrations",
+    icon: PuzzlePiece,
+    path: "/integrations",
   },
   {
     title: "Credit Facilities",

@@ -1,7 +1,7 @@
 
 import React from "react";
 import { ConnectedIntegrationType } from "../types";
-import { Coins, ReceiptText, CreditCard } from "lucide-react";
+import { Coins, ReceiptText, CreditCard, Database } from "lucide-react";
 
 export const connectedIntegrations: ConnectedIntegrationType[] = [
   {
@@ -55,5 +55,23 @@ export const connectedIntegrations: ConnectedIntegrationType[] = [
     lastSynced: "Today at 10:30 AM",
     authMethod: "apiKey",
     apiKeyName: "Plaid Client ID and Secret"
+  },
+  // This is a placeholder that will be replaced dynamically from onboarding data
+  {
+    id: "aggregator-placeholder",
+    name: "Connected Aggregator",
+    description: "Your financial data aggregator",
+    icon: <Database className="h-6 w-6" />,
+    category: "aggregators",
+    features: [
+      "Automatic data import",
+      "Financial data consolidation",
+      "Reporting integration"
+    ],
+    status: "stable",
+    connectionStatus: "active", 
+    lastSynced: "Today at 11:00 AM",
+    authMethod: "apiKey",
+    apiKeyName: "Aggregator API Key"
   }
 ];

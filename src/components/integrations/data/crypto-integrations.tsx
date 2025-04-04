@@ -52,4 +52,4 @@ export const cryptoIntegrations: IntegrationType[] = [
     authMethod: "apiKey",
     apiKeyName: "Ledger API Key"
   }
-];
+].sort((a, b) => a.name.localeCompare(b.name));

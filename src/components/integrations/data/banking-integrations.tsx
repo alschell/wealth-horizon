@@ -19,4 +19,4 @@ export const bankingIntegrations: IntegrationType[] = [
     authMethod: "apiKey",
     apiKeyName: "Plaid Client ID and Secret"
   }
-];
+].sort((a, b) => a.name.localeCompare(b.name));

@@ -1,84 +1,93 @@
+
 import React from "react";
-import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Settings, Link2Off } from "lucide-react";
+import { AlertCircle, CheckCircle2 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
-import NoIntegrations from "./NoIntegrations";
-import { connectedIntegrations } from "./data";
+import { ConnectedIntegrationType } from "./types";
 
-const ActiveIntegrations = () => {
-  const [activeIntegrations, setActiveIntegrations] = React.useState(connectedIntegrations);
+interface ActiveIntegrationsProps {
+  connectedIntegrations: ConnectedIntegrationType[];
+}
 
-  const handleDisconnect = (id: string) => {
-    const integration = activeIntegrations.find((i) => i.id === id);
-    if (integration) {
-      toast({
-        title: "Integration Disconnected",
-        description: `${integration.name} has been disconnected successfully.`,
-      });
-      
-      setActiveIntegrations(activeIntegrations.filter((i) => i.id !== id));
-    }
+const ActiveIntegrations: React.FC<ActiveIntegrationsProps> = ({ connectedIntegrations }) => {
+  const handleSync = (integration: ConnectedIntegrationType) => {
+    toast({
+      title: "Sync initiated",
+      description: `Syncing data from ${integration.name}...`,
+    });
   };
 
-  if (activeIntegrations.length === 0) {
-    return <NoIntegrations />;
+  const handleDisconnect = (integration: ConnectedIntegrationType) => {
+    toast({
+      title: "Disconnection initiated",
+      description: `Disconnecting ${integration.name}...`,
+    });
+  };
+
+  if (connectedIntegrations.length === 0) {
+    return (
+      <div className="text-center py-10">
+        <h3 className="text-lg font-medium mb-2">No Connected Integrations</h3>
+        <p className="text-gray-500">Connect services from the Available Integrations tab</p>
+      </div>
+    );
   }
 
   return (
-    <div className="space-y-6">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Integration</TableHead>
-            <TableHead>Category</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Last Synced</TableHead>
-            <TableHead className="text-right">Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {activeIntegrations.map((integration) => (
-            <TableRow key={integration.id}>
-              <TableCell className="font-medium">
-                <div className="flex items-center space-x-3">
-                  <div className="h-8 w-8 rounded-md bg-gray-100 flex items-center justify-center">
-                    {integration.icon}
-                  </div>
-                  <span>{integration.name}</span>
-                </div>
-              </TableCell>
-              <TableCell>{integration.category.charAt(0).toUpperCase() + integration.category.slice(1)}</TableCell>
-              <TableCell>
-                <div className={`inline-flex px-2 py-1 text-xs rounded-full ${
-                  integration.connectionStatus === "active" 
-                    ? "bg-green-100 text-green-800" 
-                    : "bg-amber-100 text-amber-800"
-                }`}>
-                  {integration.connectionStatus.charAt(0).toUpperCase() + integration.connectionStatus.slice(1)}
-                </div>
-              </TableCell>
-              <TableCell>{integration.lastSynced}</TableCell>
-              <TableCell className="text-right">
-                <div className="flex justify-end space-x-2">
-                  <Button variant="outline" size="sm">
-                    <Settings className="h-4 w-4 mr-1" />
-                    Configure
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    onClick={() => handleDisconnect(integration.id)}
-                  >
-                    <Link2Off className="h-4 w-4 mr-1" />
-                    Disconnect
-                  </Button>
-                </div>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {connectedIntegrations.map((integration) => (
+        <Card key={integration.id}>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div className="h-12 w-12 rounded-md bg-gray-100 flex items-center justify-center">
+                {integration.icon}
+              </div>
+              <div className={`flex items-center px-2 py-1 text-xs rounded-full ${
+                integration.connectionStatus === "active" 
+                  ? "bg-green-100 text-green-800" 
+                  : "bg-amber-100 text-amber-800"
+              }`}>
+                {integration.connectionStatus === "active" 
+                  ? <CheckCircle2 className="h-3 w-3 mr-1" /> 
+                  : <AlertCircle className="h-3 w-3 mr-1" />}
+                {integration.connectionStatus === "active" ? "Active" : "Needs Attention"}
+              </div>
+            </div>
+            <CardTitle className="mt-4">{integration.name}</CardTitle>
+            <CardDescription>{integration.description}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="text-sm text-gray-500 mb-4">
+              Last synced: {integration.lastSynced}
+            </div>
+            <ul className="space-y-1 text-sm">
+              {integration.features.map((feature, index) => (
+                <li key={index} className="flex items-start">
+                  <span className="mr-2 text-green-500">✓</span>
+                  {feature}
+                </li>
+              ))}
+            </ul>
+          </CardContent>
+          <CardFooter className="flex gap-2 justify-between">
+            <Button 
+              variant="outline" 
+              className="flex-1"
+              onClick={() => handleSync(integration)}
+            >
+              Sync
+            </Button>
+            <Button 
+              variant="outline" 
+              className="flex-1 hover:bg-red-50 hover:text-red-600 hover:border-red-200"
+              onClick={() => handleDisconnect(integration)}
+            >
+              Disconnect
+            </Button>
+          </CardFooter>
+        </Card>
+      ))}
     </div>
   );
 };

@@ -34,4 +34,4 @@ export const accountingIntegrations: IntegrationType[] = [
     authMethod: "oauth",
     authUrl: "https://login.xero.com/identity/connect/authorize"
   }
-];
+].sort((a, b) => a.name.localeCompare(b.name));

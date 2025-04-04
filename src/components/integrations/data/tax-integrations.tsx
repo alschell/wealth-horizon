@@ -5,21 +5,6 @@ import { Calculator, FileText } from "lucide-react";
 
 export const taxIntegrations: IntegrationType[] = [
   {
-    id: "taxbit",
-    name: "TaxBit",
-    description: "Automated cryptocurrency tax reporting and compliance",
-    icon: <Calculator className="h-6 w-6" />,
-    category: "tax",
-    features: [
-      "Crypto tax calculations",
-      "Automated tax forms",
-      "Year-round tax optimization"
-    ],
-    status: "stable",
-    authMethod: "oauth",
-    authUrl: "https://taxbit.com/app/oauth/authorize"
-  },
-  {
     id: "koinly",
     name: "Koinly",
     description: "Crypto tax software for investors and accountants",
@@ -33,6 +18,21 @@ export const taxIntegrations: IntegrationType[] = [
     status: "stable",
     authMethod: "apiKey",
     apiKeyName: "Koinly API Key"
+  },
+  {
+    id: "taxbit",
+    name: "TaxBit",
+    description: "Automated cryptocurrency tax reporting and compliance",
+    icon: <Calculator className="h-6 w-6" />,
+    category: "tax",
+    features: [
+      "Crypto tax calculations",
+      "Automated tax forms",
+      "Year-round tax optimization"
+    ],
+    status: "stable",
+    authMethod: "oauth",
+    authUrl: "https://taxbit.com/app/oauth/authorize"
   },
   {
     id: "turbotax",
@@ -49,4 +49,4 @@ export const taxIntegrations: IntegrationType[] = [
     authMethod: "oauth",
     authUrl: "https://accounts.intuit.com/oauth2/v2/authorize"
   }
-];
+].sort((a, b) => a.name.localeCompare(b.name));

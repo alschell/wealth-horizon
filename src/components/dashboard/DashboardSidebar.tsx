@@ -123,7 +123,7 @@ const DashboardSidebar = () => {
       <SidebarContent className="py-2">
         {menuSections.map((section, idx) => (
           <SidebarGroup key={idx} className="mb-2">
-            <SidebarGroupLabel className="font-medium text-xs text-muted-foreground px-3 mb-1 uppercase tracking-wider">
+            <SidebarGroupLabel className="text-xs text-muted-foreground px-2 mb-1 uppercase tracking-wider">
               {section.label}
             </SidebarGroupLabel>
             <SidebarGroupContent>
@@ -136,7 +136,7 @@ const DashboardSidebar = () => {
                       tooltip={item.title}
                       className="transition-colors hover:bg-accent/50 focus:bg-accent/50 group"
                     >
-                      <Link to={item.path} className="flex items-center gap-3 p-2 rounded-md text-sm">
+                      <Link to={item.path} className="flex items-center gap-2 p-2 rounded-md text-sm">
                         <div className="flex items-center justify-center w-5 h-5">
                           <item.icon className={`h-[18px] w-[18px] ${isActivePath(item.path) ? 'text-primary' : 'text-muted-foreground group-hover:text-foreground'}`} />
                         </div>

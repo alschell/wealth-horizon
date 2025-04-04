@@ -1,12 +1,12 @@
 
 import React from "react";
-import { PuzzlePiece } from "lucide-react";
+import { Puzzle } from "lucide-react";
 
 const IntegrationsHeader = () => {
   return (
     <div className="flex flex-col space-y-2">
       <h1 className="text-3xl font-bold tracking-tight flex items-center gap-2">
-        <PuzzlePiece className="h-8 w-8" />
+        <Puzzle className="h-8 w-8" />
         Third-Party Integrations
       </h1>
       <p className="text-muted-foreground">

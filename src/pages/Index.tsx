@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, PuzzlePiece } from "lucide-react";
+import { ArrowRight, Puzzle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const Index = () => {
@@ -87,7 +87,7 @@ const Index = () => {
             <Link to="/integrations">
               <Button className="w-full bg-black hover:bg-gray-800 text-white">
                 Manage Integrations
-                <PuzzlePiece className="ml-2 h-4 w-4" />
+                <Puzzle className="ml-2 h-4 w-4" />
               </Button>
             </Link>
           </div>

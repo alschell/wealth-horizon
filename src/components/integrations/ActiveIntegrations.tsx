@@ -3,12 +3,11 @@ import React from "react";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Settings, Link2Off } from "lucide-react";
-import { useToast } from "@/components/ui/toaster";
+import { toast } from "@/hooks/use-toast";
 import NoIntegrations from "./NoIntegrations";
 import { connectedIntegrations } from "./integrationData";
 
 const ActiveIntegrations = () => {
-  const { toast } = useToast();
   const [activeIntegrations, setActiveIntegrations] = React.useState(connectedIntegrations);
 
   const handleDisconnect = (id: string) => {

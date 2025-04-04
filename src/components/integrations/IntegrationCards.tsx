@@ -3,13 +3,12 @@ import React from "react";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { BadgePlus } from "lucide-react";
-import { useToast } from "@/components/ui/toaster";
+import { toast } from "@/hooks/use-toast";
 import { integrationCategories, availableIntegrations } from "./integrationData";
 import IntegrationFilters from "./IntegrationFilters";
 
 const IntegrationCards = () => {
   const [selectedCategory, setSelectedCategory] = React.useState<string>("all");
-  const { toast } = useToast();
 
   const handleConnect = (integrationName: string) => {
     toast({

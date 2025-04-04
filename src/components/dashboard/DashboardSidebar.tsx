@@ -11,7 +11,7 @@ import {
   LineChart,
   BarChart,
   Wallet,
-  PuzzlePiece
+  Puzzle
 } from "lucide-react";
 import {
   Sidebar,
@@ -56,7 +56,7 @@ const menuItems = [
   },
   {
     title: "Integrations",
-    icon: PuzzlePiece,
+    icon: Puzzle,
     path: "/integrations",
   },
   {

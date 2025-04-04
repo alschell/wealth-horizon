@@ -16,7 +16,7 @@ export const taxIntegrations: IntegrationType[] = [
       "Capital gains reports"
     ],
     status: "stable" as const,
-    authMethod: "apiKey",
+    authMethod: "apiKey" as const,
     apiKeyName: "Koinly API Key"
   },
   {
@@ -31,7 +31,7 @@ export const taxIntegrations: IntegrationType[] = [
       "Year-round tax optimization"
     ],
     status: "stable" as const,
-    authMethod: "oauth",
+    authMethod: "oauth" as const,
     authUrl: "https://taxbit.com/app/oauth/authorize"
   },
   {
@@ -46,7 +46,7 @@ export const taxIntegrations: IntegrationType[] = [
       "Capital gains reporting"
     ],
     status: "beta" as const,
-    authMethod: "oauth",
+    authMethod: "oauth" as const,
     authUrl: "https://accounts.intuit.com/oauth2/v2/authorize"
   }
 ].sort((a, b) => a.name.localeCompare(b.name));

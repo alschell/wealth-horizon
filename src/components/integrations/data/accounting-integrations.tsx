@@ -16,7 +16,7 @@ export const accountingIntegrations: IntegrationType[] = [
       "Consolidated financial statements"
     ],
     status: "stable" as const,
-    authMethod: "oauth",
+    authMethod: "oauth" as const,
     authUrl: "https://appcenter.intuit.com/connect/oauth2"
   },
   {
@@ -31,7 +31,7 @@ export const accountingIntegrations: IntegrationType[] = [
       "Custom financial reports"
     ],
     status: "stable" as const,
-    authMethod: "oauth",
+    authMethod: "oauth" as const,
     authUrl: "https://login.xero.com/identity/connect/authorize"
   }
 ].sort((a, b) => a.name.localeCompare(b.name));

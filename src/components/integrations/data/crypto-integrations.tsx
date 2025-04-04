@@ -16,7 +16,7 @@ export const cryptoIntegrations: IntegrationType[] = [
       "Consolidated reporting with other assets"
     ],
     status: "stable" as const,
-    authMethod: "oauth",
+    authMethod: "oauth" as const,
     authUrl: "https://www.coinbase.com/oauth/authorize",
     scopes: ["wallet:accounts:read", "wallet:transactions:read"]
   },
@@ -32,7 +32,7 @@ export const cryptoIntegrations: IntegrationType[] = [
       "Automated tax reporting"
     ],
     status: "beta" as const,
-    authMethod: "both",
+    authMethod: "both" as const,
     authUrl: "https://www.kraken.com/oauth2/authorize",
     apiKeyName: "Kraken API Key",
     scopes: ["read"]
@@ -49,7 +49,7 @@ export const cryptoIntegrations: IntegrationType[] = [
       "Multi-wallet support"
     ],
     status: "beta" as const,
-    authMethod: "apiKey",
+    authMethod: "apiKey" as const,
     apiKeyName: "Ledger API Key"
   }
 ].sort((a, b) => a.name.localeCompare(b.name));

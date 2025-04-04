@@ -18,7 +18,7 @@ export const connectedIntegrations: ConnectedIntegrationType[] = [
     status: "stable" as const,
     connectionStatus: "active",
     lastSynced: "Today at 09:45 AM",
-    authMethod: "oauth",
+    authMethod: "oauth" as const,
     authUrl: "https://www.coinbase.com/oauth/authorize",
     scopes: ["wallet:accounts:read", "wallet:transactions:read"]
   },
@@ -36,7 +36,7 @@ export const connectedIntegrations: ConnectedIntegrationType[] = [
     status: "stable" as const,
     connectionStatus: "needs attention",
     lastSynced: "Apr 02, 2025",
-    authMethod: "oauth",
+    authMethod: "oauth" as const,
     authUrl: "https://appcenter.intuit.com/connect/oauth2"
   },
   {
@@ -53,7 +53,7 @@ export const connectedIntegrations: ConnectedIntegrationType[] = [
     status: "stable" as const,
     connectionStatus: "active",
     lastSynced: "Today at 10:30 AM",
-    authMethod: "apiKey",
+    authMethod: "apiKey" as const,
     apiKeyName: "Plaid Client ID and Secret"
   },
   // This is a placeholder that will be replaced dynamically from onboarding data
@@ -71,7 +71,7 @@ export const connectedIntegrations: ConnectedIntegrationType[] = [
     status: "stable" as const,
     connectionStatus: "active", 
     lastSynced: "Today at 11:00 AM",
-    authMethod: "apiKey",
+    authMethod: "apiKey" as const,
     apiKeyName: "Aggregator API Key"
   }
 ];

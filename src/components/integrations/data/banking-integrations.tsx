@@ -16,7 +16,7 @@ export const bankingIntegrations: IntegrationType[] = [
       "Account balance monitoring"
     ],
     status: "stable" as const,
-    authMethod: "apiKey",
+    authMethod: "apiKey" as const,
     apiKeyName: "Plaid Client ID and Secret"
   }
 ].sort((a, b) => a.name.localeCompare(b.name));

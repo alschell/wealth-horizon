@@ -16,7 +16,7 @@ export const reportingIntegrations: IntegrationType[] = [
       "Scheduled report delivery"
     ],
     status: "beta" as const,
-    authMethod: "oauth",
+    authMethod: "oauth" as const,
     authUrl: "https://login.microsoftonline.com/common/oauth2/v2.0/authorize"
   },
   {
@@ -31,7 +31,7 @@ export const reportingIntegrations: IntegrationType[] = [
       "Data-driven insights"
     ],
     status: "stable" as const,
-    authMethod: "apiKey",
+    authMethod: "apiKey" as const,
     apiKeyName: "Tableau API Token"
   }
 ].sort((a, b) => a.name.localeCompare(b.name));

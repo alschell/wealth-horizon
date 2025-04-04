@@ -21,7 +21,7 @@ export const aggregatorIntegrations: IntegrationType[] = AGGREGATORS.map((aggreg
       "Reporting integration"
     ],
     status: "stable" as const,
-    authMethod: "apiKey",
+    authMethod: "apiKey" as const,
     apiKeyName: `${aggregator} API Key`
   };
 }).filter(Boolean) as IntegrationType[];

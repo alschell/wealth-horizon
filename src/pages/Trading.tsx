@@ -1,12 +1,13 @@
 
 import React from "react";
-import TradingInterface from "@/components/trading/TradingInterface";
+import DashboardLayout from "@/components/dashboard/DashboardLayout";
+import TradingDashboard from "@/components/trading/TradingDashboard";
 
 const Trading = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50/30 to-white">
-      <TradingInterface />
-    </div>
+    <DashboardLayout>
+      <TradingDashboard />
+    </DashboardLayout>
   );
 };
 

@@ -1,3 +1,4 @@
+
 import React from "react";  // Explicitly import React
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -17,6 +18,7 @@ import Index from "./pages/Index";
 import CashflowManagement from "./pages/CashflowManagement";
 import Integrations from "./pages/Integrations";
 import IntegrationCallback from "./pages/IntegrationCallback";
+import TradingInterface from "@/components/trading/TradingInterface";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -35,6 +37,8 @@ function App() {
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/dashboard/*" element={<Dashboard />} />
                 <Route path="/trading" element={<Trading />} />
+                <Route path="/trading/new" element={<TradingInterface />} />
+                <Route path="/trading/edit/:tradeId" element={<TradingInterface />} />
                 <Route path="/advice" element={<Advice />} />
                 <Route path="/market-data" element={<MarketData />} />
                 <Route path="/analyze-wealth" element={<AnalyzeWealth />} />

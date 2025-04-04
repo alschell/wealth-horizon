@@ -4,7 +4,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
 import { Button } from "@/components/ui/button";
 import { BadgePlus } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
-import { integrationCategories, availableIntegrations } from "./integrationData";
+import { integrationCategories, availableIntegrations } from "./data";
 import IntegrationFilters from "./IntegrationFilters";
 import AuthenticationDialog from "./auth/AuthenticationDialog";
 import { IntegrationType } from "./types";

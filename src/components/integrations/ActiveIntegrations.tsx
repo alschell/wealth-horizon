@@ -1,11 +1,10 @@
-
 import React from "react";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Settings, Link2Off } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import NoIntegrations from "./NoIntegrations";
-import { connectedIntegrations } from "./integrationData";
+import { connectedIntegrations } from "./data";
 
 const ActiveIntegrations = () => {
   const [activeIntegrations, setActiveIntegrations] = React.useState(connectedIntegrations);
@@ -18,7 +17,6 @@ const ActiveIntegrations = () => {
         description: `${integration.name} has been disconnected successfully.`,
       });
       
-      // Remove from active integrations
       setActiveIntegrations(activeIntegrations.filter((i) => i.id !== id));
     }
   };

@@ -1,8 +1,7 @@
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Plus, Clock, CheckCircle, BarChart3 } from "lucide-react";
+import { Plus, Clock, CheckCircle, BarChart3, Lightbulb, ArrowRight } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -17,11 +16,14 @@ const AdviceInterface: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Advisory Services</h1>
-          <p className="text-muted-foreground">
-            Manage your advisory mandates and compare performance across advisors
-          </p>
+        <div className="flex items-center gap-3">
+          <Lightbulb className="h-8 w-8 text-black" />
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">Advisory Services</h1>
+            <p className="text-muted-foreground">
+              Manage your advisory mandates and compare performance across advisors
+            </p>
+          </div>
         </div>
         <Button onClick={handleNewAdvice} className="flex items-center gap-2">
           <Plus className="h-4 w-4" />
@@ -81,33 +83,60 @@ const AdviceInterface: React.FC = () => {
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             <Card className="cursor-pointer hover:bg-accent/50">
               <CardHeader>
-                <CardTitle>New Advisory Mandate</CardTitle>
+                <CardTitle className="flex items-center gap-2">
+                  <Plus className="h-4 w-4" />
+                  New Advisory Mandate
+                </CardTitle>
                 <CardDescription>
                   Setup a new advisory relationship with a bank
                 </CardDescription>
               </CardHeader>
+              <CardContent className="pt-0 flex justify-end">
+                <Button variant="ghost" size="sm" className="text-sm">
+                  Start <ArrowRight className="ml-1 h-3 w-3" />
+                </Button>
+              </CardContent>
             </Card>
             <Card className="cursor-pointer hover:bg-accent/50">
               <CardHeader>
-                <CardTitle>Compare Advisors</CardTitle>
+                <CardTitle className="flex items-center gap-2">
+                  <BarChart3 className="h-4 w-4" />
+                  Compare Advisors
+                </CardTitle>
                 <CardDescription>
                   Benchmark performances across all mandates
                 </CardDescription>
               </CardHeader>
+              <CardContent className="pt-0 flex justify-end">
+                <Button variant="ghost" size="sm" className="text-sm">
+                  View <ArrowRight className="ml-1 h-3 w-3" />
+                </Button>
+              </CardContent>
             </Card>
             <Card className="cursor-pointer hover:bg-accent/50">
               <CardHeader>
-                <CardTitle>Review Latest Advice</CardTitle>
+                <CardTitle className="flex items-center gap-2">
+                  <Lightbulb className="h-4 w-4" />
+                  Review Latest Advice
+                </CardTitle>
                 <CardDescription>
                   See the latest investment recommendations
                 </CardDescription>
               </CardHeader>
+              <CardContent className="pt-0 flex justify-end">
+                <Button variant="ghost" size="sm" className="text-sm">
+                  Review <ArrowRight className="ml-1 h-3 w-3" />
+                </Button>
+              </CardContent>
             </Card>
           </div>
         </TabsContent>
 
         <TabsContent value="active" className="space-y-4">
-          <h2 className="text-xl font-semibold mb-4">Active Advisory Mandates</h2>
+          <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+            <CheckCircle className="h-5 w-5 text-black" />
+            Active Advisory Mandates
+          </h2>
           <div className="grid gap-4">
             <Card>
               <CardHeader>
@@ -156,7 +185,10 @@ const AdviceInterface: React.FC = () => {
         </TabsContent>
 
         <TabsContent value="pending" className="space-y-4">
-          <h2 className="text-xl font-semibold mb-4">Pending Advisory Mandates</h2>
+          <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+            <Clock className="h-5 w-5 text-black" />
+            Pending Advisory Mandates
+          </h2>
           <Card>
             <CardHeader>
               <CardTitle>JP Morgan Private Bank</CardTitle>
@@ -184,7 +216,10 @@ const AdviceInterface: React.FC = () => {
         </TabsContent>
 
         <TabsContent value="benchmarking" className="space-y-4">
-          <h2 className="text-xl font-semibold mb-4">Performance Benchmarking</h2>
+          <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+            <BarChart3 className="h-5 w-5 text-black" />
+            Performance Benchmarking
+          </h2>
           <Card>
             <CardHeader>
               <CardTitle>Mandate Performance Comparison</CardTitle>

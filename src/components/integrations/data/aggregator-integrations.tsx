@@ -20,7 +20,7 @@ export const aggregatorIntegrations: IntegrationType[] = AGGREGATORS.map((aggreg
       "Financial data consolidation",
       "Reporting integration"
     ],
-    status: "stable",
+    status: "stable" as const,
     authMethod: "apiKey",
     apiKeyName: `${aggregator} API Key`
   };

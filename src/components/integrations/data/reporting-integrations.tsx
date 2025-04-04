@@ -15,7 +15,7 @@ export const reportingIntegrations: IntegrationType[] = [
       "Interactive data exploration",
       "Scheduled report delivery"
     ],
-    status: "beta",
+    status: "beta" as const,
     authMethod: "oauth",
     authUrl: "https://login.microsoftonline.com/common/oauth2/v2.0/authorize"
   },
@@ -30,7 +30,7 @@ export const reportingIntegrations: IntegrationType[] = [
       "Interactive visualizations",
       "Data-driven insights"
     ],
-    status: "stable",
+    status: "stable" as const,
     authMethod: "apiKey",
     apiKeyName: "Tableau API Token"
   }

@@ -15,7 +15,7 @@ export const taxIntegrations: IntegrationType[] = [
       "Tax loss harvesting",
       "Capital gains reports"
     ],
-    status: "stable",
+    status: "stable" as const,
     authMethod: "apiKey",
     apiKeyName: "Koinly API Key"
   },
@@ -30,7 +30,7 @@ export const taxIntegrations: IntegrationType[] = [
       "Automated tax forms",
       "Year-round tax optimization"
     ],
-    status: "stable",
+    status: "stable" as const,
     authMethod: "oauth",
     authUrl: "https://taxbit.com/app/oauth/authorize"
   },
@@ -45,7 +45,7 @@ export const taxIntegrations: IntegrationType[] = [
       "Tax document organization",
       "Capital gains reporting"
     ],
-    status: "beta",
+    status: "beta" as const,
     authMethod: "oauth",
     authUrl: "https://accounts.intuit.com/oauth2/v2/authorize"
   }

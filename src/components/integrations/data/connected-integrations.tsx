@@ -15,7 +15,7 @@ export const connectedIntegrations: ConnectedIntegrationType[] = [
       "Track performance in real time",
       "Consolidated reporting with other assets"
     ],
-    status: "stable",
+    status: "stable" as const,
     connectionStatus: "active",
     lastSynced: "Today at 09:45 AM",
     authMethod: "oauth",
@@ -33,7 +33,7 @@ export const connectedIntegrations: ConnectedIntegrationType[] = [
       "Automated bookkeeping",
       "Consolidated financial statements"
     ],
-    status: "stable",
+    status: "stable" as const,
     connectionStatus: "needs attention",
     lastSynced: "Apr 02, 2025",
     authMethod: "oauth",
@@ -50,7 +50,7 @@ export const connectedIntegrations: ConnectedIntegrationType[] = [
       "Transaction history",
       "Account balance monitoring"
     ],
-    status: "stable",
+    status: "stable" as const,
     connectionStatus: "active",
     lastSynced: "Today at 10:30 AM",
     authMethod: "apiKey",
@@ -68,7 +68,7 @@ export const connectedIntegrations: ConnectedIntegrationType[] = [
       "Financial data consolidation",
       "Reporting integration"
     ],
-    status: "stable",
+    status: "stable" as const,
     connectionStatus: "active", 
     lastSynced: "Today at 11:00 AM",
     authMethod: "apiKey",

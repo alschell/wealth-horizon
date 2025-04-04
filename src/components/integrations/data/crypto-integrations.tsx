@@ -15,7 +15,7 @@ export const cryptoIntegrations: IntegrationType[] = [
       "Track performance in real time",
       "Consolidated reporting with other assets"
     ],
-    status: "stable",
+    status: "stable" as const,
     authMethod: "oauth",
     authUrl: "https://www.coinbase.com/oauth/authorize",
     scopes: ["wallet:accounts:read", "wallet:transactions:read"]
@@ -31,7 +31,7 @@ export const cryptoIntegrations: IntegrationType[] = [
       "Track portfolio performance",
       "Automated tax reporting"
     ],
-    status: "beta",
+    status: "beta" as const,
     authMethod: "both",
     authUrl: "https://www.kraken.com/oauth2/authorize",
     apiKeyName: "Kraken API Key",
@@ -48,7 +48,7 @@ export const cryptoIntegrations: IntegrationType[] = [
       "Track hardware wallet balances",
       "Multi-wallet support"
     ],
-    status: "beta",
+    status: "beta" as const,
     authMethod: "apiKey",
     apiKeyName: "Ledger API Key"
   }

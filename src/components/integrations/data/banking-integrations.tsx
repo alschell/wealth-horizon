@@ -15,7 +15,7 @@ export const bankingIntegrations: IntegrationType[] = [
       "Transaction history",
       "Account balance monitoring"
     ],
-    status: "stable",
+    status: "stable" as const,
     authMethod: "apiKey",
     apiKeyName: "Plaid Client ID and Secret"
   }

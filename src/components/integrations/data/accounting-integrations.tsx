@@ -15,7 +15,7 @@ export const accountingIntegrations: IntegrationType[] = [
       "Automated bookkeeping",
       "Consolidated financial statements"
     ],
-    status: "stable",
+    status: "stable" as const,
     authMethod: "oauth",
     authUrl: "https://appcenter.intuit.com/connect/oauth2"
   },
@@ -30,7 +30,7 @@ export const accountingIntegrations: IntegrationType[] = [
       "Automated reconciliation",
       "Custom financial reports"
     ],
-    status: "stable",
+    status: "stable" as const,
     authMethod: "oauth",
     authUrl: "https://login.xero.com/identity/connect/authorize"
   }

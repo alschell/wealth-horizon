@@ -23,7 +23,10 @@ export const availableIntegrations: IntegrationType[] = [
       "Track performance in real time",
       "Consolidated reporting with other assets"
     ],
-    status: "stable"
+    status: "stable",
+    authMethod: "oauth",
+    authUrl: "https://www.coinbase.com/oauth/authorize",
+    scopes: ["wallet:accounts:read", "wallet:transactions:read"]
   },
   {
     id: "kraken",
@@ -36,7 +39,11 @@ export const availableIntegrations: IntegrationType[] = [
       "Track portfolio performance",
       "Automated tax reporting"
     ],
-    status: "beta"
+    status: "beta",
+    authMethod: "both",
+    authUrl: "https://www.kraken.com/oauth2/authorize",
+    apiKeyName: "Kraken API Key",
+    scopes: ["read"]
   },
   {
     id: "ledger",
@@ -49,7 +56,9 @@ export const availableIntegrations: IntegrationType[] = [
       "Track hardware wallet balances",
       "Multi-wallet support"
     ],
-    status: "beta"
+    status: "beta",
+    authMethod: "apiKey",
+    apiKeyName: "Ledger API Key"
   },
   {
     id: "taxbit",
@@ -62,7 +71,9 @@ export const availableIntegrations: IntegrationType[] = [
       "Automated tax forms",
       "Year-round tax optimization"
     ],
-    status: "stable"
+    status: "stable",
+    authMethod: "oauth",
+    authUrl: "https://taxbit.com/app/oauth/authorize"
   },
   {
     id: "koinly",
@@ -75,7 +86,9 @@ export const availableIntegrations: IntegrationType[] = [
       "Tax loss harvesting",
       "Capital gains reports"
     ],
-    status: "stable"
+    status: "stable",
+    authMethod: "apiKey",
+    apiKeyName: "Koinly API Key"
   },
   {
     id: "quickbooks",
@@ -88,7 +101,9 @@ export const availableIntegrations: IntegrationType[] = [
       "Automated bookkeeping",
       "Consolidated financial statements"
     ],
-    status: "stable"
+    status: "stable",
+    authMethod: "oauth",
+    authUrl: "https://appcenter.intuit.com/connect/oauth2"
   },
   {
     id: "xero",
@@ -101,7 +116,9 @@ export const availableIntegrations: IntegrationType[] = [
       "Automated reconciliation",
       "Custom financial reports"
     ],
-    status: "stable"
+    status: "stable",
+    authMethod: "oauth",
+    authUrl: "https://login.xero.com/identity/connect/authorize"
   },
   {
     id: "plaid",
@@ -114,7 +131,9 @@ export const availableIntegrations: IntegrationType[] = [
       "Transaction history",
       "Account balance monitoring"
     ],
-    status: "stable"
+    status: "stable",
+    authMethod: "apiKey",
+    apiKeyName: "Plaid Client ID and Secret"
   },
   {
     id: "tableau",
@@ -127,7 +146,9 @@ export const availableIntegrations: IntegrationType[] = [
       "Interactive visualizations",
       "Data-driven insights"
     ],
-    status: "stable"
+    status: "stable",
+    authMethod: "apiKey",
+    apiKeyName: "Tableau API Token"
   },
   {
     id: "power-bi",
@@ -140,7 +161,9 @@ export const availableIntegrations: IntegrationType[] = [
       "Interactive data exploration",
       "Scheduled report delivery"
     ],
-    status: "beta"
+    status: "beta",
+    authMethod: "oauth",
+    authUrl: "https://login.microsoftonline.com/common/oauth2/v2.0/authorize"
   },
   {
     id: "turbotax",
@@ -153,7 +176,9 @@ export const availableIntegrations: IntegrationType[] = [
       "Tax document organization",
       "Capital gains reporting"
     ],
-    status: "beta"
+    status: "beta",
+    authMethod: "oauth",
+    authUrl: "https://accounts.intuit.com/oauth2/v2/authorize"
   }
 ];
 
@@ -171,7 +196,10 @@ export const connectedIntegrations: ConnectedIntegrationType[] = [
     ],
     status: "stable",
     connectionStatus: "active",
-    lastSynced: "Today at 09:45 AM"
+    lastSynced: "Today at 09:45 AM",
+    authMethod: "oauth",
+    authUrl: "https://www.coinbase.com/oauth/authorize",
+    scopes: ["wallet:accounts:read", "wallet:transactions:read"]
   },
   {
     id: "quickbooks",
@@ -186,7 +214,9 @@ export const connectedIntegrations: ConnectedIntegrationType[] = [
     ],
     status: "stable",
     connectionStatus: "needs attention",
-    lastSynced: "Apr 02, 2025"
+    lastSynced: "Apr 02, 2025",
+    authMethod: "oauth",
+    authUrl: "https://appcenter.intuit.com/connect/oauth2"
   },
   {
     id: "plaid",
@@ -201,6 +231,8 @@ export const connectedIntegrations: ConnectedIntegrationType[] = [
     ],
     status: "stable",
     connectionStatus: "active",
-    lastSynced: "Today at 10:30 AM"
+    lastSynced: "Today at 10:30 AM",
+    authMethod: "apiKey",
+    apiKeyName: "Plaid Client ID and Secret"
   }
 ];

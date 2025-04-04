@@ -1,4 +1,3 @@
-
 import React from "react";  // Explicitly import React
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -17,6 +16,7 @@ import AnalyzeWealth from "./pages/AnalyzeWealth";
 import Index from "./pages/Index";
 import CashflowManagement from "./pages/CashflowManagement";
 import Integrations from "./pages/Integrations";
+import IntegrationCallback from "./pages/IntegrationCallback";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -40,6 +40,7 @@ function App() {
                 <Route path="/analyze-wealth" element={<AnalyzeWealth />} />
                 <Route path="/cashflow" element={<CashflowManagement />} />
                 <Route path="/integrations" element={<Integrations />} />
+                <Route path="/integrations/oauth-callback" element={<IntegrationCallback />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
               <Toaster />

@@ -9,6 +9,10 @@ export interface IntegrationType {
   category: string;
   features: string[];
   status: "beta" | "stable";
+  authMethod: "oauth" | "apiKey" | "both";
+  authUrl?: string;
+  apiKeyName?: string;
+  scopes?: string[];
 }
 
 export interface ConnectedIntegrationType extends IntegrationType {
@@ -20,4 +24,9 @@ export interface CategoryType {
   id: string;
   name: string;
   icon?: ReactNode;
+}
+
+export interface ApiKeyFormData {
+  apiKey: string;
+  service: string;
 }

@@ -6,14 +6,21 @@ import { BadgePlus } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { integrationCategories, availableIntegrations } from "./integrationData";
 import IntegrationFilters from "./IntegrationFilters";
+import AuthenticationDialog from "./auth/AuthenticationDialog";
+import { IntegrationType } from "./types";
 
 const IntegrationCards = () => {
   const [selectedCategory, setSelectedCategory] = React.useState<string>("all");
+  const [selectedIntegration, setSelectedIntegration] = React.useState<IntegrationType | null>(null);
+  const [isAuthDialogOpen, setIsAuthDialogOpen] = React.useState(false);
 
-  const handleConnect = (integrationName: string) => {
+  const handleConnect = (integration: IntegrationType) => {
+    setSelectedIntegration(integration);
+    setIsAuthDialogOpen(true);
+    
     toast({
       title: "Connection initiated",
-      description: `Starting connection process with ${integrationName}...`,
+      description: `Starting connection process with ${integration.name}...`,
     });
   };
 
@@ -59,7 +66,7 @@ const IntegrationCards = () => {
             <CardFooter>
               <Button 
                 className="w-full" 
-                onClick={() => handleConnect(integration.name)}
+                onClick={() => handleConnect(integration)}
               >
                 <BadgePlus className="mr-2 h-4 w-4" />
                 Connect
@@ -68,6 +75,14 @@ const IntegrationCards = () => {
           </Card>
         ))}
       </div>
+      
+      {selectedIntegration && (
+        <AuthenticationDialog
+          isOpen={isAuthDialogOpen}
+          onOpenChange={setIsAuthDialogOpen}
+          integration={selectedIntegration}
+        />
+      )}
     </div>
   );
 };

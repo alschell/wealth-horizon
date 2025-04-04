@@ -53,8 +53,33 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "@/hooks/use-toast";
 
+// Define proper types for our report data
+interface ReportBase {
+  id: number;
+  title: string;
+  type: string;
+  date: string;
+  status: string;
+  category: string;
+  starred?: boolean;
+}
+
+interface AvailableReport extends ReportBase {
+  status: "Available";
+  format: string;
+  size: string;
+}
+
+interface ProcessingReport extends ReportBase {
+  status: "Processing";
+  format?: string;
+  size?: string;
+}
+
+type Report = AvailableReport | ProcessingReport;
+
 // Sample report data
-const reportsData = [
+const reportsData: Report[] = [
   {
     id: 1,
     title: "Q1 2025 Performance Report",
@@ -166,7 +191,7 @@ const reportTypeIcons = {
 
 const ReportingInterface: React.FC = () => {
   const [date, setDate] = React.useState<Date>();
-  const [reports, setReports] = useState(reportsData);
+  const [reports, setReports] = useState<Report[]>(reportsData);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [sortBy, setSortBy] = useState("date");
@@ -384,9 +409,9 @@ const ReportingInterface: React.FC = () => {
                         <div className="flex justify-between text-sm">
                           <div className="flex items-center gap-1">
                             <FileCheck className="h-4 w-4 text-gray-500" />
-                            <span>{report.format}</span>
+                            <span>{(report as AvailableReport).format}</span>
                           </div>
-                          <span className="text-muted-foreground">{report.size}</span>
+                          <span className="text-muted-foreground">{(report as AvailableReport).size}</span>
                         </div>
                       )}
                     </CardContent>

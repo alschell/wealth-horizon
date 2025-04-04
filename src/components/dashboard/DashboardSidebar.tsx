@@ -96,7 +96,7 @@ const DashboardSidebar = () => {
   };
   
   return (
-    <Sidebar className="border-r border-border bg-background" collapsible="icon">
+    <Sidebar className="border-r border-border bg-white" collapsible="icon">
       <SidebarHeader className="flex items-center h-14 px-3 border-b border-border">
         <div className="text-lg font-semibold text-black">WP</div>
       </SidebarHeader>
@@ -110,13 +110,13 @@ const DashboardSidebar = () => {
                     asChild 
                     isActive={isActivePath(item.path)}
                     tooltip={item.title}
-                    className="transition-colors hover:bg-accent/50 focus:bg-accent/50 group whitespace-nowrap"
+                    className="transition-colors hover:bg-gray-100 focus:bg-gray-100 group whitespace-nowrap"
                   >
                     <Link to={item.path} className="flex items-center gap-2 p-2 rounded-md text-sm">
                       <div className="flex items-center justify-center w-5 h-5">
-                        <item.icon className={`h-[18px] w-[18px] ${isActivePath(item.path) ? 'text-primary' : 'text-muted-foreground group-hover:text-foreground'}`} />
+                        <item.icon className={`h-[18px] w-[18px] ${isActivePath(item.path) ? 'text-black' : 'text-gray-500 group-hover:text-black'}`} />
                       </div>
-                      <span className={`truncate ${isActivePath(item.path) ? 'font-medium text-foreground' : 'text-muted-foreground group-hover:text-foreground'}`}>
+                      <span className={`truncate ${isActivePath(item.path) ? 'font-medium text-black' : 'text-gray-500 group-hover:text-black'}`}>
                         {item.title}
                       </span>
                     </Link>
@@ -134,13 +134,13 @@ const DashboardSidebar = () => {
           <SidebarMenuItem>
             <SidebarMenuButton
               tooltip="Log Out"
-              className="transition-colors hover:bg-accent/50 focus:bg-accent/50 group whitespace-nowrap"
+              className="transition-colors hover:bg-gray-100 focus:bg-gray-100 group whitespace-nowrap"
             >
               <Link to="/" className="flex items-center gap-2 p-2 rounded-md text-sm">
                 <div className="flex items-center justify-center w-5 h-5">
-                  <LogOut className="h-[18px] w-[18px] text-muted-foreground group-hover:text-foreground" />
+                  <LogOut className="h-[18px] w-[18px] text-gray-500 group-hover:text-black" />
                 </div>
-                <span className="truncate text-muted-foreground group-hover:text-foreground">
+                <span className="truncate text-gray-500 group-hover:text-black">
                   Log Out
                 </span>
               </Link>

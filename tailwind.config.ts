@@ -31,7 +31,7 @@ export default {
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
 				primary: {
-					DEFAULT: '#000000', // Changed to black
+					DEFAULT: '#000000',
 					foreground: 'hsl(var(--primary-foreground))'
 				},
 				secondary: {
@@ -59,19 +59,19 @@ export default {
 					foreground: 'hsl(var(--card-foreground))'
 				},
 				sidebar: {
-					DEFAULT: 'hsl(var(--sidebar-background))',
-					foreground: 'hsl(var(--sidebar-foreground))',
-					primary: '#000000', // Changed to black
-					'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
-					accent: 'hsl(var(--sidebar-accent))',
-					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
-					border: 'hsl(var(--sidebar-border))',
-					ring: 'hsl(var(--sidebar-ring))'
+					DEFAULT: 'hsl(var(--background))',
+					foreground: 'hsl(var(--foreground))',
+					primary: '#000000',
+					'primary-foreground': 'hsl(var(--primary-foreground))',
+					accent: 'hsl(var(--accent))',
+					'accent-foreground': 'hsl(var(--accent-foreground))',
+					border: 'hsl(var(--border))',
+					ring: 'hsl(var(--ring))'
 				},
 				brand: {
-					DEFAULT: '#000000', // Changed to black
-					light: '#333333', // Changed to dark gray
-					dark: '#000000' // Changed to black
+					DEFAULT: '#000000',
+					light: '#333333',
+					dark: '#000000'
 				},
 			},
 			borderRadius: {

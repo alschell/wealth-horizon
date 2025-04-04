@@ -1,68 +1,69 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --background: 210 50% 98%;
-    --foreground: 0 0% 0%;  /* Changed to black */
+    --background: 0 0% 100%;
+    --foreground: 0 0% 0%;  
 
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 0%;  /* Changed to black */
+    --card-foreground: 0 0% 0%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 0%;  /* Changed to black */
+    --popover-foreground: 0 0% 0%;
 
-    --primary: 200 92% 75%;
-    --primary-foreground: 0 0% 0%;  /* Changed to black */
+    --primary: 0 0% 0%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 50% 96%;
-    --secondary-foreground: 0 0% 0%;  /* Changed to black */
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 0 0% 0%;
 
-    --muted: 220 14% 96%;
-    --muted-foreground: 0 0% 0%;  /* Changed to black */
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 45%;
 
-    --accent: 210 50% 96%;
-    --accent-foreground: 0 0% 0%;  /* Changed to black */
+    --accent: 0 0% 96%;
+    --accent-foreground: 0 0% 0%;
 
     --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 0%;  /* Changed to black */
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
-    --ring: 200 92% 75%;
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
+    --ring: 0 0% 0%;
 
-    --radius: 0.75rem;
+    --radius: 0.5rem;
   }
 
   .dark {
-    --background: 224 30% 10%;
-    --foreground: 0 0% 0%;  /* Changed to black */
+    --background: 0 0% 10%;
+    --foreground: 0 0% 100%;
 
-    --card: 224 30% 12%;
-    --card-foreground: 0 0% 0%;  /* Changed to black */
+    --card: 0 0% 12%;
+    --card-foreground: 0 0% 100%;
 
-    --popover: 224 30% 12%;
-    --popover-foreground: 0 0% 0%;  /* Changed to black */
+    --popover: 0 0% 12%;
+    --popover-foreground: 0 0% 100%;
 
-    --primary: 200 92% 75%;
-    --primary-foreground: 0 0% 0%;  /* Changed to black */
+    --primary: 0 0% 100%;
+    --primary-foreground: 0 0% 0%;
 
-    --secondary: 210 30% 15%;
-    --secondary-foreground: 0 0% 0%;  /* Changed to black */
+    --secondary: 0 0% 15%;
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 224 30% 15%;
-    --muted-foreground: 0 0% 0%;  /* Changed to black */
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 65%;
 
-    --accent: 210 30% 15%;
-    --accent-foreground: 0 0% 0%;  /* Changed to black */
+    --accent: 0 0% 15%;
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 62% 30%;
-    --destructive-foreground: 0 0% 0%;  /* Changed to black */
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 224 30% 20%;
-    --input: 224 30% 20%;
-    --ring: 200 92% 75%;
+    --border: 0 0% 20%;
+    --input: 0 0% 20%;
+    --ring: 0 0% 100%;
   }
 }
 
@@ -76,7 +77,7 @@
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-display tracking-tight text-black; /* Changed to black */
+    @apply font-display tracking-tight text-black;
   }
 }
 
@@ -99,6 +100,6 @@
   }
   
   .input-focus {
-    @apply focus:border-[#86CEFA] focus:ring-2 focus:ring-[#86CEFA]/20 transition-all;
+    @apply focus:border-black focus:ring-2 focus:ring-black/20 transition-all;
   }
 }

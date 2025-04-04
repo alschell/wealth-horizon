@@ -1,4 +1,3 @@
-
 import * as React from "react"
 import { PanelLeft } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -51,7 +50,7 @@ export const Sidebar = React.forwardRef<
             className="w-[--sidebar-width] bg-sidebar p-0 text-sidebar-foreground [&>button]:hidden"
             style={
               {
-                "--sidebar-width": "16rem",
+                "--sidebar-width": "14rem",
               } as React.CSSProperties
             }
             side={side}
@@ -93,8 +92,8 @@ export const Sidebar = React.forwardRef<
             className
           )}
           style={{
-            "--sidebar-width": "16rem",
-            "--sidebar-width-icon": "4rem",
+            "--sidebar-width": "14rem",
+            "--sidebar-width-icon": "3.5rem",
           } as React.CSSProperties}
           {...props}
         >

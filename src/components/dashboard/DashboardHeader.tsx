@@ -11,7 +11,7 @@ import {
 
 const DashboardHeader = () => {
   return (
-    <header className="h-16 px-4 flex items-center justify-end bg-background">
+    <header className="h-14 px-4 flex items-center justify-end border-b border-border bg-white">
       <div className="flex items-center gap-2">
         <TooltipProvider>
           <Tooltip>

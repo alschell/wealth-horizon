@@ -92,6 +92,10 @@ export const Sidebar = React.forwardRef<
               : "group-data-[collapsible=icon]:w-[--sidebar-width-icon] group-data-[side=left]:border-r group-data-[side=right]:border-l",
             className
           )}
+          style={{
+            "--sidebar-width": "14rem",
+            "--sidebar-width-icon": "4rem",
+          } as React.CSSProperties}
           {...props}
         >
           <div

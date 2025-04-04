@@ -19,91 +19,69 @@ import {
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarHeader,
-  SidebarSeparator,
   SidebarFooter
 } from "@/components/ui/sidebar";
 
-const menuSections = [
+const menuItems = [
   {
-    label: "Core",
-    items: [
-      {
-        title: "Dashboard",
-        icon: LayoutDashboard,
-        path: "/dashboard",
-      },
-      {
-        title: "Wealth",
-        icon: DollarSign,
-        path: "/dashboard/wealth",
-      },
-      {
-        title: "Analyze Wealth",
-        icon: BarChart,
-        path: "/analyze-wealth",
-      },
-      {
-        title: "Manage Cashflow & Liquidity",
-        icon: Wallet,
-        path: "/cashflow",
-      },
-    ]
+    title: "Dashboard",
+    icon: LayoutDashboard,
+    path: "/dashboard",
   },
   {
-    label: "Markets & Finance",
-    items: [
-      {
-        title: "Trade",
-        icon: TrendingUp,
-        path: "/trading",
-      },
-      {
-        title: "View Market Data & News",
-        icon: LineChart,
-        path: "/market-data",
-      },
-      {
-        title: "Credit Facilities",
-        icon: CreditCard,
-        path: "/dashboard/credit",
-      },
-    ]
+    title: "Wealth",
+    icon: DollarSign,
+    path: "/dashboard/wealth",
   },
   {
-    label: "Management",
-    items: [
-      {
-        title: "Notifications",
-        icon: Bell,
-        path: "/dashboard/notifications",
-      },
-      {
-        title: "Manage Users & Permissions",
-        icon: Users,
-        path: "/dashboard/users",
-      },
-    ]
+    title: "Analyze Wealth",
+    icon: BarChart,
+    path: "/analyze-wealth",
   },
   {
-    label: "Settings & Integrations",
-    items: [
-      {
-        title: "Connect 3rd Party Services",
-        icon: Puzzle,
-        path: "/integrations",
-      },
-      {
-        title: "Settings",
-        icon: Settings,
-        path: "/settings",
-      },
-    ]
-  }
+    title: "Manage Cashflow & Liquidity",
+    icon: Wallet,
+    path: "/cashflow",
+  },
+  {
+    title: "Trade",
+    icon: TrendingUp,
+    path: "/trading",
+  },
+  {
+    title: "View Market Data & News",
+    icon: LineChart,
+    path: "/market-data",
+  },
+  {
+    title: "Credit Facilities",
+    icon: CreditCard,
+    path: "/dashboard/credit",
+  },
+  {
+    title: "Notifications",
+    icon: Bell,
+    path: "/dashboard/notifications",
+  },
+  {
+    title: "Manage Users & Permissions",
+    icon: Users,
+    path: "/dashboard/users",
+  },
+  {
+    title: "Connect 3rd Party Services",
+    icon: Puzzle,
+    path: "/integrations",
+  },
+  {
+    title: "Settings",
+    icon: Settings,
+    path: "/settings",
+  },
 ];
 
 const DashboardSidebar = () => {
@@ -121,36 +99,31 @@ const DashboardSidebar = () => {
         <div className="text-lg font-semibold text-black">WP</div>
       </SidebarHeader>
       <SidebarContent className="py-2">
-        {menuSections.map((section, idx) => (
-          <SidebarGroup key={idx} className="mb-2">
-            <SidebarGroupLabel className="text-xs text-muted-foreground px-2 mb-1 uppercase tracking-wider">
-              {section.label}
-            </SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {section.items.map((item) => (
-                  <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton 
-                      asChild 
-                      isActive={isActivePath(item.path)}
-                      tooltip={item.title}
-                      className="transition-colors hover:bg-accent/50 focus:bg-accent/50 group"
-                    >
-                      <Link to={item.path} className="flex items-center gap-2 p-2 rounded-md text-sm">
-                        <div className="flex items-center justify-center w-5 h-5">
-                          <item.icon className={`h-[18px] w-[18px] ${isActivePath(item.path) ? 'text-primary' : 'text-muted-foreground group-hover:text-foreground'}`} />
-                        </div>
-                        <span className={`${isActivePath(item.path) ? 'font-medium text-foreground' : 'text-muted-foreground group-hover:text-foreground'}`}>
-                          {item.title}
-                        </span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        ))}
+        <SidebarGroup>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {menuItems.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton 
+                    asChild 
+                    isActive={isActivePath(item.path)}
+                    tooltip={item.title}
+                    className="transition-colors hover:bg-accent/50 focus:bg-accent/50 group whitespace-nowrap"
+                  >
+                    <Link to={item.path} className="flex items-center gap-2 p-2 rounded-md text-sm">
+                      <div className="flex items-center justify-center w-5 h-5">
+                        <item.icon className={`h-[18px] w-[18px] ${isActivePath(item.path) ? 'text-primary' : 'text-muted-foreground group-hover:text-foreground'}`} />
+                      </div>
+                      <span className={`truncate ${isActivePath(item.path) ? 'font-medium text-foreground' : 'text-muted-foreground group-hover:text-foreground'}`}>
+                        {item.title}
+                      </span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
       </SidebarContent>
       
       <SidebarFooter className="p-3 mt-auto border-t border-border" />

@@ -12,7 +12,7 @@ const CashflowHeader = () => {
             <CircleDollarSign className="h-8 w-8 text-green-700" />
           </div>
           <div className="space-y-1">
-            <h1 className="text-3xl font-semibold tracking-tight">Cashflow & Liquidity Management</h1>
+            <h1 className="text-3xl font-semibold tracking-tight">Manage Cashflow & Liquidity</h1>
             <p className="text-muted-foreground max-w-3xl">
               Monitor your cash flow, plan future liquidity needs, manage recurring payments, 
               and optimize idle funds with competitive term deposits.

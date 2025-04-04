@@ -1,18 +1,19 @@
+
 import React from "react";
-import UserManagementHeader from "./components/UserManagementHeader";
-import UsersList from "./components/UsersList";
-import InviteUserDialog from "./components/InviteUserDialog";
-import EditUserDialog from "./components/EditUserDialog";
-import DeleteUserDialog from "./components/DeleteUserDialog";
-import DeactivateUserDialog from "./components/DeactivateUserDialog";
-import ActivateUserDialog from "./components/ActivateUserDialog";
-import ResendInviteDialog from "./components/ResendInviteDialog";
-import ViewPermissionsDialog from "./components/ViewPermissionsDialog";
+import UserManagementHeader from "../components/UserManagementHeader";
+import UsersList from "../components/UsersList";
+import InviteUserDialog from "../components/InviteUserDialog";
+import EditUserDialog from "../components/EditUserDialog";
+import DeleteUserDialog from "../components/DeleteUserDialog";
+import DeactivateUserDialog from "../components/DeactivateUserDialog";
+import ActivateUserDialog from "../components/ActivateUserDialog";
+import ResendInviteDialog from "../components/ResendInviteDialog";
+import ViewPermissionsDialog from "../components/ViewPermissionsDialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { motion } from "framer-motion";
-import { useUserActionDialog } from "./hooks/useUserActionDialog";
+import { useUserActionDialog } from "../hooks/useUserActionDialog";
 import { useToast } from "@/hooks/use-toast";
-import { useInviteUserDialog } from "./hooks/useInviteUserDialog";
+import { useInviteUserDialog } from "../hooks/useInviteUserDialog";
 
 const UserManagementInterface = () => {
   const {

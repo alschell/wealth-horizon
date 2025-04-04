@@ -6,7 +6,7 @@ import MarketOverview from "./sections/MarketOverview";
 import IndicesTracker from "./sections/IndicesTracker";
 import NewsSection from "./sections/NewsSection";
 import WatchlistSection from "./sections/WatchlistSection";
-import { MarketDataHeader } from "./components/MarketDataHeader";
+import MarketDataHeader from "./components/MarketDataHeader";
 
 const MarketDataInterface = () => {
   const [activeTab, setActiveTab] = useState("overview");

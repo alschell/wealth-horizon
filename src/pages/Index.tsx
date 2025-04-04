@@ -3,6 +3,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, Puzzle } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { integrationCategories } from "@/components/integrations/data";
 
 const Index = () => {
   return (
@@ -84,6 +85,9 @@ const Index = () => {
             <p className="text-gray-600 mb-6">
               Connect with third-party services like crypto providers, tax advisors, and accounting platforms.
             </p>
+            <div className="mb-4 text-sm">
+              <span className="font-semibold">Available categories:</span> {integrationCategories.map(cat => cat.name).join(', ')}
+            </div>
             <Link to="/integrations">
               <Button className="w-full bg-black hover:bg-gray-800 text-white">
                 Manage Integrations

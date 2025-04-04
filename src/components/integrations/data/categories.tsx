@@ -8,5 +8,6 @@ export const integrationCategories: CategoryType[] = [
   { id: "banking", name: "Banking" },
   { id: "crypto", name: "Crypto Services" },
   { id: "reporting", name: "Reporting" },
+  { id: "storage", name: "Storage Providers" },
   { id: "tax", name: "Tax Services" }
 ];

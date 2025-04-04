@@ -6,6 +6,7 @@ import { accountingIntegrations } from "./accounting-integrations";
 import { bankingIntegrations } from "./banking-integrations";
 import { reportingIntegrations } from "./reporting-integrations";
 import { aggregatorIntegrations } from "./aggregator-integrations";
+import { storageIntegrations } from "./storage-integrations";
 import { connectedIntegrations } from "./connected-integrations";
 import { IntegrationType } from "../types";
 
@@ -16,6 +17,7 @@ export const availableIntegrations: IntegrationType[] = [
   ...bankingIntegrations,
   ...cryptoIntegrations,
   ...reportingIntegrations,
+  ...storageIntegrations,
   ...taxIntegrations
 ];
 
@@ -27,5 +29,6 @@ export {
   bankingIntegrations,
   reportingIntegrations,
   aggregatorIntegrations,
+  storageIntegrations,
   connectedIntegrations
 };

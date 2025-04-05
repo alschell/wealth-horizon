@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import IntegrationsHeader from "@/components/integrations/IntegrationsHeader";
@@ -8,13 +9,15 @@ import ActiveIntegrations from "@/components/integrations/ActiveIntegrations";
 import { useOnboarding } from "@/context/OnboardingContext";
 import { connectedIntegrations } from "@/components/integrations/data/connected-integrations";
 import { ConnectedIntegrationType } from "@/components/integrations/types";
-import { Database, Link } from "lucide-react";
+import { Database, Link, ArrowLeft } from "lucide-react";
 import { motion } from "framer-motion";
 import PageHeaderCard from "@/components/dashboard/PageHeaderCard";
+import { Button } from "@/components/ui/button";
 
 const Integrations = () => {
   const [activeTab, setActiveTab] = useState<string>("available");
   const { onboardingData } = useOnboarding();
+  const navigate = useNavigate();
   const [updatedConnectedIntegrations, setUpdatedConnectedIntegrations] = 
     useState<ConnectedIntegrationType[]>(connectedIntegrations);
 
@@ -59,6 +62,17 @@ const Integrations = () => {
   return (
     <DashboardLayout>
       <div className="space-y-6">
+        <div className="flex items-center gap-2 mb-4">
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={() => navigate("/dashboard")}
+            className="flex items-center gap-1"
+          >
+            <ArrowLeft className="h-4 w-4" /> Back to Dashboard
+          </Button>
+        </div>
+        
         <PageHeaderCard
           icon={Link}
           title="Integrations"

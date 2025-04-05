@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import MarketDataInterface from "@/components/market/MarketDataInterface";
 import PageHeaderCard from "@/components/dashboard/PageHeaderCard";
-import { BarChart2, ArrowLeft } from "lucide-react";
+import { LineChart, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const MarketData = () => {
@@ -25,7 +25,7 @@ const MarketData = () => {
         </div>
         
         <PageHeaderCard
-          icon={BarChart2}
+          icon={LineChart}
           title="Access market data & news"
           description="Access real-time market data, news, and research across global markets"
           iconColor="text-gray-700"

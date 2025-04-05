@@ -9,7 +9,8 @@ import {
   FileText, 
   Users, 
   Settings, 
-  HelpCircle 
+  Lightbulb,
+  Link as LinkIcon
 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -39,7 +40,7 @@ const modules = [
     id: "advisory",
     title: "Get advice",
     description: "Get personalized investment advice and insights",
-    icon: <HelpCircle className="h-6 w-6" />,
+    icon: <Lightbulb className="h-6 w-6" />,
     link: "/advice",
     color: "bg-gray-50",
     textColor: "text-gray-600",
@@ -71,6 +72,16 @@ const modules = [
     description: "Generate and view financial reports",
     icon: <FileText className="h-6 w-6" />,
     link: "/reporting",
+    color: "bg-gray-50",
+    textColor: "text-gray-600",
+    iconColor: "text-gray-500"
+  },
+  {
+    id: "integrations",
+    title: "Manage integrations",
+    description: "Connect and manage third-party integrations",
+    icon: <LinkIcon className="h-6 w-6" />,
+    link: "/integrations",
     color: "bg-gray-50",
     textColor: "text-gray-600",
     iconColor: "text-gray-500"

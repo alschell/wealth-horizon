@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Plus, Lightbulb } from "lucide-react";
+import { Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 interface AdviceHeaderProps {
@@ -12,10 +12,7 @@ const AdviceHeader: React.FC<AdviceHeaderProps> = ({ onNewAdvice }) => {
   return (
     <div className="flex items-center justify-between mb-6">
       <div className="flex items-center gap-3">
-        <div className="p-2 bg-gray-100 rounded-lg">
-          <Lightbulb className="h-6 w-6 text-black" />
-        </div>
-        <h1 className="text-2xl font-bold tracking-tight">Financial Advice</h1>
+        {/* Removed the lightbulb icon and Financial Advice text as requested */}
       </div>
       <Button onClick={onNewAdvice} className="flex items-center gap-2">
         <Plus className="h-4 w-4" />

@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import WealthAnalysisInterface from "@/components/wealth-analysis/WealthAnalysisInterface";
 import PageHeaderCard from "@/components/dashboard/PageHeaderCard";
-import { TrendingUp, ArrowLeft } from "lucide-react";
+import { PieChart, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const AnalyzeWealth = () => {
@@ -25,7 +25,7 @@ const AnalyzeWealth = () => {
         </div>
         
         <PageHeaderCard
-          icon={TrendingUp}
+          icon={PieChart}
           title="Analyze wealth"
           description="Analyze your assets and liabilities, run sophisticated benchmarks and simulations"
           iconColor="text-gray-700"

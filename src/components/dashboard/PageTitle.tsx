@@ -16,7 +16,7 @@ const PageTitle = () => {
     if (path === "/market-data") return "Access market data & news";
     if (path === "/dashboard/credit") return "Credit Facilities";
     if (path === "/cashflow") return "Manage cashflow & liquidity";
-    if (path === "/integrations") return "Integrations";
+    if (path === "/integrations") return "Manage integrations";
     if (path === "/settings") return "Settings";
     if (path === "/reporting") return "Generate reports";
     if (path === "/dashboard/users") return "Manage users & permissions";

@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import AdviceInterface from "@/components/advice/AdviceInterface";
 import PageHeaderCard from "@/components/dashboard/PageHeaderCard";
-import { HelpCircle, ArrowLeft } from "lucide-react";
+import { Lightbulb, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const Advice = () => {
@@ -25,7 +25,7 @@ const Advice = () => {
         </div>
         
         <PageHeaderCard
-          icon={HelpCircle}
+          icon={Lightbulb}
           title="Get advice"
           description="Get personalized recommendations and strategic insights for your portfolio"
           iconColor="text-gray-700"

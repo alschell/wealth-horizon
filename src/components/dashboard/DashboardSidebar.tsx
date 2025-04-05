@@ -96,8 +96,8 @@ const DashboardSidebar = () => {
   };
   
   return (
-    <Sidebar className="border-r border-border bg-white" collapsible="icon">
-      <SidebarHeader className="flex items-center h-14 px-3 border-b border-border">
+    <Sidebar className="border-r border-border bg-gray-100" collapsible="icon">
+      <SidebarHeader className="flex items-center h-14 px-3 border-b border-border bg-gray-200">
         <div className="text-lg font-semibold text-black">WP</div>
       </SidebarHeader>
       <SidebarContent className="py-2">
@@ -110,13 +110,13 @@ const DashboardSidebar = () => {
                     asChild 
                     isActive={isActivePath(item.path)}
                     tooltip={item.title}
-                    className="transition-colors hover:bg-gray-100 focus:bg-gray-100 group whitespace-nowrap"
+                    className="transition-colors hover:bg-gray-200 focus:bg-gray-200 group whitespace-nowrap"
                   >
                     <Link to={item.path} className="flex items-center gap-2 p-2 rounded-md text-sm">
                       <div className="flex items-center justify-center w-5 h-5">
-                        <item.icon className={`h-[18px] w-[18px] ${isActivePath(item.path) ? 'text-black' : 'text-gray-500 group-hover:text-black'}`} />
+                        <item.icon className={`h-[18px] w-[18px] ${isActivePath(item.path) ? 'text-black' : 'text-gray-600 group-hover:text-black'}`} />
                       </div>
-                      <span className={`truncate ${isActivePath(item.path) ? 'font-medium text-black' : 'text-gray-500 group-hover:text-black'}`}>
+                      <span className={`truncate ${isActivePath(item.path) ? 'font-medium text-black' : 'text-gray-600 group-hover:text-black'}`}>
                         {item.title}
                       </span>
                     </Link>
@@ -128,18 +128,18 @@ const DashboardSidebar = () => {
         </SidebarGroup>
       </SidebarContent>
       
-      <SidebarFooter className="p-3 mt-auto border-t border-border">
+      <SidebarFooter className="p-3 mt-auto border-t border-border bg-gray-200">
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton
               tooltip="Log Out"
-              className="transition-colors hover:bg-gray-100 focus:bg-gray-100 group whitespace-nowrap"
+              className="transition-colors hover:bg-gray-300 focus:bg-gray-300 group whitespace-nowrap"
             >
               <Link to="/" className="flex items-center gap-2 p-2 rounded-md text-sm">
                 <div className="flex items-center justify-center w-5 h-5">
-                  <LogOut className="h-[18px] w-[18px] text-gray-500 group-hover:text-black" />
+                  <LogOut className="h-[18px] w-[18px] text-gray-600 group-hover:text-black" />
                 </div>
-                <span className="truncate text-gray-500 group-hover:text-black">
+                <span className="truncate text-gray-600 group-hover:text-black">
                   Log Out
                 </span>
               </Link>

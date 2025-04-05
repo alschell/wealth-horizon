@@ -3,6 +3,7 @@ import React from "react";
 import { Bell, Calendar, CreditCard, TrendingUp, FileText, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Link } from "react-router-dom";
 
 interface Notification {
   id: string;
@@ -75,7 +76,9 @@ const NotificationsFeed = () => {
       <CardHeader className="pb-3">
         <div className="flex justify-between items-center">
           <CardTitle>Notifications, tasks & events</CardTitle>
-          <Button variant="link" className="h-8 px-2">View All</Button>
+          <Button variant="link" className="h-8 px-2" asChild>
+            <Link to="/notifications">View All</Link>
+          </Button>
         </div>
       </CardHeader>
       <CardContent className="max-h-[400px] overflow-auto">

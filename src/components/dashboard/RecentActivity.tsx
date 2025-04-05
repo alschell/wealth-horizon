@@ -37,7 +37,7 @@ const RecentActivity = () => {
             </div>
           </div>
           
-          <Link to="/analyze-wealth" className="block mt-3">
+          <Link to="/activity" className="block mt-3">
             <Button variant="outline" size="sm" className="w-full">
               View All Activity
             </Button>

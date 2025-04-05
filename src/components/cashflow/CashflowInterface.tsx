@@ -7,6 +7,7 @@ import TermDeposits from "./sections/TermDeposits";
 import RecurringPayments from "./sections/RecurringPayments";
 import { ChartBar, Calendar, Wallet, Coins } from "lucide-react";
 import { motion } from "framer-motion";
+import { Card } from "@/components/ui/card";
 
 const CashflowInterface = () => {
   const [activeTab, setActiveTab] = useState("overview");
@@ -18,46 +19,60 @@ const CashflowInterface = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
       >
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <div className="bg-white p-1.5 rounded-lg border shadow-sm">
-            <TabsList className="grid grid-cols-4 w-full">
-              <TabsTrigger value="overview" className="flex items-center gap-2 py-3">
-                <ChartBar className="h-4 w-4" />
-                <span className="hidden sm:inline">Overview</span>
-              </TabsTrigger>
-              <TabsTrigger value="planner" className="flex items-center gap-2 py-3">
-                <Calendar className="h-4 w-4" />
-                <span className="hidden sm:inline">Liquidity Planner</span>
-              </TabsTrigger>
-              <TabsTrigger value="recurring" className="flex items-center gap-2 py-3">
-                <Wallet className="h-4 w-4" />
-                <span className="hidden sm:inline">Recurring Payments</span>
-              </TabsTrigger>
-              <TabsTrigger value="deposits" className="flex items-center gap-2 py-3">
-                <Coins className="h-4 w-4" />
-                <span className="hidden sm:inline">Term Deposits</span>
-              </TabsTrigger>
-            </TabsList>
-          </div>
-          
-          <div className="bg-white rounded-lg border shadow-sm p-6">
-            <TabsContent value="overview" className="mt-0 pt-0 animate-in fade-in-50 duration-300">
-              <CashflowOverview />
-            </TabsContent>
+        <Card className="overflow-hidden border border-gray-200">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+            <div className="bg-gray-50 p-1 border-b">
+              <TabsList className="grid grid-cols-1 sm:grid-cols-4 w-full">
+                <TabsTrigger 
+                  value="overview" 
+                  className="flex items-center justify-center gap-2 py-3 data-[state=active]:bg-white"
+                >
+                  <ChartBar className="h-4 w-4" />
+                  <span>Overview</span>
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="planner" 
+                  className="flex items-center justify-center gap-2 py-3 data-[state=active]:bg-white"
+                >
+                  <Calendar className="h-4 w-4" />
+                  <span>Liquidity Planner</span>
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="recurring" 
+                  className="flex items-center justify-center gap-2 py-3 data-[state=active]:bg-white"
+                >
+                  <Wallet className="h-4 w-4" />
+                  <span>Recurring Payments</span>
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="deposits" 
+                  className="flex items-center justify-center gap-2 py-3 data-[state=active]:bg-white"
+                >
+                  <Coins className="h-4 w-4" />
+                  <span>Term Deposits</span>
+                </TabsTrigger>
+              </TabsList>
+            </div>
             
-            <TabsContent value="planner" className="mt-0 pt-0 animate-in fade-in-50 duration-300">
-              <LiquidityPlanner />
-            </TabsContent>
-            
-            <TabsContent value="recurring" className="mt-0 pt-0 animate-in fade-in-50 duration-300">
-              <RecurringPayments />
-            </TabsContent>
-            
-            <TabsContent value="deposits" className="mt-0 pt-0 animate-in fade-in-50 duration-300">
-              <TermDeposits />
-            </TabsContent>
-          </div>
-        </Tabs>
+            <div className="p-6">
+              <TabsContent value="overview" className="mt-0 pt-0 animate-in fade-in-50 duration-300">
+                <CashflowOverview />
+              </TabsContent>
+              
+              <TabsContent value="planner" className="mt-0 pt-0 animate-in fade-in-50 duration-300">
+                <LiquidityPlanner />
+              </TabsContent>
+              
+              <TabsContent value="recurring" className="mt-0 pt-0 animate-in fade-in-50 duration-300">
+                <RecurringPayments />
+              </TabsContent>
+              
+              <TabsContent value="deposits" className="mt-0 pt-0 animate-in fade-in-50 duration-300">
+                <TermDeposits />
+              </TabsContent>
+            </div>
+          </Tabs>
+        </Card>
       </motion.div>
     </div>
   );

@@ -16,6 +16,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { Link } from "react-router-dom";
 
 // Sample notification data
 const notificationData = [
@@ -163,8 +164,9 @@ const NotificationsPopover = () => {
             size="sm" 
             className="w-full text-xs"
             onClick={() => setIsOpen(false)}
+            asChild
           >
-            View all notifications
+            <Link to="/notifications">View all notifications</Link>
           </Button>
         </div>
       </PopoverContent>

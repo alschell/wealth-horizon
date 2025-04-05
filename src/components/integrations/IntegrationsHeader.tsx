@@ -30,7 +30,7 @@ const IntegrationsHeader = () => {
           />
         </div>
         <Button variant="outline" className="border-gray-200">
-          <Bell className="h-4 w-4" />
+          <Bell className="h-4 w-4 text-gray-500" />
           <span className="sr-only">Notifications</span>
         </Button>
       </div>

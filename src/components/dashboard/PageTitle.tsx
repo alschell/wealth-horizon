@@ -20,6 +20,8 @@ const PageTitle = () => {
     if (path === "/settings") return "Settings";
     if (path === "/reporting") return "Generate reports";
     if (path === "/dashboard/users") return "Manage users & permissions";
+    if (path === "/notifications") return "Notifications, tasks & events";
+    if (path === "/activity") return "Activity History";
     
     return "Wealth Pro";
   };

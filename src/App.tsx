@@ -23,6 +23,8 @@ import NewAdviceInterface from "@/components/advice/NewAdviceInterface";
 import UserManagement from "./pages/UserManagement";
 import Settings from "./pages/Settings";
 import Reporting from "./pages/Reporting";
+import Notifications from "./pages/Notifications";
+import Activity from "./pages/Activity";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -53,6 +55,8 @@ function App() {
                 <Route path="/dashboard/users" element={<UserManagement />} />
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/reporting" element={<Reporting />} />
+                <Route path="/notifications" element={<Notifications />} />
+                <Route path="/activity" element={<Activity />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
               <Toaster />

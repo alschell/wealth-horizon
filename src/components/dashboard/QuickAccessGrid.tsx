@@ -8,9 +8,9 @@ import {
   LineChart, 
   FileText, 
   Users, 
-  Settings, 
   Lightbulb,
-  Link as LinkIcon
+  Link as LinkIcon,
+  CreditCard
 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -97,16 +97,18 @@ const modules = [
     iconColor: "text-gray-500"
   },
   {
-    id: "settings",
-    title: "Settings",
-    description: "Configure your account and preferences",
-    icon: <Settings className="h-6 w-6" />,
-    link: "/settings",
+    id: "credit-facilities",
+    title: "Manage credit facilities",
+    description: "Manage and monitor your credit lines and facilities",
+    icon: <CreditCard className="h-6 w-6" />,
+    link: "/credit-facilities",
     color: "bg-gray-50",
     textColor: "text-gray-600",
     iconColor: "text-gray-500"
   }
 ];
+
+// Removed the settings module and added credit-facilities
 
 const QuickAccessGrid = () => {
   return (

@@ -28,6 +28,7 @@ import Activity from "./pages/Activity";
 import AIAssistantPage from "./pages/AIAssistant";
 import FinancialChat from "./pages/FinancialChat";
 import Borrow from "./pages/Borrow";
+import CreditFacilities from "./pages/CreditFacilities";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -63,6 +64,7 @@ function App() {
                 <Route path="/ai-assistant" element={<AIAssistantPage />} />
                 <Route path="/financial-chat" element={<FinancialChat />} />
                 <Route path="/borrow" element={<Borrow />} />
+                <Route path="/credit-facilities" element={<CreditFacilities />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
               <Toaster />

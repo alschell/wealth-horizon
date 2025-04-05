@@ -12,8 +12,10 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer } fro
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 
+type TimeframeType = '1d' | '3d' | '1w' | '2w' | '1m' | '3m' | '6m' | '1y' | '2y' | '3y' | '5y' | '10y' | 'custom' | 'all';
+
 const PerformanceAnalysis = () => {
-  const [timeframe, setTimeframe] = useState<'1y' | '3y' | '5y' | '10y'>('3y');
+  const [timeframe, setTimeframe] = useState<TimeframeType>('3m');
 
   // Sample data for the performance chart
   const performanceData = [
@@ -43,6 +45,27 @@ const PerformanceAnalysis = () => {
     }
   };
 
+  // Time options for the filter
+  const timeOptions: TimeframeType[] = ['1d', '3d', '1w', '2w', '1m', '3m', '6m', '1y', '2y', '3y', '5y', '10y', 'custom', 'all'];
+  
+  // Formatting for display
+  const timeframeDisplay = {
+    '1d': '1 Day',
+    '3d': '3 Days',
+    '1w': '1 Week',
+    '2w': '2 Weeks',
+    '1m': '1 Month',
+    '3m': '3 Months',
+    '6m': '6 Months',
+    '1y': '1 Year',
+    '2y': '2 Years',
+    '3y': '3 Years',
+    '5y': '5 Years',
+    '10y': '10 Years',
+    'custom': 'Custom',
+    'all': 'All Time'
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -50,18 +73,18 @@ const PerformanceAnalysis = () => {
       transition={{ duration: 0.6, delay: 0.1 }}
     >
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
+        <CardHeader className="flex flex-row items-center justify-between flex-wrap">
           <CardTitle>Performance Analysis</CardTitle>
-          <div className="flex space-x-1">
-            {(['1y', '3y', '5y', '10y'] as const).map((period) => (
+          <div className="flex flex-wrap gap-1">
+            {timeOptions.map((period) => (
               <Button
                 key={period}
                 variant={timeframe === period ? "default" : "outline"}
                 size="sm"
                 onClick={() => setTimeframe(period)}
-                className={`${timeframe === period ? 'bg-black text-white' : 'text-gray-600'}`}
+                className={`${timeframe === period ? 'bg-black text-white' : 'text-gray-600'} text-xs`}
               >
-                {period}
+                {timeframeDisplay[period]}
               </Button>
             ))}
           </div>

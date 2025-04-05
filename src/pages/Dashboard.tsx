@@ -8,11 +8,22 @@ import QuickAccessGrid from "@/components/dashboard/QuickAccessGrid";
 import PerformanceOverview from "@/components/dashboard/PerformanceOverview";
 import MarketSnapshot from "@/components/dashboard/MarketSnapshot";
 import RecentActivity from "@/components/dashboard/RecentActivity";
+import PageHeaderCard from "@/components/dashboard/PageHeaderCard";
+import { LayoutDashboard } from "lucide-react";
 
 const Dashboard = () => {
   return (
     <DashboardLayout>
       <div className="space-y-6">
+        {/* Dashboard header */}
+        <PageHeaderCard
+          icon={LayoutDashboard}
+          title="Dashboard"
+          description="View your wealth overview, market data, and quick access to key features"
+          iconColor="text-blue-700"
+          iconBgColor="bg-blue-100"
+        />
+
         {/* Welcome header */}
         <WelcomeHeader />
 

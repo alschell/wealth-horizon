@@ -8,8 +8,8 @@ import HeaderAction from "./HeaderAction";
 
 const DashboardHeader = () => {
   return (
-    <header className="h-16 px-3 flex items-center justify-between border-b border-border bg-white">
-      <div className="flex items-center gap-2 max-w-[95%] mx-auto w-full">
+    <header className="h-16 px-4 flex items-center justify-between border-b border-border bg-white">
+      <div className="flex items-center gap-2 max-w-7xl mx-auto w-full">
         <Logo />
         <PageTitle />
       </div>

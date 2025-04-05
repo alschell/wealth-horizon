@@ -8,8 +8,9 @@ import ActiveIntegrations from "@/components/integrations/ActiveIntegrations";
 import { useOnboarding } from "@/context/OnboardingContext";
 import { connectedIntegrations } from "@/components/integrations/data/connected-integrations";
 import { ConnectedIntegrationType } from "@/components/integrations/types";
-import { Database } from "lucide-react";
+import { Database, Link } from "lucide-react";
 import { motion } from "framer-motion";
+import PageHeaderCard from "@/components/dashboard/PageHeaderCard";
 
 const Integrations = () => {
   const [activeTab, setActiveTab] = useState<string>("available");
@@ -57,8 +58,14 @@ const Integrations = () => {
 
   return (
     <DashboardLayout>
-      <div className="max-w-7xl mx-auto w-full">
-        <IntegrationsHeader />
+      <div className="space-y-6">
+        <PageHeaderCard
+          icon={Link}
+          title="Integrations"
+          description="Connect and manage external services and data providers"
+          iconColor="text-cyan-700"
+          iconBgColor="bg-cyan-100"
+        />
         
         <motion.div
           initial={{ opacity: 0, y: 10 }}

@@ -4,10 +4,11 @@ import { useNavigate } from "react-router-dom";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { Plus, BarChart3 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PastTradesList from "@/components/trading/dashboard/PastTradesList";
 import PendingTradesList from "@/components/trading/dashboard/PendingTradesList";
+import PageHeaderCard from "@/components/dashboard/PageHeaderCard";
 
 const Trading = () => {
   const navigate = useNavigate();
@@ -15,6 +16,14 @@ const Trading = () => {
   return (
     <DashboardLayout>
       <div className="space-y-6">
+        <PageHeaderCard
+          icon={BarChart3}
+          title="Trading"
+          description="Manage your trades, view history, and execute new trading operations"
+          iconColor="text-indigo-700"
+          iconBgColor="bg-indigo-100"
+        />
+        
         <div className="flex justify-between items-center">
           <Tabs defaultValue="pending" className="w-full">
             <TabsList>

@@ -26,8 +26,8 @@ const AnalyzeWealth = () => {
         
         <PageHeaderCard
           icon={TrendingUp}
-          title="Wealth Analysis"
-          description="Analyze your wealth composition, performance trends, and risk exposures"
+          title="Analyze wealth"
+          description="Analyze your assets and liabilities, run sophisticated benchmarks and simulations"
           iconColor="text-gray-700"
           iconBgColor="bg-gray-100"
         />

@@ -26,7 +26,7 @@ const MarketData = () => {
         
         <PageHeaderCard
           icon={BarChart2}
-          title="Market Data & News"
+          title="Access market data & news"
           description="Access real-time market data, news, and research across global markets"
           iconColor="text-gray-700"
           iconBgColor="bg-gray-100"

@@ -15,8 +15,8 @@ const RecentActivity = () => {
         <div className="space-y-3">
           <div className="p-2 rounded-md hover:bg-gray-50">
             <div className="flex items-center gap-2">
-              <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center">
-                <TrendingUp className="h-4 w-4 text-blue-600" />
+              <div className="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center">
+                <TrendingUp className="h-4 w-4 text-gray-600" />
               </div>
               <div>
                 <p className="text-sm font-medium">Portfolio rebalanced</p>
@@ -27,8 +27,8 @@ const RecentActivity = () => {
           
           <div className="p-2 rounded-md hover:bg-gray-50">
             <div className="flex items-center gap-2">
-              <div className="h-8 w-8 rounded-full bg-indigo-100 flex items-center justify-center">
-                <DollarSign className="h-4 w-4 text-indigo-600" />
+              <div className="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center">
+                <DollarSign className="h-4 w-4 text-gray-600" />
               </div>
               <div>
                 <p className="text-sm font-medium">Cash deposit received</p>

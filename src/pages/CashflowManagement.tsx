@@ -26,7 +26,7 @@ const CashflowManagement = () => {
         
         <PageHeaderCard
           icon={DollarSign}
-          title="Cashflow & Liquidity"
+          title="Manage cashflow & liquidity"
           description="Monitor and manage your cash positions, deposits, and liquidity forecasts"
           iconColor="text-gray-700"
           iconBgColor="bg-gray-100"

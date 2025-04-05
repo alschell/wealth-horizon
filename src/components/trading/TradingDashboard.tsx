@@ -14,7 +14,7 @@ const TradingDashboard = () => {
       <div className="flex items-center justify-between">
         <FormHeader 
           icon={<TrendingUp className="h-6 w-6" />}
-          title="Trading"
+          title="Trade"
           description="View and manage your trades"
         />
         

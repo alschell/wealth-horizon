@@ -48,13 +48,13 @@ const NotificationsFeed = () => {
   const getIcon = (type: string) => {
     switch (type) {
       case "trade":
-        return <TrendingUp className="h-5 w-5 text-blue-500" />;
+        return <TrendingUp className="h-5 w-5 text-gray-500" />;
       case "credit":
-        return <CreditCard className="h-5 w-5 text-green-500" />;
+        return <CreditCard className="h-5 w-5 text-gray-500" />;
       case "alert":
-        return <Bell className="h-5 w-5 text-yellow-500" />;
+        return <Bell className="h-5 w-5 text-gray-500" />;
       case "appointment":
-        return <Calendar className="h-5 w-5 text-purple-500" />;
+        return <Calendar className="h-5 w-5 text-gray-500" />;
       default:
         return <Bell className="h-5 w-5 text-gray-500" />;
     }

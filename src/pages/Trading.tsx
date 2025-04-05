@@ -29,10 +29,10 @@ const Trading = () => {
       
         <PageHeaderCard
           icon={BarChart3}
-          title="Trading"
+          title="Trade"
           description="Manage your trades, view history, and execute new trading operations"
-          iconColor="text-indigo-700"
-          iconBgColor="bg-indigo-100"
+          iconColor="text-gray-700"
+          iconBgColor="bg-gray-100"
         />
         
         <div className="flex justify-end mb-4">

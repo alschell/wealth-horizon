@@ -17,8 +17,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 const modules = [
   {
     id: "wealth-analysis",
-    title: "Wealth Analysis",
-    description: "Analyze your wealth portfolio distribution and performance",
+    title: "Analyze wealth",
+    description: "Analyze assets and liabilities, run sophisticated benchmarks and simulations",
     icon: <PieChart className="h-6 w-6" />,
     link: "/analyze-wealth",
     color: "bg-gray-50",
@@ -27,7 +27,7 @@ const modules = [
   },
   {
     id: "trading",
-    title: "Trading",
+    title: "Trade",
     description: "Create and manage trade orders across your portfolios",
     icon: <TrendingUp className="h-6 w-6" />,
     link: "/trading",
@@ -37,7 +37,7 @@ const modules = [
   },
   {
     id: "advisory",
-    title: "Financial Insights",
+    title: "Get advice",
     description: "Get personalized investment advice and insights",
     icon: <HelpCircle className="h-6 w-6" />,
     link: "/advice",
@@ -47,7 +47,7 @@ const modules = [
   },
   {
     id: "cashflow",
-    title: "Cashflow Management",
+    title: "Manage cashflow & liquidity",
     description: "Manage liquidity and term deposits",
     icon: <DollarSign className="h-6 w-6" />,
     link: "/cashflow",
@@ -57,7 +57,7 @@ const modules = [
   },
   {
     id: "market-data",
-    title: "Market Data",
+    title: "Access market data & news",
     description: "Track market performance and financial news",
     icon: <LineChart className="h-6 w-6" />,
     link: "/market-data",
@@ -67,7 +67,7 @@ const modules = [
   },
   {
     id: "reporting",
-    title: "Reporting",
+    title: "Generate reports",
     description: "Generate and view financial reports",
     icon: <FileText className="h-6 w-6" />,
     link: "/reporting",
@@ -77,7 +77,7 @@ const modules = [
   },
   {
     id: "users",
-    title: "User Management",
+    title: "Manage users & permissions",
     description: "Manage team members and access permissions",
     icon: <Users className="h-6 w-6" />,
     link: "/dashboard/users",

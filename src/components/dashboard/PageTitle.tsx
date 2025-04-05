@@ -10,16 +10,16 @@ const PageTitle = () => {
     const path = location.pathname;
     
     if (path === "/dashboard") return "Dashboard";
-    if (path === "/analyze-wealth") return "Wealth Analysis";
-    if (path === "/advice") return "Advisory";
-    if (path === "/trading") return "Trading";
-    if (path === "/market-data") return "Market Data & News";
+    if (path === "/analyze-wealth") return "Analyze wealth";
+    if (path === "/advice") return "Get advice";
+    if (path === "/trading") return "Trade";
+    if (path === "/market-data") return "Access market data & news";
     if (path === "/dashboard/credit") return "Credit Facilities";
-    if (path === "/cashflow") return "Cashflow & Liquidity";
+    if (path === "/cashflow") return "Manage cashflow & liquidity";
     if (path === "/integrations") return "Integrations";
     if (path === "/settings") return "Settings";
-    if (path === "/reporting") return "Reporting";
-    if (path === "/dashboard/users") return "User Management";
+    if (path === "/reporting") return "Generate reports";
+    if (path === "/dashboard/users") return "Manage users & permissions";
     
     return "Wealth Pro";
   };

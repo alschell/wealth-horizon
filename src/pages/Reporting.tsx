@@ -26,7 +26,7 @@ const Reporting = () => {
         
         <PageHeaderCard
           icon={FileText}
-          title="Reporting"
+          title="Generate reports"
           description="Access and generate comprehensive financial reports and statements"
           iconColor="text-gray-700"
           iconBgColor="bg-gray-100"

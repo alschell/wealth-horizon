@@ -26,7 +26,7 @@ const UserManagement = () => {
         
         <PageHeaderCard
           icon={Users}
-          title="User Management"
+          title="Manage users & permissions"
           description="Manage user accounts, permissions, and access controls for your organization"
           iconColor="text-gray-700"
           iconBgColor="bg-gray-100"

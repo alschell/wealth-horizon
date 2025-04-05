@@ -91,8 +91,8 @@ const DashboardHeader = () => {
   };
 
   return (
-    <header className="h-16 px-6 flex items-center justify-between border-b border-border bg-white">
-      <div className="flex items-center gap-2">
+    <header className="h-16 px-3 flex items-center justify-between border-b border-border bg-white">
+      <div className="flex items-center gap-2 max-w-[95%] mx-auto w-full">
         <div className="text-xl font-bold tracking-tight">
           <span className="text-indigo-400">W</span>
           <span>ealth Pro</span>
@@ -100,7 +100,7 @@ const DashboardHeader = () => {
         <span className="text-lg font-medium ml-6">{getPageTitle()}</span>
       </div>
       
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3 mr-3">
         <Popover open={isOpen} onOpenChange={setIsOpen}>
           <TooltipProvider>
             <Tooltip>

@@ -1,7 +1,7 @@
 
 import React from "react";
-import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
-import { PageHeaderCard } from "@/components/dashboard/PageHeaderCard";
+import DashboardLayout from "@/components/dashboard/DashboardLayout";
+import PageHeaderCard from "@/components/dashboard/PageHeaderCard";
 import BackButtonHeader from "@/components/navigation/BackButtonHeader";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";

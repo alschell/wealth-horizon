@@ -3,14 +3,14 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { 
-  ChartBarIcon, 
+  BarChart3, 
   Wallet, 
   ArrowUpRight, 
   Layers, 
   Briefcase, 
   FileText, 
-  Zap, 
-  BarChart3
+  Zap,
+  ChartBar
 } from "lucide-react";
 
 interface QuickAccessItemProps {
@@ -46,7 +46,7 @@ const QuickAccessGrid: React.FC = () => {
     {
       title: "Wealth Analysis",
       description: "Comprehensive view of your assets",
-      icon: <ChartBarIcon size={24} />,
+      icon: <ChartBar size={24} />,
       href: "/analyze-wealth",
     },
     {

@@ -9,20 +9,6 @@ import { performanceData } from "./data/PerformanceData";
 
 const PerformanceOverview: React.FC = () => {
   const [activeTab, setActiveTab] = useState("overview");
-  
-  const {
-    totalAssets,
-    changeAmount,
-    changePercentage,
-    changeType,
-    keyMetrics,
-    assetAllocation,
-    performanceTrend,
-    topPerformers,
-    topDetractors,
-    recommendations,
-    recentNews
-  } = performanceData;
 
   return (
     <Card className="shadow-sm">
@@ -47,27 +33,26 @@ const PerformanceOverview: React.FC = () => {
           
           <TabsContent value="overview" className="m-0 p-0">
             <OverviewTabContent 
-              totalAssets={totalAssets}
-              changeAmount={changeAmount}
-              changePercentage={changePercentage}
-              changeType={changeType}
-              keyMetrics={keyMetrics}
-              topPerformers={topPerformers}
-              topDetractors={topDetractors}
-              recentNews={recentNews}
+              performanceData={performanceData.performanceTrend}
+              chartConfig={{
+                value: {
+                  label: "Net Worth",
+                  color: "#000000"
+                }
+              }}
+              newsData={performanceData.recentNews}
             />
           </TabsContent>
           
           <TabsContent value="charts" className="m-0 p-0">
             <ChartsTabContent
-              performanceTrend={performanceTrend}
-              assetAllocationData={assetAllocation}
+              assetAllocationData={performanceData.assetAllocation}
             />
           </TabsContent>
           
           <TabsContent value="recommendations" className="m-0 p-0">
             <RecommendationsTabContent
-              recommendations={recommendations}
+              recommendations={performanceData.recommendations}
             />
           </TabsContent>
         </Tabs>

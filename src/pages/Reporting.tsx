@@ -6,9 +6,7 @@ import ReportingInterface from "@/components/reporting/ReportingInterface";
 const Reporting = () => {
   return (
     <DashboardLayout>
-      <div className="p-6">
-        <ReportingInterface />
-      </div>
+      <ReportingInterface />
     </DashboardLayout>
   );
 };

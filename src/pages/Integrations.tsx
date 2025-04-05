@@ -57,7 +57,7 @@ const Integrations = () => {
 
   return (
     <DashboardLayout>
-      <div className="max-w-7xl mx-auto w-full p-4">
+      <div className="max-w-7xl mx-auto w-full">
         <IntegrationsHeader />
         
         <motion.div

@@ -9,9 +9,7 @@ interface TradingLayoutProps {
 const TradingLayout: React.FC<TradingLayoutProps> = ({ children }) => {
   return (
     <DashboardLayout>
-      <div className="p-6">
-        {children}
-      </div>
+      {children}
     </DashboardLayout>
   );
 };

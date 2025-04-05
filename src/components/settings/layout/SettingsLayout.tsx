@@ -9,9 +9,7 @@ interface SettingsLayoutProps {
 const SettingsLayout = ({ children }: SettingsLayoutProps) => {
   return (
     <DashboardLayout>
-      <div className="p-6">
-        {children}
-      </div>
+      {children}
     </DashboardLayout>
   );
 };

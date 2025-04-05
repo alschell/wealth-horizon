@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -21,12 +20,7 @@ const AdviceInterface: React.FC = () => {
           <div className="p-2 bg-amber-100 rounded-lg">
             <Lightbulb className="h-6 w-6 text-amber-600" />
           </div>
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight">Advisory Services</h1>
-            <p className="text-muted-foreground">
-              Manage your advisory mandates and compare performance across advisors
-            </p>
-          </div>
+          <h1 className="text-2xl font-bold tracking-tight">Financial Insights</h1>
         </div>
         <Button onClick={handleNewAdvice} className="flex items-center gap-2">
           <Plus className="h-4 w-4" />

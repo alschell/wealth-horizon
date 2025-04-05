@@ -37,8 +37,8 @@ const modules = [
   },
   {
     id: "advisory",
-    title: "Advisory",
-    description: "Get personalized investment advice from experts",
+    title: "Financial Insights",
+    description: "Get personalized investment advice and insights",
     icon: <HelpCircle className="h-6 w-6" />,
     link: "/advice",
     color: "bg-purple-50",

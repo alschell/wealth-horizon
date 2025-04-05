@@ -1,10 +1,9 @@
-
 import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { UserFormData } from "../types";
-import { useInviteUserDialog } from "../hooks/useInviteUserDialog";
+import { getInviteUserDialogStore } from "../hooks/useInviteUserDialog";
 import { toast } from "@/hooks/use-toast";
 import { Mail, UserPlus } from "lucide-react";
 
@@ -58,7 +57,7 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>;
 
 const InviteUserDialog = () => {
-  const { isOpen, closeInviteDialog, handleInviteUser } = useInviteUserDialog();
+  const { isOpen, closeInviteDialog, handleInviteUser } = getInviteUserDialogStore();
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -82,11 +81,6 @@ const InviteUserDialog = () => {
 
   const onSubmit = (values: FormValues) => {
     handleInviteUser(values as UserFormData);
-    toast({
-      title: "Invitation Sent",
-      description: `An invitation has been sent to ${values.email}`,
-      duration: 5000,
-    });
     form.reset();
   };
 

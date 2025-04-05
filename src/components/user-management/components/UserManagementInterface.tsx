@@ -13,7 +13,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { motion } from "framer-motion";
 import { useUserActionDialog } from "../hooks/useUserActionDialog";
 import { useToast } from "@/hooks/use-toast";
-import { useInviteUserDialog } from "../hooks/useInviteUserDialog";
+import { useGlobalInviteUserDialog } from "../hooks/useInviteUserDialog";
 
 const UserManagementInterface = () => {
   const {
@@ -33,7 +33,8 @@ const UserManagementInterface = () => {
   } = useUserActionDialog();
   
   const { toast } = useToast();
-  const { isOpen: inviteDialogOpen } = useInviteUserDialog();
+  // Use the global hook to ensure the invite dialog state is properly tracked
+  const { isOpen: inviteDialogOpen } = useGlobalInviteUserDialog();
   
   return (
     <div className="max-w-7xl mx-auto w-full p-4">

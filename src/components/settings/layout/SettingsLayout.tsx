@@ -7,7 +7,7 @@ interface SettingsLayoutProps {
 
 const SettingsLayout = ({ children }: SettingsLayoutProps) => {
   return (
-    <div>
+    <div className="w-full">
       {children}
     </div>
   );

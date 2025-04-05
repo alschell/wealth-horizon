@@ -35,8 +35,8 @@ const PortfolioPerformanceChart = () => {
   };
 
   return (
-    <div className="bg-gray-50 p-4 rounded-lg border border-gray-100">
-      <div className="flex justify-between items-center mb-4">
+    <div className="bg-gray-50 p-4 rounded-lg border border-gray-100 h-full">
+      <div className="flex justify-between items-center mb-3">
         <h3 className="text-sm font-medium flex items-center">
           <LineChart className="h-4 w-4 mr-1 text-gray-500" /> Portfolio Performance
         </h3>
@@ -44,15 +44,15 @@ const PortfolioPerformanceChart = () => {
           variant="ghost" 
           size="sm" 
           className="flex items-center text-xs text-gray-500 hover:text-gray-800"
-          onClick={() => navigate("/wealth-analysis")}
+          onClick={() => navigate("/analyze-wealth")}
         >
           <Maximize2 className="h-3 w-3 mr-1" />
           Expand
         </Button>
       </div>
-      <p className="text-xs text-gray-500 mb-4">Compared to benchmarks</p>
+      <p className="text-xs text-gray-500 mb-2">Compared to benchmarks</p>
       
-      <div className="h-36 w-full">
+      <div className="h-40 w-full">
         <ChartContainer config={chartConfig}>
           <ResponsiveContainer width="100%" height="100%">
             <RechartsLineChart
@@ -83,12 +83,12 @@ const PortfolioPerformanceChart = () => {
         </ChartContainer>
       </div>
       
-      <div className="mt-4">
+      <div className="mt-3">
         <Button 
           variant="outline" 
           size="sm" 
           className="w-full"
-          onClick={() => navigate("/wealth-analysis")}
+          onClick={() => navigate("/analyze-wealth")}
         >
           View Full Analysis
         </Button>

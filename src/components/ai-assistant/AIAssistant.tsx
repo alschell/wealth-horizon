@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Brain, Send, TrendingUp, AlertTriangle, DollarSign, BarChart3, Clock } from "lucide-react";
+import { Brain, Send, TrendingUp, AlertTriangle, DollarSign, BarChart3, Clock, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
 
@@ -19,9 +19,10 @@ type MessageType = {
 
 interface AIAssistantProps {
   minified?: boolean;
+  showHeader?: boolean;
 }
 
-const AIAssistant = ({ minified = false }: AIAssistantProps) => {
+const AIAssistant = ({ minified = false, showHeader = false }: AIAssistantProps) => {
   const [input, setInput] = useState("");
   const navigate = useNavigate();
   const [messages, setMessages] = useState<MessageType[]>([
@@ -59,11 +60,10 @@ const AIAssistant = ({ minified = false }: AIAssistantProps) => {
   
   const { toast } = useToast();
   const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const messageEndRef = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
-    if (scrollAreaRef.current) {
-      scrollAreaRef.current.scrollTop = scrollAreaRef.current.scrollHeight;
-    }
+    messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -175,82 +175,87 @@ const AIAssistant = ({ minified = false }: AIAssistantProps) => {
   }
 
   return (
-    <Card className="h-[calc(100vh-12rem)] flex flex-col">
-      <CardHeader className="px-4 py-3 border-b">
-        <div className="flex items-center">
-          <div className="bg-gray-100 p-2 rounded-full mr-3">
-            <Brain className="h-5 w-5 text-gray-600" />
+    <div className="h-full flex flex-col">
+      {showHeader && (
+        <div className="px-4 py-3 border-b flex items-center justify-between">
+          <div className="flex items-center">
+            <div className="bg-gray-100 p-2 rounded-full mr-3">
+              <Brain className="h-5 w-5 text-gray-600" />
+            </div>
+            <CardTitle className="text-base">AI Financial Assistant</CardTitle>
           </div>
-          <CardTitle className="text-base">AI Financial Assistant</CardTitle>
+          <Button size="icon" variant="ghost" onClick={() => navigate("/dashboard")}>
+            <X className="h-4 w-4" />
+          </Button>
         </div>
-      </CardHeader>
-      <CardContent className="flex-1 p-0 flex flex-col">
-        <ScrollArea className="flex-1 p-4" ref={scrollAreaRef}>
-          <div className="space-y-4">
-            {messages.map(message => (
+      )}
+      
+      <ScrollArea className="flex-1 p-4">
+        <div className="space-y-4">
+          {messages.map(message => (
+            <div
+              key={message.id}
+              className={`flex ${message.type === "user" ? "justify-end" : "justify-start"}`}
+            >
               <div
-                key={message.id}
-                className={`flex ${message.type === "user" ? "justify-end" : "justify-start"}`}
+                className={`max-w-[80%] rounded-lg p-3 ${
+                  message.type === "user"
+                    ? "bg-primary text-primary-foreground"
+                    : message.type === "recommendation"
+                    ? "bg-gray-50 border border-gray-200"
+                    : "bg-gray-100"
+                }`}
               >
-                <div
-                  className={`max-w-[80%] rounded-lg p-3 ${
-                    message.type === "user"
-                      ? "bg-primary text-primary-foreground"
-                      : message.type === "recommendation"
-                      ? "bg-gray-50 border border-gray-200"
-                      : "bg-gray-100"
-                  }`}
-                >
-                  {message.type === "recommendation" && (
-                    <div className="flex items-center gap-1 mb-1">
-                      {getCategoryIcon(message.category)}
-                      <span className="text-xs font-medium">
-                        {message.category === "risk" && "Risk Alert"}
-                        {message.category === "opportunity" && "Opportunity"}
-                        {message.category === "cash" && "Cash Management"}
-                      </span>
-                    </div>
-                  )}
-                  
-                  <p className="text-sm">{message.text}</p>
-                  
-                  <div className="flex items-center justify-between mt-2">
-                    <span className="text-xs opacity-70">
-                      {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                {message.type === "recommendation" && (
+                  <div className="flex items-center gap-1 mb-1">
+                    {getCategoryIcon(message.category)}
+                    <span className="text-xs font-medium">
+                      {message.category === "risk" && "Risk Alert"}
+                      {message.category === "opportunity" && "Opportunity"}
+                      {message.category === "cash" && "Cash Management"}
                     </span>
-                    
-                    {message.actionable && (
-                      <Button 
-                        size="sm" 
-                        variant="outline" 
-                        className="text-xs h-7 ml-auto"
-                        onClick={() => handleActionClick(message)}
-                      >
-                        Take Action
-                      </Button>
-                    )}
                   </div>
+                )}
+                
+                <p className="text-sm">{message.text}</p>
+                
+                <div className="flex items-center justify-between mt-2">
+                  <span className="text-xs opacity-70">
+                    {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                  </span>
+                  
+                  {message.actionable && (
+                    <Button 
+                      size="sm" 
+                      variant="outline" 
+                      className="text-xs h-7 ml-auto"
+                      onClick={() => handleActionClick(message)}
+                    >
+                      Take Action
+                    </Button>
+                  )}
                 </div>
               </div>
-            ))}
-          </div>
-        </ScrollArea>
-        
-        <div className="p-3 border-t">
-          <form onSubmit={handleSubmit} className="flex gap-2">
-            <Input
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="Ask anything about your portfolio or the market..."
-              className="flex-1"
-            />
-            <Button type="submit" size="icon">
-              <Send className="h-4 w-4" />
-            </Button>
-          </form>
+            </div>
+          ))}
+          <div ref={messageEndRef} />
         </div>
-      </CardContent>
-    </Card>
+      </ScrollArea>
+      
+      <div className="p-3 border-t mt-auto">
+        <form onSubmit={handleSubmit} className="flex gap-2">
+          <Input
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="Ask anything about your portfolio or the market..."
+            className="flex-1"
+          />
+          <Button type="submit" size="icon">
+            <Send className="h-4 w-4" />
+          </Button>
+        </form>
+      </div>
+    </div>
   );
 };
 

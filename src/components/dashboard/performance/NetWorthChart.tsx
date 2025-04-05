@@ -21,8 +21,8 @@ const NetWorthChart = ({ performanceData, chartConfig }: NetWorthChartProps) => 
   const [timeRange, setTimeRange] = useState<'1m' | '3m' | '6m' | '1y' | 'All'>('1y');
 
   return (
-    <div className="w-full mb-16">
-      <div className="mb-4 flex items-center justify-between">
+    <div className="w-full mb-8">
+      <div className="mb-2 flex items-center justify-between">
         <div>
           <h3 className="text-sm font-medium text-gray-600">Net Worth Trend</h3>
           <p className="text-2xl font-bold">$4.48B</p>
@@ -46,10 +46,10 @@ const NetWorthChart = ({ performanceData, chartConfig }: NetWorthChartProps) => 
           </div>
         </div>
       </div>
-      <div className="h-96 w-full mt-3">
+      <div className="h-80 w-full mt-1">
         <ChartContainer config={chartConfig}>
           <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={performanceData} margin={{ top: 0, right: 0, left: 0, bottom: 20 }}>
+            <AreaChart data={performanceData} margin={{ top: 0, right: 0, left: 0, bottom: 10 }}>
               <defs>
                 <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="5%" stopColor="#000000" stopOpacity={0.1}/>

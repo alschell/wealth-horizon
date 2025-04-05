@@ -1,6 +1,6 @@
 
 import React from "react";
-import { ArrowUp, ArrowDown, Briefcase } from "lucide-react";
+import { ArrowUp, ArrowDown, Briefcase, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const TopAssets = () => {
@@ -13,14 +13,19 @@ const TopAssets = () => {
 
   return (
     <div className="space-y-2">
-      <h3 className="text-sm font-medium flex items-center">
-        <Briefcase className="h-4 w-4 mr-1 text-gray-500" /> Top Assets
-      </h3>
+      <div className="flex justify-between items-center mb-2">
+        <h3 className="text-sm font-medium flex items-center">
+          <Briefcase className="h-4 w-4 mr-1 text-gray-500" /> Top Assets
+        </h3>
+        <Button variant="ghost" size="sm" className="text-xs h-7 px-2">
+          View all
+        </Button>
+      </div>
       <div className="space-y-2">
         {assets.map((asset, index) => (
           <div 
             key={index} 
-            className="p-3 rounded-md border border-gray-100 hover:shadow-sm transition-shadow"
+            className="p-3 rounded-md border border-gray-100 hover:shadow-sm transition-shadow bg-white"
           >
             <div className="flex justify-between items-center">
               <p className="text-sm font-medium">{asset.name}</p>
@@ -34,8 +39,9 @@ const TopAssets = () => {
             </div>
           </div>
         ))}
-        <Button variant="outline" size="sm" className="w-full">
+        <Button variant="outline" size="sm" className="w-full flex items-center justify-center">
           View All Assets
+          <ChevronRight className="h-4 w-4 ml-1" />
         </Button>
       </div>
     </div>

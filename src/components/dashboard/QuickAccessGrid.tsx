@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { 
   PieChart, 
@@ -10,12 +10,18 @@ import {
   Users, 
   Lightbulb,
   Link as LinkIcon,
-  CreditCard
+  CreditCard,
+  Settings,
+  Edit
 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
 
-// Quick action definitions
-const modules = [
+// All available modules
+const allModules = [
   {
     id: "wealth-analysis",
     title: "Analyze wealth",
@@ -105,21 +111,88 @@ const modules = [
     color: "bg-gray-50",
     textColor: "text-gray-600",
     iconColor: "text-gray-500"
+  },
+  {
+    id: "ai-assistant",
+    title: "AI Assistant",
+    description: "Get AI-powered insights and recommendations",
+    icon: <Lightbulb className="h-6 w-6" />,
+    link: "/ai-assistant",
+    color: "bg-gray-50",
+    textColor: "text-gray-600",
+    iconColor: "text-gray-500"
   }
 ];
 
-// Removed the settings module and added credit-facilities
-
 const QuickAccessGrid = () => {
+  const [isCustomizing, setIsCustomizing] = useState(false);
+  const [selectedModules, setSelectedModules] = useState<string[]>(() => {
+    const saved = localStorage.getItem("selectedQuickAccessModules");
+    return saved ? JSON.parse(saved) : 
+      ["wealth-analysis", "trading", "advisory", "cashflow", "market-data", "reporting", "integrations", "users", "credit-facilities"];
+  });
+
+  // Save to localStorage whenever selection changes
+  useEffect(() => {
+    localStorage.setItem("selectedQuickAccessModules", JSON.stringify(selectedModules));
+  }, [selectedModules]);
+
+  // Filter modules based on selected IDs
+  const displayedModules = allModules.filter(module => 
+    selectedModules.includes(module.id)
+  );
+
+  const handleModuleToggle = (moduleId: string) => {
+    setSelectedModules(prev => {
+      if (prev.includes(moduleId)) {
+        return prev.filter(id => id !== moduleId);
+      } else {
+        return [...prev, moduleId];
+      }
+    });
+  };
+
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>Quick Access</CardTitle>
-        <CardDescription>Jump to key sections of your wealth management platform</CardDescription>
+      <CardHeader className="flex flex-row items-center justify-between">
+        <div>
+          <CardTitle>Quick Access</CardTitle>
+          <CardDescription>Jump to key sections of your wealth management platform</CardDescription>
+        </div>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button variant="outline" size="sm" className="flex items-center gap-1">
+              <Edit className="h-4 w-4" />
+              Customize
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="max-w-md">
+            <DialogHeader>
+              <DialogTitle>Customize Quick Access</DialogTitle>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              <div className="space-y-4 max-h-[60vh] overflow-y-auto pr-2">
+                {allModules.map(module => (
+                  <div key={module.id} className="flex items-start space-x-3">
+                    <Checkbox 
+                      id={module.id} 
+                      checked={selectedModules.includes(module.id)} 
+                      onCheckedChange={() => handleModuleToggle(module.id)}
+                    />
+                    <div className="grid gap-1.5">
+                      <Label htmlFor={module.id}>{module.title}</Label>
+                      <p className="text-sm text-gray-500">{module.description}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {modules.map(module => (
+          {displayedModules.map(module => (
             <Link 
               to={module.link} 
               key={module.id}

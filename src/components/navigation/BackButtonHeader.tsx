@@ -21,7 +21,7 @@ const BackButtonHeader: React.FC<BackButtonHeaderProps> = ({
         variant="ghost" 
         size="sm" 
         onClick={() => navigate(destination)}
-        className="flex items-center gap-1 hover:bg-gray-100"
+        className="flex items-center gap-1 hover:bg-gray-100 dark:hover:bg-gray-800"
       >
         <ArrowLeft className="h-4 w-4" /> 
         {title || "Back to Dashboard"}

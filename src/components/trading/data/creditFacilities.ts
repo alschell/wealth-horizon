@@ -11,7 +11,8 @@ export const mockCreditFacilitiesFlat: CreditFacility[] = [
     limit: 10000000,
     used: 2500000,
     available: 7500000,
-    type: "Credit Line"
+    type: "Credit Line",
+    interestRate: 4.5
   },
   {
     id: "credit-2",
@@ -22,7 +23,8 @@ export const mockCreditFacilitiesFlat: CreditFacility[] = [
     limit: 5000000,
     used: 1000000,
     available: 4000000,
-    type: "Credit Facility"
+    type: "Credit Facility",
+    interestRate: 3.75
   },
   {
     id: "credit-3",
@@ -33,7 +35,8 @@ export const mockCreditFacilitiesFlat: CreditFacility[] = [
     limit: 3000000,
     used: 1500000,
     available: 1500000,
-    type: "Credit Line"
+    type: "Credit Line",
+    interestRate: 4.25
   },
   {
     id: "credit-4",
@@ -44,7 +47,8 @@ export const mockCreditFacilitiesFlat: CreditFacility[] = [
     limit: 7500000,
     used: 3000000,
     available: 4500000,
-    type: "Multi-currency Facility"
+    type: "Multi-currency Facility",
+    interestRate: 4.0
   },
   {
     id: "credit-5",
@@ -55,7 +59,8 @@ export const mockCreditFacilitiesFlat: CreditFacility[] = [
     limit: 4000000,
     used: 1200000,
     available: 2800000,
-    type: "Credit Line"
+    type: "Credit Line",
+    interestRate: 4.1
   },
   {
     id: "credit-6",
@@ -66,6 +71,7 @@ export const mockCreditFacilitiesFlat: CreditFacility[] = [
     limit: 6000000,
     used: 2000000,
     available: 4000000,
-    type: "Investment Facility"
+    type: "Investment Facility",
+    interestRate: 3.9
   }
 ];

@@ -1,3 +1,4 @@
+
 export type OrderType = "buy" | "sell" | "sell_short" | "exchange";
 
 export type ViewMode = "portfolios" | "institutions";
@@ -54,6 +55,7 @@ export type CreditFacility = {
   used: number;
   available: number;
   type?: string; // Add this property as optional
+  interestRate?: number; // Added this property as optional
 };
 
 export type Instrument = {

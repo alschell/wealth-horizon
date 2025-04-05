@@ -1,215 +1,107 @@
 
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import { 
-  PieChart, 
-  TrendingUp, 
-  DollarSign, 
-  LineChart, 
-  FileText, 
-  Users, 
-  Lightbulb,
-  Link as LinkIcon,
-  CreditCard,
-  Settings,
-  Edit
+  ArrowRight, LineChart, PieChart, DollarSign, 
+  FileText, Briefcase, BarChart, Leaf, Users, Lightning
 } from "lucide-react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-
-// All available modules in the desired order
-const allModules = [
-  {
-    id: "wealth-analysis",
-    title: "Analyze wealth",
-    description: "Analyze assets and liabilities, run sophisticated benchmarks and simulations",
-    icon: <PieChart className="h-6 w-6" />,
-    link: "/analyze-wealth",
-    color: "bg-gray-50",
-    textColor: "text-gray-600",
-    iconColor: "text-gray-500"
-  },
-  {
-    id: "market-data",
-    title: "Access market data & news",
-    description: "Track market performance and financial news",
-    icon: <LineChart className="h-6 w-6" />,
-    link: "/market-data",
-    color: "bg-gray-50",
-    textColor: "text-gray-600",
-    iconColor: "text-gray-500"
-  },
-  {
-    id: "trading",
-    title: "Trade",
-    description: "Create and manage trade orders across your portfolios",
-    icon: <TrendingUp className="h-6 w-6" />,
-    link: "/trading",
-    color: "bg-gray-50",
-    textColor: "text-gray-600",
-    iconColor: "text-gray-500"
-  },
-  {
-    id: "credit-facilities",
-    title: "Manage credit facilities",
-    description: "Manage and monitor your credit lines and facilities",
-    icon: <CreditCard className="h-6 w-6" />,
-    link: "/credit-facilities",
-    color: "bg-gray-50",
-    textColor: "text-gray-600",
-    iconColor: "text-gray-500"
-  },
-  {
-    id: "advisory",
-    title: "Get advice",
-    description: "Get personalized investment advice and insights",
-    icon: <Lightbulb className="h-6 w-6" />,
-    link: "/advice",
-    color: "bg-gray-50",
-    textColor: "text-gray-600",
-    iconColor: "text-gray-500"
-  },
-  {
-    id: "cashflow",
-    title: "Manage cashflow & liquidity",
-    description: "Manage liquidity and term deposits",
-    icon: <DollarSign className="h-6 w-6" />,
-    link: "/cashflow",
-    color: "bg-gray-50",
-    textColor: "text-gray-600",
-    iconColor: "text-gray-500"
-  },
-  {
-    id: "reporting",
-    title: "Generate reports",
-    description: "Generate and view financial reports",
-    icon: <FileText className="h-6 w-6" />,
-    link: "/reporting",
-    color: "bg-gray-50",
-    textColor: "text-gray-600",
-    iconColor: "text-gray-500"
-  },
-  {
-    id: "users",
-    title: "Manage users & permissions",
-    description: "Manage team members and access permissions",
-    icon: <Users className="h-6 w-6" />,
-    link: "/dashboard/users",
-    color: "bg-gray-50",
-    textColor: "text-gray-600",
-    iconColor: "text-gray-500"
-  },
-  {
-    id: "integrations",
-    title: "Manage integrations",
-    description: "Connect and manage third-party integrations",
-    icon: <LinkIcon className="h-6 w-6" />,
-    link: "/integrations",
-    color: "bg-gray-50",
-    textColor: "text-gray-600",
-    iconColor: "text-gray-500"
-  },
-  {
-    id: "ai-assistant",
-    title: "AI Assistant",
-    description: "Get AI-powered insights and recommendations",
-    icon: <Lightbulb className="h-6 w-6" />,
-    link: "/ai-assistant",
-    color: "bg-gray-50",
-    textColor: "text-gray-600",
-    iconColor: "text-gray-500"
-  }
-];
 
 const QuickAccessGrid = () => {
-  const [isCustomizing, setIsCustomizing] = useState(false);
-  const [selectedModules, setSelectedModules] = useState<string[]>(() => {
-    const saved = localStorage.getItem("selectedQuickAccessModules");
-    return saved ? JSON.parse(saved) : 
-      ["wealth-analysis", "market-data", "trading", "credit-facilities", "advisory", "cashflow", "reporting", "users", "integrations"];
-  });
-
-  // Save to localStorage whenever selection changes
-  useEffect(() => {
-    localStorage.setItem("selectedQuickAccessModules", JSON.stringify(selectedModules));
-  }, [selectedModules]);
-
-  // Filter modules based on selected IDs
-  const displayedModules = allModules.filter(module => 
-    selectedModules.includes(module.id)
-  );
-
-  const handleModuleToggle = (moduleId: string) => {
-    setSelectedModules(prev => {
-      if (prev.includes(moduleId)) {
-        return prev.filter(id => id !== moduleId);
-      } else {
-        return [...prev, moduleId];
-      }
-    });
-  };
+  const quickAccess = [
+    {
+      title: "Analyze Wealth",
+      description: "View detailed analysis of your assets and liabilities",
+      icon: <PieChart className="h-8 w-8 text-blue-600" />,
+      link: "/analyze-wealth",
+      color: "bg-blue-50 dark:bg-blue-900/20",
+      borderColor: "border-blue-100 dark:border-blue-800/30"
+    },
+    {
+      title: "Portfolio Scenarios",
+      description: "Run simulations to test portfolio performance",
+      icon: <Lightning className="h-8 w-8 text-purple-600" />,
+      link: "/portfolio-scenarios",
+      color: "bg-purple-50 dark:bg-purple-900/20",
+      borderColor: "border-purple-100 dark:border-purple-800/30",
+      isNew: true
+    },
+    {
+      title: "Trade",
+      description: "Execute trades across multiple accounts",
+      icon: <Briefcase className="h-8 w-8 text-gray-600" />,
+      link: "/trading",
+      color: "bg-gray-50 dark:bg-gray-800",
+      borderColor: "border-gray-100 dark:border-gray-700"
+    },
+    {
+      title: "Cash Management",
+      description: "Manage liquidity across all accounts",
+      icon: <DollarSign className="h-8 w-8 text-green-600" />,
+      link: "/cashflow",
+      color: "bg-green-50 dark:bg-green-900/20",
+      borderColor: "border-green-100 dark:border-green-800/30"
+    },
+    {
+      title: "Market Data",
+      description: "Access market data and research",
+      icon: <LineChart className="h-8 w-8 text-indigo-600" />,
+      link: "/market-data",
+      color: "bg-indigo-50 dark:bg-indigo-900/20",
+      borderColor: "border-indigo-100 dark:border-indigo-800/30"
+    },
+    {
+      title: "Reports",
+      description: "Generate and view reports",
+      icon: <FileText className="h-8 w-8 text-orange-600" />,
+      link: "/reporting",
+      color: "bg-orange-50 dark:bg-orange-900/20",
+      borderColor: "border-orange-100 dark:border-orange-800/30"
+    },
+    {
+      title: "ESG Analysis",
+      description: "Analyze environmental, social & governance impact",
+      icon: <Leaf className="h-8 w-8 text-emerald-600" />,
+      link: "/esg-analysis",
+      color: "bg-emerald-50 dark:bg-emerald-900/20",
+      borderColor: "border-emerald-100 dark:border-emerald-800/30",
+      isNew: true
+    },
+    {
+      title: "Wealth Transfer",
+      description: "Plan for generational wealth transfer",
+      icon: <Users className="h-8 w-8 text-amber-600" />,
+      link: "/wealth-transfer",
+      color: "bg-amber-50 dark:bg-amber-900/20",
+      borderColor: "border-amber-100 dark:border-amber-800/30",
+      isNew: true
+    },
+  ];
 
   return (
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between">
-        <div>
-          <CardTitle>Quick Access</CardTitle>
-          <CardDescription>Jump to key sections of your wealth management platform</CardDescription>
-        </div>
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button variant="outline" size="icon" className="h-9 w-9">
-              <Edit className="h-4 w-4" />
-              <span className="sr-only">Customize</span>
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="max-w-md">
-            <DialogHeader>
-              <DialogTitle>Customize Quick Access</DialogTitle>
-            </DialogHeader>
-            <div className="grid gap-4 py-4">
-              <div className="space-y-4 max-h-[60vh] overflow-y-auto pr-2">
-                {allModules.map(module => (
-                  <div key={module.id} className="flex items-start space-x-3">
-                    <Checkbox 
-                      id={module.id} 
-                      checked={selectedModules.includes(module.id)} 
-                      onCheckedChange={() => handleModuleToggle(module.id)}
-                    />
-                    <div className="grid gap-1.5">
-                      <Label htmlFor={module.id}>{module.title}</Label>
-                      <p className="text-sm text-gray-500">{module.description}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {quickAccess.map((item, index) => (
+        <Link
+          to={item.link}
+          key={index}
+          className={`group p-4 rounded-lg border ${item.borderColor} ${item.color} relative hover:shadow-md transition-all duration-200`}
+        >
+          {item.isNew && (
+            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">
+              New
+            </span>
+          )}
+          <div className="flex flex-col h-full">
+            <div className="mb-2">{item.icon}</div>
+            <h3 className="font-medium mb-1">{item.title}</h3>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">{item.description}</p>
+            <div className="mt-auto flex items-center text-sm font-medium text-blue-600 dark:text-blue-400">
+              <span className="mr-1 group-hover:mr-2 transition-all">Explore</span>
+              <ArrowRight className="h-4 w-4" />
             </div>
-          </DialogContent>
-        </Dialog>
-      </CardHeader>
-      <CardContent>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {displayedModules.map(module => (
-            <Link 
-              to={module.link} 
-              key={module.id}
-              className="block group"
-            >
-              <div className={`h-full p-4 rounded-lg border border-transparent group-hover:border-gray-200 transition-all ${module.color} hover:shadow-md`}>
-                <div className={`p-3 rounded-full inline-block ${module.iconColor} bg-white/80 mb-3`}>
-                  {module.icon}
-                </div>
-                <h3 className={`font-medium ${module.textColor}`}>{module.title}</h3>
-                <p className="text-sm text-gray-500 mt-1">{module.description}</p>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </CardContent>
-    </Card>
+          </div>
+        </Link>
+      ))}
+    </div>
   );
 };
 

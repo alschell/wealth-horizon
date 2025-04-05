@@ -21,9 +21,9 @@ const modules = [
     description: "Analyze your wealth portfolio distribution and performance",
     icon: <PieChart className="h-6 w-6" />,
     link: "/analyze-wealth",
-    color: "bg-blue-50",
-    textColor: "text-blue-600",
-    iconColor: "text-blue-500"
+    color: "bg-gray-50",
+    textColor: "text-gray-600",
+    iconColor: "text-gray-500"
   },
   {
     id: "trading",
@@ -31,9 +31,9 @@ const modules = [
     description: "Create and manage trade orders across your portfolios",
     icon: <TrendingUp className="h-6 w-6" />,
     link: "/trading",
-    color: "bg-indigo-50",
-    textColor: "text-indigo-600",
-    iconColor: "text-indigo-500"
+    color: "bg-gray-50",
+    textColor: "text-gray-600",
+    iconColor: "text-gray-500"
   },
   {
     id: "advisory",
@@ -41,9 +41,9 @@ const modules = [
     description: "Get personalized investment advice and insights",
     icon: <HelpCircle className="h-6 w-6" />,
     link: "/advice",
-    color: "bg-purple-50",
-    textColor: "text-purple-600",
-    iconColor: "text-purple-500"
+    color: "bg-gray-50",
+    textColor: "text-gray-600",
+    iconColor: "text-gray-500"
   },
   {
     id: "cashflow",
@@ -51,9 +51,9 @@ const modules = [
     description: "Manage liquidity and term deposits",
     icon: <DollarSign className="h-6 w-6" />,
     link: "/cashflow",
-    color: "bg-green-50",
-    textColor: "text-green-600",
-    iconColor: "text-green-500"
+    color: "bg-gray-50",
+    textColor: "text-gray-600",
+    iconColor: "text-gray-500"
   },
   {
     id: "market-data",
@@ -61,9 +61,9 @@ const modules = [
     description: "Track market performance and financial news",
     icon: <LineChart className="h-6 w-6" />,
     link: "/market-data",
-    color: "bg-red-50",
-    textColor: "text-red-600",
-    iconColor: "text-red-500"
+    color: "bg-gray-50",
+    textColor: "text-gray-600",
+    iconColor: "text-gray-500"
   },
   {
     id: "reporting",
@@ -71,9 +71,9 @@ const modules = [
     description: "Generate and view financial reports",
     icon: <FileText className="h-6 w-6" />,
     link: "/reporting",
-    color: "bg-amber-50",
-    textColor: "text-amber-600",
-    iconColor: "text-amber-500"
+    color: "bg-gray-50",
+    textColor: "text-gray-600",
+    iconColor: "text-gray-500"
   },
   {
     id: "users",
@@ -81,9 +81,9 @@ const modules = [
     description: "Manage team members and access permissions",
     icon: <Users className="h-6 w-6" />,
     link: "/dashboard/users",
-    color: "bg-teal-50",
-    textColor: "text-teal-600",
-    iconColor: "text-teal-500"
+    color: "bg-gray-50",
+    textColor: "text-gray-600",
+    iconColor: "text-gray-500"
   },
   {
     id: "settings",

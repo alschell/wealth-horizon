@@ -15,8 +15,8 @@ const PageHeaderCard: React.FC<PageHeaderCardProps> = ({
   icon: Icon,
   title,
   description,
-  iconColor = "text-purple-700",
-  iconBgColor = "bg-purple-100"
+  iconColor = "text-gray-700",
+  iconBgColor = "bg-gray-100"
 }) => {
   return (
     <Card className="border-none shadow-none bg-transparent">

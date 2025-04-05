@@ -28,8 +28,8 @@ const Reporting = () => {
           icon={FileText}
           title="Reporting"
           description="Access and generate comprehensive financial reports and statements"
-          iconColor="text-orange-700"
-          iconBgColor="bg-orange-100"
+          iconColor="text-gray-700"
+          iconBgColor="bg-gray-100"
         />
         <ReportingInterface />
       </div>

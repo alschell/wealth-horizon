@@ -42,7 +42,7 @@ const QuickActions = () => {
             className="h-auto py-4 px-5 flex flex-col items-center justify-center hover-lift bg-white border rounded-xl shadow-sm"
             onClick={action.action}
           >
-            <div className="p-3 rounded-full bg-primary/10 mb-3">
+            <div className="p-3 rounded-full bg-gray-100 mb-3">
               {action.icon}
             </div>
             <span className="text-base font-medium">{action.title}</span>

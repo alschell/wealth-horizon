@@ -28,8 +28,8 @@ const AnalyzeWealth = () => {
           icon={TrendingUp}
           title="Wealth Analysis"
           description="Analyze your wealth composition, performance trends, and risk exposures"
-          iconColor="text-green-700"
-          iconBgColor="bg-green-100"
+          iconColor="text-gray-700"
+          iconBgColor="bg-gray-100"
         />
         <WealthAnalysisInterface />
       </div>

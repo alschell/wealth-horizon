@@ -28,8 +28,8 @@ const Advice = () => {
           icon={HelpCircle}
           title="Financial Advice"
           description="Get personalized recommendations and strategic insights for your portfolio"
-          iconColor="text-purple-700"
-          iconBgColor="bg-purple-100"
+          iconColor="text-gray-700"
+          iconBgColor="bg-gray-100"
         />
         <AdviceInterface />
       </div>

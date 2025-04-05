@@ -20,7 +20,7 @@ interface BankRateCardProps {
 
 const BankRateCard = ({ rate, isTopRate }: BankRateCardProps) => {
   return (
-    <Card className={`overflow-hidden ${isTopRate ? 'border-green-200 bg-green-50' : ''}`}>
+    <Card className={`overflow-hidden ${isTopRate ? 'border-gray-400 bg-gray-50' : ''}`}>
       <CardHeader className="p-4 pb-2 space-y-2">
         <div className="flex items-start justify-between">
           <div className="flex items-center">
@@ -28,7 +28,7 @@ const BankRateCard = ({ rate, isTopRate }: BankRateCardProps) => {
             <CardTitle className="text-base">{rate.bank}</CardTitle>
           </div>
           {isTopRate && (
-            <Badge className="bg-green-600">Best Rate</Badge>
+            <Badge className="bg-gray-600">Best Rate</Badge>
           )}
         </div>
       </CardHeader>
@@ -44,7 +44,7 @@ const BankRateCard = ({ rate, isTopRate }: BankRateCardProps) => {
           </div>
           <div>
             <p className="text-xs text-gray-500 mb-1">Rate</p>
-            <p className="font-bold text-green-600">{rate.rate}%</p>
+            <p className="font-bold text-gray-600">{rate.rate}%</p>
           </div>
         </div>
         

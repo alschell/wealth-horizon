@@ -28,8 +28,8 @@ const UserManagement = () => {
           icon={Users}
           title="User Management"
           description="Manage user accounts, permissions, and access controls for your organization"
-          iconColor="text-violet-700"
-          iconBgColor="bg-violet-100"
+          iconColor="text-gray-700"
+          iconBgColor="bg-gray-100"
         />
         <UserManagementInterface />
       </div>

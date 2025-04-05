@@ -28,8 +28,8 @@ const MarketData = () => {
           icon={BarChart2}
           title="Market Data & News"
           description="Access real-time market data, news, and research across global markets"
-          iconColor="text-blue-700"
-          iconBgColor="bg-blue-100"
+          iconColor="text-gray-700"
+          iconBgColor="bg-gray-100"
         />
         <MarketDataInterface />
       </div>

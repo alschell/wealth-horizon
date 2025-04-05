@@ -20,8 +20,8 @@ const Dashboard = () => {
           icon={LayoutDashboard}
           title="Dashboard"
           description="View your wealth overview, market data, and quick access to key features"
-          iconColor="text-blue-700"
-          iconBgColor="bg-blue-100"
+          iconColor="text-gray-700"
+          iconBgColor="bg-gray-100"
         />
 
         {/* Welcome header */}

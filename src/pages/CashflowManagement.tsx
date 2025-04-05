@@ -28,8 +28,8 @@ const CashflowManagement = () => {
           icon={DollarSign}
           title="Cashflow & Liquidity"
           description="Monitor and manage your cash positions, deposits, and liquidity forecasts"
-          iconColor="text-emerald-700"
-          iconBgColor="bg-emerald-100"
+          iconColor="text-gray-700"
+          iconBgColor="bg-gray-100"
         />
         <CashflowInterface />
       </div>

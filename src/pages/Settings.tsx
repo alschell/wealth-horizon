@@ -28,8 +28,8 @@ const SettingsPage = () => {
           icon={Settings}
           title="Settings"
           description="Configure your account preferences, notifications, and security options"
-          iconColor="text-slate-700"
-          iconBgColor="bg-slate-100"
+          iconColor="text-gray-700"
+          iconBgColor="bg-gray-100"
         />
         <SettingsInterface />
       </div>

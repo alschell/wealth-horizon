@@ -133,10 +133,13 @@ const MarketOverview = () => {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="h-80 w-full mt-2 mb-6"> {/* Added margin bottom to prevent overlap */}
+            <div className="h-80 w-full mt-2 mb-6 overflow-hidden"> 
               <ChartContainer config={chartConfig}>
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}> {/* Increased bottom margin */}
+                  <LineChart 
+                    data={chartData} 
+                    margin={{ top: 20, right: 30, left: 20, bottom: 40 }}
+                  > 
                     <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
                     <XAxis dataKey="name" tick={{ fontSize: 12 }} tickMargin={10} />
                     <YAxis tick={{ fontSize: 12 }} tickMargin={10} />
@@ -144,7 +147,7 @@ const MarketOverview = () => {
                     <Line type="monotone" dataKey="sp500" stroke="#10B981" strokeWidth={2} dot={false} />
                     <Line type="monotone" dataKey="nasdaq" stroke="#8B5CF6" strokeWidth={2} dot={false} />
                     <Line type="monotone" dataKey="dowjones" stroke="#3B82F6" strokeWidth={2} dot={false} />
-                    <ChartLegend content={<ChartLegendContent />} />
+                    <ChartLegend content={<ChartLegendContent />} verticalAlign="bottom" height={36} />
                   </LineChart>
                 </ResponsiveContainer>
               </ChartContainer>

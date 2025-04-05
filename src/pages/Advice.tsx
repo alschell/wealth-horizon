@@ -26,7 +26,7 @@ const Advice = () => {
         
         <PageHeaderCard
           icon={Lightbulb}
-          title="Financial Advice"
+          title="Financial Insights"
           description="Get personalized recommendations and insights for your financial portfolio"
           iconColor="text-amber-700"
           iconBgColor="bg-amber-100"

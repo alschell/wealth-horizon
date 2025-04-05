@@ -18,7 +18,7 @@ type NetWorthChartProps = {
 
 const NetWorthChart = ({ performanceData, chartConfig }: NetWorthChartProps) => {
   return (
-    <div className="w-full mb-16">
+    <div className="w-full mb-20 pt-16">
       <div className="mb-10 flex items-center justify-between">
         <div>
           <h3 className="text-sm font-medium text-gray-600">Net Worth Trend</h3>
@@ -28,7 +28,7 @@ const NetWorthChart = ({ performanceData, chartConfig }: NetWorthChartProps) => 
           <TrendingUp className="h-4 w-4 mr-1" /> +3.8% YTD
         </div>
       </div>
-      <div className="h-72 w-full mt-6">
+      <div className="h-96 w-full mt-12">
         <ChartContainer config={chartConfig}>
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart 

@@ -1,6 +1,7 @@
 
 import React, { useState } from "react";
-import { Bell, X } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
+import { Bell, X, Settings, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { 
   Tooltip,
@@ -52,6 +53,7 @@ const notificationData = [
 const DashboardHeader = () => {
   const [notifications, setNotifications] = useState(notificationData);
   const [isOpen, setIsOpen] = useState(false);
+  const location = useLocation();
   
   const unreadCount = notifications.filter(n => !n.read).length;
 
@@ -69,9 +71,36 @@ const DashboardHeader = () => {
     setNotifications(notifications.filter(n => n.id !== id));
   };
 
+  // Helper function to get the current page title
+  const getPageTitle = () => {
+    const path = location.pathname;
+    
+    if (path === "/dashboard") return "Dashboard";
+    if (path === "/analyze-wealth") return "Wealth Analysis";
+    if (path === "/advice") return "Advisory";
+    if (path === "/trading") return "Trading";
+    if (path === "/market-data") return "Market Data & News";
+    if (path === "/dashboard/credit") return "Credit Facilities";
+    if (path === "/cashflow") return "Cashflow & Liquidity";
+    if (path === "/integrations") return "Integrations";
+    if (path === "/settings") return "Settings";
+    if (path === "/reporting") return "Reporting";
+    if (path === "/dashboard/users") return "User Management";
+    
+    return "Wealth Pro";
+  };
+
   return (
-    <header className="h-14 px-4 flex items-center justify-end border-b border-border bg-white">
+    <header className="h-16 px-6 flex items-center justify-between border-b border-border bg-white">
       <div className="flex items-center gap-2">
+        <div className="text-xl font-bold tracking-tight">
+          <span className="text-indigo-400">W</span>
+          <span>ealth Pro</span>
+        </div>
+        <span className="text-lg font-medium ml-6">{getPageTitle()}</span>
+      </div>
+      
+      <div className="flex items-center gap-3">
         <Popover open={isOpen} onOpenChange={setIsOpen}>
           <TooltipProvider>
             <Tooltip>
@@ -171,6 +200,38 @@ const DashboardHeader = () => {
             </div>
           </PopoverContent>
         </Popover>
+
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button variant="ghost" size="icon" className="text-black" asChild>
+                <Link to="/settings">
+                  <Settings className="h-5 w-5" />
+                  <span className="sr-only">Settings</span>
+                </Link>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Settings</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button variant="ghost" size="icon" className="text-black" asChild>
+                <Link to="/">
+                  <LogOut className="h-5 w-5" />
+                  <span className="sr-only">Log Out</span>
+                </Link>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Log Out</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </div>
     </header>
   );

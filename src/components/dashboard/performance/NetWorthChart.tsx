@@ -3,9 +3,10 @@ import React from "react";
 import { TrendingUp } from "lucide-react";
 import {
   ChartContainer,
+  ChartTooltip,
   ChartTooltipContent
 } from "@/components/ui/chart";
-import { Area, AreaChart, XAxis, YAxis, ResponsiveContainer, Tooltip } from "recharts";
+import { Area, AreaChart, XAxis, YAxis, ResponsiveContainer } from "recharts";
 
 type NetWorthChartProps = {
   performanceData: {
@@ -39,7 +40,7 @@ const NetWorthChart = ({ performanceData, chartConfig }: NetWorthChartProps) => 
               </defs>
               <XAxis dataKey="month" tick={{ fontSize: 10 }} tickLine={false} axisLine={false} />
               <YAxis hide />
-              <Tooltip content={<ChartTooltipContent />} />
+              <ChartTooltip content={<ChartTooltipContent />} />
               <Area 
                 type="monotone" 
                 dataKey="value" 

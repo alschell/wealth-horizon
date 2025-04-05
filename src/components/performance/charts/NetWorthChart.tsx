@@ -3,6 +3,7 @@ import React from "react";
 import { TrendingUp } from "lucide-react";
 import {
   ChartContainer,
+  ChartTooltip,
   ChartTooltipContent
 } from "@/components/ui/chart";
 import { Area, AreaChart, XAxis, YAxis, ResponsiveContainer, Tooltip } from "recharts";
@@ -48,7 +49,7 @@ const NetWorthChart = ({ performanceData, chartConfig }: NetWorthChartProps) => 
                 dy={5}
               />
               <YAxis hide />
-              <Tooltip content={<ChartTooltipContent />} />
+              <ChartTooltip content={<ChartTooltipContent />} />
               <Area 
                 type="monotone" 
                 dataKey="value" 

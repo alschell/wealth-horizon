@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Plus, BarChart3 } from "lucide-react";
+import { Plus, BarChart3, ArrowLeft } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PastTradesList from "@/components/trading/dashboard/PastTradesList";
 import PendingTradesList from "@/components/trading/dashboard/PendingTradesList";
@@ -16,6 +16,17 @@ const Trading = () => {
   return (
     <DashboardLayout>
       <div className="space-y-6">
+        <div className="flex items-center gap-2 mb-4">
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={() => navigate("/dashboard")}
+            className="flex items-center gap-1"
+          >
+            <ArrowLeft className="h-4 w-4" /> Back to Dashboard
+          </Button>
+        </div>
+      
         <PageHeaderCard
           icon={BarChart3}
           title="Trading"

@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { FileText, FilePlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -9,7 +8,6 @@ import { reportsData, scheduledReportsData } from "./data/mockData";
 import AvailableReportsTab from "./sections/AvailableReportsTab";
 import ScheduledReportsTab from "./sections/ScheduledReportsTab";
 import TemplatesTab from "./sections/TemplatesTab";
-import FormHeader from "@/components/onboarding/common/FormHeader";
 
 const ReportingInterface: React.FC = () => {
   const [date, setDate] = React.useState<Date>();
@@ -45,11 +43,7 @@ const ReportingInterface: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <FormHeader
-          icon={<FileText className="h-6 w-6" />}
-          title="Reporting"
-          description="Generate, download, and schedule financial reports"
-        />
+        <div></div>
         <Button onClick={handleRequestReport} className="flex items-center gap-2">
           <FilePlus className="h-4 w-4" />
           Request New Report

@@ -1,7 +1,6 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import WealthAnalysisHeader from "./components/WealthAnalysisHeader";
 import AssetAllocation from "./sections/AssetAllocation";
 import PerformanceAnalysis from "./sections/PerformanceAnalysis";
 import ScenarioSimulation from "./sections/scenario-simulation";
@@ -15,8 +14,6 @@ const WealthAnalysisInterface = () => {
       transition={{ duration: 0.5 }}
       className="space-y-8"
     >
-      <WealthAnalysisHeader />
-      
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <AssetAllocation />
         <PerformanceAnalysis />

@@ -1,6 +1,5 @@
 
 import React, { useState } from "react";
-import CashflowHeader from "./components/CashflowHeader";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import CashflowOverview from "./sections/CashflowOverview";
 import LiquidityPlanner from "./sections/LiquidityPlanner";
@@ -13,8 +12,6 @@ const CashflowInterface = () => {
 
   return (
     <div className="space-y-6">
-      <CashflowHeader />
-      
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
         <div className="bg-white p-1.5 rounded-lg border shadow-sm">
           <TabsList className="grid grid-cols-4 w-full">

@@ -6,15 +6,12 @@ import MarketOverview from "./sections/MarketOverview";
 import IndicesTracker from "./sections/IndicesTracker";
 import NewsSection from "./sections/NewsSection";
 import WatchlistSection from "./sections/WatchlistSection";
-import MarketDataHeader from "./components/MarketDataHeader";
 
 const MarketDataInterface = () => {
   const [activeTab, setActiveTab] = useState("overview");
 
   return (
     <div className="max-w-7xl mx-auto w-full p-4">
-      <MarketDataHeader />
-      
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}

@@ -24,7 +24,7 @@ const OverviewTabContent = ({
 }: OverviewTabContentProps) => {
   return (
     <div className="space-y-8">
-      <div className="mb-2">
+      <div>
         <NetWorthChart performanceData={performanceData} chartConfig={chartConfig} />
       </div>
       

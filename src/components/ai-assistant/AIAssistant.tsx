@@ -159,17 +159,17 @@ const AIAssistant = ({ minified = false }: AIAssistantProps) => {
             <p className="text-sm">Tesla position up 15% this week. Consider taking profits.</p>
           </div>
         </div>
-        <div className="flex gap-2">
+        <form onSubmit={handleSubmit} className="flex gap-2">
           <Input 
             placeholder="Ask your AI assistant..." 
-            className="text-sm" 
-            onClick={() => navigate("/ai-assistant")}
-            readOnly
+            className="text-sm"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
           />
-          <Button size="icon" onClick={() => navigate("/ai-assistant")}>
+          <Button type="submit" size="icon">
             <Send className="h-4 w-4" />
           </Button>
-        </div>
+        </form>
       </CardContent>
     );
   }

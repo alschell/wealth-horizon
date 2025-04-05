@@ -94,7 +94,7 @@ const QuickActions = () => {
           size="sm" 
           onClick={() => setShowCustomize(!showCustomize)}
         >
-          {showCustomize ? "Done" : "Customize"}
+          {showCustomize ? "Done" : <span className="sr-only">Customize</span>}
         </Button>
       </div>
       

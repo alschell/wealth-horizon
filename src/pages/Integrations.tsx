@@ -77,8 +77,8 @@ const Integrations = () => {
           icon={Link}
           title="Integrations"
           description="Connect and manage external services and data providers"
-          iconColor="text-cyan-700"
-          iconBgColor="bg-cyan-100"
+          iconColor="text-gray-700"
+          iconBgColor="bg-gray-100"
         />
         
         <motion.div

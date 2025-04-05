@@ -25,6 +25,9 @@ import Settings from "./pages/Settings";
 import Reporting from "./pages/Reporting";
 import Notifications from "./pages/Notifications";
 import Activity from "./pages/Activity";
+import AIAssistantPage from "./pages/AIAssistant";
+import FinancialChat from "./pages/FinancialChat";
+import Borrow from "./pages/Borrow";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -57,6 +60,9 @@ function App() {
                 <Route path="/reporting" element={<Reporting />} />
                 <Route path="/notifications" element={<Notifications />} />
                 <Route path="/activity" element={<Activity />} />
+                <Route path="/ai-assistant" element={<AIAssistantPage />} />
+                <Route path="/financial-chat" element={<FinancialChat />} />
+                <Route path="/borrow" element={<Borrow />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
               <Toaster />

@@ -129,7 +129,6 @@ const DashboardSidebar = () => {
       </SidebarContent>
       
       <SidebarFooter className="p-3 mt-auto border-t border-border">
-        <Separator className="my-2" />
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton

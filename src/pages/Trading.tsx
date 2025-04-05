@@ -6,7 +6,9 @@ import TradingDashboard from "@/components/trading/TradingDashboard";
 const Trading = () => {
   return (
     <DashboardLayout>
-      <TradingDashboard />
+      <div className="p-6">
+        <TradingDashboard />
+      </div>
     </DashboardLayout>
   );
 };

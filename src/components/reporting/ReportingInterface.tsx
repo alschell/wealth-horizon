@@ -9,6 +9,7 @@ import { reportsData, scheduledReportsData } from "./data/mockData";
 import AvailableReportsTab from "./sections/AvailableReportsTab";
 import ScheduledReportsTab from "./sections/ScheduledReportsTab";
 import TemplatesTab from "./sections/TemplatesTab";
+import FormHeader from "@/components/onboarding/common/FormHeader";
 
 const ReportingInterface: React.FC = () => {
   const [date, setDate] = React.useState<Date>();
@@ -44,17 +45,11 @@ const ReportingInterface: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="p-2 bg-gray-100 rounded-lg">
-            <FileText className="h-6 w-6 text-black" />
-          </div>
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight">Reporting</h1>
-            <p className="text-muted-foreground">
-              Generate, download, and schedule financial reports
-            </p>
-          </div>
-        </div>
+        <FormHeader
+          icon={<FileText className="h-6 w-6" />}
+          title="Reporting"
+          description="Generate, download, and schedule financial reports"
+        />
         <Button onClick={handleRequestReport} className="flex items-center gap-2">
           <FilePlus className="h-4 w-4" />
           Request New Report

@@ -6,7 +6,7 @@ import {
   ChartTooltip,
   ChartTooltipContent
 } from "@/components/ui/chart";
-import { Area, AreaChart, XAxis, YAxis, ResponsiveContainer, Tooltip } from "recharts";
+import { Area, AreaChart, XAxis, YAxis, ResponsiveContainer } from "recharts";
 
 type NetWorthChartProps = {
   performanceData: {

@@ -1,6 +1,5 @@
 
 import React from "react";
-import SettingsHeader from "./components/SettingsHeader";
 import ProfileSettings from "./sections/ProfileSettings";
 import SecuritySettings from "./sections/SecuritySettings";
 import NotificationSettings from "./sections/NotificationSettings";
@@ -12,8 +11,6 @@ import SettingsTabContent from "./components/SettingsTabContent";
 const SettingsInterface = () => {
   return (
     <SettingsLayout>
-      <SettingsHeader />
-      
       <div className="mt-6">
         <SettingsTabs defaultValue="profile">
           <SettingsTabContent value="profile">

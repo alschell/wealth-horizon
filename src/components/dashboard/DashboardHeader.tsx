@@ -9,7 +9,7 @@ import HeaderAction from "./HeaderAction";
 const DashboardHeader = () => {
   return (
     <header className="h-16 flex items-center justify-between border-b border-border bg-white">
-      <div className="max-w-7xl mx-auto w-full px-4 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto w-full px-8 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Logo />
           <PageTitle />

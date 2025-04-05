@@ -10,8 +10,6 @@ import MarketSnapshot from "@/components/dashboard/MarketSnapshot";
 import RecentActivity from "@/components/dashboard/RecentActivity";
 import PageHeaderCard from "@/components/dashboard/PageHeaderCard";
 import { LayoutDashboard } from "lucide-react";
-import AIAssistant from "@/components/ai-assistant/AIAssistant";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 
 const Dashboard = () => {
   return (
@@ -40,13 +38,6 @@ const Dashboard = () => {
           </div>
           
           <div className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>AI Assistant</CardTitle>
-              </CardHeader>
-              <AIAssistant minified={true} />
-            </Card>
-            
             <NotificationsFeed />
             
             {/* Market overview card */}

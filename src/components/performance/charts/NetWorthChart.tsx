@@ -18,8 +18,8 @@ type NetWorthChartProps = {
 
 const NetWorthChart = ({ performanceData, chartConfig }: NetWorthChartProps) => {
   return (
-    <div className="w-full mb-6">
-      <div className="mb-4 flex items-center justify-between">
+    <div className="w-full mb-2">
+      <div className="mb-2 flex items-center justify-between">
         <div>
           <h3 className="text-sm font-medium text-gray-600">Net Worth Trend</h3>
           <p className="text-2xl font-bold">$4.48B</p>

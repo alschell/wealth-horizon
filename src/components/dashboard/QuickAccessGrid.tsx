@@ -20,7 +20,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 
-// All available modules
+// All available modules in the desired order
 const allModules = [
   {
     id: "wealth-analysis",
@@ -33,11 +33,31 @@ const allModules = [
     iconColor: "text-gray-500"
   },
   {
+    id: "market-data",
+    title: "Access market data & news",
+    description: "Track market performance and financial news",
+    icon: <LineChart className="h-6 w-6" />,
+    link: "/market-data",
+    color: "bg-gray-50",
+    textColor: "text-gray-600",
+    iconColor: "text-gray-500"
+  },
+  {
     id: "trading",
     title: "Trade",
     description: "Create and manage trade orders across your portfolios",
     icon: <TrendingUp className="h-6 w-6" />,
     link: "/trading",
+    color: "bg-gray-50",
+    textColor: "text-gray-600",
+    iconColor: "text-gray-500"
+  },
+  {
+    id: "credit-facilities",
+    title: "Manage credit facilities",
+    description: "Manage and monitor your credit lines and facilities",
+    icon: <CreditCard className="h-6 w-6" />,
+    link: "/credit-facilities",
     color: "bg-gray-50",
     textColor: "text-gray-600",
     iconColor: "text-gray-500"
@@ -63,31 +83,11 @@ const allModules = [
     iconColor: "text-gray-500"
   },
   {
-    id: "market-data",
-    title: "Access market data & news",
-    description: "Track market performance and financial news",
-    icon: <LineChart className="h-6 w-6" />,
-    link: "/market-data",
-    color: "bg-gray-50",
-    textColor: "text-gray-600",
-    iconColor: "text-gray-500"
-  },
-  {
     id: "reporting",
     title: "Generate reports",
     description: "Generate and view financial reports",
     icon: <FileText className="h-6 w-6" />,
     link: "/reporting",
-    color: "bg-gray-50",
-    textColor: "text-gray-600",
-    iconColor: "text-gray-500"
-  },
-  {
-    id: "integrations",
-    title: "Manage integrations",
-    description: "Connect and manage third-party integrations",
-    icon: <LinkIcon className="h-6 w-6" />,
-    link: "/integrations",
     color: "bg-gray-50",
     textColor: "text-gray-600",
     iconColor: "text-gray-500"
@@ -103,11 +103,11 @@ const allModules = [
     iconColor: "text-gray-500"
   },
   {
-    id: "credit-facilities",
-    title: "Manage credit facilities",
-    description: "Manage and monitor your credit lines and facilities",
-    icon: <CreditCard className="h-6 w-6" />,
-    link: "/credit-facilities",
+    id: "integrations",
+    title: "Manage integrations",
+    description: "Connect and manage third-party integrations",
+    icon: <LinkIcon className="h-6 w-6" />,
+    link: "/integrations",
     color: "bg-gray-50",
     textColor: "text-gray-600",
     iconColor: "text-gray-500"
@@ -129,7 +129,7 @@ const QuickAccessGrid = () => {
   const [selectedModules, setSelectedModules] = useState<string[]>(() => {
     const saved = localStorage.getItem("selectedQuickAccessModules");
     return saved ? JSON.parse(saved) : 
-      ["wealth-analysis", "trading", "advisory", "cashflow", "market-data", "reporting", "integrations", "users", "credit-facilities"];
+      ["wealth-analysis", "market-data", "trading", "credit-facilities", "advisory", "cashflow", "reporting", "users", "integrations"];
   });
 
   // Save to localStorage whenever selection changes
@@ -161,9 +161,9 @@ const QuickAccessGrid = () => {
         </div>
         <Dialog>
           <DialogTrigger asChild>
-            <Button variant="outline" size="sm" className="flex items-center gap-1">
+            <Button variant="outline" size="icon" className="h-9 w-9">
               <Edit className="h-4 w-4" />
-              Customize
+              <span className="sr-only">Customize</span>
             </Button>
           </DialogTrigger>
           <DialogContent className="max-w-md">

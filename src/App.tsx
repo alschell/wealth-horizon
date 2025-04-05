@@ -29,6 +29,7 @@ import AIAssistantPage from "./pages/AIAssistant";
 import FinancialChat from "./pages/FinancialChat";
 import Borrow from "./pages/Borrow";
 import CreditFacilities from "./pages/CreditFacilities";
+import ChatButton from "./components/chat/ChatButton";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -69,6 +70,7 @@ function App() {
               </Routes>
               <Toaster />
               <Sonner />
+              <ChatButton />
             </TooltipProvider>
           </BrowserRouter>
         </OnboardingProvider>

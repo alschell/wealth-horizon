@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import { Settings, LogOut, Bell, Search, Menu, X, BarChart3 } from "lucide-react";
+import { Settings, LogOut, Bell, Search, Menu, X } from "lucide-react";
 import Logo from "./Logo";
 import PageTitle from "./PageTitle";
 import NotificationsPopover from "./NotificationsPopover";
@@ -54,11 +54,6 @@ const DashboardHeader = () => {
           
           <NotificationsPopover />
           
-          <HeaderAction 
-            icon={Settings} 
-            label="Settings" 
-            to="/settings" 
-          />
           <HeaderAction 
             icon={LogOut} 
             label="Log Out" 

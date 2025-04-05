@@ -1,125 +1,27 @@
 
 import React from "react";
-import { CheckIcon } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { Plus, Lightbulb } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface AdviceHeaderProps {
-  activeTab: string;
-  setActiveTab: (tab: string) => void;
+  onNewAdvice: () => void;
 }
 
-const AdviceHeader: React.FC<AdviceHeaderProps> = ({ activeTab, setActiveTab }) => {
-  const steps = [
-    { id: "assets", label: "Assets" },
-    { id: "mandate", label: "Mandate" },
-    { id: "advisor", label: "Advisor" },
-    { id: "review", label: "Review" }
-  ];
-
+const AdviceHeader: React.FC<AdviceHeaderProps> = ({ onNewAdvice }) => {
   return (
-    <header className="max-w-4xl mx-auto py-8">
-      <motion.div 
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="mb-10 text-center"
-      >
-        <h1 className="text-3xl font-bold text-black mb-8">New Advice Mandate</h1>
-      </motion.div>
-      
-      <div className="mb-8">
-        {/* Desktop view */}
-        <div className="hidden md:flex w-full justify-between relative mb-2">
-          {/* Progress line - positioned to connect circles */}
-          <div className="absolute top-5 left-0 w-full h-0.5 bg-gray-100 -z-0">
-            <div 
-              className="h-full bg-black transition-all duration-700 ease-in-out"
-              style={{ 
-                width: `${(steps.findIndex(step => step.id === activeTab) / (steps.length - 1)) * 100}%` 
-              }}
-            ></div>
-          </div>
-          
-          {/* Step circles with equal spacing */}
-          <div className="flex w-full">
-            {steps.map((step, index) => {
-              const isActive = step.id === activeTab;
-              const isCompleted = steps.findIndex(s => s.id === activeTab) > index;
-
-              return (
-                <div 
-                  key={step.id}
-                  className="flex flex-col items-center relative z-10"
-                  style={{ 
-                    position: 'absolute', 
-                    left: `${(index / (steps.length - 1)) * 100}%`,
-                    transform: 'translateX(-50%)',
-                    width: '40px' 
-                  }}
-                  onClick={() => {
-                    // Only allow clicking on previous tabs or the current one
-                    if (index <= steps.findIndex(s => s.id === activeTab)) {
-                      setActiveTab(step.id);
-                    }
-                  }}
-                >
-                  <div
-                    className={cn(
-                      "w-10 h-10 rounded-full flex items-center justify-center font-medium transition-all duration-300 cursor-pointer",
-                      isActive
-                        ? "bg-gray-100 text-black border-2 border-gray-400"
-                        : isCompleted
-                        ? "bg-black text-white"
-                        : "bg-gray-100 text-gray-500"
-                    )}
-                  >
-                    {isCompleted ? (
-                      <CheckIcon className="h-5 w-5" />
-                    ) : (
-                      index + 1
-                    )}
-                  </div>
-                  <span 
-                    className={cn(
-                      "mt-2 text-sm font-medium text-center",
-                      isActive || isCompleted ? "text-black" : "text-gray-500"
-                    )}
-                  >
-                    {step.label}
-                  </span>
-                </div>
-              );
-            })}
-          </div>
-          
-          {/* Empty space to maintain layout height */}
-          <div className="w-full h-24"></div>
+    <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center gap-3">
+        <div className="p-2 bg-amber-100 rounded-lg">
+          <Lightbulb className="h-6 w-6 text-amber-600" />
         </div>
-
-        {/* Mobile version */}
-        <div className="md:hidden w-full">
-          <div className="flex items-center justify-center">
-            <span className="text-sm text-gray-500">
-              Step {steps.findIndex(step => step.id === activeTab) + 1} of {steps.length}
-            </span>
-          </div>
-          <div className="w-full h-2 bg-gray-100 rounded-full mt-2">
-            <div 
-              className="h-full bg-black rounded-full transition-all duration-700 ease-in-out"
-              style={{ 
-                width: `${((steps.findIndex(step => step.id === activeTab) + 1) / steps.length) * 100}%` 
-              }}
-            ></div>
-          </div>
-          <div className="mt-4 text-center">
-            <span className="font-medium text-black">
-              {steps.find(step => step.id === activeTab)?.label}
-            </span>
-          </div>
-        </div>
+        <h1 className="text-2xl font-bold tracking-tight">Financial Advice</h1>
       </div>
-    </header>
+      <Button onClick={onNewAdvice} className="flex items-center gap-2">
+        <Plus className="h-4 w-4" />
+        New Advisory Mandate
+      </Button>
+    </div>
   );
 };
 

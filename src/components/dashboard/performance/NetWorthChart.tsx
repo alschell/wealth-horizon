@@ -18,8 +18,8 @@ type NetWorthChartProps = {
 
 const NetWorthChart = ({ performanceData, chartConfig }: NetWorthChartProps) => {
   return (
-    <div className="w-full mb-4">
-      <div className="mb-3 flex items-center justify-between">
+    <div className="w-full mb-12">
+      <div className="mb-8 flex items-center justify-between">
         <div>
           <h3 className="text-sm font-medium text-gray-600">Net Worth Trend</h3>
           <p className="text-2xl font-bold">$4.48B</p>
@@ -28,17 +28,17 @@ const NetWorthChart = ({ performanceData, chartConfig }: NetWorthChartProps) => 
           <TrendingUp className="h-4 w-4 mr-1" /> +3.8% YTD
         </div>
       </div>
-      <div className="h-28 w-full">
+      <div className="h-60 w-full mt-4">
         <ChartContainer config={chartConfig}>
           <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={performanceData} margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
+            <AreaChart data={performanceData} margin={{ top: 10, right: 0, left: 0, bottom: 20 }}>
               <defs>
                 <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="5%" stopColor="#000000" stopOpacity={0.1}/>
                   <stop offset="95%" stopColor="#000000" stopOpacity={0}/>
                 </linearGradient>
               </defs>
-              <XAxis dataKey="month" tick={{ fontSize: 10 }} tickLine={false} axisLine={false} />
+              <XAxis dataKey="month" tick={{ fontSize: 10 }} tickLine={false} axisLine={false} dy={5} />
               <YAxis hide />
               <ChartTooltip content={<ChartTooltipContent />} />
               <Area 

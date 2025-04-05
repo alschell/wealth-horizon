@@ -10,7 +10,6 @@ import MarketSnapshot from "@/components/dashboard/MarketSnapshot";
 import RecentActivity from "@/components/dashboard/RecentActivity";
 import PageHeaderCard from "@/components/dashboard/PageHeaderCard";
 import { LayoutDashboard } from "lucide-react";
-import QuickActions from "@/components/dashboard/QuickActions";
 import AIAssistant from "@/components/ai-assistant/AIAssistant";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -29,9 +28,6 @@ const Dashboard = () => {
 
         {/* Welcome header */}
         <WelcomeHeader />
-
-        {/* Quick Actions */}
-        <QuickActions />
 
         {/* Performance Overview with enhanced visuals */}
         <PerformanceOverview />

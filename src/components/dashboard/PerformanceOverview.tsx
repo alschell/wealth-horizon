@@ -77,8 +77,8 @@ const PerformanceOverview = () => {
           </TabsList>
           
           <TabsContent value="overview" className="space-y-6">
-            {/* Net Worth Chart */}
-            <div className="h-36">
+            {/* Net Worth Chart - Fixed height container */}
+            <div className="h-36 w-full">
               <div className="mb-2 flex items-center justify-between">
                 <div>
                   <h3 className="text-sm font-medium text-gray-600">Net Worth Trend</h3>
@@ -88,28 +88,30 @@ const PerformanceOverview = () => {
                   <TrendingUp className="h-4 w-4 mr-1" /> +3.8% YTD
                 </div>
               </div>
-              <ChartContainer config={chartConfig}>
-                <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={performanceData}>
-                    <defs>
-                      <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#000000" stopOpacity={0.1}/>
-                        <stop offset="95%" stopColor="#000000" stopOpacity={0}/>
-                      </linearGradient>
-                    </defs>
-                    <XAxis dataKey="month" tick={{ fontSize: 10 }} tickLine={false} axisLine={false} />
-                    <YAxis hide />
-                    <Tooltip content={<ChartTooltipContent />} />
-                    <Area 
-                      type="monotone" 
-                      dataKey="value" 
-                      stroke="#000000" 
-                      fillOpacity={1}
-                      fill="url(#colorValue)" 
-                    />
-                  </AreaChart>
-                </ResponsiveContainer>
-              </ChartContainer>
+              <div className="h-[calc(100%-2rem)] w-full">
+                <ChartContainer config={chartConfig}>
+                  <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart data={performanceData}>
+                      <defs>
+                        <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#000000" stopOpacity={0.1}/>
+                          <stop offset="95%" stopColor="#000000" stopOpacity={0}/>
+                        </linearGradient>
+                      </defs>
+                      <XAxis dataKey="month" tick={{ fontSize: 10 }} tickLine={false} axisLine={false} />
+                      <YAxis hide />
+                      <Tooltip content={<ChartTooltipContent />} />
+                      <Area 
+                        type="monotone" 
+                        dataKey="value" 
+                        stroke="#000000" 
+                        fillOpacity={1}
+                        fill="url(#colorValue)" 
+                      />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                </ChartContainer>
+              </div>
             </div>
             
             {/* Key Metrics */}

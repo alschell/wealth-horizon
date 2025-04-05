@@ -12,14 +12,12 @@ interface AssetSelectionProps {
   assetsInScope: Asset[];
   assetsOutOfScope: Asset[];
   onAssetToggle: (asset: Asset, inScope: boolean) => void;
-  onNext: () => void;
 }
 
 const AssetSelection: React.FC<AssetSelectionProps> = ({
   assetsInScope,
   assetsOutOfScope,
-  onAssetToggle,
-  onNext
+  onAssetToggle
 }) => {
   // Set all institutions and legal entities as expanded by default
   const [expandedInstitutions, setExpandedInstitutions] = useState<string[]>([]);
@@ -123,17 +121,6 @@ const AssetSelection: React.FC<AssetSelectionProps> = ({
             totalValue={totalValue}
           />
         </div>
-      </div>
-      
-      <div className="flex justify-end mt-8 mb-16">
-        <Button 
-          onClick={onNext}
-          disabled={assetsInScope.length === 0}
-          className="px-10 py-6 text-base font-medium rounded-lg shadow-md hover:shadow-lg transition-all"
-          size="lg"
-        >
-          Continue
-        </Button>
       </div>
     </div>
   );

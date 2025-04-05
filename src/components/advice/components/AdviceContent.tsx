@@ -83,17 +83,11 @@ const AdviceContent: React.FC<AdviceContentProps> = ({
             transition={{ duration: 0.3 }}
           >
             {activeTab === "assets" && (
-              <div className="space-y-6">
-                <h2 className="text-xl font-semibold mb-4">Select Assets in Scope</h2>
-                <p className="text-gray-600 mb-6">
-                  Choose which assets will be covered by this advisory mandate
-                </p>
-                <AssetSelection 
-                  assetsInScope={adviceState.assetsInScope}
-                  assetsOutOfScope={adviceState.assetsOutOfScope}
-                  onAssetToggle={onAssetToggle}
-                />
-              </div>
+              <AssetSelection 
+                assetsInScope={adviceState.assetsInScope}
+                assetsOutOfScope={adviceState.assetsOutOfScope}
+                onAssetToggle={onAssetToggle}
+              />
             )}
 
             {activeTab === "mandate" && (
@@ -123,6 +117,8 @@ const AdviceContent: React.FC<AdviceContentProps> = ({
         <div className="mt-8">
           <FormNavigation 
             onBack={handleBack}
+            onNext={handleNext}
+            isLastStep={activeTab === "review"}
             showRequiredFieldsNote={false}
             disableBack={currentStepIndex === 0}
             submitText={activeTab === "review" ? "Submit" : "Continue"}

@@ -6,6 +6,8 @@ import { cn } from "@/lib/utils";
 
 interface FormNavigationProps {
   onBack: () => void;
+  onNext?: () => void;
+  isLastStep?: boolean;
   showRequiredFieldsNote?: boolean;
   isSubmitting?: boolean;
   submitText?: string;
@@ -15,6 +17,8 @@ interface FormNavigationProps {
 
 const FormNavigation: React.FC<FormNavigationProps> = ({ 
   onBack, 
+  onNext,
+  isLastStep = false,
   showRequiredFieldsNote = true,
   isSubmitting = false,
   submitText = "Continue",
@@ -25,6 +29,12 @@ const FormNavigation: React.FC<FormNavigationProps> = ({
     // Scroll to top before navigating back
     window.scrollTo(0, 0);
     onBack();
+  };
+
+  const handleNext = () => {
+    if (onNext) {
+      onNext();
+    }
   };
 
   return (
@@ -47,10 +57,11 @@ const FormNavigation: React.FC<FormNavigationProps> = ({
           Back
         </Button>
         <Button 
-          type="submit" 
+          type="button" 
           size="lg" 
           className="rounded-lg transition-shadow bg-black hover:bg-gray-800 text-white"
           disabled={isSubmitting}
+          onClick={handleNext}
         >
           {isSubmitting ? (
             <>

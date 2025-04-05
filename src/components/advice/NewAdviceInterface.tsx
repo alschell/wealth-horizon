@@ -12,10 +12,10 @@ const NewAdviceInterface: React.FC = () => {
   const [activeTab, setActiveTab] = useState("assets");
   const { 
     adviceState, 
-    onMandateTypeChange, 
-    onBankSelection, 
-    onAssetToggle, 
-    onSubmit 
+    handleMandateTypeChange, 
+    handleBankSelection, 
+    handleAssetToggle, 
+    handleSubmit 
   } = useAdvice();
 
   const handleBackToAdvice = () => {
@@ -44,10 +44,10 @@ const NewAdviceInterface: React.FC = () => {
           <AdviceContent 
             activeTab={activeTab}
             adviceState={adviceState}
-            onMandateTypeChange={onMandateTypeChange}
-            onBankSelection={onBankSelection}
-            onAssetToggle={onAssetToggle}
-            onSubmit={onSubmit}
+            onMandateTypeChange={handleMandateTypeChange}
+            onBankSelection={handleBankSelection}
+            onAssetToggle={handleAssetToggle}
+            onSubmit={handleSubmit}
             setActiveTab={setActiveTab}
           />
         </div>

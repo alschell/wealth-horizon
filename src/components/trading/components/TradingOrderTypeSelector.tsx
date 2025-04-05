@@ -21,7 +21,7 @@ const TradingOrderTypeSelector: React.FC<TradingOrderTypeSelectorProps> = ({
       >
         <div className="flex flex-col items-center">
           <div className="mb-2">
-            <ArrowUp className="h-5 w-5 text-green-600" />
+            <ArrowUp className="h-5 w-5 text-gray-700" />
           </div>
           <h3 className="font-medium text-center mb-2">Buy</h3>
           <p className="text-sm text-gray-600 text-center w-full">
@@ -36,7 +36,7 @@ const TradingOrderTypeSelector: React.FC<TradingOrderTypeSelectorProps> = ({
       >
         <div className="flex flex-col items-center">
           <div className="mb-2">
-            <ArrowDown className="h-5 w-5 text-red-600" />
+            <ArrowDown className="h-5 w-5 text-gray-700" />
           </div>
           <h3 className="font-medium text-center mb-2">Sell</h3>
           <p className="text-sm text-gray-600 text-center w-full">
@@ -51,7 +51,7 @@ const TradingOrderTypeSelector: React.FC<TradingOrderTypeSelectorProps> = ({
       >
         <div className="flex flex-col items-center">
           <div className="mb-2">
-            <Circle className="h-5 w-5 text-amber-600" />
+            <Circle className="h-5 w-5 text-gray-600" />
           </div>
           <h3 className="font-medium text-center mb-2">Sell Short</h3>
           <p className="text-sm text-gray-600 text-center w-full">
@@ -66,7 +66,7 @@ const TradingOrderTypeSelector: React.FC<TradingOrderTypeSelectorProps> = ({
       >
         <div className="flex flex-col items-center">
           <div className="mb-2">
-            <RefreshCcw className="h-5 w-5 text-blue-600" />
+            <RefreshCcw className="h-5 w-5 text-gray-600" />
           </div>
           <h3 className="font-medium text-center mb-2">Exchange</h3>
           <p className="text-sm text-gray-600 text-center w-full">

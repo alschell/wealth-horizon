@@ -33,7 +33,7 @@ const AssetsInScope: React.FC<AssetsInScopeProps> = ({
                   <div 
                     key={asset.id} 
                     className={`flex items-center justify-between p-6 border border-gray-200 rounded-lg cursor-pointer transition-all 
-                             hover:shadow-md ${isSelected ? 'bg-red-50 border-red-200' : 'bg-white hover:bg-gray-50'}`}
+                             hover:shadow-md ${isSelected ? 'bg-gray-100 border-gray-300' : 'bg-white hover:bg-gray-50'}`}
                     onClick={() => toggleAssetForRemoval(asset)}
                   >
                     <div className="flex-grow">
@@ -56,7 +56,7 @@ const AssetsInScope: React.FC<AssetsInScopeProps> = ({
                       type="checkbox"
                       checked={isSelected}
                       onChange={() => {}}
-                      className="h-5 w-5 rounded border-gray-300 text-red-600 focus:ring-red-500 ml-4"
+                      className="h-5 w-5 rounded border-gray-300 text-gray-600 focus:ring-gray-500 ml-4"
                     />
                   </div>
                 );

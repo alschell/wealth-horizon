@@ -27,7 +27,7 @@ const LeveragePresets: React.FC<LeveragePresetsProps> = ({
       value: 1, 
       title: "No Leverage (1x)", 
       icon: Shield, 
-      iconColor: "text-green-600", 
+      iconColor: "text-gray-600", 
       description: "Standard trading with your available capital.", 
       badge: "Conservative" 
     },
@@ -35,7 +35,7 @@ const LeveragePresets: React.FC<LeveragePresetsProps> = ({
       value: 2, 
       title: "Moderate (2x)", 
       icon: TrendingUp, 
-      iconColor: "text-blue-600", 
+      iconColor: "text-gray-600", 
       description: "Double your buying power with moderate risk.", 
       badge: "Standard" 
     },
@@ -43,7 +43,7 @@ const LeveragePresets: React.FC<LeveragePresetsProps> = ({
       value: 5, 
       title: "Advanced (5x)", 
       icon: AlertTriangle, 
-      iconColor: "text-amber-600", 
+      iconColor: "text-gray-600", 
       description: "Quintuple your position size with higher risk.", 
       badge: "High Risk" 
     }

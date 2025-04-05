@@ -12,14 +12,14 @@ const WarningsNotices: React.FC<WarningsNoticesProps> = ({ warnings }) => {
     <>
       {/* Warnings and notices */}
       {warnings.length > 0 && (
-        <div className="bg-amber-50 border border-amber-200 rounded-md p-4 mt-6">
+        <div className="bg-gray-100 border border-gray-300 rounded-md p-4 mt-6">
           <div className="flex items-start">
-            <AlertTriangle className="h-5 w-5 text-amber-600 mt-0.5 mr-2 flex-shrink-0" />
+            <AlertTriangle className="h-5 w-5 text-gray-600 mt-0.5 mr-2 flex-shrink-0" />
             <div>
-              <h4 className="font-medium text-amber-800 mb-1">Please note:</h4>
+              <h4 className="font-medium text-gray-800 mb-1">Please note:</h4>
               <ul className="list-disc pl-5 space-y-1">
                 {warnings.map((warning, index) => (
-                  <li key={index} className="text-sm text-amber-700">{warning}</li>
+                  <li key={index} className="text-sm text-gray-700">{warning}</li>
                 ))}
               </ul>
             </div>
@@ -28,12 +28,12 @@ const WarningsNotices: React.FC<WarningsNoticesProps> = ({ warnings }) => {
       )}
 
       {/* Confirmation box */}
-      <div className="bg-green-50 border border-green-200 rounded-md p-4 mt-2">
+      <div className="bg-gray-100 border border-gray-300 rounded-md p-4 mt-2">
         <div className="flex items-start">
-          <Check className="h-5 w-5 text-green-600 mt-0.5 mr-2 flex-shrink-0" />
+          <Check className="h-5 w-5 text-gray-700 mt-0.5 mr-2 flex-shrink-0" />
           <div>
-            <h4 className="font-medium text-green-800">Ready to submit</h4>
-            <p className="text-sm text-green-700 mt-1">
+            <h4 className="font-medium text-gray-800">Ready to submit</h4>
+            <p className="text-sm text-gray-700 mt-1">
               By clicking "Submit Order", you agree to the terms and conditions of this transaction.
             </p>
           </div>

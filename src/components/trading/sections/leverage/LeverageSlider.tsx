@@ -16,7 +16,7 @@ const LeverageSlider: React.FC<LeverageSliderProps> = ({
   const getBadgeVariant = (value: number): "default" | "secondary" | "outline" | "destructive" => {
     if (value <= 1) return "secondary";
     if (value <= 3) return "outline";
-    return "destructive";
+    return "outline";
   };
 
   // Handle slider change with optimized state updates
@@ -40,7 +40,7 @@ const LeverageSlider: React.FC<LeverageSliderProps> = ({
         <h3 className="text-md font-medium">Custom Leverage</h3>
         <Badge 
           variant={getBadgeVariant(leverage)}
-          className={leverage > 3 ? "bg-red-500 text-white" : ""}
+          className={leverage > 3 ? "bg-gray-700 text-white" : ""}
         >
           {leverage}x
         </Badge>

@@ -62,8 +62,8 @@ const LeverageCard: React.FC<LeverageCardProps> = ({
           <Icon className={cn("h-5 w-5", iconColor)} />
         </div>
         <Badge
-          variant={value > 1 ? (value > 2 ? "destructive" : "outline") : "secondary"}
-          className={value > 3 ? "bg-red-500 text-white" : ""}
+          variant={value > 1 ? (value > 2 ? "outline" : "outline") : "secondary"}
+          className={value > 3 ? "bg-gray-700 text-white" : ""}
         >
           {value}x
         </Badge>

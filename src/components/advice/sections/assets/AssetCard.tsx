@@ -49,9 +49,9 @@ const AssetCard: React.FC<AssetCardProps> = ({ asset, inScope, onToggle }) => {
         </div>
         <Button
           onClick={onToggle}
-          variant={inScope ? "destructive" : "default"}
+          variant={inScope ? "outline" : "default"}
           size="sm"
-          className={inScope ? "bg-red-100 text-red-600 hover:bg-red-200 hover:text-red-700" : "bg-black text-white hover:bg-gray-800"}
+          className={inScope ? "bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-700" : "bg-black text-white hover:bg-gray-800"}
         >
           {inScope ? (
             <>

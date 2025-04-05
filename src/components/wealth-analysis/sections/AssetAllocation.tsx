@@ -14,11 +14,11 @@ import { motion } from "framer-motion";
 const AssetAllocation = () => {
   // Sample data for the asset allocation chart
   const assetAllocationData = [
-    { name: "Equities", value: 45, color: "#10B981" },
-    { name: "Fixed Income", value: 25, color: "#3B82F6" },
-    { name: "Real Estate", value: 15, color: "#8B5CF6" },
-    { name: "Alternative Investments", value: 10, color: "#F59E0B" },
-    { name: "Cash", value: 5, color: "#EC4899" }
+    { name: "Equities", value: 45, color: "#555555" },
+    { name: "Fixed Income", value: 25, color: "#777777" },
+    { name: "Real Estate", value: 15, color: "#999999" },
+    { name: "Alternative Investments", value: 10, color: "#333333" },
+    { name: "Cash", value: 5, color: "#AAAAAA" }
   ];
 
   // Chart config for the asset allocation chart
@@ -78,7 +78,7 @@ const AssetAllocation = () => {
             </div>
             <div className="flex justify-between items-center">
               <div className="text-sm font-medium">Rebalancing Status</div>
-              <div className="text-sm font-bold text-amber-500">Due in 5 days</div>
+              <div className="text-sm font-bold text-gray-600">Due in 5 days</div>
             </div>
           </div>
         </CardContent>

@@ -34,7 +34,7 @@ const RiskMetricsCard = ({ metrics }: RiskMetricsCardProps) => {
             <span className="text-2xl font-bold">
               {metric.score}{metric.unit || ''}
             </span>
-            <span className={`ml-2 text-xs flex items-center ${metric.changeDirection === 'down' ? 'text-green-500' : 'text-red-500'}`}>
+            <span className={`ml-2 text-xs flex items-center ${metric.changeDirection === 'down' ? 'text-gray-500' : 'text-gray-700'}`}>
               {metric.changeDirection === 'down' ? (
                 <TrendingDown className="h-3 w-3 mr-0.5" />
               ) : (

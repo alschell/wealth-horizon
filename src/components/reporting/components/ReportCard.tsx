@@ -36,10 +36,10 @@ const ReportCard: React.FC<ReportCardProps> = ({ report, toggleStar, downloadRep
             variant="ghost"
             size="icon"
             onClick={() => toggleStar(report.id)}
-            className="h-8 w-8 text-gray-400 hover:text-amber-400"
+            className="h-8 w-8 text-gray-400 hover:text-gray-600"
           >
             <Bookmark 
-              className={cn("h-5 w-5", report.starred && "fill-amber-400 text-amber-400")} 
+              className={cn("h-5 w-5", report.starred && "fill-gray-600 text-gray-600")} 
             />
             <span className="sr-only">Star</span>
           </Button>

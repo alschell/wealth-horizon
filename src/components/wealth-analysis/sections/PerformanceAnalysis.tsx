@@ -35,7 +35,7 @@ const PerformanceAnalysis = () => {
   const chartConfig = {
     portfolio: {
       label: "Your Portfolio",
-      color: "#10B981"
+      color: "#000000"
     },
     benchmark: {
       label: "Benchmark (S&P 500)",
@@ -86,7 +86,7 @@ const PerformanceAnalysis = () => {
                   <Line
                     type="monotone"
                     dataKey="portfolio"
-                    stroke="#10B981"
+                    stroke="#000000"
                     strokeWidth={2}
                     dot={false}
                   />
@@ -106,7 +106,7 @@ const PerformanceAnalysis = () => {
           <div className="grid grid-cols-3 gap-4 mt-4">
             <div className="text-center">
               <div className="text-sm text-gray-500">Total Return</div>
-              <div className="text-lg font-bold text-green-500">+60.0%</div>
+              <div className="text-lg font-bold text-gray-700">+60.0%</div>
             </div>
             <div className="text-center">
               <div className="text-sm text-gray-500">Alpha</div>

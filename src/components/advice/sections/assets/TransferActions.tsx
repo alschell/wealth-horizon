@@ -23,21 +23,21 @@ const TransferActions: React.FC<TransferActionsProps> = ({
           onClick={moveAssetsToScope}
           disabled={selectedAssetsCount === 0}
           variant="outline"
-          className="flex items-center justify-center w-14 h-14 rounded-full shadow-md hover:shadow-lg transition-all bg-gray-50 hover:bg-blue-50 disabled:opacity-40"
+          className="flex items-center justify-center w-14 h-14 rounded-full shadow-md hover:shadow-lg transition-all bg-gray-50 hover:bg-gray-100 disabled:opacity-40"
           title="Add to scope"
           aria-label="Add selected assets to scope"
         >
-          <ArrowRight className="h-6 w-6 text-blue-600" />
+          <ArrowRight className="h-6 w-6 text-gray-600" />
         </Button>
         <Button 
           onClick={removeAssetsFromScope}
           disabled={selectedAssetsForRemovalCount === 0}
           variant="outline"
-          className="flex items-center justify-center w-14 h-14 rounded-full shadow-md hover:shadow-lg transition-all bg-gray-50 hover:bg-red-50 disabled:opacity-40"
+          className="flex items-center justify-center w-14 h-14 rounded-full shadow-md hover:shadow-lg transition-all bg-gray-50 hover:bg-gray-100 disabled:opacity-40"
           title="Remove from scope"
           aria-label="Remove selected assets from scope"
         >
-          <ArrowLeft className="h-6 w-6 text-red-600" />
+          <ArrowLeft className="h-6 w-6 text-gray-600" />
         </Button>
       </div>
     </div>

@@ -1,10 +1,10 @@
 
 export const getRiskColor = (value: number): string => {
-  if (value < 20) return "bg-green-500";
-  if (value < 40) return "bg-emerald-500";
-  if (value < 60) return "bg-yellow-500";
-  if (value < 80) return "bg-orange-500";
-  return "bg-red-500";
+  if (value < 20) return "bg-gray-400";
+  if (value < 40) return "bg-gray-500";
+  if (value < 60) return "bg-gray-600";
+  if (value < 80) return "bg-gray-700";
+  return "bg-gray-900";
 };
 
 export const riskMetricsData = [
@@ -12,7 +12,7 @@ export const riskMetricsData = [
     label: "Overall Risk Score",
     score: 68,
     change: "+2",
-    color: "bg-orange-500",
+    color: "bg-gray-700",
     tooltip: "Based on asset volatility, concentration, and correlation"
   },
   {

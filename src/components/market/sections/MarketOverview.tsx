@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -17,12 +16,12 @@ import { MarketSummaryCard } from "../components/MarketSummaryCard";
 const MarketOverview = () => {
   // Mock data - in a real app, this would come from an API
   const marketData = [
-    { name: "S&P 500", value: "4,587.20", change: 0.85, color: "#10B981" },
-    { name: "NASDAQ", value: "14,346.30", change: 1.2, color: "#10B981" },
-    { name: "Dow Jones", value: "36,124.56", change: 0.32, color: "#10B981" },
-    { name: "FTSE 100", value: "7,582.10", change: -0.32, color: "#EF4444" },
-    { name: "DAX", value: "15,947.80", change: -0.15, color: "#EF4444" },
-    { name: "Nikkei 225", value: "37,156.45", change: 1.45, color: "#10B981" },
+    { name: "S&P 500", value: "4,587.20", change: 0.85, color: "#555555" },
+    { name: "NASDAQ", value: "14,346.30", change: 1.2, color: "#555555" },
+    { name: "Dow Jones", value: "36,124.56", change: 0.32, color: "#555555" },
+    { name: "FTSE 100", value: "7,582.10", change: -0.32, color: "#777777" },
+    { name: "DAX", value: "15,947.80", change: -0.15, color: "#777777" },
+    { name: "Nikkei 225", value: "37,156.45", change: 1.45, color: "#555555" },
   ];
 
   const chartData = [
@@ -38,26 +37,26 @@ const MarketOverview = () => {
   ];
 
   const assetClasses = [
-    { name: "Equities", value: 2.1, color: "#10B981" },
-    { name: "Fixed Income", value: -0.3, color: "#EF4444" },
-    { name: "Commodities", value: 1.5, color: "#10B981" },
-    { name: "Currencies", value: -0.2, color: "#EF4444" },
-    { name: "Crypto", value: 3.5, color: "#10B981" },
+    { name: "Equities", value: 2.1, color: "#555555" },
+    { name: "Fixed Income", value: -0.3, color: "#777777" },
+    { name: "Commodities", value: 1.5, color: "#555555" },
+    { name: "Currencies", value: -0.2, color: "#777777" },
+    { name: "Crypto", value: 3.5, color: "#555555" },
   ];
 
   // Chart config
   const chartConfig = {
     sp500: {
       label: "S&P 500",
-      color: "#10B981"
+      color: "#333333"
     },
     nasdaq: {
       label: "NASDAQ",
-      color: "#8B5CF6"
+      color: "#666666"
     },
     dowjones: {
       label: "Dow Jones",
-      color: "#3B82F6"
+      color: "#999999"
     }
   };
 
@@ -144,9 +143,9 @@ const MarketOverview = () => {
                     <XAxis dataKey="name" tick={{ fontSize: 12 }} tickMargin={10} />
                     <YAxis tick={{ fontSize: 12 }} tickMargin={10} />
                     <ChartTooltip content={<ChartTooltipContent />} />
-                    <Line type="monotone" dataKey="sp500" stroke="#10B981" strokeWidth={2} dot={false} />
-                    <Line type="monotone" dataKey="nasdaq" stroke="#8B5CF6" strokeWidth={2} dot={false} />
-                    <Line type="monotone" dataKey="dowjones" stroke="#3B82F6" strokeWidth={2} dot={false} />
+                    <Line type="monotone" dataKey="sp500" stroke="#333333" strokeWidth={2} dot={false} />
+                    <Line type="monotone" dataKey="nasdaq" stroke="#666666" strokeWidth={2} dot={false} />
+                    <Line type="monotone" dataKey="dowjones" stroke="#999999" strokeWidth={2} dot={false} />
                     <ChartLegend content={<ChartLegendContent />} verticalAlign="bottom" height={36} />
                   </LineChart>
                 </ResponsiveContainer>
@@ -183,11 +182,11 @@ const MarketOverview = () => {
                   <ChartTooltip />
                   <defs>
                     <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#8B5CF6" stopOpacity={0.8}/>
-                      <stop offset="95%" stopColor="#8B5CF6" stopOpacity={0}/>
+                      <stop offset="5%" stopColor="#666666" stopOpacity={0.8}/>
+                      <stop offset="95%" stopColor="#666666" stopOpacity={0}/>
                     </linearGradient>
                   </defs>
-                  <Area type="monotone" dataKey="value" stroke="#8B5CF6" fillOpacity={1} fill="url(#colorUv)" />
+                  <Area type="monotone" dataKey="value" stroke="#666666" fillOpacity={1} fill="url(#colorUv)" />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
@@ -206,10 +205,10 @@ const MarketOverview = () => {
           <CardContent>
             <div className="space-y-4 mt-2">
               {[
-                { name: "Gold", price: "$2,356.70", change: 0.75, color: "#f59e0b" },
-                { name: "Silver", price: "$28.12", change: 1.15, color: "#94a3b8" },
-                { name: "Crude Oil", price: "$75.46", change: -0.65, color: "#030712" },
-                { name: "Natural Gas", price: "$3.12", change: 2.15, color: "#0ea5e9" },
+                { name: "Gold", price: "$2,356.70", change: 0.75, color: "#777777" },
+                { name: "Silver", price: "$28.12", change: 1.15, color: "#999999" },
+                { name: "Crude Oil", price: "$75.46", change: -0.65, color: "#333333" },
+                { name: "Natural Gas", price: "$3.12", change: 2.15, color: "#555555" },
               ].map((item) => (
                 <div key={item.name} className="flex justify-between items-center">
                   <div className="flex items-center">
@@ -222,7 +221,7 @@ const MarketOverview = () => {
                   <div className="flex items-center gap-3">
                     <span className="text-sm">{item.price}</span>
                     <div className={`flex items-center ${
-                      item.change >= 0 ? "text-green-500" : "text-red-500"
+                      item.change >= 0 ? "text-gray-700" : "text-gray-500"
                     }`}>
                       {item.change >= 0 ? (
                         <TrendingUp className="h-3 w-3 mr-1" />

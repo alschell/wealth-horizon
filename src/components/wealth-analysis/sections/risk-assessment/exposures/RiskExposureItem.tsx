@@ -21,7 +21,7 @@ const RiskExposureItem = ({ name, value, warning, riskColor }: RiskExposureItemP
         <Progress value={value} className={`h-2 ${riskColor}`} />
       </div>
       {warning && (
-        <div className="flex items-center mt-1 text-xs text-amber-600">
+        <div className="flex items-center mt-1 text-xs text-gray-600">
           <AlertCircle className="h-3 w-3 mr-1" />
           {warning}
         </div>

@@ -50,14 +50,16 @@ const PortfolioPerformanceChart = () => {
           Expand
         </Button>
       </div>
-      <p className="text-xs text-gray-500 mb-4">Compared to benchmarks</p>
+      <p className="text-xs text-gray-500 mb-4">
+        Detailed chart view available in the Analysis section
+      </p>
       
-      <div className="h-36 w-full">
+      <div className="h-60 w-full">
         <ChartContainer config={chartConfig}>
           <ResponsiveContainer width="100%" height="100%">
             <RechartsLineChart
               data={data}
-              margin={{ top: 5, right: 5, left: 0, bottom: 5 }}
+              margin={{ top: 5, right: 5, left: 5, bottom: 5 }}
             >
               <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
               <XAxis dataKey="month" tick={{ fontSize: 10 }} tickMargin={5} />

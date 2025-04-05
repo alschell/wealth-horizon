@@ -46,7 +46,7 @@ const RiskMetricsCard = ({ metrics }: RiskMetricsCardProps) => {
           {metric.color && (
             <div className="w-full h-1.5 bg-gray-200 rounded mt-1">
               <div 
-                className={`h-1.5 rounded ${metric.color}`} 
+                className="h-1.5 rounded bg-gray-500" 
                 style={{ width: `${Math.min(100, metric.score)}%` }}
               />
             </div>

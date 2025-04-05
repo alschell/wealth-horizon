@@ -33,7 +33,7 @@ const ExecutionTypeCard: React.FC<ExecutionTypeCardProps> = ({
     >
       <div className="flex flex-col items-center text-center h-full justify-center">
         <div className="mb-3">
-          <Icon className={`h-5 w-5 ${iconColor}`} />
+          <Icon className="h-5 w-5 text-gray-700" />
         </div>
         <h3 className="font-medium mb-2">{title}</h3>
         <p className="text-xs text-gray-600">

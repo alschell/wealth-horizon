@@ -59,7 +59,7 @@ const LeverageCard: React.FC<LeverageCardProps> = ({
     >
       <div className="flex justify-between items-start">
         <div className="flex items-center">
-          <Icon className={cn("h-5 w-5", iconColor)} />
+          <Icon className={cn("h-5 w-5", "text-gray-700")} />
         </div>
         <Badge
           variant={value > 1 ? (value > 2 ? "outline" : "outline") : "secondary"}

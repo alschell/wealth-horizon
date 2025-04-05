@@ -35,7 +35,7 @@ export const MarketSummaryCard: React.FC<MarketSummaryCardProps> = ({
               <div className="flex items-center space-x-2">
                 <span className="text-sm font-mono">{item.value}</span>
                 <div className={`flex items-center ${
-                  item.change >= 0 ? "text-green-500" : "text-red-500"
+                  item.change >= 0 ? "text-gray-700" : "text-gray-500"
                 }`}>
                   {item.change >= 0 ? (
                     <TrendingUp className="h-3 w-3 mr-1" />

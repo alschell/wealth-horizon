@@ -7,29 +7,25 @@ interface BankSelectorProps {
   selectedBank: Bank | null;
   mandateType: MandateType;
   onBankSelection: (bank: Bank | null) => void;
-  onNext: () => void;
 }
 
 const BankSelector: React.FC<BankSelectorProps> = ({
   selectedBank,
   mandateType,
-  onBankSelection,
-  onNext
+  onBankSelection
 }) => {
   return (
-    <div className="space-y-8">
-      <div className="p-6 rounded-lg border border-gray-200 bg-white">
-        <h2 className="text-xl font-semibold mb-6">Advisor</h2>
-        <p className="text-gray-600 mb-6">
-          Choose a bank to provide {mandateType === "discretionary" ? "discretionary management" : "advisory services"} for your assets.
-        </p>
-        
-        <BankSelectorComponent 
-          selectedBank={selectedBank}
-          mandateType={mandateType}
-          onBankSelection={onBankSelection}
-        />
-      </div>
+    <div className="space-y-6">
+      <h2 className="text-xl font-semibold mb-4">Select Advisory Institution</h2>
+      <p className="text-gray-600 mb-6">
+        Choose a bank to provide {mandateType === "discretionary" ? "discretionary management" : "advisory services"} for your assets.
+      </p>
+      
+      <BankSelectorComponent 
+        selectedBank={selectedBank}
+        mandateType={mandateType}
+        onBankSelection={onBankSelection}
+      />
     </div>
   );
 };

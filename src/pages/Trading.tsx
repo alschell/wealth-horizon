@@ -15,7 +15,7 @@ const Trading = () => {
 
   return (
     <DashboardLayout>
-      <div className="space-y-6">
+      <div className="space-y-6 p-6">
         <div className="flex items-center gap-2 mb-4">
           <Button 
             variant="ghost" 
@@ -35,7 +35,7 @@ const Trading = () => {
           iconBgColor="bg-gray-100"
         />
         
-        <div className="flex justify-end mb-4">
+        <div className="flex justify-end mb-6">
           <Button 
             className="flex items-center gap-2" 
             onClick={() => navigate("/trading/new")}
@@ -50,7 +50,7 @@ const Trading = () => {
             <TabsTrigger value="pending">Pending Trades</TabsTrigger>
             <TabsTrigger value="history">Trade History</TabsTrigger>
           </TabsList>
-          <TabsContent value="pending" className="mt-4">
+          <TabsContent value="pending" className="mt-6">
             <Card>
               <CardHeader className="pb-2">
                 <CardTitle>Pending Trades</CardTitle>
@@ -60,7 +60,7 @@ const Trading = () => {
               </CardContent>
             </Card>
           </TabsContent>
-          <TabsContent value="history" className="mt-4">
+          <TabsContent value="history" className="mt-6">
             <Card>
               <CardHeader className="pb-2">
                 <CardTitle>Trade History</CardTitle>

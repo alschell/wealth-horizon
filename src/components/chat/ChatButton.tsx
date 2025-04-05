@@ -1,14 +1,12 @@
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import { MessageCircle, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import AIAssistant from "@/components/ai-assistant/AIAssistant";
 
 const ChatButton = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [input, setInput] = useState("");
-  const [messages, setMessages] = useState([]);
   
   const toggleChat = () => {
     setIsOpen(!isOpen);
@@ -19,8 +17,13 @@ const ChatButton = () => {
       {isOpen && (
         <div className="fixed bottom-20 right-5 z-50 w-96 shadow-xl">
           <Card className="h-[500px] flex flex-col">
+            <CardHeader className="p-4 pb-3 border-b">
+              <CardTitle className="text-md">AI Financial Assistant</CardTitle>
+            </CardHeader>
             <CardContent className="p-0 flex-1 overflow-hidden flex flex-col">
-              <AIAssistant showHeader={true} />
+              <div className="h-full overflow-y-auto">
+                <AIAssistant showHeader={false} />
+              </div>
             </CardContent>
           </Card>
         </div>

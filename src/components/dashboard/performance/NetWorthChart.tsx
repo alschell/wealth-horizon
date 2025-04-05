@@ -28,7 +28,7 @@ const NetWorthChart = ({ performanceData, chartConfig }: NetWorthChartProps) => 
           <TrendingUp className="h-4 w-4 mr-1" /> +3.8% YTD
         </div>
       </div>
-      <div className="h-32 w-full">
+      <div className="h-28 w-full">
         <ChartContainer config={chartConfig}>
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={performanceData} margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>

@@ -22,6 +22,7 @@ import TradingInterface from "@/components/trading/TradingInterface";
 import NewAdviceInterface from "@/components/advice/NewAdviceInterface";
 import UserManagement from "./pages/UserManagement";
 import Settings from "./pages/Settings";
+import Reporting from "./pages/Reporting";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -51,6 +52,7 @@ function App() {
                 <Route path="/integrations/oauth-callback" element={<IntegrationCallback />} />
                 <Route path="/dashboard/users" element={<UserManagement />} />
                 <Route path="/settings" element={<Settings />} />
+                <Route path="/reporting" element={<Reporting />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
               <Toaster />

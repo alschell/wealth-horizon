@@ -2,6 +2,8 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TrendingUp, TrendingDown } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 
 interface MarketIndex {
   name: string;
@@ -16,9 +18,25 @@ interface NewsItem {
   time: string;
 }
 
-const MarketData = () => {
-  // Mock data - in a real app, this would come from your API
-  const indices: MarketIndex[] = [
+interface MarketDataWidgetProps {
+  indices?: MarketIndex[];
+  news?: NewsItem[];
+  title?: string;
+  showViewAllButton?: boolean;
+  maxNewsItems?: number;
+  className?: string;
+}
+
+const MarketDataWidget: React.FC<MarketDataWidgetProps> = ({
+  indices = [],
+  news = [],
+  title = "Market Data & News",
+  showViewAllButton = true,
+  maxNewsItems = 2,
+  className = "",
+}) => {
+  // Default data if none is provided
+  const defaultIndices: MarketIndex[] = [
     {
       name: "S&P 500",
       value: "4,587.20",
@@ -35,8 +53,8 @@ const MarketData = () => {
       change: -0.32,
     },
   ];
-
-  const news: NewsItem[] = [
+  
+  const defaultNews: NewsItem[] = [
     {
       id: "1",
       title: "Fed signals potential rate cuts later this year",
@@ -51,14 +69,18 @@ const MarketData = () => {
     },
   ];
 
+  // Use provided data or fallback to defaults
+  const displayIndices = indices.length > 0 ? indices : defaultIndices;
+  const displayNews = news.length > 0 ? news.slice(0, maxNewsItems) : defaultNews.slice(0, maxNewsItems);
+
   return (
-    <Card>
+    <Card className={className}>
       <CardHeader className="pb-2">
-        <CardTitle className="text-base">Market Data & News</CardTitle>
+        <CardTitle className="text-base">{title}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-2">
-          {indices.map((index, i) => (
+          {displayIndices.map((index, i) => (
             <div key={i} className="flex justify-between items-center">
               <span className="font-medium text-sm">{index.name}</span>
               <div className="flex items-center">
@@ -81,23 +103,33 @@ const MarketData = () => {
           ))}
         </div>
         
-        <div>
-          <h4 className="text-sm font-medium mb-2">Latest News</h4>
-          <div className="space-y-2">
-            {news.map((item) => (
-              <div key={item.id} className="cursor-pointer hover:bg-gray-50 rounded-md p-2 transition-colors">
-                <p className="text-sm font-medium">{item.title}</p>
-                <div className="flex justify-between text-xs text-gray-500 mt-1">
-                  <span>{item.source}</span>
-                  <span>{item.time}</span>
+        {displayNews.length > 0 && (
+          <div>
+            <h4 className="text-sm font-medium mb-2">Latest News</h4>
+            <div className="space-y-2">
+              {displayNews.map((item) => (
+                <div key={item.id} className="cursor-pointer hover:bg-gray-50 rounded-md p-2 transition-colors">
+                  <p className="text-sm font-medium">{item.title}</p>
+                  <div className="flex justify-between text-xs text-gray-500 mt-1">
+                    <span>{item.source}</span>
+                    <span>{item.time}</span>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
+        )}
+        
+        {showViewAllButton && (
+          <Link to="/market-data" className="block mt-3">
+            <Button variant="outline" size="sm" className="w-full">
+              View Full Market Data
+            </Button>
+          </Link>
+        )}
       </CardContent>
     </Card>
   );
 };
 
-export default MarketData;
+export default MarketDataWidget;

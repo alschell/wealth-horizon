@@ -1,64 +1,78 @@
 
 import React, { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import OverviewTabContent from "./tabs/OverviewTabContent";
 import ChartsTabContent from "./tabs/ChartsTabContent";
 import RecommendationsTabContent from "./tabs/RecommendationsTabContent";
-import { PerformanceData } from "./data/PerformanceData";
-import BackButtonHeader from "@/components/navigation/BackButtonHeader";
+import { performanceData } from "./data/PerformanceData";
 
-const PerformanceOverview = () => {
-  const [selectedTab, setSelectedTab] = useState("overview");
+const PerformanceOverview: React.FC = () => {
+  const [activeTab, setActiveTab] = useState("overview");
   
-  const newsData = [
-    { title: "Q2 Earnings Report Released", time: "2h ago" },
-    { title: "New Strategic Asset Allocation", time: "Yesterday" },
-    { title: "Market Update: Tech Sector Rotation", time: "2d ago" },
-    { title: "Portfolio Rebalancing Complete", time: "3d ago" },
-  ];
-  
-  const chartConfig = {
-    height: 300,
-    showGrid: true,
-    showTooltip: true,
-    showLegend: true,
-  };
-  
+  const {
+    totalAssets,
+    changeAmount,
+    changePercentage,
+    changeType,
+    keyMetrics,
+    assetAllocation,
+    performanceTrend,
+    topPerformers,
+    topDetractors,
+    recommendations,
+    recentNews
+  } = performanceData;
+
   return (
-    <div className="space-y-6">
-      <BackButtonHeader title="Back to Dashboard" />
-      
-      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-        <Tabs 
-          defaultValue="overview" 
-          value={selectedTab}
-          onValueChange={setSelectedTab}
-          className="space-y-6"
-        >
-          <TabsList className="grid grid-cols-3 h-11">
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="charts">Charts</TabsTrigger>
-            <TabsTrigger value="recommendations">Recommendations</TabsTrigger>
-          </TabsList>
+    <Card className="shadow-sm">
+      <CardHeader className="pb-3">
+        <CardTitle className="text-lg font-medium flex items-center justify-between">
+          <span>Portfolio Performance</span>
+          <span className="text-sm font-normal text-muted-foreground">Last updated: Today, 9:43 AM</span>
+        </CardTitle>
+        <CardDescription>
+          Track your portfolio performance across all accounts
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="p-0">
+        <Tabs defaultValue="overview" value={activeTab} onValueChange={setActiveTab}>
+          <div className="px-6">
+            <TabsList className="grid w-full grid-cols-3">
+              <TabsTrigger value="overview">Overview</TabsTrigger>
+              <TabsTrigger value="charts">Charts</TabsTrigger>
+              <TabsTrigger value="recommendations">Recommendations</TabsTrigger>
+            </TabsList>
+          </div>
           
-          <TabsContent value="overview">
+          <TabsContent value="overview" className="m-0 p-0">
             <OverviewTabContent 
-              performanceData={PerformanceData} 
-              chartConfig={chartConfig}
-              newsData={newsData}
+              totalAssets={totalAssets}
+              changeAmount={changeAmount}
+              changePercentage={changePercentage}
+              changeType={changeType}
+              keyMetrics={keyMetrics}
+              topPerformers={topPerformers}
+              topDetractors={topDetractors}
+              recentNews={recentNews}
             />
           </TabsContent>
           
-          <TabsContent value="charts">
-            <ChartsTabContent />
+          <TabsContent value="charts" className="m-0 p-0">
+            <ChartsTabContent
+              performanceTrend={performanceTrend}
+              assetAllocationData={assetAllocation}
+            />
           </TabsContent>
           
-          <TabsContent value="recommendations">
-            <RecommendationsTabContent />
+          <TabsContent value="recommendations" className="m-0 p-0">
+            <RecommendationsTabContent
+              recommendations={recommendations}
+            />
           </TabsContent>
         </Tabs>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 };
 

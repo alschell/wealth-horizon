@@ -96,11 +96,18 @@ const DashboardSidebar = () => {
   };
   
   return (
-    <Sidebar className="border-r border-border bg-gray-800 text-white" collapsible="icon">
-      <SidebarHeader className="flex items-center h-14 px-3 border-b border-border/50 bg-gray-900">
-        <div className="text-lg font-semibold text-white">WP</div>
+    <Sidebar 
+      className="border-r border-border/10 bg-gradient-to-b from-gray-900 to-gray-800 text-white" 
+      collapsible="icon"
+    >
+      <SidebarHeader className="flex items-center h-16 px-4 border-b border-border/10 bg-gray-900/50 backdrop-blur-sm">
+        <div className="text-xl font-bold text-white tracking-tight">
+          <span className="text-indigo-400">W</span>
+          <span>ealth Pro</span>
+        </div>
       </SidebarHeader>
-      <SidebarContent className="py-2">
+      
+      <SidebarContent className="py-4">
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
@@ -110,13 +117,25 @@ const DashboardSidebar = () => {
                     asChild 
                     isActive={isActivePath(item.path)}
                     tooltip={item.title}
-                    className="transition-colors hover:bg-gray-700 focus:bg-gray-700 group whitespace-nowrap"
+                    className={`transition-all duration-150 ease-in-out my-1 hover:bg-indigo-600/20 focus:bg-indigo-600/20 group whitespace-nowrap ${
+                      isActivePath(item.path) 
+                        ? "bg-indigo-600/30 text-white border-l-2 border-indigo-400 pl-[10px]" 
+                        : "text-gray-300 hover:text-white pl-3"
+                    }`}
                   >
-                    <Link to={item.path} className="flex items-center gap-2 p-2 rounded-md text-sm">
+                    <Link to={item.path} className="flex items-center gap-3 p-2 rounded-md text-sm">
                       <div className="flex items-center justify-center w-5 h-5">
-                        <item.icon className={`h-[18px] w-[18px] ${isActivePath(item.path) ? 'text-white' : 'text-gray-300 group-hover:text-white'}`} />
+                        <item.icon className={`h-[18px] w-[18px] ${
+                          isActivePath(item.path) 
+                            ? 'text-indigo-400' 
+                            : 'text-gray-400 group-hover:text-indigo-400'
+                        }`} />
                       </div>
-                      <span className={`truncate ${isActivePath(item.path) ? 'font-medium text-white' : 'text-gray-300 group-hover:text-white'}`}>
+                      <span className={`truncate ${
+                        isActivePath(item.path) 
+                          ? 'font-medium' 
+                          : ''
+                      }`}>
                         {item.title}
                       </span>
                     </Link>
@@ -128,18 +147,18 @@ const DashboardSidebar = () => {
         </SidebarGroup>
       </SidebarContent>
       
-      <SidebarFooter className="p-3 mt-auto border-t border-border/50 bg-gray-900">
+      <SidebarFooter className="p-4 mt-auto border-t border-border/10 bg-gray-900/30">
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton
               tooltip="Log Out"
-              className="transition-colors hover:bg-gray-700 focus:bg-gray-700 group whitespace-nowrap"
+              className="transition-all duration-150 ease-in-out hover:bg-red-600/20 focus:bg-red-600/20 group whitespace-nowrap"
             >
-              <Link to="/" className="flex items-center gap-2 p-2 rounded-md text-sm">
+              <Link to="/" className="flex items-center gap-3 p-2 rounded-md text-sm">
                 <div className="flex items-center justify-center w-5 h-5">
-                  <LogOut className="h-[18px] w-[18px] text-gray-300 group-hover:text-white" />
+                  <LogOut className="h-[18px] w-[18px] text-gray-400 group-hover:text-red-400" />
                 </div>
-                <span className="truncate text-gray-300 group-hover:text-white">
+                <span className="truncate text-gray-300 group-hover:text-red-400">
                   Log Out
                 </span>
               </Link>

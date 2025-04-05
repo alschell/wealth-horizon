@@ -12,8 +12,8 @@ const AdviceHeader: React.FC<AdviceHeaderProps> = ({ onNewAdvice }) => {
   return (
     <div className="flex items-center justify-between mb-6">
       <div className="flex items-center gap-3">
-        <div className="p-2 bg-amber-100 rounded-lg">
-          <Lightbulb className="h-6 w-6 text-amber-600" />
+        <div className="p-2 bg-gray-100 rounded-lg">
+          <Lightbulb className="h-6 w-6 text-black" />
         </div>
         <h1 className="text-2xl font-bold tracking-tight">Financial Advice</h1>
       </div>

@@ -19,7 +19,7 @@ const PendingMandatesTab: React.FC = () => {
         <CardContent>
           <div className="flex justify-between mb-2">
             <span className="text-muted-foreground">Status</span>
-            <span className="font-medium text-amber-600">Under Review</span>
+            <span className="font-medium text-gray-600">Under Review</span>
           </div>
           <div className="flex justify-between mb-2">
             <span className="text-muted-foreground">Proposed Assets</span>
@@ -31,7 +31,7 @@ const PendingMandatesTab: React.FC = () => {
           </div>
           <div className="flex gap-2 mt-4">
             <Button variant="outline" className="flex-1">View Details</Button>
-            <Button variant="destructive" className="flex-1">Cancel</Button>
+            <Button variant="outline" className="flex-1 text-gray-700 hover:bg-gray-100">Cancel</Button>
           </div>
         </CardContent>
       </Card>

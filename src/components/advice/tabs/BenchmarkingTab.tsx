@@ -24,12 +24,12 @@ const BenchmarkingTab: React.FC = () => {
             <div>
               <h3 className="text-sm font-medium mb-2">Top Performing Mandate</h3>
               <p className="text-lg font-bold">UBS Wealth Management</p>
-              <p className="text-sm text-green-600">+10.3% YTD</p>
+              <p className="text-sm text-gray-600">+10.3% YTD</p>
             </div>
             <div>
               <h3 className="text-sm font-medium mb-2">Industry Benchmark</h3>
               <p className="text-lg font-bold">S&P 500</p>
-              <p className="text-sm text-green-600">+7.2% YTD</p>
+              <p className="text-sm text-gray-600">+7.2% YTD</p>
             </div>
           </div>
           <Button className="w-full mt-4">Generate Detailed Report</Button>

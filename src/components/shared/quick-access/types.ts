@@ -10,10 +10,19 @@ export interface QuickAccessItem {
   color?: string;
 }
 
+export interface QuickLinkItem {
+  title: string;
+  description: string;
+  icon: React.ReactNode;
+  link: string;
+  color?: string;
+}
+
 export interface QuickAccessGridProps {
   items?: QuickAccessItem[];
   title?: string;
   showCustomizeButton?: boolean;
+  links?: QuickLinkItem[];
 }
 
 export interface QuickAccessItemProps {

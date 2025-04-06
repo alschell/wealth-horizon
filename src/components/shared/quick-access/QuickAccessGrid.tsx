@@ -1,16 +1,15 @@
 
 import React from "react";
 import QuickAccessItem from "./QuickAccessItem";
-import { QuickLinkItem } from "./types";
+import { QuickAccessGridProps, QuickLinkItem, QuickAccessItem as QuickAccessItemType } from "./types";
 
-interface QuickAccessGridProps {
-  links: QuickLinkItem[];
-}
-
-const QuickAccessGrid = ({ links }: QuickAccessGridProps) => {
+const QuickAccessGrid = ({ links, items }: QuickAccessGridProps) => {
+  // Use either links or items based on what's provided
+  const displayItems = links || items || [];
+  
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-      {links.map((item, index) => (
+      {displayItems.map((item, index) => (
         <QuickAccessItem
           key={index}
           title={item.title}

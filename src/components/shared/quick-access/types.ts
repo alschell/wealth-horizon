@@ -1,10 +1,10 @@
 
-import React from "react";
+import { ReactNode } from "react";
 
 export interface QuickLinkItem {
   title: string;
   description: string;
-  icon: React.ReactNode;
+  icon: ReactNode;
   link: string;
   color?: string;
 }

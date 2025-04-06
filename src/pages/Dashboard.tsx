@@ -37,7 +37,7 @@ const Dashboard = () => {
         {/* Performance Overview with enhanced visuals */}
         <PerformanceOverview />
         
-        {/* Quick Access section with the restored previous design */}
+        {/* Quick Access section */}
         <QuickAccess />
         
         {/* Top Assets and Recent News in separate cards */}

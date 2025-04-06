@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -8,7 +8,11 @@ import { Input } from "@/components/ui/input";
 import { Search, Filter, BookmarkPlus, Share2, ExternalLink } from "lucide-react";
 import { NewsCard } from "../components/NewsCard";
 
-const NewsSection = () => {
+interface NewsSectionProps {
+  articleId?: string;
+}
+
+const NewsSection = ({ articleId }: NewsSectionProps) => {
   const [category, setCategory] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
   
@@ -147,6 +151,22 @@ const NewsSection = () => {
       url: "#"
     }
   ];
+  
+  // Effect to scroll to specific article if articleId is provided
+  useEffect(() => {
+    if (articleId) {
+      // Find the article in our data
+      const article = newsItems.find(item => item.id === articleId);
+      if (article) {
+        // We could automatically set the category filter based on the article
+        setCategory(article.category !== "all" ? article.category : "all");
+        
+        // In a real implementation, you might want to scroll to the article or highlight it
+        // This is a placeholder for that functionality
+        console.log(`Article ${articleId} should be displayed prominently`);
+      }
+    }
+  }, [articleId]);
   
   const filteredNews = newsItems.filter(item => {
     if (category !== "all" && item.category !== category) return false;

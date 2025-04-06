@@ -24,7 +24,7 @@ export const allQuickLinks: QuickAccessItem[] = [
     id: "dashboard",
     title: "Dashboard",
     description: "Main overview of your wealth",
-    icon: <BarChart3 className="h-5 w-5" />,
+    icon: React.createElement(BarChart3, { className: "h-5 w-5" }),
     link: "/dashboard",
     color: "bg-gray-50"
   },
@@ -32,7 +32,7 @@ export const allQuickLinks: QuickAccessItem[] = [
     id: "market-data",
     title: "Market Data",
     description: "Access market information",
-    icon: <LineChart className="h-5 w-5" />,
+    icon: React.createElement(LineChart, { className: "h-5 w-5" }),
     link: "/market-data",
     color: "bg-gray-50"
   },
@@ -40,7 +40,7 @@ export const allQuickLinks: QuickAccessItem[] = [
     id: "analyze",
     title: "Analyze Wealth",
     description: "Portfolio analysis tools",
-    icon: <PieChart className="h-5 w-5" />,
+    icon: React.createElement(PieChart, { className: "h-5 w-5" }),
     link: "/analyze-wealth",
     color: "bg-gray-50"
   },
@@ -48,7 +48,7 @@ export const allQuickLinks: QuickAccessItem[] = [
     id: "trade",
     title: "Trading",
     description: "Execute investment trades",
-    icon: <TrendingUp className="h-5 w-5" />,
+    icon: React.createElement(TrendingUp, { className: "h-5 w-5" }),
     link: "/trading",
     color: "bg-gray-50"
   },
@@ -56,7 +56,7 @@ export const allQuickLinks: QuickAccessItem[] = [
     id: "reports",
     title: "Reports",
     description: "Generate financial reports",
-    icon: <FileText className="h-5 w-5" />,
+    icon: React.createElement(FileText, { className: "h-5 w-5" }),
     link: "/reporting",
     color: "bg-gray-50"
   },
@@ -64,7 +64,7 @@ export const allQuickLinks: QuickAccessItem[] = [
     id: "advice",
     title: "Advice",
     description: "Get personalized advice",
-    icon: <Lightbulb className="h-5 w-5" />,
+    icon: React.createElement(Lightbulb, { className: "h-5 w-5" }),
     link: "/advice",
     color: "bg-gray-50"
   },
@@ -72,7 +72,7 @@ export const allQuickLinks: QuickAccessItem[] = [
     id: "cashflow",
     title: "Cashflow",
     description: "Manage liquidity and deposits",
-    icon: <DollarSign className="h-5 w-5" />,
+    icon: React.createElement(DollarSign, { className: "h-5 w-5" }),
     link: "/cashflow-management",
     color: "bg-gray-50"
   },
@@ -80,7 +80,7 @@ export const allQuickLinks: QuickAccessItem[] = [
     id: "users",
     title: "Users",
     description: "Manage user accounts",
-    icon: <Users className="h-5 w-5" />,
+    icon: React.createElement(Users, { className: "h-5 w-5" }),
     link: "/user-management",
     color: "bg-gray-50"
   },
@@ -88,7 +88,7 @@ export const allQuickLinks: QuickAccessItem[] = [
     id: "integrations",
     title: "Integrations",
     description: "Manage connected services",
-    icon: <Landmark className="h-5 w-5" />,
+    icon: React.createElement(Landmark, { className: "h-5 w-5" }),
     link: "/integrations",
     color: "bg-gray-50"
   },
@@ -96,7 +96,7 @@ export const allQuickLinks: QuickAccessItem[] = [
     id: "esg",
     title: "ESG",
     description: "Sustainable investing metrics",
-    icon: <Leaf className="h-5 w-5" />,
+    icon: React.createElement(Leaf, { className: "h-5 w-5" }),
     link: "/esg",
     color: "bg-gray-50"
   },
@@ -104,7 +104,7 @@ export const allQuickLinks: QuickAccessItem[] = [
     id: "compliance",
     title: "Compliance",
     description: "Regulatory compliance tracking",
-    icon: <Shield className="h-5 w-5" />,
+    icon: React.createElement(Shield, { className: "h-5 w-5" }),
     link: "/compliance-monitoring",
     color: "bg-gray-50"
   },
@@ -112,7 +112,7 @@ export const allQuickLinks: QuickAccessItem[] = [
     id: "tax",
     title: "Tax",
     description: "Tax planning & optimization",
-    icon: <Calculator className="h-5 w-5" />,
+    icon: React.createElement(Calculator, { className: "h-5 w-5" }),
     link: "/tax-optimization",
     color: "bg-gray-50"
   },
@@ -120,7 +120,7 @@ export const allQuickLinks: QuickAccessItem[] = [
     id: "entity",
     title: "Entity",
     description: "Manage legal structures",
-    icon: <Building2 className="h-5 w-5" />,
+    icon: React.createElement(Building2, { className: "h-5 w-5" }),
     link: "/entity-management",
     color: "bg-gray-50"
   },
@@ -128,7 +128,7 @@ export const allQuickLinks: QuickAccessItem[] = [
     id: "legacy",
     title: "Legacy",
     description: "Succession & estate planning",
-    icon: <Scroll className="h-5 w-5" />,
+    icon: React.createElement(Scroll, { className: "h-5 w-5" }),
     link: "/legacy-planning",
     color: "bg-gray-50"
   },
@@ -136,7 +136,7 @@ export const allQuickLinks: QuickAccessItem[] = [
     id: "settings",
     title: "Settings",
     description: "Configure application settings",
-    icon: <Settings className="h-5 w-5" />,
+    icon: React.createElement(Settings, { className: "h-5 w-5" }),
     link: "/settings",
     color: "bg-gray-50"
   }

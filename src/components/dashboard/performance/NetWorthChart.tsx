@@ -21,7 +21,7 @@ const NetWorthChart = ({ performanceData, chartConfig }: NetWorthChartProps) => 
   const [timeRange, setTimeRange] = useState<'1m' | '3m' | '6m' | '1y' | 'All'>('1y');
 
   return (
-    <div className="w-full mb-2 -mt-[100px]">
+    <div className="w-full mb-2">
       <div className="mb-2 flex items-center justify-between">
         <div>
           <h3 className="text-sm font-medium text-gray-600">Net Worth Trend</h3>
@@ -46,7 +46,7 @@ const NetWorthChart = ({ performanceData, chartConfig }: NetWorthChartProps) => 
           </div>
         </div>
       </div>
-      <div className="h-20 w-full mt-0">
+      <div className="h-40 w-full mt-0">
         <ChartContainer config={chartConfig}>
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={performanceData} margin={{ top: 0, right: 0, left: 0, bottom: 10 }}>

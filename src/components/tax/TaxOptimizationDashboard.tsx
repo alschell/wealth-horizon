@@ -21,7 +21,7 @@ const TaxOptimizationDashboard = () => {
         <PageHeader className="flex flex-col gap-1">
           <h1 className="text-2xl font-bold tracking-tight">Tax Optimization</h1>
           <p className="text-muted-foreground">
-            Tools and insights for efficient tax planning and reporting
+            Optimize your tax strategy and minimize your liability
           </p>
         </PageHeader>
 

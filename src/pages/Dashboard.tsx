@@ -23,7 +23,7 @@ const Dashboard = () => {
         <PageHeaderCard
           icon={LayoutDashboard}
           title="Dashboard"
-          description="View your wealth overview, market data, and quick access to key features"
+          description="Your complete financial overview at a glance"
           iconColor="text-gray-700"
           iconBgColor="bg-gray-100"
         />

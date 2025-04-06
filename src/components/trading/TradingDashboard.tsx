@@ -15,7 +15,7 @@ const TradingDashboard = () => {
         <FormHeader 
           icon={<TrendingUp className="h-6 w-6" />}
           title="Trade"
-          description="View and manage your trades"
+          description="Execute and manage all your investment trades"
         />
         
         <Button asChild className="flex items-center gap-2">

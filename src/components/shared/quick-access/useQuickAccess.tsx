@@ -41,7 +41,7 @@ export const useQuickAccess = (pathname?: string) => {
   };
 
   // Filter the quick links based on user selection
-  const filteredItems = allQuickLinks.filter(link => 
+  const filteredItems: QuickLinkItem[] = allQuickLinks.filter(link => 
     visibleItems.includes(link.title)
   );
 

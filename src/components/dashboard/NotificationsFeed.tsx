@@ -89,13 +89,15 @@ const NotificationsFeed = () => {
           </div>
         </div>
         
-        <div className="absolute bottom-0 left-0 right-0 bg-white pb-5 pt-2 border-t">
-          <Link to="/notifications">
-            <Button variant="outline" size="sm" className="w-full flex items-center justify-center">
-              View All Notifications
-              <ChevronRight className="h-4 w-4 ml-1" />
-            </Button>
-          </Link>
+        <div className="absolute bottom-0 left-0 right-0 bg-white pb-5 pt-2">
+          <div className="px-2">
+            <Link to="/notifications">
+              <Button variant="outline" size="sm" className="w-full flex items-center justify-center">
+                View All Notifications
+                <ChevronRight className="h-4 w-4 ml-1" />
+              </Button>
+            </Link>
+          </div>
         </div>
       </CardContent>
     </Card>

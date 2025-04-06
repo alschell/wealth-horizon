@@ -23,7 +23,7 @@ const OverviewTabContent = ({
 }: OverviewTabContentProps) => {
   return (
     <div className="space-y-6">
-      <div className="h-[400px]"> {/* Reduced height from 600px to 400px */}
+      <div className="h-[400px] relative" style={{ top: "-150px", marginBottom: "-150px" }}> {/* Added relative positioning and negative margin to compensate */}
         <NetWorthChart performanceData={performanceData} chartConfig={chartConfig} />
       </div>
     </div>

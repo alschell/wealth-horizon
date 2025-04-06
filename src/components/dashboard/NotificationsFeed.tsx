@@ -15,8 +15,8 @@ const NotificationsFeed = () => {
         <div className="space-y-3 max-h-[500px] overflow-y-auto pr-1">
           <div className="p-3 rounded-md hover:bg-gray-50 transition-colors cursor-pointer">
             <div className="flex items-start gap-3">
-              <div className="mt-0.5 h-8 w-8 flex items-center justify-center bg-blue-50 rounded-full">
-                <BellRing className="h-4 w-4 text-blue-500" />
+              <div className="mt-0.5 h-8 w-8 flex items-center justify-center bg-gray-50 rounded-full">
+                <BellRing className="h-4 w-4 text-gray-500" />
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium">New Trade Executed</p>
@@ -30,8 +30,8 @@ const NotificationsFeed = () => {
           
           <div className="p-3 rounded-md hover:bg-gray-50 transition-colors cursor-pointer">
             <div className="flex items-start gap-3">
-              <div className="mt-0.5 h-8 w-8 flex items-center justify-center bg-amber-50 rounded-full">
-                <CheckCircle className="h-4 w-4 text-amber-500" />
+              <div className="mt-0.5 h-8 w-8 flex items-center justify-center bg-gray-50 rounded-full">
+                <CheckCircle className="h-4 w-4 text-gray-500" />
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium">Review Portfolio Allocation</p>
@@ -45,8 +45,8 @@ const NotificationsFeed = () => {
           
           <div className="p-3 rounded-md hover:bg-gray-50 transition-colors cursor-pointer">
             <div className="flex items-start gap-3">
-              <div className="mt-0.5 h-8 w-8 flex items-center justify-center bg-green-50 rounded-full">
-                <Bell className="h-4 w-4 text-green-500" />
+              <div className="mt-0.5 h-8 w-8 flex items-center justify-center bg-gray-50 rounded-full">
+                <Bell className="h-4 w-4 text-gray-500" />
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium">Credit Application Approved</p>
@@ -60,8 +60,8 @@ const NotificationsFeed = () => {
           
           <div className="p-3 rounded-md hover:bg-gray-50 transition-colors cursor-pointer">
             <div className="flex items-start gap-3">
-              <div className="mt-0.5 h-8 w-8 flex items-center justify-center bg-purple-50 rounded-full">
-                <Calendar className="h-4 w-4 text-purple-500" />
+              <div className="mt-0.5 h-8 w-8 flex items-center justify-center bg-gray-50 rounded-full">
+                <Calendar className="h-4 w-4 text-gray-500" />
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium">Quarterly Review Meeting</p>
@@ -75,8 +75,8 @@ const NotificationsFeed = () => {
           
           <div className="p-3 rounded-md hover:bg-gray-50 transition-colors cursor-pointer">
             <div className="flex items-start gap-3">
-              <div className="mt-0.5 h-8 w-8 flex items-center justify-center bg-red-50 rounded-full">
-                <AlertTriangle className="h-4 w-4 text-red-500" />
+              <div className="mt-0.5 h-8 w-8 flex items-center justify-center bg-gray-50 rounded-full">
+                <AlertTriangle className="h-4 w-4 text-gray-500" />
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium">Portfolio Alert</p>

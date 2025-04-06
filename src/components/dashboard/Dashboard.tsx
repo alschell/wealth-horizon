@@ -44,11 +44,8 @@ const Dashboard = () => {
         {/* Top Assets and Recent News in separate cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Card className="shadow-sm">
-            <CardHeader className="pb-2 flex flex-row justify-between items-center">
+            <CardHeader className="pb-2">
               <SectionHeader title="Top Assets" />
-              <a href="/analyze-wealth" className="text-sm font-medium text-blue-600 hover:text-blue-800">
-                View All Assets
-              </a>
             </CardHeader>
             <CardContent>
               <TopAssets />
@@ -56,11 +53,8 @@ const Dashboard = () => {
           </Card>
           
           <Card className="shadow-sm">
-            <CardHeader className="pb-2 flex flex-row justify-between items-center">
+            <CardHeader className="pb-2">
               <SectionHeader title="Recent News" />
-              <a href="/market-data" className="text-sm font-medium text-blue-600 hover:text-blue-800">
-                View All News
-              </a>
             </CardHeader>
             <CardContent>
               <RecentNewsList newsData={newsData} />

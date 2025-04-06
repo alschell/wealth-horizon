@@ -13,6 +13,9 @@ const CustomizeDialog = ({
   onItemToggle, 
   onSave 
 }: CustomizeDialogProps) => {
+  // Sort items alphabetically by title
+  const sortedItems = [...items].sort((a, b) => a.title.localeCompare(b.title));
+  
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
@@ -24,7 +27,7 @@ const CustomizeDialog = ({
         </DialogHeader>
         <div className="max-h-[60vh] overflow-y-auto py-4">
           <div className="space-y-4">
-            {[...items].sort((a, b) => a.title.localeCompare(b.title)).map((item) => (
+            {sortedItems.map((item) => (
               <div key={item.id} className="flex items-start space-x-3">
                 <Checkbox 
                   id={`item-${item.id}`}

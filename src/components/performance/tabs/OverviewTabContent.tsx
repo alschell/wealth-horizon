@@ -1,5 +1,6 @@
 
 import React from "react";
+import { TrendingUp } from "lucide-react";
 import NetWorthChart from "../charts/NetWorthChart";
 import KeyMetricsGrid from "../components/KeyMetricsGrid";
 import TopAssets from "../components/TopAssets";
@@ -25,7 +26,14 @@ const OverviewTabContent = ({
   return (
     <div className="space-y-12">
       <div>
-        <h3 className="text-sm font-medium text-gray-600 mb-2">Net Worth Trend</h3>
+        <div className="flex items-center justify-between mb-2">
+          <h3 className="text-sm font-medium text-gray-600">Net Worth Trend</h3>
+          <div className="flex items-center">
+            <div className="flex items-center text-emerald-600 text-sm font-medium mr-6">
+              <TrendingUp className="h-4 w-4 mr-1" /> +3.8% YTD
+            </div>
+          </div>
+        </div>
         <NetWorthChart performanceData={performanceData} chartConfig={chartConfig} />
       </div>
       

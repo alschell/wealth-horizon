@@ -1,6 +1,5 @@
 
 import React, { useState } from "react";
-import { TrendingUp } from "lucide-react";
 import {
   ChartContainer,
   ChartTooltip,
@@ -26,23 +25,18 @@ const NetWorthChart = ({ performanceData, chartConfig }: NetWorthChartProps) => 
         <div>
           <p className="text-2xl font-bold">$4.48B</p>
         </div>
-        <div className="flex items-center">
-          <div className="flex items-center text-emerald-600 text-sm font-medium mr-6">
-            <TrendingUp className="h-4 w-4 mr-1" /> +3.8% YTD
-          </div>
-          <div className="flex space-x-1">
-            {(['1m', '3m', '6m', '1y', 'All'] as const).map((range) => (
-              <Button 
-                key={range}
-                variant={timeRange === range ? "secondary" : "ghost"} 
-                size="sm"
-                className="text-xs h-7 px-2"
-                onClick={() => setTimeRange(range)}
-              >
-                {range}
-              </Button>
-            ))}
-          </div>
+        <div className="flex space-x-1">
+          {(['1m', '3m', '6m', '1y', 'All'] as const).map((range) => (
+            <Button 
+              key={range}
+              variant={timeRange === range ? "secondary" : "ghost"} 
+              size="sm"
+              className="text-xs h-7 px-2"
+              onClick={() => setTimeRange(range)}
+            >
+              {range}
+            </Button>
+          ))}
         </div>
       </div>
       <div className="h-96 w-full mt-3">

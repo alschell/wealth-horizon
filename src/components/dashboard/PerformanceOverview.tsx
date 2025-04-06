@@ -5,13 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import OverviewTabContent from "@/components/performance/tabs/OverviewTabContent";
 import ChartsTabContent from "@/components/performance/tabs/ChartsTabContent";
 import RecommendationsTabContent from "@/components/performance/tabs/RecommendationsTabContent";
-import { 
-  performanceData, 
-  assetAllocationData, 
-  newsData, 
-  recommendations, 
-  chartConfig 
-} from "@/components/performance/data/PerformanceData";
+import { performanceData } from "@/components/performance/data/PerformanceData";
 
 const PerformanceOverview = () => {
   return (
@@ -30,21 +24,26 @@ const PerformanceOverview = () => {
           
           <TabsContent value="overview">
             <OverviewTabContent 
-              performanceData={performanceData}
-              chartConfig={chartConfig}
-              newsData={newsData}
+              performanceData={performanceData.performanceTrend}
+              chartConfig={{
+                value: {
+                  label: "Net Worth",
+                  color: "#000000"
+                }
+              }}
+              newsData={performanceData.recentNews}
             />
           </TabsContent>
           
           <TabsContent value="charts">
             <ChartsTabContent 
-              assetAllocationData={assetAllocationData}
+              assetAllocationData={performanceData.assetAllocation}
             />
           </TabsContent>
           
           <TabsContent value="recommendations">
             <RecommendationsTabContent 
-              recommendations={recommendations}
+              recommendations={performanceData.recommendations}
             />
           </TabsContent>
         </Tabs>

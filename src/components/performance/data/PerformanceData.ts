@@ -48,3 +48,15 @@ export const performanceData = {
     { title: "Tech stocks rally on positive earnings", time: "5h ago" }
   ]
 };
+
+// For backward compatibility with any code still using the individual exports
+export const performanceTrendData = performanceData.performanceTrend;
+export const assetAllocationData = performanceData.assetAllocation;
+export const newsData = performanceData.recentNews;
+export const recommendations = performanceData.recommendations;
+export const chartConfig = {
+  "value": {
+    label: "Net Worth",
+    color: "#000000"
+  }
+};

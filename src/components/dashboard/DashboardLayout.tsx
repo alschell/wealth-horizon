@@ -2,6 +2,7 @@
 import React, { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import DashboardHeader from "./DashboardHeader";
+import PageTransition from "@/components/ui/page-transition";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -21,7 +22,9 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
       <div className="flex-1 flex flex-col overflow-hidden">
         <main className="flex-1 overflow-auto">
           <div className="max-w-7xl mx-auto w-full p-4 md:p-6 pt-12">
-            {children}
+            <PageTransition>
+              {children}
+            </PageTransition>
           </div>
         </main>
       </div>

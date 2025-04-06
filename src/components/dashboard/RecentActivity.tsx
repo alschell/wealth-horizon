@@ -14,19 +14,21 @@ const RecentActivity = () => {
       title: "Portfolio rebalanced", 
       time: "Today at 09:45 AM",
       icon: <TrendingUp className="h-4 w-4 text-gray-500" />,
-      link: "/activity/rebalance-01"
+      link: "/activity"
     },
     { 
       id: "deposit-01",
       title: "Cash deposit received", 
       time: "Yesterday at 2:30 PM",
       icon: <DollarSign className="h-4 w-4 text-gray-500" />,
-      link: "/activity/deposit-01"
+      link: "/activity"
     }
   ];
 
   const handleActivityClick = (activityId: string) => {
-    navigate(`/activity/${activityId}`);
+    // Navigate to the activity page instead of a specific activity ID
+    // This prevents 404 errors since we don't have individual activity pages yet
+    navigate("/activity");
   };
 
   return (

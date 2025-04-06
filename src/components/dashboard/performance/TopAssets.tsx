@@ -13,18 +13,15 @@ const TopAssets = () => {
     { id: "real-estate", name: "Real Estate Holdings", value: "$682M", change: "-2.1%", isPositive: false },
     { id: "private-equity", name: "Private Equity", value: "$456M", change: "+8.3%", isPositive: true },
   ];
-
+  
   const handleAssetClick = (assetId: string) => {
     navigate(`/analyze-wealth/asset/${assetId}`);
   };
 
-  const handleViewAllClick = () => {
-    navigate("/analyze-wealth");
-  };
-
   return (
-    <div className="flex flex-col h-full">
-      <div className="space-y-3 flex-grow">
+    <div className="space-y-2">
+      <h3 className="text-xl mb-4">Top Assets</h3>
+      <div className="space-y-2">
         {assets.map((asset, index) => (
           <div 
             key={index} 
@@ -43,13 +40,11 @@ const TopAssets = () => {
             </div>
           </div>
         ))}
-      </div>
-      <div className="mt-auto pt-4">
         <Button 
           variant="outline" 
           size="sm" 
           className="w-full flex items-center justify-center"
-          onClick={handleViewAllClick}
+          onClick={() => navigate("/analyze-wealth")}
         >
           View All Assets
           <ChevronRight className="h-4 w-4 ml-1" />

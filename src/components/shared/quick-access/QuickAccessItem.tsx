@@ -2,15 +2,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
-
-interface QuickAccessItemProps {
-  title: string;
-  description: string;
-  icon: React.ReactNode;
-  link: string;
-  color?: string;
-  onClick?: () => void;
-}
+import { QuickAccessItemProps } from "./types";
 
 const QuickAccessItem = ({ 
   title, 

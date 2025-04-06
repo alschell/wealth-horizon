@@ -1,17 +1,10 @@
 
-import React, { useEffect } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import LandingPage from "./LandingPage";
 
 const Index = () => {
-  const navigate = useNavigate();
-  
-  useEffect(() => {
-    // Redirect to dashboard when the index page is loaded
-    navigate("/dashboard");
-  }, [navigate]);
-  
-  // Return the LandingPage as a fallback while redirecting
+  // We no longer automatically redirect, instead just show the landing page
   return <LandingPage />;
 };
 

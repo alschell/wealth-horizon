@@ -2,16 +2,16 @@
 import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import OverviewTabContent from "./performance/OverviewTabContent";
-import ChartsTabContent from "./performance/ChartsTabContent";
-import RecommendationsTabContent from "./performance/RecommendationsTabContent";
+import OverviewTabContent from "@/components/performance/tabs/OverviewTabContent";
+import ChartsTabContent from "@/components/performance/tabs/ChartsTabContent";
+import RecommendationsTabContent from "@/components/performance/tabs/RecommendationsTabContent";
 import { 
   performanceData, 
   assetAllocationData, 
   newsData, 
   recommendations, 
   chartConfig 
-} from "./performance/PerformanceData";
+} from "@/components/performance/data/PerformanceData";
 
 const PerformanceOverview = () => {
   return (

@@ -21,26 +21,32 @@ const NetWorthChart = ({ performanceData, chartConfig }: NetWorthChartProps) => 
   const [timeRange, setTimeRange] = useState<'1m' | '3m' | '6m' | '1y' | 'All'>('1y');
 
   return (
-    <div className="w-full mb-6">
-      <div className="flex items-center justify-between">
+    <div className="w-full">
+      <div className="flex items-center justify-between mb-3">
         <div>
           <p className="text-2xl font-bold">$4.48B</p>
         </div>
-        <div className="flex space-x-1">
-          {(['1m', '3m', '6m', '1y', 'All'] as const).map((range) => (
-            <Button 
-              key={range}
-              variant={timeRange === range ? "secondary" : "ghost"} 
-              size="sm"
-              className="text-xs h-7 px-2"
-              onClick={() => setTimeRange(range)}
-            >
-              {range}
-            </Button>
-          ))}
+        <div className="flex items-center">
+          <div className="flex items-center text-emerald-600 text-sm font-medium mr-4">
+            <TrendingUp className="h-4 w-4 mr-1" /> +3.8% YTD
+          </div>
+          <div className="flex space-x-1">
+            {(['1m', '3m', '6m', '1y', 'All'] as const).map((range) => (
+              <Button 
+                key={range}
+                variant={timeRange === range ? "secondary" : "ghost"} 
+                size="sm"
+                className="text-xs h-7 px-2"
+                onClick={() => setTimeRange(range)}
+              >
+                {range}
+              </Button>
+            ))}
+          </div>
         </div>
       </div>
-      <div className="h-96 w-full mt-3">
+
+      <div className="h-[350px] w-full">
         <ChartContainer config={chartConfig}>
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart 

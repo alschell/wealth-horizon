@@ -3,9 +3,11 @@ import React from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { TrendingUp, TrendingDown, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const MarketSnapshot = () => {
+  const navigate = useNavigate();
+  
   // Define market indices for the snapshot view - expanded to top 10
   const indices = [
     {
@@ -60,6 +62,11 @@ const MarketSnapshot = () => {
     },
   ];
 
+  const handleIndexClick = (indexName: string) => {
+    // Navigate to market data page with the index name as a query parameter
+    navigate(`/market-data?index=${encodeURIComponent(indexName)}`);
+  };
+
   return (
     <Card className="shadow-sm">
       <CardHeader className="pb-2">
@@ -68,7 +75,11 @@ const MarketSnapshot = () => {
       <CardContent>
         <div className="space-y-2">
           {indices.map((index, i) => (
-            <div key={i} className="flex justify-between items-center p-3 rounded-md hover:bg-gray-50 transition-colors cursor-pointer">
+            <div 
+              key={i} 
+              className="flex justify-between items-center p-3 rounded-md hover:bg-gray-50 transition-colors cursor-pointer"
+              onClick={() => handleIndexClick(index.name)}
+            >
               <span className="font-medium text-sm">{index.name}</span>
               <div className="flex items-center">
                 <span className="mr-2">{index.value}</span>

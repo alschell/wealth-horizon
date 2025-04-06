@@ -2,6 +2,7 @@
 import React from "react";
 import { Sun, Moon, Cloud, Clock, Calendar, Video, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const WelcomeHeader = () => {
   const getCurrentTimeOfDay = () => {
@@ -52,9 +53,9 @@ const WelcomeHeader = () => {
               <p className="text-xs text-gray-600">April 10, 2025 • 2:00 PM EST</p>
             </div>
             <Button size="sm" variant="ghost" className="ml-3" asChild>
-              <a href="/calendar">
+              <Link to="/calendar">
                 <ExternalLink className="h-4 w-4" />
-              </a>
+              </Link>
             </Button>
           </div>
         </div>

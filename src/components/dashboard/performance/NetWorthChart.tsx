@@ -21,7 +21,7 @@ const NetWorthChart = ({ performanceData, chartConfig }: NetWorthChartProps) => 
   const [timeRange, setTimeRange] = useState<'1m' | '3m' | '6m' | '1y' | 'All'>('1y');
 
   return (
-    <div className="w-full mb-2" style={{ marginTop: "-200px" }}>
+    <div className="w-full mb-2">
       <div className="mb-2 flex items-center justify-between">
         <div>
           <h3 className="text-sm font-medium text-gray-600">Net Worth Trend</h3>

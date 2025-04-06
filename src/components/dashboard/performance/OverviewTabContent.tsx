@@ -23,7 +23,7 @@ const OverviewTabContent = ({
 }: OverviewTabContentProps) => {
   return (
     <div className="space-y-6">
-      <div>
+      <div className="h-[600px]"> {/* Tripled height from ~200px to 600px */}
         <NetWorthChart performanceData={performanceData} chartConfig={chartConfig} />
       </div>
     </div>

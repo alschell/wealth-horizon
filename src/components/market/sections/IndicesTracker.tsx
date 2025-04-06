@@ -1,11 +1,12 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
-import { TrendingUp, TrendingDown, Star, LineChart, Filter, Bell } from "lucide-react";
+import { TrendingUp, TrendingDown, Star, LineChart, Filter, Bell, ArrowLeft } from "lucide-react";
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
@@ -13,11 +14,29 @@ import {
   DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
+import { Area, AreaChart, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 
 const IndicesTracker = () => {
   const [filter, setFilter] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
   const [subscribedIndices, setSubscribedIndices] = useState<string[]>(["S&P 500", "NASDAQ"]);
+  const [selectedIndex, setSelectedIndex] = useState<any>(null);
+  
+  const location = useLocation();
+  const navigate = useNavigate();
+  
+  // Parse the query parameters to get the selected index
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const indexName = params.get('index');
+    
+    if (indexName) {
+      const foundIndex = indices.find(idx => idx.name === indexName);
+      if (foundIndex) {
+        setSelectedIndex(foundIndex);
+      }
+    }
+  }, [location]);
   
   // Mock data - would come from API in real app
   const indices = [
@@ -33,6 +52,30 @@ const IndicesTracker = () => {
     { id: "10", name: "Shanghai", value: "3,039.15", change: 0.47, volume: "23.2B", region: "Asia" },
   ];
   
+  // Generate mock chart data for the selected index
+  const generateChartData = (indexName: string) => {
+    // This would come from a real API in a production app
+    const data = [];
+    const startValue = parseFloat(indices.find(i => i.name === indexName)?.value.replace(',', '') || "4000");
+    const volatility = Math.random() * 0.5 + 0.5; // Random volatility factor
+    
+    // Generate 30 days of data
+    for (let i = 30; i >= 0; i--) {
+      const date = new Date();
+      date.setDate(date.getDate() - i);
+      
+      const change = (Math.random() - 0.5) * volatility * 50;
+      const value = startValue + change * (30 - i) / 10;
+      
+      data.push({
+        date: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+        value: parseFloat(value.toFixed(2))
+      });
+    }
+    
+    return data;
+  };
+  
   const filteredIndices = indices.filter(index => {
     if (filter !== "all" && index.region !== filter) return false;
     if (searchTerm && !index.name.toLowerCase().includes(searchTerm.toLowerCase())) return false;
@@ -45,6 +88,12 @@ const IndicesTracker = () => {
     } else {
       setSubscribedIndices([...subscribedIndices, indexName]);
     }
+  };
+  
+  const handleSelectIndex = (index: any) => {
+    setSelectedIndex(index);
+    // Update URL with the selected index
+    navigate(`/market-data?index=${encodeURIComponent(index.name)}`);
   };
   
   const container = {
@@ -147,7 +196,11 @@ const IndicesTracker = () => {
               </TableHeader>
               <TableBody>
                 {filteredIndices.map((index) => (
-                  <TableRow key={index.id} className="hover:bg-gray-50">
+                  <TableRow 
+                    key={index.id} 
+                    className={`hover:bg-gray-50 cursor-pointer ${selectedIndex?.id === index.id ? 'bg-gray-50' : ''}`}
+                    onClick={() => handleSelectIndex(index)}
+                  >
                     <TableCell className="font-medium">{index.name}</TableCell>
                     <TableCell>{index.value}</TableCell>
                     <TableCell>
@@ -167,8 +220,16 @@ const IndicesTracker = () => {
                     <TableCell className="hidden md:table-cell">{index.volume}</TableCell>
                     <TableCell className="hidden md:table-cell">{index.region}</TableCell>
                     <TableCell className="text-right">
-                      <div className="flex justify-end gap-2">
-                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                      <div className="flex justify-end gap-2" onClick={(e) => e.stopPropagation()}>
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          className="h-8 w-8 p-0"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleSelectIndex(index);
+                          }}
+                        >
                           <LineChart className="h-4 w-4" />
                           <span className="sr-only">View chart</span>
                         </Button>
@@ -176,7 +237,10 @@ const IndicesTracker = () => {
                           variant="ghost" 
                           size="sm" 
                           className={`h-8 w-8 p-0 ${subscribedIndices.includes(index.name) ? 'text-amber-500' : ''}`}
-                          onClick={() => toggleSubscription(index.name)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            toggleSubscription(index.name);
+                          }}
                         >
                           <Star className="h-4 w-4" fill={subscribedIndices.includes(index.name) ? "currentColor" : "none"} />
                           <span className="sr-only">
@@ -196,19 +260,64 @@ const IndicesTracker = () => {
       <motion.div variants={item} className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card className="col-span-1 md:col-span-2">
           <CardHeader className="pb-2">
-            <CardTitle>Index Performance</CardTitle>
+            <CardTitle className="text-xl flex items-center justify-between">
+              {selectedIndex ? `${selectedIndex.name} Performance` : 'Index Performance'}
+              {selectedIndex && (
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="text-xs"
+                  onClick={() => setSelectedIndex(null)}
+                >
+                  <ArrowLeft className="h-3 w-3 mr-1" />
+                  View All
+                </Button>
+              )}
+            </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="h-80 flex items-center justify-center bg-gray-50 rounded-lg">
-              <p className="text-gray-500">Select an index to view detailed performance chart</p>
-            </div>
+            {selectedIndex ? (
+              <div className="h-80">
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart 
+                    data={generateChartData(selectedIndex.name)}
+                    margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+                  >
+                    <defs>
+                      <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor={selectedIndex.change >= 0 ? "#10B981" : "#EF4444"} stopOpacity={0.8}/>
+                        <stop offset="95%" stopColor={selectedIndex.change >= 0 ? "#10B981" : "#EF4444"} stopOpacity={0}/>
+                      </linearGradient>
+                    </defs>
+                    <XAxis dataKey="date" />
+                    <YAxis />
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <Tooltip 
+                      contentStyle={{ backgroundColor: 'white', borderRadius: '8px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)' }}
+                      labelStyle={{ fontWeight: 'bold' }}
+                    />
+                    <Area 
+                      type="monotone" 
+                      dataKey="value" 
+                      stroke={selectedIndex.change >= 0 ? "#10B981" : "#EF4444"} 
+                      fillOpacity={1} 
+                      fill="url(#colorValue)" 
+                    />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </div>
+            ) : (
+              <div className="h-80 flex items-center justify-center bg-gray-50 rounded-lg">
+                <p className="text-gray-500">Select an index to view detailed performance chart</p>
+              </div>
+            )}
           </CardContent>
         </Card>
         
         <Card>
           <CardHeader className="pb-2">
             <div className="flex items-center justify-between">
-              <CardTitle>Your Subscriptions</CardTitle>
+              <CardTitle className="text-xl">Your Subscriptions</CardTitle>
               <Button variant="outline" size="sm" className="h-8 gap-1">
                 <Bell className="h-4 w-4" />
                 <span className="text-xs">Manage Alerts</span>
@@ -221,7 +330,11 @@ const IndicesTracker = () => {
                 {indices
                   .filter(index => subscribedIndices.includes(index.name))
                   .map(index => (
-                    <div key={index.id} className="flex justify-between items-center py-2 border-b last:border-0">
+                    <div 
+                      key={index.id} 
+                      className="flex justify-between items-center py-2 border-b last:border-0 cursor-pointer hover:bg-gray-50 rounded-md px-2"
+                      onClick={() => handleSelectIndex(index)}
+                    >
                       <div>
                         <p className="font-medium">{index.name}</p>
                         <p className="text-xs text-gray-500">{index.region}</p>

@@ -20,7 +20,7 @@ const CustomizeDialog = ({
   links,
   selectedItems,
   onItemToggle,
-  onSave,
+  onSave
 }: CustomizeDialogProps) => {
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>

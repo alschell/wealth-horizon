@@ -41,25 +41,25 @@ const LandingPage = () => {
       id: 0,
       title: "Portfolio Aggregation",
       description: "Consolidate all your assets across custodians into a single, actionable view",
-      animation: "/animations/portfolio-anim.svg"
+      animation: "/images/portfolio-aggregation.png"
     },
     {
       id: 1,
       title: "Sophisticated Analytics",
       description: "Make data-driven decisions with our powerful analytics and reporting",
-      animation: "/animations/analytics-anim.svg"
+      animation: "/images/analytics-dashboard.png"
     },
     {
       id: 2,
       title: "Seamless Integration",
       description: "Automate data flows from all your institutions without manual work",
-      animation: "/animations/integration-anim.svg"
+      animation: "/images/data-integration.png"
     },
     {
       id: 3,
       title: "Robust Compliance",
       description: "Automated monitoring of regulatory requirements and internal mandates",
-      animation: "/animations/compliance-anim.svg"
+      animation: "/images/compliance-monitoring.png"
     }
   ];
   

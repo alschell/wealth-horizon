@@ -23,7 +23,8 @@ const DashboardHeader = () => {
             <input
               type="search"
               placeholder="Search..."
-              className="w-full md:w-[200px] bg-background pl-8 h-9 rounded-md border border-input px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+              className="w-full md:w-[200px] bg-background pl-8 h-9 rounded-md border border-input px-3 py-1 text-sm shadow-sm 
+              focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:border-black"
             />
           </div>
           <NotificationsPopover />

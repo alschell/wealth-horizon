@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import PageHeaderCard from "@/components/dashboard/PageHeaderCard";
-import { Calendar as CalendarIcon, Plus, ArrowLeft, Users, Video, MapPin } from "lucide-react";
+import { Calendar as CalendarIcon, Plus, ArrowLeft, Users, Video, MapPin, Mail, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -12,9 +12,11 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Calendar as CalendarComponent } from "@/components/ui/calendar";
+import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { toast } from "sonner";
+import { TimePicker } from "@/components/ui/time-picker";
+import { DatePicker } from "@/components/ui/date-picker";
 
 // Mock meeting data
 const upcomingMeetings = [
@@ -71,15 +73,24 @@ const pastMeetings = [
 const CalendarPage = () => {
   const navigate = useNavigate();
   const [isNewMeetingDialogOpen, setIsNewMeetingDialogOpen] = useState(false);
+  const [meetingDetailsDialogOpen, setMeetingDetailsDialogOpen] = useState(false);
+  const [selectedMeeting, setSelectedMeeting] = useState<any>(null);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
   const [meetingTime, setMeetingTime] = useState("09:00");
   const [meetingDuration, setMeetingDuration] = useState("60");
   const [meetingType, setMeetingType] = useState("video");
+  const [meetingInvitees, setMeetingInvitees] = useState("");
+  const [meetingLink, setMeetingLink] = useState("");
 
   const handleScheduleMeeting = () => {
     // In a real app, this would call an API to create the meeting
     toast.success("New meeting scheduled successfully");
     setIsNewMeetingDialogOpen(false);
+  };
+
+  const handleViewDetails = (meeting: any) => {
+    setSelectedMeeting(meeting);
+    setMeetingDetailsDialogOpen(true);
   };
 
   return (
@@ -146,7 +157,13 @@ const CalendarPage = () => {
                         </div>
                       </div>
                       <div>
-                        <Button variant="outline" size="sm">Details</Button>
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          onClick={() => handleViewDetails(meeting)}
+                        >
+                          Details
+                        </Button>
                       </div>
                     </div>
                   </CardContent>
@@ -181,7 +198,13 @@ const CalendarPage = () => {
                         </div>
                       </div>
                       <div>
-                        <Button variant="outline" size="sm">View Summary</Button>
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => handleViewDetails(meeting)}
+                        >
+                          View Summary
+                        </Button>
                       </div>
                     </div>
                   </CardContent>
@@ -194,7 +217,7 @@ const CalendarPage = () => {
       
       {/* Schedule New Meeting Dialog */}
       <Dialog open={isNewMeetingDialogOpen} onOpenChange={setIsNewMeetingDialogOpen}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Schedule New Meeting</DialogTitle>
             <DialogDescription>
@@ -209,27 +232,21 @@ const CalendarPage = () => {
             </div>
             
             <div className="space-y-2">
-              <Label>Meeting Date</Label>
-              <div className="border rounded-md p-2">
-                <CalendarComponent
-                  mode="single"
-                  selected={selectedDate}
-                  onSelect={setSelectedDate}
-                  className="mx-auto pointer-events-auto"
-                />
-              </div>
+              <DatePicker
+                label="Meeting Date"
+                placeholder="Select date"
+                value={selectedDate}
+                onChange={setSelectedDate}
+              />
             </div>
             
             <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="time">Start Time</Label>
-                <Input 
-                  id="time" 
-                  type="time" 
-                  value={meetingTime}
-                  onChange={(e) => setMeetingTime(e.target.value)}
-                />
-              </div>
+              <TimePicker
+                id="time"
+                label="Start Time"
+                value={meetingTime}
+                onChange={setMeetingTime}
+              />
               
               <div className="space-y-2">
                 <Label htmlFor="duration">Duration (minutes)</Label>
@@ -262,6 +279,27 @@ const CalendarPage = () => {
             </div>
             
             <div className="space-y-2">
+              <Label htmlFor="meetingLink">Meeting Link</Label>
+              <Input 
+                id="meetingLink" 
+                placeholder="Paste Google Meet, Microsoft Teams, or Zoom link" 
+                value={meetingLink}
+                onChange={(e) => setMeetingLink(e.target.value)}
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="invitees">Invitees (email addresses)</Label>
+              <Textarea 
+                id="invitees" 
+                placeholder="Enter email addresses separated by commas"
+                value={meetingInvitees}
+                onChange={(e) => setMeetingInvitees(e.target.value)}
+                className="min-h-[80px]"
+              />
+            </div>
+            
+            <div className="space-y-2">
               <Label htmlFor="description">Description</Label>
               <Textarea id="description" placeholder="Enter meeting details" className="min-h-[100px]" />
             </div>
@@ -273,6 +311,59 @@ const CalendarPage = () => {
             </Button>
             <Button onClick={handleScheduleMeeting} className="bg-black hover:bg-gray-800">
               Schedule Meeting
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      
+      {/* Meeting Details Dialog */}
+      <Dialog open={meetingDetailsDialogOpen} onOpenChange={setMeetingDetailsDialogOpen}>
+        <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>{selectedMeeting?.title}</DialogTitle>
+          </DialogHeader>
+          
+          <div className="space-y-4">
+            <div className="border-b pb-2">
+              <div className="flex items-center gap-2 mb-2">
+                <CalendarIcon className="h-4 w-4 text-gray-500" />
+                <span className="text-sm">{selectedMeeting?.date}</span>
+              </div>
+              <div className="flex items-center gap-2 mb-2">
+                <Users className="h-4 w-4 text-gray-500" />
+                <span className="text-sm">{selectedMeeting?.attendees?.join(', ')}</span>
+              </div>
+              {selectedMeeting?.type === 'video' && (
+                <div className="flex items-center gap-2 mb-2">
+                  <ExternalLink className="h-4 w-4 text-gray-500" />
+                  <Button variant="link" className="p-0 h-auto text-blue-600">
+                    Join meeting link
+                  </Button>
+                </div>
+              )}
+              {selectedMeeting?.location && (
+                <div className="flex items-center gap-2">
+                  <MapPin className="h-4 w-4 text-gray-500" />
+                  <span className="text-sm">{selectedMeeting?.location}</span>
+                </div>
+              )}
+            </div>
+            
+            <div>
+              <h4 className="text-sm font-medium mb-2">Meeting Details</h4>
+              <p className="text-sm text-gray-600">
+                This is a {selectedMeeting?.type} meeting scheduled for {selectedMeeting?.time}.
+                {selectedMeeting?.type === 'in-person' && ` The meeting will take place at ${selectedMeeting?.location}.`}
+              </p>
+            </div>
+          </div>
+          
+          <DialogFooter>
+            <Button variant="outline" className="mr-2">
+              Edit Meeting
+            </Button>
+            <Button variant="destructive">
+              Cancel Meeting
             </Button>
           </DialogFooter>
         </DialogContent>

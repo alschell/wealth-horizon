@@ -2,7 +2,7 @@
 import React from "react";
 import { Newspaper, ChevronRight, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 type NewsItemType = {
   title: string;
@@ -15,15 +15,13 @@ type RecentNewsListProps = {
 };
 
 const RecentNewsList = ({ newsData }: RecentNewsListProps) => {
+  const navigate = useNavigate();
   // Only show the first 4 news items
   const visibleNews = newsData.slice(0, 4);
   
   const handleNewsClick = (url?: string) => {
-    if (url) {
-      window.open(url, '_blank');
-    } else {
-      window.open('https://www.bloomberg.com', '_blank');
-    }
+    // Navigate to the news tab in the market data page
+    navigate('/market-data', { state: { activeTab: 'news', articleUrl: url } });
   };
 
   return (
@@ -42,12 +40,15 @@ const RecentNewsList = ({ newsData }: RecentNewsListProps) => {
             <ExternalLink className="h-4 w-4 text-gray-400 flex-shrink-0" />
           </div>
         ))}
-        <Link to="/market-data">
-          <Button variant="outline" size="sm" className="w-full flex items-center justify-center">
-            View All News
-            <ChevronRight className="h-4 w-4 ml-1" />
-          </Button>
-        </Link>
+        <Button 
+          variant="outline" 
+          size="sm" 
+          className="w-full flex items-center justify-center"
+          onClick={() => navigate('/market-data', { state: { activeTab: 'news' } })}
+        >
+          View All News
+          <ChevronRight className="h-4 w-4 ml-1" />
+        </Button>
       </div>
     </div>
   );

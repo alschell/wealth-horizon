@@ -69,6 +69,7 @@ const Dashboard = () => {
           </div>
           
           <div className="space-y-6">
+            {/* Notifications container */}
             <NotificationsFeed />
             
             {/* Recent activities card */}

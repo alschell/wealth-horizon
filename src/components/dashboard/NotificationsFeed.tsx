@@ -90,9 +90,9 @@ const NotificationsFeed = () => {
         </div>
         
         <div className="absolute bottom-0 left-0 right-0 bg-white pb-5 pt-2">
-          <div className="px-2">
+          <div className="flex justify-center">
             <Link to="/notifications">
-              <Button variant="outline" size="sm" className="w-full flex items-center justify-center">
+              <Button variant="outline" size="sm" className="flex items-center justify-center px-6">
                 View All Notifications
                 <ChevronRight className="h-4 w-4 ml-1" />
               </Button>

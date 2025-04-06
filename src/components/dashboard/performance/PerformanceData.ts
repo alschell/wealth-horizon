@@ -16,11 +16,11 @@ export const performanceData = [
 
 // Asset allocation data
 export const assetAllocationData = [
-  { name: "Equities", value: 60 },
-  { name: "Fixed Income", value: 20 },
-  { name: "Real Estate", value: 10 },
-  { name: "Alternatives", value: 5 },
-  { name: "Cash", value: 5 }
+  { name: "Equities", value: 60, color: "#4F46E5" },
+  { name: "Fixed Income", value: 20, color: "#818CF8" },
+  { name: "Real Estate", value: 10, color: "#A5B4FC" },
+  { name: "Alternatives", value: 5, color: "#C7D2FE" },
+  { name: "Cash", value: 5, color: "#DDD6FE" }
 ];
 
 // Enhanced news data with URLs
@@ -47,31 +47,43 @@ export const newsData = [
   }
 ];
 
-// Enhanced recommendations for Next Best Actions tab
+// Enhanced recommendations with the proper structure for RecommendationsTabContent
 export const recommendations = [
   { 
-    text: "Rebalance your equity allocation to reduce risk", 
-    priority: "high"
+    title: "Rebalance Equity Allocation",
+    description: "Rebalance your equity allocation to reduce risk", 
+    impact: "High",
+    type: "Portfolio"
   },
   { 
-    text: "Consider increasing fixed income exposure by 8%", 
-    priority: "medium"
+    title: "Increase Fixed Income",
+    description: "Consider increasing fixed income exposure by 8%", 
+    impact: "Medium",
+    type: "Allocation"
   },
   {
-    text: "Implement currency hedging for EUR exposure",
-    priority: "high"
+    title: "Implement Currency Hedging",
+    description: "Implement currency hedging for EUR exposure",
+    impact: "High",
+    type: "Risk"
   },
   {
-    text: "Review technology ETFs for overlap reduction",
-    priority: "medium"
+    title: "Reduce ETF Overlap",
+    description: "Review technology ETFs for overlap reduction",
+    impact: "Medium",
+    type: "Efficiency"
   },
   {
-    text: "Transition 15% to active management strategies",
-    priority: "medium"
+    title: "Active Management",
+    description: "Transition 15% to active management strategies",
+    impact: "Medium",
+    type: "Strategy"
   },
   {
-    text: "Evaluate tax-loss harvesting opportunities",
-    priority: "medium"
+    title: "Tax-Loss Harvesting",
+    description: "Evaluate tax-loss harvesting opportunities",
+    impact: "Medium",
+    type: "Tax"
   }
 ];
 

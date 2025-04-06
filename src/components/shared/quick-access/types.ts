@@ -1,7 +1,7 @@
 
 import { ReactElement } from "react";
 
-export interface QuickAccessItem {
+export interface QuickLinkItem {
   id: string;
   title: string;
   description: string;
@@ -12,7 +12,7 @@ export interface QuickAccessItem {
 }
 
 export interface QuickAccessGridProps {
-  items: QuickAccessItem[];
+  items: QuickLinkItem[];
 }
 
 export interface QuickAccessItemProps {
@@ -27,7 +27,7 @@ export interface QuickAccessItemProps {
 export interface CustomizeDialogProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
-  items: QuickAccessItem[];
+  items: QuickLinkItem[];
   selectedItems: string[];
   onItemToggle: (id: string) => void;
   onSave: () => void;

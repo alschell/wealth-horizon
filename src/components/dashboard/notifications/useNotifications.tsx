@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Notification } from "./types";
 import { notificationData } from "./notificationData";
+import { toast } from "sonner"; // Make sure this is imported
 
 export const useNotifications = () => {
   const [notifications, setNotifications] = useState<Notification[]>(notificationData);
@@ -31,8 +32,27 @@ export const useNotifications = () => {
     setIsOpen(false);
     
     // Make sure we navigate to a valid route to prevent 404s
-    const safeLink = notification.link || "/dashboard";
-    navigate(safeLink);
+    const validRoutes = [
+      '/dashboard',
+      '/analyze-wealth',
+      '/market-data',
+      '/profile',
+      '/settings',
+      '/notifications'
+    ];
+    
+    let targetRoute = notification.link || "/dashboard";
+    
+    // Check if the link is valid or default to dashboard
+    const isValidRoute = validRoutes.some(route => targetRoute.startsWith(route));
+    
+    if (!isValidRoute) {
+      console.warn(`Invalid notification link: ${targetRoute}, redirecting to dashboard`);
+      toast.warning("That page doesn't exist yet. Redirecting to dashboard.");
+      targetRoute = "/dashboard";
+    }
+    
+    navigate(targetRoute);
   };
 
   return {

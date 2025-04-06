@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from "react";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
@@ -18,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useInView } from "framer-motion";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { motion, AnimatePresence } from "framer-motion";
 
 const LandingPage = () => {
   const navigate = useNavigate();
@@ -41,25 +41,25 @@ const LandingPage = () => {
       id: 0,
       title: "Portfolio Aggregation",
       description: "Consolidate all your assets across custodians into a single, actionable view",
-      animation: "/assets/dashboard-preview.png" // Updated path with /assets/ prefix
+      animation: "/assets/dashboard-preview.png"
     },
     {
       id: 1,
       title: "Sophisticated Analytics",
       description: "Make data-driven decisions with our powerful analytics and reporting",
-      animation: "/assets/dashboard-preview.png" // Updated path with /assets/ prefix
+      animation: "/assets/dashboard-preview.png"
     },
     {
       id: 2,
       title: "Seamless Integration",
       description: "Automate data flows from all your institutions without manual work",
-      animation: "/assets/dashboard-preview.png" // Updated path with /assets/ prefix
+      animation: "/assets/dashboard-preview.png"
     },
     {
       id: 3,
       title: "Robust Compliance",
       description: "Automated monitoring of regulatory requirements and internal mandates",
-      animation: "/assets/dashboard-preview.png" // Updated path with /assets/ prefix
+      animation: "/assets/dashboard-preview.png"
     }
   ];
   
@@ -91,6 +91,28 @@ const LandingPage = () => {
       e.currentTarget.style.border = "1px solid #e5e7eb";
       e.currentTarget.alt = "Dashboard Preview (Image not available)";
     };
+  };
+
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { 
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: { 
+      y: 0, 
+      opacity: 1,
+      transition: {
+        duration: 0.5
+      }
+    }
   };
 
   return (
@@ -155,44 +177,55 @@ const LandingPage = () => {
 
       <main className="pt-20">
         {/* Hero Section */}
-        <section 
+        <motion.section 
           id="hero-section" 
           ref={heroRef}
           className="min-h-[90vh] flex items-center justify-center relative overflow-hidden"
           style={{
             background: "linear-gradient(180deg, #F9FAFC 0%, #F3F4F6 100%)"
           }}
+          initial="hidden"
+          animate="visible"
+          variants={containerVariants}
         >
           {/* Subtle grid background */}
           <div className="absolute inset-0 bg-[url('/assets/grid-pattern.svg')] opacity-5"></div>
           
-          <div 
+          <motion.div 
             className="max-w-7xl w-full px-6 md:px-12 py-20 md:py-32 relative z-10"
-            style={{
-              opacity: heroInView ? 1 : 0,
-              transform: heroInView ? "translateY(0)" : "translateY(20px)",
-              transition: "opacity 0.7s ease-out, transform 0.7s ease-out"
-            }}
+            variants={itemVariants}
           >
             <div className="flex flex-col md:flex-row items-center gap-10 md:gap-20">
-              <div className="md:w-1/2 space-y-8">
-                <div className="inline-flex items-center px-4 py-2 rounded-full bg-gray-100 border border-gray-200">
+              <motion.div className="md:w-1/2 space-y-8" variants={itemVariants}>
+                <motion.div 
+                  className="inline-flex items-center px-4 py-2 rounded-full bg-gray-100 border border-gray-200"
+                  variants={itemVariants}
+                >
                   <span className="text-sm text-gray-700 font-medium">For Family Offices & Institutional Investors</span>
-                </div>
+                </motion.div>
                 
-                <h1 className="text-4xl md:text-6xl font-bold tracking-tight">
+                <motion.h1 
+                  className="text-4xl md:text-6xl font-bold tracking-tight"
+                  variants={itemVariants}
+                >
                   All your{" "}
                   <span className="bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
                     wealth
                   </span>{" "}
                   on a single actionable platform
-                </h1>
+                </motion.h1>
                 
-                <p className="text-lg text-gray-600 max-w-lg">
+                <motion.p 
+                  className="text-lg text-gray-600 max-w-lg"
+                  variants={itemVariants}
+                >
                   View, analyze, and act on your bankable wealth across all your banks, brokers, and custodians in one powerful platform.
-                </p>
+                </motion.p>
                 
-                <div className="flex flex-col sm:flex-row gap-4">
+                <motion.div 
+                  className="flex flex-col sm:flex-row gap-4"
+                  variants={itemVariants}
+                >
                   <Button 
                     className="h-12 px-6 rounded-lg bg-gray-900 text-white hover:bg-gray-800 transition-all text-base"
                     onClick={() => navigate('/onboarding')}
@@ -208,9 +241,12 @@ const LandingPage = () => {
                   >
                     See Demo
                   </Button>
-                </div>
+                </motion.div>
                 
-                <div className="flex flex-col md:flex-row gap-6 pt-6">
+                <motion.div 
+                  className="flex flex-col md:flex-row gap-6 pt-6"
+                  variants={itemVariants}
+                >
                   <div className="flex items-center gap-2">
                     <CheckCircle className="h-5 w-5 text-gray-600" />
                     <span className="text-gray-600 text-sm">Secure & Private</span>
@@ -223,10 +259,16 @@ const LandingPage = () => {
                     <CheckCircle className="h-5 w-5 text-gray-600" />
                     <span className="text-gray-600 text-sm">SOC 2 Compliant</span>
                   </div>
-                </div>
-              </div>
+                </motion.div>
+              </motion.div>
               
-              <div className="md:w-1/2 relative">
+              <motion.div 
+                className="md:w-1/2 relative"
+                variants={itemVariants}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.6 }}
+              >
                 <div className="relative bg-gradient-to-br from-white to-gray-100 rounded-2xl border border-gray-200 overflow-hidden shadow-xl">
                   <div className="absolute inset-0 bg-[url('/assets/grid-pattern.svg')] opacity-20"></div>
                   <img 
@@ -238,32 +280,50 @@ const LandingPage = () => {
                 </div>
                 
                 {/* Floating elements */}
-                <div className="absolute -top-3 -right-3 bg-white border border-gray-200 rounded-lg p-3 shadow-lg">
+                <motion.div 
+                  className="absolute -top-3 -right-3 bg-white border border-gray-200 rounded-lg p-3 shadow-lg"
+                  initial={{ y: -20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ delay: 0.8, duration: 0.4 }}
+                >
                   <TrendingUp className="h-5 w-5 text-green-600" />
-                </div>
-                <div className="absolute -bottom-3 -left-3 bg-white border border-gray-200 rounded-lg p-3 shadow-lg">
+                </motion.div>
+                <motion.div 
+                  className="absolute -bottom-3 -left-3 bg-white border border-gray-200 rounded-lg p-3 shadow-lg"
+                  initial={{ y: 20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ delay: 1, duration: 0.4 }}
+                >
                   <LayoutDashboard className="h-5 w-5 text-blue-600" />
-                </div>
-              </div>
+                </motion.div>
+              </motion.div>
             </div>
             
             {/* Scroll down indicator */}
-            <div className="hidden md:flex flex-col items-center absolute bottom-10 left-1/2 transform -translate-x-1/2 cursor-pointer"
+            <motion.div 
+              className="hidden md:flex flex-col items-center absolute bottom-10 left-1/2 transform -translate-x-1/2 cursor-pointer"
               onClick={() => {
                 document.getElementById('platform-section')?.scrollIntoView({ behavior: 'smooth' });
               }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.2, duration: 0.4 }}
             >
               <span className="text-gray-500 text-sm mb-2">Learn More</span>
               <ChevronDown className="h-5 w-5 text-gray-500 animate-bounce" />
-            </div>
-          </div>
-        </section>
+            </motion.div>
+          </motion.div>
+        </motion.section>
         
         {/* Platform Section - "One platform to replace them all" */}
-        <section 
+        <motion.section 
           id="platform-section" 
           ref={platformRef}
           className="py-20 md:py-32 bg-white"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+          variants={containerVariants}
         >
           <div 
             className="max-w-7xl mx-auto px-6 md:px-12"
@@ -347,13 +407,17 @@ const LandingPage = () => {
               </div>
             </div>
           </div>
-        </section>
+        </motion.section>
         
         {/* Features Section */}
-        <section 
+        <motion.section 
           id="features-section" 
           ref={featuresRef}
           className="py-20 md:py-32 bg-gray-50"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+          variants={containerVariants}
         >
           <div 
             className="max-w-7xl mx-auto px-6 md:px-12"
@@ -433,13 +497,17 @@ const LandingPage = () => {
               </Button>
             </div>
           </div>
-        </section>
+        </motion.section>
 
         {/* Contact Form & Newsletter Section */}
-        <section 
+        <motion.section 
           id="contact-section" 
           ref={contactRef}
           className="py-20 md:py-32 bg-white"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+          variants={containerVariants}
         >
           <div 
             className="max-w-7xl mx-auto px-6 md:px-12"
@@ -587,7 +655,7 @@ const LandingPage = () => {
               </div>
             </div>
           </div>
-        </section>
+        </motion.section>
       </main>
       
       {/* Footer */}
@@ -653,7 +721,7 @@ const LandingPage = () => {
               </a>
               <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors">
                 <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path fillRule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z" clipRule="evenodd" />
+                  <path fillRule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.045-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z" clipRule="evenodd" />
                 </svg>
               </a>
               <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors">

@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import DashboardHeader from "./DashboardHeader";
 import PageTransition from "@/components/ui/page-transition";
+import { motion } from "framer-motion"; // Added import for motion
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -21,11 +22,16 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
       <DashboardHeader />
       <div className="flex-1 flex flex-col overflow-hidden">
         <main className="flex-1 overflow-auto">
-          <div className="max-w-7xl mx-auto w-full p-4 md:p-6 pt-12">
+          <motion.div 
+            className="max-w-7xl mx-auto w-full p-4 md:p-6 pt-12"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3 }}
+          >
             <PageTransition>
               {children}
             </PageTransition>
-          </div>
+          </motion.div>
         </main>
       </div>
     </div>

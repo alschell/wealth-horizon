@@ -68,8 +68,8 @@ const MarketSnapshot = () => {
         <CardTitle className="text-xl">Market Snapshot</CardTitle>
       </CardHeader>
       <CardContent className="flex-1 flex flex-col">
-        <div className="relative flex-1 flex flex-col">
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 pb-12 overflow-y-auto max-h-[165px]">
+        <div className="flex-grow overflow-y-auto max-h-[165px]">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
             {markets.map((market, index) => (
               <div key={index} className="p-3 border border-gray-100 rounded-md hover:bg-gray-50 transition-colors cursor-pointer">
                 <div className="flex items-center gap-2 mb-1">
@@ -86,15 +86,15 @@ const MarketSnapshot = () => {
               </div>
             ))}
           </div>
-          
-          <div className="absolute bottom-0 left-0 right-0 bg-white pb-5 pt-2">
-            <Link to="/market-data">
-              <Button variant="outline" size="sm" className="w-full flex items-center justify-center">
-                View All Market Data
-                <ChevronRight className="h-4 w-4 ml-1" />
-              </Button>
-            </Link>
-          </div>
+        </div>
+        
+        <div className="mt-auto pt-4">
+          <Link to="/market-data">
+            <Button variant="outline" size="sm" className="w-full flex items-center justify-center">
+              View All Market Data
+              <ChevronRight className="h-4 w-4 ml-1" />
+            </Button>
+          </Link>
         </div>
       </CardContent>
     </Card>

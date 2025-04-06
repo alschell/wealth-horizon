@@ -94,7 +94,7 @@ export const recommendations = [
     impact: "Medium",
     category: "Asset Allocation",
     impactValue: 3.2,
-    urgency: "medium",
+    urgency: "medium" as "medium", // Explicitly typed as a literal
     action: "Review Allocation"
   },
   {
@@ -104,7 +104,7 @@ export const recommendations = [
     impact: "High",
     category: "Risk Management",
     impactValue: 5.7,
-    urgency: "high",
+    urgency: "high" as "high", // Explicitly typed as a literal
     action: "Diversify Now"
   },
   {
@@ -114,7 +114,7 @@ export const recommendations = [
     impact: "Medium",
     category: "Tax Optimization",
     impactValue: 2.8,
-    urgency: "medium",
+    urgency: "medium" as "medium", // Explicitly typed as a literal
     action: "Harvest Losses"
   },
   {
@@ -124,7 +124,7 @@ export const recommendations = [
     impact: "Low",
     category: "Cash Management",
     impactValue: 1.5,
-    urgency: "low",
+    urgency: "low" as "low", // Explicitly typed as a literal
     action: "Allocate Cash"
   }
 ];

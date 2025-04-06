@@ -184,7 +184,9 @@ const MarketSnapshot = () => {
                 onClick={() => handleIndexClick(index)}
               >
                 <span className="font-medium text-sm flex items-center">
-                  <span className="mr-2 text-lg" aria-label={`Flag of ${index.country}`}>{index.flag}</span>
+                  <div className="mr-2 h-8 w-8 flex items-center justify-center bg-gray-50 rounded-full">
+                    <span className="text-sm" aria-label={`Flag of ${index.country}`}>{index.flag}</span>
+                  </div>
                   {index.name}
                 </span>
                 <div className="flex items-center">
@@ -205,12 +207,14 @@ const MarketSnapshot = () => {
                 </div>
               </div>
             ))}
-            <Link to="/market-data" className="block mt-4">
-              <Button variant="outline" size="sm" className="w-full flex items-center justify-center">
-                View All Market Data & News
-                <ChevronRight className="h-4 w-4 ml-1" />
-              </Button>
-            </Link>
+            <div className="pt-2">
+              <Link to="/market-data" className="block">
+                <Button variant="outline" size="sm" className="w-full flex items-center justify-center">
+                  View All Market Data & News
+                  <ChevronRight className="h-4 w-4 ml-1" />
+                </Button>
+              </Link>
+            </div>
           </div>
         </CardContent>
       </Card>

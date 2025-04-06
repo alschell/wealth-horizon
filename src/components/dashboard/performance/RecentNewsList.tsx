@@ -42,7 +42,7 @@ const RecentNewsList = ({ newsData }: RecentNewsListProps) => {
         ))}
       </div>
       
-      <div className="absolute bottom-0 left-0 right-0 bg-white pt-2 border-t pb-2">
+      <div className="absolute bottom-0 left-0 right-0 bg-white pt-2 pb-2">
         <Button 
           variant="outline" 
           size="sm" 

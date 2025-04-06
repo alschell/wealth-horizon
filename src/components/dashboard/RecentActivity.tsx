@@ -38,7 +38,7 @@ const RecentActivity = () => {
           </div>
         </div>
         
-        <div className="absolute bottom-0 left-0 right-0 bg-white pb-5 pt-2 border-t">
+        <div className="absolute bottom-0 left-0 right-0 bg-white pb-5 pt-2">
           <Link to="/activity">
             <Button variant="outline" size="sm" className="w-full flex items-center justify-center">
               View All Activity

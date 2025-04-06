@@ -1,7 +1,9 @@
 
 import React from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { TrendingUp, TrendingDown } from "lucide-react";
+import { TrendingUp, TrendingDown, ChevronRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const MarketSnapshot = () => {
   // Define market indices for the snapshot view - expanded to top 10
@@ -86,6 +88,12 @@ const MarketSnapshot = () => {
               </div>
             </div>
           ))}
+          <Link to="/market-data" className="block mt-4">
+            <Button variant="outline" size="sm" className="w-full flex items-center justify-center">
+              View All Market Data & News
+              <ChevronRight className="h-4 w-4 ml-1" />
+            </Button>
+          </Link>
         </div>
       </CardContent>
     </Card>

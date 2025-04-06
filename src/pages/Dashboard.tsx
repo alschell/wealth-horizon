@@ -9,11 +9,11 @@ import MarketSnapshot from "@/components/dashboard/MarketSnapshot";
 import RecentActivity from "@/components/dashboard/RecentActivity";
 import PageHeaderCard from "@/components/dashboard/PageHeaderCard";
 import KeyMetricsGrid from "@/components/dashboard/performance/KeyMetricsGrid";
-import TopAssets from "@/components/dashboard/performance/TopAssets";
-import RecentNewsList from "@/components/dashboard/performance/RecentNewsList";
 import { LayoutDashboard } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { newsData } from "@/components/dashboard/performance/PerformanceData";
+import TopAssets from "@/components/dashboard/performance/TopAssets";
+import RecentNewsList from "@/components/dashboard/performance/RecentNewsList";
 
 const Dashboard = () => {
   return (

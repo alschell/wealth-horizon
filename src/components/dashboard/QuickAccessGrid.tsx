@@ -12,7 +12,7 @@ import {
   Building,
   Users,
 } from "lucide-react";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
 const actionItems = [
   {
@@ -73,24 +73,26 @@ const actionItems = [
 
 const QuickAccessGrid = () => {
   return (
-    <div>
-      <CardHeader className="px-0 pt-0 pb-4">
+    <Card>
+      <CardHeader className="px-6 pt-6 pb-4">
         <CardTitle className="text-xl">Quick Access</CardTitle>
       </CardHeader>
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
-        {actionItems.map((item, index) => (
-          <Link to={item.path} key={index}>
-            <Card className="h-full flex flex-col items-center justify-start p-4 text-center transition-all duration-200 hover:bg-gray-50">
-              <div className="h-10 w-10 rounded-full bg-gray-50 flex items-center justify-center mb-3 mt-2">
-                <item.icon className="h-5 w-5 text-gray-700" />
+      <CardContent>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+          {actionItems.map((item, index) => (
+            <Link to={item.path} key={index}>
+              <div className="h-full flex flex-col items-center justify-start p-4 text-center transition-all duration-200 hover:bg-gray-50 rounded-md">
+                <div className="h-10 w-10 rounded-full bg-gray-50 flex items-center justify-center mb-3 mt-2">
+                  <item.icon className="h-5 w-5 text-gray-700" />
+                </div>
+                <h3 className="font-medium text-sm mb-1">{item.label}</h3>
+                <p className="text-xs text-gray-500">{item.description}</p>
               </div>
-              <h3 className="font-medium text-sm mb-1">{item.label}</h3>
-              <p className="text-xs text-gray-500">{item.description}</p>
-            </Card>
-          </Link>
-        ))}
-      </div>
-    </div>
+            </Link>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 

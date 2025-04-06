@@ -20,16 +20,16 @@ import { QuickLinkItem } from "./types";
 export const allQuickLinks: QuickLinkItem[] = [
   {
     id: "analyze-wealth",
-    title: "Analyze wealth",
-    description: "Comprehensive portfolio analysis and insights",
+    title: "Analyze Wealth",
+    description: "Portfolio analysis tools & benchmarks",
     icon: React.createElement(PieChart, { className: "h-4 w-4 text-gray-500" }),
     link: "/analyze-wealth",
     color: "bg-gray-50"
   },
   {
     id: "market-data",
-    title: "Access market data & news",
-    description: "Real-time market information and financial news",
+    title: "Access Market Data & News",
+    description: "Real-time market data and information",
     icon: React.createElement(LineChart, { className: "h-4 w-4 text-gray-500" }),
     link: "/market-data",
     color: "bg-gray-50"
@@ -37,118 +37,110 @@ export const allQuickLinks: QuickLinkItem[] = [
   {
     id: "trade",
     title: "Trade",
-    description: "Execute and manage investment transactions",
+    description: "Execute investment trades",
     icon: React.createElement(TrendingUp, { className: "h-4 w-4 text-gray-500" }),
     link: "/trading",
     color: "bg-gray-50"
   },
   {
     id: "credit-facilities",
-    title: "Manage credit facilities",
-    description: "Oversee lending arrangements and credit lines",
+    title: "Manage Credit Facilities",
+    description: "Apply for credit facilities & borrow",
     icon: React.createElement(Building2, { className: "h-4 w-4 text-gray-500" }),
     link: "/credit-facilities",
     color: "bg-gray-50"
   },
   {
     id: "advice",
-    title: "Get advice",
-    description: "Access personalized financial recommendations",
+    title: "Get Advice",
+    description: "Get personalized advice & request mandates",
     icon: React.createElement(Lightbulb, { className: "h-4 w-4 text-gray-500" }),
     link: "/advice",
     color: "bg-gray-50"
   },
   {
     id: "cashflow",
-    title: "Manage cashflow & liquidity",
-    description: "Monitor and optimize cash positions across accounts",
+    title: "Manage Cashflow & Liquidity",
+    description: "Optimize liquidity & term deposits",
     icon: React.createElement(DollarSign, { className: "h-4 w-4 text-gray-500" }),
     link: "/cashflow-management",
     color: "bg-gray-50"
   },
   {
     id: "reports",
-    title: "Generate reports",
-    description: "Create customized financial performance reports",
+    title: "Generate Reports",
+    description: "Create financial reports & statements",
     icon: React.createElement(FileText, { className: "h-4 w-4 text-gray-500" }),
     link: "/reporting",
     color: "bg-gray-50"
   },
   {
     id: "users",
-    title: "Manage users & permissions",
-    description: "Control access rights and user authorization",
+    title: "Manage Users & Permissions",
+    description: "Manage user accounts & access",
     icon: React.createElement(Users, { className: "h-4 w-4 text-gray-500" }),
     link: "/user-management",
     color: "bg-gray-50"
   },
   {
-    id: "accounts",
-    title: "Manage user accounts",
-    description: "Administer user profiles and account settings",
-    icon: React.createElement(Users, { className: "h-4 w-4 text-gray-500" }),
-    link: "/user-management/accounts",
-    color: "bg-gray-50"
-  },
-  {
     id: "integrations",
-    title: "Manage integrations",
-    description: "Configure and monitor third-party service connections",
+    title: "Manage Integrations",
+    description: "Connect to 3rd party services",
     icon: React.createElement(Landmark, { className: "h-4 w-4 text-gray-500" }),
     link: "/integrations",
     color: "bg-gray-50"
   },
   {
     id: "esg",
-    title: "Assess ESG investments",
-    description: "Evaluate environmental, social, and governance factors",
+    title: "Assess ESG Investments",
+    description: "Sustainable investment metrics & benchmarks",
     icon: React.createElement(Leaf, { className: "h-4 w-4 text-gray-500" }),
     link: "/esg",
     color: "bg-gray-50"
   },
   {
     id: "compliance",
-    title: "Monitor compliance",
-    description: "Track regulatory requirements and compliance status",
+    title: "Monitor Compliance",
+    description: "Regulatory compliance tracking",
     icon: React.createElement(Shield, { className: "h-4 w-4 text-gray-500" }),
     link: "/compliance-monitoring",
     color: "bg-gray-50"
   },
   {
     id: "tax",
-    title: "Optimize tax",
-    description: "Implement tax-efficient investment strategies",
+    title: "Optimize Tax",
+    description: "Tax planning & efficiency",
     icon: React.createElement(Calculator, { className: "h-4 w-4 text-gray-500" }),
     link: "/tax-optimization",
     color: "bg-gray-50"
   },
   {
+    id: "entity",
+    title: "Manage Legal Entities",
+    description: "Manage legal structures & holdings",
+    icon: React.createElement(Building2, { className: "h-4 w-4 text-gray-500" }),
+    link: "/entity-management",
+    color: "bg-gray-50"
+  },
+  {
     id: "legacy",
-    title: "Plan legacy",
-    description: "Develop succession and inheritance strategies",
+    title: "Plan Legacy",
+    description: "Succession & estate planning",
     icon: React.createElement(Scroll, { className: "h-4 w-4 text-gray-500" }),
     link: "/legacy-planning",
     color: "bg-gray-50"
   },
   {
     id: "client-access",
-    title: "Manage client access",
-    description: "Control client portal permissions and visibility",
+    title: "Manage Client Access",
+    description: "Control client portal permissions & visibility",
     icon: React.createElement(Users, { className: "h-4 w-4 text-gray-500" }),
     link: "/client-portal",
     color: "bg-gray-50"
   },
   {
-    id: "entities",
-    title: "Manage entities",
-    description: "Administer legal structures and organization hierarchy",
-    icon: React.createElement(Building2, { className: "h-4 w-4 text-gray-500" }),
-    link: "/entity-management",
-    color: "bg-gray-50"
-  },
-  {
     id: "documents",
-    title: "Manage documents",
+    title: "Manage Documents",
     description: "Organize and secure financial documentation",
     icon: React.createElement(FileText, { className: "h-4 w-4 text-gray-500" }),
     link: "/documents",

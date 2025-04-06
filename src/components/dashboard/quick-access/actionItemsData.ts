@@ -9,7 +9,6 @@ import {
   Building2,
   Lightbulb,
   Users,
-  Settings,
   Shield,
   Landmark,
   Leaf,
@@ -32,15 +31,15 @@ export const allActionItems: ActionItem[] = [
     id: "analyze-wealth",
     icon: PieChart,
     label: "Analyze Wealth",
-    description: "Portfolio analysis tools",
+    description: "Portfolio analysis tools & benchmarks",
     path: "/analyze-wealth",
     color: "bg-gray-50 text-gray-500"
   },
   {
     id: "market-data",
     icon: LineChart,
-    label: "Market Data",
-    description: "Access market information",
+    label: "Access Market Data & News",
+    description: "Real-time market data and information",
     path: "/market-data",
     color: "bg-gray-50 text-gray-500"
   },
@@ -55,8 +54,8 @@ export const allActionItems: ActionItem[] = [
   {
     id: "credit-facilities",
     icon: Building2,
-    label: "Credit Facilities",
-    description: "Manage credit facilities",
+    label: "Manage Credit Facilities",
+    description: "Apply for credit facilities & borrow",
     path: "/credit-facilities",
     color: "bg-gray-50 text-gray-500"
   },
@@ -64,54 +63,54 @@ export const allActionItems: ActionItem[] = [
     id: "advice",
     icon: Lightbulb,
     label: "Get Advice",
-    description: "Get personalized advice",
+    description: "Get personalized advice & request mandates",
     path: "/advice",
     color: "bg-gray-50 text-gray-500"
   },
   {
     id: "cashflow",
     icon: DollarSign,
-    label: "Cashflow Management",
-    description: "Manage liquidity and deposits",
+    label: "Manage Cashflow & Liquidity",
+    description: "Optimize liquidity & term deposits",
     path: "/cashflow-management",
     color: "bg-gray-50 text-gray-500"
   },
   {
     id: "reports",
     icon: FileText,
-    label: "Reports",
-    description: "Generate financial reports",
+    label: "Generate Reports",
+    description: "Create financial reports & statements",
     path: "/reporting",
     color: "bg-gray-50 text-gray-500"
   },
   {
     id: "users",
     icon: Users,
-    label: "User Management",
-    description: "Manage user accounts",
+    label: "Manage Users & Permissions",
+    description: "Manage user accounts & access",
     path: "/user-management",
     color: "bg-gray-50 text-gray-500"
   },
   {
     id: "integrations",
     icon: Landmark,
-    label: "Integrations",
-    description: "Manage connected services",
+    label: "Manage Integrations",
+    description: "Connect to 3rd party services",
     path: "/integrations",
     color: "bg-gray-50 text-gray-500"
   },
   {
     id: "esg",
     icon: Leaf,
-    label: "ESG Investing",
-    description: "Sustainable investing metrics",
+    label: "Assess ESG Investments",
+    description: "Sustainable investment metrics & benchmarks",
     path: "/esg",
     color: "bg-gray-50 text-gray-500"
   },
   {
     id: "compliance",
     icon: Shield,
-    label: "Compliance",
+    label: "Monitor Compliance",
     description: "Regulatory compliance tracking",
     path: "/compliance-monitoring",
     color: "bg-gray-50 text-gray-500"
@@ -119,7 +118,7 @@ export const allActionItems: ActionItem[] = [
   {
     id: "tax",
     icon: Calculator,
-    label: "Tax Optimization",
+    label: "Optimize Tax",
     description: "Tax planning & efficiency",
     path: "/tax-optimization",
     color: "bg-gray-50 text-gray-500"
@@ -127,25 +126,33 @@ export const allActionItems: ActionItem[] = [
   {
     id: "entity",
     icon: Building2,
-    label: "Entity Management",
-    description: "Manage legal structures",
+    label: "Manage Legal Entities",
+    description: "Manage legal structures & holdings",
     path: "/entity-management",
     color: "bg-gray-50 text-gray-500"
   },
   {
     id: "legacy",
     icon: Scroll,
-    label: "Legacy Planning",
+    label: "Plan Legacy",
     description: "Succession & estate planning",
     path: "/legacy-planning",
     color: "bg-gray-50 text-gray-500"
   },
   {
-    id: "settings",
-    icon: Settings,
-    label: "Settings",
-    description: "Configure application settings",
-    path: "/settings",
+    id: "client-access",
+    icon: Users,
+    label: "Manage Client Access",
+    description: "Control client portal permissions & visibility",
+    path: "/client-portal",
+    color: "bg-gray-50 text-gray-500"
+  },
+  {
+    id: "documents",
+    icon: FileText,
+    label: "Manage Documents",
+    description: "Organize and secure financial documentation",
+    path: "/documents",
     color: "bg-gray-50 text-gray-500"
   }
 ];

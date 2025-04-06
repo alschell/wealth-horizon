@@ -19,7 +19,7 @@ const QuickAccessItem = ({
       onClick={onClick}
     >
       <div className="flex items-start gap-3">
-        <div className={cn("h-10 w-10 flex items-center justify-center rounded-full", color)}>
+        <div className={cn("h-10 w-10 flex-shrink-0 flex items-center justify-center rounded-full", color)}>
           {icon}
         </div>
         <div className="flex flex-col">

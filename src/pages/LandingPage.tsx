@@ -24,16 +24,13 @@ import {
 const LandingPage = () => {
   const navigate = useNavigate();
   
-  // Animation variants
+  // Animation variants for consistent animations
   const fadeIn = {
     hidden: { opacity: 0, y: 20 },
     visible: { 
       opacity: 1, 
       y: 0,
-      transition: { 
-        duration: 0.6,
-        ease: "easeOut"
-      }
+      transition: { duration: 0.6 }
     }
   };
   
@@ -42,8 +39,7 @@ const LandingPage = () => {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.1
+        staggerChildren: 0.1
       }
     }
   };
@@ -53,10 +49,7 @@ const LandingPage = () => {
     visible: {
       opacity: 1,
       scale: 1,
-      transition: { 
-        duration: 0.6,
-        ease: "easeOut" 
-      }
+      transition: { duration: 0.5 }
     }
   };
 
@@ -85,8 +78,8 @@ const LandingPage = () => {
     document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
   };
   
-  // Platform tabs
-  const platformTabs = [
+  // Platform features
+  const platformFeatures = [
     {
       title: "Portfolio Aggregation",
       description: "Consolidate all your assets across custodians into a single, actionable view",
@@ -288,7 +281,8 @@ const LandingPage = () => {
                     alt="WPro Dashboard" 
                     className="w-full aspect-video object-cover rounded-2xl transform hover:scale-105 transition-transform duration-500"
                     onError={(e) => {
-                      e.currentTarget.src = "/assets/dashboard-fallback.png";
+                      const target = e.target as HTMLImageElement;
+                      target.src = "/assets/dashboard-fallback.png";
                     }}
                   />
                 </div>
@@ -337,9 +331,9 @@ const LandingPage = () => {
             
             <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
               <div className="md:col-span-4 space-y-6">
-                {platformTabs.map((tab, index) => (
+                {platformFeatures.map((feature, index) => (
                   <motion.div
-                    key={tab.title}
+                    key={feature.title}
                     className="p-6 rounded-xl cursor-pointer transition-all duration-300 hover:bg-gray-50 border border-gray-200"
                     initial={{ opacity: 0, x: -20 }}
                     whileInView={{ opacity: 1, x: 0 }}
@@ -347,10 +341,10 @@ const LandingPage = () => {
                     transition={{ delay: index * 0.1, duration: 0.5 }}
                   >
                     <div className="flex items-center gap-3 mb-2">
-                      {tab.icon}
-                      <h3 className="text-xl font-semibold">{tab.title}</h3>
+                      {feature.icon}
+                      <h3 className="text-xl font-semibold">{feature.title}</h3>
                     </div>
-                    <p className="text-gray-600">{tab.description}</p>
+                    <p className="text-gray-600">{feature.description}</p>
                   </motion.div>
                 ))}
               </div>
@@ -369,7 +363,8 @@ const LandingPage = () => {
                       alt="Platform Preview" 
                       className="w-full h-full object-cover rounded-lg shadow-lg"
                       onError={(e) => {
-                        e.currentTarget.src = "/assets/dashboard-fallback.png";
+                        const target = e.target as HTMLImageElement;
+                        target.src = "/assets/dashboard-fallback.png";
                       }}
                     />
                   </div>
@@ -435,18 +430,15 @@ const LandingPage = () => {
               </p>
             </motion.div>
             
-            <motion.div 
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              variants={staggerContainer}
-            >
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {enterpriseSolutions.map((solution, index) => (
                 <motion.div 
                   key={solution.title} 
                   className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-all duration-300"
-                  variants={fadeIn}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1, duration: 0.5 }}
                 >
                   <div className="p-3 rounded-full bg-gray-100 w-fit mb-4">
                     {solution.icon}
@@ -457,7 +449,7 @@ const LandingPage = () => {
                   </p>
                 </motion.div>
               ))}
-            </motion.div>
+            </div>
             
             <div className="mt-16 text-center">
               <motion.div

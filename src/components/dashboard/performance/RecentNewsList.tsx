@@ -25,8 +25,8 @@ const RecentNewsList = ({ newsData }: RecentNewsListProps) => {
   };
 
   return (
-    <div className="space-y-2">
-      <div className="space-y-3">
+    <div className="relative h-full">
+      <div className="space-y-3 max-h-[300px] overflow-y-auto pb-16">
         {visibleNews.map((news, index) => (
           <div 
             key={index} 
@@ -40,6 +40,9 @@ const RecentNewsList = ({ newsData }: RecentNewsListProps) => {
             <ExternalLink className="h-4 w-4 text-gray-400 flex-shrink-0" />
           </div>
         ))}
+      </div>
+      
+      <div className="absolute bottom-0 left-0 right-0 bg-white pt-2 border-t pb-2">
         <Button 
           variant="outline" 
           size="sm" 

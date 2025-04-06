@@ -11,8 +11,8 @@ const RecentActivity = () => {
       <CardHeader className="pb-2">
         <CardTitle className="text-xl">Recent Activity</CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="space-y-3">
+      <CardContent className="space-y-4 relative">
+        <div className="space-y-3 pb-12 max-h-[300px] overflow-y-auto">
           <div className="p-3 rounded-md hover:bg-gray-50 transition-colors cursor-pointer">
             <div className="flex items-start gap-3">
               <div className="mt-0.5 h-8 w-8 flex items-center justify-center bg-gray-50 rounded-full">
@@ -36,7 +36,9 @@ const RecentActivity = () => {
               </div>
             </div>
           </div>
-          
+        </div>
+        
+        <div className="absolute bottom-0 left-0 right-0 bg-white pb-5 pt-2 border-t">
           <Link to="/activity">
             <Button variant="outline" size="sm" className="w-full flex items-center justify-center">
               View All Activity

@@ -18,7 +18,6 @@ const PerformanceOverview = () => {
     <Card className="shadow-sm">
       <CardHeader className="pb-2">
         <CardTitle className="text-xl">Performance Overview</CardTitle>
-        <CardDescription>Quick snapshot of your wealth performance</CardDescription>
       </CardHeader>
       <CardContent className="h-[800px] overflow-y-auto"> {/* Doubled the height by setting explicit height */}
         <Tabs defaultValue="overview" className="space-y-4">

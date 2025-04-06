@@ -89,17 +89,17 @@ const ChartsTabContent = ({ assetAllocationData }: ChartsTabContentProps) => {
                 <div className="grid grid-cols-2 gap-4 h-full">
                   <div>
                     <p className="text-sm text-center mb-2 font-medium">Assets</p>
-                    <AssetAllocationChart data={assetAllocationData} />
+                    <AssetAllocationChart assetAllocationData={assetAllocationData} />
                   </div>
                   <div>
                     <p className="text-sm text-center mb-2 font-medium">Liabilities</p>
-                    <AssetAllocationChart data={liabilitiesData} />
+                    <AssetAllocationChart assetAllocationData={liabilitiesData} />
                   </div>
                 </div>
               ) : chartView === 'assets' ? (
-                <AssetAllocationChart data={assetAllocationData} />
+                <AssetAllocationChart assetAllocationData={assetAllocationData} />
               ) : (
-                <AssetAllocationChart data={liabilitiesData} />
+                <AssetAllocationChart assetAllocationData={liabilitiesData} />
               )}
             </div>
           </CardContent>

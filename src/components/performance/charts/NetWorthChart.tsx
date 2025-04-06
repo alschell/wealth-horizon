@@ -1,5 +1,6 @@
 
 import React, { useState } from "react";
+import { TrendingUp } from "lucide-react";
 import {
   ChartContainer,
   ChartTooltip,

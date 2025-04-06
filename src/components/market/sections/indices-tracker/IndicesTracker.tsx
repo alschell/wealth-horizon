@@ -1,16 +1,13 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
-import FilterButtons from "./components/FilterButtons";
-import SearchAndFilter from "./components/SearchAndFilter";
-import IndicesTable from "./components/IndicesTable";
-import IndexPerformanceChart from "./components/IndexPerformanceChart";
-import SubscriptionsCard from "./components/SubscriptionsCard";
+import Header from "./components/Header";
+import TableSection from "./components/TableSection";
+import ChartsSection from "./components/ChartsSection";
 import { useIndicesTracker } from "./hooks/useIndicesTracker";
+import { MotionVariants } from "./types/animationTypes";
 
-const IndicesTracker = () => {
+const IndicesTracker: React.FC = () => {
   const {
     filter,
     setFilter,
@@ -25,7 +22,7 @@ const IndicesTracker = () => {
     indices
   } = useIndicesTracker();
 
-  const container = {
+  const container: MotionVariants = {
     hidden: { opacity: 0 },
     show: {
       opacity: 1,
@@ -35,7 +32,7 @@ const IndicesTracker = () => {
     }
   };
 
-  const item = {
+  const item: MotionVariants = {
     hidden: { opacity: 0, y: 20 },
     show: { opacity: 1, y: 0 }
   };
@@ -47,44 +44,31 @@ const IndicesTracker = () => {
       animate="show"
       className="space-y-6"
     >
-      <motion.div variants={item} className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div>
-          <div className="flex items-center gap-2 mb-2">
-            <h2 className="text-2xl font-bold">Global Indices</h2>
-            <Badge variant="outline" className="text-xs">Live</Badge>
-          </div>
-          <FilterButtons filter={filter} setFilter={setFilter} />
-        </div>
-        <SearchAndFilter searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-      </motion.div>
+      <Header 
+        filter={filter} 
+        setFilter={setFilter} 
+        searchTerm={searchTerm} 
+        setSearchTerm={setSearchTerm} 
+        item={item} 
+      />
       
-      <motion.div variants={item}>
-        <Card>
-          <CardContent className="p-0">
-            <IndicesTable 
-              indices={filteredIndices} 
-              selectedIndex={selectedIndex}
-              subscribedIndices={subscribedIndices}
-              handleSelectIndex={handleSelectIndex}
-              toggleSubscription={toggleSubscription}
-            />
-          </CardContent>
-        </Card>
-      </motion.div>
+      <TableSection 
+        filteredIndices={filteredIndices}
+        selectedIndex={selectedIndex}
+        subscribedIndices={subscribedIndices}
+        handleSelectIndex={handleSelectIndex}
+        toggleSubscription={toggleSubscription}
+        item={item}
+      />
       
-      <motion.div variants={item} className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <IndexPerformanceChart 
-          selectedIndex={selectedIndex} 
-          setSelectedIndex={setSelectedIndex}
-          indices={indices}
-        />
-        
-        <SubscriptionsCard 
-          subscribedIndices={subscribedIndices}
-          indices={indices}
-          handleSelectIndex={handleSelectIndex}
-        />
-      </motion.div>
+      <ChartsSection 
+        selectedIndex={selectedIndex}
+        setSelectedIndex={setSelectedIndex}
+        subscribedIndices={subscribedIndices}
+        indices={indices}
+        handleSelectIndex={handleSelectIndex}
+        item={item}
+      />
     </motion.div>
   );
 };

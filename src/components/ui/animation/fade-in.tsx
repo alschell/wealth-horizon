@@ -3,7 +3,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
-interface FadeInProps {
+export interface FadeInProps {
   children: React.ReactNode;
   duration?: number;
   delay?: number;
@@ -11,6 +11,7 @@ interface FadeInProps {
   direction?: "up" | "down" | "left" | "right" | "none";
   distance?: number;
   once?: boolean;
+  onClick?: () => void; // Add onClick handler to the interface
 }
 
 export function FadeIn({
@@ -21,6 +22,7 @@ export function FadeIn({
   direction = "up",
   distance = 20,
   once = true,
+  onClick, // Include onClick in the component props
 }: FadeInProps) {
   // Define direction variants
   const directionOffsets = {
@@ -49,6 +51,7 @@ export function FadeIn({
         ease: "easeOut",
       }}
       className={cn(className)}
+      onClick={onClick} // Pass onClick to the motion.div
     >
       {children}
     </motion.div>

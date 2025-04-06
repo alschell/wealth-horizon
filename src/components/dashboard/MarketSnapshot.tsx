@@ -68,7 +68,7 @@ const MarketSnapshot = () => {
         <CardTitle className="text-xl">Market Snapshot</CardTitle>
       </CardHeader>
       <CardContent className="flex-1 flex flex-col">
-        <div className="flex-grow overflow-y-auto max-h-[330px]">
+        <div className="flex-grow overflow-y-auto max-h-[165px]">
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
             {markets.map((market, index) => (
               <div key={index} className="p-3 border border-gray-100 rounded-md hover:bg-gray-50 transition-colors cursor-pointer">

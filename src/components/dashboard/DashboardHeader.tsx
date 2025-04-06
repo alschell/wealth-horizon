@@ -7,6 +7,7 @@ import NotificationsPopover from "./NotificationsPopover";
 import PageTitle from "./PageTitle";
 import HeaderAction from "./HeaderAction";
 import PersonalizedSettings from "./PersonalizedSettings";
+import { Settings } from "lucide-react";
 
 const DashboardHeader = () => {
   return (
@@ -50,7 +51,11 @@ const DashboardHeader = () => {
       </div>
       <div className="flex items-center gap-2">
         <PersonalizedSettings />
-        <HeaderAction />
+        <HeaderAction 
+          icon={Settings} 
+          label="Settings" 
+          to="/settings" 
+        />
         <NotificationsPopover />
       </div>
     </header>

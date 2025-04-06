@@ -30,6 +30,13 @@ import FinancialChat from "./pages/FinancialChat";
 import Borrow from "./pages/Borrow";
 import CreditFacilities from "./pages/CreditFacilities";
 import ChatButton from "./components/chat/ChatButton";
+import ESG from "./pages/ESG";
+import ClientPortal from "./pages/ClientPortal";
+import Documents from "./pages/Documents";
+import TaxOptimization from "./pages/TaxOptimization";
+import LegacyPlanning from "./pages/LegacyPlanning";
+import EntityManagement from "./pages/EntityManagement";
+import ComplianceMonitoring from "./pages/ComplianceMonitoring";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -65,6 +72,13 @@ function App() {
                 <Route path="/financial-chat" element={<FinancialChat />} />
                 <Route path="/borrow" element={<Borrow />} />
                 <Route path="/credit-facilities" element={<CreditFacilities />} />
+                <Route path="/esg" element={<ESG />} />
+                <Route path="/client-portal" element={<ClientPortal />} />
+                <Route path="/documents" element={<Documents />} />
+                <Route path="/tax-optimization" element={<TaxOptimization />} />
+                <Route path="/legacy-planning" element={<LegacyPlanning />} />
+                <Route path="/entity-management" element={<EntityManagement />} />
+                <Route path="/compliance-monitoring" element={<ComplianceMonitoring />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
               <Toaster />

@@ -61,7 +61,7 @@ const NotificationsFeed = () => {
         <CardTitle className="text-xl">Notifications, events and tasks</CardTitle>
       </CardHeader>
       <CardContent className="flex-1 flex flex-col">
-        <div className="flex-grow overflow-y-auto max-h-[165px]">
+        <div className="flex-grow overflow-y-auto max-h-[330px]">
           <div className="space-y-3">
             {notifications.map((notification, index) => (
               <div 

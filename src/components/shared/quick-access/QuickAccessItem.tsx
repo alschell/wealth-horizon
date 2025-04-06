@@ -15,19 +15,19 @@ const QuickAccessItem = ({
   return (
     <Link
       to={link}
-      className="flex flex-col p-4 rounded-lg transition-all duration-200 text-center h-full hover:bg-gray-50"
+      className="flex flex-col p-4 rounded-lg transition-all duration-200 h-full hover:bg-gray-50"
       onClick={onClick}
     >
-      <div className="flex flex-col items-center justify-center">
-        <div className={cn("h-10 w-10 flex items-center justify-center rounded-full mb-3", color)}>
+      <div className="flex items-start gap-3">
+        <div className={cn("h-10 w-10 flex items-center justify-center rounded-full", color)}>
           {icon}
         </div>
-      </div>
-      <div>
-        <h3 className="text-sm font-medium mb-1">{title}</h3>
-        <p className="text-xs text-gray-500">
-          {description}
-        </p>
+        <div className="flex flex-col">
+          <h3 className="text-sm font-medium mb-1">{title}</h3>
+          <p className="text-xs text-gray-500">
+            {description}
+          </p>
+        </div>
       </div>
     </Link>
   );

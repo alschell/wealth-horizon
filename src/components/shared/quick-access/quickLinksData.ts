@@ -22,7 +22,7 @@ export const allQuickLinks: QuickAccessItem[] = [
   {
     id: "analyze-wealth",
     title: "Analyze wealth",
-    description: "Portfolio analysis tools",
+    description: "Comprehensive portfolio analysis and insights",
     icon: React.createElement(PieChart, { className: "h-5 w-5" }),
     link: "/analyze-wealth",
     color: "bg-gray-50"
@@ -30,7 +30,7 @@ export const allQuickLinks: QuickAccessItem[] = [
   {
     id: "access-market-data",
     title: "Access market data & news",
-    description: "Access market information",
+    description: "Real-time market information and financial news",
     icon: React.createElement(LineChart, { className: "h-5 w-5" }),
     link: "/market-data",
     color: "bg-gray-50"
@@ -38,7 +38,7 @@ export const allQuickLinks: QuickAccessItem[] = [
   {
     id: "trade",
     title: "Trade",
-    description: "Execute investment trades",
+    description: "Execute and manage investment transactions",
     icon: React.createElement(TrendingUp, { className: "h-5 w-5" }),
     link: "/trading",
     color: "bg-gray-50"
@@ -46,7 +46,7 @@ export const allQuickLinks: QuickAccessItem[] = [
   {
     id: "manage-credit-facilities",
     title: "Manage credit facilities",
-    description: "Manage credit facilities",
+    description: "Oversee lending arrangements and credit lines",
     icon: React.createElement(Building2, { className: "h-5 w-5" }),
     link: "/credit-facilities",
     color: "bg-gray-50"
@@ -54,7 +54,7 @@ export const allQuickLinks: QuickAccessItem[] = [
   {
     id: "get-advice",
     title: "Get advice",
-    description: "Get personalized advice",
+    description: "Access personalized financial recommendations",
     icon: React.createElement(Lightbulb, { className: "h-5 w-5" }),
     link: "/advice",
     color: "bg-gray-50"
@@ -62,7 +62,7 @@ export const allQuickLinks: QuickAccessItem[] = [
   {
     id: "manage-cashflow",
     title: "Manage cashflow & liquidity",
-    description: "Manage liquidity and deposits",
+    description: "Monitor and optimize cash positions across accounts",
     icon: React.createElement(DollarSign, { className: "h-5 w-5" }),
     link: "/cashflow-management",
     color: "bg-gray-50"
@@ -70,7 +70,7 @@ export const allQuickLinks: QuickAccessItem[] = [
   {
     id: "generate-reports",
     title: "Generate reports",
-    description: "Generate financial reports",
+    description: "Create customized financial performance reports",
     icon: React.createElement(FileText, { className: "h-5 w-5" }),
     link: "/reporting",
     color: "bg-gray-50"
@@ -78,7 +78,7 @@ export const allQuickLinks: QuickAccessItem[] = [
   {
     id: "manage-users-permissions",
     title: "Manage users & permissions",
-    description: "Manage user permissions",
+    description: "Control access rights and user authorization",
     icon: React.createElement(Users, { className: "h-5 w-5" }),
     link: "/user-management",
     color: "bg-gray-50"
@@ -86,7 +86,7 @@ export const allQuickLinks: QuickAccessItem[] = [
   {
     id: "manage-user-accounts",
     title: "Manage user accounts",
-    description: "Manage user accounts",
+    description: "Administer user profiles and account settings",
     icon: React.createElement(Users, { className: "h-5 w-5" }),
     link: "/user-management/accounts",
     color: "bg-gray-50"
@@ -94,7 +94,7 @@ export const allQuickLinks: QuickAccessItem[] = [
   {
     id: "manage-integrations",
     title: "Manage integrations",
-    description: "Manage connected services",
+    description: "Configure and monitor third-party service connections",
     icon: React.createElement(Landmark, { className: "h-5 w-5" }),
     link: "/integrations",
     color: "bg-gray-50"
@@ -102,7 +102,7 @@ export const allQuickLinks: QuickAccessItem[] = [
   {
     id: "assess-esg-investments",
     title: "Assess ESG investments",
-    description: "Sustainable investing metrics",
+    description: "Evaluate environmental, social, and governance factors",
     icon: React.createElement(Leaf, { className: "h-5 w-5" }),
     link: "/esg",
     color: "bg-gray-50"
@@ -110,7 +110,7 @@ export const allQuickLinks: QuickAccessItem[] = [
   {
     id: "monitor-compliance",
     title: "Monitor compliance",
-    description: "Regulatory compliance tracking",
+    description: "Track regulatory requirements and compliance status",
     icon: React.createElement(Shield, { className: "h-5 w-5" }),
     link: "/compliance-monitoring",
     color: "bg-gray-50"
@@ -118,7 +118,7 @@ export const allQuickLinks: QuickAccessItem[] = [
   {
     id: "optimize-tax",
     title: "Optimize tax",
-    description: "Tax planning & optimization",
+    description: "Implement tax-efficient investment strategies",
     icon: React.createElement(Calculator, { className: "h-5 w-5" }),
     link: "/tax-optimization",
     color: "bg-gray-50"
@@ -126,7 +126,7 @@ export const allQuickLinks: QuickAccessItem[] = [
   {
     id: "manage-entities",
     title: "Manage entities",
-    description: "Manage legal structures",
+    description: "Administer legal structures and organization hierarchy",
     icon: React.createElement(Building2, { className: "h-5 w-5" }),
     link: "/entity-management",
     color: "bg-gray-50"
@@ -134,7 +134,7 @@ export const allQuickLinks: QuickAccessItem[] = [
   {
     id: "plan-legacy",
     title: "Plan legacy",
-    description: "Succession & estate planning",
+    description: "Develop succession and inheritance strategies",
     icon: React.createElement(Scroll, { className: "h-5 w-5" }),
     link: "/legacy-planning",
     color: "bg-gray-50"
@@ -142,7 +142,7 @@ export const allQuickLinks: QuickAccessItem[] = [
   {
     id: "manage-client-access",
     title: "Manage client access",
-    description: "Manage client access",
+    description: "Control client portal permissions and visibility",
     icon: React.createElement(Users, { className: "h-5 w-5" }),
     link: "/client-portal",
     color: "bg-gray-50"
@@ -150,7 +150,7 @@ export const allQuickLinks: QuickAccessItem[] = [
   {
     id: "manage-documents",
     title: "Manage documents",
-    description: "Document management",
+    description: "Organize and secure financial documentation",
     icon: React.createElement(FileText, { className: "h-5 w-5" }),
     link: "/documents",
     color: "bg-gray-50"

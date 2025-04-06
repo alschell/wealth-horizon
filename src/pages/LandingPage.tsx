@@ -1,9 +1,12 @@
 
-import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion"; // Add proper import for motion
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { toast } from "sonner";
 import {
   ArrowRight,
   CheckCircle,
@@ -12,75 +15,133 @@ import {
   Mail,
   Phone,
   TrendingUp,
-  Users
+  PieChart,
+  Users,
+  Shield,
+  Lightbulb
 } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { 
-  FadeIn, 
-  StaggerContainer, 
-  StaggerItem, 
-  ScaleIn 
-} from "@/components/ui/animation";
-import { toast } from "sonner";
 
 const LandingPage = () => {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<number>(0);
-  const [email, setEmail] = useState("");
-  const [isLoaded, setIsLoaded] = useState(false);
-
-  useEffect(() => {
-    // Set loaded state when component mounts
-    setIsLoaded(true);
-    
-    // Cleanup tab interval on unmount
-    const interval = setInterval(() => {
-      setActiveTab(prev => (prev + 1) % platformTabs.length);
-    }, 5000);
-    
-    return () => clearInterval(interval);
-  }, []);
-
-  // Handle image errors
-  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
-    e.currentTarget.src = "/assets/dashboard-fallback.png";
+  
+  // Animation variants
+  const fadeIn = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: { 
+        duration: 0.6,
+        ease: "easeOut"
+      }
+    }
+  };
+  
+  const staggerContainer = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.1
+      }
+    }
+  };
+  
+  const scaleIn = {
+    hidden: { opacity: 0, scale: 0.95 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      transition: { 
+        duration: 0.6,
+        ease: "easeOut" 
+      }
+    }
   };
 
-  // Platform features tab data
-  const platformTabs = [
-    {
-      id: 0,
-      title: "Portfolio Aggregation",
-      description: "Consolidate all your assets across custodians into a single, actionable view"
-    },
-    {
-      id: 1,
-      title: "Sophisticated Analytics",
-      description: "Make data-driven decisions with our powerful analytics and reporting"
-    },
-    {
-      id: 2,
-      title: "Seamless Integration",
-      description: "Automate data flows from all your institutions without manual work"
-    },
-    {
-      id: 3,
-      title: "Robust Compliance",
-      description: "Automated monitoring of regulatory requirements and internal mandates"
-    }
-  ];
-  
   // Handle newsletter signup
   const handleNewsletterSignup = (e: React.FormEvent) => {
     e.preventDefault();
-    toast.success(`Thank you for subscribing with ${email}!`);
-    setEmail("");
+    const form = e.target as HTMLFormElement;
+    const emailInput = form.elements.namedItem('email') as HTMLInputElement;
+    
+    if (emailInput.value) {
+      toast.success(`Thank you for subscribing with ${emailInput.value}!`);
+      emailInput.value = "";
+    }
   };
 
+  // Handle contact form submission
+  const handleContactSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    toast.success("Your message has been sent. We'll be in touch shortly!");
+    const form = e.target as HTMLFormElement;
+    form.reset();
+  };
+
+  // Smooth scroll to section
   const scrollToSection = (sectionId: string) => {
     document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
   };
+  
+  // Platform tabs
+  const platformTabs = [
+    {
+      title: "Portfolio Aggregation",
+      description: "Consolidate all your assets across custodians into a single, actionable view",
+      icon: <PieChart className="h-6 w-6 text-primary" />
+    },
+    {
+      title: "Advanced Analytics",
+      description: "Make data-driven decisions with our powerful analytics and reporting",
+      icon: <TrendingUp className="h-6 w-6 text-primary" />
+    },
+    {
+      title: "Seamless Integration",
+      description: "Automate data flows from all your institutions without manual work",
+      icon: <Globe className="h-6 w-6 text-primary" />
+    },
+    {
+      title: "Robust Compliance",
+      description: "Automated monitoring of regulatory requirements and internal mandates",
+      icon: <Shield className="h-6 w-6 text-primary" />
+    }
+  ];
+  
+  // Enterprise solutions
+  const enterpriseSolutions = [
+    {
+      title: "Wealth Analytics",
+      description: "Advanced analytics and visualization of your entire wealth across all accounts and assets",
+      icon: <TrendingUp className="h-6 w-6 text-gray-900" />
+    },
+    {
+      title: "Multi-Bank Integration",
+      description: "Seamlessly connect all your financial accounts from different institutions into a single dashboard",
+      icon: <Globe className="h-6 w-6 text-gray-900" />
+    },
+    {
+      title: "Secure KYC Process",
+      description: "Complete your KYC verification with bank-level security and encryption for all sensitive data",
+      icon: <Shield className="h-6 w-6 text-gray-900" />
+    },
+    {
+      title: "Automated Reporting",
+      description: "Generate comprehensive reports automatically for internal reviews and external stakeholders",
+      icon: <LayoutDashboard className="h-6 w-6 text-gray-900" />
+    },
+    {
+      title: "Document Management",
+      description: "Store and organize all your financial documents in one secure location with easy access",
+      icon: <Mail className="h-6 w-6 text-gray-900" />
+    },
+    {
+      title: "AI-Powered Insights",
+      description: "Get intelligent recommendations and insights about your financial portfolio powered by AI",
+      icon: <Lightbulb className="h-6 w-6 text-gray-900" />
+    }
+  ];
 
   return (
     <Layout withPadding={false} className="bg-white text-gray-900">
@@ -105,7 +166,7 @@ const LandingPage = () => {
             <Button 
               variant="link" 
               className="text-gray-700 hover:text-gray-900 transition-colors"
-              onClick={() => scrollToSection('features-section')}
+              onClick={() => scrollToSection('solutions-section')}
             >
               Solutions
             </Button>
@@ -137,7 +198,7 @@ const LandingPage = () => {
       </header>
 
       <main className="pt-20">
-        {/* Hero Section - Updated with animation components */}
+        {/* Hero Section */}
         <section 
           id="hero-section"
           className="min-h-[90vh] flex items-center justify-center relative overflow-hidden"
@@ -150,37 +211,36 @@ const LandingPage = () => {
           
           <div className="max-w-7xl w-full px-6 md:px-12 py-20 md:py-32 relative z-10">
             <div className="flex flex-col md:flex-row items-center gap-10 md:gap-20">
-              <StaggerContainer 
+              <motion.div 
                 className="md:w-1/2 space-y-8"
-                delayChildren={0.1}
-                staggerChildren={0.1}
+                initial="hidden"
+                animate="visible"
+                variants={staggerContainer}
               >
-                <StaggerItem>
-                  <div className="inline-flex items-center px-4 py-2 rounded-full bg-gray-100 border border-gray-200">
-                    <span className="text-sm text-gray-700 font-medium">For Family Offices & Institutional Investors</span>
+                <motion.div variants={fadeIn}>
+                  <div className="inline-flex items-center px-4 py-2 rounded-full bg-blue-50 border border-blue-100">
+                    <span className="text-sm text-blue-700 font-medium">Family Office Management</span>
                   </div>
-                </StaggerItem>
+                </motion.div>
                 
-                <StaggerItem>
-                  <h1 className="text-4xl md:text-6xl font-bold tracking-tight">
-                    All your{" "}
-                    <span className="bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
-                      wealth
-                    </span>{" "}
-                    on a single actionable platform
+                <motion.div variants={fadeIn}>
+                  <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-4">
+                    Streamlined Wealth Management 
+                    <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-500 block md:inline"> for Family Offices</span>
                   </h1>
-                </StaggerItem>
+                </motion.div>
                 
-                <StaggerItem>
-                  <p className="text-lg text-gray-600 max-w-lg">
-                    View, analyze, and act on your bankable wealth across all your banks, brokers, and custodians in one powerful platform.
+                <motion.div variants={fadeIn}>
+                  <p className="text-lg md:text-xl text-gray-600 max-w-lg">
+                    Our comprehensive platform helps family offices manage their wealth, streamline KYC processes, 
+                    and seamlessly integrate with financial data aggregators.
                   </p>
-                </StaggerItem>
+                </motion.div>
                 
-                <StaggerItem>
+                <motion.div variants={fadeIn}>
                   <div className="flex flex-col sm:flex-row gap-4">
                     <Button 
-                      className="h-12 px-6 rounded-lg bg-gray-900 text-white hover:bg-gray-800 transition-all text-base"
+                      className="h-12 px-8 rounded-xl font-medium shadow-lg hover:shadow-xl transition-all"
                       onClick={() => navigate('/onboarding')}
                     >
                       Start Onboarding
@@ -189,15 +249,15 @@ const LandingPage = () => {
                     
                     <Button 
                       variant="outline" 
-                      className="h-12 px-6 rounded-lg border-gray-300 text-gray-900 hover:bg-gray-100 text-base"
+                      className="h-12 px-8 rounded-xl font-medium border border-gray-200"
                       onClick={() => navigate('/dashboard')}
                     >
-                      See Demo
+                      Go to Dashboard
                     </Button>
                   </div>
-                </StaggerItem>
+                </motion.div>
                 
-                <StaggerItem>
+                <motion.div variants={fadeIn}>
                   <div className="flex flex-col md:flex-row gap-6 pt-6">
                     <div className="flex items-center gap-2">
                       <CheckCircle className="h-5 w-5 text-gray-600" />
@@ -212,13 +272,14 @@ const LandingPage = () => {
                       <span className="text-gray-600 text-sm">SOC 2 Compliant</span>
                     </div>
                   </div>
-                </StaggerItem>
-              </StaggerContainer>
+                </motion.div>
+              </motion.div>
               
-              <ScaleIn 
+              <motion.div 
                 className="md:w-1/2 relative"
-                delay={0.3}
-                duration={0.6}
+                initial="hidden"
+                animate="visible"
+                variants={scaleIn}
               >
                 <div className="relative bg-gradient-to-br from-white to-gray-100 rounded-2xl border border-gray-200 overflow-hidden shadow-xl">
                   <div className="absolute inset-0 bg-[url('/assets/grid-pattern.svg')] opacity-20"></div>
@@ -226,82 +287,94 @@ const LandingPage = () => {
                     src="/assets/dashboard-preview.png" 
                     alt="WPro Dashboard" 
                     className="w-full aspect-video object-cover rounded-2xl transform hover:scale-105 transition-transform duration-500"
-                    onError={handleImageError}
+                    onError={(e) => {
+                      e.currentTarget.src = "/assets/dashboard-fallback.png";
+                    }}
                   />
                 </div>
                 
                 {/* Floating elements */}
-                <FadeIn 
+                <motion.div 
                   className="absolute -top-3 -right-3 bg-white border border-gray-200 rounded-lg p-3 shadow-lg"
-                  delay={0.8}
-                  duration={0.4}
-                  direction="down"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.8, duration: 0.4 }}
                 >
                   <TrendingUp className="h-5 w-5 text-green-600" />
-                </FadeIn>
+                </motion.div>
                 
-                <FadeIn 
+                <motion.div 
                   className="absolute -bottom-3 -left-3 bg-white border border-gray-200 rounded-lg p-3 shadow-lg"
-                  delay={1}
-                  duration={0.4}
-                  direction="up"
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 1, duration: 0.4 }}
                 >
                   <LayoutDashboard className="h-5 w-5 text-blue-600" />
-                </FadeIn>
-              </ScaleIn>
+                </motion.div>
+              </motion.div>
             </div>
           </div>
         </section>
         
-        {/* Platform Section - Updated with animations */}
+        {/* Platform Section */}
         <section 
           id="platform-section"
           className="py-20 md:py-32 bg-white"
         >
           <div className="max-w-7xl mx-auto px-6 md:px-12">
-            <FadeIn className="text-center mb-16">
+            <motion.div 
+              className="text-center mb-16"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            >
               <h2 className="text-3xl md:text-5xl font-bold mb-6">One Platform to Replace Them All</h2>
               <p className="text-gray-600 max-w-2xl mx-auto text-lg">
                 Eliminate the need for multiple systems with our comprehensive wealth management platform designed for institutional investors.
               </p>
-            </FadeIn>
+            </motion.div>
             
             <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
               <div className="md:col-span-4 space-y-6">
                 {platformTabs.map((tab, index) => (
-                  <FadeIn
-                    key={tab.id}
-                    className={`p-6 rounded-xl cursor-pointer transition-all duration-300 ${
-                      activeTab === tab.id
-                        ? "bg-gray-100 border border-gray-200 shadow-lg"
-                        : "hover:bg-gray-50"
-                    }`}
-                    onClick={() => setActiveTab(tab.id)}
-                    direction="left"
-                    delay={index * 0.1}
+                  <motion.div
+                    key={tab.title}
+                    className="p-6 rounded-xl cursor-pointer transition-all duration-300 hover:bg-gray-50 border border-gray-200"
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.1, duration: 0.5 }}
                   >
-                    <h3 className="text-xl font-semibold mb-2">{tab.title}</h3>
+                    <div className="flex items-center gap-3 mb-2">
+                      {tab.icon}
+                      <h3 className="text-xl font-semibold">{tab.title}</h3>
+                    </div>
                     <p className="text-gray-600">{tab.description}</p>
-                  </FadeIn>
+                  </motion.div>
                 ))}
               </div>
               
-              <div className="md:col-span-8 bg-gray-100 rounded-2xl overflow-hidden border border-gray-200 shadow-xl">
+              <motion.div 
+                className="md:col-span-8 bg-gray-100 rounded-2xl overflow-hidden border border-gray-200 shadow-xl"
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+              >
                 <div className="relative aspect-video w-full">
-                  <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-gray-100 to-white">
-                    <div className="w-full h-full flex items-center justify-center">
-                      {/* Display the active tab content */}
-                      <ScaleIn
-                        key={activeTab}
-                      >
-                        <h3 className="text-2xl font-semibold text-gray-600">
-                          {platformTabs[activeTab].title}
-                        </h3>
-                      </ScaleIn>
-                    </div>
+                  <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-gray-100 to-white p-8">
+                    <img 
+                      src="/assets/dashboard-preview.png" 
+                      alt="Platform Preview" 
+                      className="w-full h-full object-cover rounded-lg shadow-lg"
+                      onError={(e) => {
+                        e.currentTarget.src = "/assets/dashboard-fallback.png";
+                      }}
+                    />
                   </div>
                 </div>
-              </div>
+              </motion.div>
             </div>
             
             <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -322,11 +395,13 @@ const LandingPage = () => {
                   description: "Manage assets across multiple jurisdictions, currencies, and asset classes."
                 }
               ].map((feature, index) => (
-                <FadeIn 
-                  key={index}
+                <motion.div 
+                  key={feature.title}
                   className="bg-gray-100 border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-shadow"
-                  direction="up"
-                  delay={index * 0.1 + 0.2}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1 + 0.2, duration: 0.5 }}
                 >
                   <div className="p-3 rounded-full bg-gray-200 w-fit mb-4">
                     <feature.icon className="h-6 w-6 text-gray-900" />
@@ -335,78 +410,62 @@ const LandingPage = () => {
                   <p className="text-gray-600">
                     {feature.description}
                   </p>
-                </FadeIn>
+                </motion.div>
               ))}
             </div>
           </div>
         </section>
 
-        {/* Features Section - Updated with animations */}
+        {/* Solutions Section */}
         <section 
-          id="features-section"
+          id="solutions-section"
           className="py-20 md:py-32 bg-gray-50"
         >
           <div className="max-w-7xl mx-auto px-6 md:px-12">
-            <FadeIn className="text-center mb-16">
+            <motion.div 
+              className="text-center mb-16"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            >
               <h2 className="text-3xl md:text-5xl font-bold mb-6">Enterprise-Grade Solutions</h2>
               <p className="text-gray-600 max-w-2xl mx-auto text-lg">
                 Our platform delivers comprehensive solutions tailored for family offices and institutional investors.
               </p>
-            </FadeIn>
+            </motion.div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {/* Feature cards */}
-              <StaggerContainer delayChildren={0.1} staggerChildren={0.1}>
-                {[
-                  {
-                    title: "Portfolio Analytics",
-                    description: "Advanced analytics and visualization of your entire wealth across all accounts and assets",
-                    icon: <TrendingUp className="h-6 w-6 text-gray-900" />
-                  },
-                  {
-                    title: "Multi-Bank Integration",
-                    description: "Seamlessly connect all your financial accounts from different institutions into a single dashboard",
-                    icon: <Globe className="h-6 w-6 text-gray-900" />
-                  },
-                  {
-                    title: "Secure KYC Process",
-                    description: "Complete your KYC verification with bank-level security and encryption for all sensitive data",
-                    icon: <CheckCircle className="h-6 w-6 text-gray-900" />
-                  },
-                  {
-                    title: "Automated Reporting",
-                    description: "Generate comprehensive reports automatically for internal reviews and external stakeholders",
-                    icon: <LayoutDashboard className="h-6 w-6 text-gray-900" />
-                  },
-                  {
-                    title: "Document Management",
-                    description: "Store and organize all your financial documents in one secure location with easy access",
-                    icon: <CheckCircle className="h-6 w-6 text-gray-900" />
-                  },
-                  {
-                    title: "AI-Powered Insights",
-                    description: "Get intelligent recommendations and insights about your financial portfolio powered by AI",
-                    icon: <TrendingUp className="h-6 w-6 text-gray-900" />
-                  }
-                ].map((feature, index) => (
-                  <StaggerItem 
-                    key={index} 
-                    className="bg-white border border-gray-200 rounded-xl p-6 hover:scale-105 transition-all duration-300"
-                  >
-                    <div className="p-3 rounded-full bg-gray-100 w-fit mb-4">
-                      {feature.icon}
-                    </div>
-                    <h3 className="text-xl font-semibold mb-3">{feature.title}</h3>
-                    <p className="text-gray-600">
-                      {feature.description}
-                    </p>
-                  </StaggerItem>
-                ))}
-              </StaggerContainer>
-            </div>
+            <motion.div 
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              variants={staggerContainer}
+            >
+              {enterpriseSolutions.map((solution, index) => (
+                <motion.div 
+                  key={solution.title} 
+                  className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-all duration-300"
+                  variants={fadeIn}
+                >
+                  <div className="p-3 rounded-full bg-gray-100 w-fit mb-4">
+                    {solution.icon}
+                  </div>
+                  <h3 className="text-xl font-semibold mb-3">{solution.title}</h3>
+                  <p className="text-gray-600">
+                    {solution.description}
+                  </p>
+                </motion.div>
+              ))}
+            </motion.div>
             
             <div className="mt-16 text-center">
-              <FadeIn direction="up">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5 }}
+              >
                 <Button 
                   className="h-12 px-6 rounded-lg bg-gray-900 text-white hover:bg-gray-800 transition-all text-base"
                   onClick={() => navigate('/onboarding')}
@@ -414,7 +473,7 @@ const LandingPage = () => {
                   Schedule a Demo
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
-              </FadeIn>
+              </motion.div>
             </div>
           </div>
         </section>
@@ -439,25 +498,26 @@ const LandingPage = () => {
                   Get in touch with our team to learn more about how we can help your family office or institution.
                 </p>
                 
-                <form className="space-y-6" onSubmit={(e) => { 
-                  e.preventDefault();
-                  toast.success("Your message has been sent. We'll be in touch shortly!");
-                }}>
+                <form className="space-y-6" onSubmit={handleContactSubmit}>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <label htmlFor="firstName" className="text-sm text-gray-600">First Name</label>
                       <Input 
                         id="firstName" 
+                        name="firstName"
                         className="bg-white border-gray-300 text-gray-900" 
                         placeholder="John"
+                        required
                       />
                     </div>
                     <div className="space-y-2">
                       <label htmlFor="lastName" className="text-sm text-gray-600">Last Name</label>
                       <Input 
                         id="lastName" 
+                        name="lastName"
                         className="bg-white border-gray-300 text-gray-900" 
                         placeholder="Doe"
+                        required
                       />
                     </div>
                   </div>
@@ -466,9 +526,11 @@ const LandingPage = () => {
                     <label htmlFor="email" className="text-sm text-gray-600">Email</label>
                     <Input 
                       id="email" 
+                      name="email"
                       type="email" 
                       className="bg-white border-gray-300 text-gray-900" 
                       placeholder="john@example.com"
+                      required
                     />
                   </div>
                   
@@ -476,6 +538,7 @@ const LandingPage = () => {
                     <label htmlFor="company" className="text-sm text-gray-600">Company</label>
                     <Input 
                       id="company" 
+                      name="company"
                       className="bg-white border-gray-300 text-gray-900" 
                       placeholder="Company Ltd."
                     />
@@ -485,8 +548,10 @@ const LandingPage = () => {
                     <label htmlFor="message" className="text-sm text-gray-600">Message</label>
                     <Textarea 
                       id="message" 
+                      name="message"
                       className="bg-white border-gray-300 text-gray-900 min-h-[100px]" 
                       placeholder="Tell us about your needs..."
+                      required
                     />
                   </div>
                   
@@ -518,9 +583,8 @@ const LandingPage = () => {
                       <label htmlFor="newsletterEmail" className="text-sm text-gray-600">Email Address</label>
                       <Input 
                         id="newsletterEmail" 
+                        name="email"
                         type="email" 
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
                         className="bg-white border-gray-300 text-gray-900" 
                         placeholder="your@email.com"
                         required
@@ -637,6 +701,7 @@ const LandingPage = () => {
             </p>
             
             <div className="flex space-x-6 mt-4 md:mt-0">
+              {/* Social Media Icons */}
               <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors">
                 <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path fillRule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clipRule="evenodd" />
@@ -655,11 +720,6 @@ const LandingPage = () => {
               <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors">
                 <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd" />
-                </svg>
-              </a>
-              <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors">
-                <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path fillRule="evenodd" d="M19.812 5.418c.861.23 1.538.907 1.768 1.768C21.998 8.746 22 12 22 12s0 3.255-.418 4.814a2.504 2.504 0 01-1.768 1.768c-1.56.419-7.814.419-7.814.419s-6.255 0-7.814-.419a2.505 2.505 0 01-1.768-1.768C2 15.255 2 12 2 12s0-3.255.417-4.814a2.507 2.507 0 011.768-1.768C5.744 5 11.998 5 11.998 5s6.255 0 7.814.418ZM15.194 12 10 15V9l5.194 3Z" clipRule="evenodd" />
                 </svg>
               </a>
             </div>

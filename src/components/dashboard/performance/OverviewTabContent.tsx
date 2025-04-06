@@ -4,6 +4,7 @@ import NetWorthChart from "./NetWorthChart";
 import KeyMetricsGrid from "./KeyMetricsGrid";
 import TopAssets from "./TopAssets";
 import RecentNewsList from "./RecentNewsList";
+import { Card, CardContent } from "@/components/ui/card";
 
 type OverviewTabContentProps = {
   performanceData: {
@@ -24,13 +25,22 @@ const OverviewTabContent = ({
 }: OverviewTabContentProps) => {
   return (
     <div className="space-y-8">
-      <div>
+      <div className="mt-[-100px]">
         <NetWorthChart performanceData={performanceData} chartConfig={chartConfig} />
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <TopAssets />
-        <RecentNewsList newsData={newsData} />
+        <Card className="bg-white border border-gray-200">
+          <CardContent className="p-4">
+            <TopAssets />
+          </CardContent>
+        </Card>
+        
+        <Card className="bg-white border border-gray-200">
+          <CardContent className="p-4">
+            <RecentNewsList newsData={newsData} />
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

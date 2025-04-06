@@ -27,25 +27,25 @@ const Dashboard = () => {
         {/* Welcome header */}
         <WelcomeHeader />
         
-        {/* Key metrics grid - moved to top */}
+        {/* Key metrics grid - at the top */}
         <KeyMetricsGrid />
-
+        
         {/* Performance Overview with enhanced visuals */}
         <PerformanceOverview />
+        
+        {/* Quick Access section - moved below performance overview */}
+        <QuickAccessGrid />
 
         {/* Key summary cards */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 space-y-6">            
-            {/* Modules card grid */}
-            <QuickAccessGrid />
+          <div className="lg:col-span-2 space-y-6">
+            {/* Market overview card */}
+            <MarketSnapshot />
           </div>
           
           <div className="space-y-6">
             <NotificationsFeed />
             
-            {/* Market overview card */}
-            <MarketSnapshot />
-
             {/* Recent activities card */}
             <RecentActivity />
           </div>

@@ -18,7 +18,7 @@ const QuickAccessItem = ({ title, description, icon, link }: QuickAccessItemProp
     >
       <div className="flex items-center space-x-3 mb-2">
         <div className="h-8 w-8 flex items-center justify-center rounded-full bg-gray-50">
-          {icon}
+          <div className="text-gray-500">{icon}</div>
         </div>
         <h3 className="text-sm font-medium">{title}</h3>
       </div>

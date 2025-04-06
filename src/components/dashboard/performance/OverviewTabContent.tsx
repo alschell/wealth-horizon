@@ -21,7 +21,7 @@ const OverviewTabContent = ({
 }: OverviewTabContentProps) => {
   return (
     <div className="space-y-6 h-full">
-      <div className="pt-32"> {/* Added padding top to move chart down from the moved up trend line */}
+      <div>
         <NetWorthChart performanceData={performanceData} chartConfig={chartConfig} />
       </div>
     </div>

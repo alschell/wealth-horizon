@@ -31,6 +31,14 @@ export const useNotifications = () => {
     markAsRead(notification.id);
     setIsOpen(false);
     
+    // Safe navigation - always default to dashboard if link is invalid
+    let targetRoute = notification.link || "/dashboard";
+    
+    // Sanitize link to avoid 404s - make sure it starts with a slash
+    if (!targetRoute.startsWith('/')) {
+      targetRoute = `/${targetRoute}`;
+    }
+    
     // Make sure we navigate to a valid route to prevent 404s
     const validRoutes = [
       '/dashboard',
@@ -38,10 +46,21 @@ export const useNotifications = () => {
       '/market-data',
       '/profile',
       '/settings',
-      '/notifications'
+      '/notifications',
+      '/advice',
+      '/cashflow',
+      '/reporting',
+      '/integrations',
+      '/documents',
+      '/esg',
+      '/tax-optimization',
+      '/legacy-planning',
+      '/entity-management',
+      '/compliance-monitoring',
+      '/client-portal',
+      '/trading',
+      '/credit-facilities'
     ];
-    
-    let targetRoute = notification.link || "/dashboard";
     
     // Check if the link is valid or default to dashboard
     const isValidRoute = validRoutes.some(route => targetRoute.startsWith(route));

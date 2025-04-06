@@ -17,34 +17,6 @@ const DashboardHeader = () => {
           <Logo />
           <span className="hidden lg:inline-block font-bold">Wealth Pro</span>
         </Link>
-        <div className="hidden lg:block ml-6">
-          <nav className="flex items-center space-x-4">
-            <Link to="/analyze-wealth" className="text-sm font-medium transition-colors hover:text-primary">
-              Wealth Analysis
-            </Link>
-            <Link to="/advice" className="text-sm font-medium transition-colors hover:text-primary">
-              Advice
-            </Link>
-            <Link to="/trading" className="text-sm font-medium transition-colors hover:text-primary">
-              Trading
-            </Link>
-            <Link to="/market-data" className="text-sm font-medium transition-colors hover:text-primary">
-              Markets
-            </Link>
-            <Link to="/cashflow" className="text-sm font-medium transition-colors hover:text-primary">
-              Cashflow
-            </Link>
-            <Link to="/tax-optimization" className="text-sm font-medium transition-colors hover:text-primary">
-              Tax
-            </Link>
-            <Link to="/client-portal" className="text-sm font-medium transition-colors hover:text-primary">
-              Clients
-            </Link>
-            <Link to="/esg" className="text-sm font-medium transition-colors hover:text-primary">
-              ESG
-            </Link>
-          </nav>
-        </div>
       </div>
       <div className="hidden lg:block">
         <PageTitle />

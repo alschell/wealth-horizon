@@ -6,6 +6,7 @@ import AdviceInterface from "@/components/advice/AdviceInterface";
 import PageHeaderCard from "@/components/dashboard/PageHeaderCard";
 import { Lightbulb, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import QuickAccess from "@/components/shared/QuickAccess";
 
 const Advice = () => {
   const navigate = useNavigate();
@@ -31,6 +32,9 @@ const Advice = () => {
           iconColor="text-gray-700"
           iconBgColor="bg-gray-100"
         />
+        
+        <QuickAccess pathname="/advice" />
+        
         <AdviceInterface />
       </div>
     </DashboardLayout>

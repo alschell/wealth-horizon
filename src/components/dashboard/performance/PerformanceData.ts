@@ -47,10 +47,32 @@ export const newsData = [
   }
 ];
 
-// Recommendations
+// Enhanced recommendations for Next Best Actions tab
 export const recommendations = [
-  { text: "Rebalance your equity allocation to reduce risk", priority: "high" },
-  { text: "Consider increasing fixed income exposure", priority: "medium" }
+  { 
+    text: "Rebalance your equity allocation to reduce risk", 
+    priority: "high"
+  },
+  { 
+    text: "Consider increasing fixed income exposure by 8%", 
+    priority: "medium"
+  },
+  {
+    text: "Implement currency hedging for EUR exposure",
+    priority: "high"
+  },
+  {
+    text: "Review technology ETFs for overlap reduction",
+    priority: "medium"
+  },
+  {
+    text: "Transition 15% to active management strategies",
+    priority: "medium"
+  },
+  {
+    text: "Evaluate tax-loss harvesting opportunities",
+    priority: "medium"
+  }
 ];
 
 // Chart config

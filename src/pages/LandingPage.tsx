@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from "react";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
@@ -40,25 +41,25 @@ const LandingPage = () => {
       id: 0,
       title: "Portfolio Aggregation",
       description: "Consolidate all your assets across custodians into a single, actionable view",
-      animation: "/dashboard-preview.png"
+      animation: "/assets/dashboard-preview.png" // Updated path with /assets/ prefix
     },
     {
       id: 1,
       title: "Sophisticated Analytics",
       description: "Make data-driven decisions with our powerful analytics and reporting",
-      animation: "/dashboard-preview.png"
+      animation: "/assets/dashboard-preview.png" // Updated path with /assets/ prefix
     },
     {
       id: 2,
       title: "Seamless Integration",
       description: "Automate data flows from all your institutions without manual work",
-      animation: "/dashboard-preview.png"
+      animation: "/assets/dashboard-preview.png" // Updated path with /assets/ prefix
     },
     {
       id: 3,
       title: "Robust Compliance",
       description: "Automated monitoring of regulatory requirements and internal mandates",
-      animation: "/dashboard-preview.png"
+      animation: "/assets/dashboard-preview.png" // Updated path with /assets/ prefix
     }
   ];
   
@@ -78,6 +79,18 @@ const LandingPage = () => {
     // Here you would typically integrate with your newsletter service
     alert(`Thank you for subscribing with ${email}!`);
     setEmail("");
+  };
+
+  // Provide a fallback image for when images fail to load
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    console.log("Image failed to load. Using fallback.");
+    e.currentTarget.src = "/assets/dashboard-fallback.png";
+    // If the fallback also fails, show a colored background
+    e.currentTarget.onerror = () => {
+      e.currentTarget.style.backgroundColor = "#f3f4f6";
+      e.currentTarget.style.border = "1px solid #e5e7eb";
+      e.currentTarget.alt = "Dashboard Preview (Image not available)";
+    };
   };
 
   return (
@@ -151,7 +164,7 @@ const LandingPage = () => {
           }}
         >
           {/* Subtle grid background */}
-          <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-5"></div>
+          <div className="absolute inset-0 bg-[url('/assets/grid-pattern.svg')] opacity-5"></div>
           
           <div 
             className="max-w-7xl w-full px-6 md:px-12 py-20 md:py-32 relative z-10"
@@ -215,14 +228,12 @@ const LandingPage = () => {
               
               <div className="md:w-1/2 relative">
                 <div className="relative bg-gradient-to-br from-white to-gray-100 rounded-2xl border border-gray-200 overflow-hidden shadow-xl">
-                  <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-20"></div>
+                  <div className="absolute inset-0 bg-[url('/assets/grid-pattern.svg')] opacity-20"></div>
                   <img 
-                    src="/dashboard-preview.png" 
+                    src="/assets/dashboard-preview.png" 
                     alt="WPro Dashboard" 
                     className="w-full aspect-video object-cover rounded-2xl transform hover:scale-105 transition-transform duration-500"
-                    onError={(e) => {
-                      e.currentTarget.src = "/dashboard-preview.png";
-                    }}
+                    onError={handleImageError}
                   />
                 </div>
                 
@@ -293,12 +304,10 @@ const LandingPage = () => {
                   <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-gray-100 to-white">
                     <div className="w-full h-full flex items-center justify-center">
                       <img
-                        src={platformTabs[activeTab].animation || "/dashboard-preview.png"}
+                        src={platformTabs[activeTab].animation}
                         alt={platformTabs[activeTab].title}
                         className="w-full h-full object-contain p-8"
-                        onError={(e) => {
-                          e.currentTarget.src = "/dashboard-preview.png";
-                        }}
+                        onError={handleImageError}
                       />
                     </div>
                   </div>

@@ -2,6 +2,7 @@
 import React from "react";
 import { ArrowUp, ArrowDown, Briefcase, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const TopAssets = () => {
   const assets = [
@@ -31,10 +32,12 @@ const TopAssets = () => {
             </div>
           </div>
         ))}
-        <Button variant="outline" size="sm" className="w-full flex items-center justify-center">
-          View All Assets
-          <ChevronRight className="h-4 w-4 ml-1" />
-        </Button>
+        <Link to="/analyze-wealth">
+          <Button variant="outline" size="sm" className="w-full flex items-center justify-center">
+            View All Assets
+            <ChevronRight className="h-4 w-4 ml-1" />
+          </Button>
+        </Link>
       </div>
     </div>
   );

@@ -1,8 +1,7 @@
-
 import React from "react";
-import { Bell, Calendar, CreditCard, TrendingUp, FileText, CheckCircle, ChevronRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
 
 interface Notification {
@@ -14,7 +13,6 @@ interface Notification {
 }
 
 const NotificationsFeed = () => {
-  // Updated mock data with tasks and events
   const notifications: Notification[] = [
     {
       id: "1",
@@ -73,10 +71,10 @@ const NotificationsFeed = () => {
 
   return (
     <Card>
-      <CardHeader className="px-6 pt-6 pb-4">
-        <CardTitle className="text-xl">Notifications, tasks & events</CardTitle>
+      <CardHeader className="pb-3">
+        <CardTitle>Notifications</CardTitle>
       </CardHeader>
-      <CardContent className="max-h-[400px] overflow-auto">
+      <CardContent className="space-y-4">
         <div className="space-y-4">
           {notifications.map((notification) => (
             <div 
@@ -94,10 +92,12 @@ const NotificationsFeed = () => {
             </div>
           ))}
           
-          <Button variant="outline" size="sm" className="w-full flex items-center justify-center">
-            View All Notifications
-            <ChevronRight className="h-4 w-4 ml-1" />
-          </Button>
+          <Link to="/notifications">
+            <Button variant="outline" size="sm" className="w-full flex items-center justify-center">
+              View All Notifications
+              <ChevronRight className="h-4 w-4 ml-1" />
+            </Button>
+          </Link>
         </div>
       </CardContent>
     </Card>

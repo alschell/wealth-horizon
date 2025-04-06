@@ -17,9 +17,6 @@ const DashboardHeader = () => {
           <span className="hidden lg:inline-block font-bold">Wealth Pro</span>
         </Link>
       </div>
-      <div className="hidden lg:block">
-        <PageTitle />
-      </div>
       <div className="flex items-center gap-2">
         <div className="relative w-full md:w-auto">
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />

@@ -6,16 +6,18 @@ import MarketOverview from "./sections/MarketOverview";
 import IndicesTracker from "./sections/IndicesTracker";
 import NewsSection from "./sections/NewsSection";
 import WatchlistSection from "./sections/WatchlistSection";
-import { useLocation } from "react-router-dom";
+import { useLocation, useSearchParams } from "react-router-dom";
 import PageHeaderCard from "@/components/dashboard/PageHeaderCard";
 import { LineChart } from "lucide-react";
 
 const MarketDataInterface = () => {
   const location = useLocation();
+  const [searchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState("overview");
   
-  // Check if we have state from navigation
+  // Check if we have state from navigation or URL params
   useEffect(() => {
+    // Check for state in location
     if (location.state) {
       const { activeTab: tab, articleId } = location.state as { 
         activeTab?: string;
@@ -26,7 +28,13 @@ const MarketDataInterface = () => {
         setActiveTab(tab);
       }
     }
-  }, [location.state]);
+    
+    // Check for index param in URL
+    const indexParam = searchParams.get('index');
+    if (indexParam) {
+      setActiveTab("indices");
+    }
+  }, [location.state, searchParams]);
 
   return (
     <div className="max-w-7xl mx-auto w-full p-4 space-y-6">

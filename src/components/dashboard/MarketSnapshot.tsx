@@ -3,7 +3,7 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowUp, ArrowDown, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import SectionHeader from "./SectionHeader";
 
@@ -42,6 +42,8 @@ const getFlagIcon = (code: string) => {
 };
 
 const MarketSnapshot = () => {
+  const navigate = useNavigate();
+  
   const markets = [
     { name: "S&P 500", value: "5,328.42", change: "+0.83%", isPositive: true, flag: "US" },
     { name: "NASDAQ", value: "16,742.39", change: "+1.24%", isPositive: true, flag: "US" },
@@ -64,6 +66,11 @@ const MarketSnapshot = () => {
     { name: "10Y US TREASURY", value: "4.25%", change: "+0.06", isPositive: true, flag: "US" },
   ];
 
+  const handleMarketClick = (marketName: string) => {
+    // Navigate to the market data page and pass the selected index
+    navigate(`/market-data?index=${encodeURIComponent(marketName)}`);
+  };
+
   return (
     <Card className="shadow-sm h-full flex flex-col">
       <CardHeader className="pb-2">
@@ -73,7 +80,11 @@ const MarketSnapshot = () => {
         <ScrollArea className="flex-grow h-[165px]">
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
             {markets.map((market, index) => (
-              <div key={index} className="p-3 border border-gray-100 rounded-md hover:bg-gray-50 transition-colors cursor-pointer">
+              <div 
+                key={index} 
+                className="p-3 border border-gray-100 rounded-md hover:bg-gray-50 transition-colors cursor-pointer"
+                onClick={() => handleMarketClick(market.name)}
+              >
                 <div className="flex items-center gap-2 mb-1">
                   <span className="text-xl">{getFlagIcon(market.flag)}</span>
                   <p className="text-sm font-medium">{market.name}</p>

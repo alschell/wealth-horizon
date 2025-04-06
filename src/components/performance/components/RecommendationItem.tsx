@@ -16,8 +16,8 @@ const RecommendationItem = ({ recommendation }: RecommendationProps) => {
   
   return (
     <div 
-      className={`p-3 rounded-md border ${
-        isHighPriority ? 'border-amber-200 bg-amber-50' : 'border-gray-100 bg-gray-50'
+      className={`p-3 rounded-md hover:bg-gray-50 transition-colors cursor-pointer ${
+        isHighPriority ? 'bg-amber-50' : 'bg-gray-50'
       }`}
     >
       <div className="flex items-start">

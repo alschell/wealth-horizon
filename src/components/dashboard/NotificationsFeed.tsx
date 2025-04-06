@@ -57,12 +57,12 @@ const NotificationsFeed = () => {
   };
 
   return (
-    <Card className="shadow-sm">
+    <Card className="shadow-sm h-full flex flex-col">
       <CardHeader className="pb-2">
         <CardTitle className="text-xl">Notifications, events and tasks</CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4 relative">
-        <div className="space-y-3 max-h-[500px] overflow-y-auto pr-1 pb-12">
+      <CardContent className="space-y-4 relative flex-1 flex flex-col">
+        <div className="space-y-3 pb-12 overflow-y-auto flex-1">
           {notifications.map((notification, index) => (
             <div 
               key={index} 

@@ -63,13 +63,13 @@ const MarketSnapshot = () => {
   ];
 
   return (
-    <Card className="shadow-sm">
+    <Card className="shadow-sm h-full flex flex-col">
       <CardHeader className="pb-2">
         <CardTitle className="text-xl">Market Snapshot</CardTitle>
       </CardHeader>
-      <CardContent>
-        <div className="relative">
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 pb-12 max-h-[300px] overflow-y-auto">
+      <CardContent className="flex-1 flex flex-col">
+        <div className="relative flex-1 flex flex-col">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 pb-12 overflow-y-auto flex-1">
             {markets.map((market, index) => (
               <div key={index} className="p-3 border border-gray-100 rounded-md hover:bg-gray-50 transition-colors cursor-pointer">
                 <div className="flex items-center gap-2 mb-1">

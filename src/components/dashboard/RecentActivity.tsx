@@ -13,84 +13,84 @@ const RecentActivity = () => {
       id: "rebalance-01",
       title: "Portfolio rebalanced", 
       time: "Today at 09:45 AM",
-      icon: <TrendingUp className="h-4 w-4 text-gray-700" />,
+      icon: <TrendingUp className="h-4 w-4 text-gray-500" />,
       link: "/activity"
     },
     { 
       id: "deposit-01",
       title: "Cash deposit received", 
       time: "Yesterday at 2:30 PM",
-      icon: <DollarSign className="h-4 w-4 text-gray-700" />,
+      icon: <DollarSign className="h-4 w-4 text-gray-500" />,
       link: "/activity"
     },
     { 
       id: "docs-01",
       title: "New tax documents uploaded", 
       time: "Yesterday at 11:20 AM",
-      icon: <FileCheck className="h-4 w-4 text-gray-700" />,
+      icon: <FileCheck className="h-4 w-4 text-gray-500" />,
       link: "/activity"
     },
     { 
       id: "trade-01",
       title: "Trade executed: AAPL", 
       time: "2 days ago at 3:15 PM",
-      icon: <ArrowUpRight className="h-4 w-4 text-gray-700" />,
+      icon: <ArrowUpRight className="h-4 w-4 text-gray-500" />,
       link: "/activity"
     },
     { 
       id: "permission-01",
       title: "User permission updated", 
       time: "2 days ago at 10:45 AM",
-      icon: <Users className="h-4 w-4 text-gray-700" />,
+      icon: <Users className="h-4 w-4 text-gray-500" />,
       link: "/activity"
     },
     { 
       id: "loan-01",
       title: "Credit facility application submitted", 
       time: "3 days ago at 4:20 PM",
-      icon: <CreditCard className="h-4 w-4 text-gray-700" />,
+      icon: <CreditCard className="h-4 w-4 text-gray-500" />,
       link: "/activity"
     },
     { 
       id: "trade-02",
       title: "Trade executed: TSLA", 
       time: "3 days ago at 11:30 AM",
-      icon: <ArrowDownRight className="h-4 w-4 text-gray-700" />,
+      icon: <ArrowDownRight className="h-4 w-4 text-gray-500" />,
       link: "/activity"
     },
     { 
       id: "report-01",
       title: "Monthly performance report generated", 
       time: "4 days ago at 9:00 AM",
-      icon: <File className="h-4 w-4 text-gray-700" />,
+      icon: <File className="h-4 w-4 text-gray-500" />,
       link: "/activity"
     },
     { 
       id: "alert-01",
       title: "Market volatility alert", 
       time: "5 days ago at 2:45 PM",
-      icon: <AlertTriangle className="h-4 w-4 text-gray-700" />,
+      icon: <AlertTriangle className="h-4 w-4 text-gray-500" />,
       link: "/activity"
     },
     { 
       id: "rebalance-02",
       title: "Strategy allocation adjusted", 
       time: "1 week ago at 10:30 AM",
-      icon: <RefreshCcw className="h-4 w-4 text-gray-700" />,
+      icon: <RefreshCcw className="h-4 w-4 text-gray-500" />,
       link: "/activity"
     },
     { 
       id: "deposit-02",
       title: "Term deposit matured", 
       time: "1 week ago at 9:15 AM",
-      icon: <DollarSign className="h-4 w-4 text-gray-700" />,
+      icon: <DollarSign className="h-4 w-4 text-gray-500" />,
       link: "/activity"
     },
     { 
       id: "trade-03",
       title: "Trade executed: GOOGL", 
       time: "1 week ago at 3:45 PM",
-      icon: <ArrowUpRight className="h-4 w-4 text-gray-700" />,
+      icon: <ArrowUpRight className="h-4 w-4 text-gray-500" />,
       link: "/activity"
     }
   ];
@@ -100,12 +100,12 @@ const RecentActivity = () => {
   };
 
   return (
-    <Card className="shadow-sm">
+    <Card className="shadow-sm h-full flex flex-col">
       <CardHeader className="pb-2">
         <CardTitle className="text-xl">Recent Activity</CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4 relative">
-        <div className="space-y-3 pb-12 max-h-[300px] overflow-y-auto">
+      <CardContent className="space-y-4 relative flex-1 flex flex-col">
+        <div className="space-y-3 pb-12 overflow-y-auto flex-1">
           {activities.map((activity, index) => (
             <div 
               key={index} 
@@ -113,7 +113,7 @@ const RecentActivity = () => {
               onClick={() => handleActivityClick(activity.id)}
             >
               <div className="flex items-start gap-3">
-                <div className="mt-0.5 h-8 w-8 flex items-center justify-center bg-gray-100 rounded-full">
+                <div className="mt-0.5 h-8 w-8 flex items-center justify-center bg-gray-50 rounded-full">
                   {activity.icon}
                 </div>
                 <div className="flex-1 min-w-0">

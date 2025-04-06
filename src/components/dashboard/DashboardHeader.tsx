@@ -14,7 +14,7 @@ const DashboardHeader = () => {
     <header className="sticky top-0 z-50 flex h-16 w-full shrink-0 items-center justify-between border-b bg-background px-4 lg:px-6">
       <div className="flex items-center">
         <Link to="/dashboard" className="flex items-center">
-          <Logo className="h-8 w-8 mr-2" />
+          <Logo />
           <span className="hidden lg:inline-block font-bold">Wealth Pro</span>
         </Link>
         <div className="hidden lg:block ml-6">

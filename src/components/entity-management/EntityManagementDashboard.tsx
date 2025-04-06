@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -145,6 +144,7 @@ const EntityManagementDashboard = () => {
       compliance: 78,
       assets: "$18M",
       relations: {
+        children: [],
         associates: ["e2"]
       },
       documents: 7,
@@ -159,6 +159,7 @@ const EntityManagementDashboard = () => {
       compliance: 91,
       assets: "$42M",
       relations: {
+        children: [],
         associates: ["e4"]
       },
       documents: 11,
@@ -389,7 +390,7 @@ const EntityManagementDashboard = () => {
                         <div>
                           <div className="font-medium">{entity.name}</div>
                           <div className="text-sm text-muted-foreground">
-                            {entity.type} • {entity.jurisdiction}
+                            {entity.type} �� {entity.jurisdiction}
                           </div>
                         </div>
                       </div>

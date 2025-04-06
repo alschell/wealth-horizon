@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -120,8 +119,8 @@ const ClientPortalInterface = () => {
       reportAccess: newClient.accessLevel === "Full" 
         ? ["Performance Reports", "Tax Documents", "Portfolio Valuations"] 
         : newClient.accessLevel === "Reports Only"
-        ? ["Performance Reports", "Portfolio Valuations"]
-        : ["Portfolio Valuations"]
+          ? ["Performance Reports", "Portfolio Valuations"]
+          : ["Portfolio Valuations"]
     };
 
     setClients([...clients, newClientData]);

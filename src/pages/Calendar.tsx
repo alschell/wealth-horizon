@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import PageHeaderCard from "@/components/dashboard/PageHeaderCard";
-import { Calendar as CalendarIcon, Plus, ArrowLeft, X, Users, Clock, Video, MapPin } from "lucide-react";
+import { Calendar as CalendarIcon, Plus, ArrowLeft, Users, Video, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Calendar } from "@/components/ui/calendar";
+import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { toast } from "sonner";
 
@@ -68,7 +68,7 @@ const pastMeetings = [
   }
 ];
 
-const Calendar = () => {
+const CalendarPage = () => {
   const navigate = useNavigate();
   const [isNewMeetingDialogOpen, setIsNewMeetingDialogOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
@@ -211,11 +211,11 @@ const Calendar = () => {
             <div className="space-y-2">
               <Label>Meeting Date</Label>
               <div className="border rounded-md p-2">
-                <Calendar
+                <CalendarComponent
                   mode="single"
                   selected={selectedDate}
                   onSelect={setSelectedDate}
-                  className="mx-auto"
+                  className="mx-auto pointer-events-auto"
                 />
               </div>
             </div>
@@ -281,4 +281,4 @@ const Calendar = () => {
   );
 };
 
-export default Calendar;
+export default CalendarPage;

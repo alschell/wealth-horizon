@@ -73,13 +73,8 @@ const NotificationsFeed = () => {
 
   return (
     <Card>
-      <CardHeader className="pb-3">
-        <div className="flex justify-between items-center">
-          <CardTitle>Notifications, tasks & events</CardTitle>
-          <Button variant="link" className="h-8 px-2" asChild>
-            <Link to="/notifications">View All</Link>
-          </Button>
-        </div>
+      <CardHeader className="px-6 pt-6 pb-4">
+        <CardTitle className="text-xl">Notifications, tasks & events</CardTitle>
       </CardHeader>
       <CardContent className="max-h-[400px] overflow-auto">
         <div className="space-y-4">

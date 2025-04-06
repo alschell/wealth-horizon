@@ -1,6 +1,7 @@
 
 import React from "react";
 import MarketDataWidget from "@/components/market/components/MarketDataWidget";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
 const MarketSnapshot = () => {
   // Define market indices for the snapshot view - expanded to top 10
@@ -58,11 +59,18 @@ const MarketSnapshot = () => {
   ];
 
   return (
-    <MarketDataWidget 
-      indices={indices}
-      title="Market Snapshot"
-      maxNewsItems={0} // Don't show news in the snapshot
-    />
+    <Card>
+      <CardHeader className="px-6 pt-6 pb-4">
+        <CardTitle className="text-xl">Market Snapshot</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <MarketDataWidget 
+          indices={indices}
+          title=""
+          maxNewsItems={0} // Don't show news in the snapshot
+        />
+      </CardContent>
+    </Card>
   );
 };
 

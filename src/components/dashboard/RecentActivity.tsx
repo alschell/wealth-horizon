@@ -8,8 +8,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 const RecentActivity = () => {
   return (
     <Card>
-      <CardHeader>
-        <CardTitle className="text-base">Recent Activity</CardTitle>
+      <CardHeader className="px-6 pt-6 pb-4">
+        <CardTitle className="text-xl">Recent Activity</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="space-y-3">

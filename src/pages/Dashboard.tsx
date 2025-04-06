@@ -12,7 +12,7 @@ import KeyMetricsGrid from "@/components/dashboard/performance/KeyMetricsGrid";
 import TopAssets from "@/components/dashboard/performance/TopAssets";
 import RecentNewsList from "@/components/dashboard/performance/RecentNewsList";
 import { LayoutDashboard } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { newsData } from "@/components/dashboard/performance/PerformanceData";
 
 const Dashboard = () => {
@@ -39,14 +39,20 @@ const Dashboard = () => {
         
         {/* Top Assets and Recent News in separate cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Card className="bg-white border border-gray-200">
-            <CardContent className="p-6">
+          <Card>
+            <CardHeader className="px-6 pt-6 pb-4">
+              <CardTitle className="text-xl">Top Assets</CardTitle>
+            </CardHeader>
+            <CardContent>
               <TopAssets />
             </CardContent>
           </Card>
           
-          <Card className="bg-white border border-gray-200">
-            <CardContent className="p-6">
+          <Card>
+            <CardHeader className="px-6 pt-6 pb-4">
+              <CardTitle className="text-xl">Recent News</CardTitle>
+            </CardHeader>
+            <CardContent>
               <RecentNewsList newsData={newsData} />
             </CardContent>
           </Card>

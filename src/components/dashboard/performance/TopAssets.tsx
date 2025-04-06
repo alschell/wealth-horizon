@@ -13,14 +13,7 @@ const TopAssets = () => {
 
   return (
     <div className="space-y-2">
-      <div className="flex justify-between items-center mb-2">
-        <h3 className="text-sm font-medium flex items-center">
-          <Briefcase className="h-4 w-4 mr-1 text-gray-500" /> Top Assets
-        </h3>
-        <Button variant="ghost" size="sm" className="text-xs h-7 px-2">
-          View all
-        </Button>
-      </div>
+      <h3 className="text-xl font-semibold mb-4">Top Assets</h3>
       <div className="space-y-2">
         {assets.map((asset, index) => (
           <div 

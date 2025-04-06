@@ -105,7 +105,7 @@ const RecentActivity = () => {
         <CardTitle className="text-xl">Recent Activity</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4 relative flex-1 flex flex-col">
-        <div className="space-y-3 pb-12 overflow-y-auto flex-1">
+        <div className="space-y-3 pb-12 overflow-y-auto max-h-[330px]">
           {activities.map((activity, index) => (
             <div 
               key={index} 

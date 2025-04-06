@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -143,13 +142,11 @@ const QuickAccessGrid = () => {
   const [visibleItems, setVisibleItems] = useState<string[]>([]);
   const [temporarySelection, setTemporarySelection] = useState<string[]>([]);
 
-  // Initialize visible items from localStorage or default to first 9
   useEffect(() => {
     const savedItems = localStorage.getItem("quickAccessVisibleItems");
     if (savedItems) {
       setVisibleItems(JSON.parse(savedItems));
     } else {
-      // Default to first 9 items
       setVisibleItems(allActionItems.slice(0, 9).map(item => item.id));
     }
   }, []);
@@ -177,7 +174,6 @@ const QuickAccessGrid = () => {
     }
   };
 
-  // Filter items that should be visible
   const filteredItems = allActionItems.filter(item => 
     visibleItems.includes(item.id)
   );
@@ -197,7 +193,7 @@ const QuickAccessGrid = () => {
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
           {filteredItems.map((item, index) => (
             <Link to={item.path} key={item.id}>
-              <div className="h-full flex flex-col items-center justify-start p-4 text-center transition-all duration-200 hover:bg-gray-50 rounded-md border">
+              <div className="h-full flex flex-col items-center justify-start p-4 text-center transition-all duration-200 hover:bg-gray-50 rounded-md">
                 <div className="h-10 w-10 rounded-full bg-gray-50 flex items-center justify-center mb-3 mt-2">
                   <item.icon className="h-5 w-5 text-gray-700" />
                 </div>
@@ -214,7 +210,7 @@ const QuickAccessGrid = () => {
           <DialogHeader>
             <DialogTitle>Customize Quick Access</DialogTitle>
             <DialogDescription>
-              Select the items you want to show in your Quick Access grid. You can select up to 12 items.
+              Select the items you want to show in your Quick Access grid.
             </DialogDescription>
           </DialogHeader>
           <div className="max-h-[60vh] overflow-y-auto py-4">
@@ -225,7 +221,6 @@ const QuickAccessGrid = () => {
                     id={`item-${item.id}`}
                     checked={temporarySelection.includes(item.id)}
                     onCheckedChange={() => toggleItem(item.id)}
-                    disabled={!temporarySelection.includes(item.id) && temporarySelection.length >= 12}
                   />
                   <div className="grid gap-1.5 leading-none">
                     <label

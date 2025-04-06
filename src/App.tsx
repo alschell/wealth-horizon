@@ -1,4 +1,3 @@
-
 import React from "react";  // Explicitly import React
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -9,7 +8,7 @@ import { OnboardingProvider } from "./context/OnboardingContext";
 import LandingPage from "./pages/LandingPage";
 import NotFound from "./pages/NotFound";
 import Onboarding from "./pages/Onboarding";
-import Dashboard from "./pages/Dashboard";
+import Dashboard from "./pages/Dashboard"; // This now points to the new file
 import Trading from "./pages/Trading";
 import Advice from "./pages/Advice";
 import MarketData from "./pages/MarketData";
@@ -30,7 +29,7 @@ import AIAssistantPage from "./pages/AIAssistant";
 import FinancialChat from "./pages/FinancialChat";
 import Borrow from "./pages/Borrow";
 import CreditFacilities from "./pages/CreditFacilities";
-import ChatButton from "./components/chat/ChatButton";
+import ChatButton from "@/components/chat/ChatButton";
 import ESG from "./pages/ESG";
 import ClientPortal from "./pages/ClientPortal";
 import Documents from "./pages/Documents";

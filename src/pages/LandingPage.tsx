@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
@@ -35,7 +36,12 @@ const LandingPage = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // Platform features tab data - removed animation paths since they're not loading correctly
+  // Handle image errors
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    e.currentTarget.src = "/assets/dashboard-fallback.png";
+  };
+
+  // Platform features tab data - removed animation paths to fix loading issues
   const platformTabs = [
     {
       id: 0,
@@ -326,19 +332,19 @@ const LandingPage = () => {
                 <div className="relative aspect-video w-full">
                   <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-gray-100 to-white">
                     <div className="w-full h-full flex items-center justify-center">
-                      <AnimatePresence mode="wait">
-                        <motion.img
-                          key={activeTab}
-                          src={platformTabs[activeTab].animation}
-                          alt={platformTabs[activeTab].title}
-                          className="w-full h-full object-contain p-8"
-                          onError={handleImageError}
-                          initial={{ opacity: 0, scale: 0.98 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          exit={{ opacity: 0, scale: 0.98 }}
-                          transition={{ duration: 0.3 }}
-                        />
-                      </AnimatePresence>
+                      {/* Display the active tab content */}
+                      <motion.div
+                        key={activeTab}
+                        initial={{ opacity: 0, scale: 0.98 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.98 }}
+                        transition={{ duration: 0.3 }}
+                        className="w-full h-full flex items-center justify-center"
+                      >
+                        <h3 className="text-2xl font-semibold text-gray-600">
+                          {platformTabs[activeTab].title}
+                        </h3>
+                      </motion.div>
                     </div>
                   </div>
                 </div>
@@ -728,3 +734,4 @@ const LandingPage = () => {
 };
 
 export default LandingPage;
+

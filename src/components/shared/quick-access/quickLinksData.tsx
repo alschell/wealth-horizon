@@ -76,6 +76,13 @@ export const allQuickLinks: QuickLinkItem[] = [
     color: "text-gray-500 bg-gray-50"
   },
   {
+    title: "Manage user accounts",
+    description: "Manage user access and roles",
+    icon: <Users className="h-4 w-4" />,
+    link: "/user-accounts",
+    color: "text-gray-500 bg-gray-50"
+  },
+  {
     title: "Manage integrations",
     description: "Manage connected services",
     icon: <Landmark className="h-4 w-4" />,
@@ -83,49 +90,49 @@ export const allQuickLinks: QuickLinkItem[] = [
     color: "text-gray-500 bg-gray-50"
   },
   {
-    title: "ESG Investing",
+    title: "Assess ESG investments",
     description: "Sustainable investing metrics",
     icon: <Leaf className="h-4 w-4" />,
     link: "/esg",
     color: "text-gray-500 bg-gray-50"
   },
   {
-    title: "Compliance",
+    title: "Monitor compliance",
     description: "Regulatory compliance tracking",
     icon: <Shield className="h-4 w-4" />,
     link: "/compliance-monitoring",
     color: "text-gray-500 bg-gray-50"
   },
   {
-    title: "Tax Optimization",
+    title: "Optimize tax",
     description: "Tax planning & efficiency",
     icon: <Calculator className="h-4 w-4" />,
     link: "/tax-optimization",
     color: "text-gray-500 bg-gray-50"
   },
   {
-    title: "Entity Management",
+    title: "Manage entities",
     description: "Manage legal structures",
     icon: <Building2 className="h-4 w-4" />,
     link: "/entity-management",
     color: "text-gray-500 bg-gray-50"
   },
   {
-    title: "Legacy Planning",
+    title: "Plan legacy",
     description: "Succession & estate planning",
     icon: <Scroll className="h-4 w-4" />,
     link: "/legacy-planning",
     color: "text-gray-500 bg-gray-50"
   },
   {
-    title: "Client Portal",
-    description: "Manage client access",
+    title: "Manage client access",
+    description: "Manage client portal",
     icon: <Users className="h-4 w-4" />,
     link: "/client-portal",
     color: "text-gray-500 bg-gray-50"
   },
   {
-    title: "Documents",
+    title: "Manage documents",
     description: "Document management",
     icon: <FileText className="h-4 w-4" />,
     link: "/documents",

@@ -17,6 +17,7 @@ const QuickAccessGrid = ({ links }: QuickAccessGridProps) => {
           description={item.description}
           icon={item.icon}
           link={item.link}
+          color={item.color}
         />
       ))}
     </div>

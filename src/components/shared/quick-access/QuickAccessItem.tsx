@@ -1,28 +1,36 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
+import { cn } from "@/lib/utils";
 
 interface QuickAccessItemProps {
   title: string;
   description: string;
   icon: React.ReactNode;
   link: string;
+  color?: string;
 }
 
-const QuickAccessItem = ({ title, description, icon, link }: QuickAccessItemProps) => {
+const QuickAccessItem = ({ 
+  title, 
+  description, 
+  icon, 
+  link, 
+  color = "bg-gray-50 text-gray-500" 
+}: QuickAccessItemProps) => {
   return (
     <Link
       to={link}
-      className="flex flex-col p-3 rounded-lg hover:bg-gray-50 transition-colors text-center"
+      className="flex flex-col p-4 rounded-lg hover:bg-gray-50 transition-all duration-200 text-center h-full"
     >
       <div className="flex flex-col items-center justify-center">
-        <div className="h-8 w-8 flex items-center justify-center rounded-full bg-gray-50 mb-2">
+        <div className={cn("h-10 w-10 flex items-center justify-center rounded-full mb-3", color)}>
           {icon}
         </div>
       </div>
       <div>
-        <h3 className="text-sm font-medium">{title}</h3>
-        <p className="text-xs text-muted-foreground mt-0.5">
+        <h3 className="text-sm font-medium mb-1">{title}</h3>
+        <p className="text-xs text-muted-foreground">
           {description}
         </p>
       </div>

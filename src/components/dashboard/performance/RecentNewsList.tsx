@@ -26,11 +26,11 @@ const RecentNewsList = ({ newsData }: RecentNewsListProps) => {
 
   return (
     <div className="relative h-full">
-      <div className="space-y-3 max-h-[300px] overflow-y-auto pb-16">
+      <div className="space-y-2 max-h-[240px] overflow-y-auto pb-12">
         {visibleNews.map((news, index) => (
           <div 
             key={index} 
-            className="p-3 rounded-md hover:bg-gray-50 transition-colors cursor-pointer"
+            className="p-2 rounded-md hover:bg-gray-50 transition-colors cursor-pointer"
             onClick={() => handleNewsClick(news.url)}
           >
             <div>

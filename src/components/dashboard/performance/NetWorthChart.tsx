@@ -29,26 +29,7 @@ const NetWorthChart = ({ performanceData, chartConfig }: NetWorthChartProps) => 
         </div>
       </div>
       
-      <div className="flex items-center justify-end space-x-4 mt-2 mb-2">
-        <div className="flex items-center text-emerald-600 text-sm font-medium">
-          <TrendingUp className="h-4 w-4 mr-1" /> +3.8% YTD
-        </div>
-        <div className="flex space-x-1">
-          {(['1m', '3m', '6m', '1y', 'All'] as const).map((range) => (
-            <Button 
-              key={range}
-              variant={timeRange === range ? "secondary" : "ghost"} 
-              size="sm"
-              className="text-xs h-7 px-2"
-              onClick={() => setTimeRange(range)}
-            >
-              {range}
-            </Button>
-          ))}
-        </div>
-      </div>
-      
-      <div className="h-64 w-full mt-4">
+      <div className="h-48 w-full mt-4">
         <ChartContainer config={chartConfig}>
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={performanceData} margin={{ top: 0, right: 0, left: 0, bottom: 10 }}>

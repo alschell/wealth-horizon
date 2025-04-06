@@ -4,6 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ChevronRight, Bell, BellRing, Clock, CheckCircle, AlertTriangle, Calendar } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import SectionHeader from "./SectionHeader";
 
 const NotificationsFeed = () => {
   const navigate = useNavigate();
@@ -58,10 +60,10 @@ const NotificationsFeed = () => {
   return (
     <Card className="shadow-sm h-full flex flex-col">
       <CardHeader className="pb-2">
-        <CardTitle className="text-xl">Notifications, events and tasks</CardTitle>
+        <SectionHeader title="Notifications, events and tasks" />
       </CardHeader>
       <CardContent className="flex-1 flex flex-col">
-        <div className="flex-grow overflow-y-auto max-h-[165px]">
+        <ScrollArea className="flex-grow h-[165px]">
           <div className="space-y-3">
             {notifications.map((notification, index) => (
               <div 
@@ -84,7 +86,7 @@ const NotificationsFeed = () => {
               </div>
             ))}
           </div>
-        </div>
+        </ScrollArea>
         
         <div className="mt-auto pt-4">
           <Link to="/notifications">

@@ -4,6 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowUp, ArrowDown, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import SectionHeader from "./SectionHeader";
 
 // Flag icons for currencies and markets
 const getFlagIcon = (code: string) => {
@@ -65,10 +67,10 @@ const MarketSnapshot = () => {
   return (
     <Card className="shadow-sm h-full flex flex-col">
       <CardHeader className="pb-2">
-        <CardTitle className="text-xl">Market Snapshot</CardTitle>
+        <SectionHeader title="Market Snapshot" />
       </CardHeader>
       <CardContent className="flex-1 flex flex-col">
-        <div className="flex-grow overflow-y-auto max-h-[165px]">
+        <ScrollArea className="flex-grow h-[165px]">
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
             {markets.map((market, index) => (
               <div key={index} className="p-3 border border-gray-100 rounded-md hover:bg-gray-50 transition-colors cursor-pointer">
@@ -86,7 +88,7 @@ const MarketSnapshot = () => {
               </div>
             ))}
           </div>
-        </div>
+        </ScrollArea>
         
         <div className="mt-auto pt-4">
           <Link to="/market-data">

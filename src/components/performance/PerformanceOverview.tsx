@@ -31,7 +31,7 @@ const PerformanceOverview: React.FC = () => {
             </TabsList>
           </div>
           
-          <TabsContent value="overview" className="m-0 p-0">
+          <TabsContent value="overview" className="m-0 p-6">
             <OverviewTabContent 
               performanceData={performanceData.performanceTrend}
               chartConfig={{
@@ -44,13 +44,13 @@ const PerformanceOverview: React.FC = () => {
             />
           </TabsContent>
           
-          <TabsContent value="charts" className="m-0 p-0">
+          <TabsContent value="charts" className="m-0 p-6">
             <ChartsTabContent
               assetAllocationData={performanceData.assetAllocation}
             />
           </TabsContent>
           
-          <TabsContent value="recommendations" className="m-0 p-0">
+          <TabsContent value="recommendations" className="m-0 p-6">
             <RecommendationsTabContent
               recommendations={performanceData.recommendations}
             />

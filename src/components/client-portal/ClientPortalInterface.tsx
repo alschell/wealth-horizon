@@ -28,11 +28,13 @@ import {
 } from "lucide-react";
 import { useNotifications } from "@/hooks/use-notifications";
 
+type AccessLevel = "Full" | "Reports Only" | "Limited";
+
 interface Client {
   id: string;
   name: string;
   email: string;
-  accessLevel: "Full" | "Reports Only" | "Limited";
+  accessLevel: AccessLevel;
   status: "Active" | "Pending" | "Revoked";
   lastLogin: string;
   reportAccess: string[];
@@ -88,10 +90,14 @@ const ClientPortalInterface = () => {
     }
   ]);
 
-  const [newClient, setNewClient] = useState({
+  const [newClient, setNewClient] = useState<{
+    name: string;
+    email: string;
+    accessLevel: AccessLevel;
+  }>({
     name: "",
     email: "",
-    accessLevel: "Limited" as const
+    accessLevel: "Limited"
   });
 
   const [isVisible, setIsVisible] = useState<Record<string, boolean>>({});
@@ -109,6 +115,15 @@ const ClientPortalInterface = () => {
       return;
     }
 
+    let reportAccess: string[] = [];
+    if (newClient.accessLevel === "Full") {
+      reportAccess = ["Performance Reports", "Tax Documents", "Portfolio Valuations"];
+    } else if (newClient.accessLevel === "Reports Only") {
+      reportAccess = ["Performance Reports", "Portfolio Valuations"];
+    } else {
+      reportAccess = ["Portfolio Valuations"];
+    }
+
     const newClientData: Client = {
       id: `c${clients.length + 1}`,
       name: newClient.name,
@@ -116,11 +131,7 @@ const ClientPortalInterface = () => {
       accessLevel: newClient.accessLevel,
       status: "Pending",
       lastLogin: "Never",
-      reportAccess: newClient.accessLevel === "Full" 
-        ? ["Performance Reports", "Tax Documents", "Portfolio Valuations"] 
-        : newClient.accessLevel === "Reports Only"
-          ? ["Performance Reports", "Portfolio Valuations"]
-          : ["Portfolio Valuations"]
+      reportAccess
     };
 
     setClients([...clients, newClientData]);
@@ -306,7 +317,7 @@ const ClientPortalInterface = () => {
                       id="access"
                       className="w-full p-2 border rounded-md bg-background"
                       value={newClient.accessLevel}
-                      onChange={(e) => setNewClient({...newClient, accessLevel: e.target.value as any})}
+                      onChange={(e) => setNewClient({...newClient, accessLevel: e.target.value as AccessLevel})}
                     >
                       <option value="Full">Full Access</option>
                       <option value="Reports Only">Reports Only</option>

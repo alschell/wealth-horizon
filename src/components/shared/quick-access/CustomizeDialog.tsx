@@ -5,13 +5,13 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { CustomizeDialogProps } from "./types";
 
-const CustomizeDialog = ({
-  isOpen,
-  onOpenChange,
-  items,
-  selectedItems,
-  onItemToggle,
-  onSave
+const CustomizeDialog = ({ 
+  isOpen, 
+  onOpenChange, 
+  items, 
+  selectedItems, 
+  onItemToggle, 
+  onSave 
 }: CustomizeDialogProps) => {
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
@@ -24,7 +24,7 @@ const CustomizeDialog = ({
         </DialogHeader>
         <div className="max-h-[60vh] overflow-y-auto py-4">
           <div className="space-y-4">
-            {items.map((item) => (
+            {[...items].sort((a, b) => a.title.localeCompare(b.title)).map((item) => (
               <div key={item.id} className="flex items-start space-x-3">
                 <Checkbox 
                   id={`item-${item.id}`}

@@ -16,8 +16,8 @@ export const useQuickAccess = (pathname?: string) => {
     if (savedItems) {
       setVisibleItems(JSON.parse(savedItems));
     } else {
-      // Default to showing all items
-      setVisibleItems(allQuickLinks.map(item => item.id));
+      // Default to showing first 8 items
+      setVisibleItems(allQuickLinks.slice(0, 8).map(item => item.id));
     }
   }, [currentPage]);
   

@@ -9,13 +9,13 @@ const QuickAccessItem = ({
   description, 
   icon, 
   link, 
-  color = "bg-gray-50 text-gray-500",
+  color = "bg-gray-50",
   onClick
 }: QuickAccessItemProps) => {
   return (
     <Link
       to={link}
-      className="flex flex-col p-4 rounded-lg transition-all duration-200 h-full hover:bg-gray-50"
+      className="flex p-4 rounded-lg transition-all duration-200 h-full hover:bg-gray-50"
       onClick={onClick}
     >
       <div className="flex items-start gap-3">

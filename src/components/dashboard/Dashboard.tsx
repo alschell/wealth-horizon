@@ -3,7 +3,7 @@ import React from "react";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import WelcomeHeader from "@/components/dashboard/WelcomeHeader";
 import NotificationsFeed from "@/components/dashboard/NotificationsFeed";
-import QuickAccessGrid from "@/components/dashboard/QuickAccessGrid";
+import QuickAccessGrid from "@/components/dashboard/quick-access";
 import PerformanceOverview from "@/components/dashboard/PerformanceOverview";
 import MarketSnapshot from "@/components/dashboard/MarketSnapshot";
 import RecentActivity from "@/components/dashboard/RecentActivity";
@@ -23,7 +23,7 @@ const Dashboard = () => {
         <PageHeaderCard
           icon={LayoutDashboard}
           title="Dashboard"
-          description="View your wealth overview, market data, and quick access to key features"
+          description="Your complete financial overview at a glance"
           iconColor="text-gray-700"
           iconBgColor="bg-gray-100"
         />
@@ -37,6 +37,9 @@ const Dashboard = () => {
         {/* Performance Overview with enhanced visuals */}
         <PerformanceOverview />
         
+        {/* Quick Access section - moved below performance overview */}
+        <QuickAccessGrid />
+
         {/* Top Assets and Recent News in separate cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Card className="shadow-sm">
@@ -57,9 +60,6 @@ const Dashboard = () => {
             </CardContent>
           </Card>
         </div>
-        
-        {/* Quick Access section - moved below performance overview */}
-        <QuickAccessGrid />
 
         {/* Key summary cards */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -74,10 +74,8 @@ const Dashboard = () => {
           </div>
           
           <div className="space-y-6">
-            {/* Reduced height of notifications container */}
-            <div className="max-h-[300px] overflow-hidden">
-              <NotificationsFeed />
-            </div>
+            {/* Notifications container */}
+            <NotificationsFeed />
             
             {/* Recent activities card - only visible on large screens */}
             <div className="hidden lg:block">

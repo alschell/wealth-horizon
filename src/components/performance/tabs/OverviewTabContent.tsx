@@ -25,6 +25,7 @@ const OverviewTabContent = ({
   return (
     <div className="space-y-12">
       <div>
+        <h3 className="text-sm font-medium text-gray-600 mb-2">Net Worth Trend</h3>
         <NetWorthChart performanceData={performanceData} chartConfig={chartConfig} />
       </div>
       

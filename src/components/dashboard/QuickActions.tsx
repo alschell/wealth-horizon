@@ -1,10 +1,24 @@
 
 import React from "react";
-import { CreditCard, TrendingUp, UserPlus, FileText, Brain, MessageSquare, Wallet } from "lucide-react";
+import { CreditCard, TrendingUp, UserPlus, FileText, Brain, MessageSquare, Wallet, Settings, BarChart3, Globe, Link } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 
 const defaultActions = [
+  {
+    id: "analyze",
+    title: "Analyze Wealth",
+    description: "View performance metrics",
+    icon: <BarChart3 className="h-6 w-6" />,
+    path: "/analyze-wealth",
+  },
+  {
+    id: "market",
+    title: "Access Market Data & News",
+    description: "Get market insights",
+    icon: <Globe className="h-6 w-6" />,
+    path: "/market-data",
+  },
   {
     id: "trade",
     title: "Trade",
@@ -14,46 +28,46 @@ const defaultActions = [
   },
   {
     id: "credit",
-    title: "Apply for Credit",
-    description: "Request new credit facilities",
+    title: "Manage Credit Facilities",
+    description: "Request new credit",
     icon: <CreditCard className="h-6 w-6" />,
-    path: "/dashboard/credit",
+    path: "/credit-facilities",
   },
   {
-    id: "invite",
-    title: "Invite User",
-    description: "Add team members",
-    icon: <UserPlus className="h-6 w-6" />,
-    path: "/dashboard/users",
+    id: "advice",
+    title: "Get Advice",
+    description: "Financial recommendations",
+    icon: <Brain className="h-6 w-6" />,
+    path: "/advice",
+  },
+  {
+    id: "cashflow",
+    title: "Manage Cashflow & Liquidity",
+    description: "Optimize cash positions",
+    icon: <Wallet className="h-6 w-6" />,
+    path: "/cashflow",
   },
   {
     id: "reports",
-    title: "View Reports",
+    title: "Generate Reports",
     description: "Access financial reports",
     icon: <FileText className="h-6 w-6" />,
     path: "/reporting",
   },
   {
-    id: "ai-assistant",
-    title: "AI Assistant",
-    description: "Get financial recommendations",
-    icon: <Brain className="h-6 w-6" />,
-    path: "/ai-assistant",
+    id: "users",
+    title: "Manage Users & Permissions",
+    description: "Add team members",
+    icon: <UserPlus className="h-6 w-6" />,
+    path: "/dashboard/users",
   },
   {
-    id: "chat",
-    title: "Financial Chat",
-    description: "Ask questions and execute actions",
-    icon: <MessageSquare className="h-6 w-6" />,
-    path: "/financial-chat",
+    id: "integrations",
+    title: "Manage Integrations",
+    description: "Connect external services",
+    icon: <Link className="h-6 w-6" />,
+    path: "/integrations",
   },
-  {
-    id: "borrow",
-    title: "Borrow from Facility",
-    description: "Access available credit",
-    icon: <Wallet className="h-6 w-6" />,
-    path: "/borrow",
-  }
 ];
 
 const QuickActions = () => {
@@ -90,11 +104,12 @@ const QuickActions = () => {
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold">Quick Actions</h2>
         <Button 
-          variant="outline" 
-          size="sm" 
+          variant="ghost" 
+          size="icon"
           onClick={() => setShowCustomize(!showCustomize)}
+          title="Customize Quick Actions"
         >
-          {showCustomize ? "Done" : <span className="sr-only">Customize</span>}
+          <Settings className="h-4 w-4" />
         </Button>
       </div>
       
@@ -136,7 +151,7 @@ const QuickActions = () => {
             <Button
               key={action.id}
               variant="outline"
-              className="h-auto py-4 px-5 flex flex-col items-center justify-center hover-lift bg-white border rounded-xl shadow-sm"
+              className="h-auto py-4 px-5 flex flex-col items-center justify-center hover:bg-gray-50 bg-white border rounded-xl shadow-sm"
               onClick={() => handleActionClick(action.path)}
             >
               <div className="p-3 rounded-full bg-gray-100 mb-3">

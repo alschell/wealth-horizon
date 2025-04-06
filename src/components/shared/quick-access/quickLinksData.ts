@@ -29,7 +29,7 @@ export const allQuickLinks: QuickLinkItem[] = [
   {
     id: "market-data",
     title: "Access Market Data & News",
-    description: "Real-time market data and information",
+    description: "Real-time market data & information",
     icon: React.createElement(LineChart, { className: "h-4 w-4 text-gray-500" }),
     link: "/market-data",
     color: "bg-gray-50"
@@ -61,7 +61,7 @@ export const allQuickLinks: QuickLinkItem[] = [
   {
     id: "cashflow",
     title: "Manage Cashflow & Liquidity",
-    description: "Optimize liquidity & term deposits",
+    description: "Optimize liquidity & place term deposits",
     icon: React.createElement(DollarSign, { className: "h-4 w-4 text-gray-500" }),
     link: "/cashflow-management",
     color: "bg-gray-50"

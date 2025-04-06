@@ -39,7 +39,7 @@ export const allActionItems: ActionItem[] = [
     id: "market-data",
     icon: LineChart,
     label: "Access Market Data & News",
-    description: "Real-time market data and information",
+    description: "Real-time market data & information",
     path: "/market-data",
     color: "bg-gray-50 text-gray-500"
   },
@@ -71,7 +71,7 @@ export const allActionItems: ActionItem[] = [
     id: "cashflow",
     icon: DollarSign,
     label: "Manage Cashflow & Liquidity",
-    description: "Optimize liquidity & term deposits",
+    description: "Optimize liquidity & place term deposits",
     path: "/cashflow-management",
     color: "bg-gray-50 text-gray-500"
   },

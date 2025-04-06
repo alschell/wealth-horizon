@@ -19,16 +19,20 @@ const QuickAccessItemCard = ({
   label, 
   path, 
   description,
-  color = "bg-gray-50 text-gray-500"
+  color = "bg-gray-50"
 }: QuickAccessItemCardProps) => {
   return (
     <Link to={path} key={id}>
-      <div className="h-full flex flex-col items-center justify-start p-4 text-center transition-all duration-200 hover:bg-gray-50 rounded-md">
-        <div className={cn("h-10 w-10 rounded-full flex items-center justify-center mb-3 mt-2", color)}>
-          <Icon className="h-5 w-5 text-gray-500" />
+      <div className="h-full p-4 transition-all duration-200 hover:bg-gray-50 rounded-md">
+        <div className="flex items-start gap-3">
+          <div className={cn("h-10 w-10 flex-shrink-0 flex items-center justify-center rounded-full", color)}>
+            <Icon className="h-5 w-5" />
+          </div>
+          <div className="flex flex-col">
+            <h3 className="text-sm font-medium mb-1">{label}</h3>
+            <p className="text-xs text-gray-500">{description}</p>
+          </div>
         </div>
-        <h3 className="font-medium text-sm mb-1">{label}</h3>
-        <p className="text-xs text-gray-500">{description}</p>
       </div>
     </Link>
   );

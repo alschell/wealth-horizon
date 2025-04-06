@@ -13,7 +13,6 @@ const TopAssets = () => {
 
   return (
     <div className="space-y-2">
-      <h3 className="text-xl font-semibold mb-4">Top Assets</h3>
       <div className="space-y-2">
         {assets.map((asset, index) => (
           <div 

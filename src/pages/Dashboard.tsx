@@ -5,7 +5,7 @@ import WealthSummary from "@/components/dashboard/WealthSummary";
 import NotificationsFeed from "@/components/dashboard/NotificationsFeed";
 import WelcomeHeader from "@/components/dashboard/WelcomeHeader";
 import QuickAccessGrid from "@/components/dashboard/QuickAccessGrid";
-import PerformanceOverview from "@/components/performance/PerformanceOverview";
+import PerformanceOverview from "@/components/dashboard/PerformanceOverview";
 import MarketSnapshot from "@/components/dashboard/MarketSnapshot";
 import RecentActivity from "@/components/dashboard/RecentActivity";
 import PageHeaderCard from "@/components/dashboard/PageHeaderCard";

@@ -38,7 +38,6 @@ function App() {
   return (
     <React.StrictMode>
       <QueryClientProvider client={queryClient}>
-        {/* Move TooltipProvider inside React context */}
         <OnboardingProvider>
           <BrowserRouter>
             <TooltipProvider>

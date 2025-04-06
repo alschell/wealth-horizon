@@ -1,8 +1,9 @@
+
 import React from "react";
+import { Recommendation } from "./RecommendationsTabContent";
 
-// Note: This file should exist in the project. We're just adding recommendations data
-
-export const recommendations = [
+// Update recommendations to use proper string literal type for urgency
+export const recommendations: Recommendation[] = [
   {
     id: "rec1",
     title: "Rebalance equity allocation",

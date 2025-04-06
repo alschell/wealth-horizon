@@ -7,7 +7,8 @@ import {
   QuickAccessItem, 
   CustomizeDialog,
   useQuickAccess,
-  allQuickLinks
+  allQuickLinks,
+  defaultQuickLinks 
 } from "./quick-access";
 
 export {
@@ -18,5 +19,6 @@ export {
   QuickAccessItem,
   CustomizeDialog,
   useQuickAccess,
-  allQuickLinks
+  allQuickLinks,
+  defaultQuickLinks
 };

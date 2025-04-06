@@ -1,26 +1,24 @@
 
-import { ReactNode } from "react";
+import { ReactElement } from "react";
 
 export interface QuickAccessItem {
   id: string;
   title: string;
   description: string;
-  icon: ReactNode;
+  icon: ReactElement;
   link: string;
   color?: string;
   onClick?: () => void;
 }
 
 export interface QuickAccessGridProps {
-  items?: QuickAccessItem[];
-  title?: string;
-  showCustomizeButton?: boolean;
+  items: QuickAccessItem[];
 }
 
 export interface QuickAccessItemProps {
   title: string;
   description: string;
-  icon: ReactNode;
+  icon: ReactElement;
   link: string;
   color?: string;
   onClick?: () => void;

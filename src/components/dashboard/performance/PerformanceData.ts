@@ -1,5 +1,59 @@
+import React from "react";
 
-// Sample data for the Performance Overview component
+// Note: This file should exist in the project. We're just adding recommendations data
+
+export const recommendations = [
+  {
+    id: "rec1",
+    title: "Rebalance equity allocation",
+    description: "Your equity allocation is 5% above your target. Consider rebalancing to maintain your risk profile.",
+    category: "Portfolio Strategy",
+    impact: "+1.2% risk-adjusted returns",
+    impactValue: 1.2,
+    urgency: "high",
+    action: "Rebalance Now"
+  },
+  {
+    id: "rec2",
+    title: "Tax-loss harvesting opportunity",
+    description: "Harvest losses in tech sector to offset capital gains and reduce tax liability.",
+    category: "Tax Optimization",
+    impact: "Save $15,000 in taxes",
+    impactValue: 15000,
+    urgency: "medium",
+    action: "Review Opportunities"
+  },
+  {
+    id: "rec3",
+    title: "Optimize cash position",
+    description: "You have $1.2M in cash earning below-market interest. Consider moving to higher yield options.",
+    category: "Cash Management",
+    impact: "+$24,000 annual income",
+    impactValue: 24000,
+    urgency: "medium",
+    action: "See Options"
+  },
+  {
+    id: "rec4",
+    title: "Refinance mortgage opportunity",
+    description: "Current mortgage rate is 4.5%. Refinancing could save significant interest over remaining term.",
+    category: "Liability Management",
+    impact: "Save $120,000 over term",
+    impactValue: 120000,
+    urgency: "medium",
+    action: "Explore Rates"
+  },
+  {
+    id: "rec5",
+    title: "ESG alignment review needed",
+    description: "Some investments don't align with your ESG preferences. Review and adjust to match your values.",
+    category: "ESG Alignment",
+    impact: "Align with values",
+    impactValue: 0,
+    urgency: "low",
+    action: "Review Holdings"
+  }
+];
 
 // Performance chart data
 export const performanceData = [
@@ -44,46 +98,6 @@ export const newsData = [
     title: "Oil prices stabilize after recent volatility, Brent crude at $82",
     time: "Yesterday",
     url: "https://www.bloomberg.com/news/articles/2023-08-22/oil-prices-stabilize-after-volatility"
-  }
-];
-
-// Enhanced recommendations with the proper structure for RecommendationsTabContent
-export const recommendations = [
-  { 
-    title: "Rebalance Equity Allocation",
-    description: "Rebalance your equity allocation to reduce risk", 
-    impact: "High",
-    type: "Portfolio"
-  },
-  { 
-    title: "Increase Fixed Income",
-    description: "Consider increasing fixed income exposure by 8%", 
-    impact: "Medium",
-    type: "Allocation"
-  },
-  {
-    title: "Implement Currency Hedging",
-    description: "Implement currency hedging for EUR exposure",
-    impact: "High",
-    type: "Risk"
-  },
-  {
-    title: "Reduce ETF Overlap",
-    description: "Review technology ETFs for overlap reduction",
-    impact: "Medium",
-    type: "Efficiency"
-  },
-  {
-    title: "Active Management",
-    description: "Transition 15% to active management strategies",
-    impact: "Medium",
-    type: "Strategy"
-  },
-  {
-    title: "Tax-Loss Harvesting",
-    description: "Evaluate tax-loss harvesting opportunities",
-    impact: "Medium",
-    type: "Tax"
   }
 ];
 

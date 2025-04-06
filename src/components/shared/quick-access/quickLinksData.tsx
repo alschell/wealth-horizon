@@ -1,4 +1,3 @@
-
 import React from "react";
 import {
   FileText,
@@ -22,42 +21,42 @@ export const allQuickLinks: QuickLinkItem[] = [
   {
     title: "Analyze wealth",
     description: "Portfolio analysis tools",
-    icon: <PieChart className="h-4 w-4" />,
+    icon: <PieChart className="h-4 w-4 text-gray-500" />,
     link: "/analyze-wealth",
     color: "text-gray-500 bg-gray-50"
   },
   {
     title: "Access market data & news",
     description: "Access market information",
-    icon: <LineChart className="h-4 w-4" />,
+    icon: <LineChart className="h-4 w-4 text-gray-500" />,
     link: "/market-data",
     color: "text-gray-500 bg-gray-50"
   },
   {
     title: "Trade",
     description: "Execute investment trades",
-    icon: <TrendingUp className="h-4 w-4" />,
+    icon: <TrendingUp className="h-4 w-4 text-gray-500" />,
     link: "/trading",
     color: "text-gray-500 bg-gray-50"
   },
   {
     title: "Manage credit facilities",
-    description: "Manage credit facilities",
-    icon: <Building2 className="h-4 w-4" />,
+    description: "Setup and manage credit lines",
+    icon: <Building2 className="h-4 w-4 text-gray-500" />,
     link: "/credit-facilities",
     color: "text-gray-500 bg-gray-50"
   },
   {
     title: "Get advice",
     description: "Get personalized advice",
-    icon: <Lightbulb className="h-4 w-4" />,
+    icon: <Lightbulb className="h-4 w-4 text-gray-500" />,
     link: "/advice",
     color: "text-gray-500 bg-gray-50"
   },
   {
     title: "Manage cashflow & liquidity",
     description: "Manage liquidity and deposits",
-    icon: <DollarSign className="h-4 w-4" />,
+    icon: <DollarSign className="h-4 w-4 text-gray-500" />,
     link: "/cashflow-management",
     color: "text-gray-500 bg-gray-50"
   },

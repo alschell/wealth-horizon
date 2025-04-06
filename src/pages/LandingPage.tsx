@@ -1,11 +1,10 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import {
   ArrowRight,
   CheckCircle,
-  ChevronDown,
   Globe,
   LayoutDashboard,
   Mail,
@@ -15,26 +14,13 @@ import {
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useInView } from "framer-motion";
-import { useIsMobile } from "@/hooks/use-mobile";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
 const LandingPage = () => {
   const navigate = useNavigate();
-  const isMobile = useIsMobile();
   const [activeTab, setActiveTab] = useState<number>(0);
+  const [email, setEmail] = useState("");
 
-  // Refs for scroll animations
-  const heroRef = useRef(null);
-  const platformRef = useRef(null);
-  const featuresRef = useRef(null);
-  const contactRef = useRef(null);
-  
-  const heroInView = useInView(heroRef, { once: true, amount: 0.2 });
-  const platformInView = useInView(platformRef, { once: true, amount: 0.2 });
-  const featuresInView = useInView(featuresRef, { once: true, amount: 0.2 });
-  const contactInView = useInView(contactRef, { once: true, amount: 0.2 });
-  
   // Platform features tab data
   const platformTabs = [
     {
@@ -64,7 +50,7 @@ const LandingPage = () => {
   ];
   
   // Auto-advance platform tabs
-  useEffect(() => {
+  React.useEffect(() => {
     const interval = setInterval(() => {
       setActiveTab(prev => (prev + 1) % platformTabs.length);
     }, 5000);
@@ -73,24 +59,10 @@ const LandingPage = () => {
   }, [platformTabs.length]);
   
   // Handle newsletter signup
-  const [email, setEmail] = useState("");
   const handleNewsletterSignup = (e: React.FormEvent) => {
     e.preventDefault();
-    // Here you would typically integrate with your newsletter service
     alert(`Thank you for subscribing with ${email}!`);
     setEmail("");
-  };
-
-  // Provide a fallback image for when images fail to load
-  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
-    console.log("Image failed to load. Using fallback.");
-    e.currentTarget.src = "/assets/dashboard-fallback.png";
-    // If the fallback also fails, show a colored background
-    e.currentTarget.onerror = () => {
-      e.currentTarget.style.backgroundColor = "#f3f4f6";
-      e.currentTarget.style.border = "1px solid #e5e7eb";
-      e.currentTarget.alt = "Dashboard Preview (Image not available)";
-    };
   };
 
   // Animation variants
@@ -113,6 +85,18 @@ const LandingPage = () => {
         duration: 0.5
       }
     }
+  };
+
+  // Handle image error fallback
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    console.log("Image failed to load. Using fallback.");
+    e.currentTarget.src = "/assets/dashboard-fallback.png";
+    // If the fallback also fails, show a colored background
+    e.currentTarget.onerror = () => {
+      e.currentTarget.style.backgroundColor = "#f3f4f6";
+      e.currentTarget.style.border = "1px solid #e5e7eb";
+      e.currentTarget.alt = "Dashboard Preview (Image not available)";
+    };
   };
 
   return (
@@ -178,8 +162,7 @@ const LandingPage = () => {
       <main className="pt-20">
         {/* Hero Section */}
         <motion.section 
-          id="hero-section" 
-          ref={heroRef}
+          id="hero-section"
           className="min-h-[90vh] flex items-center justify-center relative overflow-hidden"
           style={{
             background: "linear-gradient(180deg, #F9FAFC 0%, #F3F4F6 100%)"
@@ -191,12 +174,12 @@ const LandingPage = () => {
           {/* Subtle grid background */}
           <div className="absolute inset-0 bg-[url('/assets/grid-pattern.svg')] opacity-5"></div>
           
-          <motion.div 
-            className="max-w-7xl w-full px-6 md:px-12 py-20 md:py-32 relative z-10"
-            variants={itemVariants}
-          >
+          <div className="max-w-7xl w-full px-6 md:px-12 py-20 md:py-32 relative z-10">
             <div className="flex flex-col md:flex-row items-center gap-10 md:gap-20">
-              <motion.div className="md:w-1/2 space-y-8" variants={itemVariants}>
+              <motion.div 
+                className="md:w-1/2 space-y-8"
+                variants={itemVariants}
+              >
                 <motion.div 
                   className="inline-flex items-center px-4 py-2 rounded-full bg-gray-100 border border-gray-200"
                   variants={itemVariants}
@@ -264,7 +247,6 @@ const LandingPage = () => {
               
               <motion.div 
                 className="md:w-1/2 relative"
-                variants={itemVariants}
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.6 }}
@@ -298,42 +280,19 @@ const LandingPage = () => {
                 </motion.div>
               </motion.div>
             </div>
-            
-            {/* Scroll down indicator */}
-            <motion.div 
-              className="hidden md:flex flex-col items-center absolute bottom-10 left-1/2 transform -translate-x-1/2 cursor-pointer"
-              onClick={() => {
-                document.getElementById('platform-section')?.scrollIntoView({ behavior: 'smooth' });
-              }}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.2, duration: 0.4 }}
-            >
-              <span className="text-gray-500 text-sm mb-2">Learn More</span>
-              <ChevronDown className="h-5 w-5 text-gray-500 animate-bounce" />
-            </motion.div>
-          </motion.div>
+          </div>
         </motion.section>
         
         {/* Platform Section - "One platform to replace them all" */}
         <motion.section 
-          id="platform-section" 
-          ref={platformRef}
+          id="platform-section"
           className="py-20 md:py-32 bg-white"
-          initial="hidden"
-          whileInView="visible"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.2 }}
-          variants={containerVariants}
+          transition={{ duration: 0.5 }}
         >
-          <div 
-            className="max-w-7xl mx-auto px-6 md:px-12"
-            style={{
-              opacity: platformInView ? 1 : 0,
-              transform: platformInView ? "translateY(0)" : "translateY(20px)",
-              transition: "opacity 0.7s ease-out, transform 0.7s ease-out",
-              transitionDelay: "0.2s"
-            }}
-          >
+          <div className="max-w-7xl mx-auto px-6 md:px-12">
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-5xl font-bold mb-6">One Platform to Replace Them All</h2>
               <p className="text-gray-600 max-w-2xl mx-auto text-lg">
@@ -344,7 +303,7 @@ const LandingPage = () => {
             <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
               <div className="md:col-span-4 space-y-6">
                 {platformTabs.map((tab) => (
-                  <div
+                  <motion.div
                     key={tab.id}
                     className={`p-6 rounded-xl cursor-pointer transition-all duration-300 ${
                       activeTab === tab.id
@@ -352,10 +311,17 @@ const LandingPage = () => {
                         : "hover:bg-gray-50"
                     }`}
                     onClick={() => setActiveTab(tab.id)}
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ 
+                      duration: 0.5, 
+                      delay: tab.id * 0.1 
+                    }}
                   >
                     <h3 className="text-xl font-semibold mb-2">{tab.title}</h3>
                     <p className="text-gray-600">{tab.description}</p>
-                  </div>
+                  </motion.div>
                 ))}
               </div>
               
@@ -363,11 +329,15 @@ const LandingPage = () => {
                 <div className="relative aspect-video w-full">
                   <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-gray-100 to-white">
                     <div className="w-full h-full flex items-center justify-center">
-                      <img
+                      <motion.img
                         src={platformTabs[activeTab].animation}
                         alt={platformTabs[activeTab].title}
                         className="w-full h-full object-contain p-8"
                         onError={handleImageError}
+                        key={activeTab}
+                        initial={{ opacity: 0, scale: 0.98 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.5 }}
                       />
                     </div>
                   </div>
@@ -376,58 +346,57 @@ const LandingPage = () => {
             </div>
             
             <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-gray-100 border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-shadow">
-                <div className="p-3 rounded-full bg-gray-200 w-fit mb-4">
-                  <TrendingUp className="h-6 w-6 text-gray-900" />
-                </div>
-                <h3 className="text-xl font-semibold mb-3">Real-time Performance</h3>
-                <p className="text-gray-600">
-                  Monitor your complete portfolio performance with real-time analytics and insights.
-                </p>
-              </div>
-              
-              <div className="bg-gray-100 border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-shadow">
-                <div className="p-3 rounded-full bg-gray-200 w-fit mb-4">
-                  <Users className="h-6 w-6 text-gray-900" />
-                </div>
-                <h3 className="text-xl font-semibold mb-3">Multi-User Access</h3>
-                <p className="text-gray-600">
-                  Collaborate seamlessly with team members and advisors with customizable permissions.
-                </p>
-              </div>
-              
-              <div className="bg-gray-100 border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-shadow">
-                <div className="p-3 rounded-full bg-gray-200 w-fit mb-4">
-                  <Globe className="h-6 w-6 text-gray-900" />
-                </div>
-                <h3 className="text-xl font-semibold mb-3">Global Coverage</h3>
-                <p className="text-gray-600">
-                  Manage assets across multiple jurisdictions, currencies, and asset classes.
-                </p>
-              </div>
+              {[
+                {
+                  icon: TrendingUp,
+                  title: "Real-time Performance",
+                  description: "Monitor your complete portfolio performance with real-time analytics and insights."
+                },
+                {
+                  icon: Users,
+                  title: "Multi-User Access",
+                  description: "Collaborate seamlessly with team members and advisors with customizable permissions."
+                },
+                {
+                  icon: Globe,
+                  title: "Global Coverage",
+                  description: "Manage assets across multiple jurisdictions, currencies, and asset classes."
+                }
+              ].map((feature, index) => (
+                <motion.div 
+                  key={index}
+                  className="bg-gray-100 border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-shadow"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ 
+                    duration: 0.5,
+                    delay: index * 0.1 + 0.2
+                  }}
+                >
+                  <div className="p-3 rounded-full bg-gray-200 w-fit mb-4">
+                    <feature.icon className="h-6 w-6 text-gray-900" />
+                  </div>
+                  <h3 className="text-xl font-semibold mb-3">{feature.title}</h3>
+                  <p className="text-gray-600">
+                    {feature.description}
+                  </p>
+                </motion.div>
+              ))}
             </div>
           </div>
         </motion.section>
-        
+
         {/* Features Section */}
         <motion.section 
-          id="features-section" 
-          ref={featuresRef}
+          id="features-section"
           className="py-20 md:py-32 bg-gray-50"
-          initial="hidden"
-          whileInView="visible"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
           viewport={{ once: true, amount: 0.2 }}
-          variants={containerVariants}
+          transition={{ duration: 0.5 }}
         >
-          <div 
-            className="max-w-7xl mx-auto px-6 md:px-12"
-            style={{
-              opacity: featuresInView ? 1 : 0,
-              transform: featuresInView ? "translateY(0)" : "translateY(20px)",
-              transition: "opacity 0.7s ease-out, transform 0.7s ease-out",
-              transitionDelay: "0.2s"
-            }}
-          >
+          <div className="max-w-7xl mx-auto px-6 md:px-12">
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-5xl font-bold mb-6">Enterprise-Grade Solutions</h2>
               <p className="text-gray-600 max-w-2xl mx-auto text-lg">
@@ -469,11 +438,15 @@ const LandingPage = () => {
                   icon: <TrendingUp className="h-6 w-6 text-gray-900" />
                 }
               ].map((feature, index) => (
-                <div 
+                <motion.div 
                   key={index} 
                   className="bg-white border border-gray-200 rounded-xl p-6 hover:scale-105 transition-all duration-300"
-                  style={{
-                    transitionDelay: `${index * 0.1}s`
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ 
+                    duration: 0.4,
+                    delay: index * 0.1
                   }}
                 >
                   <div className="p-3 rounded-full bg-gray-100 w-fit mb-4">
@@ -483,7 +456,7 @@ const LandingPage = () => {
                   <p className="text-gray-600">
                     {feature.description}
                   </p>
-                </div>
+                </motion.div>
               ))}
             </div>
             
@@ -501,26 +474,23 @@ const LandingPage = () => {
 
         {/* Contact Form & Newsletter Section */}
         <motion.section 
-          id="contact-section" 
-          ref={contactRef}
+          id="contact-section"
           className="py-20 md:py-32 bg-white"
-          initial="hidden"
-          whileInView="visible"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
           viewport={{ once: true, amount: 0.2 }}
-          variants={containerVariants}
+          transition={{ duration: 0.5 }}
         >
-          <div 
-            className="max-w-7xl mx-auto px-6 md:px-12"
-            style={{
-              opacity: contactInView ? 1 : 0,
-              transform: contactInView ? "translateY(0)" : "translateY(20px)",
-              transition: "opacity 0.7s ease-out, transform 0.7s ease-out",
-              transitionDelay: "0.2s"
-            }}
-          >
+          <div className="max-w-7xl mx-auto px-6 md:px-12">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
               {/* Contact Form */}
-              <div className="bg-white border border-gray-200 rounded-2xl p-8 shadow-lg">
+              <motion.div 
+                className="bg-white border border-gray-200 rounded-2xl p-8 shadow-lg"
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5 }}
+              >
                 <h2 className="text-2xl md:text-3xl font-bold mb-6">Contact Us</h2>
                 <p className="text-gray-600 mb-8">
                   Get in touch with our team to learn more about how we can help your family office or institution.
@@ -581,11 +551,17 @@ const LandingPage = () => {
                     Send Message
                   </Button>
                 </form>
-              </div>
+              </motion.div>
               
               {/* Newsletter & Contact Info */}
               <div className="space-y-12">
-                <div className="bg-white border border-gray-200 rounded-2xl p-8 shadow-lg">
+                <motion.div 
+                  className="bg-white border border-gray-200 rounded-2xl p-8 shadow-lg"
+                  initial={{ opacity: 0, x: 20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: 0.1 }}
+                >
                   <h2 className="text-2xl md:text-3xl font-bold mb-6">Subscribe to Our Newsletter</h2>
                   <p className="text-gray-600 mb-8">
                     Stay updated with the latest in wealth management technology and industry insights.
@@ -612,9 +588,15 @@ const LandingPage = () => {
                       Subscribe
                     </Button>
                   </form>
-                </div>
+                </motion.div>
                 
-                <div className="bg-white border border-gray-200 rounded-2xl p-8 shadow-lg">
+                <motion.div 
+                  className="bg-white border border-gray-200 rounded-2xl p-8 shadow-lg"
+                  initial={{ opacity: 0, x: 20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                >
                   <h2 className="text-2xl font-bold mb-6">Get in Touch</h2>
                   
                   <div className="space-y-6">
@@ -651,7 +633,7 @@ const LandingPage = () => {
                       </div>
                     </div>
                   </div>
-                </div>
+                </motion.div>
               </div>
             </div>
           </div>

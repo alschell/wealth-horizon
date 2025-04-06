@@ -106,17 +106,17 @@ const ChartsTabContent = ({ assetAllocationData }: ChartsTabContentProps) => {
         </Card>
       </div>
 
-      {/* Detailed Breakdown Section */}
+      {/* Detailed Breakdown Section - Increased height and adjusted styling */}
       <div className="mt-6">
-        <Tabs defaultValue={chartView === 'liabilities' ? "liabilities" : "assets"}>
-          <TabsList>
+        <Tabs defaultValue={chartView === 'liabilities' ? "liabilities" : "assets"} className="w-full">
+          <TabsList className="w-full justify-start">
             <TabsTrigger value="assets">Assets Breakdown</TabsTrigger>
             <TabsTrigger value="liabilities">Liabilities Breakdown</TabsTrigger>
           </TabsList>
           
           <TabsContent value="assets" className="mt-4">
             <Card>
-              <CardContent className="pt-6">
+              <CardContent className="pt-6 max-h-[400px] overflow-y-auto">
                 <div className="space-y-4">
                   {assetAllocationData.map((asset, index) => (
                     <div key={index} className="flex items-center justify-between border-b pb-3 last:border-0">
@@ -141,7 +141,7 @@ const ChartsTabContent = ({ assetAllocationData }: ChartsTabContentProps) => {
           
           <TabsContent value="liabilities" className="mt-4">
             <Card>
-              <CardContent className="pt-6">
+              <CardContent className="pt-6 max-h-[400px] overflow-y-auto">
                 <div className="space-y-4">
                   {liabilitiesData.map((liability, index) => (
                     <div key={index} className="flex items-center justify-between border-b pb-3 last:border-0">

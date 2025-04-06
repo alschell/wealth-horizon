@@ -64,9 +64,11 @@ function App() {
                 <Route path="/market-data" element={<MarketData />} />
                 <Route path="/analyze-wealth" element={<AnalyzeWealth />} />
                 <Route path="/analyze-wealth/asset/:assetId" element={<AssetDetail />} />
+                <Route path="/cashflow-management" element={<CashflowManagement />} />
                 <Route path="/cashflow" element={<CashflowManagement />} />
                 <Route path="/integrations" element={<Integrations />} />
                 <Route path="/integrations/oauth-callback" element={<IntegrationCallback />} />
+                <Route path="/user-management" element={<UserManagement />} />
                 <Route path="/dashboard/users" element={<UserManagement />} />
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/reporting" element={<Reporting />} />

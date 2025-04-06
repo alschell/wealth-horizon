@@ -41,7 +41,7 @@ const PerformanceOverview = () => {
           </div>
         </div>
       </CardHeader>
-      <CardContent className="pt-0 pb-6" style={{ height: "800px" }}> {/* Doubled the height */}
+      <CardContent className="pt-0 pb-6" style={{ minHeight: "800px" }}> {/* Set min-height to ensure it doesn't collapse */}
         <Tabs defaultValue="networth" className="mt-4 h-full">
           <TabsList className="mb-6">
             <TabsTrigger value="networth">Net Worth</TabsTrigger>
@@ -63,7 +63,7 @@ const PerformanceOverview = () => {
             />
           </TabsContent>
           
-          <TabsContent value="nextactions" className="mt-0 h-full">
+          <TabsContent value="nextactions" className="mt-0 h-full overflow-visible">
             <RecommendationsTabContent 
               recommendations={recommendations}
             />

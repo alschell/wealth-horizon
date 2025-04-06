@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -16,9 +15,9 @@ import {
   Calculator,
   Shield,
   Building2,
-  Sliders, // Adding Sliders icon for customize
+  Sliders,
 } from "lucide-react";
-import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
@@ -50,7 +49,7 @@ const allActionItems = [
     icon: Banknote,
     label: "Manage credit facilities",
     path: "/credit-facilities",
-    description: "Credit and lending facilities"
+    description: "Setup and manage credit lines"
   },
   {
     id: "advice",
@@ -63,7 +62,7 @@ const allActionItems = [
     id: "cashflow",
     icon: ArrowRightLeft,
     label: "Manage cashflow & liquidity",
-    path: "/cashflow",
+    path: "/cashflow-management",
     description: "Cash and liquidity management"
   },
   {
@@ -184,7 +183,6 @@ const QuickAccessGrid = () => {
       <CardHeader className="px-6 pt-6 pb-4 flex flex-row justify-between items-center">
         <div>
           <CardTitle className="text-xl">Quick Access</CardTitle>
-          <CardDescription>Frequently used features and tools</CardDescription>
         </div>
         <Button variant="outline" size="sm" onClick={handleCustomizeOpen} className="flex items-center gap-1">
           <Sliders className="h-4 w-4 mr-1" />
@@ -197,7 +195,7 @@ const QuickAccessGrid = () => {
             <Link to={item.path} key={item.id}>
               <div className="h-full flex flex-col items-center justify-start p-4 text-center transition-all duration-200 hover:bg-gray-50 rounded-md">
                 <div className="h-10 w-10 rounded-full bg-gray-50 flex items-center justify-center mb-3 mt-2">
-                  <item.icon className="h-5 w-5 text-gray-700" />
+                  <item.icon className="h-5 w-5 text-gray-500" />
                 </div>
                 <h3 className="font-medium text-sm mb-1">{item.label}</h3>
                 <p className="text-xs text-gray-500">{item.description}</p>

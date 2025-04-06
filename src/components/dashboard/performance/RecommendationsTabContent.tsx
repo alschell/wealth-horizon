@@ -1,522 +1,250 @@
 
 import React, { useState } from "react";
-import { Check, AlertTriangle, TrendingUp, Brain, X, ThumbsUp, ThumbsDown, MessagesSquare, Settings } from "lucide-react";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { CheckCircle, ChevronRight, MessageCircle, Settings, Trash2, TrendingUp, XCircle } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import { toast } from "sonner";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
-type RecommendationType = {
+type Recommendation = {
   id: string;
   title: string;
   description: string;
+  category: string;
   impact: string;
-  type: string;
-  category?: 'allocation' | 'risk' | 'opportunity' | 'tax' | 'cash';
-  priority?: 'high' | 'medium' | 'low';
-  aiAssisted?: boolean;
-  isDismissed?: boolean;
-  isAutomated?: boolean;
+  impactValue: number;
+  urgency: "high" | "medium" | "low";
+  action: string;
 };
 
 type RecommendationsTabContentProps = {
-  recommendations: {
-    title: string;
-    description: string;
-    impact: string;
-    type: string;
-  }[];
+  recommendations: Recommendation[];
 };
 
-const RecommendationsTabContent = ({
-  recommendations,
-}: RecommendationsTabContentProps) => {
-  // Convert incoming recommendations to enhanced format
-  const initialRecommendations: RecommendationType[] = recommendations.map((rec, index) => ({
-    id: `rec-${index}`,
-    ...rec,
-    category: ['allocation', 'risk', 'opportunity', 'tax', 'cash'][index % 5] as any,
-    priority: index % 3 === 0 ? 'high' : index % 3 === 1 ? 'medium' : 'low',
-    aiAssisted: index % 2 === 0,
-    isDismissed: false,
-    isAutomated: false
-  }));
-
-  const [enhancedRecommendations, setEnhancedRecommendations] = useState<RecommendationType[]>(initialRecommendations);
-  const [activeTab, setActiveTab] = useState('pending');
-  const [aiChatOpen, setAiChatOpen] = useState(false);
-  const [selectedRecommendation, setSelectedRecommendation] = useState<RecommendationType | null>(null);
-  const [autoSettingsOpen, setAutoSettingsOpen] = useState(false);
-
-  const pendingRecommendations = enhancedRecommendations.filter(r => !r.isDismissed);
-  const dismissedRecommendations = enhancedRecommendations.filter(r => r.isDismissed);
-  const automatedRecommendations = enhancedRecommendations.filter(r => r.isAutomated);
+const RecommendationsTabContent = ({ recommendations }: RecommendationsTabContentProps) => {
+  const [dismissedActions, setDismissedActions] = useState<string[]>([]);
+  const [autopilotEnabled, setAutopilotEnabled] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [selectedRecommendation, setSelectedRecommendation] = useState<Recommendation | null>(null);
 
   const handleDismiss = (id: string) => {
-    setEnhancedRecommendations(
-      enhancedRecommendations.map(rec => 
-        rec.id === id ? { ...rec, isDismissed: true } : rec
-      )
-    );
-    toast.success("Recommendation dismissed");
+    setDismissedActions([...dismissedActions, id]);
   };
 
   const handleRestore = (id: string) => {
-    setEnhancedRecommendations(
-      enhancedRecommendations.map(rec => 
-        rec.id === id ? { ...rec, isDismissed: false } : rec
-      )
-    );
-    toast.success("Recommendation restored");
+    setDismissedActions(dismissedActions.filter(actionId => actionId !== id));
   };
 
-  const handleImplement = (recommendation: RecommendationType) => {
-    toast.success(`Implementing: ${recommendation.title}`);
-    // In a real app, this would trigger the actual implementation
-    setTimeout(() => {
-      setEnhancedRecommendations(
-        enhancedRecommendations.map(rec => 
-          rec.id === recommendation.id ? { ...rec, isDismissed: true } : rec
-        )
-      );
-    }, 1500);
-  };
-
-  const handleAiChat = (recommendation: RecommendationType) => {
+  const openDialog = (recommendation: Recommendation) => {
     setSelectedRecommendation(recommendation);
-    setAiChatOpen(true);
+    setIsDialogOpen(true);
   };
 
-  const handleToggleAutomation = (id: string, automated: boolean) => {
-    setEnhancedRecommendations(
-      enhancedRecommendations.map(rec => 
-        rec.id === id ? { ...rec, isAutomated: automated } : rec
-      )
-    );
-    toast.success(automated 
-      ? "Recommendation set to autopilot" 
-      : "Recommendation removed from autopilot"
-    );
-  };
+  const filteredRecommendations = recommendations.filter(
+    rec => !dismissedActions.includes(rec.id)
+  );
 
-  const getCategoryIcon = (category?: string) => {
-    switch(category) {
-      case 'risk': return <AlertTriangle className="h-4 w-4 text-amber-500" />;
-      case 'opportunity': return <TrendingUp className="h-4 w-4 text-emerald-500" />;
-      case 'allocation': return <PieChart className="h-4 w-4 text-blue-500" />;
-      case 'tax': return <Calculator className="h-4 w-4 text-purple-500" />;
-      case 'cash': return <DollarSign className="h-4 w-4 text-green-500" />;
-      default: return <Check className="h-4 w-4 text-gray-500" />;
-    }
-  };
-
-  const getPriorityColor = (priority?: string) => {
-    switch(priority) {
-      case 'high': return 'bg-red-50 text-red-600 border-red-200';
-      case 'medium': return 'bg-amber-50 text-amber-600 border-amber-200';
-      case 'low': return 'bg-green-50 text-green-600 border-green-200';
-      default: return 'bg-gray-50 text-gray-600 border-gray-200';
+  const getUrgencyColor = (urgency: string) => {
+    switch (urgency) {
+      case "high":
+        return "bg-red-100 text-red-800";
+      case "medium":
+        return "bg-amber-100 text-amber-800";
+      case "low":
+        return "bg-green-100 text-green-800";
+      default:
+        return "bg-gray-100 text-gray-800";
     }
   };
 
   return (
     <div className="space-y-6">
-      {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="shadow-sm">
-          <CardContent className="pt-6">
-            <div className="flex justify-between items-start">
-              <div>
-                <p className="text-sm text-gray-600 mb-1">Risk Score</p>
-                <p className="text-2xl font-bold">Medium</p>
-              </div>
-              <div className="h-8 w-8 flex items-center justify-center rounded-full bg-amber-100">
-                <AlertTriangle className="h-4 w-4 text-amber-500" />
-              </div>
-            </div>
-            <div className="flex items-center mt-2 text-amber-500 text-xs">
-              <AlertTriangle className="h-3 w-3 mr-1" /> Review recommended
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card className="shadow-sm">
-          <CardContent className="pt-6">
-            <div className="flex justify-between items-start">
-              <div>
-                <p className="text-sm text-gray-600 mb-1">Compliance</p>
-                <p className="text-2xl font-bold">Compliant</p>
-              </div>
-              <div className="h-8 w-8 flex items-center justify-center rounded-full bg-green-100">
-                <Check className="h-4 w-4 text-green-500" />
-              </div>
-            </div>
-            <div className="flex items-center mt-2 text-green-600 text-xs">
-              <Check className="h-3 w-3 mr-1" /> No issues
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card className="shadow-sm">
-          <CardContent className="pt-6">
-            <div className="flex justify-between items-start">
-              <div>
-                <p className="text-sm text-gray-600 mb-1">Potential Gain</p>
-                <p className="text-2xl font-bold">+$124K</p>
-              </div>
-              <div className="h-8 w-8 flex items-center justify-center rounded-full bg-emerald-100">
-                <TrendingUp className="h-4 w-4 text-emerald-500" />
-              </div>
-            </div>
-            <div className="flex items-center mt-2 text-emerald-600 text-xs">
-              <TrendingUp className="h-3 w-3 mr-1" /> From recommendations
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card className="shadow-sm">
-          <CardContent className="pt-6">
-            <div className="flex justify-between items-start">
-              <div>
-                <p className="text-sm text-gray-600 mb-1">Excess Cash</p>
-                <p className="text-2xl font-bold">$280K</p>
-              </div>
-              <div className="h-8 w-8 flex items-center justify-center rounded-full bg-blue-100">
-                <DollarSign className="h-4 w-4 text-blue-500" />
-              </div>
-            </div>
-            <div className="flex items-center mt-2 text-amber-500 text-xs">
-              <AlertTriangle className="h-3 w-3 mr-1" /> Consider investing
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-      
-      {/* Recommendations Section */}
-      <div className="mt-6">
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-medium">Next Best Actions</h3>
-          <div className="flex space-x-2">
-            <Button variant="outline" size="sm" onClick={() => setAutoSettingsOpen(true)}>
-              <Settings className="h-4 w-4 mr-2" />
-              Autopilot Settings
-            </Button>
-          </div>
+      <div className="flex justify-between items-center mb-4">
+        <div>
+          <h2 className="text-2xl font-semibold">Next Best Actions</h2>
+          <p className="text-muted-foreground">Personalized recommendations to optimize your portfolio</p>
         </div>
-        
-        <Tabs defaultValue="pending" onValueChange={setActiveTab}>
-          <div className="flex justify-between items-center mb-4">
-            <TabsList>
-              <TabsTrigger value="pending">
-                Pending ({pendingRecommendations.length})
-              </TabsTrigger>
-              <TabsTrigger value="automated">
-                Autopilot ({automatedRecommendations.length})
-              </TabsTrigger>
-              <TabsTrigger value="dismissed">
-                Dismissed ({dismissedRecommendations.length})
-              </TabsTrigger>
-            </TabsList>
+        <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2">
+            <Switch 
+              id="autopilot" 
+              checked={autopilotEnabled}
+              onCheckedChange={setAutopilotEnabled}
+            />
+            <label htmlFor="autopilot" className="text-sm font-medium">
+              Autopilot
+            </label>
           </div>
-          
-          <TabsContent value="pending" className="space-y-4">
-            {pendingRecommendations.length === 0 ? (
-              <div className="text-center py-12 bg-gray-50 rounded-lg">
-                <p className="text-gray-500">No pending recommendations</p>
-              </div>
-            ) : (
-              pendingRecommendations.map((recommendation) => (
-                <Card key={recommendation.id} className="overflow-hidden">
-                  <div className={`h-1 ${recommendation.priority === 'high' ? 'bg-red-500' : recommendation.priority === 'medium' ? 'bg-amber-500' : 'bg-green-500'}`}></div>
-                  <CardContent className="pt-4">
-                    <div className="flex items-start gap-4">
-                      <div className="mt-1">
-                        <div className={`h-10 w-10 rounded-full flex items-center justify-center ${recommendation.category === 'risk' ? 'bg-amber-100' : recommendation.category === 'opportunity' ? 'bg-emerald-100' : recommendation.category === 'allocation' ? 'bg-blue-100' : recommendation.category === 'tax' ? 'bg-purple-100' : 'bg-green-100'}`}>
-                          {getCategoryIcon(recommendation.category)}
-                        </div>
-                      </div>
-                      
-                      <div className="flex-1">
-                        <div className="flex flex-wrap gap-2 mb-1">
-                          <Badge variant="outline" className={getPriorityColor(recommendation.priority)}>
-                            {recommendation.priority?.toUpperCase()}
-                          </Badge>
-                          
-                          {recommendation.aiAssisted && (
-                            <Badge variant="outline" className="bg-gray-50 text-gray-600 border-gray-200">
-                              <Brain className="h-3 w-3 mr-1" /> AI Suggested
-                            </Badge>
-                          )}
-                          
-                          <Badge variant="outline" className="bg-gray-50 text-gray-600 border-gray-200">
-                            {recommendation.category?.[0].toUpperCase()}{recommendation.category?.slice(1)}
-                          </Badge>
-                        </div>
-                        
-                        <h4 className="text-base font-medium">{recommendation.title}</h4>
-                        <p className="text-sm text-gray-600 mt-1">{recommendation.description}</p>
-                        
-                        <div className="flex flex-wrap items-center gap-2 mt-4">
-                          <Button variant="default" size="sm" onClick={() => handleImplement(recommendation)}>
-                            Implement
-                          </Button>
-                          <Button variant="outline" size="sm" onClick={() => handleAiChat(recommendation)}>
-                            <MessagesSquare className="h-4 w-4 mr-1" /> Discuss with AI
-                          </Button>
-                          <Button variant="ghost" size="sm" onClick={() => handleDismiss(recommendation.id)}>
-                            <X className="h-4 w-4 mr-1" /> Dismiss
-                          </Button>
-                          <div className="ml-auto flex items-center space-x-2">
-                            <span className="text-xs text-gray-500">Autopilot</span>
-                            <Switch
-                              checked={recommendation.isAutomated}
-                              onCheckedChange={(checked) => handleToggleAutomation(recommendation.id, checked)}
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))
-            )}
-          </TabsContent>
-          
-          <TabsContent value="automated" className="space-y-4">
-            {automatedRecommendations.length === 0 ? (
-              <div className="text-center py-12 bg-gray-50 rounded-lg">
-                <p className="text-gray-500">No automated recommendations</p>
-              </div>
-            ) : (
-              automatedRecommendations.map((recommendation) => (
-                <Card key={recommendation.id} className="bg-blue-50 border-blue-200">
-                  <CardContent className="pt-4">
-                    <div className="flex items-start gap-4">
-                      <div className="mt-1">
-                        <div className={`h-10 w-10 rounded-full flex items-center justify-center ${recommendation.category === 'risk' ? 'bg-amber-100' : recommendation.category === 'opportunity' ? 'bg-emerald-100' : recommendation.category === 'allocation' ? 'bg-blue-100' : recommendation.category === 'tax' ? 'bg-purple-100' : 'bg-green-100'}`}>
-                          {getCategoryIcon(recommendation.category)}
-                        </div>
-                      </div>
-                      
-                      <div className="flex-1">
-                        <h4 className="text-base font-medium">{recommendation.title}</h4>
-                        <p className="text-sm text-gray-600 mt-1">{recommendation.description}</p>
-                        
-                        <div className="flex items-center gap-2 mt-4">
-                          <Badge className="bg-blue-100 text-blue-700 border-blue-200">
-                            Autopilot Enabled
-                          </Badge>
-                          <div className="ml-auto">
-                            <Button variant="ghost" size="sm" onClick={() => handleToggleAutomation(recommendation.id, false)}>
-                              Disable Autopilot
-                            </Button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))
-            )}
-          </TabsContent>
-          
-          <TabsContent value="dismissed" className="space-y-4">
-            {dismissedRecommendations.length === 0 ? (
-              <div className="text-center py-12 bg-gray-50 rounded-lg">
-                <p className="text-gray-500">No dismissed recommendations</p>
-              </div>
-            ) : (
-              dismissedRecommendations.map((recommendation) => (
-                <Card key={recommendation.id} className="opacity-70">
-                  <CardContent className="pt-4">
-                    <div className="flex items-start gap-4">
-                      <div className="mt-1">
-                        <div className="h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center">
-                          {getCategoryIcon(recommendation.category)}
-                        </div>
-                      </div>
-                      
-                      <div className="flex-1">
-                        <h4 className="text-base font-medium">{recommendation.title}</h4>
-                        <p className="text-sm text-gray-600 mt-1">{recommendation.description}</p>
-                        
-                        <div className="flex items-center gap-2 mt-4">
-                          <Button variant="outline" size="sm" onClick={() => handleRestore(recommendation.id)}>
-                            Restore
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))
-            )}
-          </TabsContent>
-        </Tabs>
+          <Button variant="outline" size="sm">
+            <Settings className="h-4 w-4 mr-2" />
+            Settings
+          </Button>
+        </div>
       </div>
 
-      {/* AI Chat Dialog */}
-      <Dialog open={aiChatOpen} onOpenChange={setAiChatOpen}>
-        <DialogContent className="sm:max-w-[500px]">
+      <div className="grid gap-4">
+        {filteredRecommendations.length === 0 ? (
+          <Card>
+            <CardContent className="py-8 flex flex-col items-center justify-center">
+              <CheckCircle className="h-12 w-12 text-green-500 mb-4" />
+              <h3 className="text-xl font-medium mb-2">All caught up!</h3>
+              <p className="text-muted-foreground text-center max-w-md">
+                You've addressed all your recommendations. We'll notify you when new opportunities are identified.
+              </p>
+            </CardContent>
+          </Card>
+        ) : (
+          filteredRecommendations.map((recommendation) => (
+            <Card key={recommendation.id} className="overflow-hidden">
+              <CardHeader className="pb-3">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <CardTitle className="text-lg">{recommendation.title}</CardTitle>
+                    <CardDescription className="mt-1">{recommendation.description}</CardDescription>
+                  </div>
+                  <Badge className={`${getUrgencyColor(recommendation.urgency)} capitalize`}>
+                    {recommendation.urgency} priority
+                  </Badge>
+                </div>
+              </CardHeader>
+              <CardContent className="pb-3">
+                <div className="flex items-center justify-between text-sm mb-4">
+                  <div className="flex items-center">
+                    <div className="mr-6">
+                      <span className="text-muted-foreground block">Category</span>
+                      <span className="font-medium">{recommendation.category}</span>
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground block">Potential Impact</span>
+                      <span className={`font-medium ${recommendation.impactValue > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                        {recommendation.impact}
+                      </span>
+                    </div>
+                  </div>
+                  <div>
+                    <Button variant="ghost" size="sm" onClick={() => openDialog(recommendation)}>
+                      <MessageCircle className="h-4 w-4 mr-2" />
+                      Talk to AI
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+              <CardFooter className="border-t bg-muted/10 pt-3">
+                <div className="flex justify-between w-full">
+                  <Button variant="ghost" size="sm" onClick={() => handleDismiss(recommendation.id)}>
+                    <XCircle className="h-4 w-4 mr-1" />
+                    Dismiss
+                  </Button>
+                  <Button className="px-4" size="sm">
+                    <TrendingUp className="h-4 w-4 mr-2" />
+                    {recommendation.action}
+                  </Button>
+                </div>
+              </CardFooter>
+            </Card>
+          ))
+        )}
+      </div>
+
+      {dismissedActions.length > 0 && (
+        <div className="mt-8">
+          <h3 className="text-lg font-medium mb-4">Dismissed Actions</h3>
+          <div className="grid gap-3">
+            {recommendations
+              .filter(rec => dismissedActions.includes(rec.id))
+              .map((recommendation) => (
+                <div key={recommendation.id} className="flex items-center justify-between p-3 bg-muted rounded-lg">
+                  <div className="flex items-center">
+                    <Trash2 className="h-4 w-4 text-muted-foreground mr-3" />
+                    <div>
+                      <h4 className="text-sm font-medium">{recommendation.title}</h4>
+                      <p className="text-xs text-muted-foreground">{recommendation.description}</p>
+                    </div>
+                  </div>
+                  <Button variant="ghost" size="sm" onClick={() => handleRestore(recommendation.id)}>
+                    Restore
+                  </Button>
+                </div>
+              ))}
+          </div>
+        </div>
+      )}
+
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <Brain className="h-5 w-5" /> 
-              AI Assistant
-            </DialogTitle>
+            <DialogTitle>{selectedRecommendation?.title}</DialogTitle>
             <DialogDescription>
-              Discussing: {selectedRecommendation?.title}
+              Discuss this recommendation with your AI assistant
             </DialogDescription>
           </DialogHeader>
           
-          <div className="border rounded-md p-4 max-h-[300px] overflow-y-auto">
+          <div className="py-4 space-y-4">
+            <Card className="bg-muted/50">
+              <CardContent className="pt-4">
+                <p className="text-sm">
+                  {selectedRecommendation?.description}
+                </p>
+              </CardContent>
+            </Card>
+            
             <div className="space-y-4">
-              <div className="bg-gray-100 p-3 rounded-lg rounded-tl-none max-w-[80%]">
+              <div className="bg-primary/10 rounded-lg p-4">
+                <p className="text-sm font-medium mb-1">You</p>
+                <p className="text-sm">Why are you recommending this action?</p>
+              </div>
+              
+              <div className="bg-secondary/10 rounded-lg p-4">
+                <p className="text-sm font-medium mb-1">AI Assistant</p>
                 <p className="text-sm">
-                  I've analyzed this recommendation for {selectedRecommendation?.title}. Would you like me to explain why this is recommended and the potential impact?
+                  Based on your portfolio analysis, I'm recommending this action because it aligns with your investment goals and risk tolerance. This adjustment should help optimize your returns while maintaining your preferred asset allocation strategy.
                 </p>
               </div>
               
-              <div className="bg-primary text-primary-foreground p-3 rounded-lg rounded-tr-none max-w-[80%] ml-auto">
-                <p className="text-sm">Yes, please explain why this is important and what will happen if I implement it.</p>
+              <div className="bg-primary/10 rounded-lg p-4">
+                <p className="text-sm font-medium mb-1">You</p>
+                <p className="text-sm">What are the potential risks?</p>
               </div>
               
-              <div className="bg-gray-100 p-3 rounded-lg rounded-tl-none max-w-[80%]">
+              <div className="bg-secondary/10 rounded-lg p-4">
+                <p className="text-sm font-medium mb-1">AI Assistant</p>
                 <p className="text-sm">
-                  This recommendation {selectedRecommendation?.description}. It was suggested based on market analysis and your portfolio composition.
+                  The main risks include potential market volatility in the short term and opportunity costs if you choose alternative investments. However, based on historical data and your investment timeframe, the benefits outweigh these risks.
                 </p>
-                <p className="text-sm mt-2">
-                  If implemented, it could {selectedRecommendation?.impact}. This represents a significant opportunity for portfolio optimization.
-                </p>
-                <p className="text-sm mt-2">
-                  Would you like me to go ahead and implement this for you?
-                </p>
+              </div>
+            </div>
+            
+            <div className="border rounded-lg p-4">
+              <div className="flex">
+                <input 
+                  type="text" 
+                  placeholder="Ask more questions..." 
+                  className="flex-1 bg-transparent outline-none text-sm"
+                />
+                <Button size="sm" className="ml-2">Send</Button>
               </div>
             </div>
           </div>
           
-          <div className="flex border rounded-md p-2">
-            <input 
-              className="flex-1 border-0 focus:outline-none text-sm" 
-              placeholder="Ask a question about this recommendation..." 
-            />
-            <Button size="sm" className="ml-2">Send</Button>
-          </div>
-          
-          <DialogFooter className="flex justify-between">
+          <DialogFooter className="flex items-center justify-between sm:justify-between">
+            <Button variant="outline" onClick={() => setIsDialogOpen(false)}>Close</Button>
             <div className="flex gap-2">
-              <Button variant="outline" size="sm" onClick={() => setAiChatOpen(false)}>
-                <ThumbsDown className="h-4 w-4 mr-1" /> Not Helpful
+              <Button variant="outline" onClick={() => {
+                handleDismiss(selectedRecommendation?.id || "");
+                setIsDialogOpen(false);
+              }}>
+                Dismiss
               </Button>
-              <Button variant="outline" size="sm" onClick={() => setAiChatOpen(false)}>
-                <ThumbsUp className="h-4 w-4 mr-1" /> Helpful
+              <Button>
+                Take Action
               </Button>
             </div>
-            <Button onClick={() => {
-              handleImplement(selectedRecommendation!);
-              setAiChatOpen(false);
-            }}>
-              Implement
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-      
-      {/* Autopilot Settings Dialog */}
-      <Dialog open={autoSettingsOpen} onOpenChange={setAutoSettingsOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Autopilot Settings</DialogTitle>
-            <DialogDescription>
-              Configure which types of recommendations should be automatically implemented.
-            </DialogDescription>
-          </DialogHeader>
-          
-          <div className="space-y-4 py-4">
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <div className="flex items-center">
-                  <DollarSign className="h-4 w-4 text-green-500 mr-2" />
-                  <h4 className="text-sm font-medium">Cash Management</h4>
-                </div>
-                <p className="text-xs text-muted-foreground">
-                  Automatically optimize cash positions
-                </p>
-              </div>
-              <Switch />
-            </div>
-            
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <div className="flex items-center">
-                  <AlertTriangle className="h-4 w-4 text-amber-500 mr-2" />
-                  <h4 className="text-sm font-medium">Risk Reduction</h4>
-                </div>
-                <p className="text-xs text-muted-foreground">
-                  Automatically reduce portfolio risk
-                </p>
-              </div>
-              <Switch />
-            </div>
-            
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <div className="flex items-center">
-                  <PieChart className="h-4 w-4 text-blue-500 mr-2" />
-                  <h4 className="text-sm font-medium">Rebalancing</h4>
-                </div>
-                <p className="text-xs text-muted-foreground">
-                  Automatically rebalance to target allocations
-                </p>
-              </div>
-              <Switch />
-            </div>
-            
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <div className="flex items-center">
-                  <TrendingUp className="h-4 w-4 text-emerald-500 mr-2" />
-                  <h4 className="text-sm font-medium">Opportunities</h4>
-                </div>
-                <p className="text-xs text-muted-foreground">
-                  Automatically act on investment opportunities
-                </p>
-              </div>
-              <Switch />
-            </div>
-            
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <div className="flex items-center">
-                  <Calculator className="h-4 w-4 text-purple-500 mr-2" />
-                  <h4 className="text-sm font-medium">Tax Optimization</h4>
-                </div>
-                <p className="text-xs text-muted-foreground">
-                  Automatically optimize for tax efficiency
-                </p>
-              </div>
-              <Switch />
-            </div>
-          </div>
-          
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setAutoSettingsOpen(false)}>Cancel</Button>
-            <Button onClick={() => {
-              toast.success("Autopilot settings saved");
-              setAutoSettingsOpen(false);
-            }}>Save Settings</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>
   );
 };
-
-// Add the missing icons
-const PieChart = (props: any) => <TrendingUp {...props} />;
-const Calculator = (props: any) => <TrendingUp {...props} />;
-const DollarSign = (props: any) => <TrendingUp {...props} />;
 
 export default RecommendationsTabContent;

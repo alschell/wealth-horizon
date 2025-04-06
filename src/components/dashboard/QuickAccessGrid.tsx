@@ -2,39 +2,21 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import {
-  TrendingUp, 
-  Activity, 
   BarChart3, 
-  FileText, 
   LineChart, 
+  TrendingUp, 
+  Banknote, 
+  Briefcase, 
   ArrowRightLeft,
-  Banknote,
+  FileText, 
   Building,
-  Briefcase,
+  Users,
   Brain,
-  MessageSquare
+  MessageSquare,
 } from "lucide-react";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 
 const actionItems = [
-  {
-    icon: TrendingUp,
-    label: "Trading",
-    path: "/trading",
-    description: "Execute trades across portfolios"
-  },
-  {
-    icon: Briefcase,
-    label: "Advice",
-    path: "/advice",
-    description: "Investment advisory mandates"
-  },
-  {
-    icon: LineChart,
-    label: "Markets",
-    path: "/market-data",
-    description: "Real-time market data"
-  },
   {
     icon: BarChart3,
     label: "Analyze Wealth",
@@ -42,26 +24,50 @@ const actionItems = [
     description: "Wealth analytics and insights"
   },
   {
+    icon: LineChart,
+    label: "Access Market Data",
+    path: "/market-data",
+    description: "Real-time market data & news"
+  },
+  {
+    icon: TrendingUp,
+    label: "Trade",
+    path: "/trading",
+    description: "Execute trades across portfolios"
+  },
+  {
+    icon: Banknote,
+    label: "Manage Credit",
+    path: "/credit-facilities",
+    description: "Credit and lending facilities"
+  },
+  {
+    icon: Briefcase,
+    label: "Get Advice",
+    path: "/advice",
+    description: "Investment advisory mandates"
+  },
+  {
     icon: ArrowRightLeft,
-    label: "Cashflow",
+    label: "Manage Cashflow",
     path: "/cashflow",
-    description: "Manage cash and term deposits"
+    description: "Cash and liquidity management"
   },
   {
     icon: FileText,
-    label: "Reporting",
+    label: "Generate Reports",
     path: "/reporting",
     description: "Custom financial reports"
   },
   {
-    icon: Banknote,
-    label: "Borrow",
-    path: "/borrow",
-    description: "Lending and credit facilities"
+    icon: Users,
+    label: "Manage Users",
+    path: "/dashboard/users",
+    description: "User access and permissions"
   },
   {
     icon: Building,
-    label: "Integrations",
+    label: "Manage Integrations",
     path: "/integrations",
     description: "Connect to external services"
   },
@@ -70,12 +76,6 @@ const actionItems = [
     label: "AI Assistant",
     path: "/ai-assistant",
     description: "Get financial recommendations"
-  },
-  {
-    icon: MessageSquare,
-    label: "Financial Chat",
-    path: "/financial-chat",
-    description: "Ask questions and execute actions"
   }
 ];
 

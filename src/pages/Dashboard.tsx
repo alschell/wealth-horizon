@@ -8,6 +8,7 @@ import PerformanceOverview from "@/components/dashboard/PerformanceOverview";
 import MarketSnapshot from "@/components/dashboard/MarketSnapshot";
 import RecentActivity from "@/components/dashboard/RecentActivity";
 import PageHeaderCard from "@/components/dashboard/PageHeaderCard";
+import KeyMetricsGrid from "@/components/dashboard/performance/KeyMetricsGrid";
 import { LayoutDashboard } from "lucide-react";
 
 const Dashboard = () => {
@@ -25,15 +26,18 @@ const Dashboard = () => {
 
         {/* Welcome header */}
         <WelcomeHeader />
+        
+        {/* Key metrics grid - moved to top */}
+        <KeyMetricsGrid />
+
+        {/* Performance Overview with enhanced visuals */}
+        <PerformanceOverview />
 
         {/* Key summary cards */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-6">            
             {/* Modules card grid */}
             <QuickAccessGrid />
-            
-            {/* Performance Overview with enhanced visuals */}
-            <PerformanceOverview />
           </div>
           
           <div className="space-y-6">

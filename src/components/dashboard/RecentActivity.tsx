@@ -15,7 +15,7 @@ const RecentActivity = () => {
         <div className="space-y-3">
           <div className="p-2 rounded-md hover:bg-gray-50">
             <div className="flex items-center gap-2">
-              <div className="h-8 w-8 rounded-full bg-gray-50 flex items-center justify-center">
+              <div className="h-8 w-8 flex items-center justify-center bg-gray-50 rounded-full">
                 <TrendingUp className="h-4 w-4 text-gray-500" />
               </div>
               <div>
@@ -27,7 +27,7 @@ const RecentActivity = () => {
           
           <div className="p-2 rounded-md hover:bg-gray-50">
             <div className="flex items-center gap-2">
-              <div className="h-8 w-8 rounded-full bg-gray-50 flex items-center justify-center">
+              <div className="h-8 w-8 flex items-center justify-center bg-gray-50 rounded-full">
                 <DollarSign className="h-4 w-4 text-gray-500" />
               </div>
               <div>

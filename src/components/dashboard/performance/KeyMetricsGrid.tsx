@@ -42,7 +42,7 @@ const MiniSparkline = ({ trend }: { trend: 'up' | 'down' | 'neutral' }) => {
 const KeyMetricsGrid = () => {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-      <div className="bg-gray-50 p-4 rounded-lg border border-gray-100 hover:shadow-md transition-shadow">
+      <div className="bg-white p-4 rounded-lg border border-gray-200 hover:shadow-md transition-shadow">
         <p className="text-sm text-gray-600 mb-1">Total Assets</p>
         <p className="text-2xl font-bold">$5.68B</p>
         <div className="flex items-center justify-between">
@@ -53,7 +53,7 @@ const KeyMetricsGrid = () => {
         </div>
       </div>
       
-      <div className="bg-gray-50 p-4 rounded-lg border border-gray-100 hover:shadow-md transition-shadow">
+      <div className="bg-white p-4 rounded-lg border border-gray-200 hover:shadow-md transition-shadow">
         <p className="text-sm text-gray-600 mb-1">Total Liabilities</p>
         <p className="text-2xl font-bold">$1.20B</p>
         <div className="flex items-center justify-between">
@@ -64,7 +64,7 @@ const KeyMetricsGrid = () => {
         </div>
       </div>
       
-      <div className="bg-gray-50 p-4 rounded-lg border border-gray-100 hover:shadow-md transition-shadow">
+      <div className="bg-white p-4 rounded-lg border border-gray-200 hover:shadow-md transition-shadow">
         <p className="text-sm text-gray-600 mb-1">Cash Balance</p>
         <p className="text-2xl font-bold">$1.28B</p>
         <div className="flex items-center justify-between">
@@ -75,7 +75,7 @@ const KeyMetricsGrid = () => {
         </div>
       </div>
       
-      <div className="bg-gray-50 p-4 rounded-lg border border-gray-100 hover:shadow-md transition-shadow">
+      <div className="bg-white p-4 rounded-lg border border-gray-200 hover:shadow-md transition-shadow">
         <p className="text-sm text-gray-600 mb-1">Investments</p>
         <p className="text-2xl font-bold">$3.40B</p>
         <div className="flex items-center justify-between">

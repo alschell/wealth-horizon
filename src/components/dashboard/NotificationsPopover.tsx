@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Bell, X, FileText, TrendingUp, AlertTriangle, Check, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -18,7 +17,6 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { Link, useNavigate } from "react-router-dom";
 
-// Enhanced notification data with details, links, and icons
 const notificationData = [
   {
     id: 1,
@@ -173,12 +171,7 @@ const NotificationsPopover = () => {
                   )}
                   onClick={() => handleNotificationClick(notification)}
                 >
-                  <div className={cn(
-                    "h-8 w-8 rounded-full flex items-center justify-center text-white",
-                    notification.id === 1 ? "bg-blue-500" : 
-                    notification.id === 2 ? "bg-amber-500" : 
-                    notification.id === 3 ? "bg-green-500" : "bg-gray-500"
-                  )}>
+                  <div className="mt-0.5 h-8 w-8 flex items-center justify-center bg-gray-50 rounded-full">
                     {notification.icon}
                   </div>
                   

@@ -3,7 +3,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
-  ArrowUpRight,
   FileText,
   BarChart3,
   Landmark,
@@ -207,15 +206,14 @@ const QuickAccess = ({ pathname }: QuickAccessProps) => {
             <Link
               key={index}
               to={item.link}
-              className="flex flex-col p-3 rounded-lg hover:bg-gray-50 transition-colors"
+              className="flex flex-col p-3 rounded-lg hover:bg-gray-50 transition-colors text-center"
             >
-              <div className="flex items-start justify-between">
-                <div className="h-8 w-8 flex items-center justify-center rounded-full bg-gray-50">
+              <div className="flex flex-col items-center justify-center">
+                <div className="h-8 w-8 flex items-center justify-center rounded-full bg-gray-50 mb-2">
                   {item.icon}
                 </div>
-                <ArrowUpRight className="h-4 w-4 text-gray-400" />
               </div>
-              <div className="mt-2">
+              <div>
                 <h3 className="text-sm font-medium">{item.title}</h3>
                 <p className="text-xs text-muted-foreground mt-0.5">
                   {item.description}

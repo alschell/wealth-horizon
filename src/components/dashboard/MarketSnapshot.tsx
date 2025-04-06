@@ -1,7 +1,7 @@
 
 import React from "react";
-import MarketDataWidget from "@/components/market/components/MarketDataWidget";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { TrendingUp, TrendingDown } from "lucide-react";
 
 const MarketSnapshot = () => {
   // Define market indices for the snapshot view - expanded to top 10
@@ -64,11 +64,29 @@ const MarketSnapshot = () => {
         <CardTitle className="text-xl">Market Snapshot</CardTitle>
       </CardHeader>
       <CardContent>
-        <MarketDataWidget 
-          indices={indices}
-          title=""
-          maxNewsItems={0} // Don't show news in the snapshot
-        />
+        <div className="space-y-2">
+          {indices.map((index, i) => (
+            <div key={i} className="flex justify-between items-center p-3 rounded-md hover:bg-gray-50 transition-colors cursor-pointer">
+              <span className="font-medium text-sm">{index.name}</span>
+              <div className="flex items-center">
+                <span className="mr-2">{index.value}</span>
+                <div className={`flex items-center ${
+                  index.change >= 0 ? "text-emerald-600" : "text-red-500"
+                }`}>
+                  {index.change >= 0 ? (
+                    <TrendingUp className="h-3 w-3 mr-1" />
+                  ) : (
+                    <TrendingDown className="h-3 w-3 mr-1" />
+                  )}
+                  <span className="text-xs">
+                    {index.change >= 0 ? "+" : ""}
+                    {index.change}%
+                  </span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       </CardContent>
     </Card>
   );

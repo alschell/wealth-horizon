@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Bell, Calendar, CreditCard, TrendingUp, FileText, CheckCircle } from "lucide-react";
+import { Bell, Calendar, CreditCard, TrendingUp, FileText, CheckCircle, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "react-router-dom";
@@ -93,6 +93,11 @@ const NotificationsFeed = () => {
               </div>
             </div>
           ))}
+          
+          <Button variant="outline" size="sm" className="w-full flex items-center justify-center">
+            View All Notifications
+            <ChevronRight className="h-4 w-4 ml-1" />
+          </Button>
         </div>
       </CardContent>
     </Card>

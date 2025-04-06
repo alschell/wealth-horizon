@@ -22,7 +22,7 @@ const OverviewTabContent = ({
   newsData 
 }: OverviewTabContentProps) => {
   return (
-    <div className="space-y-8" style={{ marginTop: "-200px" }}>
+    <div className="space-y-8">
       <div>
         <NetWorthChart performanceData={performanceData} chartConfig={chartConfig} />
       </div>

@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
-import { TrendingUp, DollarSign } from "lucide-react";
+import { TrendingUp, DollarSign, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -13,7 +13,7 @@ const RecentActivity = () => {
       </CardHeader>
       <CardContent>
         <div className="space-y-3">
-          <div className="p-2 rounded-md hover:bg-gray-50">
+          <div className="p-3 rounded-md hover:bg-gray-50 transition-colors cursor-pointer">
             <div className="flex items-center gap-2">
               <div className="h-8 w-8 flex items-center justify-center bg-gray-50 rounded-full">
                 <TrendingUp className="h-4 w-4 text-gray-500" />
@@ -25,7 +25,7 @@ const RecentActivity = () => {
             </div>
           </div>
           
-          <div className="p-2 rounded-md hover:bg-gray-50">
+          <div className="p-3 rounded-md hover:bg-gray-50 transition-colors cursor-pointer">
             <div className="flex items-center gap-2">
               <div className="h-8 w-8 flex items-center justify-center bg-gray-50 rounded-full">
                 <DollarSign className="h-4 w-4 text-gray-500" />
@@ -37,11 +37,10 @@ const RecentActivity = () => {
             </div>
           </div>
           
-          <Link to="/activity" className="block mt-3">
-            <Button variant="outline" size="sm" className="w-full">
-              View All Activity
-            </Button>
-          </Link>
+          <Button variant="outline" size="sm" className="w-full flex items-center justify-center">
+            View All Activity
+            <ChevronRight className="h-4 w-4 ml-1" />
+          </Button>
         </div>
       </CardContent>
     </Card>

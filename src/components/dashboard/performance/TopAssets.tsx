@@ -17,7 +17,7 @@ const TopAssets = () => {
         {assets.map((asset, index) => (
           <div 
             key={index} 
-            className="p-3 rounded-md border border-gray-100 hover:shadow-sm transition-shadow bg-white"
+            className="p-3 rounded-md hover:bg-gray-50 transition-colors cursor-pointer"
           >
             <div className="flex justify-between items-center">
               <p className="text-sm font-medium">{asset.name}</p>

@@ -24,7 +24,7 @@ const DashboardHeader = () => {
         </div>
         
         <div className="flex items-center gap-3">
-          <div className="relative max-w-xs w-full hidden md:block">
+          <div className="relative max-w-xs w-64 hidden md:block">
             <Search className={`absolute left-2 top-2.5 h-4 w-4 ${isSearchFocused ? 'text-blue-500' : 'text-muted-foreground'}`} />
             <Input 
               placeholder="Search..." 

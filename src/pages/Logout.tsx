@@ -17,9 +17,13 @@ const Logout = () => {
     // Show success toast
     toast.success("You have been successfully logged out");
     
-    // Redirect to landing page after logout
-    navigate("/");
+    // Stay on the logout page
   };
+  
+  // Auto-execute logout on page load
+  useEffect(() => {
+    handleLogout();
+  }, []);
   
   const handleCancel = () => {
     // Go back to previous page
@@ -33,27 +37,18 @@ const Logout = () => {
           <LogOut className="h-8 w-8 text-red-500" />
         </div>
         
-        <h1 className="text-2xl font-bold mb-2">Sign Out</h1>
+        <h1 className="text-2xl font-bold mb-2">Signed Out</h1>
         <p className="text-gray-600 mb-8">
-          Are you sure you want to sign out of your Wealth Pro account?
+          You have been successfully signed out of your Wealth Pro account.
         </p>
         
         <div className="space-y-3">
           <Button 
             variant="default" 
             className="w-full py-6 bg-black hover:bg-gray-800 text-white" 
-            onClick={handleLogout}
+            onClick={() => navigate("/")}
           >
-            Yes, Sign Out
-          </Button>
-          
-          <Button 
-            variant="outline" 
-            className="w-full py-6" 
-            onClick={handleCancel}
-          >
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Cancel
+            Return to Home
           </Button>
         </div>
       </div>

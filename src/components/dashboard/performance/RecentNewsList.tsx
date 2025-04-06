@@ -1,12 +1,13 @@
 
 import React from "react";
-import { Newspaper, ChevronRight } from "lucide-react";
+import { Newspaper, ChevronRight, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
 type NewsItemType = {
   title: string;
   time: string;
+  url?: string;
 };
 
 type RecentNewsListProps = {
@@ -14,13 +15,31 @@ type RecentNewsListProps = {
 };
 
 const RecentNewsList = ({ newsData }: RecentNewsListProps) => {
+  // Only show the first 4 news items
+  const visibleNews = newsData.slice(0, 4);
+  
+  const handleNewsClick = (url?: string) => {
+    if (url) {
+      window.open(url, '_blank');
+    } else {
+      window.open('https://www.bloomberg.com', '_blank');
+    }
+  };
+
   return (
     <div className="space-y-2">
       <div className="space-y-3">
-        {newsData.map((news, index) => (
-          <div key={index} className="p-3 rounded-md hover:bg-gray-50 transition-colors cursor-pointer">
-            <p className="text-sm font-medium">{news.title}</p>
-            <p className="text-xs text-gray-500 mt-1">{news.time}</p>
+        {visibleNews.map((news, index) => (
+          <div 
+            key={index} 
+            className="p-3 rounded-md hover:bg-gray-50 transition-colors cursor-pointer flex justify-between items-center"
+            onClick={() => handleNewsClick(news.url)}
+          >
+            <div>
+              <p className="text-sm font-medium">{news.title}</p>
+              <p className="text-xs text-gray-500 mt-1">{news.time}</p>
+            </div>
+            <ExternalLink className="h-4 w-4 text-gray-400 flex-shrink-0" />
           </div>
         ))}
         <Link to="/market-data">

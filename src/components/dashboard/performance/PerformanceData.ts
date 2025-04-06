@@ -1,3 +1,4 @@
+
 // Sample data for the Performance Overview component
 
 // Performance chart data
@@ -22,39 +23,27 @@ export const assetAllocationData = [
   { name: "Cash", value: 5 }
 ];
 
-// Enhanced news data with more items
+// Enhanced news data with URLs
 export const newsData = [
   {
     title: "Fed signals rate cuts possible in September as inflation eases",
-    time: "2 hours ago"
+    time: "2 hours ago",
+    url: "https://www.bloomberg.com/news/articles/2023-08-23/fed-signals-september-rate-cut-possible-as-inflation-eases"
   },
   {
     title: "Global markets rally on positive economic data from US and Europe",
-    time: "4 hours ago"
+    time: "4 hours ago",
+    url: "https://www.bloomberg.com/news/articles/2023-08-23/global-markets-rally-on-positive-economic-data"
   },
   {
     title: "Tech sector leads gains as major earnings beat analyst expectations",
-    time: "Yesterday"
+    time: "Yesterday",
+    url: "https://www.bloomberg.com/news/articles/2023-08-22/tech-sector-leads-gains-as-earnings-beat-expectations"
   },
   {
     title: "Oil prices stabilize after recent volatility, Brent crude at $82",
-    time: "Yesterday"
-  },
-  {
-    title: "Real estate investments show resilience despite higher rates",
-    time: "2 days ago"
-  },
-  {
-    title: "Gold reaches new all-time high amid economic uncertainties",
-    time: "2 days ago"
-  },
-  {
-    title: "European Central Bank maintains rates, signals future easing",
-    time: "3 days ago"
-  },
-  {
-    title: "Semiconductor industry faces supply challenges amid growing demand",
-    time: "4 days ago"
+    time: "Yesterday",
+    url: "https://www.bloomberg.com/news/articles/2023-08-22/oil-prices-stabilize-after-volatility"
   }
 ];
 

@@ -83,7 +83,7 @@ const NotificationsFeed = () => {
         <CardTitle className="text-xl">Notifications</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="space-y-3">
+        <div className="space-y-3 max-h-[220px] overflow-y-auto pr-2"> {/* Added max-height and overflow */}
           {notifications.map((notification) => (
             <div 
               key={notification.id}

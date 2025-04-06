@@ -2,16 +2,21 @@
 import React from "react";
 import { ArrowUp, ArrowDown, Briefcase, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Link, useNavigate } from "react-router-dom";
 
 const TopAssets = () => {
+  const navigate = useNavigate();
+  
   const assets = [
-    { name: "US Tech Fund", value: "$1.24B", change: "+4.7%", isPositive: true },
-    { name: "Treasury Notes", value: "$845M", change: "+1.2%", isPositive: true },
-    { name: "Real Estate Holdings", value: "$682M", change: "-2.1%", isPositive: false },
-    { name: "Private Equity", value: "$456M", change: "+8.3%", isPositive: true },
+    { id: "us-tech-fund", name: "US Tech Fund", value: "$1.24B", change: "+4.7%", isPositive: true },
+    { id: "treasury-notes", name: "Treasury Notes", value: "$845M", change: "+1.2%", isPositive: true },
+    { id: "real-estate", name: "Real Estate Holdings", value: "$682M", change: "-2.1%", isPositive: false },
+    { id: "private-equity", name: "Private Equity", value: "$456M", change: "+8.3%", isPositive: true },
   ];
+
+  const handleAssetClick = (id: string) => {
+    navigate(`/analyze-wealth/asset/${id}`);
+  };
 
   return (
     <div className="space-y-2">
@@ -20,6 +25,7 @@ const TopAssets = () => {
           <div 
             key={index} 
             className="p-3 rounded-md hover:bg-gray-50 transition-colors cursor-pointer"
+            onClick={() => handleAssetClick(asset.id)}
           >
             <div className="flex justify-between items-center">
               <p className="text-sm font-medium">{asset.name}</p>

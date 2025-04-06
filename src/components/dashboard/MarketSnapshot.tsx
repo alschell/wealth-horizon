@@ -11,12 +11,14 @@ const MarketSnapshot = () => {
   const navigate = useNavigate();
   const [selectedIndex, setSelectedIndex] = React.useState(null);
   
-  // Define market indices for the snapshot view
+  // Define market indices for the snapshot view with country flags
   const indices = [
     {
       name: "S&P 500",
       value: "4,587.20",
       change: 0.85,
+      flag: "🇺🇸",
+      country: "USA",
       data: [
         { date: "Jan", value: 4300 },
         { date: "Feb", value: 4250 },
@@ -30,6 +32,8 @@ const MarketSnapshot = () => {
       name: "NASDAQ",
       value: "14,346.30",
       change: 1.2,
+      flag: "🇺🇸",
+      country: "USA",
       data: [
         { date: "Jan", value: 13500 },
         { date: "Feb", value: 13800 },
@@ -43,6 +47,8 @@ const MarketSnapshot = () => {
       name: "Dow Jones",
       value: "32,627.80",
       change: 0.45,
+      flag: "🇺🇸",
+      country: "USA",
       data: [
         { date: "Jan", value: 31800 },
         { date: "Feb", value: 32000 },
@@ -56,6 +62,8 @@ const MarketSnapshot = () => {
       name: "FTSE 100",
       value: "6,952.30",
       change: -0.22,
+      flag: "🇬🇧",
+      country: "UK",
       data: [
         { date: "Jan", value: 7000 },
         { date: "Feb", value: 7050 },
@@ -69,6 +77,8 @@ const MarketSnapshot = () => {
       name: "DAX",
       value: "14,688.40",
       change: 0.31,
+      flag: "🇩🇪",
+      country: "Germany",
       data: [
         { date: "Jan", value: 14400 },
         { date: "Feb", value: 14500 },
@@ -82,6 +92,8 @@ const MarketSnapshot = () => {
       name: "Nikkei 225",
       value: "29,176.70",
       change: 1.34,
+      flag: "🇯🇵",
+      country: "Japan",
       data: [
         { date: "Jan", value: 28000 },
         { date: "Feb", value: 28400 },
@@ -95,6 +107,8 @@ const MarketSnapshot = () => {
       name: "Shanghai Comp",
       value: "3,442.61",
       change: -0.92,
+      flag: "🇨🇳",
+      country: "China",
       data: [
         { date: "Jan", value: 3500 },
         { date: "Feb", value: 3490 },
@@ -108,6 +122,8 @@ const MarketSnapshot = () => {
       name: "Hang Seng",
       value: "28,750.83",
       change: -1.28,
+      flag: "🇭🇰",
+      country: "Hong Kong",
       data: [
         { date: "Jan", value: 29200 },
         { date: "Feb", value: 29150 },
@@ -121,6 +137,8 @@ const MarketSnapshot = () => {
       name: "ASX 200",
       value: "6,821.20",
       change: 0.27,
+      flag: "🇦🇺",
+      country: "Australia",
       data: [
         { date: "Jan", value: 6750 },
         { date: "Feb", value: 6780 },
@@ -134,6 +152,8 @@ const MarketSnapshot = () => {
       name: "CAC 40",
       value: "5,997.96",
       change: 0.42,
+      flag: "🇫🇷",
+      country: "France",
       data: [
         { date: "Jan", value: 5900 },
         { date: "Feb", value: 5930 },
@@ -163,7 +183,10 @@ const MarketSnapshot = () => {
                 className="flex justify-between items-center p-3 rounded-md hover:bg-gray-50 transition-colors cursor-pointer"
                 onClick={() => handleIndexClick(index)}
               >
-                <span className="font-medium text-sm">{index.name}</span>
+                <span className="font-medium text-sm flex items-center">
+                  <span className="mr-2 text-lg" aria-label={`Flag of ${index.country}`}>{index.flag}</span>
+                  {index.name}
+                </span>
                 <div className="flex items-center">
                   <span className="mr-2">{index.value}</span>
                   <div className={`flex items-center ${
@@ -197,6 +220,7 @@ const MarketSnapshot = () => {
         <DialogContent className="max-w-4xl">
           <DialogHeader>
             <DialogTitle>
+              <span className="mr-2">{selectedIndex?.flag}</span>
               {selectedIndex?.name} - {selectedIndex?.value}
               <span className={`ml-2 text-sm ${
                 selectedIndex?.change >= 0 ? "text-emerald-600" : "text-red-500"

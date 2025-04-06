@@ -14,6 +14,7 @@ import Trading from "./pages/Trading";
 import Advice from "./pages/Advice";
 import MarketData from "./pages/MarketData";
 import AnalyzeWealth from "./pages/AnalyzeWealth";
+import AssetDetail from "./pages/AssetDetail";
 import Index from "./pages/Index";
 import CashflowManagement from "./pages/CashflowManagement";
 import Integrations from "./pages/Integrations";
@@ -62,6 +63,7 @@ function App() {
                 <Route path="/advice/new" element={<NewAdviceInterface />} />
                 <Route path="/market-data" element={<MarketData />} />
                 <Route path="/analyze-wealth" element={<AnalyzeWealth />} />
+                <Route path="/analyze-wealth/asset/:assetId" element={<AssetDetail />} />
                 <Route path="/cashflow" element={<CashflowManagement />} />
                 <Route path="/integrations" element={<Integrations />} />
                 <Route path="/integrations/oauth-callback" element={<IntegrationCallback />} />

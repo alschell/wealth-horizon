@@ -1,8 +1,8 @@
 
 import DataCard from "./DataCard";
 import PerformanceContainer from "./PerformanceContainer";
-import QuickAccess from "./quick-access";
 import { 
+  QuickAccess, 
   QuickAccessGrid, 
   QuickAccessItem, 
   CustomizeDialog,

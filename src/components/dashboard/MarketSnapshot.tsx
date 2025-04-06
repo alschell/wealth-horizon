@@ -62,7 +62,7 @@ const MarketSnapshot = () => {
 
   return (
     <Card className="shadow-sm">
-      <CardHeader className="pb-3">
+      <CardHeader className="pb-2">
         <CardTitle className="text-md">Market Snapshot</CardTitle>
       </CardHeader>
       <CardContent>

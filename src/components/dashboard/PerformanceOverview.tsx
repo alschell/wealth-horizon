@@ -16,7 +16,7 @@ import {
 const PerformanceOverview = () => {
   return (
     <Card className="overflow-auto shadow-sm">
-      <CardHeader className="pb-3">
+      <CardHeader className="pb-2">
         <CardTitle className="text-md">Performance Overview</CardTitle>
         <CardDescription>Quick snapshot of your wealth performance</CardDescription>
       </CardHeader>

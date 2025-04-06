@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import { Settings, LogOut, Bell, Search, Menu, X } from "lucide-react";
+import { LogOut, Bell, Search, Menu, X } from "lucide-react";
 import Logo from "./Logo";
 import PageTitle from "./PageTitle";
 import NotificationsPopover from "./NotificationsPopover";

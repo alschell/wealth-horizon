@@ -24,15 +24,15 @@ const OverviewTabContent = ({
 }: OverviewTabContentProps) => {
   return (
     <div className="space-y-12">
-      <div>
+      <div className="mt-4">
         <NetWorthChart performanceData={performanceData} chartConfig={chartConfig} />
       </div>
       
-      <div>
+      <div className="mt-8">
         <KeyMetricsGrid />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
         <TopAssets />
         <RecentNewsList newsData={newsData} />
       </div>

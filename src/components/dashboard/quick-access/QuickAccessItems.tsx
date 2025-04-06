@@ -18,6 +18,7 @@ const QuickAccessItems = ({ items }: QuickAccessItemsProps) => {
           label={item.label}
           path={item.path}
           description={item.description}
+          color={item.color}
         />
       ))}
     </div>

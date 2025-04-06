@@ -41,7 +41,7 @@ const RecentActivity = () => {
         <div className="absolute bottom-0 left-0 right-0 bg-white pb-5 pt-2">
           <div className="flex justify-center">
             <Link to="/activity">
-              <Button variant="outline" size="sm" className="flex items-center justify-center px-6">
+              <Button variant="outline" size="sm" className="flex items-center justify-center">
                 View All Activity
                 <ChevronRight className="h-4 w-4 ml-1" />
               </Button>

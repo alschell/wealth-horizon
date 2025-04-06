@@ -26,7 +26,7 @@ const Documents = () => {
         
         <PageHeaderCard
           icon={FileText}
-          title="Document Management"
+          title="Manage Documents"
           description="Securely store, manage, and share important financial documents"
           iconColor="text-blue-600"
           iconBgColor="bg-blue-100"

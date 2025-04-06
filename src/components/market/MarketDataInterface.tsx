@@ -15,17 +15,17 @@ const MarketDataInterface = () => {
   // Check if we have state from navigation
   useEffect(() => {
     if (location.state) {
-      const { activeTab: tab, articleUrl } = location.state as { 
+      const { activeTab: tab, articleId } = location.state as { 
         activeTab?: string;
-        articleUrl?: string;
+        articleId?: string;
       };
       
       if (tab) {
         setActiveTab(tab);
       }
       
-      // If we have an article URL, we could trigger showing the article detail
-      // This would be implemented in the NewsSection component
+      // If we have an article ID, we could pass it to the NewsSection
+      // NewsSection would need to be updated to handle this and open the article
     }
   }, [location.state]);
 
@@ -59,7 +59,7 @@ const MarketDataInterface = () => {
           </TabsContent>
           
           <TabsContent value="news" className="mt-0">
-            <NewsSection />
+            <NewsSection articleId={location.state?.articleId} />
           </TabsContent>
           
           <TabsContent value="watchlist" className="mt-0">

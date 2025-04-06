@@ -26,7 +26,7 @@ const EntityManagement = () => {
         
         <PageHeaderCard
           icon={Building2}
-          title="Multi-Entity Management"
+          title="Manage Entities"
           description="Manage and monitor your complex legal entity structure"
           iconColor="text-purple-600"
           iconBgColor="bg-purple-100"

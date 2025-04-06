@@ -26,7 +26,7 @@ const ClientPortal = () => {
         
         <PageHeaderCard
           icon={Users}
-          title="Client Portal"
+          title="Access Client Portal"
           description="Manage client access to reports and financial information"
           iconColor="text-sky-600"
           iconBgColor="bg-sky-100"

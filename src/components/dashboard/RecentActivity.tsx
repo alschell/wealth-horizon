@@ -3,9 +3,32 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ChevronRight, TrendingUp, DollarSign } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const RecentActivity = () => {
+  const navigate = useNavigate();
+
+  const activities = [
+    { 
+      id: "rebalance-01",
+      title: "Portfolio rebalanced", 
+      time: "Today at 09:45 AM",
+      icon: <TrendingUp className="h-4 w-4 text-gray-500" />,
+      link: "/activity/rebalance-01"
+    },
+    { 
+      id: "deposit-01",
+      title: "Cash deposit received", 
+      time: "Yesterday at 2:30 PM",
+      icon: <DollarSign className="h-4 w-4 text-gray-500" />,
+      link: "/activity/deposit-01"
+    }
+  ];
+
+  const handleActivityClick = (activityId: string) => {
+    navigate(`/activity/${activityId}`);
+  };
+
   return (
     <Card className="shadow-sm">
       <CardHeader className="pb-2">
@@ -13,29 +36,23 @@ const RecentActivity = () => {
       </CardHeader>
       <CardContent className="space-y-4 relative">
         <div className="space-y-3 pb-12 max-h-[300px] overflow-y-auto">
-          <div className="p-3 rounded-md hover:bg-gray-50 transition-colors cursor-pointer">
-            <div className="flex items-start gap-3">
-              <div className="mt-0.5 h-8 w-8 flex items-center justify-center bg-gray-50 rounded-full">
-                <TrendingUp className="h-4 w-4 text-gray-500" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium">Portfolio rebalanced</p>
-                <p className="text-xs text-gray-500">Today at 09:45 AM</p>
-              </div>
-            </div>
-          </div>
-          
-          <div className="p-3 rounded-md hover:bg-gray-50 transition-colors cursor-pointer">
-            <div className="flex items-start gap-3">
-              <div className="mt-0.5 h-8 w-8 flex items-center justify-center bg-gray-50 rounded-full">
-                <DollarSign className="h-4 w-4 text-gray-500" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium">Cash deposit received</p>
-                <p className="text-xs text-gray-500">Yesterday at 2:30 PM</p>
+          {activities.map((activity, index) => (
+            <div 
+              key={index} 
+              className="p-3 rounded-md hover:bg-gray-50 transition-colors cursor-pointer"
+              onClick={() => handleActivityClick(activity.id)}
+            >
+              <div className="flex items-start gap-3">
+                <div className="mt-0.5 h-8 w-8 flex items-center justify-center bg-gray-50 rounded-full">
+                  {activity.icon}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium">{activity.title}</p>
+                  <p className="text-xs text-gray-500">{activity.time}</p>
+                </div>
               </div>
             </div>
-          </div>
+          ))}
         </div>
         
         <div className="absolute bottom-0 left-0 right-0 bg-white pb-5 pt-2">

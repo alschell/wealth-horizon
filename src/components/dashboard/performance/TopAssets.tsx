@@ -2,14 +2,25 @@
 import React from "react";
 import { ArrowUp, ArrowDown, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 const TopAssets = () => {
+  const navigate = useNavigate();
+  
   const assets = [
-    { name: "US Tech Fund", value: "$1.24B", change: "+4.7%", isPositive: true },
-    { name: "Treasury Notes", value: "$845M", change: "+1.2%", isPositive: true },
-    { name: "Real Estate Holdings", value: "$682M", change: "-2.1%", isPositive: false },
-    { name: "Private Equity", value: "$456M", change: "+8.3%", isPositive: true },
+    { id: "tech-fund", name: "US Tech Fund", value: "$1.24B", change: "+4.7%", isPositive: true },
+    { id: "treasury", name: "Treasury Notes", value: "$845M", change: "+1.2%", isPositive: true },
+    { id: "real-estate", name: "Real Estate Holdings", value: "$682M", change: "-2.1%", isPositive: false },
+    { id: "private-equity", name: "Private Equity", value: "$456M", change: "+8.3%", isPositive: true },
   ];
+
+  const handleAssetClick = (assetId: string) => {
+    navigate(`/analyze-wealth/asset/${assetId}`);
+  };
+
+  const handleViewAllClick = () => {
+    navigate("/analyze-wealth");
+  };
 
   return (
     <div className="flex flex-col h-full">
@@ -18,6 +29,7 @@ const TopAssets = () => {
           <div 
             key={index} 
             className="p-3 rounded-md hover:bg-gray-50 transition-colors cursor-pointer"
+            onClick={() => handleAssetClick(asset.id)}
           >
             <div className="flex justify-between items-center">
               <p className="text-sm font-medium">{asset.name}</p>
@@ -33,7 +45,12 @@ const TopAssets = () => {
         ))}
       </div>
       <div className="mt-auto pt-4">
-        <Button variant="outline" size="sm" className="w-full flex items-center justify-center">
+        <Button 
+          variant="outline" 
+          size="sm" 
+          className="w-full flex items-center justify-center"
+          onClick={handleViewAllClick}
+        >
           View All Assets
           <ChevronRight className="h-4 w-4 ml-1" />
         </Button>

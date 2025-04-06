@@ -3,9 +3,58 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ChevronRight, Bell, BellRing, Clock, CheckCircle, AlertTriangle, Calendar } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const NotificationsFeed = () => {
+  const navigate = useNavigate();
+
+  const notifications = [
+    {
+      id: "trade-executed",
+      title: "New Trade Executed",
+      description: "Your order to buy 100 shares of AAPL has been executed.",
+      time: "2 hours ago",
+      icon: <BellRing className="h-4 w-4 text-gray-500" />,
+      link: "/trading/history/trade-123"
+    },
+    {
+      id: "portfolio-review",
+      title: "Review Portfolio Allocation",
+      description: "Task: Review and approve the new portfolio allocation strategy.",
+      time: "Today",
+      icon: <CheckCircle className="h-4 w-4 text-gray-500" />,
+      link: "/analyze-wealth"
+    },
+    {
+      id: "credit-approved",
+      title: "Credit Application Approved",
+      description: "Your application for a new credit line has been approved.",
+      time: "Yesterday",
+      icon: <Bell className="h-4 w-4 text-gray-500" />,
+      link: "/credit-facilities"
+    },
+    {
+      id: "quarterly-review",
+      title: "Quarterly Review Meeting",
+      description: "Event: Your quarterly financial review is scheduled for June 15.",
+      time: "1 week ago",
+      icon: <Calendar className="h-4 w-4 text-gray-500" />,
+      link: "/calendar"
+    },
+    {
+      id: "portfolio-alert",
+      title: "Portfolio Alert",
+      description: "Your portfolio has increased by 5% this month.",
+      time: "2 days ago",
+      icon: <AlertTriangle className="h-4 w-4 text-gray-500" />,
+      link: "/analyze-wealth"
+    }
+  ];
+
+  const handleNotificationClick = (notification: any) => {
+    navigate(notification.link);
+  };
+
   return (
     <Card className="shadow-sm">
       <CardHeader className="pb-2">
@@ -13,80 +62,26 @@ const NotificationsFeed = () => {
       </CardHeader>
       <CardContent className="space-y-4 relative">
         <div className="space-y-3 max-h-[500px] overflow-y-auto pr-1 pb-12">
-          <div className="p-3 rounded-md hover:bg-gray-50 transition-colors cursor-pointer">
-            <div className="flex items-start gap-3">
-              <div className="mt-0.5 h-8 w-8 flex items-center justify-center bg-gray-50 rounded-full">
-                <BellRing className="h-4 w-4 text-gray-500" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium">New Trade Executed</p>
-                <p className="text-xs text-gray-500 mt-1">
-                  Your order to buy 100 shares of AAPL has been executed.
-                </p>
-                <p className="text-xs text-gray-400 mt-1">2 hours ago</p>
-              </div>
-            </div>
-          </div>
-          
-          <div className="p-3 rounded-md hover:bg-gray-50 transition-colors cursor-pointer">
-            <div className="flex items-start gap-3">
-              <div className="mt-0.5 h-8 w-8 flex items-center justify-center bg-gray-50 rounded-full">
-                <CheckCircle className="h-4 w-4 text-gray-500" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium">Review Portfolio Allocation</p>
-                <p className="text-xs text-gray-500 mt-1">
-                  Task: Review and approve the new portfolio allocation strategy.
-                </p>
-                <p className="text-xs text-gray-400 mt-1">Today</p>
+          {notifications.map((notification, index) => (
+            <div 
+              key={index} 
+              className="p-3 rounded-md hover:bg-gray-50 transition-colors cursor-pointer"
+              onClick={() => handleNotificationClick(notification)}
+            >
+              <div className="flex items-start gap-3">
+                <div className="mt-0.5 h-8 w-8 flex items-center justify-center bg-gray-50 rounded-full">
+                  {notification.icon}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium">{notification.title}</p>
+                  <p className="text-xs text-gray-500 mt-1">
+                    {notification.description}
+                  </p>
+                  <p className="text-xs text-gray-400 mt-1">{notification.time}</p>
+                </div>
               </div>
             </div>
-          </div>
-          
-          <div className="p-3 rounded-md hover:bg-gray-50 transition-colors cursor-pointer">
-            <div className="flex items-start gap-3">
-              <div className="mt-0.5 h-8 w-8 flex items-center justify-center bg-gray-50 rounded-full">
-                <Bell className="h-4 w-4 text-gray-500" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium">Credit Application Approved</p>
-                <p className="text-xs text-gray-500 mt-1">
-                  Your application for a new credit line has been approved.
-                </p>
-                <p className="text-xs text-gray-400 mt-1">Yesterday</p>
-              </div>
-            </div>
-          </div>
-          
-          <div className="p-3 rounded-md hover:bg-gray-50 transition-colors cursor-pointer">
-            <div className="flex items-start gap-3">
-              <div className="mt-0.5 h-8 w-8 flex items-center justify-center bg-gray-50 rounded-full">
-                <Calendar className="h-4 w-4 text-gray-500" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium">Quarterly Review Meeting</p>
-                <p className="text-xs text-gray-500 mt-1">
-                  Event: Your quarterly financial review is scheduled for June 15.
-                </p>
-                <p className="text-xs text-gray-400 mt-1">1 week ago</p>
-              </div>
-            </div>
-          </div>
-          
-          <div className="p-3 rounded-md hover:bg-gray-50 transition-colors cursor-pointer">
-            <div className="flex items-start gap-3">
-              <div className="mt-0.5 h-8 w-8 flex items-center justify-center bg-gray-50 rounded-full">
-                <AlertTriangle className="h-4 w-4 text-gray-500" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium">Portfolio Alert</p>
-                <p className="text-xs text-gray-500 mt-1">
-                  Your portfolio has increased by 5% this month.
-                </p>
-                <p className="text-xs text-gray-400 mt-1">2 days ago</p>
-              </div>
-            </div>
-          </div>
+          ))}
         </div>
         
         <div className="absolute bottom-0 left-0 right-0 bg-white pb-5 pt-2">

@@ -14,6 +14,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { newsData } from "@/components/dashboard/performance/PerformanceData";
 import TopAssets from "@/components/dashboard/performance/TopAssets";
 import RecentNewsList from "@/components/dashboard/performance/RecentNewsList";
+import SectionHeader from "./SectionHeader";
 
 const Dashboard = () => {
   return (
@@ -44,7 +45,7 @@ const Dashboard = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Card className="shadow-sm">
             <CardHeader className="pb-2">
-              <CardTitle className="text-xl">Top Assets</CardTitle>
+              <SectionHeader title="Top Assets" />
             </CardHeader>
             <CardContent>
               <TopAssets />
@@ -53,7 +54,7 @@ const Dashboard = () => {
           
           <Card className="shadow-sm">
             <CardHeader className="pb-2">
-              <CardTitle className="text-xl">Recent News</CardTitle>
+              <SectionHeader title="Recent News" />
             </CardHeader>
             <CardContent>
               <RecentNewsList newsData={newsData} />

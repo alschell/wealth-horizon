@@ -3,12 +3,21 @@ import React from "react";
 import { useLocation } from "react-router-dom";
 import DashboardHeader from "./DashboardHeader";
 import PageTransition from "@/components/ui/page-transition";
+import { cn } from "@/lib/utils";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
+  fullWidth?: boolean;
+  paddingY?: string;
+  paddingX?: string;
 }
 
-const DashboardLayout = ({ children }: DashboardLayoutProps) => {
+const DashboardLayout = ({ 
+  children, 
+  fullWidth = false,
+  paddingY = "pt-12",
+  paddingX = "p-4 md:p-6"
+}: DashboardLayoutProps) => {
   const location = useLocation();
   
   // Scroll to top when location changes
@@ -22,7 +31,11 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
       <div className="flex-1 flex flex-col overflow-hidden">
         <main className="flex-1 overflow-auto">
           <div 
-            className="max-w-7xl mx-auto w-full p-4 md:p-6 pt-12"
+            className={cn(
+              fullWidth ? "w-full" : "max-w-7xl mx-auto w-full",
+              paddingX,
+              paddingY
+            )}
           >
             <PageTransition>
               {children}

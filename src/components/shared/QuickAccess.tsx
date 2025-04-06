@@ -1,127 +1,134 @@
 
 import React from "react";
-import { 
-  AreaChart, 
-  ArrowRight, 
-  BarChart3, 
-  Briefcase, 
-  Building, 
-  FileText, 
-  LucideIcon, 
-  Newspaper, 
-  Sliders, 
-  Users 
+import { Link } from "react-router-dom";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  ArrowUpRight,
+  FileText,
+  BarChart3,
+  Landmark,
+  Leaf,
+  Shield,
+  Calculator,
+  Building2,
+  Scroll,
+  Users,
+  TrendingUp,
+  Sliders,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useLocation } from "react-router-dom";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Checkbox } from "@/components/ui/checkbox";
 
-type QuickAccessItem = {
-  title: string;
-  description: string;
-  icon: LucideIcon;
-  path: string;
-  visibleOn: string[];
-};
-
-// Define which items should be visible on which pages
-const quickAccessItems: QuickAccessItem[] = [
+const allQuickLinks = [
   {
-    title: "Portfolio",
-    description: "View your complete portfolio breakdown",
-    icon: AreaChart,
-    path: "/portfolio",
-    visibleOn: ["dashboard", "advice", "market-data", "documents"]
-  },
-  {
-    title: "Advice",
-    description: "Review advisory relationships and mandates",
-    icon: Briefcase,
-    path: "/advice",
-    visibleOn: ["dashboard", "portfolio", "market-data", "documents"]
+    title: "Reports",
+    description: "Generate financial reports",
+    icon: <FileText className="h-4 w-4" />,
+    link: "/reporting",
+    color: "text-gray-500 bg-gray-50"
   },
   {
     title: "Market Data",
-    description: "Access real-time market information",
-    icon: BarChart3,
-    path: "/market-data",
-    visibleOn: ["dashboard", "portfolio", "advice", "documents"]
+    description: "Access market information",
+    icon: <BarChart3 className="h-4 w-4" />,
+    link: "/market-data",
+    color: "text-gray-500 bg-gray-50"
+  },
+  {
+    title: "Integrations",
+    description: "Manage connected services",
+    icon: <Landmark className="h-4 w-4" />,
+    link: "/integrations",
+    color: "text-gray-500 bg-gray-50"
+  },
+  {
+    title: "ESG Investing",
+    description: "Sustainable investing metrics",
+    icon: <Leaf className="h-4 w-4" />,
+    link: "/esg",
+    color: "text-gray-500 bg-gray-50"
+  },
+  {
+    title: "Compliance",
+    description: "Regulatory compliance tracking",
+    icon: <Shield className="h-4 w-4" />,
+    link: "/compliance-monitoring",
+    color: "text-gray-500 bg-gray-50"
+  },
+  {
+    title: "Tax Optimization",
+    description: "Tax planning & efficiency",
+    icon: <Calculator className="h-4 w-4" />,
+    link: "/tax-optimization",
+    color: "text-gray-500 bg-gray-50"
+  },
+  {
+    title: "Entity Management",
+    description: "Manage legal structures",
+    icon: <Building2 className="h-4 w-4" />,
+    link: "/entity-management",
+    color: "text-gray-500 bg-gray-50"
+  },
+  {
+    title: "Legacy Planning",
+    description: "Succession & estate planning",
+    icon: <Scroll className="h-4 w-4" />,
+    link: "/legacy-planning",
+    color: "text-gray-500 bg-gray-50"
+  },
+  {
+    title: "Client Portal",
+    description: "Manage client access",
+    icon: <Users className="h-4 w-4" />,
+    link: "/client-portal",
+    color: "text-gray-500 bg-gray-50"
+  },
+  {
+    title: "Trading",
+    description: "Execute investment trades",
+    icon: <TrendingUp className="h-4 w-4" />,
+    link: "/trading",
+    color: "text-gray-500 bg-gray-50"
   },
   {
     title: "Documents",
-    description: "Manage and review all documents",
-    icon: FileText,
-    path: "/documents",
-    visibleOn: ["dashboard", "portfolio", "advice", "market-data"]
+    description: "Document management",
+    icon: <FileText className="h-4 w-4" />,
+    link: "/documents",
+    color: "text-gray-500 bg-gray-50"
   },
   {
-    title: "Family Office",
-    description: "Manage your family office settings",
-    icon: Building,
-    path: "/family-office",
-    visibleOn: ["dashboard"]
+    title: "Analyze Wealth",
+    description: "Portfolio analysis tools",
+    icon: <BarChart3 className="h-4 w-4" />,
+    link: "/analyze-wealth",
+    color: "text-gray-500 bg-gray-50"
   },
-  {
-    title: "News",
-    description: "Latest financial news and insights",
-    icon: Newspaper,
-    path: "/news",
-    visibleOn: ["dashboard", "market-data"]
-  },
-  {
-    title: "Users",
-    description: "Manage access and permissions",
-    icon: Users,
-    path: "/users",
-    visibleOn: ["dashboard", "settings"]
-  },
-  {
-    title: "Reports",
-    description: "Generate and view reports",
-    icon: FileText,
-    path: "/reports",
-    visibleOn: ["dashboard", "portfolio"]
-  }
 ];
 
 interface QuickAccessProps {
   pathname?: string;
-  customItems?: QuickAccessItem[];
 }
 
-const QuickAccess = ({ pathname, customItems }: QuickAccessProps) => {
-  const location = useLocation();
-  const currentPath = pathname || location.pathname;
+const QuickAccess = ({ pathname }: QuickAccessProps) => {
   const [isCustomizing, setIsCustomizing] = React.useState(false);
   const [visibleItems, setVisibleItems] = React.useState<string[]>([]);
   const [temporarySelection, setTemporarySelection] = React.useState<string[]>([]);
   
-  // Extract the current page name from the path
-  const currentPage = currentPath.split('/')[1] || 'dashboard';
+  // Get current page from pathname or default to dashboard
+  const currentPage = pathname?.split('/')[1] || 'dashboard';
   
   React.useEffect(() => {
     const savedItems = localStorage.getItem(`quickAccessItems_${currentPage}`);
     if (savedItems) {
       setVisibleItems(JSON.parse(savedItems));
     } else {
-      // Default to showing all items relevant for this page
-      const defaultVisible = quickAccessItems
-        .filter(item => item.visibleOn.includes(currentPage))
-        .map(item => item.title);
-      setVisibleItems(defaultVisible);
+      // Default to showing all items
+      setVisibleItems(allQuickLinks.map(item => item.title));
     }
   }, [currentPage]);
   
-  // Filter the quick access items to show only those selected by the user or relevant to the current page
-  const filteredItems = customItems || quickAccessItems.filter(item => 
-    item.visibleOn.includes(currentPage) && visibleItems.includes(item.title)
-  );
-  
-  // Limit to 6 items max
-  const displayItems = filteredItems.slice(0, 6);
-
   const handleCustomizeOpen = () => {
     setTemporarySelection([...visibleItems]);
     setIsCustomizing(true);
@@ -141,45 +148,51 @@ const QuickAccess = ({ pathname, customItems }: QuickAccessProps) => {
     }
   };
 
-  const availableItems = quickAccessItems.filter(item => 
-    item.visibleOn.includes(currentPage)
+  // Filter the quick links based on user selection
+  const filteredLinks = allQuickLinks.filter(link => 
+    visibleItems.includes(link.title)
   );
 
   return (
-    <div>
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-semibold">Quick Access</h2>
-        <Button 
-          variant="outline" 
-          size="sm" 
-          className="flex items-center gap-1"
-          onClick={handleCustomizeOpen}
-        >
-          <Sliders className="h-3.5 w-3.5" />
-          <span className="hidden sm:inline">Customize</span>
-        </Button>
-      </div>
-      
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-        {displayItems.map((item, index) => (
-          <Card key={index} className="hover:shadow-md transition-shadow cursor-pointer">
-            <CardHeader className="p-4 pb-2">
-              <div className="flex items-center justify-between">
-                <div className="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center">
-                  <item.icon className="h-4 w-4 text-gray-600" />
+    <Card>
+      <CardHeader className="pb-2">
+        <div className="flex items-center justify-between">
+          <CardTitle className="text-xl">Quick Access</CardTitle>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={handleCustomizeOpen}
+            className="flex items-center gap-1"
+          >
+            <Sliders className="h-4 w-4 mr-1" />
+            Customize
+          </Button>
+        </div>
+      </CardHeader>
+      <CardContent>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+          {filteredLinks.map((item, index) => (
+            <Link
+              key={index}
+              to={item.link}
+              className="flex flex-col p-3 rounded-lg hover:bg-gray-50 transition-colors border"
+            >
+              <div className="flex items-start justify-between">
+                <div className="h-8 w-8 flex items-center justify-center rounded-full bg-gray-50">
+                  {item.icon}
                 </div>
-                <Button variant="ghost" size="icon" className="h-6 w-6">
-                  <ArrowRight className="h-4 w-4" />
-                </Button>
+                <ArrowUpRight className="h-4 w-4 text-gray-400" />
               </div>
-            </CardHeader>
-            <CardContent className="p-4 pt-2">
-              <CardTitle className="text-sm font-medium">{item.title}</CardTitle>
-              <p className="text-xs text-gray-500 mt-1">{item.description}</p>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+              <div className="mt-2">
+                <h3 className="text-sm font-medium">{item.title}</h3>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  {item.description}
+                </p>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </CardContent>
 
       <Dialog open={isCustomizing} onOpenChange={setIsCustomizing}>
         <DialogContent className="sm:max-w-md">
@@ -191,7 +204,7 @@ const QuickAccess = ({ pathname, customItems }: QuickAccessProps) => {
           </DialogHeader>
           <div className="max-h-[60vh] overflow-y-auto py-4">
             <div className="space-y-4">
-              {availableItems.map((item) => (
+              {allQuickLinks.map((item) => (
                 <div key={item.title} className="flex items-start space-x-3">
                   <Checkbox 
                     id={`item-${item.title}`}
@@ -219,7 +232,7 @@ const QuickAccess = ({ pathname, customItems }: QuickAccessProps) => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </div>
+    </Card>
   );
 };
 

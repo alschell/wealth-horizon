@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Newspaper, ChevronRight, ExternalLink } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -30,14 +30,13 @@ const RecentNewsList = ({ newsData }: RecentNewsListProps) => {
         {visibleNews.map((news, index) => (
           <div 
             key={index} 
-            className="p-3 rounded-md hover:bg-gray-50 transition-colors cursor-pointer flex justify-between items-center"
+            className="p-3 rounded-md hover:bg-gray-50 transition-colors cursor-pointer"
             onClick={() => handleNewsClick(news.url)}
           >
             <div>
               <p className="text-sm font-medium">{news.title}</p>
               <p className="text-xs text-gray-500 mt-1">{news.time}</p>
             </div>
-            <ExternalLink className="h-4 w-4 text-gray-400 flex-shrink-0" />
           </div>
         ))}
       </div>

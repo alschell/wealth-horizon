@@ -22,13 +22,13 @@ const NetWorthChart = ({ performanceData, chartConfig }: NetWorthChartProps) => 
 
   return (
     <div className="w-full mb-2">
-      <div className="mb-2 flex items-center justify-between">
+      <div className="flex items-center justify-between">
         <div>
           <h3 className="text-sm font-medium text-gray-600">Net Worth Trend</h3>
           <p className="text-2xl font-bold">$4.48B</p>
         </div>
-        <div className="flex items-center">
-          <div className="flex items-center text-emerald-600 text-sm font-medium mr-6">
+        <div className="flex items-center space-x-4">
+          <div className="flex items-center text-emerald-600 text-sm font-medium">
             <TrendingUp className="h-4 w-4 mr-1" /> +3.8% YTD
           </div>
           <div className="flex space-x-1">
@@ -46,7 +46,7 @@ const NetWorthChart = ({ performanceData, chartConfig }: NetWorthChartProps) => 
           </div>
         </div>
       </div>
-      <div className="h-64 w-full mt-0">
+      <div className="h-64 w-full mt-4">
         <ChartContainer config={chartConfig}>
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={performanceData} margin={{ top: 0, right: 0, left: 0, bottom: 10 }}>

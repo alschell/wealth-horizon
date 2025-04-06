@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Sun, Moon, Cloud, Clock, Calendar, Video, ExternalLink } from "lucide-react";
+import { Sun, Moon, Cloud, Clock, Calendar, Video } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
@@ -45,16 +45,16 @@ const WelcomeHeader = () => {
         
         <div className="mt-4 md:mt-0 flex items-center bg-white px-4 py-2 rounded-lg shadow-sm border border-gray-100">
           <div className="flex items-center">
-            <div className="bg-blue-100 p-2 rounded-full mr-3">
-              <Video className="h-5 w-5 text-blue-600" />
+            <div className="mt-0.5 h-8 w-8 flex items-center justify-center bg-gray-50 rounded-full">
+              <Video className="h-4 w-4 text-gray-500" />
             </div>
-            <div>
+            <div className="ml-3">
               <p className="text-sm font-medium">Next Advisory Meeting</p>
               <p className="text-xs text-gray-600">April 10, 2025 • 2:00 PM EST</p>
             </div>
             <Button size="sm" variant="ghost" className="ml-3" asChild>
               <Link to="/calendar">
-                <ExternalLink className="h-4 w-4" />
+                <Calendar className="h-4 w-4" />
               </Link>
             </Button>
           </div>

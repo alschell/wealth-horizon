@@ -92,28 +92,40 @@ export const recommendations = [
     title: "Increase fixed income allocation",
     description: "Increasing your fixed income allocation by 5% would improve your portfolio's risk-adjusted return.",
     impact: "Medium",
-    category: "Asset Allocation"
+    category: "Asset Allocation",
+    impactValue: 3.2,
+    urgency: "medium",
+    action: "Review Allocation"
   },
   {
     id: "rec-2",
     title: "Review concentrated positions",
     description: "Your technology sector exposure exceeds 30% of your equity portfolio, consider diversifying.",
     impact: "High",
-    category: "Risk Management"
+    category: "Risk Management",
+    impactValue: 5.7,
+    urgency: "high",
+    action: "Diversify Now"
   },
   {
     id: "rec-3",
     title: "Tax-loss harvesting opportunity",
     description: "Current market conditions present an opportunity for tax-loss harvesting in your international equity positions.",
     impact: "Medium",
-    category: "Tax Optimization"
+    category: "Tax Optimization",
+    impactValue: 2.8,
+    urgency: "medium",
+    action: "Harvest Losses"
   },
   {
     id: "rec-4",
     title: "Term deposit rates favorable",
     description: "Current interest rates for 6-month term deposits are at 4.75%, consider allocating excess cash.",
     impact: "Low",
-    category: "Cash Management"
+    category: "Cash Management",
+    impactValue: 1.5,
+    urgency: "low",
+    action: "Allocate Cash"
   }
 ];
 

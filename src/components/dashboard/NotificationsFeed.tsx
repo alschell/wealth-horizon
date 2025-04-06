@@ -52,7 +52,6 @@ const NotificationsFeed = () => {
   ];
 
   const handleNotificationClick = (notification: any) => {
-    // Changed links to valid routes to prevent 404 errors
     navigate(notification.link);
   };
 

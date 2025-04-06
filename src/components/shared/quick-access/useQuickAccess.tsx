@@ -32,11 +32,11 @@ export const useQuickAccess = (pathname?: string) => {
     setIsCustomizing(false);
   };
 
-  const toggleItem = (title: string) => {
-    if (temporarySelection.includes(title)) {
-      setTemporarySelection(temporarySelection.filter(item => item !== title));
+  const toggleItem = (id: string) => {
+    if (temporarySelection.includes(id)) {
+      setTemporarySelection(temporarySelection.filter(item => item !== id));
     } else {
-      setTemporarySelection([...temporarySelection, title]);
+      setTemporarySelection([...temporarySelection, id]);
     }
   };
 

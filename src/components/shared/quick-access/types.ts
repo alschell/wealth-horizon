@@ -39,6 +39,6 @@ export interface CustomizeDialogProps {
   onOpenChange: (open: boolean) => void;
   items: QuickAccessItem[];
   selectedItems: string[];
-  onItemToggle: (title: string) => void;
+  onItemToggle: (id: string) => void;
   onSave: () => void;
 }

@@ -1,27 +1,18 @@
 
 import React from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { QuickLinkItem } from "./types";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { QuickAccessItem, CustomizeDialogProps } from "./types";
 
-interface CustomizeDialogProps {
-  isOpen: boolean;
-  onOpenChange: (open: boolean) => void;
-  links: QuickLinkItem[];
-  selectedItems: string[];
-  onItemToggle: (title: string) => void;
-  onSave: () => void;
-}
-
-const CustomizeDialog = ({
+const CustomizeDialog: React.FC<CustomizeDialogProps> = ({
   isOpen,
   onOpenChange,
-  links,
+  items,
   selectedItems,
   onItemToggle,
-  onSave
-}: CustomizeDialogProps) => {
+  onSave,
+}) => {
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
@@ -33,16 +24,16 @@ const CustomizeDialog = ({
         </DialogHeader>
         <div className="max-h-[60vh] overflow-y-auto py-4">
           <div className="space-y-4">
-            {[...links].sort((a, b) => a.title.localeCompare(b.title)).map((item) => (
-              <div key={item.title} className="flex items-start space-x-3">
+            {[...items].sort((a, b) => a.title.localeCompare(b.title)).map((item) => (
+              <div key={item.id} className="flex items-start space-x-3">
                 <Checkbox 
-                  id={`item-${item.title}`}
+                  id={`item-${item.id}`}
                   checked={selectedItems.includes(item.title)}
                   onCheckedChange={() => onItemToggle(item.title)}
                 />
                 <div className="grid gap-1.5 leading-none">
                   <label
-                    htmlFor={`item-${item.title}`}
+                    htmlFor={`item-${item.id}`}
                     className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                   >
                     {item.title}

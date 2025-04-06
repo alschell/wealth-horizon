@@ -2,13 +2,14 @@
 import React from "react";
 import { cn } from "@/lib/utils";
 
-type StatusType = "success" | "warning" | "error" | "info" | "pending";
+export type StatusType = "success" | "warning" | "error" | "info" | "pending";
 
-interface StatusIndicatorProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface StatusIndicatorProps extends React.HTMLAttributes<HTMLDivElement> {
   status: StatusType;
   size?: "sm" | "md" | "lg";
   withLabel?: boolean;
   label?: string;
+  className?: string;
 }
 
 export const StatusIndicator: React.FC<StatusIndicatorProps> = ({
@@ -20,11 +21,11 @@ export const StatusIndicator: React.FC<StatusIndicatorProps> = ({
   ...props
 }) => {
   const statusColors = {
-    success: "bg-gray-800",
-    warning: "bg-gray-400",
-    error: "bg-gray-600",
-    info: "bg-gray-500",
-    pending: "bg-gray-300"
+    success: "bg-green-600",
+    warning: "bg-amber-500",
+    error: "bg-red-600",
+    info: "bg-blue-500",
+    pending: "bg-gray-400"
   };
 
   const statusLabels = {

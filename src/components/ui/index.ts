@@ -9,3 +9,4 @@ export * from './card-skeleton';
 export * from './toaster';
 export * from './toast';
 export * from './tooltip';
+export * from './skeleton';

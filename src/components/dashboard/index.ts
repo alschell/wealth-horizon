@@ -8,5 +8,7 @@ export { default as MarketSnapshot } from './MarketSnapshot';
 export { default as RecentActivity } from './RecentActivity';
 export { default as PageHeaderCard } from './PageHeaderCard';
 export { default as SectionHeader } from './SectionHeader';
+export { default as HeaderAction } from './HeaderAction';
+export { default as QuickActions } from './QuickActions';
 export * from './recommendations';
 // Add any new exports here

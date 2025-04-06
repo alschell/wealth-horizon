@@ -7,7 +7,7 @@ import QuickAccessGrid from "./QuickAccessGrid";
 import CustomizeDialog from "./CustomizeDialog";
 import { useQuickAccess } from "./useQuickAccess";
 import { allQuickLinks } from "./quickLinksData";
-import { QuickAccessItem } from "./types";
+import { QuickAccessItem, QuickLinkItem } from "./types";
 
 interface QuickAccessProps {
   pathname?: string;

@@ -14,16 +14,16 @@ const QuickAccessItem = ({ title, description, icon, link }: QuickAccessItemProp
   return (
     <Link
       to={link}
-      className="flex flex-col p-3 rounded-lg hover:bg-gray-50 transition-colors text-center"
+      className="flex flex-col p-3 rounded-lg hover:bg-gray-50 transition-colors text-left"
     >
-      <div className="flex flex-col items-center justify-center">
-        <div className="h-8 w-8 flex items-center justify-center rounded-full bg-gray-50 mb-2">
+      <div className="flex items-center space-x-3 mb-2">
+        <div className="h-8 w-8 flex items-center justify-center rounded-full bg-gray-50">
           {icon}
         </div>
+        <h3 className="text-sm font-medium">{title}</h3>
       </div>
       <div>
-        <h3 className="text-sm font-medium">{title}</h3>
-        <p className="text-xs text-muted-foreground mt-0.5">
+        <p className="text-xs text-muted-foreground pl-11">
           {description}
         </p>
       </div>

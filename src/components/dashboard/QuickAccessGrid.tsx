@@ -80,7 +80,7 @@ const QuickAccessGrid = () => {
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
         {actionItems.map((item, index) => (
           <Link to={item.path} key={index}>
-            <Card className="h-full flex flex-col items-center justify-start p-4 text-center transition-all duration-200 hover:translate-y-[-2px] bg-white border border-gray-200 shadow-sm">
+            <Card className="h-full flex flex-col items-center justify-start p-4 text-center transition-all duration-200 hover:bg-gray-50">
               <div className="h-10 w-10 rounded-full bg-gray-50 flex items-center justify-center mb-3 mt-2">
                 <item.icon className="h-5 w-5 text-gray-700" />
               </div>

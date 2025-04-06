@@ -15,6 +15,10 @@ import {
   Users,
   TrendingUp,
   Sliders,
+  PieChart,
+  LineChart,
+  DollarSign,
+  Lightbulb,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
@@ -22,21 +26,63 @@ import { Checkbox } from "@/components/ui/checkbox";
 
 const allQuickLinks = [
   {
-    title: "Reports",
+    title: "Analyze wealth",
+    description: "Portfolio analysis tools",
+    icon: <PieChart className="h-4 w-4" />,
+    link: "/analyze-wealth",
+    color: "text-gray-500 bg-gray-50"
+  },
+  {
+    title: "Access market data & news",
+    description: "Access market information",
+    icon: <LineChart className="h-4 w-4" />,
+    link: "/market-data",
+    color: "text-gray-500 bg-gray-50"
+  },
+  {
+    title: "Trade",
+    description: "Execute investment trades",
+    icon: <TrendingUp className="h-4 w-4" />,
+    link: "/trading",
+    color: "text-gray-500 bg-gray-50"
+  },
+  {
+    title: "Manage credit facilities",
+    description: "Manage credit facilities",
+    icon: <Building2 className="h-4 w-4" />,
+    link: "/credit-facilities",
+    color: "text-gray-500 bg-gray-50"
+  },
+  {
+    title: "Get advice",
+    description: "Get personalized advice",
+    icon: <Lightbulb className="h-4 w-4" />,
+    link: "/advice",
+    color: "text-gray-500 bg-gray-50"
+  },
+  {
+    title: "Manage cashflow & liquidity",
+    description: "Manage liquidity and deposits",
+    icon: <DollarSign className="h-4 w-4" />,
+    link: "/cashflow-management",
+    color: "text-gray-500 bg-gray-50"
+  },
+  {
+    title: "Generate reports",
     description: "Generate financial reports",
     icon: <FileText className="h-4 w-4" />,
     link: "/reporting",
     color: "text-gray-500 bg-gray-50"
   },
   {
-    title: "Market Data",
-    description: "Access market information",
-    icon: <BarChart3 className="h-4 w-4" />,
-    link: "/market-data",
+    title: "Manage users & permissions",
+    description: "Manage user accounts",
+    icon: <Users className="h-4 w-4" />,
+    link: "/user-management",
     color: "text-gray-500 bg-gray-50"
   },
   {
-    title: "Integrations",
+    title: "Manage integrations",
     description: "Manage connected services",
     icon: <Landmark className="h-4 w-4" />,
     link: "/integrations",
@@ -85,24 +131,10 @@ const allQuickLinks = [
     color: "text-gray-500 bg-gray-50"
   },
   {
-    title: "Trading",
-    description: "Execute investment trades",
-    icon: <TrendingUp className="h-4 w-4" />,
-    link: "/trading",
-    color: "text-gray-500 bg-gray-50"
-  },
-  {
     title: "Documents",
     description: "Document management",
     icon: <FileText className="h-4 w-4" />,
     link: "/documents",
-    color: "text-gray-500 bg-gray-50"
-  },
-  {
-    title: "Analyze Wealth",
-    description: "Portfolio analysis tools",
-    icon: <BarChart3 className="h-4 w-4" />,
-    link: "/analyze-wealth",
     color: "text-gray-500 bg-gray-50"
   },
 ];
@@ -175,7 +207,7 @@ const QuickAccess = ({ pathname }: QuickAccessProps) => {
             <Link
               key={index}
               to={item.link}
-              className="flex flex-col p-3 rounded-lg hover:bg-gray-50 transition-colors border"
+              className="flex flex-col p-3 rounded-lg hover:bg-gray-50 transition-colors"
             >
               <div className="flex items-start justify-between">
                 <div className="h-8 w-8 flex items-center justify-center rounded-full bg-gray-50">
@@ -204,7 +236,7 @@ const QuickAccess = ({ pathname }: QuickAccessProps) => {
           </DialogHeader>
           <div className="max-h-[60vh] overflow-y-auto py-4">
             <div className="space-y-4">
-              {allQuickLinks.map((item) => (
+              {[...allQuickLinks].sort((a, b) => a.title.localeCompare(b.title)).map((item) => (
                 <div key={item.title} className="flex items-start space-x-3">
                   <Checkbox 
                     id={`item-${item.title}`}

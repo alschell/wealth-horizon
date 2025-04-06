@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+
+import React, { useState, useEffect } from "react";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
@@ -14,12 +15,26 @@ import {
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { toast } from "sonner";
 
 const LandingPage = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<number>(0);
   const [email, setEmail] = useState("");
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    // Set loaded state when component mounts
+    setIsLoaded(true);
+
+    // Cleanup tab interval on unmount
+    const interval = setInterval(() => {
+      setActiveTab(prev => (prev + 1) % platformTabs.length);
+    }, 5000);
+    
+    return () => clearInterval(interval);
+  }, []);
 
   // Platform features tab data
   const platformTabs = [
@@ -49,42 +64,11 @@ const LandingPage = () => {
     }
   ];
   
-  // Auto-advance platform tabs
-  React.useEffect(() => {
-    const interval = setInterval(() => {
-      setActiveTab(prev => (prev + 1) % platformTabs.length);
-    }, 5000);
-    
-    return () => clearInterval(interval);
-  }, [platformTabs.length]);
-  
   // Handle newsletter signup
   const handleNewsletterSignup = (e: React.FormEvent) => {
     e.preventDefault();
-    alert(`Thank you for subscribing with ${email}!`);
+    toast.success(`Thank you for subscribing with ${email}!`);
     setEmail("");
-  };
-
-  // Animation variants
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: { 
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: { 
-      y: 0, 
-      opacity: 1,
-      transition: {
-        duration: 0.5
-      }
-    }
   };
 
   // Handle image error fallback
@@ -97,6 +81,42 @@ const LandingPage = () => {
       e.currentTarget.style.border = "1px solid #e5e7eb";
       e.currentTarget.alt = "Dashboard Preview (Image not available)";
     };
+  };
+
+  // Animation variants
+  const fadeIn = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: { duration: 0.5 }
+    }
+  };
+
+  const staggerContainer = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.2
+      }
+    }
+  };
+
+  const heroContainer = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        when: "beforeChildren"
+      }
+    }
+  };
+
+  const scrollToSection = (sectionId: string) => {
+    document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
@@ -115,27 +135,21 @@ const LandingPage = () => {
             <Button 
               variant="link" 
               className="text-gray-700 hover:text-gray-900 transition-colors"
-              onClick={() => {
-                document.getElementById('platform-section')?.scrollIntoView({ behavior: 'smooth' });
-              }}
+              onClick={() => scrollToSection('platform-section')}
             >
               Platform
             </Button>
             <Button 
               variant="link" 
               className="text-gray-700 hover:text-gray-900 transition-colors"
-              onClick={() => {
-                document.getElementById('features-section')?.scrollIntoView({ behavior: 'smooth' });
-              }}
+              onClick={() => scrollToSection('features-section')}
             >
               Solutions
             </Button>
             <Button 
               variant="link" 
               className="text-gray-700 hover:text-gray-900 transition-colors"
-              onClick={() => {
-                document.getElementById('contact-section')?.scrollIntoView({ behavior: 'smooth' });
-              }}
+              onClick={() => scrollToSection('contact-section')}
             >
               Contact
             </Button>
@@ -168,8 +182,8 @@ const LandingPage = () => {
             background: "linear-gradient(180deg, #F9FAFC 0%, #F3F4F6 100%)"
           }}
           initial="hidden"
-          animate="visible"
-          variants={containerVariants}
+          animate={isLoaded ? "visible" : "hidden"}
+          variants={heroContainer}
         >
           {/* Subtle grid background */}
           <div className="absolute inset-0 bg-[url('/assets/grid-pattern.svg')] opacity-5"></div>
@@ -178,18 +192,18 @@ const LandingPage = () => {
             <div className="flex flex-col md:flex-row items-center gap-10 md:gap-20">
               <motion.div 
                 className="md:w-1/2 space-y-8"
-                variants={itemVariants}
+                variants={staggerContainer}
               >
                 <motion.div 
                   className="inline-flex items-center px-4 py-2 rounded-full bg-gray-100 border border-gray-200"
-                  variants={itemVariants}
+                  variants={fadeIn}
                 >
                   <span className="text-sm text-gray-700 font-medium">For Family Offices & Institutional Investors</span>
                 </motion.div>
                 
                 <motion.h1 
                   className="text-4xl md:text-6xl font-bold tracking-tight"
-                  variants={itemVariants}
+                  variants={fadeIn}
                 >
                   All your{" "}
                   <span className="bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
@@ -200,14 +214,14 @@ const LandingPage = () => {
                 
                 <motion.p 
                   className="text-lg text-gray-600 max-w-lg"
-                  variants={itemVariants}
+                  variants={fadeIn}
                 >
                   View, analyze, and act on your bankable wealth across all your banks, brokers, and custodians in one powerful platform.
                 </motion.p>
                 
                 <motion.div 
                   className="flex flex-col sm:flex-row gap-4"
-                  variants={itemVariants}
+                  variants={fadeIn}
                 >
                   <Button 
                     className="h-12 px-6 rounded-lg bg-gray-900 text-white hover:bg-gray-800 transition-all text-base"
@@ -228,7 +242,7 @@ const LandingPage = () => {
                 
                 <motion.div 
                   className="flex flex-col md:flex-row gap-6 pt-6"
-                  variants={itemVariants}
+                  variants={fadeIn}
                 >
                   <div className="flex items-center gap-2">
                     <CheckCircle className="h-5 w-5 text-gray-600" />
@@ -249,7 +263,7 @@ const LandingPage = () => {
                 className="md:w-1/2 relative"
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.6 }}
+                transition={{ duration: 0.6, delay: 0.3 }}
               >
                 <div className="relative bg-gradient-to-br from-white to-gray-100 rounded-2xl border border-gray-200 overflow-hidden shadow-xl">
                   <div className="absolute inset-0 bg-[url('/assets/grid-pattern.svg')] opacity-20"></div>
@@ -287,8 +301,8 @@ const LandingPage = () => {
         <motion.section 
           id="platform-section"
           className="py-20 md:py-32 bg-white"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
           viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: 0.5 }}
         >
@@ -329,16 +343,19 @@ const LandingPage = () => {
                 <div className="relative aspect-video w-full">
                   <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-gray-100 to-white">
                     <div className="w-full h-full flex items-center justify-center">
-                      <motion.img
-                        src={platformTabs[activeTab].animation}
-                        alt={platformTabs[activeTab].title}
-                        className="w-full h-full object-contain p-8"
-                        onError={handleImageError}
-                        key={activeTab}
-                        initial={{ opacity: 0, scale: 0.98 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.5 }}
-                      />
+                      <AnimatePresence mode="wait">
+                        <motion.img
+                          key={activeTab}
+                          src={platformTabs[activeTab].animation}
+                          alt={platformTabs[activeTab].title}
+                          className="w-full h-full object-contain p-8"
+                          onError={handleImageError}
+                          initial={{ opacity: 0, scale: 0.98 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          exit={{ opacity: 0, scale: 0.98 }}
+                          transition={{ duration: 0.3 }}
+                        />
+                      </AnimatePresence>
                     </div>
                   </div>
                 </div>
@@ -496,7 +513,10 @@ const LandingPage = () => {
                   Get in touch with our team to learn more about how we can help your family office or institution.
                 </p>
                 
-                <form className="space-y-6">
+                <form className="space-y-6" onSubmit={(e) => { 
+                  e.preventDefault();
+                  toast.success("Your message has been sent. We'll be in touch shortly!");
+                }}>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <label htmlFor="firstName" className="text-sm text-gray-600">First Name</label>

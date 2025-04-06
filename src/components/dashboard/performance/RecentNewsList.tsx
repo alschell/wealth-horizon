@@ -26,7 +26,7 @@ const RecentNewsList = ({ newsData }: RecentNewsListProps) => {
 
   return (
     <div className="relative h-full">
-      <div className="space-y-2 max-h-[240px] overflow-y-auto pb-12">
+      <div className="space-y-2 pb-16">
         {visibleNews.map((news, index) => (
           <div 
             key={index} 

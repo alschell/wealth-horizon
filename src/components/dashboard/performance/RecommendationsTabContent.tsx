@@ -1,100 +1,67 @@
 
 import React from "react";
-import { Brain, ArrowRight, TrendingUp, ShieldAlert, BarChart4, FileSpreadsheet } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import RecommendationItem from "./RecommendationItem";
 import ActionableRecommendation from "./ActionableRecommendation";
-
-type RecommendationProps = {
-  text: string;
-  priority: string;
-};
+import { AlertTriangle, Briefcase, FileSpreadsheet, TrendingUp, DollarSign, Shield } from "lucide-react";
 
 type RecommendationsTabContentProps = {
-  recommendations: RecommendationProps[];
+  recommendations: {
+    text: string;
+    priority: string;
+  }[];
 };
 
 const RecommendationsTabContent = ({ recommendations }: RecommendationsTabContentProps) => {
-  // Enhanced AI recommendations for next best actions
-  const aiRecommendations = [
+  const enhancedRecommendations = [
     {
-      text: "Rebalance your equity allocation to reduce risk exposure in current market conditions",
+      text: "Rebalance your equity allocation to reduce risk by 15% based on current market volatility",
+      category: "Portfolio Optimization",
+      icon: <TrendingUp className="h-4 w-4" />,
       priority: "high"
     },
     {
-      text: "Consider increasing fixed income exposure by 8% to hedge against anticipated market volatility",
+      text: "Consider increasing fixed income exposure by 8% to improve portfolio stability",
+      category: "Asset Allocation",
+      icon: <Briefcase className="h-4 w-4" />,
       priority: "medium"
     },
     {
-      text: "Review and consolidate three similar technology ETFs to reduce overlap and save on fees",
-      priority: "medium"
-    },
-    {
-      text: "Implement currency hedging strategy for EUR exposure based on current monetary policy outlook",
+      text: "Implement currency hedging for EUR exposure to protect against anticipated volatility",
+      category: "Risk Management",
+      icon: <Shield className="h-4 w-4" />,
       priority: "high"
     },
     {
-      text: "Transition 15% of passive investments to actively managed strategies in the current market environment",
+      text: "Review overlapping technology ETFs to eliminate redundancy and reduce fees",
+      category: "Fee Optimization",
+      icon: <FileSpreadsheet className="h-4 w-4" />,
       priority: "medium"
     },
     {
-      text: "Prepare for tax season by reviewing capital gains harvesting opportunities in your portfolio",
-      priority: "medium" 
+      text: "Evaluate tax-loss harvesting opportunities in underperforming sectors",
+      category: "Tax Optimization",
+      icon: <DollarSign className="h-4 w-4" />,
+      priority: "medium"
+    },
+    {
+      text: "Address concentration risk in your portfolio with immediate sector diversification",
+      category: "Risk Alert",
+      icon: <AlertTriangle className="h-4 w-4" />,
+      priority: "high"
     }
   ];
   
-  // Actionable recommendations with specific details
-  const actionableRecommendations = [
-    {
-      text: "Your cash reserves are above target. Consider investing $240M in short-term treasury instruments to improve yield while maintaining liquidity.",
-      category: "Cash Management",
-      icon: <FileSpreadsheet className="h-4 w-4" />
-    },
-    {
-      text: "Sector over-concentration detected. Diversify your technology exposure by reducing allocation by 12% to mitigate sector-specific risk.",
-      category: "Risk Management",
-      icon: <ShieldAlert className="h-4 w-4" />
-    },
-    {
-      text: "Based on your investment policy, increase ESG exposure by 5% through new sustainable infrastructure investments offering stable yields.",
-      category: "Portfolio Alignment",
-      icon: <BarChart4 className="h-4 w-4" />
-    }
-  ];
-
   return (
     <div className="space-y-4">
-      <h3 className="text-sm font-medium flex items-center">
-        <Brain className="h-4 w-4 mr-1 text-gray-500" /> AI-Powered Next Best Actions
-      </h3>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-        {aiRecommendations.map((rec, index) => (
-          <RecommendationItem 
-            key={index} 
-            text={rec.text} 
-            priority={rec.priority} 
+      <div className="grid grid-cols-1 gap-4">
+        {enhancedRecommendations.map((recommendation, index) => (
+          <ActionableRecommendation 
+            key={index}
+            text={recommendation.text}
+            category={recommendation.category}
+            icon={recommendation.icon}
           />
         ))}
       </div>
-      
-      <h3 className="text-sm font-medium mt-8 mb-3 flex items-center">
-        <TrendingUp className="h-4 w-4 mr-1 text-gray-500" /> Actionable Opportunities
-      </h3>
-      
-      {actionableRecommendations.map((rec, index) => (
-        <ActionableRecommendation 
-          key={index} 
-          text={rec.text}
-          category={rec.category}
-          icon={rec.icon}
-        />
-      ))}
-      
-      <Button variant="outline" className="w-full mt-4 flex items-center justify-center">
-        View All Recommendations
-        <ArrowRight className="ml-2 h-4 w-4" />
-      </Button>
     </div>
   );
 };

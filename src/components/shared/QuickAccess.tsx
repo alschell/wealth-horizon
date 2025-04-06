@@ -9,13 +9,14 @@ import {
   FileText, 
   LucideIcon, 
   Newspaper, 
-  Pencil, 
-  Settings, 
+  Sliders, 
   Users 
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLocation } from "react-router-dom";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import { Checkbox } from "@/components/ui/checkbox";
 
 type QuickAccessItem = {
   title: string;
@@ -93,17 +94,56 @@ interface QuickAccessProps {
 const QuickAccess = ({ pathname, customItems }: QuickAccessProps) => {
   const location = useLocation();
   const currentPath = pathname || location.pathname;
+  const [isCustomizing, setIsCustomizing] = React.useState(false);
+  const [visibleItems, setVisibleItems] = React.useState<string[]>([]);
+  const [temporarySelection, setTemporarySelection] = React.useState<string[]>([]);
   
   // Extract the current page name from the path
   const currentPage = currentPath.split('/')[1] || 'dashboard';
   
-  // Filter the quick access items to show only those relevant to the current page
+  React.useEffect(() => {
+    const savedItems = localStorage.getItem(`quickAccessItems_${currentPage}`);
+    if (savedItems) {
+      setVisibleItems(JSON.parse(savedItems));
+    } else {
+      // Default to showing all items relevant for this page
+      const defaultVisible = quickAccessItems
+        .filter(item => item.visibleOn.includes(currentPage))
+        .map(item => item.title);
+      setVisibleItems(defaultVisible);
+    }
+  }, [currentPage]);
+  
+  // Filter the quick access items to show only those selected by the user or relevant to the current page
   const filteredItems = customItems || quickAccessItems.filter(item => 
-    item.visibleOn.includes(currentPage)
+    item.visibleOn.includes(currentPage) && visibleItems.includes(item.title)
   );
   
   // Limit to 6 items max
   const displayItems = filteredItems.slice(0, 6);
+
+  const handleCustomizeOpen = () => {
+    setTemporarySelection([...visibleItems]);
+    setIsCustomizing(true);
+  };
+
+  const handleCustomizeSave = () => {
+    setVisibleItems(temporarySelection);
+    localStorage.setItem(`quickAccessItems_${currentPage}`, JSON.stringify(temporarySelection));
+    setIsCustomizing(false);
+  };
+
+  const toggleItem = (title: string) => {
+    if (temporarySelection.includes(title)) {
+      setTemporarySelection(temporarySelection.filter(item => item !== title));
+    } else {
+      setTemporarySelection([...temporarySelection, title]);
+    }
+  };
+
+  const availableItems = quickAccessItems.filter(item => 
+    item.visibleOn.includes(currentPage)
+  );
 
   return (
     <div>
@@ -113,8 +153,9 @@ const QuickAccess = ({ pathname, customItems }: QuickAccessProps) => {
           variant="outline" 
           size="sm" 
           className="flex items-center gap-1"
+          onClick={handleCustomizeOpen}
         >
-          <Pencil className="h-3.5 w-3.5" />
+          <Sliders className="h-3.5 w-3.5" />
           <span className="hidden sm:inline">Customize</span>
         </Button>
       </div>
@@ -139,6 +180,45 @@ const QuickAccess = ({ pathname, customItems }: QuickAccessProps) => {
           </Card>
         ))}
       </div>
+
+      <Dialog open={isCustomizing} onOpenChange={setIsCustomizing}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Customize Quick Access</DialogTitle>
+            <DialogDescription>
+              Select the items you want to show in your Quick Access grid.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="max-h-[60vh] overflow-y-auto py-4">
+            <div className="space-y-4">
+              {availableItems.map((item) => (
+                <div key={item.title} className="flex items-start space-x-3">
+                  <Checkbox 
+                    id={`item-${item.title}`}
+                    checked={temporarySelection.includes(item.title)}
+                    onCheckedChange={() => toggleItem(item.title)}
+                  />
+                  <div className="grid gap-1.5 leading-none">
+                    <label
+                      htmlFor={`item-${item.title}`}
+                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    >
+                      {item.title}
+                    </label>
+                    <p className="text-xs text-muted-foreground">
+                      {item.description}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsCustomizing(false)}>Cancel</Button>
+            <Button onClick={handleCustomizeSave}>Save Changes</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

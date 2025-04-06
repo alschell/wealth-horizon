@@ -41,7 +41,7 @@ const PerformanceOverview = () => {
           </div>
         </div>
       </CardHeader>
-      <CardContent className="h-[650px] overflow-y-auto"> 
+      <CardContent className="h-[600px] overflow-y-auto"> 
         <Tabs defaultValue="networth" className="space-y-4">
           <TabsList>
             <TabsTrigger value="networth">Net Worth</TabsTrigger>

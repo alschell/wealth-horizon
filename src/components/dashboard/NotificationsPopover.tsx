@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Bell, X, FileText, TrendingUp, AlertTriangle, Check, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -94,7 +95,6 @@ const notificationData = [
 const NotificationsPopover = () => {
   const [notifications, setNotifications] = useState(notificationData);
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedNotification, setSelectedNotification] = useState<number | null>(null);
   
   const navigate = useNavigate();
   
@@ -112,30 +112,12 @@ const NotificationsPopover = () => {
 
   const dismissNotification = (id: number) => {
     setNotifications(notifications.filter(n => n.id !== id));
-    if (selectedNotification === id) {
-      setSelectedNotification(null);
-    }
   };
 
   const handleNotificationClick = (notification: any) => {
     markAsRead(notification.id);
-    
-    if (selectedNotification === notification.id) {
-      // If already selected, navigate to the relevant page
-      setIsOpen(false);
-      navigate(notification.link);
-    } else {
-      // Otherwise, show the details view
-      setSelectedNotification(notification.id);
-    }
-  };
-
-  const handleBackToList = () => {
-    setSelectedNotification(null);
-  };
-
-  const getSelectedNotification = () => {
-    return notifications.find(n => n.id === selectedNotification);
+    setIsOpen(false);
+    navigate(notification.link);
   };
 
   return (
@@ -164,196 +146,76 @@ const NotificationsPopover = () => {
       </TooltipProvider>
 
       <PopoverContent className="w-80 p-0" align="end">
-        {selectedNotification === null ? (
-          // Notifications list view
-          <>
-            <div className="flex items-center justify-between p-4">
-              <h3 className="font-semibold">Notifications</h3>
-              {unreadCount > 0 && (
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  className="text-xs h-auto py-1"
-                  onClick={markAllAsRead}
+        <div className="flex items-center justify-between p-4">
+          <h3 className="font-semibold">Notifications</h3>
+          {unreadCount > 0 && (
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="text-xs h-auto py-1"
+              onClick={markAllAsRead}
+            >
+              Mark all as read
+            </Button>
+          )}
+        </div>
+        <Separator />
+        
+        <div className="max-h-[60vh] overflow-auto">
+          {notifications.length > 0 ? (
+            <div className="py-2">
+              {notifications.map((notification) => (
+                <div 
+                  key={notification.id} 
+                  className={cn(
+                    "flex items-start gap-3 p-3 hover:bg-muted/50 transition-colors cursor-pointer group",
+                    !notification.read && "bg-muted/30"
+                  )}
+                  onClick={() => handleNotificationClick(notification)}
                 >
-                  Mark all as read
-                </Button>
-              )}
-            </div>
-            <Separator />
-            
-            <div className="max-h-[60vh] overflow-auto">
-              {notifications.length > 0 ? (
-                <div className="py-2">
-                  {notifications.map((notification) => (
-                    <div 
-                      key={notification.id} 
-                      className={cn(
-                        "flex items-start gap-3 p-3 hover:bg-muted/50 transition-colors cursor-pointer group",
-                        !notification.read && "bg-muted/30"
-                      )}
-                      onClick={() => handleNotificationClick(notification)}
-                    >
-                      <div className={cn(
-                        "h-8 w-8 rounded-full flex items-center justify-center text-white",
-                        notification.id === 1 ? "bg-blue-500" : 
-                        notification.id === 2 ? "bg-amber-500" : 
-                        notification.id === 3 ? "bg-green-500" : "bg-gray-500"
-                      )}>
-                        {notification.icon}
-                      </div>
-                      
-                      <div className="flex-1 space-y-1">
-                        <div className="flex items-center gap-2">
-                          <p className="text-sm font-medium">{notification.title}</p>
-                          {!notification.read && (
-                            <span className="h-2 w-2 rounded-full bg-black" />
-                          )}
-                        </div>
-                        <p className="text-xs text-muted-foreground line-clamp-2">
-                          {notification.description}
-                        </p>
-                        <p className="text-xs text-muted-foreground">{notification.time}</p>
-                      </div>
-                      
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-6 w-6 text-muted-foreground opacity-0 group-hover:opacity-100"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          dismissNotification(notification.id);
-                        }}
-                      >
-                        <X className="h-3 w-3" />
-                        <span className="sr-only">Dismiss</span>
-                      </Button>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="py-6 text-center">
-                  <p className="text-sm text-muted-foreground">No notifications</p>
-                </div>
-              )}
-            </div>
-          </>
-        ) : (
-          // Notification detail view
-          <>
-            <div className="flex items-center gap-2 p-4">
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                className="h-8 w-8 p-0"
-                onClick={handleBackToList}
-              >
-                <X className="h-4 w-4" />
-                <span className="sr-only">Back</span>
-              </Button>
-              <h3 className="font-semibold">Notification Details</h3>
-            </div>
-            <Separator />
-            
-            {(() => {
-              const notification = getSelectedNotification();
-              if (!notification) return null;
-              
-              return (
-                <div className="p-4 max-h-[60vh] overflow-auto">
-                  <div className="space-y-4">
-                    <div>
-                      <div className="flex items-center gap-2 mb-1">
-                        <div className={cn(
-                          "h-8 w-8 rounded-full flex items-center justify-center text-white",
-                          notification.id === 1 ? "bg-blue-500" : 
-                          notification.id === 2 ? "bg-amber-500" : 
-                          notification.id === 3 ? "bg-green-500" : "bg-gray-500"
-                        )}>
-                          {notification.icon}
-                        </div>
-                        <h4 className="font-medium">{notification.title}</h4>
-                      </div>
-                      <p className="text-sm text-muted-foreground">{notification.time}</p>
-                    </div>
-                    
-                    <p className="text-sm">{notification.details?.content}</p>
-                    
-                    {notification.details?.sender && (
-                      <div>
-                        <p className="text-xs text-muted-foreground mb-1">From</p>
-                        <p className="text-sm font-medium">{notification.details.sender}</p>
-                      </div>
-                    )}
-                    
-                    {notification.details?.priority && (
-                      <div>
-                        <p className="text-xs text-muted-foreground mb-1">Priority</p>
-                        <Badge variant={notification.details.priority === "High" ? "destructive" : "outline"}>
-                          {notification.details.priority}
-                        </Badge>
-                      </div>
-                    )}
-                    
-                    {notification.details?.attachments && notification.details.attachments.length > 0 && (
-                      <div>
-                        <p className="text-xs text-muted-foreground mb-2">Attachments</p>
-                        <div className="space-y-2">
-                          {notification.details.attachments.map((attachment: any, index: number) => (
-                            <div key={index} className="flex items-center gap-2 p-2 bg-muted rounded-md">
-                              <FileText className="h-4 w-4 text-muted-foreground" />
-                              <div className="flex-1">
-                                <p className="text-xs font-medium">{attachment.name}</p>
-                                <p className="text-xs text-muted-foreground">{attachment.size}</p>
-                              </div>
-                              <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
-                                <ArrowRight className="h-3 w-3" />
-                              </Button>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                    
-                    {notification.details?.highlights && (
-                      <div>
-                        <p className="text-xs text-muted-foreground mb-2">Highlights</p>
-                        <ul className="text-sm space-y-1 pl-4 list-disc">
-                          {notification.details.highlights.map((item: string, index: number) => (
-                            <li key={index}>{item}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-                    
-                    {notification.details?.affectedAssets && (
-                      <div>
-                        <p className="text-xs text-muted-foreground mb-2">Affected Assets</p>
-                        <div className="flex gap-2 flex-wrap">
-                          {notification.details.affectedAssets.map((asset: string, index: number) => (
-                            <Badge key={index} variant="outline">{asset}</Badge>
-                          ))}
-                        </div>
-                      </div>
-                    )}
+                  <div className={cn(
+                    "h-8 w-8 rounded-full flex items-center justify-center text-white",
+                    notification.id === 1 ? "bg-blue-500" : 
+                    notification.id === 2 ? "bg-amber-500" : 
+                    notification.id === 3 ? "bg-green-500" : "bg-gray-500"
+                  )}>
+                    {notification.icon}
                   </div>
                   
-                  <div className="mt-4 pt-4 border-t">
-                    <Button 
-                      className="w-full"
-                      onClick={() => {
-                        setIsOpen(false);
-                        navigate(notification.link);
-                      }}
-                    >
-                      View Full Details
-                    </Button>
+                  <div className="flex-1 space-y-1">
+                    <div className="flex items-center gap-2">
+                      <p className="text-sm font-medium">{notification.title}</p>
+                      {!notification.read && (
+                        <span className="h-2 w-2 rounded-full bg-black" />
+                      )}
+                    </div>
+                    <p className="text-xs text-muted-foreground line-clamp-2">
+                      {notification.description}
+                    </p>
+                    <p className="text-xs text-muted-foreground">{notification.time}</p>
                   </div>
+                  
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-6 w-6 text-muted-foreground opacity-0 group-hover:opacity-100"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      dismissNotification(notification.id);
+                    }}
+                  >
+                    <X className="h-3 w-3" />
+                    <span className="sr-only">Dismiss</span>
+                  </Button>
                 </div>
-              );
-            })()}
-          </>
-        )}
+              ))}
+            </div>
+          ) : (
+            <div className="py-6 text-center">
+              <p className="text-sm text-muted-foreground">No notifications</p>
+            </div>
+          )}
+        </div>
         
         <Separator />
         <div className="p-4 text-center">

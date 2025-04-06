@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React from "react";
 import { TrendingUp } from "lucide-react";
 import {
   ChartContainer,
@@ -7,7 +7,6 @@ import {
   ChartTooltipContent
 } from "@/components/ui/chart";
 import { Area, AreaChart, XAxis, YAxis, ResponsiveContainer } from "recharts";
-import { Button } from "@/components/ui/button";
 
 type NetWorthChartProps = {
   performanceData: {
@@ -18,21 +17,19 @@ type NetWorthChartProps = {
 };
 
 const NetWorthChart = ({ performanceData, chartConfig }: NetWorthChartProps) => {
-  const [timeRange, setTimeRange] = useState<'1m' | '3m' | '6m' | '1y' | 'All'>('1y');
-
   return (
-    <div className="w-full mb-2">
-      <div className="flex items-center justify-between">
+    <div className="w-full">
+      <div className="flex items-center justify-between mb-2">
         <div>
           <h3 className="text-sm font-medium text-gray-600">Net Worth Trend</h3>
           <p className="text-2xl font-bold">$4.48B</p>
         </div>
       </div>
       
-      <div className="h-24 w-full mt-4" style={{ marginTop: "-200px" }}>
+      <div className="h-[70px] w-full">
         <ChartContainer config={chartConfig}>
           <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={performanceData} margin={{ top: 0, right: 0, left: 0, bottom: 10 }}>
+            <AreaChart data={performanceData} margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
               <defs>
                 <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="5%" stopColor="#000000" stopOpacity={0.1}/>

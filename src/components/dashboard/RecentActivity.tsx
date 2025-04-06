@@ -26,8 +26,7 @@ const RecentActivity = () => {
   ];
 
   const handleActivityClick = (activityId: string) => {
-    // Navigate to the activity page instead of a specific activity ID
-    // This prevents 404 errors since we don't have individual activity pages yet
+    // We now navigate to the activity page which exists in the app
     navigate("/activity");
   };
 

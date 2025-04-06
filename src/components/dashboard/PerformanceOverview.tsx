@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { TrendingUp } from "lucide-react";
@@ -41,15 +41,15 @@ const PerformanceOverview = () => {
           </div>
         </div>
       </CardHeader>
-      <CardContent> 
-        <Tabs defaultValue="networth" className="space-y-4">
-          <TabsList>
+      <CardContent className="pt-0 pb-6"> 
+        <Tabs defaultValue="networth" className="mt-4">
+          <TabsList className="mb-6">
             <TabsTrigger value="networth">Net Worth</TabsTrigger>
             <TabsTrigger value="assets">Assets & Liabilities</TabsTrigger>
             <TabsTrigger value="nextactions">Next Best Actions</TabsTrigger>
           </TabsList>
           
-          <TabsContent value="networth">
+          <TabsContent value="networth" className="mt-0">
             <OverviewTabContent 
               performanceData={performanceData}
               chartConfig={chartConfig}
@@ -57,13 +57,13 @@ const PerformanceOverview = () => {
             />
           </TabsContent>
           
-          <TabsContent value="assets">
+          <TabsContent value="assets" className="mt-0">
             <ChartsTabContent 
               assetAllocationData={assetAllocationData}
             />
           </TabsContent>
           
-          <TabsContent value="nextactions">
+          <TabsContent value="nextactions" className="mt-0">
             <RecommendationsTabContent 
               recommendations={recommendations}
             />

@@ -29,7 +29,10 @@ export const useNotifications = () => {
   const handleNotificationClick = (notification: Notification) => {
     markAsRead(notification.id);
     setIsOpen(false);
-    navigate(notification.link);
+    
+    // Make sure we navigate to a valid route to prevent 404s
+    const safeLink = notification.link || "/dashboard";
+    navigate(safeLink);
   };
 
   return {

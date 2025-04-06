@@ -15,7 +15,7 @@ const NotificationsFeed = () => {
       description: "Your order to buy 100 shares of AAPL has been executed.",
       time: "2 hours ago",
       icon: <BellRing className="h-4 w-4 text-gray-500" />,
-      link: "/trading/history/trade-123"
+      link: "/trading"
     },
     {
       id: "portfolio-review",
@@ -31,7 +31,7 @@ const NotificationsFeed = () => {
       description: "Your application for a new credit line has been approved.",
       time: "Yesterday",
       icon: <Bell className="h-4 w-4 text-gray-500" />,
-      link: "/credit-facilities"
+      link: "/dashboard"
     },
     {
       id: "quarterly-review",
@@ -39,7 +39,7 @@ const NotificationsFeed = () => {
       description: "Event: Your quarterly financial review is scheduled for June 15.",
       time: "1 week ago",
       icon: <Calendar className="h-4 w-4 text-gray-500" />,
-      link: "/calendar"
+      link: "/dashboard"
     },
     {
       id: "portfolio-alert",
@@ -52,6 +52,7 @@ const NotificationsFeed = () => {
   ];
 
   const handleNotificationClick = (notification: any) => {
+    // Changed links to valid routes to prevent 404 errors
     navigate(notification.link);
   };
 

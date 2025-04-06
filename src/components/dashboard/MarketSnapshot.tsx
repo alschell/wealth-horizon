@@ -63,7 +63,7 @@ const MarketSnapshot = () => {
   return (
     <Card className="shadow-sm">
       <CardHeader className="pb-2">
-        <CardTitle className="text-md">Market Snapshot</CardTitle>
+        <CardTitle className="text-xl">Market Snapshot</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="space-y-2">

@@ -9,7 +9,7 @@ const RecentActivity = () => {
   return (
     <Card className="shadow-sm">
       <CardHeader className="pb-2">
-        <CardTitle className="text-md">Recent Activity</CardTitle>
+        <CardTitle className="text-xl">Recent Activity</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-3">

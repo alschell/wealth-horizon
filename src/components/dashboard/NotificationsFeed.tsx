@@ -80,7 +80,7 @@ const NotificationsFeed = () => {
   return (
     <Card className="shadow-sm">
       <CardHeader className="pb-2">
-        <CardTitle className="text-md">Notifications</CardTitle>
+        <CardTitle className="text-xl">Notifications</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-3">

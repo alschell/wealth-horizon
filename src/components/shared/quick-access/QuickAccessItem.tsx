@@ -1,7 +1,6 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
-import { LucideIcon } from "lucide-react";
 
 interface QuickAccessItemProps {
   title: string;
@@ -16,7 +15,7 @@ const QuickAccessItem = ({ title, description, icon, link }: QuickAccessItemProp
       to={link}
       className="flex flex-col p-3 rounded-lg hover:bg-gray-50 transition-colors text-center h-full"
     >
-      <div className="flex flex-col items-center justify-center mb-2">
+      <div className="flex flex-col items-center justify-center">
         <div className="h-8 w-8 flex items-center justify-center rounded-full bg-gray-50 mb-2">
           <div className="text-gray-500">{icon}</div>
         </div>

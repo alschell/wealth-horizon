@@ -1,149 +1,145 @@
 
+import React from "react";
 import {
-  FileText,
   BarChart3,
+  LineChart,
+  PieChart,
+  TrendingUp,
+  FileText,
+  DollarSign,
+  Building2,
+  Lightbulb,
+  Users,
+  Settings,
+  Shield,
   Landmark,
   Leaf,
-  Shield,
   Calculator,
-  Building2,
-  Scroll,
-  Users,
-  TrendingUp,
-  PieChart,
-  LineChart,
-  DollarSign,
-  Lightbulb,
+  Scroll
 } from "lucide-react";
 import { QuickAccessItem } from "./types";
 
 export const allQuickLinks: QuickAccessItem[] = [
   {
-    id: "analyze-wealth",
-    title: "Analyze wealth",
-    description: "Portfolio analysis tools",
-    icon: <PieChart className="h-4 w-4" />,
-    link: "/analyze-wealth",
-    color: "text-gray-500 bg-gray-50"
+    id: "dashboard",
+    title: "Dashboard",
+    description: "Main overview of your wealth",
+    icon: <BarChart3 className="h-5 w-5" />,
+    link: "/dashboard",
+    color: "bg-gray-50"
   },
   {
     id: "market-data",
-    title: "Access market data & news",
+    title: "Market Data",
     description: "Access market information",
-    icon: <LineChart className="h-4 w-4" />,
+    icon: <LineChart className="h-5 w-5" />,
     link: "/market-data",
-    color: "text-gray-500 bg-gray-50"
+    color: "bg-gray-50"
   },
   {
-    id: "trading",
-    title: "Trade",
+    id: "analyze",
+    title: "Analyze Wealth",
+    description: "Portfolio analysis tools",
+    icon: <PieChart className="h-5 w-5" />,
+    link: "/analyze-wealth",
+    color: "bg-gray-50"
+  },
+  {
+    id: "trade",
+    title: "Trading",
     description: "Execute investment trades",
-    icon: <TrendingUp className="h-4 w-4" />,
+    icon: <TrendingUp className="h-5 w-5" />,
     link: "/trading",
-    color: "text-gray-500 bg-gray-50"
+    color: "bg-gray-50"
   },
   {
-    id: "credit-facilities",
-    title: "Manage credit facilities",
-    description: "Manage credit facilities",
-    icon: <Building2 className="h-4 w-4" />,
-    link: "/credit-facilities",
-    color: "text-gray-500 bg-gray-50"
+    id: "reports",
+    title: "Reports",
+    description: "Generate financial reports",
+    icon: <FileText className="h-5 w-5" />,
+    link: "/reporting",
+    color: "bg-gray-50"
   },
   {
     id: "advice",
-    title: "Get advice",
+    title: "Advice",
     description: "Get personalized advice",
-    icon: <Lightbulb className="h-4 w-4" />,
+    icon: <Lightbulb className="h-5 w-5" />,
     link: "/advice",
-    color: "text-gray-500 bg-gray-50"
+    color: "bg-gray-50"
   },
   {
-    id: "cashflow-management",
-    title: "Manage cashflow & liquidity",
+    id: "cashflow",
+    title: "Cashflow",
     description: "Manage liquidity and deposits",
-    icon: <DollarSign className="h-4 w-4" />,
+    icon: <DollarSign className="h-5 w-5" />,
     link: "/cashflow-management",
-    color: "text-gray-500 bg-gray-50"
+    color: "bg-gray-50"
   },
   {
-    id: "reporting",
-    title: "Generate reports",
-    description: "Generate financial reports",
-    icon: <FileText className="h-4 w-4" />,
-    link: "/reporting",
-    color: "text-gray-500 bg-gray-50"
-  },
-  {
-    id: "user-management",
-    title: "Manage users & permissions",
+    id: "users",
+    title: "Users",
     description: "Manage user accounts",
-    icon: <Users className="h-4 w-4" />,
+    icon: <Users className="h-5 w-5" />,
     link: "/user-management",
-    color: "text-gray-500 bg-gray-50"
+    color: "bg-gray-50"
   },
   {
     id: "integrations",
-    title: "Manage integrations",
+    title: "Integrations",
     description: "Manage connected services",
-    icon: <Landmark className="h-4 w-4" />,
+    icon: <Landmark className="h-5 w-5" />,
     link: "/integrations",
-    color: "text-gray-500 bg-gray-50"
+    color: "bg-gray-50"
   },
   {
     id: "esg",
-    title: "ESG Investing",
+    title: "ESG",
     description: "Sustainable investing metrics",
-    icon: <Leaf className="h-4 w-4" />,
+    icon: <Leaf className="h-5 w-5" />,
     link: "/esg",
-    color: "text-gray-500 bg-gray-50"
+    color: "bg-gray-50"
   },
   {
-    id: "compliance-monitoring",
+    id: "compliance",
     title: "Compliance",
     description: "Regulatory compliance tracking",
-    icon: <Shield className="h-4 w-4" />,
+    icon: <Shield className="h-5 w-5" />,
     link: "/compliance-monitoring",
-    color: "text-gray-500 bg-gray-50"
+    color: "bg-gray-50"
   },
   {
-    id: "tax-optimization",
-    title: "Tax Optimization",
-    description: "Tax planning & efficiency",
-    icon: <Calculator className="h-4 w-4" />,
+    id: "tax",
+    title: "Tax",
+    description: "Tax planning & optimization",
+    icon: <Calculator className="h-5 w-5" />,
     link: "/tax-optimization",
-    color: "text-gray-500 bg-gray-50"
+    color: "bg-gray-50"
   },
   {
-    id: "entity-management",
-    title: "Entity Management",
+    id: "entity",
+    title: "Entity",
     description: "Manage legal structures",
-    icon: <Building2 className="h-4 w-4" />,
+    icon: <Building2 className="h-5 w-5" />,
     link: "/entity-management",
-    color: "text-gray-500 bg-gray-50"
+    color: "bg-gray-50"
   },
   {
-    id: "legacy-planning",
-    title: "Legacy Planning",
+    id: "legacy",
+    title: "Legacy",
     description: "Succession & estate planning",
-    icon: <Scroll className="h-4 w-4" />,
+    icon: <Scroll className="h-5 w-5" />,
     link: "/legacy-planning",
-    color: "text-gray-500 bg-gray-50"
+    color: "bg-gray-50"
   },
   {
-    id: "client-portal",
-    title: "Client Portal",
-    description: "Manage client access",
-    icon: <Users className="h-4 w-4" />,
-    link: "/client-portal",
-    color: "text-gray-500 bg-gray-50"
-  },
-  {
-    id: "documents",
-    title: "Documents",
-    description: "Document management",
-    icon: <FileText className="h-4 w-4" />,
-    link: "/documents",
-    color: "text-gray-500 bg-gray-50"
-  },
+    id: "settings",
+    title: "Settings",
+    description: "Configure application settings",
+    icon: <Settings className="h-5 w-5" />,
+    link: "/settings",
+    color: "bg-gray-50"
+  }
 ];
+
+export const defaultQuickLinks = allQuickLinks.slice(0, 8);

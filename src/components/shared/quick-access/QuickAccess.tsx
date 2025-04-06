@@ -27,7 +27,11 @@ const QuickAccess = ({ pathname }: QuickAccessProps) => {
   // Convert allQuickLinks to QuickAccessItem[] for the CustomizeDialog
   const quickAccessItems: QuickAccessItem[] = allQuickLinks.map(link => ({
     id: link.title, // Using title as id since it's unique
-    ...link
+    title: link.title,
+    description: link.description,
+    icon: link.icon,
+    link: link.link,
+    color: link.color
   }));
 
   return (

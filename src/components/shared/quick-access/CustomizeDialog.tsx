@@ -1,18 +1,18 @@
 
 import React from "react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { QuickAccessItem, CustomizeDialogProps } from "./types";
+import { CustomizeDialogProps } from "./types";
 
-const CustomizeDialog: React.FC<CustomizeDialogProps> = ({
+const CustomizeDialog = ({
   isOpen,
   onOpenChange,
   items,
   selectedItems,
   onItemToggle,
-  onSave,
-}) => {
+  onSave
+}: CustomizeDialogProps) => {
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
@@ -28,8 +28,8 @@ const CustomizeDialog: React.FC<CustomizeDialogProps> = ({
               <div key={item.id} className="flex items-start space-x-3">
                 <Checkbox 
                   id={`item-${item.id}`}
-                  checked={selectedItems.includes(item.title)}
-                  onCheckedChange={() => onItemToggle(item.title)}
+                  checked={selectedItems.includes(item.id)}
+                  onCheckedChange={() => onItemToggle(item.id)}
                 />
                 <div className="grid gap-1.5 leading-none">
                   <label

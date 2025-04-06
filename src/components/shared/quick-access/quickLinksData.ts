@@ -22,7 +22,7 @@ export const allQuickLinks: QuickLinkItem[] = [
     id: "analyze-wealth",
     title: "Analyze wealth",
     description: "Comprehensive portfolio analysis and insights",
-    icon: <PieChart className="h-4 w-4 text-gray-500" />,
+    icon: React.createElement(PieChart, { className: "h-4 w-4 text-gray-500" }),
     link: "/analyze-wealth",
     color: "bg-gray-50"
   },
@@ -30,7 +30,7 @@ export const allQuickLinks: QuickLinkItem[] = [
     id: "market-data",
     title: "Access market data & news",
     description: "Real-time market information and financial news",
-    icon: <LineChart className="h-4 w-4 text-gray-500" />,
+    icon: React.createElement(LineChart, { className: "h-4 w-4 text-gray-500" }),
     link: "/market-data",
     color: "bg-gray-50"
   },
@@ -38,7 +38,7 @@ export const allQuickLinks: QuickLinkItem[] = [
     id: "trade",
     title: "Trade",
     description: "Execute and manage investment transactions",
-    icon: <TrendingUp className="h-4 w-4 text-gray-500" />,
+    icon: React.createElement(TrendingUp, { className: "h-4 w-4 text-gray-500" }),
     link: "/trading",
     color: "bg-gray-50"
   },
@@ -46,7 +46,7 @@ export const allQuickLinks: QuickLinkItem[] = [
     id: "credit-facilities",
     title: "Manage credit facilities",
     description: "Oversee lending arrangements and credit lines",
-    icon: <Building2 className="h-4 w-4 text-gray-500" />,
+    icon: React.createElement(Building2, { className: "h-4 w-4 text-gray-500" }),
     link: "/credit-facilities",
     color: "bg-gray-50"
   },
@@ -54,7 +54,7 @@ export const allQuickLinks: QuickLinkItem[] = [
     id: "advice",
     title: "Get advice",
     description: "Access personalized financial recommendations",
-    icon: <Lightbulb className="h-4 w-4 text-gray-500" />,
+    icon: React.createElement(Lightbulb, { className: "h-4 w-4 text-gray-500" }),
     link: "/advice",
     color: "bg-gray-50"
   },
@@ -62,7 +62,7 @@ export const allQuickLinks: QuickLinkItem[] = [
     id: "cashflow",
     title: "Manage cashflow & liquidity",
     description: "Monitor and optimize cash positions across accounts",
-    icon: <DollarSign className="h-4 w-4 text-gray-500" />,
+    icon: React.createElement(DollarSign, { className: "h-4 w-4 text-gray-500" }),
     link: "/cashflow-management",
     color: "bg-gray-50"
   },
@@ -70,7 +70,7 @@ export const allQuickLinks: QuickLinkItem[] = [
     id: "reports",
     title: "Generate reports",
     description: "Create customized financial performance reports",
-    icon: <FileText className="h-4 w-4 text-gray-500" />,
+    icon: React.createElement(FileText, { className: "h-4 w-4 text-gray-500" }),
     link: "/reporting",
     color: "bg-gray-50"
   },
@@ -78,7 +78,7 @@ export const allQuickLinks: QuickLinkItem[] = [
     id: "users",
     title: "Manage users & permissions",
     description: "Control access rights and user authorization",
-    icon: <Users className="h-4 w-4 text-gray-500" />,
+    icon: React.createElement(Users, { className: "h-4 w-4 text-gray-500" }),
     link: "/user-management",
     color: "bg-gray-50"
   },
@@ -86,7 +86,7 @@ export const allQuickLinks: QuickLinkItem[] = [
     id: "accounts",
     title: "Manage user accounts",
     description: "Administer user profiles and account settings",
-    icon: <Users className="h-4 w-4 text-gray-500" />,
+    icon: React.createElement(Users, { className: "h-4 w-4 text-gray-500" }),
     link: "/user-management/accounts",
     color: "bg-gray-50"
   },
@@ -94,7 +94,7 @@ export const allQuickLinks: QuickLinkItem[] = [
     id: "integrations",
     title: "Manage integrations",
     description: "Configure and monitor third-party service connections",
-    icon: <Landmark className="h-4 w-4 text-gray-500" />,
+    icon: React.createElement(Landmark, { className: "h-4 w-4 text-gray-500" }),
     link: "/integrations",
     color: "bg-gray-50"
   },
@@ -102,7 +102,7 @@ export const allQuickLinks: QuickLinkItem[] = [
     id: "esg",
     title: "Assess ESG investments",
     description: "Evaluate environmental, social, and governance factors",
-    icon: <Leaf className="h-4 w-4 text-gray-500" />,
+    icon: React.createElement(Leaf, { className: "h-4 w-4 text-gray-500" }),
     link: "/esg",
     color: "bg-gray-50"
   },
@@ -110,7 +110,7 @@ export const allQuickLinks: QuickLinkItem[] = [
     id: "compliance",
     title: "Monitor compliance",
     description: "Track regulatory requirements and compliance status",
-    icon: <Shield className="h-4 w-4 text-gray-500" />,
+    icon: React.createElement(Shield, { className: "h-4 w-4 text-gray-500" }),
     link: "/compliance-monitoring",
     color: "bg-gray-50"
   },
@@ -118,7 +118,7 @@ export const allQuickLinks: QuickLinkItem[] = [
     id: "tax",
     title: "Optimize tax",
     description: "Implement tax-efficient investment strategies",
-    icon: <Calculator className="h-4 w-4 text-gray-500" />,
+    icon: React.createElement(Calculator, { className: "h-4 w-4 text-gray-500" }),
     link: "/tax-optimization",
     color: "bg-gray-50"
   },
@@ -126,7 +126,7 @@ export const allQuickLinks: QuickLinkItem[] = [
     id: "entities",
     title: "Manage entities",
     description: "Administer legal structures and organization hierarchy",
-    icon: <Building2 className="h-4 w-4 text-gray-500" />,
+    icon: React.createElement(Building2, { className: "h-4 w-4 text-gray-500" }),
     link: "/entity-management",
     color: "bg-gray-50"
   },
@@ -134,7 +134,7 @@ export const allQuickLinks: QuickLinkItem[] = [
     id: "legacy",
     title: "Plan legacy",
     description: "Develop succession and inheritance strategies",
-    icon: <Scroll className="h-4 w-4 text-gray-500" />,
+    icon: React.createElement(Scroll, { className: "h-4 w-4 text-gray-500" }),
     link: "/legacy-planning",
     color: "bg-gray-50"
   },
@@ -142,7 +142,7 @@ export const allQuickLinks: QuickLinkItem[] = [
     id: "client-access",
     title: "Manage client access",
     description: "Control client portal permissions and visibility",
-    icon: <Users className="h-4 w-4 text-gray-500" />,
+    icon: React.createElement(Users, { className: "h-4 w-4 text-gray-500" }),
     link: "/client-portal",
     color: "bg-gray-50"
   },
@@ -150,7 +150,7 @@ export const allQuickLinks: QuickLinkItem[] = [
     id: "documents",
     title: "Manage documents",
     description: "Organize and secure financial documentation",
-    icon: <FileText className="h-4 w-4 text-gray-500" />,
+    icon: React.createElement(FileText, { className: "h-4 w-4 text-gray-500" }),
     link: "/documents",
     color: "bg-gray-50"
   }

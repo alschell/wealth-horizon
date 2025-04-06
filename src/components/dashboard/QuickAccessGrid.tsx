@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -10,12 +11,12 @@ import {
   FileText, 
   Building,
   Users,
-  Settings,
   Leaf,
   Scroll,
   Calculator,
   Shield,
   Building2,
+  Sliders, // Adding Sliders icon for customize
 } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -185,7 +186,8 @@ const QuickAccessGrid = () => {
           <CardTitle className="text-xl">Quick Access</CardTitle>
           <CardDescription>Frequently used features and tools</CardDescription>
         </div>
-        <Button variant="outline" size="sm" onClick={handleCustomizeOpen}>
+        <Button variant="outline" size="sm" onClick={handleCustomizeOpen} className="flex items-center gap-1">
+          <Sliders className="h-4 w-4 mr-1" />
           Customize
         </Button>
       </CardHeader>

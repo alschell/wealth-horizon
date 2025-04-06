@@ -1,8 +1,8 @@
 
 import React from "react";
-import { ChevronRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Link, useNavigate } from "react-router-dom";
+import { ChevronRight } from "lucide-react";
 
 type NewsItemType = {
   title: string;

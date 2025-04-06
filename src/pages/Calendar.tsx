@@ -1,89 +1,87 @@
 
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import PageHeaderCard from "@/components/dashboard/PageHeaderCard";
-import { Calendar as CalendarIcon, ArrowLeft, Plus, Video, Clock, Users } from "lucide-react";
+import { Calendar as CalendarIcon, Plus, ArrowLeft, X, Users, Clock, Video, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useNavigate } from "react-router-dom";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Calendar } from "@/components/ui/calendar";
+import { format } from "date-fns";
+import { toast } from "sonner";
 
 // Mock meeting data
-const meetings = [
+const upcomingMeetings = [
   {
-    id: 1,
-    title: "Advisory Meeting",
-    date: new Date(2025, 3, 10, 14, 0), // April 10, 2025, 2:00 PM
-    duration: 60,
+    id: "1",
+    title: "Quarterly Portfolio Review",
+    date: "April 10, 2025",
+    time: "2:00 PM - 3:00 PM EST",
+    attendees: ["James Anderson", "Sarah Williams", "Michael Chen"],
     type: "video",
-    participants: ["James Thompson", "Sarah Chen", "Michael Roberts"],
-    description: "Quarterly portfolio review and strategy discussion"
+    location: "Zoom"
   },
   {
-    id: 2,
-    title: "Tax Planning Session",
-    date: new Date(2025, 3, 15, 11, 0), // April 15, 2025, 11:00 AM
-    duration: 45,
+    id: "2",
+    title: "Tax Planning Discussion",
+    date: "April 15, 2025",
+    time: "10:30 AM - 11:30 AM EST",
+    attendees: ["James Anderson", "Robert Johnson", "Emily Tax"],
     type: "video",
-    participants: ["James Thompson", "David Wilson"],
-    description: "Review tax optimization strategies for upcoming fiscal year"
+    location: "Microsoft Teams"
   },
   {
-    id: 3,
-    title: "Estate Planning Review",
-    date: new Date(2025, 3, 22, 10, 0), // April 22, 2025, 10:00 AM
-    duration: 90,
-    type: "video",
-    participants: ["James Thompson", "Emily Parker", "Robert Johnson"],
-    description: "Comprehensive review of estate planning documents and strategy"
+    id: "3",
+    title: "Estate Planning Update",
+    date: "April 22, 2025",
+    time: "1:00 PM - 2:30 PM EST",
+    attendees: ["James Anderson", "Laura Miller", "David Estate"],
+    type: "in-person",
+    location: "New York Office - Conference Room B"
   }
 ];
 
-// Utility function to format dates
-const formatDate = (date: Date) => {
-  return new Intl.DateTimeFormat('en-US', {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  }).format(date);
-};
+const pastMeetings = [
+  {
+    id: "4",
+    title: "Investment Strategy Session",
+    date: "March 24, 2025",
+    time: "11:00 AM - 12:00 PM EST",
+    attendees: ["James Anderson", "Sarah Williams", "Michael Chen"],
+    type: "video",
+    location: "Zoom"
+  },
+  {
+    id: "5",
+    title: "Annual Review Meeting",
+    date: "February 15, 2025",
+    time: "3:00 PM - 4:30 PM EST",
+    attendees: ["James Anderson", "Robert Johnson", "Emily Tax"],
+    type: "in-person",
+    location: "New York Office - Conference Room A"
+  }
+];
 
-// Utility function to format time
-const formatTime = (date: Date) => {
-  return new Intl.DateTimeFormat('en-US', {
-    hour: 'numeric',
-    minute: 'numeric',
-    hour12: true,
-  }).format(date);
-};
-
-const CalendarPage = () => {
+const Calendar = () => {
   const navigate = useNavigate();
-  const [date, setDate] = useState<Date | undefined>(new Date(2025, 3, 10)); // Default to April 10, 2025
-  const [selectedMeeting, setSelectedMeeting] = useState<any>(null);
-  
-  // Get meetings for the selected date
-  const meetingsForSelectedDate = date 
-    ? meetings.filter(meeting => 
-        meeting.date.getDate() === date.getDate() &&
-        meeting.date.getMonth() === date.getMonth() &&
-        meeting.date.getFullYear() === date.getFullYear()
-      ) 
-    : [];
-  
-  // Create an array of dates that have meetings
-  const meetingDates = meetings.map(meeting => meeting.date);
-  
+  const [isNewMeetingDialogOpen, setIsNewMeetingDialogOpen] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
+  const [meetingTime, setMeetingTime] = useState("09:00");
+  const [meetingDuration, setMeetingDuration] = useState("60");
+  const [meetingType, setMeetingType] = useState("video");
+
+  const handleScheduleMeeting = () => {
+    // In a real app, this would call an API to create the meeting
+    toast.success("New meeting scheduled successfully");
+    setIsNewMeetingDialogOpen(false);
+  };
+
   return (
     <DashboardLayout>
       <div className="space-y-6">
@@ -101,133 +99,186 @@ const CalendarPage = () => {
         <PageHeaderCard
           icon={CalendarIcon}
           title="Calendar"
-          description="Schedule and manage your advisory meetings and appointments"
+          description="Schedule and manage your advisory meetings and events"
           iconColor="text-gray-700"
           iconBgColor="bg-gray-100"
         />
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card className="md:col-span-1">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-xl">Select Date</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Calendar
-                mode="single"
-                selected={date}
-                onSelect={setDate}
-                className="rounded-md border shadow-sm"
-                weekStartsOn={1}
-                modifiers={{
-                  booked: meetingDates,
-                }}
-                modifiersStyles={{
-                  booked: { 
-                    fontWeight: 'bold',
-                    backgroundColor: 'rgba(155, 135, 245, 0.1)',
-                    borderWidth: '1px',
-                    borderColor: 'rgb(155, 135, 245)'
-                  }
-                }}
-              />
-              
-              <div className="mt-4">
-                <Button className="w-full" size="sm">
-                  <Plus className="mr-2 h-4 w-4" /> Schedule New Meeting
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card className="md:col-span-2">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-xl">
-                {date ? formatDate(date) : "No Date Selected"}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {meetingsForSelectedDate.length > 0 ? (
-                <div className="space-y-4">
-                  {meetingsForSelectedDate.map((meeting) => (
-                    <Dialog key={meeting.id}>
-                      <DialogTrigger asChild>
-                        <div 
-                          key={meeting.id} 
-                          className="flex items-start gap-4 p-4 rounded-lg border border-gray-100 hover:border-gray-200 hover:bg-gray-50 transition-colors cursor-pointer"
-                          onClick={() => setSelectedMeeting(meeting)}
-                        >
-                          <div className="bg-purple-100 p-2 rounded-full">
-                            <Video className="h-5 w-5 text-purple-600" />
-                          </div>
-                          <div className="flex-1">
-                            <p className="font-medium">{meeting.title}</p>
-                            <div className="flex items-center text-gray-600 text-sm mt-1">
-                              <Clock className="h-3.5 w-3.5 mr-1" />
-                              <span>{formatTime(meeting.date)} ({meeting.duration} min)</span>
-                            </div>
-                            <div className="flex items-center text-gray-600 text-sm mt-1">
-                              <Users className="h-3.5 w-3.5 mr-1" />
-                              <span>{meeting.participants.length} participants</span>
-                            </div>
-                          </div>
-                          <Badge variant="outline" className="bg-purple-50 text-purple-600 border-purple-200">
-                            {meeting.type === "video" ? "Video Call" : "In Person"}
-                          </Badge>
-                        </div>
-                      </DialogTrigger>
-                      <DialogContent className="sm:max-w-md">
-                        <DialogHeader>
-                          <DialogTitle>{meeting.title}</DialogTitle>
-                          <DialogDescription>
-                            {formatDate(meeting.date)} at {formatTime(meeting.date)}
-                          </DialogDescription>
-                        </DialogHeader>
-                        <div className="space-y-4 mt-4">
-                          <div>
-                            <h4 className="text-sm font-medium">Description</h4>
-                            <p className="text-sm text-gray-600 mt-1">{meeting.description}</p>
-                          </div>
-                          <div>
-                            <h4 className="text-sm font-medium">Duration</h4>
-                            <p className="text-sm text-gray-600 mt-1">{meeting.duration} minutes</p>
-                          </div>
-                          <div>
-                            <h4 className="text-sm font-medium">Participants</h4>
-                            <ul className="text-sm text-gray-600 mt-1 space-y-1">
-                              {meeting.participants.map((participant: string, index: number) => (
-                                <li key={index}>{participant}</li>
-                              ))}
-                            </ul>
-                          </div>
-                          <div className="flex justify-end gap-2 mt-4">
-                            <Button variant="outline">Reschedule</Button>
-                            <Button>Join Meeting</Button>
-                          </div>
-                        </div>
-                      </DialogContent>
-                    </Dialog>
-                  ))}
-                </div>
-              ) : (
-                <div className="flex flex-col items-center justify-center p-12 text-center">
-                  <CalendarIcon className="h-12 w-12 text-gray-300 mb-4" />
-                  <h3 className="text-lg font-medium">No meetings scheduled</h3>
-                  <p className="text-gray-500 mt-1">
-                    {date 
-                      ? `You don't have any meetings scheduled for ${formatDate(date)}.` 
-                      : "Select a date to view scheduled meetings."}
-                  </p>
-                  <Button className="mt-4">
-                    <Plus className="mr-2 h-4 w-4" /> Schedule Meeting
-                  </Button>
-                </div>
-              )}
-            </CardContent>
-          </Card>
+        <div className="flex justify-between items-center">
+          <h3 className="text-xl font-semibold">My Meetings</h3>
+          <Button 
+            onClick={() => setIsNewMeetingDialogOpen(true)}
+            className="bg-black hover:bg-gray-800"
+          >
+            <Plus className="h-4 w-4 mr-2" /> Schedule New Meeting
+          </Button>
         </div>
+        
+        <Tabs defaultValue="upcoming" className="w-full">
+          <TabsList>
+            <TabsTrigger value="upcoming">Upcoming</TabsTrigger>
+            <TabsTrigger value="past">Past</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="upcoming" className="mt-4">
+            <div className="grid grid-cols-1 gap-4">
+              {upcomingMeetings.map(meeting => (
+                <Card key={meeting.id} className="overflow-hidden">
+                  <CardContent className="p-0">
+                    <div className="p-4 flex items-start gap-4">
+                      <div className={`mt-1 h-10 w-10 flex items-center justify-center rounded-full 
+                        ${meeting.type === 'video' ? 'bg-blue-50' : 'bg-green-50'}`}>
+                        {meeting.type === 'video' ? (
+                          <Video className={`h-5 w-5 text-blue-600`} />
+                        ) : (
+                          <MapPin className={`h-5 w-5 text-green-600`} />
+                        )}
+                      </div>
+                      <div className="flex-1">
+                        <h4 className="font-semibold">{meeting.title}</h4>
+                        <div className="mt-1 text-sm text-gray-500">
+                          <p>{meeting.date} • {meeting.time}</p>
+                          <p className="mt-1">{meeting.location}</p>
+                        </div>
+                        <div className="mt-3 flex items-center text-sm text-gray-500">
+                          <Users className="h-4 w-4 mr-1" />
+                          <span>{meeting.attendees.length} attendees</span>
+                        </div>
+                      </div>
+                      <div>
+                        <Button variant="outline" size="sm">Details</Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="past" className="mt-4">
+            <div className="grid grid-cols-1 gap-4">
+              {pastMeetings.map(meeting => (
+                <Card key={meeting.id} className="overflow-hidden">
+                  <CardContent className="p-0">
+                    <div className="p-4 flex items-start gap-4">
+                      <div className={`mt-1 h-10 w-10 flex items-center justify-center rounded-full 
+                        ${meeting.type === 'video' ? 'bg-blue-50' : 'bg-green-50'}`}>
+                        {meeting.type === 'video' ? (
+                          <Video className={`h-5 w-5 text-blue-600`} />
+                        ) : (
+                          <MapPin className={`h-5 w-5 text-green-600`} />
+                        )}
+                      </div>
+                      <div className="flex-1">
+                        <h4 className="font-semibold">{meeting.title}</h4>
+                        <div className="mt-1 text-sm text-gray-500">
+                          <p>{meeting.date} • {meeting.time}</p>
+                          <p className="mt-1">{meeting.location}</p>
+                        </div>
+                        <div className="mt-3 flex items-center text-sm text-gray-500">
+                          <Users className="h-4 w-4 mr-1" />
+                          <span>{meeting.attendees.length} attendees</span>
+                        </div>
+                      </div>
+                      <div>
+                        <Button variant="outline" size="sm">View Summary</Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
+      
+      {/* Schedule New Meeting Dialog */}
+      <Dialog open={isNewMeetingDialogOpen} onOpenChange={setIsNewMeetingDialogOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Schedule New Meeting</DialogTitle>
+            <DialogDescription>
+              Fill in the details below to schedule a new advisory meeting.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4 py-2">
+            <div className="space-y-2">
+              <Label htmlFor="title">Meeting Title</Label>
+              <Input id="title" placeholder="Enter meeting title" />
+            </div>
+            
+            <div className="space-y-2">
+              <Label>Meeting Date</Label>
+              <div className="border rounded-md p-2">
+                <Calendar
+                  mode="single"
+                  selected={selectedDate}
+                  onSelect={setSelectedDate}
+                  className="mx-auto"
+                />
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="time">Start Time</Label>
+                <Input 
+                  id="time" 
+                  type="time" 
+                  value={meetingTime}
+                  onChange={(e) => setMeetingTime(e.target.value)}
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="duration">Duration (minutes)</Label>
+                <Select value={meetingDuration} onValueChange={setMeetingDuration}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select duration" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="30">30 minutes</SelectItem>
+                    <SelectItem value="60">60 minutes</SelectItem>
+                    <SelectItem value="90">90 minutes</SelectItem>
+                    <SelectItem value="120">120 minutes</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="type">Meeting Type</Label>
+              <Select value={meetingType} onValueChange={setMeetingType}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select meeting type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="video">Video Call</SelectItem>
+                  <SelectItem value="in-person">In-person</SelectItem>
+                  <SelectItem value="phone">Phone Call</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="description">Description</Label>
+              <Textarea id="description" placeholder="Enter meeting details" className="min-h-[100px]" />
+            </div>
+          </div>
+          
+          <DialogFooter className="flex space-x-2 justify-end">
+            <Button variant="outline" onClick={() => setIsNewMeetingDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleScheduleMeeting} className="bg-black hover:bg-gray-800">
+              Schedule Meeting
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </DashboardLayout>
   );
 };
 
-export default CalendarPage;
+export default Calendar;

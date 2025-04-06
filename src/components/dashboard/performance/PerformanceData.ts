@@ -1,4 +1,3 @@
-
 // Sample data for the Performance Overview component
 
 // Performance chart data
@@ -23,10 +22,40 @@ export const assetAllocationData = [
   { name: "Cash", value: 5 }
 ];
 
-// News data
+// Enhanced news data with more items
 export const newsData = [
-  { title: "Fed signals potential rate cut in December", time: "2h ago" },
-  { title: "Tech stocks rally on positive earnings", time: "5h ago" }
+  {
+    title: "Fed signals rate cuts possible in September as inflation eases",
+    time: "2 hours ago"
+  },
+  {
+    title: "Global markets rally on positive economic data from US and Europe",
+    time: "4 hours ago"
+  },
+  {
+    title: "Tech sector leads gains as major earnings beat analyst expectations",
+    time: "Yesterday"
+  },
+  {
+    title: "Oil prices stabilize after recent volatility, Brent crude at $82",
+    time: "Yesterday"
+  },
+  {
+    title: "Real estate investments show resilience despite higher rates",
+    time: "2 days ago"
+  },
+  {
+    title: "Gold reaches new all-time high amid economic uncertainties",
+    time: "2 days ago"
+  },
+  {
+    title: "European Central Bank maintains rates, signals future easing",
+    time: "3 days ago"
+  },
+  {
+    title: "Semiconductor industry faces supply challenges amid growing demand",
+    time: "4 days ago"
+  }
 ];
 
 // Recommendations

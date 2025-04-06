@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { LogOut, ArrowLeft } from "lucide-react";
+import { toast } from "sonner";
 
 const Logout = () => {
   const navigate = useNavigate();
@@ -12,6 +13,9 @@ const Logout = () => {
     // Clear any auth data from localStorage
     localStorage.removeItem("auth_token");
     localStorage.removeItem("user_data");
+    
+    // Show success toast
+    toast.success("You have been successfully logged out");
     
     // Redirect to landing page after logout
     navigate("/");
@@ -36,8 +40,8 @@ const Logout = () => {
         
         <div className="space-y-3">
           <Button 
-            variant="destructive" 
-            className="w-full py-6" 
+            variant="default" 
+            className="w-full py-6 bg-black hover:bg-gray-800 text-white" 
             onClick={handleLogout}
           >
             Yes, Sign Out

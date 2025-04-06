@@ -12,7 +12,7 @@ const NewsSection = () => {
   const [category, setCategory] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
   
-  // Mock news data - would come from API in real app
+  // Expanded news data with more items - would come from API in real app
   const newsItems = [
     {
       id: "1",
@@ -80,6 +80,72 @@ const NewsSection = () => {
       isBreaking: false,
       url: "#"
     },
+    {
+      id: "7",
+      title: "Global supply chain disruptions impact semiconductor availability",
+      summary: "Ongoing disruptions in global supply chains are causing shortages of critical semiconductor components, affecting multiple industries.",
+      source: "The Economist",
+      image: "https://placehold.co/600x400/e2e8f0/64748b?text=Economist",
+      category: "markets",
+      datePublished: "1d ago",
+      isBreaking: false,
+      url: "#"
+    },
+    {
+      id: "8",
+      title: "Renewable energy investments reach new highs in first quarter",
+      summary: "Global investments in renewable energy projects hit record levels in Q1 2025, driven by policy incentives and corporate sustainability targets.",
+      source: "Financial Times",
+      image: "https://placehold.co/600x400/e2e8f0/64748b?text=FT",
+      category: "stocks",
+      datePublished: "1d ago",
+      isBreaking: false,
+      url: "#"
+    },
+    {
+      id: "9",
+      title: "Housing market shows signs of cooling after two years of rapid growth",
+      summary: "Latest data indicates a slowdown in housing price growth in major markets, with analysts suggesting a normalization rather than a sharp correction.",
+      source: "Wall Street Journal",
+      image: "https://placehold.co/600x400/e2e8f0/64748b?text=WSJ",
+      category: "markets",
+      datePublished: "2d ago",
+      isBreaking: false,
+      url: "#"
+    },
+    {
+      id: "10",
+      title: "Agriculture futures surge on adverse weather reports",
+      summary: "Wheat, corn and soybean futures rose sharply following forecasts of adverse weather conditions in key growing regions, raising supply concerns.",
+      source: "Bloomberg",
+      image: "https://placehold.co/600x400/e2e8f0/64748b?text=Bloomberg",
+      category: "commodities",
+      datePublished: "2d ago",
+      isBreaking: false,
+      url: "#"
+    },
+    {
+      id: "11",
+      title: "Major tech company announces ambitious AI investment plan",
+      summary: "A leading technology corporation has unveiled a $10 billion investment plan focused on artificial intelligence development over the next five years.",
+      source: "CNBC",
+      image: "https://placehold.co/600x400/e2e8f0/64748b?text=CNBC",
+      category: "stocks",
+      datePublished: "3d ago",
+      isBreaking: false,
+      url: "#"
+    },
+    {
+      id: "12",
+      title: "Central banks worldwide accumulate gold at fastest pace in decades",
+      summary: "Global central banks are purchasing gold at the fastest rate in 50 years, diversifying reserves away from traditional currencies.",
+      source: "Reuters",
+      image: "https://placehold.co/600x400/e2e8f0/64748b?text=Reuters",
+      category: "commodities",
+      datePublished: "3d ago",
+      isBreaking: false,
+      url: "#"
+    }
   ];
   
   const filteredNews = newsItems.filter(item => {

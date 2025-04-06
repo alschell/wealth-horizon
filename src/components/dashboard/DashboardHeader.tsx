@@ -1,66 +1,57 @@
 
-import React, { useState } from "react";
-import { Settings, LogOut, Bell, Search, Menu, X } from "lucide-react";
-import Logo from "./Logo";
-import PageTitle from "./PageTitle";
-import NotificationsPopover from "./NotificationsPopover";
-import HeaderAction from "./HeaderAction";
-import { Input } from "@/components/ui/input";
+import React from "react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import Logo from "./Logo";
+import NotificationsPopover from "./NotificationsPopover";
+import PageTitle from "./PageTitle";
+import HeaderAction from "./HeaderAction";
+import PersonalizedSettings from "./PersonalizedSettings";
 
 const DashboardHeader = () => {
-  const [isSearchFocused, setIsSearchFocused] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-
   return (
-    <header className="h-16 flex items-center justify-between border-b border-border bg-white sticky top-0 z-10 shadow-sm">
-      <div className="max-w-7xl mx-auto w-full px-4 md:px-8 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon" className="md:hidden">
-            <Menu className="h-5 w-5" />
-          </Button>
-          <Logo />
-          <PageTitle />
+    <header className="sticky top-0 z-50 flex h-16 w-full shrink-0 items-center justify-between border-b bg-background px-4 lg:px-6">
+      <div className="flex items-center">
+        <Link to="/dashboard" className="flex items-center">
+          <Logo className="h-8 w-8 mr-2" />
+          <span className="hidden lg:inline-block font-bold">Wealth Pro</span>
+        </Link>
+        <div className="hidden lg:block ml-6">
+          <nav className="flex items-center space-x-4">
+            <Link to="/analyze-wealth" className="text-sm font-medium transition-colors hover:text-primary">
+              Wealth Analysis
+            </Link>
+            <Link to="/advice" className="text-sm font-medium transition-colors hover:text-primary">
+              Advice
+            </Link>
+            <Link to="/trading" className="text-sm font-medium transition-colors hover:text-primary">
+              Trading
+            </Link>
+            <Link to="/market-data" className="text-sm font-medium transition-colors hover:text-primary">
+              Markets
+            </Link>
+            <Link to="/cashflow" className="text-sm font-medium transition-colors hover:text-primary">
+              Cashflow
+            </Link>
+            <Link to="/tax-optimization" className="text-sm font-medium transition-colors hover:text-primary">
+              Tax
+            </Link>
+            <Link to="/client-portal" className="text-sm font-medium transition-colors hover:text-primary">
+              Clients
+            </Link>
+            <Link to="/esg" className="text-sm font-medium transition-colors hover:text-primary">
+              ESG
+            </Link>
+          </nav>
         </div>
-        
-        <div className="flex items-center gap-3">
-          <div className="relative max-w-xs w-64 hidden md:block">
-            <Search className={`absolute left-2 top-2.5 h-4 w-4 ${isSearchFocused ? 'text-blue-500' : 'text-muted-foreground'}`} />
-            <Input 
-              placeholder="Search..." 
-              className="pl-8 bg-gray-50 border-none focus-visible:ring-1 focus-visible:ring-blue-500 transition-all" 
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onFocus={() => setIsSearchFocused(true)}
-              onBlur={() => setIsSearchFocused(false)}
-            />
-            {searchQuery && (
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className="absolute right-1 top-1 h-7 w-7" 
-                onClick={() => setSearchQuery("")}
-              >
-                <X className="h-3 w-3" />
-              </Button>
-            )}
-          </div>
-          
-          <Button variant="ghost" size="icon" className="md:hidden">
-            <Search className="h-5 w-5" />
-          </Button>
-          <NotificationsPopover />
-          <HeaderAction 
-            icon={Settings} 
-            label="Settings" 
-            to="/settings" 
-          />
-          <HeaderAction 
-            icon={LogOut} 
-            label="Log Out" 
-            to="/" 
-          />
-        </div>
+      </div>
+      <div className="hidden lg:block">
+        <PageTitle />
+      </div>
+      <div className="flex items-center gap-2">
+        <PersonalizedSettings />
+        <HeaderAction />
+        <NotificationsPopover />
       </div>
     </header>
   );

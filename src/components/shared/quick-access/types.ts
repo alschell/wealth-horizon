@@ -1,4 +1,6 @@
 
+import React from "react";
+
 export interface QuickLinkItem {
   title: string;
   description: string;

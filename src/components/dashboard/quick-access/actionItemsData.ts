@@ -31,7 +31,7 @@ export const allActionItems: ActionItem[] = [
     id: "analyze-wealth",
     icon: PieChart,
     label: "Analyze Wealth",
-    description: "Portfolio analysis tools & benchmarks",
+    description: "Portfolio analysis tools and benchmarks",
     path: "/analyze-wealth",
     color: "bg-gray-50 text-gray-500"
   },
@@ -39,7 +39,7 @@ export const allActionItems: ActionItem[] = [
     id: "market-data",
     icon: LineChart,
     label: "Access Market Data & News",
-    description: "Real-time market data & information",
+    description: "Real-time market data and information",
     path: "/market-data",
     color: "bg-gray-50 text-gray-500"
   },
@@ -55,7 +55,7 @@ export const allActionItems: ActionItem[] = [
     id: "credit-facilities",
     icon: Building2,
     label: "Manage Credit Facilities",
-    description: "Apply for credit facilities & borrow",
+    description: "Apply for credit facilities and borrow",
     path: "/credit-facilities",
     color: "bg-gray-50 text-gray-500"
   },
@@ -63,7 +63,7 @@ export const allActionItems: ActionItem[] = [
     id: "advice",
     icon: Lightbulb,
     label: "Get Advice",
-    description: "Get personalized advice & request mandates",
+    description: "Get personalized advice and request mandates",
     path: "/advice",
     color: "bg-gray-50 text-gray-500"
   },
@@ -71,7 +71,7 @@ export const allActionItems: ActionItem[] = [
     id: "cashflow",
     icon: DollarSign,
     label: "Manage Cashflow & Liquidity",
-    description: "Optimize liquidity & place term deposits",
+    description: "Optimize liquidity and place term deposits",
     path: "/cashflow-management",
     color: "bg-gray-50 text-gray-500"
   },
@@ -79,7 +79,7 @@ export const allActionItems: ActionItem[] = [
     id: "reports",
     icon: FileText,
     label: "Generate Reports",
-    description: "Create financial reports & statements",
+    description: "Create financial reports and statements",
     path: "/reporting",
     color: "bg-gray-50 text-gray-500"
   },
@@ -87,7 +87,7 @@ export const allActionItems: ActionItem[] = [
     id: "users",
     icon: Users,
     label: "Manage Users & Permissions",
-    description: "Manage user accounts & access",
+    description: "Manage user accounts and access",
     path: "/user-management",
     color: "bg-gray-50 text-gray-500"
   },
@@ -103,7 +103,7 @@ export const allActionItems: ActionItem[] = [
     id: "esg",
     icon: Leaf,
     label: "Assess ESG Investments",
-    description: "Sustainable investment metrics & benchmarks",
+    description: "Sustainable investment metrics and benchmarks",
     path: "/esg",
     color: "bg-gray-50 text-gray-500"
   },
@@ -119,7 +119,7 @@ export const allActionItems: ActionItem[] = [
     id: "tax",
     icon: Calculator,
     label: "Optimize Tax",
-    description: "Tax planning & efficiency",
+    description: "Tax planning and efficiency",
     path: "/tax-optimization",
     color: "bg-gray-50 text-gray-500"
   },
@@ -127,7 +127,7 @@ export const allActionItems: ActionItem[] = [
     id: "entity",
     icon: Building2,
     label: "Manage Legal Entities",
-    description: "Manage legal structures & holdings",
+    description: "Manage legal structures and holdings",
     path: "/entity-management",
     color: "bg-gray-50 text-gray-500"
   },
@@ -135,7 +135,7 @@ export const allActionItems: ActionItem[] = [
     id: "legacy",
     icon: Scroll,
     label: "Plan Legacy",
-    description: "Succession & estate planning",
+    description: "Succession and estate planning",
     path: "/legacy-planning",
     color: "bg-gray-50 text-gray-500"
   },
@@ -143,7 +143,7 @@ export const allActionItems: ActionItem[] = [
     id: "client-access",
     icon: Users,
     label: "Manage Client Access",
-    description: "Control client portal permissions & visibility",
+    description: "Control client portal permissions and visibility",
     path: "/client-portal",
     color: "bg-gray-50 text-gray-500"
   },

@@ -31,11 +31,6 @@ const Logout = () => {
     // Close the dialog
     setShowConfirmation(false);
   };
-  
-  const handleCancel = () => {
-    // Go back to previous page
-    navigate(-1);
-  };
 
   return (
     <>

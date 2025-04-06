@@ -1,24 +1,13 @@
 
-import React, { useState } from "react";
+import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Search, LogOut, Settings } from "lucide-react";
 import Logo from "./Logo";
 import NotificationsPopover from "./notifications";
 import HeaderAction from "./HeaderAction";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
 
 const DashboardHeader = () => {
-  const [logoutConfirmOpen, setLogoutConfirmOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -54,7 +43,7 @@ const DashboardHeader = () => {
               variant="ghost" 
               size="icon" 
               className="text-black" 
-              onClick={() => setLogoutConfirmOpen(true)}
+              onClick={handleLogout}
             >
               <LogOut className="h-5 w-5" />
               <span className="sr-only">Log out</span>
@@ -62,21 +51,6 @@ const DashboardHeader = () => {
           </div>
         </div>
       </header>
-
-      <AlertDialog open={logoutConfirmOpen} onOpenChange={setLogoutConfirmOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Confirm Logout</AlertDialogTitle>
-            <AlertDialogDescription>
-              Are you sure you want to log out of your Wealth Pro account?
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleLogout}>Log Out</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </>
   );
 };

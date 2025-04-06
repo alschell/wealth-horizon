@@ -31,7 +31,7 @@ const RecentNewsList = ({ newsData }: RecentNewsListProps) => {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="space-y-3 flex-grow">
+      <div className="space-y-3 flex-grow overflow-y-auto max-h-[330px]">
         {newsData.map((news, index) => (
           <div 
             key={index} 

@@ -12,6 +12,10 @@ const TopAssets = () => {
     { id: "treasury", name: "Treasury Notes", value: "$845M", change: "+1.2%", isPositive: true },
     { id: "real-estate", name: "Real Estate Holdings", value: "$682M", change: "-2.1%", isPositive: false },
     { id: "private-equity", name: "Private Equity", value: "$456M", change: "+8.3%", isPositive: true },
+    { id: "global-bonds", name: "Global Bond Fund", value: "$378M", change: "+0.9%", isPositive: true },
+    { id: "commodities", name: "Commodities", value: "$215M", change: "+3.2%", isPositive: true },
+    { id: "hedge-fund", name: "Hedge Fund Alpha", value: "$189M", change: "-1.5%", isPositive: false },
+    { id: "emerging-markets", name: "Emerging Markets", value: "$132M", change: "+5.7%", isPositive: true },
   ];
   
   const handleAssetClick = (assetId: string) => {
@@ -19,8 +23,8 @@ const TopAssets = () => {
   };
 
   return (
-    <div className="space-y-2">
-      <div className="space-y-2">
+    <div className="flex flex-col h-full">
+      <div className="space-y-2 flex-grow overflow-y-auto max-h-[330px]">
         {assets.map((asset, index) => (
           <div 
             key={index} 
@@ -39,6 +43,8 @@ const TopAssets = () => {
             </div>
           </div>
         ))}
+      </div>
+      <div className="mt-auto pt-4">
         <Button 
           variant="outline" 
           size="sm" 

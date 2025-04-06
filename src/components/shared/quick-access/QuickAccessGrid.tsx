@@ -1,7 +1,7 @@
 
 import React from "react";
 import QuickAccessItem from "./QuickAccessItem";
-import { QuickAccessGridProps, QuickLinkItem, QuickAccessItem as QuickAccessItemType } from "./types";
+import { QuickAccessGridProps, QuickLinkItem } from "./types";
 
 const QuickAccessGrid = ({ links, items }: QuickAccessGridProps) => {
   // Use either links or items based on what's provided

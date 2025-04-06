@@ -20,9 +20,9 @@ export interface QuickLinkItem {
 
 export interface QuickAccessGridProps {
   items?: QuickAccessItem[];
+  links?: QuickLinkItem[];
   title?: string;
   showCustomizeButton?: boolean;
-  links?: QuickLinkItem[];
 }
 
 export interface QuickAccessItemProps {

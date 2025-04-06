@@ -1,26 +1,18 @@
 
-import { LucideIcon } from "lucide-react";
+import { ReactNode } from "react";
 
 export interface QuickAccessItem {
   id: string;
   title: string;
   description: string;
-  icon: React.ReactNode;
+  icon: ReactNode;
   link: string;
   color?: string;
-}
-
-export interface QuickLinkItem {
-  title: string;
-  description: string;
-  icon: React.ReactNode;
-  link: string;
-  color?: string;
+  onClick?: () => void;
 }
 
 export interface QuickAccessGridProps {
   items?: QuickAccessItem[];
-  links?: QuickLinkItem[];
   title?: string;
   showCustomizeButton?: boolean;
 }
@@ -28,7 +20,7 @@ export interface QuickAccessGridProps {
 export interface QuickAccessItemProps {
   title: string;
   description: string;
-  icon: React.ReactNode;
+  icon: ReactNode;
   link: string;
   color?: string;
   onClick?: () => void;

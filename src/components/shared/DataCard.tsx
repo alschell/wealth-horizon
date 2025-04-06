@@ -1,13 +1,15 @@
 
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import { FadeIn } from "@/components/ui/animation";
 
 interface DataCardProps {
   title: string;
+  description?: string;
   children: React.ReactNode;
   className?: string;
   action?: {
@@ -15,13 +17,31 @@ interface DataCardProps {
     href: string;
     onClick?: () => void;
   };
+  withAnimation?: boolean;
+  headerAction?: React.ReactNode;
 }
 
-const DataCard = ({ title, children, className, action }: DataCardProps) => {
-  return (
+const DataCard = ({
+  title,
+  description,
+  children,
+  className,
+  action,
+  withAnimation = false,
+  headerAction,
+}: DataCardProps) => {
+  const content = (
     <Card className={cn("h-full", className)}>
       <CardHeader className="px-6 pt-6 pb-4">
-        <CardTitle className="text-xl">{title}</CardTitle>
+        <div className="flex items-center justify-between">
+          <div>
+            <CardTitle className="text-xl">{title}</CardTitle>
+            {description && <CardDescription>{description}</CardDescription>}
+          </div>
+          {headerAction && (
+            <div>{headerAction}</div>
+          )}
+        </div>
       </CardHeader>
       <CardContent className="flex flex-col">
         <div className="flex-grow">{children}</div>
@@ -42,6 +62,16 @@ const DataCard = ({ title, children, className, action }: DataCardProps) => {
       </CardContent>
     </Card>
   );
+
+  if (withAnimation) {
+    return (
+      <FadeIn>
+        {content}
+      </FadeIn>
+    );
+  }
+
+  return content;
 };
 
 export default DataCard;

@@ -10,3 +10,4 @@ export * from './toaster';
 export * from './toast';
 export * from './tooltip';
 export * from './skeleton';
+export * from './animation';

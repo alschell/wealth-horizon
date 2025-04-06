@@ -2,52 +2,49 @@
 import React from "react";
 import { cn } from "@/lib/utils";
 
-export type StatusType = "success" | "warning" | "error" | "info" | "pending";
+type StatusType = "success" | "warning" | "error" | "info" | "neutral";
 
-export interface StatusIndicatorProps extends React.HTMLAttributes<HTMLDivElement> {
-  status: StatusType;
+interface StatusIndicatorProps {
+  type?: StatusType;
   size?: "sm" | "md" | "lg";
-  withLabel?: boolean;
+  pulse?: boolean;
   label?: string;
   className?: string;
 }
 
-export const StatusIndicator: React.FC<StatusIndicatorProps> = ({
-  status,
+const statusColors = {
+  success: "bg-green-500",
+  warning: "bg-yellow-500",
+  error: "bg-red-500",
+  info: "bg-blue-500",
+  neutral: "bg-gray-500",
+};
+
+const sizeClasses = {
+  sm: "h-2 w-2",
+  md: "h-3 w-3",
+  lg: "h-4 w-4",
+};
+
+export function StatusIndicator({
+  type = "neutral",
   size = "md",
-  withLabel = false,
+  pulse = false,
   label,
   className,
-  ...props
-}) => {
-  const statusColors = {
-    success: "bg-green-600",
-    warning: "bg-amber-500",
-    error: "bg-red-600",
-    info: "bg-blue-500",
-    pending: "bg-gray-400"
-  };
-
-  const statusLabels = {
-    success: label || "Success",
-    warning: label || "Warning",
-    error: label || "Error",
-    info: label || "Info",
-    pending: label || "Pending"
-  };
-
-  const sizeClasses = {
-    sm: "h-2 w-2",
-    md: "h-3 w-3",
-    lg: "h-4 w-4"
-  };
-
+}: StatusIndicatorProps) {
   return (
-    <div className={cn("flex items-center", className)} {...props}>
-      <div className={cn("rounded-full", statusColors[status], sizeClasses[size])} />
-      {withLabel && (
-        <span className="text-xs ml-2 text-gray-600">{statusLabels[status]}</span>
-      )}
+    <div className="flex items-center gap-2">
+      <span
+        className={cn(
+          "rounded-full",
+          statusColors[type],
+          sizeClasses[size],
+          pulse && "animate-pulse",
+          className
+        )}
+      />
+      {label && <span className="text-sm text-gray-700">{label}</span>}
     </div>
   );
-};
+}

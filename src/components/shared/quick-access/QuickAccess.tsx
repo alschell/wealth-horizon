@@ -7,7 +7,6 @@ import QuickAccessGrid from "./QuickAccessGrid";
 import CustomizeDialog from "./CustomizeDialog";
 import { useQuickAccess } from "./useQuickAccess";
 import { allQuickLinks } from "./quickLinksData";
-import { QuickAccessItem } from "./types";
 
 interface QuickAccessProps {
   pathname?: string;
@@ -23,16 +22,6 @@ const QuickAccess = ({ pathname }: QuickAccessProps) => {
     handleCustomizeSave,
     toggleItem
   } = useQuickAccess(pathname);
-
-  // Convert allQuickLinks to QuickAccessItem[] for the CustomizeDialog
-  const quickAccessItems: QuickAccessItem[] = allQuickLinks.map(link => ({
-    id: link.title, // Using title as id since it's unique
-    title: link.title,
-    description: link.description,
-    icon: link.icon,
-    link: link.link,
-    color: link.color
-  }));
 
   return (
     <Card>
@@ -51,13 +40,13 @@ const QuickAccess = ({ pathname }: QuickAccessProps) => {
         </div>
       </CardHeader>
       <CardContent>
-        <QuickAccessGrid links={filteredItems} />
+        <QuickAccessGrid items={filteredItems} />
       </CardContent>
 
       <CustomizeDialog
         isOpen={isCustomizing}
         onOpenChange={setIsCustomizing}
-        items={quickAccessItems}
+        items={allQuickLinks}
         selectedItems={temporarySelection}
         onItemToggle={toggleItem}
         onSave={handleCustomizeSave}

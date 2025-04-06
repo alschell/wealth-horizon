@@ -2,6 +2,8 @@
 import React, { ReactNode } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { FadeIn } from "@/components/ui/animation";
+import { cn } from "@/lib/utils";
 
 interface PerformanceContainerProps {
   title: string;
@@ -13,6 +15,8 @@ interface PerformanceContainerProps {
     content: ReactNode;
   }[];
   className?: string;
+  withAnimation?: boolean;
+  headerRight?: ReactNode;
 }
 
 const PerformanceContainer = ({
@@ -21,12 +25,21 @@ const PerformanceContainer = ({
   defaultTab,
   tabs,
   className,
+  withAnimation = false,
+  headerRight,
 }: PerformanceContainerProps) => {
-  return (
-    <Card className={className}>
+  const content = (
+    <Card className={cn(className)}>
       <CardHeader className="px-6 pt-6 pb-4">
-        <CardTitle className="text-xl">{title}</CardTitle>
-        {description && <CardDescription>{description}</CardDescription>}
+        <div className="flex items-center justify-between">
+          <div>
+            <CardTitle className="text-xl">{title}</CardTitle>
+            {description && <CardDescription>{description}</CardDescription>}
+          </div>
+          {headerRight && (
+            <div>{headerRight}</div>
+          )}
+        </div>
       </CardHeader>
       <CardContent>
         <Tabs defaultValue={defaultTab || tabs[0].id} className="space-y-4">
@@ -39,7 +52,7 @@ const PerformanceContainer = ({
           </TabsList>
           
           {tabs.map((tab) => (
-            <TabsContent key={tab.id} value={tab.id}>
+            <TabsContent key={tab.id} value={tab.id} className="pt-2">
               {tab.content}
             </TabsContent>
           ))}
@@ -47,6 +60,16 @@ const PerformanceContainer = ({
       </CardContent>
     </Card>
   );
+
+  if (withAnimation) {
+    return (
+      <FadeIn>
+        {content}
+      </FadeIn>
+    );
+  }
+
+  return content;
 };
 
 export default PerformanceContainer;

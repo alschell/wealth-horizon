@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { allQuickLinks } from "./quickLinksData";
-import { QuickLinkItem } from "./types";
+import { QuickAccessItem } from "./types";
 
 export const useQuickAccess = (pathname?: string) => {
   const [isCustomizing, setIsCustomizing] = useState(false);
@@ -17,7 +17,7 @@ export const useQuickAccess = (pathname?: string) => {
       setVisibleItems(JSON.parse(savedItems));
     } else {
       // Default to showing all items
-      setVisibleItems(allQuickLinks.map(item => item.title));
+      setVisibleItems(allQuickLinks.map(item => item.id));
     }
   }, [currentPage]);
   
@@ -41,8 +41,8 @@ export const useQuickAccess = (pathname?: string) => {
   };
 
   // Filter the quick links based on user selection
-  const filteredItems: QuickLinkItem[] = allQuickLinks.filter(link => 
-    visibleItems.includes(link.title)
+  const filteredItems: QuickAccessItem[] = allQuickLinks.filter(link => 
+    visibleItems.includes(link.id)
   );
 
   return {

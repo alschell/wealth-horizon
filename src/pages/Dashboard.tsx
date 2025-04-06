@@ -1,4 +1,3 @@
-
 import React from "react";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import WelcomeHeader from "@/components/dashboard/WelcomeHeader";
@@ -13,7 +12,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { newsData } from "@/components/dashboard/performance/PerformanceData";
 import TopAssets from "@/components/dashboard/performance/TopAssets";
 import RecentNewsList from "@/components/dashboard/performance/RecentNewsList";
-import QuickAccess from "@/components/shared/QuickAccess";
+import QuickAccess from "@/components/shared/quick-access";
 
 const Dashboard = () => {
   return (

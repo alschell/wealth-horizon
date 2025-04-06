@@ -55,7 +55,7 @@ export const assetAllocationData = performanceData.assetAllocation;
 export const newsData = performanceData.recentNews;
 export const recommendations = performanceData.recommendations;
 export const chartConfig = {
-  "value": {
+  value: {
     label: "Net Worth",
     color: "#000000"
   }

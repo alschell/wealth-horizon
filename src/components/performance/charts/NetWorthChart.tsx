@@ -24,11 +24,11 @@ const NetWorthChart = ({ performanceData, chartConfig }: NetWorthChartProps) => 
     <div className="w-full">
       <div className="flex items-center justify-between mb-3">
         <div>
-          <p className="text-2xl font-bold">$4.48B</p>
+          <p className="text-2xl font-bold">$5.68B</p>
         </div>
         <div className="flex items-center">
           <div className="flex items-center text-emerald-600 text-sm font-medium mr-4">
-            <TrendingUp className="h-4 w-4 mr-1" /> +3.8% YTD
+            <TrendingUp className="h-4 w-4 mr-1" /> +4.2% YTD
           </div>
           <div className="flex space-x-1">
             {(['1m', '3m', '6m', '1y', 'All'] as const).map((range) => (
@@ -46,7 +46,7 @@ const NetWorthChart = ({ performanceData, chartConfig }: NetWorthChartProps) => 
         </div>
       </div>
 
-      <div className="h-[350px] w-full">
+      <div className="h-[300px] w-full">
         <ChartContainer config={chartConfig}>
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart 

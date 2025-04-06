@@ -1,6 +1,5 @@
 
 import React from "react";
-import { TrendingUp } from "lucide-react";
 import NetWorthChart from "../charts/NetWorthChart";
 import KeyMetricsGrid from "../components/KeyMetricsGrid";
 import TopAssets from "../components/TopAssets";
@@ -24,7 +23,7 @@ const OverviewTabContent = ({
   newsData 
 }: OverviewTabContentProps) => {
   return (
-    <div className="space-y-12">
+    <div className="space-y-8">
       <div>
         <div className="mb-2">
           <h3 className="text-sm font-medium text-gray-600">Net Worth Trend</h3>

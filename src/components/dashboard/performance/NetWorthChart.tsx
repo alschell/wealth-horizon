@@ -46,7 +46,7 @@ const NetWorthChart = ({ performanceData, chartConfig }: NetWorthChartProps) => 
           </div>
         </div>
       </div>
-      <div className="h-40 w-full mt-0">
+      <div className="h-64 w-full mt-0">
         <ChartContainer config={chartConfig}>
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={performanceData} margin={{ top: 0, right: 0, left: 0, bottom: 10 }}>

@@ -30,7 +30,7 @@ const QuickAccessItem = ({
       </div>
       <div>
         <h3 className="text-sm font-medium mb-1">{title}</h3>
-        <p className="text-xs text-muted-foreground">
+        <p className="text-xs text-gray-500">
           {description}
         </p>
       </div>

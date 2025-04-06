@@ -17,12 +17,12 @@ const RecommendationItem = ({ recommendation }: RecommendationProps) => {
   return (
     <div 
       className={`p-3 rounded-md hover:bg-gray-50 transition-colors cursor-pointer ${
-        isHighPriority ? 'bg-amber-50' : 'bg-gray-50'
+        isHighPriority ? 'bg-gray-100' : 'bg-gray-50'
       }`}
     >
       <div className="flex items-start">
         <div className={`h-5 w-5 rounded-full flex items-center justify-center mr-3 ${
-          isHighPriority ? 'bg-amber-200' : 'bg-gray-200'
+          isHighPriority ? 'bg-gray-200' : 'bg-gray-200'
         }`}>
           <Brain className="h-3 w-3 text-gray-700" />
         </div>

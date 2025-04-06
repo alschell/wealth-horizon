@@ -15,10 +15,10 @@ export const CustomBadge: React.FC<CustomBadgeProps> = ({
   className,
   ...props
 }) => {
-  // Map "success" variant to appropriate styles
+  // Map "success" variant to appropriate styles using our black/gray/white palette
   let variantClass = "";
   if (variant === "success") {
-    variantClass = "bg-gray-600 hover:bg-gray-700 text-white";
+    variantClass = "bg-gray-800 hover:bg-gray-900 text-white";
     variant = "outline" as any; // Use outline as base and override with our custom styles
   }
 

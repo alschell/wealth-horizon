@@ -16,7 +16,7 @@ type RecentNewsListProps = {
 const RecentNewsList = ({ newsData }: RecentNewsListProps) => {
   return (
     <div className="space-y-2">
-      <div className="space-y-2">
+      <div className="space-y-3">
         {newsData.map((news, index) => (
           <div key={index} className="p-3 rounded-md hover:bg-gray-50 transition-colors cursor-pointer">
             <p className="text-sm font-medium">{news.title}</p>

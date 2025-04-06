@@ -78,24 +78,26 @@ const NotificationsFeed = () => {
   };
 
   return (
-    <Card>
+    <Card className="shadow-sm">
       <CardHeader className="pb-3">
-        <CardTitle>Notifications</CardTitle>
+        <CardTitle className="text-md">Notifications</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="space-y-4">
+        <div className="space-y-3">
           {notifications.map((notification) => (
             <div 
               key={notification.id}
-              className="flex items-start p-3 rounded-md hover:bg-gray-50 transition-colors cursor-pointer"
+              className="p-3 rounded-md hover:bg-gray-50 transition-colors cursor-pointer"
             >
-              <div className="mr-3 mt-0.5">
-                {getIcon(notification.type)}
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="font-medium text-sm">{notification.title}</p>
-                <p className="text-sm text-gray-500 mt-1">{notification.description}</p>
-                <p className="text-xs text-gray-400 mt-1">{notification.timestamp}</p>
+              <div className="flex items-start gap-3">
+                <div className="mt-0.5 h-8 w-8 flex items-center justify-center bg-gray-50 rounded-full">
+                  {getIcon(notification.type)}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium">{notification.title}</p>
+                  <p className="text-sm text-gray-500 mt-1">{notification.description}</p>
+                  <p className="text-xs text-gray-400 mt-1">{notification.timestamp}</p>
+                </div>
               </div>
             </div>
           ))}

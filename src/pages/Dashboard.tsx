@@ -39,18 +39,18 @@ const Dashboard = () => {
         
         {/* Top Assets and Recent News in separate cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Card>
-            <CardHeader className="px-6 pt-6 pb-4">
-              <CardTitle className="text-xl">Top Assets</CardTitle>
+          <Card className="shadow-sm">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-md">Top Assets</CardTitle>
             </CardHeader>
             <CardContent>
               <TopAssets />
             </CardContent>
           </Card>
           
-          <Card>
-            <CardHeader className="px-6 pt-6 pb-4">
-              <CardTitle className="text-xl">Recent News</CardTitle>
+          <Card className="shadow-sm">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-md">Recent News</CardTitle>
             </CardHeader>
             <CardContent>
               <RecentNewsList newsData={newsData} />

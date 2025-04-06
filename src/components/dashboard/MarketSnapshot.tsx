@@ -61,9 +61,9 @@ const MarketSnapshot = () => {
   ];
 
   return (
-    <Card>
-      <CardHeader className="px-6 pt-6 pb-4">
-        <CardTitle className="text-xl">Market Snapshot</CardTitle>
+    <Card className="shadow-sm">
+      <CardHeader className="pb-3">
+        <CardTitle className="text-md">Market Snapshot</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="space-y-2">

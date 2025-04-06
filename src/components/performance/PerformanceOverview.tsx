@@ -1,58 +1,50 @@
 
-import React, { useState } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import OverviewTabContent from "./tabs/OverviewTabContent";
 import ChartsTabContent from "./tabs/ChartsTabContent";
 import RecommendationsTabContent from "./tabs/RecommendationsTabContent";
-import { performanceData } from "./data/PerformanceData";
+import { 
+  performanceData, 
+  assetAllocationData, 
+  newsData, 
+  recommendations, 
+  chartConfig 
+} from "./data/PerformanceData";
 
-const PerformanceOverview: React.FC = () => {
-  const [activeTab, setActiveTab] = useState("overview");
-
+const PerformanceOverview = () => {
   return (
-    <Card className="shadow-sm">
-      <CardHeader className="pb-3">
-        <CardTitle className="text-lg font-medium flex items-center justify-between">
-          <span>Portfolio Performance</span>
-          <span className="text-sm font-normal text-muted-foreground">Last updated: Today, 9:43 AM</span>
-        </CardTitle>
-        <CardDescription>
-          Track your portfolio performance across all accounts
-        </CardDescription>
+    <Card>
+      <CardHeader>
+        <CardTitle>Performance Overview</CardTitle>
+        <CardDescription>Quick snapshot of your wealth performance</CardDescription>
       </CardHeader>
-      <CardContent className="p-0">
-        <Tabs defaultValue="overview" value={activeTab} onValueChange={setActiveTab}>
-          <div className="px-6">
-            <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="overview">Overview</TabsTrigger>
-              <TabsTrigger value="charts">Charts</TabsTrigger>
-              <TabsTrigger value="recommendations">Recommendations</TabsTrigger>
-            </TabsList>
-          </div>
+      <CardContent>
+        <Tabs defaultValue="overview" className="space-y-4">
+          <TabsList>
+            <TabsTrigger value="overview">Overview</TabsTrigger>
+            <TabsTrigger value="charts">Charts</TabsTrigger>
+            <TabsTrigger value="recommendations">Recommendations</TabsTrigger>
+          </TabsList>
           
-          <TabsContent value="overview" className="m-0 p-6">
+          <TabsContent value="overview">
             <OverviewTabContent 
-              performanceData={performanceData.performanceTrend}
-              chartConfig={{
-                value: {
-                  label: "Net Worth",
-                  color: "#000000"
-                }
-              }}
-              newsData={performanceData.recentNews}
+              performanceData={performanceData}
+              chartConfig={chartConfig}
+              newsData={newsData}
             />
           </TabsContent>
           
-          <TabsContent value="charts" className="m-0 p-6">
-            <ChartsTabContent
-              assetAllocationData={performanceData.assetAllocation}
+          <TabsContent value="charts">
+            <ChartsTabContent 
+              assetAllocationData={assetAllocationData}
             />
           </TabsContent>
           
-          <TabsContent value="recommendations" className="m-0 p-6">
-            <RecommendationsTabContent
-              recommendations={performanceData.recommendations}
+          <TabsContent value="recommendations">
+            <RecommendationsTabContent 
+              recommendations={recommendations}
             />
           </TabsContent>
         </Tabs>

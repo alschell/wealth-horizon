@@ -1,12 +1,13 @@
 
 import React from "react";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
+import WealthSummary from "@/components/dashboard/WealthSummary";
+import NotificationsFeed from "@/components/dashboard/NotificationsFeed";
 import WelcomeHeader from "@/components/dashboard/WelcomeHeader";
-import QuickActions from "@/components/dashboard/QuickActions";
+import QuickAccessGrid from "@/components/dashboard/QuickAccessGrid";
 import PerformanceOverview from "@/components/performance/PerformanceOverview";
 import MarketSnapshot from "@/components/dashboard/MarketSnapshot";
 import RecentActivity from "@/components/dashboard/RecentActivity";
-import NotificationsFeed from "@/components/dashboard/NotificationsFeed";
 import PageHeaderCard from "@/components/dashboard/PageHeaderCard";
 import { LayoutDashboard } from "lucide-react";
 
@@ -26,14 +27,14 @@ const Dashboard = () => {
         {/* Welcome header */}
         <WelcomeHeader />
 
-        {/* Quick Actions */}
-        <QuickActions />
+        {/* Performance Overview with enhanced visuals */}
+        <PerformanceOverview />
 
-        {/* Main dashboard content grid */}
+        {/* Key summary cards */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 space-y-6">
-            {/* Performance Overview with enhanced visuals */}
-            <PerformanceOverview />
+          <div className="lg:col-span-2 space-y-6">            
+            {/* Modules card grid */}
+            <QuickAccessGrid />
           </div>
           
           <div className="space-y-6">

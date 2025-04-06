@@ -21,14 +21,15 @@ const NetWorthChart = ({ performanceData, chartConfig }: NetWorthChartProps) => 
   const [timeRange, setTimeRange] = useState<'1m' | '3m' | '6m' | '1y' | 'All'>('1y');
 
   return (
-    <div className="w-full">
-      <div className="flex items-center justify-between mb-3">
+    <div className="w-full mb-8">
+      <div className="mb-2 flex items-center justify-between">
         <div>
-          <p className="text-2xl font-bold">$5.68B</p>
+          <h3 className="text-sm font-medium text-gray-600">Net Worth Trend</h3>
+          <p className="text-2xl font-bold">$4.48B</p>
         </div>
         <div className="flex items-center">
-          <div className="flex items-center text-emerald-600 text-sm font-medium mr-4">
-            <TrendingUp className="h-4 w-4 mr-1" /> +4.2% YTD
+          <div className="flex items-center text-emerald-600 text-sm font-medium mr-6">
+            <TrendingUp className="h-4 w-4 mr-1" /> +3.8% YTD
           </div>
           <div className="flex space-x-1">
             {(['1m', '3m', '6m', '1y', 'All'] as const).map((range) => (
@@ -45,8 +46,7 @@ const NetWorthChart = ({ performanceData, chartConfig }: NetWorthChartProps) => 
           </div>
         </div>
       </div>
-
-      <div className="h-[300px] w-full">
+      <div className="h-80 w-full mt-1">
         <ChartContainer config={chartConfig}>
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart 

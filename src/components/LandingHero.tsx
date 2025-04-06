@@ -38,9 +38,8 @@ const LandingHero = () => {
           <Button 
             variant="outline" 
             className="h-12 px-8 rounded-xl font-medium border border-gray-200"
-            onClick={() => navigate('/dashboard')}
           >
-            Go to Dashboard
+            Learn More
           </Button>
         </div>
       </div>

@@ -2,10 +2,16 @@
 import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import OverviewTabContent from "@/components/performance/tabs/OverviewTabContent";
-import ChartsTabContent from "@/components/performance/tabs/ChartsTabContent";
-import RecommendationsTabContent from "@/components/performance/tabs/RecommendationsTabContent";
-import { performanceData } from "@/components/performance/data/PerformanceData";
+import OverviewTabContent from "./performance/OverviewTabContent";
+import ChartsTabContent from "./performance/ChartsTabContent";
+import RecommendationsTabContent from "./performance/RecommendationsTabContent";
+import { 
+  performanceData, 
+  assetAllocationData, 
+  newsData, 
+  recommendations, 
+  chartConfig 
+} from "./performance/PerformanceData";
 
 const PerformanceOverview = () => {
   return (
@@ -24,26 +30,21 @@ const PerformanceOverview = () => {
           
           <TabsContent value="overview">
             <OverviewTabContent 
-              performanceData={performanceData.performanceTrend}
-              chartConfig={{
-                value: {
-                  label: "Net Worth",
-                  color: "#000000"
-                }
-              }}
-              newsData={performanceData.recentNews}
+              performanceData={performanceData}
+              chartConfig={chartConfig}
+              newsData={newsData}
             />
           </TabsContent>
           
           <TabsContent value="charts">
             <ChartsTabContent 
-              assetAllocationData={performanceData.assetAllocation}
+              assetAllocationData={assetAllocationData}
             />
           </TabsContent>
           
           <TabsContent value="recommendations">
             <RecommendationsTabContent 
-              recommendations={performanceData.recommendations}
+              recommendations={recommendations}
             />
           </TabsContent>
         </Tabs>

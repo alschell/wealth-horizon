@@ -23,11 +23,8 @@ const OverviewTabContent = ({
   newsData 
 }: OverviewTabContentProps) => {
   return (
-    <div className="space-y-8">
+    <div className="space-y-12">
       <div>
-        <div className="mb-2">
-          <h3 className="text-sm font-medium text-gray-600">Net Worth Trend</h3>
-        </div>
         <NetWorthChart performanceData={performanceData} chartConfig={chartConfig} />
       </div>
       

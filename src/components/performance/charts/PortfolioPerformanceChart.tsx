@@ -51,7 +51,7 @@ const PortfolioPerformanceChart = () => {
         </Button>
       </div>
       <p className="text-xs text-gray-500 mb-4">
-        Compared to benchmarks
+        Detailed chart view available in the Analysis section
       </p>
       
       <div className="h-60 w-full">

@@ -123,14 +123,6 @@ export const allQuickLinks: QuickLinkItem[] = [
     color: "bg-gray-50"
   },
   {
-    id: "entities",
-    title: "Manage entities",
-    description: "Administer legal structures and organization hierarchy",
-    icon: React.createElement(Building2, { className: "h-4 w-4 text-gray-500" }),
-    link: "/entity-management",
-    color: "bg-gray-50"
-  },
-  {
     id: "legacy",
     title: "Plan legacy",
     description: "Develop succession and inheritance strategies",
@@ -144,6 +136,14 @@ export const allQuickLinks: QuickLinkItem[] = [
     description: "Control client portal permissions and visibility",
     icon: React.createElement(Users, { className: "h-4 w-4 text-gray-500" }),
     link: "/client-portal",
+    color: "bg-gray-50"
+  },
+  {
+    id: "entities",
+    title: "Manage entities",
+    description: "Administer legal structures and organization hierarchy",
+    icon: React.createElement(Building2, { className: "h-4 w-4 text-gray-500" }),
+    link: "/entity-management",
     color: "bg-gray-50"
   },
   {

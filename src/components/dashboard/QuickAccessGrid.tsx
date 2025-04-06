@@ -1,215 +1,85 @@
 
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-import { 
-  PieChart, 
+import {
   TrendingUp, 
-  DollarSign, 
-  LineChart, 
+  Activity, 
+  BarChart3, 
   FileText, 
-  Users, 
-  Lightbulb,
-  Link as LinkIcon,
-  CreditCard,
-  Settings,
-  Edit
+  LineChart, 
+  ArrowRightLeft,
+  Banknote,
+  Building,
+  Briefcase
 } from "lucide-react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
+import { Card } from "@/components/ui/card";
 
-// All available modules in the desired order
-const allModules = [
+const actionItems = [
   {
-    id: "wealth-analysis",
-    title: "Analyze wealth",
-    description: "Analyze assets and liabilities, run sophisticated benchmarks and simulations",
-    icon: <PieChart className="h-6 w-6" />,
-    link: "/analyze-wealth",
-    color: "bg-gray-50",
-    textColor: "text-gray-600",
-    iconColor: "text-gray-500"
+    icon: TrendingUp,
+    label: "Trading",
+    path: "/trading",
+    description: "Execute trades across portfolios"
   },
   {
-    id: "market-data",
-    title: "Access market data & news",
-    description: "Track market performance and financial news",
-    icon: <LineChart className="h-6 w-6" />,
-    link: "/market-data",
-    color: "bg-gray-50",
-    textColor: "text-gray-600",
-    iconColor: "text-gray-500"
+    icon: Briefcase,
+    label: "Advice",
+    path: "/advice",
+    description: "Investment advisory mandates"
   },
   {
-    id: "trading",
-    title: "Trade",
-    description: "Create and manage trade orders across your portfolios",
-    icon: <TrendingUp className="h-6 w-6" />,
-    link: "/trading",
-    color: "bg-gray-50",
-    textColor: "text-gray-600",
-    iconColor: "text-gray-500"
+    icon: LineChart,
+    label: "Markets",
+    path: "/market-data",
+    description: "Real-time market data"
   },
   {
-    id: "credit-facilities",
-    title: "Manage credit facilities",
-    description: "Manage and monitor your credit lines and facilities",
-    icon: <CreditCard className="h-6 w-6" />,
-    link: "/credit-facilities",
-    color: "bg-gray-50",
-    textColor: "text-gray-600",
-    iconColor: "text-gray-500"
+    icon: BarChart3,
+    label: "Analyze Wealth",
+    path: "/analyze-wealth",
+    description: "Wealth analytics and insights"
   },
   {
-    id: "advisory",
-    title: "Get advice",
-    description: "Get personalized investment advice and insights",
-    icon: <Lightbulb className="h-6 w-6" />,
-    link: "/advice",
-    color: "bg-gray-50",
-    textColor: "text-gray-600",
-    iconColor: "text-gray-500"
+    icon: ArrowRightLeft,
+    label: "Cashflow",
+    path: "/cashflow",
+    description: "Manage cash and term deposits"
   },
   {
-    id: "cashflow",
-    title: "Manage cashflow & liquidity",
-    description: "Manage liquidity and term deposits",
-    icon: <DollarSign className="h-6 w-6" />,
-    link: "/cashflow",
-    color: "bg-gray-50",
-    textColor: "text-gray-600",
-    iconColor: "text-gray-500"
+    icon: FileText,
+    label: "Reporting",
+    path: "/reporting",
+    description: "Custom financial reports"
   },
   {
-    id: "reporting",
-    title: "Generate reports",
-    description: "Generate and view financial reports",
-    icon: <FileText className="h-6 w-6" />,
-    link: "/reporting",
-    color: "bg-gray-50",
-    textColor: "text-gray-600",
-    iconColor: "text-gray-500"
+    icon: Banknote,
+    label: "Borrow",
+    path: "/borrow",
+    description: "Lending and credit facilities"
   },
   {
-    id: "users",
-    title: "Manage users & permissions",
-    description: "Manage team members and access permissions",
-    icon: <Users className="h-6 w-6" />,
-    link: "/dashboard/users",
-    color: "bg-gray-50",
-    textColor: "text-gray-600",
-    iconColor: "text-gray-500"
-  },
-  {
-    id: "integrations",
-    title: "Manage integrations",
-    description: "Connect and manage third-party integrations",
-    icon: <LinkIcon className="h-6 w-6" />,
-    link: "/integrations",
-    color: "bg-gray-50",
-    textColor: "text-gray-600",
-    iconColor: "text-gray-500"
-  },
-  {
-    id: "ai-assistant",
-    title: "AI Assistant",
-    description: "Get AI-powered insights and recommendations",
-    icon: <Lightbulb className="h-6 w-6" />,
-    link: "/ai-assistant",
-    color: "bg-gray-50",
-    textColor: "text-gray-600",
-    iconColor: "text-gray-500"
+    icon: Building,
+    label: "Integrations",
+    path: "/integrations",
+    description: "Connect to external services"
   }
 ];
 
 const QuickAccessGrid = () => {
-  const [isCustomizing, setIsCustomizing] = useState(false);
-  const [selectedModules, setSelectedModules] = useState<string[]>(() => {
-    const saved = localStorage.getItem("selectedQuickAccessModules");
-    return saved ? JSON.parse(saved) : 
-      ["wealth-analysis", "market-data", "trading", "credit-facilities", "advisory", "cashflow", "reporting", "users", "integrations"];
-  });
-
-  // Save to localStorage whenever selection changes
-  useEffect(() => {
-    localStorage.setItem("selectedQuickAccessModules", JSON.stringify(selectedModules));
-  }, [selectedModules]);
-
-  // Filter modules based on selected IDs
-  const displayedModules = allModules.filter(module => 
-    selectedModules.includes(module.id)
-  );
-
-  const handleModuleToggle = (moduleId: string) => {
-    setSelectedModules(prev => {
-      if (prev.includes(moduleId)) {
-        return prev.filter(id => id !== moduleId);
-      } else {
-        return [...prev, moduleId];
-      }
-    });
-  };
-
   return (
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between">
-        <div>
-          <CardTitle>Quick Access</CardTitle>
-          <CardDescription>Jump to key sections of your wealth management platform</CardDescription>
-        </div>
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button variant="outline" size="icon" className="h-9 w-9">
-              <Edit className="h-4 w-4" />
-              <span className="sr-only">Customize</span>
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="max-w-md">
-            <DialogHeader>
-              <DialogTitle>Customize Quick Access</DialogTitle>
-            </DialogHeader>
-            <div className="grid gap-4 py-4">
-              <div className="space-y-4 max-h-[60vh] overflow-y-auto pr-2">
-                {allModules.map(module => (
-                  <div key={module.id} className="flex items-start space-x-3">
-                    <Checkbox 
-                      id={module.id} 
-                      checked={selectedModules.includes(module.id)} 
-                      onCheckedChange={() => handleModuleToggle(module.id)}
-                    />
-                    <div className="grid gap-1.5">
-                      <Label htmlFor={module.id}>{module.title}</Label>
-                      <p className="text-sm text-gray-500">{module.description}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+      {actionItems.map((item, index) => (
+        <Link to={item.path} key={index}>
+          <Card className="h-full flex flex-col items-center justify-center p-4 text-center transition-all duration-200 hover:translate-y-[-2px] bg-white border border-gray-200 shadow-sm">
+            <div className="h-10 w-10 rounded-full bg-gray-50 flex items-center justify-center mb-3">
+              <item.icon className="h-5 w-5 text-gray-700" />
             </div>
-          </DialogContent>
-        </Dialog>
-      </CardHeader>
-      <CardContent>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {displayedModules.map(module => (
-            <Link 
-              to={module.link} 
-              key={module.id}
-              className="block group"
-            >
-              <div className={`h-full p-4 rounded-lg border border-transparent group-hover:border-gray-200 transition-all ${module.color} hover:shadow-md`}>
-                <div className={`p-3 rounded-full inline-block ${module.iconColor} bg-white/80 mb-3`}>
-                  {module.icon}
-                </div>
-                <h3 className={`font-medium ${module.textColor}`}>{module.title}</h3>
-                <p className="text-sm text-gray-500 mt-1">{module.description}</p>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </CardContent>
-    </Card>
+            <h3 className="font-medium text-sm">{item.label}</h3>
+            <p className="text-xs text-gray-500 mt-1">{item.description}</p>
+          </Card>
+        </Link>
+      ))}
+    </div>
   );
 };
 

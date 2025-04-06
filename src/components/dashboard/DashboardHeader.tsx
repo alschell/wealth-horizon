@@ -23,8 +23,8 @@ const DashboardHeader = () => {
           <PageTitle />
         </div>
         
-        <div className="hidden md:flex items-center max-w-xs w-full mx-4">
-          <div className="relative w-full">
+        <div className="flex items-center gap-3">
+          <div className="relative max-w-xs w-full hidden md:block">
             <Search className={`absolute left-2 top-2.5 h-4 w-4 ${isSearchFocused ? 'text-blue-500' : 'text-muted-foreground'}`} />
             <Input 
               placeholder="Search..." 
@@ -45,9 +45,7 @@ const DashboardHeader = () => {
               </Button>
             )}
           </div>
-        </div>
-        
-        <div className="flex items-center gap-1 md:gap-3">
+          
           <Button variant="ghost" size="icon" className="md:hidden">
             <Search className="h-5 w-5" />
           </Button>

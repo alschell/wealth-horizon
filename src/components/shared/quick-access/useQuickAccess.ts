@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { allQuickLinks } from "./quickLinksData";
-import { QuickAccessItem } from "./types";
+import { QuickLinkItem } from "./types";
 
 export const useQuickAccess = (pathname?: string) => {
   const [isCustomizing, setIsCustomizing] = useState(false);
@@ -41,7 +41,7 @@ export const useQuickAccess = (pathname?: string) => {
   };
 
   // Filter the quick links based on user selection
-  const filteredItems: QuickAccessItem[] = allQuickLinks.filter(link => 
+  const filteredItems: QuickLinkItem[] = allQuickLinks.filter(link => 
     visibleItems.includes(link.id)
   );
 

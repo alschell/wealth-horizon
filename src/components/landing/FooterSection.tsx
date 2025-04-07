@@ -55,7 +55,7 @@ const FooterSection: React.FC = () => {
         <Separator className="my-8 bg-gray-800" />
         
         <div className="flex flex-col md:flex-row justify-between items-center">
-          <p>© 2025 Wealth Horizon. All rights reserved.</p>
+          <p>© 2025 WealthHorizon. All rights reserved.</p>
           <div className="mt-4 md:mt-0">
             <ul className="flex space-x-6">
               <li><a href="#" className="hover:text-white transition-colors">Privacy</a></li>

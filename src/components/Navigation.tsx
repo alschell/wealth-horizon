@@ -40,7 +40,7 @@ const Navigation: React.FC = () => {
           <div className="flex items-center">
             <Link to="/" className="font-bold text-xl flex items-center">
               <span className="text-indigo-600">Wealth</span>
-              <span className="ml-1 text-gray-900">Horizon</span>
+              <span className="text-gray-900">Horizon</span>
             </Link>
             
             <div className="hidden md:flex items-center ml-10 space-x-8">
@@ -71,7 +71,7 @@ const Navigation: React.FC = () => {
         <div className="flex items-center">
           <Link to="/dashboard" className="font-bold text-xl flex items-center">
             <span className="text-indigo-500">Wealth</span>
-            <span className="ml-1">Horizon</span>
+            <span>Horizon</span>
           </Link>
         </div>
         

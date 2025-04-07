@@ -183,46 +183,6 @@ const RecentNewsList = ({ newsData }: RecentNewsListProps) => {
       />
     </div>
   );
-
-  function handleNewsClick(newsItem: any, index: number) {
-    // Navigate to market data with news tab active and the specific article id
-    navigate("/market-data", { 
-      state: { 
-        activeTab: "news",
-        articleId: newsItem.id || `news-${index}` 
-      } 
-    });
-  }
-
-  function handleViewAllClick() {
-    navigate("/market-data", { state: { activeTab: "news" } });
-  }
-
-  function toggleSource(id: string) {
-    setSelectedSources(prev => {
-      if (prev.includes(id)) {
-        return prev.filter(item => item !== id);
-      } else {
-        return [...prev, id];
-      }
-    });
-  }
-
-  function toggleCategory(id: string) {
-    setSelectedCategories(prev => {
-      if (prev.includes(id)) {
-        return prev.filter(item => item !== id);
-      } else {
-        return [...prev, id];
-      }
-    });
-  }
-
-  function saveCustomization() {
-    localStorage.setItem("newsSelectedSources", JSON.stringify(selectedSources));
-    localStorage.setItem("newsSelectedCategories", JSON.stringify(selectedCategories));
-    setIsCustomizing(false);
-  }
 };
 
 export default RecentNewsList;

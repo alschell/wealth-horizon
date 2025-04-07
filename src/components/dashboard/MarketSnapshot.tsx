@@ -9,17 +9,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 
 const MarketSnapshot = () => {
   const [isCustomizing, setIsCustomizing] = useState(false);
-  const [visibleItems, setVisibleItems] = useState<string[]>(() => {
-    try {
-      const saved = localStorage.getItem("marketSnapshotVisibleItems");
-      return saved ? JSON.parse(saved) : defaultMarketItems.map(item => item.id);
-    } catch (e) {
-      return defaultMarketItems.map(item => item.id);
-    }
-  });
   
-  const [temporarySelection, setTemporarySelection] = useState<string[]>([]);
-
+  // Define defaultMarketItems before using it in useState
   const defaultMarketItems = [
     { id: "sp500", label: "S&P 500", value: "4,400.50", change: "+0.25%", emoji: "📈" },
     { id: "nasdaq", label: "Nasdaq", value: "13,630.75", change: "-0.10%", emoji: "📊" },
@@ -34,6 +25,17 @@ const MarketSnapshot = () => {
     { id: "uk", label: "FTSE 100", value: "7,650.10", change: "-0.05%", emoji: "🇬🇧" },
     { id: "china", label: "Shanghai", value: "3,210.40", change: "-0.30%", emoji: "🇨🇳" },
   ];
+  
+  const [visibleItems, setVisibleItems] = useState<string[]>(() => {
+    try {
+      const saved = localStorage.getItem("marketSnapshotVisibleItems");
+      return saved ? JSON.parse(saved) : defaultMarketItems.map(item => item.id);
+    } catch (e) {
+      return defaultMarketItems.map(item => item.id);
+    }
+  });
+  
+  const [temporarySelection, setTemporarySelection] = useState<string[]>([]);
 
   const handleCustomizeOpen = () => {
     setTemporarySelection([...visibleItems]);

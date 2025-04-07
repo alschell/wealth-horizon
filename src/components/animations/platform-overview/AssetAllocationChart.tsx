@@ -17,20 +17,20 @@ const AssetAllocationChart: React.FC = () => {
         <span className="text-sm font-medium">Asset Allocation</span>
       </div>
       
-      <div className="h-[120px] flex justify-center items-center">
-        {/* Simple Pie Chart with three segments */}
-        <svg width="100" height="100" viewBox="0 0 100 100">
-          {/* First segment - 40% */}
+      <div className="h-[140px] flex justify-center items-center">
+        {/* Full Circle Pie Chart with three unequal segments */}
+        <svg width="120" height="120" viewBox="0 0 100 100">
+          {/* First segment - 45% */}
           <motion.path
-            d="M50,50 L50,0 A50,50 0 0,1 96.6,35 Z"
+            d="M50,50 L50,0 A50,50 0 0,1 97.6,34.2 Z"
             fill="#818CF8"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.1 }}
           />
-          {/* Second segment - 35% */}
+          {/* Second segment - 30% */}
           <motion.path
-            d="M50,50 L96.6,35 A50,50 0 0,1 69.1,95.1 Z"
+            d="M50,50 L97.6,34.2 A50,50 0 0,1 70.7,95.1 Z"
             fill="#34D399"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -38,14 +38,12 @@ const AssetAllocationChart: React.FC = () => {
           />
           {/* Third segment - 25% */}
           <motion.path
-            d="M50,50 L69.1,95.1 A50,50 0 0,1 0,50 L50,50 Z"
+            d="M50,50 L70.7,95.1 A50,50 0 0,1 0,50 L50,50 Z"
             fill="#F59E0B"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.5 }}
           />
-          {/* Center circle for cleaner look */}
-          <circle cx="50" cy="50" r="15" fill="white" />
         </svg>
       </div>
     </motion.div>

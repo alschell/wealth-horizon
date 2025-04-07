@@ -61,7 +61,7 @@ const DashboardAnimation = () => {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.6 }}
         >
-          {/* Asset Allocation Chart - Updated */}
+          {/* Asset Allocation Chart - Updated with a full circle */}
           <motion.div 
             className="col-span-1 bg-white rounded-lg border border-gray-100 p-4 shadow-sm"
             initial={{ opacity: 0, x: -20 }}
@@ -72,36 +72,36 @@ const DashboardAnimation = () => {
             <div className="relative h-[150px] flex items-center justify-center">
               {/* Simplified Pie Chart with 3 segments */}
               <svg viewBox="0 0 100 100" className="w-full h-full">
-                {/* Each slice represents an asset class */}
+                {/* First segment - 45% */}
                 <motion.path
-                  d="M50,50 L50,10 A40,40 0 0,1 90,50 Z"
+                  d="M50,50 L50,0 A50,50 0 0,1 97.6,34.2 Z"
                   fill="#818CF8"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.5, delay: 0.8 }}
                 />
+                {/* Second segment - 30% */}
                 <motion.path
-                  d="M50,50 L90,50 A40,40 0 0,1 50,90 Z"
+                  d="M50,50 L97.6,34.2 A50,50 0 0,1 70.7,95.1 Z"
                   fill="#34D399"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.5, delay: 1.0 }}
                 />
+                {/* Third segment - 25% */}
                 <motion.path
-                  d="M50,50 L50,90 A40,40 0 0,1 10,50 L50,50 Z"
+                  d="M50,50 L70.7,95.1 A50,50 0 0,1 0,50 L50,50 Z"
                   fill="#F59E0B"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.5, delay: 1.2 }}
                 />
-                {/* Center circle for cleaner look */}
-                <circle cx="50" cy="50" r="15" fill="white" />
               </svg>
             </div>
             <div className="mt-4 grid grid-cols-3 gap-1">
               {[
-                { label: 'Stocks', value: '40%', color: '#818CF8' },
-                { label: 'Bonds', value: '35%', color: '#34D399' },
+                { label: 'Stocks', value: '45%', color: '#818CF8' },
+                { label: 'Bonds', value: '30%', color: '#34D399' },
                 { label: 'Alt', value: '25%', color: '#F59E0B' }
               ].map((item, i) => (
                 <motion.div 

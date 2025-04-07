@@ -3,18 +3,53 @@ import React from 'react';
 import { Calendar, AlertTriangle } from 'lucide-react';
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from '@/components/ui/card';
 import { StatusIndicator } from '@/components/ui/status-indicator';
+import { EmptyState } from './EmptyState';
 
-interface ComplianceChangesProps {
-  regulatoryChanges: Array<{
-    id: number;
-    title: string;
-    date: string;
-    impact: string;
-    description: string;
-  }>;
+interface RegulatoryChange {
+  id: number;
+  title: string;
+  date: string;
+  impact: string;
+  description: string;
 }
 
-export const ComplianceChanges: React.FC<ComplianceChangesProps> = ({ regulatoryChanges }) => {
+interface ComplianceChangesProps {
+  regulatoryChanges: RegulatoryChange[];
+  isLoading?: boolean;
+}
+
+export const ComplianceChanges: React.FC<ComplianceChangesProps> = ({ 
+  regulatoryChanges,
+  isLoading = false
+}) => {
+  if (isLoading) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>Regulatory Changes</CardTitle>
+          <CardDescription>Recent regulatory changes that may affect your portfolios</CardDescription>
+        </CardHeader>
+        <CardContent className="min-h-[200px] flex items-center justify-center">
+          <div className="animate-pulse flex flex-col items-center">
+            <AlertTriangle className="h-10 w-10 text-gray-300 mb-3" />
+            <p className="text-muted-foreground">Loading regulatory changes...</p>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  const getImpactType = (impact: string): "error" | "warning" | "info" => {
+    switch (impact) {
+      case 'high':
+        return 'error';
+      case 'medium':
+        return 'warning';
+      default:
+        return 'info';
+    }
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -29,7 +64,7 @@ export const ComplianceChanges: React.FC<ComplianceChangesProps> = ({ regulatory
                 <div className="flex justify-between items-start mb-2">
                   <h3 className="text-lg font-medium">{change.title}</h3>
                   <StatusIndicator 
-                    type={change.impact === 'high' ? 'error' : change.impact === 'medium' ? 'warning' : 'info'} 
+                    type={getImpactType(change.impact)} 
                     size="sm" 
                     label={`${change.impact.charAt(0).toUpperCase() + change.impact.slice(1)} Impact`} 
                   />
@@ -43,10 +78,11 @@ export const ComplianceChanges: React.FC<ComplianceChangesProps> = ({ regulatory
             ))}
           </div>
         ) : (
-          <div className="text-center py-12">
-            <AlertTriangle className="h-10 w-10 text-gray-400 mx-auto mb-3" />
-            <p className="text-muted-foreground">No recent regulatory changes to display.</p>
-          </div>
+          <EmptyState
+            icon={AlertTriangle}
+            title="No Regulatory Changes"
+            description="No recent regulatory changes to display."
+          />
         )}
       </CardContent>
     </Card>

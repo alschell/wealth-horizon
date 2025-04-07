@@ -1,40 +1,50 @@
 
-import { getStatusColor, getPriorityLabel } from '../StatusUtils';
+import React from 'react';
+import { render, screen } from '@testing-library/react';
+import { getStatusColor, getPriorityLabel, RenderStatusIndicator } from '../StatusUtils';
 
 describe('StatusUtils', () => {
   describe('getStatusColor', () => {
-    it('should return "success" for completed status', () => {
+    it('returns "success" for completed status', () => {
       expect(getStatusColor('completed')).toBe('success');
     });
-
-    it('should return "warning" for pending status', () => {
+    
+    it('returns "warning" for pending status', () => {
       expect(getStatusColor('pending')).toBe('warning');
     });
-
-    it('should return "error" for overdue status', () => {
+    
+    it('returns "error" for overdue status', () => {
       expect(getStatusColor('overdue')).toBe('error');
     });
-
-    it('should return "neutral" for unknown status', () => {
+    
+    it('returns "neutral" for unknown status', () => {
       expect(getStatusColor('unknown')).toBe('neutral');
     });
   });
-
+  
   describe('getPriorityLabel', () => {
-    it('should return "High Priority" for high priority', () => {
+    it('returns "High Priority" for high priority', () => {
       expect(getPriorityLabel('high')).toBe('High Priority');
     });
-
-    it('should return "Medium Priority" for medium priority', () => {
+    
+    it('returns "Medium Priority" for medium priority', () => {
       expect(getPriorityLabel('medium')).toBe('Medium Priority');
     });
-
-    it('should return "Low Priority" for low priority', () => {
+    
+    it('returns "Low Priority" for low priority', () => {
       expect(getPriorityLabel('low')).toBe('Low Priority');
     });
-
-    it('should return "Normal Priority" for unknown priority', () => {
+    
+    it('returns "Normal Priority" for unknown priority', () => {
       expect(getPriorityLabel('unknown')).toBe('Normal Priority');
+    });
+  });
+  
+  describe('RenderStatusIndicator', () => {
+    it('renders status indicator with correct props', () => {
+      render(<RenderStatusIndicator status="completed" priority="high" />);
+      
+      expect(screen.getByText('High Priority')).toBeInTheDocument();
     });
   });
 });

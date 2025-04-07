@@ -2,11 +2,15 @@
 import React from 'react';
 import { StatusIndicator } from '@/components/ui/status-indicator';
 
-export const getStatusColor = (status: string) => {
-  switch (status) {
+export type ComplianceStatus = 'completed' | 'pending' | 'overdue' | 'in-progress' | string;
+export type PriorityLevel = 'high' | 'medium' | 'low' | string;
+
+export const getStatusColor = (status: ComplianceStatus): "success" | "warning" | "error" | "neutral" | "info" => {
+  switch (status.toLowerCase()) {
     case "completed":
       return "success";
     case "pending":
+    case "in-progress":
       return "warning";
     case "overdue":
       return "error";
@@ -15,8 +19,8 @@ export const getStatusColor = (status: string) => {
   }
 };
 
-export const getPriorityLabel = (priority: string) => {
-  switch (priority) {
+export const getPriorityLabel = (priority: PriorityLevel): string => {
+  switch (priority.toLowerCase()) {
     case "high":
       return "High Priority";
     case "medium":
@@ -28,12 +32,14 @@ export const getPriorityLabel = (priority: string) => {
   }
 };
 
-export const RenderStatusIndicator = ({ 
+interface StatusIndicatorProps { 
+  status: ComplianceStatus; 
+  priority: PriorityLevel;
+}
+
+export const RenderStatusIndicator: React.FC<StatusIndicatorProps> = ({ 
   status, 
   priority 
-}: { 
-  status: string; 
-  priority: string 
 }) => (
   <StatusIndicator 
     type={getStatusColor(status)} 

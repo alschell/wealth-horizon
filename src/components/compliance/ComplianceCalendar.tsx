@@ -3,17 +3,41 @@ import React from 'react';
 import { Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from '@/components/ui/card';
+import { EmptyState } from './EmptyState';
 
-interface ComplianceCalendarProps {
-  calendarEvents: Array<{
-    id: number;
-    title: string;
-    date: string;
-    type: string;
-  }>;
+interface CalendarEvent {
+  id: number;
+  title: string;
+  date: string;
+  type: string;
 }
 
-export const ComplianceCalendar: React.FC<ComplianceCalendarProps> = ({ calendarEvents }) => {
+interface ComplianceCalendarProps {
+  calendarEvents: CalendarEvent[];
+  isLoading?: boolean;
+}
+
+export const ComplianceCalendar: React.FC<ComplianceCalendarProps> = ({ 
+  calendarEvents,
+  isLoading = false
+}) => {
+  if (isLoading) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>Compliance Calendar</CardTitle>
+          <CardDescription>Upcoming compliance deadlines and events</CardDescription>
+        </CardHeader>
+        <CardContent className="min-h-[200px] flex items-center justify-center">
+          <div className="animate-pulse flex flex-col items-center">
+            <Calendar className="h-10 w-10 text-gray-300 mb-3" />
+            <p className="text-muted-foreground">Loading calendar events...</p>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
     <Card>
       <CardHeader>
@@ -42,10 +66,11 @@ export const ComplianceCalendar: React.FC<ComplianceCalendarProps> = ({ calendar
             ))}
           </div>
         ) : (
-          <div className="text-center py-12">
-            <Calendar className="h-10 w-10 text-gray-400 mx-auto mb-3" />
-            <p className="text-muted-foreground">No upcoming compliance events scheduled.</p>
-          </div>
+          <EmptyState
+            icon={Calendar}
+            title="No Upcoming Events"
+            description="No upcoming compliance events scheduled for the next 90 days."
+          />
         )}
       </CardContent>
     </Card>

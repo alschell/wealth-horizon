@@ -5,17 +5,32 @@ import { ComplianceOverview } from './ComplianceOverview';
 import { ComplianceFilings } from './ComplianceFilings';
 import { ComplianceChanges } from './ComplianceChanges';
 import { ComplianceCalendar } from './ComplianceCalendar';
-import { getStatusColor, getPriorityLabel, RenderStatusIndicator } from './StatusUtils';
+import { EmptyState } from './EmptyState';
+import { LoadingState } from './LoadingState';
+import { 
+  getStatusColor, 
+  getPriorityLabel, 
+  RenderStatusIndicator,
+  type ComplianceStatus,
+  type PriorityLevel
+} from './StatusUtils';
 
-// We can also add more shared components here in the future
-
+// Export all compliance components
 export {
   ComplianceHeader,
   ComplianceOverview,
   ComplianceFilings,
   ComplianceChanges,
   ComplianceCalendar,
+  EmptyState,
+  LoadingState,
   getStatusColor,
   getPriorityLabel,
   RenderStatusIndicator
+};
+
+// Export types
+export type {
+  ComplianceStatus,
+  PriorityLevel
 };

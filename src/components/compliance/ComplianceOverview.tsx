@@ -5,31 +5,74 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button';
 import { ContentGrid } from '@/components/ui/design-system';
 import { StatusIndicator } from '@/components/ui/status-indicator';
-import { getStatusColor, getPriorityLabel } from './StatusUtils';
+import { getStatusColor, getPriorityLabel, ComplianceStatus, PriorityLevel } from './StatusUtils';
+import { EmptyState } from './EmptyState';
+
+interface FilingItem {
+  id: number;
+  name: string;
+  deadline: string;
+  status: ComplianceStatus;
+  priority: PriorityLevel;
+}
+
+interface RegulatoryChange {
+  id: number;
+  title: string;
+  date: string;
+  impact: string;
+  description: string;
+}
 
 interface ComplianceOverviewProps {
-  upcomingFilings: Array<{
-    id: number;
-    name: string;
-    deadline: string;
-    status: string;
-    priority: string;
-  }>;
-  regulatoryChanges: Array<{
-    id: number;
-    title: string;
-    date: string;
-    impact: string;
-    description: string;
-  }>;
+  upcomingFilings: FilingItem[];
+  regulatoryChanges: RegulatoryChange[];
   setActiveTab: (tab: string) => void;
+  isLoading?: boolean;
 }
 
 export const ComplianceOverview: React.FC<ComplianceOverviewProps> = ({
   upcomingFilings,
   regulatoryChanges,
-  setActiveTab
+  setActiveTab,
+  isLoading = false
 }) => {
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <ContentGrid columns="3">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <Card key={i}>
+              <CardHeader className="pb-2">
+                <div className="h-6 w-40 bg-gray-200 rounded animate-pulse"></div>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  <div className="h-4 w-full bg-gray-200 rounded animate-pulse"></div>
+                  <div className="h-4 w-3/4 bg-gray-200 rounded animate-pulse"></div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </ContentGrid>
+        
+        <Card>
+          <CardHeader>
+            <div className="h-6 w-40 bg-gray-200 rounded animate-pulse"></div>
+            <div className="h-4 w-60 bg-gray-200 rounded animate-pulse"></div>
+          </CardHeader>
+          <CardContent className="min-h-[150px] flex items-center justify-center">
+            <div className="animate-pulse flex flex-col items-center">
+              <div className="h-12 w-12 bg-gray-200 rounded-full mb-3"></div>
+              <div className="h-5 w-40 bg-gray-200 rounded mb-2"></div>
+              <div className="h-4 w-60 bg-gray-200 rounded"></div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+  
   return (
     <div className="space-y-6">
       <ContentGrid columns="3">
@@ -137,15 +180,11 @@ export const ComplianceOverview: React.FC<ComplianceOverviewProps> = ({
           <CardDescription>Tasks requiring your attention</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center justify-center py-8">
-            <div className="text-center">
-              <ClipboardCheck className="h-12 w-12 text-green-500 mx-auto mb-3" />
-              <h3 className="text-lg font-medium">All Clear</h3>
-              <p className="text-muted-foreground text-sm max-w-md">
-                There are no pending compliance tasks requiring immediate attention.
-              </p>
-            </div>
-          </div>
+          <EmptyState
+            icon={ClipboardCheck}
+            title="All Clear"
+            description="There are no pending compliance tasks requiring immediate attention."
+          />
         </CardContent>
       </Card>
     </div>

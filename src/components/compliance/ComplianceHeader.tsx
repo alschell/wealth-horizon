@@ -5,7 +5,11 @@ import { ArrowLeft, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import PageHeaderCard from '@/components/dashboard/PageHeaderCard';
 
-export const ComplianceHeader: React.FC = () => {
+interface ComplianceHeaderProps {
+  loading?: boolean;
+}
+
+export const ComplianceHeader: React.FC<ComplianceHeaderProps> = ({ loading = false }) => {
   return (
     <>
       <div className="flex items-center justify-between">
@@ -17,13 +21,25 @@ export const ComplianceHeader: React.FC = () => {
         </Button>
       </div>
       
-      <PageHeaderCard
-        icon={Shield}
-        title="Monitor Compliance"
-        description="Track regulatory activities"
-        iconColor="text-blue-600"
-        iconBgColor="bg-blue-100"
-      />
+      {loading ? (
+        <div className="w-full p-6 rounded-lg border bg-card animate-pulse mb-6">
+          <div className="flex items-center gap-4">
+            <div className="h-12 w-12 rounded-full bg-gray-200"></div>
+            <div className="space-y-2">
+              <div className="h-6 w-48 bg-gray-200 rounded"></div>
+              <div className="h-4 w-72 bg-gray-200 rounded"></div>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <PageHeaderCard
+          icon={Shield}
+          title="Monitor Compliance"
+          description="Track regulatory activities"
+          iconColor="text-blue-600"
+          iconBgColor="bg-blue-100"
+        />
+      )}
     </>
   );
 };

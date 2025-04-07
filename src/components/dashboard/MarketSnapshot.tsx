@@ -113,7 +113,7 @@ const MarketSnapshot = () => {
         <ScrollArea className="flex-1 -mr-4 pr-4">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {filteredAndOrderedItems.map((item, index) => (
-              <div key={index} className="p-3 rounded-md bg-gray-50 hover:bg-gray-100 transition-colors">
+              <div key={index} className="p-3 rounded-md bg-white border hover:bg-gray-50 transition-colors">
                 <div className="flex items-center mb-1">
                   <span className="text-lg mr-2 w-6 text-center">{item.emoji}</span>
                   <p className="text-sm font-medium">{item.label}</p>
@@ -153,7 +153,7 @@ const MarketSnapshot = () => {
             <div className="space-y-6">
               <div>
                 <h3 className="text-sm font-medium mb-3">Select Market Items</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-4">
                   {alphabeticallySortedItems.map((item) => (
                     <div key={item.id} className="flex items-start space-x-3">
                       <Checkbox 
@@ -175,47 +175,49 @@ const MarketSnapshot = () => {
                 </div>
               </div>
               
-              <div>
-                <h3 className="text-sm font-medium mb-3">Order of Display</h3>
-                <p className="text-xs text-muted-foreground mb-2">Drag to reorder items</p>
-                
-                <DragDropContext onDragEnd={handleDragEnd}>
-                  <Droppable droppableId="market-items">
-                    {(provided) => (
-                      <div
-                        {...provided.droppableProps}
-                        ref={provided.innerRef}
-                        className="space-y-2"
-                      >
-                        {temporaryOrder
-                          .filter(id => temporarySelection.includes(id))
-                          .map((id, index) => {
-                            const item = defaultMarketItems.find(m => m.id === id);
-                            if (!item) return null;
-                            
-                            return (
-                              <Draggable key={id} draggableId={id} index={index}>
-                                {(provided) => (
-                                  <div
-                                    ref={provided.innerRef}
-                                    {...provided.draggableProps}
-                                    {...provided.dragHandleProps}
-                                    className="flex items-center p-2 border rounded bg-white"
-                                  >
-                                    <GripVertical className="h-4 w-4 mr-2 text-gray-400" />
-                                    <span className="mr-2">{item.emoji}</span>
-                                    <span className="text-sm">{item.label}</span>
-                                  </div>
-                                )}
-                              </Draggable>
-                            );
-                          })}
-                        {provided.placeholder}
-                      </div>
-                    )}
-                  </Droppable>
-                </DragDropContext>
-              </div>
+              {temporarySelection.length > 0 && (
+                <div>
+                  <h3 className="text-sm font-medium mb-3">Order of Display</h3>
+                  <p className="text-xs text-muted-foreground mb-2">Drag to reorder items</p>
+                  
+                  <DragDropContext onDragEnd={handleDragEnd}>
+                    <Droppable droppableId="market-items">
+                      {(provided) => (
+                        <div
+                          {...provided.droppableProps}
+                          ref={provided.innerRef}
+                          className="space-y-2"
+                        >
+                          {temporaryOrder
+                            .filter(id => temporarySelection.includes(id))
+                            .map((id, index) => {
+                              const item = defaultMarketItems.find(m => m.id === id);
+                              if (!item) return null;
+                              
+                              return (
+                                <Draggable key={id} draggableId={id} index={index}>
+                                  {(provided) => (
+                                    <div
+                                      ref={provided.innerRef}
+                                      {...provided.draggableProps}
+                                      {...provided.dragHandleProps}
+                                      className="flex items-center p-2 border rounded bg-white"
+                                    >
+                                      <GripVertical className="h-4 w-4 mr-2 text-gray-400" />
+                                      <span className="mr-2">{item.emoji}</span>
+                                      <span className="text-sm">{item.label}</span>
+                                    </div>
+                                  )}
+                                </Draggable>
+                              );
+                            })}
+                          {provided.placeholder}
+                        </div>
+                      )}
+                    </Droppable>
+                  </DragDropContext>
+                </div>
+              )}
             </div>
           </div>
           <DialogFooter>

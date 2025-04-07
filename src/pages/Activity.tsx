@@ -192,7 +192,7 @@ const Activity = () => {
             onClick={() => window.history.back()}
             className="flex items-center gap-1"
           >
-            <ArrowLeft className="h-4 w-4" /> Back
+            <ArrowLeft className="h-4 w-4" /> Back to Dashboard
           </Button>
         </div>
         

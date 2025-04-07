@@ -34,7 +34,7 @@ const BenefitsSection: React.FC = () => {
           <FadeIn>
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Transform Your Wealth Management</h2>
             <p className="mt-4 text-xl text-gray-600 max-w-3xl mx-auto">
-              Experience a new level of efficiency, insight, and control with Wealth Horizon.
+              Experience a new level of efficiency, insight, and control with <span className="text-indigo-600">Wealth</span><span className="text-gray-900">Horizon</span>.
             </p>
           </FadeIn>
         </div>
@@ -46,6 +46,10 @@ const BenefitsSection: React.FC = () => {
                 src="/assets/dashboard-fallback.png" 
                 alt="Platform Overview" 
                 className="w-full h-auto"
+                onError={(e) => {
+                  // Fallback to a placeholder image if the original image fails to load
+                  e.currentTarget.src = "https://placehold.co/800x600/e6e6ff/5a67d8?text=Platform+Overview";
+                }}
               />
             </div>
           </FadeIn>

@@ -54,6 +54,10 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToFeatures }) => {
                   src="/assets/dashboard-preview.png"
                   alt="Wealth Horizon Dashboard"
                   className="w-full h-full object-cover"
+                  onError={(e) => {
+                    // Fallback to a placeholder image if the original image fails to load
+                    e.currentTarget.src = "https://placehold.co/800x600/e6e6ff/5a67d8?text=Wealth+Horizon+Dashboard";
+                  }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
               </div>

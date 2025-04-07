@@ -8,7 +8,10 @@ const FooterSection: React.FC = () => {
       <div className="max-w-7xl mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           <div>
-            <h3 className="text-white font-bold text-xl mb-4">Wealth Horizon</h3>
+            <h3 className="text-white font-bold text-xl mb-4">
+              <span className="text-indigo-400">Wealth</span>
+              <span className="text-white">Horizon</span>
+            </h3>
             <p className="mb-4">Holistic wealth management for family offices and institutions.</p>
             <div className="flex space-x-4">
               {/* Social media icons would go here */}

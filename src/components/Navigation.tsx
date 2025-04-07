@@ -53,7 +53,7 @@ const Navigation: React.FC = () => {
           
           <div className="flex items-center gap-3">
             <Button variant="ghost" asChild>
-              <Link to="/login">Log In</Link>
+              <Link to="/dashboard">Log In</Link>
             </Button>
             <Button asChild>
               <Link to="/onboarding">Sign Up</Link>

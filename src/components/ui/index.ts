@@ -10,4 +10,5 @@ export * from './toaster';
 export * from './toast';
 export * from './tooltip';
 export * from './skeleton';
+// Export animation components from their directory
 export * from './animation';

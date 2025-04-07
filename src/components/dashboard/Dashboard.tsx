@@ -1,7 +1,6 @@
 
 import React from "react";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
-import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import DashboardContent from "@/components/dashboard/DashboardContent";
 import { DashboardCustomizeDialog, useDashboardCustomize } from "@/components/dashboard/customize";
 
@@ -20,11 +19,11 @@ const Dashboard = () => {
   return (
     <DashboardLayout>
       <div className="space-y-6">
-        {/* Dashboard header */}
-        <DashboardHeader onCustomizeClick={() => setIsCustomizing(true)} />
-
         {/* Dashboard content */}
-        <DashboardContent orderedVisibleSections={orderedVisibleSections} />
+        <DashboardContent 
+          orderedVisibleSections={orderedVisibleSections} 
+          onCustomizeClick={() => setIsCustomizing(true)}
+        />
 
         {/* Dashboard Customization Dialog */}
         <DashboardCustomizeDialog

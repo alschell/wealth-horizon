@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, CheckCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { ScaleIn } from '@/components/ui/animation';
 
 const LandingHero = () => {
   const navigate = useNavigate();
@@ -92,11 +93,10 @@ const LandingHero = () => {
             </motion.div>
           </motion.div>
           
-          <motion.div 
+          <ScaleIn
             className="relative"
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.7, delay: 0.4 }}
+            delay={0.4}
+            scale={0.95}
           >
             <div className="relative bg-white rounded-2xl overflow-hidden shadow-2xl border border-gray-100">
               <div className="absolute inset-0 bg-[url('/assets/grid-pattern.svg')] opacity-10"></div>
@@ -110,7 +110,7 @@ const LandingHero = () => {
                 }}
               />
             </div>
-          </motion.div>
+          </ScaleIn>
         </div>
       </div>
     </section>

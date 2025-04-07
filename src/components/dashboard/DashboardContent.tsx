@@ -1,6 +1,7 @@
 
 import React from "react";
 import WelcomeHeader from "@/components/dashboard/WelcomeHeader";
+import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import { QuickAccessGrid } from "@/components/dashboard/quick-access";
 import PerformanceOverview from "@/components/dashboard/PerformanceOverview";
 import NotificationsFeed from "@/components/dashboard/NotificationsFeed";
@@ -13,11 +14,18 @@ import { newsData } from "@/components/dashboard/performance/PerformanceData";
 
 interface DashboardContentProps {
   orderedVisibleSections: string[];
+  onCustomizeClick: () => void;
 }
 
-const DashboardContent: React.FC<DashboardContentProps> = ({ orderedVisibleSections }) => {
+const DashboardContent: React.FC<DashboardContentProps> = ({ 
+  orderedVisibleSections,
+  onCustomizeClick
+}) => {
   return (
     <div className="space-y-6">
+      {/* Dashboard header */}
+      <DashboardHeader onCustomizeClick={onCustomizeClick} />
+      
       {/* Welcome header */}
       <WelcomeHeader />
       

@@ -3,9 +3,14 @@ import React from "react";
 import { ChevronRight, Sliders } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import CustomizeNewsDialog, { NewsSource, NewsCategory } from "./CustomizeNewsDialog";
+import CustomizeNewsDialog from "./CustomizeNewsDialog";
 import SectionHeader from "../SectionHeader";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import NewsItem from "./news/NewsItem";
+import EmptyNewsList from "./news/EmptyNewsList";
+import { useNewsFilters } from "./news/useNewsFilters";
+import { useNewsFiltering } from "./news/useNewsFiltering";
+import { defaultSources, defaultCategories } from "./news/NewsConstants";
 
 type NewsItem = {
   title: string;
@@ -19,59 +24,20 @@ type RecentNewsListProps = {
   newsData: NewsItem[];
 };
 
-// Default sources and categories - sorts alphabetically
-const defaultSources: NewsSource[] = [
-  { id: "bloomberg", name: "Bloomberg", description: "Financial and business news" },
-  { id: "cnbc", name: "CNBC", description: "Financial and business news" },
-  { id: "ft", name: "Financial Times", description: "Global financial news" },
-  { id: "reuters", name: "Reuters", description: "Global news and markets" },
-  { id: "wsj", name: "Wall Street Journal", description: "Business and markets" }
-];
-
-const defaultCategories: NewsCategory[] = [
-  { id: "companies", name: "Companies", description: "Corporate news and earnings" },
-  { id: "economy", name: "Economy", description: "Economic news and indicators" },
-  { id: "finance", name: "Finance", description: "Financial industry news" },
-  { id: "markets", name: "Markets", description: "Stock, bond, and commodity markets" },
-  { id: "technology", name: "Technology", description: "Tech industry news" }
-];
-
 const RecentNewsList = ({ newsData }: RecentNewsListProps) => {
   const navigate = useNavigate();
   const [isCustomizing, setIsCustomizing] = React.useState(false);
-  const [selectedSources, setSelectedSources] = React.useState<string[]>(() => {
-    try {
-      const saved = localStorage.getItem("newsSelectedSources");
-      return saved ? JSON.parse(saved) : defaultSources.map(s => s.id);
-    } catch (e) {
-      return defaultSources.map(s => s.id);
-    }
-  });
   
-  const [selectedCategories, setSelectedCategories] = React.useState<string[]>(() => {
-    try {
-      const saved = localStorage.getItem("newsSelectedCategories");
-      return saved ? JSON.parse(saved) : defaultCategories.map(c => c.id);
-    } catch (e) {
-      return defaultCategories.map(c => c.id);
-    }
-  });
+  const {
+    selectedSources,
+    selectedCategories,
+    toggleSource,
+    toggleCategory,
+    saveCustomization
+  } = useNewsFilters(defaultSources, defaultCategories);
 
   // Filter news based on selected sources and categories
-  const filteredNews = React.useMemo(() => {
-    return newsData.filter(news => {
-      // If no source or category filter is applied, show all
-      if (selectedSources.length === 0 && selectedCategories.length === 0) return true;
-      
-      // If no source is specified for the news item, don't filter by source
-      const sourceMatch = !news.source || selectedSources.includes(news.source);
-      
-      // If no category is specified for the news item, don't filter by category
-      const categoryMatch = !news.category || selectedCategories.includes(news.category);
-      
-      return sourceMatch && categoryMatch;
-    });
-  }, [newsData, selectedSources, selectedCategories]);
+  const filteredNews = useNewsFiltering(newsData, selectedSources, selectedCategories);
 
   const handleNewsClick = (newsItem: any, index: number) => {
     // Navigate to market data with news tab active and the specific article id
@@ -87,29 +53,8 @@ const RecentNewsList = ({ newsData }: RecentNewsListProps) => {
     navigate("/market-data", { state: { activeTab: "news" } });
   };
 
-  const toggleSource = (id: string) => {
-    setSelectedSources(prev => {
-      if (prev.includes(id)) {
-        return prev.filter(item => item !== id);
-      } else {
-        return [...prev, id];
-      }
-    });
-  };
-
-  const toggleCategory = (id: string) => {
-    setSelectedCategories(prev => {
-      if (prev.includes(id)) {
-        return prev.filter(item => item !== id);
-      } else {
-        return [...prev, id];
-      }
-    });
-  };
-
-  const saveCustomization = () => {
-    localStorage.setItem("newsSelectedSources", JSON.stringify(selectedSources));
-    localStorage.setItem("newsSelectedCategories", JSON.stringify(selectedCategories));
+  const handleSaveCustomization = () => {
+    saveCustomization();
     setIsCustomizing(false);
   };
 
@@ -132,28 +77,17 @@ const RecentNewsList = ({ newsData }: RecentNewsListProps) => {
         <div className="space-y-3">
           {filteredNews.length > 0 ? (
             filteredNews.map((news, index) => (
-              <div 
-                key={index} 
-                className="p-3 rounded-md hover:bg-gray-50 transition-colors cursor-pointer"
+              <NewsItem
+                key={index}
+                title={news.title}
+                time={news.time}
+                source={news.source}
+                category={news.category}
                 onClick={() => handleNewsClick(news, index)}
-              >
-                <h3 className="text-sm font-medium">{news.title}</h3>
-                <p className="text-xs text-gray-500 mt-1">{news.time}</p>
-                {news.source && <span className="text-xs bg-gray-100 px-2 py-0.5 rounded mr-2">{news.source}</span>}
-                {news.category && <span className="text-xs bg-gray-100 px-2 py-0.5 rounded">{news.category}</span>}
-              </div>
+              />
             ))
           ) : (
-            <div className="text-center py-6">
-              <p className="text-sm text-gray-500">No news matching your filters</p>
-              <Button 
-                variant="link" 
-                size="sm" 
-                onClick={() => setIsCustomizing(true)}
-              >
-                Customize filters
-              </Button>
-            </div>
+            <EmptyNewsList onCustomize={() => setIsCustomizing(true)} />
           )}
         </div>
       </ScrollArea>
@@ -179,7 +113,7 @@ const RecentNewsList = ({ newsData }: RecentNewsListProps) => {
         allCategories={defaultCategories}
         onSourceToggle={toggleSource}
         onCategoryToggle={toggleCategory}
-        onSave={saveCustomization}
+        onSave={handleSaveCustomization}
       />
     </div>
   );

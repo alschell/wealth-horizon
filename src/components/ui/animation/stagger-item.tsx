@@ -1,53 +1,25 @@
 
-import React from "react";
-import { motion } from "framer-motion";
-import { cn } from "@/lib/utils";
+import React, { ReactNode } from 'react';
+import { motion } from 'framer-motion';
 
 interface StaggerItemProps {
-  children: React.ReactNode;
+  children: ReactNode;
   className?: string;
-  direction?: "up" | "down" | "left" | "right" | "none";
-  distance?: number;
-  duration?: number;
 }
 
-export function StaggerItem({
+export const StaggerItem: React.FC<StaggerItemProps> = ({
   children,
-  className,
-  direction = "up",
-  distance = 20,
-  duration = 0.5,
-}: StaggerItemProps) {
-  // Define direction variants
-  const getInitialOffset = () => {
-    switch (direction) {
-      case "up": return { y: distance };
-      case "down": return { y: -distance };
-      case "left": return { x: distance };
-      case "right": return { x: -distance };
-      case "none": return {};
-    }
-  };
-
+  className = ""
+}) => {
   return (
     <motion.div
       variants={{
-        hidden: { 
-          opacity: 0,
-          ...getInitialOffset()
-        },
-        visible: { 
-          opacity: 1,
-          x: 0,
-          y: 0,
-          transition: {
-            duration,
-          }
-        },
+        hidden: { opacity: 0, y: 20 },
+        visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
       }}
-      className={cn(className)}
+      className={className}
     >
       {children}
     </motion.div>
   );
-}
+};

@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Notification } from "./types";
 import { notificationData } from "./notificationData";
-import { toast } from "sonner"; // Make sure this is imported
+import { toast } from "sonner";
 
 export const useNotifications = () => {
   const [notifications, setNotifications] = useState<Notification[]>(notificationData);
@@ -31,15 +31,18 @@ export const useNotifications = () => {
     markAsRead(notification.id);
     setIsOpen(false);
     
-    // Safe navigation - always default to dashboard if link is invalid
-    let targetRoute = notification.link || "/dashboard";
-    
-    // Sanitize link to avoid 404s - make sure it starts with a slash
-    if (!targetRoute.startsWith('/')) {
-      targetRoute = `/${targetRoute}`;
+    // Handle navigation based on notification link
+    if (!notification.link) {
+      navigate("/dashboard");
+      return;
     }
     
-    // Make sure we navigate to a valid route to prevent 404s
+    // Sanitize link to ensure it starts with a slash
+    let targetRoute = notification.link.startsWith('/') 
+      ? notification.link 
+      : `/${notification.link}`;
+    
+    // List of valid routes to prevent navigation to non-existent pages
     const validRoutes = [
       '/dashboard',
       '/analyze-wealth',

@@ -1,59 +1,48 @@
 
-import React from "react";
-import { motion } from "framer-motion";
-import { cn } from "@/lib/utils";
+import React, { ReactNode } from 'react';
+import { motion, HTMLMotionProps } from 'framer-motion';
 
-export interface FadeInProps {
-  children: React.ReactNode;
-  duration?: number;
+export interface FadeInProps extends HTMLMotionProps<"div"> {
+  children: ReactNode;
+  direction?: "up" | "down" | "left" | "right";
   delay?: number;
   className?: string;
-  direction?: "up" | "down" | "left" | "right" | "none";
-  distance?: number;
-  once?: boolean;
-  onClick?: () => void; // Add onClick handler to the interface
 }
 
-export function FadeIn({
-  children,
-  duration = 0.5,
+export const FadeIn: React.FC<FadeInProps> = ({ 
+  children, 
+  direction = "up", 
   delay = 0,
-  className,
-  direction = "up",
-  distance = 20,
-  once = true,
-  onClick, // Include onClick in the component props
-}: FadeInProps) {
-  // Define direction variants
-  const directionOffsets = {
-    up: { y: distance },
-    down: { y: -distance },
-    left: { x: distance },
-    right: { x: -distance },
-    none: {},
+  className = "",
+  ...props 
+}) => {
+  const getDirectionValues = () => {
+    switch (direction) {
+      case "up":
+        return { y: 20, x: 0 };
+      case "down":
+        return { y: -20, x: 0 };
+      case "left":
+        return { x: 20, y: 0 };
+      case "right":
+        return { x: -20, y: 0 };
+      default:
+        return { y: 20, x: 0 };
+    }
   };
+
+  const { x, y } = getDirectionValues();
 
   return (
     <motion.div
-      initial={{ 
-        opacity: 0,
-        ...directionOffsets[direction]
-      }}
-      whileInView={{ 
-        opacity: 1,
-        x: 0,
-        y: 0
-      }}
-      viewport={{ once }}
-      transition={{
-        duration,
-        delay,
-        ease: "easeOut",
-      }}
-      className={cn(className)}
-      onClick={onClick} // Pass onClick to the motion.div
+      initial={{ opacity: 0, x, y }}
+      whileInView={{ opacity: 1, x: 0, y: 0 }}
+      viewport={{ once: true, margin: "-100px" }}
+      transition={{ duration: 0.6, delay }}
+      className={className}
+      {...props}
     >
       {children}
     </motion.div>
   );
-}
+};

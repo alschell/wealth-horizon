@@ -1,44 +1,31 @@
 
-import React from "react";
-import { motion } from "framer-motion";
-import { cn } from "@/lib/utils";
+import React, { ReactNode } from 'react';
+import { motion, HTMLMotionProps } from 'framer-motion';
 
-interface ScaleInProps {
-  children: React.ReactNode;
-  duration?: number;
+export interface ScaleInProps extends HTMLMotionProps<"div"> {
+  children: ReactNode;
   delay?: number;
   className?: string;
-  initialScale?: number;
-  once?: boolean;
+  scale?: number;
 }
 
-export function ScaleIn({
-  children,
-  duration = 0.5,
+export const ScaleIn: React.FC<ScaleInProps> = ({ 
+  children, 
   delay = 0,
-  className,
-  initialScale = 0.95,
-  once = true,
-}: ScaleInProps) {
+  className = "",
+  scale = 0.95,
+  ...props 
+}) => {
   return (
     <motion.div
-      initial={{ 
-        opacity: 0,
-        scale: initialScale
-      }}
-      whileInView={{ 
-        opacity: 1,
-        scale: 1
-      }}
-      viewport={{ once }}
-      transition={{
-        duration,
-        delay,
-        ease: "easeOut",
-      }}
-      className={cn(className)}
+      initial={{ opacity: 0, scale }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      viewport={{ once: true, margin: "-100px" }}
+      transition={{ duration: 0.5, delay }}
+      className={className}
+      {...props}
     >
       {children}
     </motion.div>
   );
-}
+};

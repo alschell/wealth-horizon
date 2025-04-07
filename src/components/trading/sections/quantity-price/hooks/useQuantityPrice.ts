@@ -52,6 +52,7 @@ export const useQuantityPrice = ({
   // Handle quantity input changes
   const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
+    // Use empty string instead of 0 when input is empty
     const numValue = value === "" ? "" : Number(value);
     setQuantity(numValue);
     
@@ -74,6 +75,7 @@ export const useQuantityPrice = ({
   // Handle price input changes
   const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
+    // Use empty string instead of 0 when input is empty
     setPrice(value === "" ? "" : Number(value));
   };
 

@@ -1,55 +1,33 @@
 
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { LayoutDashboard, Sliders } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Search, LogOut, Settings } from "lucide-react";
-import Logo from "./Logo";
-import NotificationsPopover from "./notifications";
-import HeaderAction from "./HeaderAction";
+import PageHeaderCard from "@/components/dashboard/PageHeaderCard";
 
-const DashboardHeader = () => {
-  const navigate = useNavigate();
+interface DashboardHeaderProps {
+  onCustomizeClick: () => void;
+}
 
-  const handleLogout = () => {
-    navigate("/logout");
-  };
-
+const DashboardHeader: React.FC<DashboardHeaderProps> = ({ onCustomizeClick }) => {
   return (
-    <header className="sticky top-0 z-50 flex h-16 w-full shrink-0 items-center justify-between border-b bg-background">
-      <div className="max-w-7xl mx-auto w-full px-4 md:px-6 flex items-center justify-between">
-        <div className="flex items-center">
-          <Link to="/dashboard" className="flex items-center">
-            <Logo />
-          </Link>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="relative w-full md:w-auto">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            <input
-              type="search"
-              placeholder="Search..."
-              className="w-full md:w-[200px] bg-background pl-8 h-9 rounded-md border border-input px-3 py-1 text-sm shadow-sm 
-              focus-visible:outline-none focus-visible:ring-0 focus-visible:border-black focus-visible:border-2"
-            />
-          </div>
-          <NotificationsPopover />
-          <HeaderAction 
-            icon={Settings} 
-            label="Settings" 
-            to="/settings" 
-          />
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            className="text-black" 
-            onClick={handleLogout}
-          >
-            <LogOut className="h-5 w-5" />
-            <span className="sr-only">Log out</span>
-          </Button>
-        </div>
-      </div>
-    </header>
+    <div className="flex justify-between items-center">
+      <PageHeaderCard
+        icon={LayoutDashboard}
+        title="Dashboard"
+        description="Your complete financial overview at a glance"
+        iconColor="text-gray-700"
+        iconBgColor="bg-gray-100"
+      />
+      <Button 
+        variant="ghost" 
+        size="sm"
+        onClick={onCustomizeClick}
+        className="h-8 w-8 p-0"
+      >
+        <Sliders className="h-4 w-4" />
+        <span className="sr-only">Customize</span>
+      </Button>
+    </div>
   );
 };
 

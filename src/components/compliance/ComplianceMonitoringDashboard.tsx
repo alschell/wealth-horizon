@@ -194,7 +194,7 @@ const ComplianceMonitoringDashboard = () => {
         <PageHeader className="flex flex-col gap-1">
           <h1 className="text-2xl font-bold tracking-tight">Compliance Monitoring</h1>
           <p className="text-muted-foreground">
-            Track and report on regulatory compliance activities
+            Regulatory compliance tracking
           </p>
         </PageHeader>
 

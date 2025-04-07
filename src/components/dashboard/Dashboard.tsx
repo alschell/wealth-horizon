@@ -72,21 +72,18 @@ const Dashboard = () => {
 
         {/* Key summary cards - Market Snapshot and Recent Activity */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-2">
             {/* Market overview card - fixed height */}
-            <MarketSnapshot />
-            
-            {/* Recent activities card - moved up to align with Market Snapshot */}
-            <div className="lg:hidden">
-              <RecentActivity />
-            </div>
+            <Card className="shadow-sm h-[350px] flex flex-col">
+              <MarketSnapshot />
+            </Card>
           </div>
           
-          <div className="space-y-6">
-            {/* Recent activities card - only visible on large screens */}
-            <div className="hidden lg:block">
+          <div>
+            {/* Recent activities card - fixed height */}
+            <Card className="shadow-sm h-[350px] flex flex-col">
               <RecentActivity />
-            </div>
+            </Card>
           </div>
         </div>
       </div>

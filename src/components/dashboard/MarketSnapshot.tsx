@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { CardContent, CardHeader } from "@/components/ui/card";
 import { Sliders } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import SectionHeader from "./SectionHeader";
@@ -9,24 +9,24 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { GripVertical } from "lucide-react";
 
+// Define defaultMarketItems first before using it in useState
+const defaultMarketItems = [
+  { id: "sp500", label: "S&P 500", value: "4,400.50", change: "+0.25%", emoji: "📈" },
+  { id: "nasdaq", label: "Nasdaq", value: "13,630.75", change: "-0.10%", emoji: "📊" },
+  { id: "dowjones", label: "Dow Jones", value: "34,500.20", change: "+0.15%", emoji: "📉" },
+  { id: "bitcoin", label: "Bitcoin", value: "29,500.00", change: "+1.50%", emoji: "₿" },
+  { id: "ethereum", label: "Ethereum", value: "1,850.40", change: "+0.75%", emoji: "Ξ" },
+  { id: "gold", label: "Gold", value: "$1,850.20", change: "+0.35%", emoji: "🥇" },
+  { id: "oil", label: "Crude Oil", value: "$79.15", change: "-0.60%", emoji: "🛢️" },
+  { id: "dollar", label: "US Dollar", value: "1.0870", change: "+0.12%", emoji: "💵" },
+  { id: "japan", label: "Nikkei 225", value: "32,450.80", change: "+1.20%", emoji: "🇯🇵" },
+  { id: "germany", label: "DAX", value: "15,720.30", change: "+0.22%", emoji: "🇩🇪" },
+  { id: "uk", label: "FTSE 100", value: "7,650.10", change: "-0.05%", emoji: "🇬🇧" },
+  { id: "china", label: "Shanghai", value: "3,210.40", change: "-0.30%", emoji: "🇨🇳" },
+];
+
 const MarketSnapshot = () => {
   const [isCustomizing, setIsCustomizing] = useState(false);
-  
-  // Define defaultMarketItems before using it in useState
-  const defaultMarketItems = [
-    { id: "sp500", label: "S&P 500", value: "4,400.50", change: "+0.25%", emoji: "📈" },
-    { id: "nasdaq", label: "Nasdaq", value: "13,630.75", change: "-0.10%", emoji: "📊" },
-    { id: "dowjones", label: "Dow Jones", value: "34,500.20", change: "+0.15%", emoji: "📉" },
-    { id: "bitcoin", label: "Bitcoin", value: "29,500.00", change: "+1.50%", emoji: "₿" },
-    { id: "ethereum", label: "Ethereum", value: "1,850.40", change: "+0.75%", emoji: "Ξ" },
-    { id: "gold", label: "Gold", value: "$1,850.20", change: "+0.35%", emoji: "🥇" },
-    { id: "oil", label: "Crude Oil", value: "$79.15", change: "-0.60%", emoji: "🛢️" },
-    { id: "dollar", label: "US Dollar", value: "1.0870", change: "+0.12%", emoji: "💵" },
-    { id: "japan", label: "Nikkei 225", value: "32,450.80", change: "+1.20%", emoji: "🇯🇵" },
-    { id: "germany", label: "DAX", value: "15,720.30", change: "+0.22%", emoji: "🇩🇪" },
-    { id: "uk", label: "FTSE 100", value: "7,650.10", change: "-0.05%", emoji: "🇬🇧" },
-    { id: "china", label: "Shanghai", value: "3,210.40", change: "-0.30%", emoji: "🇨🇳" },
-  ];
   
   // Sort market items alphabetically by default
   const alphabeticallySortedItems = [...defaultMarketItems].sort((a, b) => 
@@ -95,7 +95,7 @@ const MarketSnapshot = () => {
     .filter(Boolean) as typeof defaultMarketItems;
 
   return (
-    <Card className="shadow-sm h-full flex flex-col">
+    <>
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
           <SectionHeader title="Market Snapshot" />
@@ -110,7 +110,7 @@ const MarketSnapshot = () => {
           </Button>
         </div>
       </CardHeader>
-      <CardContent className="flex-1 overflow-auto">
+      <CardContent className="overflow-auto h-[250px]">
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {filteredAndOrderedItems.map((item, index) => (
             <div key={index} className="p-3 rounded-md bg-gray-50 hover:bg-gray-100 transition-colors">
@@ -214,7 +214,7 @@ const MarketSnapshot = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </Card>
+    </>
   );
 };
 

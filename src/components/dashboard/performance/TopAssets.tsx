@@ -30,7 +30,7 @@ const TopAssets = () => {
         <SectionHeader title="Top Assets" />
       </div>
       
-      <ScrollArea className="flex-grow">
+      <ScrollArea className="flex-grow h-[225px]">
         <div className="space-y-3">
           {assets.map((asset, index) => (
             <div 

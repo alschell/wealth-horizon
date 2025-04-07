@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import CustomizeNewsDialog, { NewsSource, NewsCategory } from "./CustomizeNewsDialog";
 import SectionHeader from "../SectionHeader";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 type NewsItem = {
   title: string;
@@ -127,33 +128,35 @@ const RecentNewsList = ({ newsData }: RecentNewsListProps) => {
         </Button>
       </div>
       
-      <div className="space-y-3 flex-grow overflow-y-auto max-h-[165px]">
-        {filteredNews.length > 0 ? (
-          filteredNews.map((news, index) => (
-            <div 
-              key={index} 
-              className="p-3 rounded-md hover:bg-gray-50 transition-colors cursor-pointer"
-              onClick={() => handleNewsClick(news, index)}
-            >
-              <h3 className="text-sm font-medium">{news.title}</h3>
-              <p className="text-xs text-gray-500 mt-1">{news.time}</p>
-              {news.source && <span className="text-xs bg-gray-100 px-2 py-0.5 rounded mr-2">{news.source}</span>}
-              {news.category && <span className="text-xs bg-gray-100 px-2 py-0.5 rounded">{news.category}</span>}
+      <ScrollArea className="flex-grow h-[225px]">
+        <div className="space-y-3">
+          {filteredNews.length > 0 ? (
+            filteredNews.map((news, index) => (
+              <div 
+                key={index} 
+                className="p-3 rounded-md hover:bg-gray-50 transition-colors cursor-pointer"
+                onClick={() => handleNewsClick(news, index)}
+              >
+                <h3 className="text-sm font-medium">{news.title}</h3>
+                <p className="text-xs text-gray-500 mt-1">{news.time}</p>
+                {news.source && <span className="text-xs bg-gray-100 px-2 py-0.5 rounded mr-2">{news.source}</span>}
+                {news.category && <span className="text-xs bg-gray-100 px-2 py-0.5 rounded">{news.category}</span>}
+              </div>
+            ))
+          ) : (
+            <div className="text-center py-6">
+              <p className="text-sm text-gray-500">No news matching your filters</p>
+              <Button 
+                variant="link" 
+                size="sm" 
+                onClick={() => setIsCustomizing(true)}
+              >
+                Customize filters
+              </Button>
             </div>
-          ))
-        ) : (
-          <div className="text-center py-6">
-            <p className="text-sm text-gray-500">No news matching your filters</p>
-            <Button 
-              variant="link" 
-              size="sm" 
-              onClick={() => setIsCustomizing(true)}
-            >
-              Customize filters
-            </Button>
-          </div>
-        )}
-      </div>
+          )}
+        </div>
+      </ScrollArea>
       
       <div className="mt-auto pt-4">
         <Button 
@@ -180,6 +183,46 @@ const RecentNewsList = ({ newsData }: RecentNewsListProps) => {
       />
     </div>
   );
+
+  function handleNewsClick(newsItem: any, index: number) {
+    // Navigate to market data with news tab active and the specific article id
+    navigate("/market-data", { 
+      state: { 
+        activeTab: "news",
+        articleId: newsItem.id || `news-${index}` 
+      } 
+    });
+  }
+
+  function handleViewAllClick() {
+    navigate("/market-data", { state: { activeTab: "news" } });
+  }
+
+  function toggleSource(id: string) {
+    setSelectedSources(prev => {
+      if (prev.includes(id)) {
+        return prev.filter(item => item !== id);
+      } else {
+        return [...prev, id];
+      }
+    });
+  }
+
+  function toggleCategory(id: string) {
+    setSelectedCategories(prev => {
+      if (prev.includes(id)) {
+        return prev.filter(item => item !== id);
+      } else {
+        return [...prev, id];
+      }
+    });
+  }
+
+  function saveCustomization() {
+    localStorage.setItem("newsSelectedSources", JSON.stringify(selectedSources));
+    localStorage.setItem("newsSelectedCategories", JSON.stringify(selectedCategories));
+    setIsCustomizing(false);
+  }
 };
 
 export default RecentNewsList;

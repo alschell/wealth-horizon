@@ -29,7 +29,7 @@ const FooterSection: React.FC = () => {
           <div>
             <h4 className="text-white font-semibold mb-4">Solutions</h4>
             <ul className="space-y-2">
-              <li><button onClick={() => scrollToSection('features')} className="hover:text-white transition-colors">Portfolio Management</button></li>
+              <li><Link to="/dashboard" className="hover:text-white transition-colors">Portfolio Management</Link></li>
               <li><Link to="/trading" className="hover:text-white transition-colors">Trading</Link></li>
               <li><Link to="/analyze-wealth" className="hover:text-white transition-colors">Wealth Analysis</Link></li>
               <li><Link to="/reporting" className="hover:text-white transition-colors">Reporting</Link></li>
@@ -41,9 +41,9 @@ const FooterSection: React.FC = () => {
             <h4 className="text-white font-semibold mb-4">Company</h4>
             <ul className="space-y-2">
               <li><button onClick={() => scrollToSection('about')} className="hover:text-white transition-colors">About Us</button></li>
-              <li><a href="mailto:careers@wealthhorizon.com" className="hover:text-white transition-colors">Careers</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Blog</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Press</a></li>
+              <li><Link to="/careers" className="hover:text-white transition-colors">Careers</Link></li>
+              <li><Link to="/blog" className="hover:text-white transition-colors">Blog</Link></li>
+              <li><Link to="/press" className="hover:text-white transition-colors">Press</Link></li>
               <li><button onClick={() => scrollToSection('contact')} className="hover:text-white transition-colors">Contact</button></li>
             </ul>
           </div>
@@ -51,11 +51,11 @@ const FooterSection: React.FC = () => {
           <div>
             <h4 className="text-white font-semibold mb-4">Resources</h4>
             <ul className="space-y-2">
-              <li><a href="#" className="hover:text-white transition-colors">Documentation</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Help Center</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Security</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Privacy Policy</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Terms of Service</a></li>
+              <li><Link to="/documentation" className="hover:text-white transition-colors">Documentation</Link></li>
+              <li><Link to="/help-center" className="hover:text-white transition-colors">Help Center</Link></li>
+              <li><Link to="/security" className="hover:text-white transition-colors">Security</Link></li>
+              <li><Link to="/privacy-policy" className="hover:text-white transition-colors">Privacy Policy</Link></li>
+              <li><Link to="/terms-of-service" className="hover:text-white transition-colors">Terms of Service</Link></li>
             </ul>
           </div>
         </div>
@@ -66,9 +66,9 @@ const FooterSection: React.FC = () => {
           <p>© 2025 WealthHorizon. All rights reserved.</p>
           <div className="mt-4 md:mt-0">
             <ul className="flex space-x-6">
-              <li><a href="#" className="hover:text-white transition-colors">Privacy</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Terms</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Cookies</a></li>
+              <li><Link to="/privacy-policy" className="hover:text-white transition-colors">Privacy</Link></li>
+              <li><Link to="/terms-of-service" className="hover:text-white transition-colors">Terms</Link></li>
+              <li><Link to="/cookies-policy" className="hover:text-white transition-colors">Cookies</Link></li>
             </ul>
           </div>
         </div>

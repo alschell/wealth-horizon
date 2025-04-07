@@ -61,7 +61,7 @@ const DashboardAnimation = () => {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.6 }}
         >
-          {/* Allocation Chart */}
+          {/* Asset Allocation Chart - Updated */}
           <motion.div 
             className="col-span-1 bg-white rounded-lg border border-gray-100 p-4 shadow-sm"
             initial={{ opacity: 0, x: -20 }}
@@ -69,60 +69,51 @@ const DashboardAnimation = () => {
             transition={{ duration: 0.4, delay: 0.7 }}
           >
             <div className="mb-3 text-sm font-medium">Asset Allocation</div>
-            <div className="relative h-[120px] flex items-center justify-center">
-              {/* Simplified Donut Chart */}
-              <svg width="100%" height="100%" viewBox="0 0 100 100">
-                <motion.circle 
-                  cx="50" cy="50" r="40" 
-                  fill="transparent"
-                  stroke="#818CF8"
-                  strokeWidth="20"
-                  strokeDasharray="251.2"
-                  strokeDashoffset="251.2"
-                  initial={{ strokeDashoffset: 251.2 }}
-                  animate={{ strokeDashoffset: 150 }}
-                  transition={{ duration: 1, delay: 0.8 }}
+            <div className="relative h-[150px] flex items-center justify-center">
+              {/* Simplified Pie Chart with 3 segments */}
+              <svg viewBox="0 0 100 100" className="w-full h-full">
+                {/* Each slice represents an asset class */}
+                <motion.path
+                  d="M50,50 L50,10 A40,40 0 0,1 90,50 Z"
+                  fill="#818CF8"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.5, delay: 0.8 }}
                 />
-                <motion.circle 
-                  cx="50" cy="50" r="40" 
-                  fill="transparent"
-                  stroke="#34D399"
-                  strokeWidth="20"
-                  strokeDasharray="251.2"
-                  strokeDashoffset="150"
-                  initial={{ strokeDashoffset: 150 }}
-                  animate={{ strokeDashoffset: 70 }}
-                  transition={{ duration: 1, delay: 1 }}
+                <motion.path
+                  d="M50,50 L90,50 A40,40 0 0,1 50,90 Z"
+                  fill="#34D399"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.5, delay: 1.0 }}
                 />
-                <motion.circle 
-                  cx="50" cy="50" r="40" 
-                  fill="transparent"
-                  stroke="#F59E0B"
-                  strokeWidth="20"
-                  strokeDasharray="251.2"
-                  strokeDashoffset="70"
-                  initial={{ strokeDashoffset: 70 }}
-                  animate={{ strokeDashoffset: 0 }}
-                  transition={{ duration: 1, delay: 1.2 }}
+                <motion.path
+                  d="M50,50 L50,90 A40,40 0 0,1 10,50 L50,50 Z"
+                  fill="#F59E0B"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.5, delay: 1.2 }}
                 />
-                <circle cx="50" cy="50" r="30" fill="white" />
+                {/* Center circle for cleaner look */}
+                <circle cx="50" cy="50" r="15" fill="white" />
               </svg>
             </div>
-            <div className="mt-2 grid grid-cols-3 gap-1">
+            <div className="mt-4 grid grid-cols-3 gap-1">
               {[
-                { label: 'Stocks', color: '#818CF8' },
-                { label: 'Bonds', color: '#34D399' },
-                { label: 'Alt', color: '#F59E0B' }
+                { label: 'Stocks', value: '40%', color: '#818CF8' },
+                { label: 'Bonds', value: '35%', color: '#34D399' },
+                { label: 'Alt', value: '25%', color: '#F59E0B' }
               ].map((item, i) => (
                 <motion.div 
                   key={i} 
-                  className="flex items-center gap-1"
+                  className="flex flex-col items-center"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.3, delay: 1.4 + (i * 0.1) }}
                 >
-                  <div className="w-2 h-2 rounded-sm" style={{ backgroundColor: item.color }}></div>
-                  <div className="text-xs">{item.label}</div>
+                  <div className="w-3 h-3 rounded-sm mb-1" style={{ backgroundColor: item.color }}></div>
+                  <div className="text-xs text-center">{item.label}</div>
+                  <div className="text-xs font-medium">{item.value}</div>
                 </motion.div>
               ))}
             </div>

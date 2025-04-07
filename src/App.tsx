@@ -41,6 +41,8 @@ import ComplianceMonitoring from "./pages/ComplianceMonitoring";
 import Logout from "./pages/Logout";
 import Calendar from "./pages/Calendar";
 import Contact from "./pages/Contact";
+import LegacyPage from "./pages/LegacyPages";
+import LandingPage from "./pages/LandingPage";
 
 function App() {
   // Create a query client inside the component
@@ -61,7 +63,7 @@ function App() {
           <TooltipProvider>
             <Navigation />
             <Routes>
-              <Route path="/" element={<Index />} />
+              <Route path="/" element={<LandingPage />} />
               <Route path="/onboarding/*" element={<Onboarding />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/dashboard/*" element={<Dashboard />} />
@@ -97,6 +99,18 @@ function App() {
               <Route path="/logout" element={<Logout />} />
               <Route path="/calendar" element={<Calendar />} />
               <Route path="/contact" element={<Contact />} />
+              
+              {/* Footer link pages */}
+              <Route path="/careers" element={<LegacyPage />} />
+              <Route path="/blog" element={<LegacyPage />} />
+              <Route path="/press" element={<LegacyPage />} />
+              <Route path="/documentation" element={<LegacyPage />} />
+              <Route path="/help-center" element={<LegacyPage />} />
+              <Route path="/security" element={<LegacyPage />} />
+              <Route path="/privacy-policy" element={<LegacyPage />} />
+              <Route path="/terms-of-service" element={<LegacyPage />} />
+              <Route path="/cookies-policy" element={<LegacyPage />} />
+              
               <Route path="*" element={<NotFound />} />
             </Routes>
             <Toaster />

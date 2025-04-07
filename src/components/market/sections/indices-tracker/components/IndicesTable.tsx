@@ -8,9 +8,10 @@ import {
   TableHead, 
   TableCell 
 } from "@/components/ui/table";
-import { TrendingUp, TrendingDown, LineChart, Star } from "lucide-react";
+import { TrendingUp, TrendingDown, LineChart, Star, Globe } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { IndexData } from "../types";
+import { getCountryFlagCode } from "../data/mockData";
 
 interface IndicesTableProps {
   indices: IndexData[];
@@ -46,7 +47,29 @@ const IndicesTable: React.FC<IndicesTableProps> = ({
             className={`hover:bg-gray-50 cursor-pointer ${selectedIndex?.id === index.id ? 'bg-gray-50' : ''}`}
             onClick={() => handleSelectIndex(index)}
           >
-            <TableCell className="font-medium">{index.name}</TableCell>
+            <TableCell className="font-medium">
+              <div className="flex items-center gap-2">
+                <span className="flex items-center justify-center w-6 h-6">
+                  {/* Flag using the region to determine the country code */}
+                  <img 
+                    src={`https://flagcdn.com/w20/${getCountryFlagCode(index.region)}.png`} 
+                    alt={`${index.region} flag`}
+                    className="w-5 h-auto"
+                    onError={(e) => {
+                      // Fallback to globe icon if flag doesn't load
+                      e.currentTarget.style.display = 'none';
+                      const parent = e.currentTarget.parentElement;
+                      if (parent) {
+                        const globe = document.createElement('span');
+                        globe.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>';
+                        parent.appendChild(globe);
+                      }
+                    }}
+                  />
+                </span>
+                {index.name}
+              </div>
+            </TableCell>
             <TableCell>{index.value}</TableCell>
             <TableCell>
               <div className={`flex items-center ${

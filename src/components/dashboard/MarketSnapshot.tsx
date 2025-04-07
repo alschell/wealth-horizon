@@ -11,27 +11,57 @@ import { GripVertical } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Link } from "react-router-dom";
 
+// Get country flag code by category
+const getCountryFlagCode = (category: string, label: string): string => {
+  if (category === "Indices") {
+    const mapping: Record<string, string> = {
+      "S&P 500": "us",
+      "Nasdaq": "us",
+      "Dow Jones": "us",
+      "Nikkei 225": "jp",
+      "DAX": "de",
+      "FTSE 100": "gb",
+      "Shanghai": "cn",
+    };
+    return mapping[label] || "globe";
+  }
+  
+  if (category === "Currencies") {
+    const mapping: Record<string, string> = {
+      "US Dollar": "us",
+      "Euro": "eu",
+      "British Pound": "gb",
+      "Japanese Yen": "jp",
+      "Swiss Franc": "ch",
+    };
+    return mapping[label] || "globe";
+  }
+
+  // Default flag code
+  return "globe";
+};
+
 // Categorized market items
 const marketItems = [
   // Indices
-  { id: "sp500", label: "S&P 500", value: "4,400.50", change: "+0.25%", emoji: "📈", category: "Indices" },
-  { id: "nasdaq", label: "Nasdaq", value: "13,630.75", change: "-0.10%", emoji: "📊", category: "Indices" },
-  { id: "dowjones", label: "Dow Jones", value: "34,500.20", change: "+0.15%", emoji: "📉", category: "Indices" },
-  { id: "japan", label: "Nikkei 225", value: "32,450.80", change: "+1.20%", emoji: "🇯🇵", category: "Indices" },
-  { id: "germany", label: "DAX", value: "15,720.30", change: "+0.22%", emoji: "🇩🇪", category: "Indices" },
-  { id: "uk", label: "FTSE 100", value: "7,650.10", change: "-0.05%", emoji: "🇬🇧", category: "Indices" },
-  { id: "china", label: "Shanghai", value: "3,210.40", change: "-0.30%", emoji: "🇨🇳", category: "Indices" },
+  { id: "sp500", label: "S&P 500", value: "4,400.50", change: "+0.25%", category: "Indices" },
+  { id: "nasdaq", label: "Nasdaq", value: "13,630.75", change: "-0.10%", category: "Indices" },
+  { id: "dowjones", label: "Dow Jones", value: "34,500.20", change: "+0.15%", category: "Indices" },
+  { id: "japan", label: "Nikkei 225", value: "32,450.80", change: "+1.20%", category: "Indices" },
+  { id: "germany", label: "DAX", value: "15,720.30", change: "+0.22%", category: "Indices" },
+  { id: "uk", label: "FTSE 100", value: "7,650.10", change: "-0.05%", category: "Indices" },
+  { id: "china", label: "Shanghai", value: "3,210.40", change: "-0.30%", category: "Indices" },
   
   // Cryptocurrencies
-  { id: "bitcoin", label: "Bitcoin", value: "29,500.00", change: "+1.50%", emoji: "₿", category: "Cryptocurrencies" },
-  { id: "ethereum", label: "Ethereum", value: "1,850.40", change: "+0.75%", emoji: "Ξ", category: "Cryptocurrencies" },
+  { id: "bitcoin", label: "Bitcoin", value: "29,500.00", change: "+1.50%", category: "Cryptocurrencies" },
+  { id: "ethereum", label: "Ethereum", value: "1,850.40", change: "+0.75%", category: "Cryptocurrencies" },
   
   // Commodities
-  { id: "gold", label: "Gold", value: "$1,850.20", change: "+0.35%", emoji: "🥇", category: "Commodities" },
-  { id: "oil", label: "Crude Oil", value: "$79.15", change: "-0.60%", emoji: "🛢️", category: "Commodities" },
+  { id: "gold", label: "Gold", value: "$1,850.20", change: "+0.35%", category: "Commodities" },
+  { id: "oil", label: "Crude Oil", value: "$79.15", change: "-0.60%", category: "Commodities" },
   
   // Currencies
-  { id: "dollar", label: "US Dollar", value: "1.0870", change: "+0.12%", emoji: "💵", category: "Currencies" },
+  { id: "dollar", label: "US Dollar", value: "1.0870", change: "+0.12%", category: "Currencies" },
 ];
 
 // Get unique categories
@@ -130,7 +160,25 @@ const MarketSnapshot = () => {
                 className="p-3 rounded-md bg-white hover:bg-gray-50 transition-colors cursor-pointer"
               >
                 <div className="flex items-center mb-1">
-                  <span className="text-lg mr-2 w-6 text-center">{item.emoji}</span>
+                  <span className="w-6 h-6 mr-2 flex items-center justify-center">
+                    {/* Use flag for indices and currencies */}
+                    {(item.category === "Indices" || item.category === "Currencies") ? (
+                      <img 
+                        src={`https://flagcdn.com/w20/${getCountryFlagCode(item.category, item.label)}.png`} 
+                        alt={`${item.label} flag`}
+                        className="w-5 h-auto"
+                        onError={(e) => {
+                          e.currentTarget.style.display = 'none';
+                        }}
+                      />
+                    ) : (
+                      // Use emoji or symbol for other categories
+                      <span className="text-lg">
+                        {item.category === "Cryptocurrencies" ? "₿" : 
+                         item.category === "Commodities" && item.label === "Gold" ? "🥇" : "🛢️"}
+                      </span>
+                    )}
+                  </span>
                   <p className="text-sm font-medium">{item.label}</p>
                 </div>
                 <div className="flex flex-col ml-8">
@@ -187,8 +235,26 @@ const MarketSnapshot = () => {
                                 htmlFor={`market-${item.id}`}
                                 className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                               >
-                                <span className="mr-2">{item.emoji}</span>
-                                {item.label}
+                                <span className="flex items-center">
+                                  <span className="w-5 h-5 mr-2 inline-flex items-center justify-center">
+                                    {(item.category === "Indices" || item.category === "Currencies") ? (
+                                      <img 
+                                        src={`https://flagcdn.com/w20/${getCountryFlagCode(item.category, item.label)}.png`} 
+                                        alt={`${item.label} flag`}
+                                        className="w-4 h-auto"
+                                        onError={(e) => {
+                                          e.currentTarget.style.display = 'none';
+                                        }}
+                                      />
+                                    ) : (
+                                      <span className="text-sm">
+                                        {item.category === "Cryptocurrencies" ? "₿" : 
+                                         item.category === "Commodities" && item.label === "Gold" ? "🥇" : "🛢️"}
+                                      </span>
+                                    )}
+                                  </span>
+                                  {item.label}
+                                </span>
                               </label>
                             </div>
                           </div>
@@ -227,7 +293,23 @@ const MarketSnapshot = () => {
                                       className="flex items-center p-2 border rounded bg-white"
                                     >
                                       <GripVertical className="h-4 w-4 mr-2 text-gray-400" />
-                                      <span className="mr-2">{item.emoji}</span>
+                                      <span className="w-5 h-5 mr-2 inline-flex items-center justify-center">
+                                        {(item.category === "Indices" || item.category === "Currencies") ? (
+                                          <img 
+                                            src={`https://flagcdn.com/w20/${getCountryFlagCode(item.category, item.label)}.png`} 
+                                            alt={`${item.label} flag`}
+                                            className="w-4 h-auto"
+                                            onError={(e) => {
+                                              e.currentTarget.style.display = 'none';
+                                            }}
+                                          />
+                                        ) : (
+                                          <span className="text-sm">
+                                            {item.category === "Cryptocurrencies" ? "₿" : 
+                                             item.category === "Commodities" && item.label === "Gold" ? "🥇" : "🛢️"}
+                                          </span>
+                                        )}
+                                      </span>
                                       <span className="text-sm">{item.label}</span>
                                     </div>
                                   )}

@@ -132,3 +132,5 @@ export const allQuickLinks: QuickLinkItem[] = [
     link: "/documents"
   },
 ];
+
+export const defaultQuickLinks = allQuickLinks.slice(0, 8);

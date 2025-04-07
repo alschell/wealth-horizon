@@ -9,6 +9,15 @@ export interface QuickLinkItem {
   link: string;
 }
 
+export interface QuickAccessItemProps extends QuickLinkItem {
+  color?: string;
+  onClick?: () => void;
+}
+
+export interface QuickAccessGridProps {
+  items: QuickLinkItem[];
+}
+
 export interface CustomizeDialogProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;

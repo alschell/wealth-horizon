@@ -11,14 +11,10 @@ interface QuickAccessGridProps {
 }
 
 const QuickAccessGrid = ({ items }: QuickAccessGridProps) => {
-  // Sort items alphabetically by title for display
-  const sortedItems = React.useMemo(() => {
-    return [...items].sort((a, b) => a.title.localeCompare(b.title));
-  }, [items]);
-
+  // Items are already sorted in the useQuickAccess hook
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-      {sortedItems.map((item, index) => (
+      {items.map((item, index) => (
         <Link
           key={index}
           to={item.link}

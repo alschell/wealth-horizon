@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import SectionHeader from "../SectionHeader";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 const TopAssets = () => {
   const navigate = useNavigate();
@@ -25,46 +26,47 @@ const TopAssets = () => {
   };
 
   return (
-    <div className="flex flex-col h-full">
-      <div className="flex justify-between items-center mb-3">
+    <Card className="shadow-sm h-[350px] flex flex-col">
+      <CardHeader className="pb-2">
         <SectionHeader title="Top Assets" />
-      </div>
-      
-      <ScrollArea className="flex-grow">
-        <div className="space-y-3">
-          {assets.map((asset, index) => (
-            <div 
-              key={index} 
-              className="p-3 rounded-md hover:bg-gray-50 transition-colors cursor-pointer"
-              onClick={() => handleAssetClick(asset.id)}
-            >
-              <div className="flex justify-between items-center">
-                <p className="text-sm font-medium">{asset.name}</p>
-                <p className="text-sm font-bold">{asset.value}</p>
+      </CardHeader>
+      <CardContent className="flex-1 flex flex-col p-6 pt-0">
+        <ScrollArea className="flex-grow">
+          <div className="space-y-3">
+            {assets.map((asset, index) => (
+              <div 
+                key={index} 
+                className="p-3 rounded-md hover:bg-gray-50 transition-colors cursor-pointer"
+                onClick={() => handleAssetClick(asset.id)}
+              >
+                <div className="flex justify-between items-center">
+                  <p className="text-sm font-medium">{asset.name}</p>
+                  <p className="text-sm font-bold">{asset.value}</p>
+                </div>
+                <div className="flex justify-end mt-1">
+                  <span className={`text-xs flex items-center ${asset.isPositive ? 'text-emerald-600' : 'text-red-500'}`}>
+                    {asset.isPositive ? <ArrowUp className="h-3 w-3 mr-0.5" /> : <ArrowDown className="h-3 w-3 mr-0.5" />}
+                    {asset.change}
+                  </span>
+                </div>
               </div>
-              <div className="flex justify-end mt-1">
-                <span className={`text-xs flex items-center ${asset.isPositive ? 'text-emerald-600' : 'text-red-500'}`}>
-                  {asset.isPositive ? <ArrowUp className="h-3 w-3 mr-0.5" /> : <ArrowDown className="h-3 w-3 mr-0.5" />}
-                  {asset.change}
-                </span>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
+        </ScrollArea>
+        
+        <div className="mt-auto pt-4">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="w-full flex items-center justify-center"
+            onClick={() => navigate("/analyze-wealth")}
+          >
+            View All Assets
+            <ChevronRight className="h-4 w-4 ml-1" />
+          </Button>
         </div>
-      </ScrollArea>
-      
-      <div className="mt-auto pt-4">
-        <Button 
-          variant="outline" 
-          size="sm" 
-          className="w-full flex items-center justify-center"
-          onClick={() => navigate("/analyze-wealth")}
-        >
-          View All Assets
-          <ChevronRight className="h-4 w-4 ml-1" />
-        </Button>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 };
 

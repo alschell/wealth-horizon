@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import WelcomeHeader from "@/components/dashboard/WelcomeHeader";
@@ -11,7 +10,7 @@ import PageHeaderCard from "@/components/dashboard/PageHeaderCard";
 import KeyMetricsGrid from "@/components/dashboard/performance/KeyMetricsGrid";
 import { LayoutDashboard, Sliders, GripVertical } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardHeader } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { newsData } from "@/components/dashboard/performance/PerformanceData";
 import TopAssets from "@/components/dashboard/performance/TopAssets";
 import RecentNewsList from "@/components/dashboard/performance/RecentNewsList";
@@ -132,20 +131,12 @@ const Dashboard = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Top Assets card */}
           {orderedVisibleSections.includes("topAssets") && (
-            <Card className="shadow-sm h-[350px] flex flex-col">
-              <CardHeader className="pb-0">
-                <TopAssets />
-              </CardHeader>
-            </Card>
+            <TopAssets />
           )}
           
           {/* Recent News card */}
           {orderedVisibleSections.includes("recentNews") && (
-            <Card className="shadow-sm h-[350px] flex flex-col">
-              <CardHeader className="pb-0">
-                <RecentNewsList newsData={newsData} />
-              </CardHeader>
-            </Card>
+            <RecentNewsList newsData={newsData} />
           )}
 
           {/* Notifications container */}
@@ -156,19 +147,13 @@ const Dashboard = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {orderedVisibleSections.includes("marketSnapshot") && (
             <div className="lg:col-span-2">
-              {/* Market overview card */}
-              <Card className="shadow-sm h-[350px] flex flex-col">
-                <MarketSnapshot />
-              </Card>
+              <MarketSnapshot />
             </div>
           )}
           
           {orderedVisibleSections.includes("recentActivity") && (
             <div>
-              {/* Recent activities card */}
-              <Card className="shadow-sm h-[350px] flex flex-col">
-                <RecentActivity />
-              </Card>
+              <RecentActivity />
             </div>
           )}
         </div>

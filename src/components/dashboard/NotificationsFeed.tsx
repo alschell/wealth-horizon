@@ -2,7 +2,7 @@
 import React from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ChevronRight, Bell, BellRing, Clock, CheckCircle, AlertTriangle, Calendar } from "lucide-react";
+import { ChevronRight, Bell, BellRing, CheckCircle, AlertTriangle, Calendar } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import SectionHeader from "./SectionHeader";

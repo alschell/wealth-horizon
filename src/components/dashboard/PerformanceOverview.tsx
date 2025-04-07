@@ -41,15 +41,15 @@ const PerformanceOverview = () => {
           </div>
         </div>
       </CardHeader>
-      <CardContent className="pt-0 pb-6" style={{ minHeight: "800px" }}> 
+      <CardContent className="pt-0 pb-6" style={{ height: "350px" }}> 
         <Tabs defaultValue="networth" className="mt-4 h-full">
-          <TabsList className="mb-6">
+          <TabsList className="mb-4">
             <TabsTrigger value="networth">Net Worth</TabsTrigger>
             <TabsTrigger value="assets">Assets & Liabilities</TabsTrigger>
             <TabsTrigger value="nextactions">Next Best Actions</TabsTrigger>
           </TabsList>
           
-          <TabsContent value="networth" className="mt-0 h-full">
+          <TabsContent value="networth" className="mt-0 h-[calc(100%-40px)] overflow-auto">
             <OverviewTabContent 
               performanceData={performanceData}
               chartConfig={chartConfig}
@@ -57,13 +57,13 @@ const PerformanceOverview = () => {
             />
           </TabsContent>
           
-          <TabsContent value="assets" className="mt-0 h-full">
+          <TabsContent value="assets" className="mt-0 h-[calc(100%-40px)] overflow-auto">
             <ChartsTabContent 
               assetAllocationData={assetAllocationData}
             />
           </TabsContent>
           
-          <TabsContent value="nextactions" className="mt-0 h-full overflow-visible">
+          <TabsContent value="nextactions" className="mt-0 h-[calc(100%-40px)] overflow-auto">
             <RecommendationsTabContent 
               recommendations={recommendations}
             />

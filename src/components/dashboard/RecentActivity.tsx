@@ -1,6 +1,6 @@
 
 import React from "react";
-import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ChevronRight, TrendingUp, DollarSign, Users, File, FileCheck, CreditCard, RefreshCcw, AlertTriangle, ArrowUpRight, ArrowDownRight } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
@@ -102,11 +102,11 @@ const RecentActivity = () => {
   };
 
   return (
-    <>
+    <Card className="shadow-sm h-[350px] flex flex-col">
       <CardHeader className="pb-2">
         <SectionHeader title="Recent Activity" />
       </CardHeader>
-      <CardContent className="flex-1 flex flex-col">
+      <CardContent className="flex-1 flex flex-col p-6 pt-0">
         <ScrollArea className="flex-grow">
           <div className="space-y-3">
             {activities.map((activity, index) => (
@@ -138,7 +138,7 @@ const RecentActivity = () => {
           </Link>
         </div>
       </CardContent>
-    </>
+    </Card>
   );
 };
 

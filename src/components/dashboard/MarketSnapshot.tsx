@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { CardContent, CardHeader } from "@/components/ui/card";
-import { Sliders } from "lucide-react";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Sliders, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import SectionHeader from "./SectionHeader";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
@@ -8,6 +8,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { GripVertical } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Link } from "react-router-dom";
 
 const defaultMarketItems = [
   { id: "sp500", label: "S&P 500", value: "4,400.50", change: "+0.25%", emoji: "📈" },
@@ -92,7 +93,7 @@ const MarketSnapshot = () => {
     .filter(Boolean) as typeof defaultMarketItems;
 
   return (
-    <>
+    <Card className="shadow-sm h-[350px] flex flex-col">
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
           <SectionHeader title="Market Snapshot" />
@@ -107,7 +108,7 @@ const MarketSnapshot = () => {
           </Button>
         </div>
       </CardHeader>
-      <CardContent className="flex-1 flex flex-col">
+      <CardContent className="flex-1 flex flex-col p-6 pt-0">
         <ScrollArea className="flex-grow">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {filteredAndOrderedItems.map((item, index) => (
@@ -130,10 +131,12 @@ const MarketSnapshot = () => {
         </ScrollArea>
         
         <div className="mt-auto pt-4">
-          <Button variant="outline" size="sm" className="w-full flex items-center justify-center">
-            View All Market Data
-            <span className="h-4 w-4 ml-1">→</span>
-          </Button>
+          <Link to="/market-data">
+            <Button variant="outline" size="sm" className="w-full flex items-center justify-center">
+              View All Market Data
+              <ChevronRight className="h-4 w-4 ml-1" />
+            </Button>
+          </Link>
         </div>
       </CardContent>
 
@@ -220,7 +223,7 @@ const MarketSnapshot = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </>
+    </Card>
   );
 };
 

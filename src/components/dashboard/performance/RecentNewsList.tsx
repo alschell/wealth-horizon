@@ -11,6 +11,7 @@ import EmptyNewsList from "./news/EmptyNewsList";
 import { useNewsFilters } from "./news/useNewsFilters";
 import { useNewsFiltering } from "./news/useNewsFiltering";
 import { defaultSources, defaultCategories } from "./news/NewsConstants";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 type NewsItem = {
   title: string;
@@ -59,63 +60,67 @@ const RecentNewsList = ({ newsData }: RecentNewsListProps) => {
   };
 
   return (
-    <div className="flex flex-col h-full">
-      <div className="flex justify-between items-center mb-3">
-        <SectionHeader title="Recent News" />
-        <Button 
-          variant="ghost" 
-          size="sm" 
-          className="h-8 w-8 p-0"
-          onClick={() => setIsCustomizing(true)}
-        >
-          <Sliders className="h-4 w-4" />
-          <span className="sr-only">Customize</span>
-        </Button>
-      </div>
-      
-      <ScrollArea className="flex-grow">
-        <div className="space-y-3">
-          {filteredNews.length > 0 ? (
-            filteredNews.map((news, index) => (
-              <NewsItem
-                key={index}
-                title={news.title}
-                time={news.time}
-                source={news.source}
-                category={news.category}
-                onClick={() => handleNewsClick(news, index)}
-              />
-            ))
-          ) : (
-            <EmptyNewsList onCustomize={() => setIsCustomizing(true)} />
-          )}
+    <Card className="shadow-sm h-[350px] flex flex-col">
+      <CardHeader className="pb-2">
+        <div className="flex justify-between items-center">
+          <SectionHeader title="Recent News" />
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="h-8 w-8 p-0"
+            onClick={() => setIsCustomizing(true)}
+          >
+            <Sliders className="h-4 w-4" />
+            <span className="sr-only">Customize</span>
+          </Button>
         </div>
-      </ScrollArea>
+      </CardHeader>
       
-      <div className="mt-auto pt-4">
-        <Button 
-          variant="outline" 
-          size="sm" 
-          className="w-full flex items-center justify-center"
-          onClick={handleViewAllClick}
-        >
-          View All News
-          <ChevronRight className="h-4 w-4 ml-1" />
-        </Button>
-      </div>
+      <CardContent className="flex-1 flex flex-col p-6 pt-0">
+        <ScrollArea className="flex-grow">
+          <div className="space-y-3">
+            {filteredNews.length > 0 ? (
+              filteredNews.map((news, index) => (
+                <NewsItem
+                  key={index}
+                  title={news.title}
+                  time={news.time}
+                  source={news.source}
+                  category={news.category}
+                  onClick={() => handleNewsClick(news, index)}
+                />
+              ))
+            ) : (
+              <EmptyNewsList onCustomize={() => setIsCustomizing(true)} />
+            )}
+          </div>
+        </ScrollArea>
+        
+        <div className="mt-auto pt-4">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="w-full flex items-center justify-center"
+            onClick={handleViewAllClick}
+          >
+            View All News
+            <ChevronRight className="h-4 w-4 ml-1" />
+          </Button>
+        </div>
 
-      <CustomizeNewsDialog
-        isOpen={isCustomizing}
-        onOpenChange={setIsCustomizing}
-        selectedSources={selectedSources}
-        selectedCategories={selectedCategories}
-        allSources={defaultSources}
-        allCategories={defaultCategories}
-        onSourceToggle={toggleSource}
-        onCategoryToggle={toggleCategory}
-        onSave={handleSaveCustomization}
-      />
-    </div>
+        <CustomizeNewsDialog
+          isOpen={isCustomizing}
+          onOpenChange={setIsCustomizing}
+          selectedSources={selectedSources}
+          selectedCategories={selectedCategories}
+          allSources={defaultSources}
+          allCategories={defaultCategories}
+          onSourceToggle={toggleSource}
+          onCategoryToggle={toggleCategory}
+          onSave={handleSaveCustomization}
+        />
+      </CardContent>
+    </Card>
   );
 };
 

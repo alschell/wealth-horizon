@@ -11,6 +11,8 @@ const AssetAllocationChart: React.FC = () => {
       initial="initial"
       animate="animate"
       variants={chartVariants}
+      whileHover={{ scale: 1.02 }}
+      transition={{ duration: 0.2 }}
     >
       <div className="flex items-center mb-3">
         <PieChart size={16} className="text-indigo-600 mr-2" />
@@ -18,8 +20,18 @@ const AssetAllocationChart: React.FC = () => {
       </div>
       
       <div className="h-[140px] flex justify-center items-center">
-        {/* Full Circle Pie Chart with three unequal segments */}
-        <svg width="120" height="120" viewBox="0 0 100 100">
+        {/* Full Circle Pie Chart with three unequal segments and animated rotation */}
+        <motion.svg 
+          width="120" 
+          height="120" 
+          viewBox="0 0 100 100"
+          animate={{ rotate: [0, 5, 0, -5, 0] }}
+          transition={{ 
+            repeat: Infinity, 
+            duration: 8,
+            ease: "easeInOut"
+          }}
+        >
           {/* First segment - 45% */}
           <motion.path
             d="M50,50 L50,0 A50,50 0 0,1 97.6,34.2 Z"
@@ -44,7 +56,7 @@ const AssetAllocationChart: React.FC = () => {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.5 }}
           />
-        </svg>
+        </motion.svg>
       </div>
     </motion.div>
   );

@@ -75,7 +75,7 @@ const PlatformOverviewAnimation: React.FC = () => {
       <Header />
       <FeatureOverview />
       
-      {/* Platform modules */}
+      {/* Platform modules with added hover animation */}
       <motion.div 
         className="grid grid-cols-3 gap-4 mt-4 mb-5"
         initial="initial"
@@ -87,6 +87,8 @@ const PlatformOverviewAnimation: React.FC = () => {
             key={index}
             className="bg-white rounded-lg border border-gray-100 p-4 shadow-sm"
             variants={moduleVariants}
+            whileHover={{ y: -4, boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)" }}
+            transition={{ duration: 0.2 }}
           >
             <div className={`${module.color} w-8 h-8 rounded-lg text-white flex items-center justify-center mb-3`}>
               {module.icon}
@@ -104,7 +106,7 @@ const PlatformOverviewAnimation: React.FC = () => {
         ))}
       </motion.div>
 
-      {/* Key features grid */}
+      {/* Key features grid with staggered float animation */}
       <motion.div 
         className="grid grid-cols-4 gap-2 mb-4"
         initial="initial"
@@ -116,6 +118,16 @@ const PlatformOverviewAnimation: React.FC = () => {
             key={index}
             className={`rounded-lg ${item.color} p-2 flex items-center`}
             variants={itemVariants}
+            animate={{ 
+              y: [0, -3, 0],
+              transition: { 
+                repeat: Infinity, 
+                repeatType: "mirror", 
+                duration: 2, 
+                delay: index * 0.3,
+                ease: "easeInOut"
+              } 
+            }}
           >
             <div className="mr-2">{item.icon}</div>
             <div className="text-xs font-medium">{item.title}</div>
@@ -123,12 +135,13 @@ const PlatformOverviewAnimation: React.FC = () => {
         ))}
       </motion.div>
       
-      {/* Interactive chart preview */}
+      {/* Interactive chart preview with more pronounced animation */}
       <motion.div
         className="rounded-lg bg-gray-50 p-3 mb-4 flex items-center justify-center"
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 1 }}
+        whileHover={{ scale: 1.02 }}
       >
         <svg className="w-full h-10" viewBox="0 0 300 40">
           <motion.path
@@ -137,8 +150,14 @@ const PlatformOverviewAnimation: React.FC = () => {
             strokeWidth="2"
             fill="none"
             initial={{ pathLength: 0 }}
-            animate={{ pathLength: 1 }}
-            transition={{ duration: 2, delay: 1.2 }}
+            animate={{ 
+              pathLength: 1,
+              y: [0, -2, 0, 2, 0]
+            }}
+            transition={{ 
+              pathLength: { duration: 2, delay: 1.2 },
+              y: { repeat: Infinity, duration: 3, ease: "easeInOut" }
+            }}
           />
           <motion.path
             d="M0,30 C25,38 50,20 75,25 S125,40 150,30 S200,15 225,25 S275,35 300,30"
@@ -146,8 +165,14 @@ const PlatformOverviewAnimation: React.FC = () => {
             strokeWidth="2"
             fill="none"
             initial={{ pathLength: 0 }}
-            animate={{ pathLength: 1 }}
-            transition={{ duration: 2, delay: 1.4 }}
+            animate={{ 
+              pathLength: 1,
+              y: [0, 2, 0, -2, 0]
+            }}
+            transition={{ 
+              pathLength: { duration: 2, delay: 1.4 },
+              y: { repeat: Infinity, duration: 3.5, ease: "easeInOut" }
+            }}
           />
         </svg>
       </motion.div>

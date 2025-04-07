@@ -1,12 +1,18 @@
 
-import React, { useState, useRef } from "react";
-import { MessageCircle, X } from "lucide-react";
+import React, { useState } from "react";
+import { MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import AIAssistant from "@/components/ai-assistant/AIAssistant";
+import { useLocation } from "react-router-dom";
 
 const ChatButton = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const location = useLocation();
+  
+  // Hide the chat button on the homepage
+  const isHomePage = location.pathname === '/';
+  if (isHomePage) return null;
   
   const toggleChat = () => {
     setIsOpen(!isOpen);

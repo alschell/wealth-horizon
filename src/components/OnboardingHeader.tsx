@@ -26,7 +26,10 @@ const OnboardingHeader = () => {
         transition={{ duration: 0.5 }}
         className="mb-10 text-center"
       >
-        <h1 className="text-3xl font-bold text-black mb-8">Wealth Horizon</h1>
+        <h1 className="text-3xl font-bold mb-8">
+          <span className="text-indigo-600">Wealth</span>
+          <span className="text-gray-900">Horizon</span>
+        </h1>
       </motion.div>
 
       <div className="mb-8">

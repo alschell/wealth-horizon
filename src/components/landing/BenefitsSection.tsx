@@ -2,6 +2,7 @@
 import React from "react";
 import { BarChart3, Shield } from "lucide-react";
 import { FadeIn, StaggerContainer, StaggerItem } from "@/components/ui/animation";
+import PlatformOverviewAnimation from "@/components/animations/PlatformOverviewAnimation";
 
 const benefits = [
   {
@@ -42,15 +43,7 @@ const BenefitsSection: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
           <FadeIn delay={0.2}>
             <div className="relative rounded-xl overflow-hidden shadow-xl">
-              <img 
-                src="/assets/dashboard-fallback.png" 
-                alt="Platform Overview" 
-                className="w-full h-auto"
-                onError={(e) => {
-                  // Fallback to a placeholder image if the original image fails to load
-                  e.currentTarget.src = "https://placehold.co/800x600/e6e6ff/5a67d8?text=Platform+Overview";
-                }}
-              />
+              <PlatformOverviewAnimation />
             </div>
           </FadeIn>
           

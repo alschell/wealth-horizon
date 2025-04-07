@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { ChevronDown, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FadeIn, ScaleIn } from "@/components/ui/animation";
+import DashboardAnimation from "@/components/animations/DashboardAnimation";
 
 interface HeroSectionProps {
   onScrollToFeatures: () => void;
@@ -50,16 +51,8 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToFeatures }) => {
           <ScaleIn delay={0.4}>
             <div className="relative rounded-xl overflow-hidden shadow-2xl border border-gray-100">
               <div className="relative aspect-[4/3]">
-                <img
-                  src="/assets/dashboard-preview.png"
-                  alt="Wealth Horizon Dashboard"
-                  className="w-full h-full object-cover"
-                  onError={(e) => {
-                    // Fallback to a placeholder image if the original image fails to load
-                    e.currentTarget.src = "https://placehold.co/800x600/e6e6ff/5a67d8?text=Wealth+Horizon+Dashboard";
-                  }}
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                <DashboardAnimation />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent"></div>
               </div>
             </div>
           </ScaleIn>

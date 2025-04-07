@@ -1,6 +1,6 @@
 
 import React from "react";
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 import IndexPerformanceChart from "./IndexPerformanceChart";
 import SubscriptionsCard from "./SubscriptionsCard";
 import { IndexData } from "../types";
@@ -23,7 +23,7 @@ const ChartsSection: React.FC<ChartsSectionProps> = ({
   item
 }) => {
   return (
-    <motion.div variants={item} className="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <motion.div variants={item as Variants} className="grid grid-cols-1 md:grid-cols-3 gap-6">
       <IndexPerformanceChart 
         selectedIndex={selectedIndex} 
         setSelectedIndex={setSelectedIndex}

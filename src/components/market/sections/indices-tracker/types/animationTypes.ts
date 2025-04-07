@@ -1,11 +1,12 @@
 
 import { Variants } from "framer-motion";
 
-export interface MotionVariants {
-  hidden: Variants["hidden"];
-  show: Variants["show"];
+export interface AnimationItemProp {
+  item: Variants;
 }
 
-export interface AnimationItemProp {
-  item: MotionVariants;
-}
+// Convenience type for creating animation variants
+export type MotionVariants = {
+  hidden: any;
+  show: any;
+};

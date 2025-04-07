@@ -1,11 +1,10 @@
 
 import React from "react";
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 import Header from "./components/Header";
 import TableSection from "./components/TableSection";
 import ChartsSection from "./components/ChartsSection";
 import { useIndicesTracker } from "./hooks/useIndicesTracker";
-import { MotionVariants } from "./types/animationTypes";
 
 const IndicesTracker: React.FC = () => {
   const {
@@ -22,7 +21,7 @@ const IndicesTracker: React.FC = () => {
     indices
   } = useIndicesTracker();
 
-  const container: MotionVariants = {
+  const container: Variants = {
     hidden: { opacity: 0 },
     show: {
       opacity: 1,
@@ -32,7 +31,7 @@ const IndicesTracker: React.FC = () => {
     }
   };
 
-  const item: MotionVariants = {
+  const item: Variants = {
     hidden: { opacity: 0, y: 20 },
     show: { opacity: 1, y: 0 }
   };

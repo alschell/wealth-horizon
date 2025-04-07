@@ -1,6 +1,6 @@
 
 import React from "react";
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import IndicesTable from "./IndicesTable";
 import { IndexData } from "../types";
@@ -23,7 +23,7 @@ const TableSection: React.FC<TableSectionProps> = ({
   item
 }) => {
   return (
-    <motion.div variants={item}>
+    <motion.div variants={item as Variants}>
       <Card>
         <CardContent className="p-0">
           <IndicesTable 

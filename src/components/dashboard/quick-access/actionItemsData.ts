@@ -9,6 +9,7 @@ import {
   Building2,
   Lightbulb,
   Users,
+  Shield,
   Landmark,
   Leaf,
   Calculator,
@@ -106,6 +107,14 @@ export const allActionItems: ActionItem[] = [
     label: "Assess ESG Performance",
     description: "Sustainable investment metrics and benchmarks",
     path: "/esg",
+    color: "bg-gray-50 text-gray-500"
+  },
+  {
+    id: "compliance",
+    icon: Shield,
+    label: "Monitor Compliance",
+    description: "Track regulatory activities",
+    path: "/compliance-monitoring",
     color: "bg-gray-50 text-gray-500"
   },
   {

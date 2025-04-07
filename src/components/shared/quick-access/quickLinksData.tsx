@@ -5,6 +5,7 @@ import {
   BarChart3,
   Landmark,
   Leaf,
+  Shield,
   Calculator,
   Building2,
   Scroll,
@@ -95,6 +96,13 @@ export const allQuickLinks: QuickLinkItem[] = [
     description: "Sustainable investing metrics",
     icon: createIcon(Leaf),
     link: "/esg"
+  },
+  {
+    id: "compliance",
+    title: "Monitor Compliance",
+    description: "Track regulatory activities",
+    icon: createIcon(Shield),
+    link: "/compliance-monitoring"
   },
   {
     id: "tax",

@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Sliders, ChevronRight } from "lucide-react";
@@ -93,7 +94,7 @@ const MarketSnapshot = () => {
     .filter(Boolean) as typeof defaultMarketItems;
 
   return (
-    <Card className="shadow-sm h-[350px] flex flex-col">
+    <Card className="shadow-sm h-[350px]">
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
           <SectionHeader title="Market Snapshot" />
@@ -108,8 +109,8 @@ const MarketSnapshot = () => {
           </Button>
         </div>
       </CardHeader>
-      <CardContent className="flex-1 flex flex-col p-6 pt-0">
-        <ScrollArea className="flex-grow">
+      <CardContent className="p-6 pt-0 h-[calc(350px-80px)] flex flex-col">
+        <ScrollArea className="flex-1 -mr-4 pr-4">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {filteredAndOrderedItems.map((item, index) => (
               <div key={index} className="p-3 rounded-md bg-gray-50 hover:bg-gray-100 transition-colors">
@@ -130,7 +131,7 @@ const MarketSnapshot = () => {
           </div>
         </ScrollArea>
         
-        <div className="mt-auto pt-4">
+        <div className="pt-4 mt-auto">
           <Link to="/market-data">
             <Button variant="outline" size="sm" className="w-full flex items-center justify-center">
               View All Market Data

@@ -60,7 +60,7 @@ const RecentNewsList = ({ newsData }: RecentNewsListProps) => {
   };
 
   return (
-    <Card className="shadow-sm h-[350px] flex flex-col">
+    <Card className="shadow-sm h-[350px]">
       <CardHeader className="pb-2">
         <div className="flex justify-between items-center">
           <SectionHeader title="Recent News" />
@@ -76,8 +76,8 @@ const RecentNewsList = ({ newsData }: RecentNewsListProps) => {
         </div>
       </CardHeader>
       
-      <CardContent className="flex-1 flex flex-col p-6 pt-0">
-        <ScrollArea className="flex-grow">
+      <CardContent className="p-6 pt-0 h-[calc(350px-80px)] flex flex-col">
+        <ScrollArea className="flex-1 -mr-4 pr-4">
           <div className="space-y-3">
             {filteredNews.length > 0 ? (
               filteredNews.map((news, index) => (
@@ -96,7 +96,7 @@ const RecentNewsList = ({ newsData }: RecentNewsListProps) => {
           </div>
         </ScrollArea>
         
-        <div className="mt-auto pt-4">
+        <div className="pt-4 mt-auto">
           <Button 
             variant="outline" 
             size="sm" 

@@ -26,12 +26,12 @@ const TopAssets = () => {
   };
 
   return (
-    <Card className="shadow-sm h-[350px] flex flex-col">
+    <Card className="shadow-sm h-[350px]">
       <CardHeader className="pb-2">
         <SectionHeader title="Top Assets" />
       </CardHeader>
-      <CardContent className="flex-1 flex flex-col p-6 pt-0">
-        <ScrollArea className="flex-grow">
+      <CardContent className="p-6 pt-0 h-[calc(350px-80px)] flex flex-col">
+        <ScrollArea className="flex-1 -mr-4 pr-4">
           <div className="space-y-3">
             {assets.map((asset, index) => (
               <div 
@@ -54,7 +54,7 @@ const TopAssets = () => {
           </div>
         </ScrollArea>
         
-        <div className="mt-auto pt-4">
+        <div className="pt-4 mt-auto">
           <Button 
             variant="outline" 
             size="sm" 

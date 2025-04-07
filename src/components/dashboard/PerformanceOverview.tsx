@@ -19,7 +19,7 @@ const PerformanceOverview = () => {
   const [timeRange, setTimeRange] = useState<'1m' | '3m' | '6m' | '1y' | 'All'>('1y');
 
   return (
-    <Card className="shadow-sm">
+    <Card className="shadow-sm h-[350px]">
       <CardHeader className="pb-2 flex flex-row items-center justify-between">
         <CardTitle className="text-xl">Performance Overview</CardTitle>
         <div className="flex items-center space-x-4">
@@ -41,33 +41,35 @@ const PerformanceOverview = () => {
           </div>
         </div>
       </CardHeader>
-      <CardContent className="pt-0 pb-6" style={{ height: "350px" }}> 
-        <Tabs defaultValue="networth" className="mt-4 h-full">
-          <TabsList className="mb-4">
+      <CardContent className="pt-0 pb-6 h-[calc(350px-80px)]"> 
+        <Tabs defaultValue="networth" className="h-full">
+          <TabsList className="mb-2">
             <TabsTrigger value="networth">Net Worth</TabsTrigger>
             <TabsTrigger value="assets">Assets & Liabilities</TabsTrigger>
             <TabsTrigger value="nextactions">Next Best Actions</TabsTrigger>
           </TabsList>
           
-          <TabsContent value="networth" className="mt-0 h-[calc(100%-40px)] overflow-auto">
-            <OverviewTabContent 
-              performanceData={performanceData}
-              chartConfig={chartConfig}
-              newsData={newsData}
-            />
-          </TabsContent>
-          
-          <TabsContent value="assets" className="mt-0 h-[calc(100%-40px)] overflow-auto">
-            <ChartsTabContent 
-              assetAllocationData={assetAllocationData}
-            />
-          </TabsContent>
-          
-          <TabsContent value="nextactions" className="mt-0 h-[calc(100%-40px)] overflow-auto">
-            <RecommendationsTabContent 
-              recommendations={recommendations}
-            />
-          </TabsContent>
+          <div className="h-[calc(100%-40px)] overflow-auto">
+            <TabsContent value="networth" className="mt-0 h-full">
+              <OverviewTabContent 
+                performanceData={performanceData}
+                chartConfig={chartConfig}
+                newsData={newsData}
+              />
+            </TabsContent>
+            
+            <TabsContent value="assets" className="mt-0 h-full">
+              <ChartsTabContent 
+                assetAllocationData={assetAllocationData}
+              />
+            </TabsContent>
+            
+            <TabsContent value="nextactions" className="mt-0 h-full">
+              <RecommendationsTabContent 
+                recommendations={recommendations}
+              />
+            </TabsContent>
+          </div>
         </Tabs>
       </CardContent>
     </Card>

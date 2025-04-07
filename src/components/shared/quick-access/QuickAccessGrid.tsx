@@ -1,17 +1,13 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
-import { useQuickAccess } from "./useQuickAccess";
 import { QuickLinkItem } from "./types";
-import { Sliders } from "lucide-react";
-import { Button } from "@/components/ui/button";
 
 interface QuickAccessGridProps {
   items: QuickLinkItem[];
 }
 
 const QuickAccessGrid = ({ items }: QuickAccessGridProps) => {
-  // Items are already sorted in the useQuickAccess hook
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
       {items.map((item, index) => (

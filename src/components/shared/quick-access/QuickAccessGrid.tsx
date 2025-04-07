@@ -3,6 +3,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useQuickAccess } from "./useQuickAccess";
 import { QuickLinkItem } from "./types";
+import { Sliders } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface QuickAccessGridProps {
   items: QuickLinkItem[];

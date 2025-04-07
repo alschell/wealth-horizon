@@ -1,27 +1,12 @@
 
-import { ReactElement } from "react";
+import { ReactNode } from "react";
 
 export interface QuickLinkItem {
   id: string;
   title: string;
   description: string;
-  icon: ReactElement;
+  icon: ReactNode;
   link: string;
-  color?: string;
-  onClick?: () => void;
-}
-
-export interface QuickAccessGridProps {
-  items: QuickLinkItem[];
-}
-
-export interface QuickAccessItemProps {
-  title: string;
-  description: string;
-  icon: ReactElement;
-  link: string;
-  color?: string;
-  onClick?: () => void;
 }
 
 export interface CustomizeDialogProps {
@@ -30,5 +15,5 @@ export interface CustomizeDialogProps {
   items: QuickLinkItem[];
   selectedItems: string[];
   onItemToggle: (id: string) => void;
-  onSave: () => void;
+  onSave: (orderedItems?: string[]) => void;
 }

@@ -88,13 +88,18 @@ const MarketSnapshot = () => {
     }
   });
   
-  // Get ordered items from localStorage or default to original order
+  // Get ordered items from localStorage or default to alphabetically sorted
   const [orderedItems, setOrderedItems] = React.useState<string[]>(() => {
     try {
       const saved = localStorage.getItem("marketItemsOrder");
-      return saved ? JSON.parse(saved) : allMarkets.map(m => m.id);
+      if (saved) {
+        return JSON.parse(saved);
+      } else {
+        // Default: sort alphabetically by name
+        return [...allMarkets].sort((a, b) => a.name.localeCompare(b.name)).map(m => m.id);
+      }
     } catch (e) {
-      return allMarkets.map(m => m.id);
+      return [...allMarkets].sort((a, b) => a.name.localeCompare(b.name)).map(m => m.id);
     }
   });
   

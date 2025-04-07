@@ -16,8 +16,12 @@ export const useQuickAccess = (pathname?: string) => {
     if (savedItems) {
       setVisibleItems(JSON.parse(savedItems));
     } else {
-      // Default to showing first 8 items
-      setVisibleItems(allQuickLinks.slice(0, 8).map(item => item.id));
+      // Default to showing first 8 items sorted alphabetically
+      const defaultItems = allQuickLinks
+        .slice(0, 8)
+        .sort((a, b) => a.title.localeCompare(b.title))
+        .map(item => item.id);
+      setVisibleItems(defaultItems);
     }
   }, [currentPage]);
   
@@ -26,9 +30,11 @@ export const useQuickAccess = (pathname?: string) => {
     setIsCustomizing(true);
   };
 
-  const handleCustomizeSave = () => {
-    setVisibleItems(temporarySelection);
-    localStorage.setItem(`quickAccessItems_${currentPage}`, JSON.stringify(temporarySelection));
+  const handleCustomizeSave = (orderedItems?: string[]) => {
+    // If orderedItems are provided, use them, otherwise use temporarySelection
+    const itemsToSave = orderedItems || temporarySelection;
+    setVisibleItems(itemsToSave);
+    localStorage.setItem(`quickAccessItems_${currentPage}`, JSON.stringify(itemsToSave));
     setIsCustomizing(false);
   };
 
@@ -40,10 +46,10 @@ export const useQuickAccess = (pathname?: string) => {
     }
   };
 
-  // Filter the quick links based on user selection
-  const filteredItems: QuickLinkItem[] = allQuickLinks.filter(link => 
-    visibleItems.includes(link.id)
-  );
+  // Filter the quick links based on user selection and their order
+  const filteredItems: QuickLinkItem[] = visibleItems
+    .map(id => allQuickLinks.find(link => link.id === id))
+    .filter((item): item is QuickLinkItem => !!item);
 
   return {
     isCustomizing,

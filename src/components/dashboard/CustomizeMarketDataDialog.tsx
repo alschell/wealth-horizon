@@ -46,6 +46,11 @@ const CustomizeMarketDataDialog = ({
   onSave
 }: CustomizeMarketDataDialogProps) => {
   
+  // Sort categories alphabetically by name
+  const sortedCategories = React.useMemo(() => {
+    return [...allCategories].sort((a, b) => a.name.localeCompare(b.name));
+  }, [allCategories]);
+  
   const handleDragEnd = (result: any) => {
     if (!result.destination) return;
     
@@ -71,7 +76,7 @@ const CustomizeMarketDataDialog = ({
             <div>
               <h3 className="text-sm font-medium mb-3">Market Categories</h3>
               <div className="space-y-3">
-                {allCategories.map((category) => (
+                {sortedCategories.map((category) => (
                   <div key={category.id} className="flex items-start space-x-3">
                     <Checkbox 
                       id={`category-${category.id}`}

@@ -2,6 +2,7 @@
 import React from "react";
 import {
   FileText,
+  BarChart3,
   Landmark,
   Leaf,
   Shield,
@@ -20,132 +21,114 @@ import { QuickLinkItem } from "./types";
 export const allQuickLinks: QuickLinkItem[] = [
   {
     id: "analyze-wealth",
-    title: "Analyze Wealth",
-    description: "Portfolio analysis tools and benchmarks",
-    icon: React.createElement(PieChart, { className: "h-4 w-4 text-gray-500" }),
-    link: "/analyze-wealth",
-    color: "bg-gray-50"
+    title: "Analyze wealth",
+    description: "Portfolio analysis tools",
+    icon: <PieChart className="h-4 w-4" />,
+    link: "/analyze-wealth"
   },
   {
     id: "market-data",
-    title: "Access Market Data & News",
-    description: "Real-time market data and information",
-    icon: React.createElement(LineChart, { className: "h-4 w-4 text-gray-500" }),
-    link: "/market-data",
-    color: "bg-gray-50"
+    title: "Access market data & news",
+    description: "Access market information",
+    icon: <LineChart className="h-4 w-4" />,
+    link: "/market-data"
   },
   {
     id: "trade",
     title: "Trade",
     description: "Execute investment trades",
-    icon: React.createElement(TrendingUp, { className: "h-4 w-4 text-gray-500" }),
-    link: "/trading",
-    color: "bg-gray-50"
+    icon: <TrendingUp className="h-4 w-4" />,
+    link: "/trading"
   },
   {
     id: "credit-facilities",
-    title: "Manage Credit Facilities",
-    description: "Apply for credit facilities and borrow",
-    icon: React.createElement(Building2, { className: "h-4 w-4 text-gray-500" }),
-    link: "/credit-facilities",
-    color: "bg-gray-50"
+    title: "Manage credit facilities",
+    description: "Manage credit facilities",
+    icon: <Building2 className="h-4 w-4" />,
+    link: "/credit-facilities"
   },
   {
     id: "advice",
-    title: "Get Advice",
-    description: "Get personalized advice and request mandates",
-    icon: React.createElement(Lightbulb, { className: "h-4 w-4 text-gray-500" }),
-    link: "/advice",
-    color: "bg-gray-50"
+    title: "Get advice",
+    description: "Get personalized advice",
+    icon: <Lightbulb className="h-4 w-4" />,
+    link: "/advice"
   },
   {
     id: "cashflow",
-    title: "Manage Cashflow & Liquidity",
-    description: "Optimize liquidity and place term deposits",
-    icon: React.createElement(DollarSign, { className: "h-4 w-4 text-gray-500" }),
-    link: "/cashflow-management",
-    color: "bg-gray-50"
+    title: "Manage cashflow & liquidity",
+    description: "Manage liquidity and deposits",
+    icon: <DollarSign className="h-4 w-4" />,
+    link: "/cashflow-management"
   },
   {
     id: "reports",
-    title: "Generate Reports",
-    description: "Create financial reports and statements",
-    icon: React.createElement(FileText, { className: "h-4 w-4 text-gray-500" }),
-    link: "/reporting",
-    color: "bg-gray-50"
+    title: "Generate reports",
+    description: "Generate financial reports",
+    icon: <FileText className="h-4 w-4" />,
+    link: "/reporting"
   },
   {
     id: "users",
-    title: "Manage Users & Permissions",
-    description: "Manage user accounts and access",
-    icon: React.createElement(Users, { className: "h-4 w-4 text-gray-500" }),
-    link: "/user-management",
-    color: "bg-gray-50"
+    title: "Manage users & permissions",
+    description: "Manage user accounts",
+    icon: <Users className="h-4 w-4" />,
+    link: "/user-management"
   },
   {
     id: "integrations",
-    title: "Manage Integrations",
-    description: "Connect to 3rd party services",
-    icon: React.createElement(Landmark, { className: "h-4 w-4 text-gray-500" }),
-    link: "/integrations",
-    color: "bg-gray-50"
+    title: "Manage integrations",
+    description: "Manage connected services",
+    icon: <Landmark className="h-4 w-4" />,
+    link: "/integrations"
   },
   {
     id: "esg",
-    title: "Assess ESG Investments",
-    description: "Sustainable investment metrics and benchmarks",
-    icon: React.createElement(Leaf, { className: "h-4 w-4 text-gray-500" }),
-    link: "/esg",
-    color: "bg-gray-50"
+    title: "ESG Investing",
+    description: "Sustainable investing metrics",
+    icon: <Leaf className="h-4 w-4" />,
+    link: "/esg"
   },
   {
     id: "compliance",
-    title: "Monitor Compliance",
+    title: "Compliance",
     description: "Regulatory compliance tracking",
-    icon: React.createElement(Shield, { className: "h-4 w-4 text-gray-500" }),
-    link: "/compliance-monitoring",
-    color: "bg-gray-50"
+    icon: <Shield className="h-4 w-4" />,
+    link: "/compliance-monitoring"
   },
   {
     id: "tax",
-    title: "Optimize Tax",
-    description: "Tax planning and efficiency",
-    icon: React.createElement(Calculator, { className: "h-4 w-4 text-gray-500" }),
-    link: "/tax-optimization",
-    color: "bg-gray-50"
+    title: "Tax Optimization",
+    description: "Tax planning & efficiency",
+    icon: <Calculator className="h-4 w-4" />,
+    link: "/tax-optimization"
   },
   {
     id: "entity",
-    title: "Manage Legal Entities",
-    description: "Manage legal structures and holdings",
-    icon: React.createElement(Building2, { className: "h-4 w-4 text-gray-500" }),
-    link: "/entity-management",
-    color: "bg-gray-50"
+    title: "Entity Management",
+    description: "Manage legal structures",
+    icon: <Building2 className="h-4 w-4" />,
+    link: "/entity-management"
   },
   {
     id: "legacy",
-    title: "Plan Legacy",
-    description: "Succession and estate planning",
-    icon: React.createElement(Scroll, { className: "h-4 w-4 text-gray-500" }),
-    link: "/legacy-planning",
-    color: "bg-gray-50"
+    title: "Legacy Planning",
+    description: "Succession & estate planning",
+    icon: <Scroll className="h-4 w-4" />,
+    link: "/legacy-planning"
   },
   {
-    id: "client-access",
-    title: "Manage Client Access",
-    description: "Control client portal permissions and visibility",
-    icon: React.createElement(Users, { className: "h-4 w-4 text-gray-500" }),
-    link: "/client-portal",
-    color: "bg-gray-50"
+    id: "client-portal",
+    title: "Client Portal",
+    description: "Manage client access",
+    icon: <Users className="h-4 w-4" />,
+    link: "/client-portal"
   },
   {
     id: "documents",
-    title: "Manage Documents",
-    description: "Organize and secure financial documentation",
-    icon: React.createElement(FileText, { className: "h-4 w-4 text-gray-500" }),
-    link: "/documents",
-    color: "bg-gray-50"
-  }
+    title: "Documents",
+    description: "Document management",
+    icon: <FileText className="h-4 w-4" />,
+    link: "/documents"
+  },
 ];
-
-export const defaultQuickLinks = allQuickLinks.slice(0, 8);

@@ -1,475 +1,332 @@
-import React, { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+
+import React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { PageHeader } from "@/components/ui/design-system";
-import PageTransition from "@/components/ui/page-transition";
-import { 
-  Users, 
-  UserPlus, 
-  Mail, 
-  Eye, 
-  EyeOff, 
-  Settings, 
-  FileText, 
-  ShieldCheck,
-  BarChart3,
-  FileCheck,
-} from "lucide-react";
-import { useNotifications } from "@/hooks/use-notifications";
-
-type AccessLevel = "Full" | "Reports Only" | "Limited";
-
-interface Client {
-  id: string;
-  name: string;
-  email: string;
-  accessLevel: AccessLevel;
-  status: "Active" | "Pending" | "Revoked";
-  lastLogin: string;
-  reportAccess: string[];
-}
+import { Users, Shield, FileText, Settings, Bell, Plus } from "lucide-react";
 
 const ClientPortalInterface = () => {
-  const { showSuccess } = useNotifications();
-  const [clients, setClients] = useState<Client[]>([
-    {
-      id: "c1",
-      name: "John Smith",
-      email: "john.smith@example.com",
-      accessLevel: "Full",
-      status: "Active",
-      lastLogin: "2024-04-02 14:30",
-      reportAccess: ["Performance Reports", "Tax Documents", "Portfolio Valuations"]
-    },
-    {
-      id: "c2",
-      name: "Emma Johnson",
-      email: "emma.johnson@example.com",
-      accessLevel: "Reports Only",
-      status: "Active",
-      lastLogin: "2024-04-01 09:15",
-      reportAccess: ["Performance Reports", "Portfolio Valuations"]
-    },
-    {
-      id: "c3",
-      name: "Michael Brown",
-      email: "michael.brown@example.com",
-      accessLevel: "Limited",
-      status: "Pending",
-      lastLogin: "Never",
-      reportAccess: ["Portfolio Valuations"]
-    },
-    {
-      id: "c4",
-      name: "Sophia Williams",
-      email: "sophia.williams@example.com",
-      accessLevel: "Full",
-      status: "Active",
-      lastLogin: "2024-03-28 16:45",
-      reportAccess: ["Performance Reports", "Tax Documents", "Portfolio Valuations", "Investment Proposals"]
-    },
-    {
-      id: "c5",
-      name: "Robert Davis",
-      email: "robert.davis@example.com",
-      accessLevel: "Reports Only",
-      status: "Revoked",
-      lastLogin: "2024-02-15 11:20",
-      reportAccess: []
-    }
-  ]);
-
-  const [newClient, setNewClient] = useState<{
-    name: string;
-    email: string;
-    accessLevel: AccessLevel;
-  }>({
-    name: "",
-    email: "",
-    accessLevel: "Limited"
-  });
-
-  const [isVisible, setIsVisible] = useState<Record<string, boolean>>({});
-  const [isInviteDialogOpen, setIsInviteDialogOpen] = useState(false);
-
-  const toggleVisibility = (clientId: string) => {
-    setIsVisible(prev => ({
-      ...prev,
-      [clientId]: !prev[clientId]
-    }));
-  };
-
-  const handleInviteClient = () => {
-    if (!newClient.name || !newClient.email) {
-      return;
-    }
-
-    let reportAccess: string[] = [];
-    if (newClient.accessLevel === "Full") {
-      reportAccess = ["Performance Reports", "Tax Documents", "Portfolio Valuations"];
-    } else if (newClient.accessLevel === "Reports Only") {
-      reportAccess = ["Performance Reports", "Portfolio Valuations"];
-    } else {
-      reportAccess = ["Portfolio Valuations"];
-    }
-
-    const newClientData: Client = {
-      id: `c${clients.length + 1}`,
-      name: newClient.name,
-      email: newClient.email,
-      accessLevel: newClient.accessLevel,
-      status: "Pending",
-      lastLogin: "Never",
-      reportAccess
-    };
-
-    setClients([...clients, newClientData]);
-    setNewClient({
-      name: "",
-      email: "",
-      accessLevel: "Limited"
-    });
-    setIsInviteDialogOpen(false);
-    
-    showSuccess("Invitation sent", `Portal access invitation sent to ${newClient.email}`);
-  };
-
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case "Active":
-        return <span className="px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full">Active</span>;
-      case "Pending":
-        return <span className="px-2 py-1 text-xs bg-amber-100 text-amber-800 rounded-full">Pending</span>;
-      case "Revoked":
-        return <span className="px-2 py-1 text-xs bg-red-100 text-red-800 rounded-full">Revoked</span>;
-      default:
-        return <span className="px-2 py-1 text-xs bg-gray-100 text-gray-800 rounded-full">{status}</span>;
-    }
-  };
-
-  const getAccessLevelBadge = (level: string) => {
-    switch (level) {
-      case "Full":
-        return <span className="px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full">Full</span>;
-      case "Reports Only":
-        return <span className="px-2 py-1 text-xs bg-purple-100 text-purple-800 rounded-full">Reports Only</span>;
-      case "Limited":
-        return <span className="px-2 py-1 text-xs bg-gray-100 text-gray-800 rounded-full">Limited</span>;
-      default:
-        return <span className="px-2 py-1 text-xs bg-gray-100 text-gray-800 rounded-full">{level}</span>;
-    }
-  };
-
   return (
-    <PageTransition>
-      <div className="space-y-6">
-        <PageHeader className="flex flex-col gap-1">
-          <h1 className="text-2xl font-bold tracking-tight">Client Portal</h1>
-          <p className="text-muted-foreground">
-            Manage client access to reports and financial information
-          </p>
-        </PageHeader>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div className="space-y-6">
+      <Tabs defaultValue="clients" className="w-full">
+        <TabsList className="grid grid-cols-4 mb-6">
+          <TabsTrigger value="clients">Clients</TabsTrigger>
+          <TabsTrigger value="permissions">Permissions</TabsTrigger>
+          <TabsTrigger value="documents">Shared Documents</TabsTrigger>
+          <TabsTrigger value="settings">Portal Settings</TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="clients" className="mt-0">
+          <div className="flex justify-between items-center mb-6">
+            <h3 className="text-lg font-medium">Active Clients</h3>
+            <Button className="flex items-center gap-2">
+              <Plus className="h-4 w-4" /> Add Client
+            </Button>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <ClientCard 
+              name="Sarah Johnson" 
+              email="sarah.johnson@example.com" 
+              company="Johnson Family Office"
+              lastActive="Today at 10:23 AM"
+              status="active"
+            />
+            <ClientCard 
+              name="Michael Chen" 
+              email="m.chen@examplecorp.com" 
+              company="Chen Enterprises"
+              lastActive="Yesterday at 4:15 PM"
+              status="active"
+            />
+            <ClientCard 
+              name="Emma Williams" 
+              email="emma.w@willamsgroup.com" 
+              company="Williams Family Trust"
+              lastActive="Apr 5, 2025"
+              status="pending"
+            />
+            <ClientCard 
+              name="Robert Garcia" 
+              email="r.garcia@garciallc.com" 
+              company="Garcia LLC"
+              lastActive="Mar 28, 2025"
+              status="active"
+            />
+            <ClientCard 
+              name="Patricia Miller" 
+              email="patricia@miller-foundation.org" 
+              company="Miller Foundation"
+              lastActive="Today at 9:05 AM"
+              status="active"
+            />
+            <ClientCard 
+              name="James Wilson" 
+              email="j.wilson@wilsonholdings.com" 
+              company="Wilson Holdings"
+              lastActive="Apr 2, 2025"
+              status="inactive"
+            />
+          </div>
+        </TabsContent>
+        
+        <TabsContent value="permissions" className="mt-0">
           <Card>
             <CardHeader>
-              <CardTitle>Client Access Summary</CardTitle>
+              <CardTitle className="flex items-center gap-2">
+                <Shield className="h-5 w-5 text-sky-600" /> Permission Management
+              </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center gap-2">
-                    <Users className="h-5 w-5 text-gray-500" />
-                    <span>Total Clients</span>
-                  </div>
-                  <span className="font-bold">{clients.length}</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center gap-2">
-                    <ShieldCheck className="h-5 w-5 text-green-500" />
-                    <span>Active Access</span>
-                  </div>
-                  <span className="font-bold">{clients.filter(c => c.status === "Active").length}</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center gap-2">
-                    <UserPlus className="h-5 w-5 text-amber-500" />
-                    <span>Pending Invitations</span>
-                  </div>
-                  <span className="font-bold">{clients.filter(c => c.status === "Pending").length}</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center gap-2">
-                    <EyeOff className="h-5 w-5 text-red-500" />
-                    <span>Revoked Access</span>
-                  </div>
-                  <span className="font-bold">{clients.filter(c => c.status === "Revoked").length}</span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Recent Access</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                {clients
-                  .filter(client => client.lastLogin !== "Never")
-                  .sort((a, b) => new Date(b.lastLogin).getTime() - new Date(a.lastLogin).getTime())
-                  .slice(0, 3)
-                  .map((client, i) => (
-                    <div key={i} className="border-b pb-2 last:border-0 last:pb-0">
-                      <div className="font-medium text-sm">{client.name}</div>
-                      <div className="text-xs text-muted-foreground flex justify-between">
-                        <span>Last login: {client.lastLogin}</span>
-                        <span>{client.accessLevel}</span>
-                      </div>
-                    </div>
-                  ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Popular Reports</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                {[
-                  { name: "Portfolio Valuations", views: 32 },
-                  { name: "Performance Reports", views: 28 },
-                  { name: "Tax Documents", views: 15 },
-                  { name: "Investment Proposals", views: 7 }
-                ].map((report, i) => (
-                  <div key={i} className="flex justify-between items-center">
-                    <div className="flex items-center gap-2">
-                      <FileText className="h-4 w-4 text-muted-foreground" />
-                      <span className="text-sm">{report.name}</span>
-                    </div>
-                    <div className="flex items-center gap-1 text-xs">
-                      <Eye className="h-3 w-3 text-muted-foreground" />
-                      <span>{report.views} views</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between">
-            <div>
-              <CardTitle>Client Access Management</CardTitle>
-              <CardDescription>Manage client portal access and permissions</CardDescription>
-            </div>
-            <Dialog open={isInviteDialogOpen} onOpenChange={setIsInviteDialogOpen}>
-              <DialogTrigger asChild>
-                <Button>
-                  <UserPlus className="h-4 w-4 mr-2" />
-                  Invite Client
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Invite Client to Portal</DialogTitle>
-                  <DialogDescription>
-                    Send an invitation for client portal access
-                  </DialogDescription>
-                </DialogHeader>
-                <div className="space-y-4 py-4">
-                  <div className="space-y-2">
-                    <label htmlFor="name" className="text-sm font-medium">Client Name</label>
-                    <Input 
-                      id="name" 
-                      placeholder="Full name" 
-                      value={newClient.name}
-                      onChange={(e) => setNewClient({...newClient, name: e.target.value})}
+              <div className="space-y-6">
+                <div className="p-4 border rounded-md">
+                  <h3 className="text-lg font-medium mb-2">Document Access Levels</h3>
+                  <p className="text-sm text-gray-600 mb-4">Configure which document types clients can access through the portal</p>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <PermissionItem 
+                      title="Financial Reports" 
+                      description="Quarterly and annual reports" 
+                      enabled={true} 
+                    />
+                    <PermissionItem 
+                      title="Tax Documents" 
+                      description="Tax statements and filings" 
+                      enabled={true} 
+                    />
+                    <PermissionItem 
+                      title="Investment Recommendations" 
+                      description="Investment strategy documents" 
+                      enabled={false} 
+                    />
+                    <PermissionItem 
+                      title="Legal Documents" 
+                      description="Contracts and agreements" 
+                      enabled={false} 
                     />
                   </div>
-                  <div className="space-y-2">
-                    <label htmlFor="email" className="text-sm font-medium">Email Address</label>
-                    <Input 
-                      id="email" 
-                      placeholder="client@example.com" 
-                      type="email"
-                      value={newClient.email}
-                      onChange={(e) => setNewClient({...newClient, email: e.target.value})}
+                </div>
+                
+                <div className="p-4 border rounded-md">
+                  <h3 className="text-lg font-medium mb-2">Feature Access</h3>
+                  <p className="text-sm text-gray-600 mb-4">Control which features are available to clients</p>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <PermissionItem 
+                      title="Document Download" 
+                      description="Ability to download shared documents" 
+                      enabled={true} 
+                    />
+                    <PermissionItem 
+                      title="Portfolio Analytics" 
+                      description="Access to portfolio performance metrics" 
+                      enabled={true} 
+                    />
+                    <PermissionItem 
+                      title="Request Documents" 
+                      description="Ability to request additional documents" 
+                      enabled={true} 
+                    />
+                    <PermissionItem 
+                      title="Document Upload" 
+                      description="Ability to upload documents to the portal" 
+                      enabled={false} 
                     />
                   </div>
-                  <div className="space-y-2">
-                    <label htmlFor="access" className="text-sm font-medium">Access Level</label>
-                    <select 
-                      id="access"
-                      className="w-full p-2 border rounded-md bg-background"
-                      value={newClient.accessLevel}
-                      onChange={(e) => setNewClient({...newClient, accessLevel: e.target.value as AccessLevel})}
-                    >
-                      <option value="Full">Full Access</option>
-                      <option value="Reports Only">Reports Only</option>
-                      <option value="Limited">Limited Access</option>
-                    </select>
-                    <p className="text-xs text-muted-foreground">
-                      {newClient.accessLevel === "Full" && "Client can access all reports and documents"}
-                      {newClient.accessLevel === "Reports Only" && "Client can access performance reports and valuations only"}
-                      {newClient.accessLevel === "Limited" && "Client can access portfolio valuations only"}
-                    </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+        
+        <TabsContent value="documents" className="mt-0">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <FileText className="h-5 w-5 text-sky-600" /> Shared Documents
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="flex justify-between items-center p-4 border-b">
+                  <div>
+                    <h3 className="font-medium">Q1 2025 Portfolio Performance</h3>
+                    <p className="text-sm text-gray-500">Shared with: All Clients</p>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button variant="outline" size="sm">Edit Permissions</Button>
+                    <Button variant="ghost" size="sm">View</Button>
                   </div>
                 </div>
-                <DialogFooter>
-                  <Button variant="outline" onClick={() => setIsInviteDialogOpen(false)}>Cancel</Button>
-                  <Button onClick={handleInviteClient}>Send Invitation</Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
-          </CardHeader>
-          <CardContent>
-            <Tabs defaultValue="active" className="space-y-4">
-              <TabsList>
-                <TabsTrigger value="active">Active Clients</TabsTrigger>
-                <TabsTrigger value="pending">Pending Invitations</TabsTrigger>
-                <TabsTrigger value="revoked">Revoked Access</TabsTrigger>
-                <TabsTrigger value="all">All Clients</TabsTrigger>
-              </TabsList>
-
-              {["active", "pending", "revoked", "all"].map((tabValue) => (
-                <TabsContent key={tabValue} value={tabValue} className="space-y-4">
-                  <div className="overflow-x-auto">
-                    <table className="w-full border-collapse">
-                      <thead>
-                        <tr className="border-b">
-                          <th className="py-3 px-4 text-left text-sm font-medium">Client</th>
-                          <th className="py-3 px-4 text-left text-sm font-medium">Email</th>
-                          <th className="py-3 px-4 text-left text-sm font-medium">Access Level</th>
-                          <th className="py-3 px-4 text-left text-sm font-medium">Status</th>
-                          <th className="py-3 px-4 text-left text-sm font-medium">Last Login</th>
-                          <th className="py-3 px-4 text-right text-sm font-medium">Actions</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {clients
-                          .filter(client => 
-                            tabValue === "all" ? true : 
-                            tabValue === "active" ? client.status === "Active" :
-                            tabValue === "pending" ? client.status === "Pending" : 
-                            client.status === "Revoked"
-                          )
-                          .map((client) => (
-                            <tr key={client.id} className="border-b">
-                              <td className="py-3 px-4 text-sm">{client.name}</td>
-                              <td className="py-3 px-4 text-sm text-muted-foreground">{client.email}</td>
-                              <td className="py-3 px-4 text-sm">{getAccessLevelBadge(client.accessLevel)}</td>
-                              <td className="py-3 px-4 text-sm">{getStatusBadge(client.status)}</td>
-                              <td className="py-3 px-4 text-sm text-muted-foreground">{client.lastLogin}</td>
-                              <td className="py-3 px-4 text-right">
-                                <div className="flex justify-end items-center space-x-2">
-                                  <Button 
-                                    variant="ghost" 
-                                    size="icon"
-                                    onClick={() => toggleVisibility(client.id)}
-                                  >
-                                    {isVisible[client.id] ? (
-                                      <EyeOff className="h-4 w-4" />
-                                    ) : (
-                                      <Eye className="h-4 w-4" />
-                                    )}
-                                  </Button>
-                                  <Button variant="ghost" size="icon">
-                                    <Settings className="h-4 w-4" />
-                                  </Button>
-                                  <Button variant="ghost" size="icon">
-                                    <Mail className="h-4 w-4" />
-                                  </Button>
-                                </div>
-                              </td>
-                            </tr>
-                          ))}
-                      </tbody>
-                    </table>
+                
+                <div className="flex justify-between items-center p-4 border-b">
+                  <div>
+                    <h3 className="font-medium">2024 Tax Summary</h3>
+                    <p className="text-sm text-gray-500">Shared with: Johnson Family Office, Chen Enterprises</p>
                   </div>
-                </TabsContent>
-              ))}
-            </Tabs>
-          </CardContent>
-        </Card>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Recent Client Activity</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {[
-                  { client: "John Smith", action: "Downloaded Q1 Performance Report", time: "Today, 11:42 AM", icon: <FileText className="h-4 w-4" />, color: "bg-blue-100 text-blue-600" },
-                  { client: "Sophia Williams", action: "Viewed Portfolio Valuation", time: "Today, 09:15 AM", icon: <BarChart3 className="h-4 w-4" />, color: "bg-purple-100 text-purple-600" },
-                  { client: "Emma Johnson", action: "Downloaded Tax Documents", time: "Yesterday, 4:30 PM", icon: <FileCheck className="h-4 w-4" />, color: "bg-green-100 text-green-600" },
-                  { client: "John Smith", action: "Logged in to portal", time: "Yesterday, 2:30 PM", icon: <ShieldCheck className="h-4 w-4" />, color: "bg-gray-100 text-gray-600" }
-                ].map((activity, i) => (
-                  <div key={i} className="flex items-start gap-3">
-                    <div className={`p-2 rounded-full ${activity.color.split(" ")[0]}`}>
-                      <span className={activity.color.split(" ")[1]}>
-                        {activity.icon}
-                      </span>
-                    </div>
-                    <div>
-                      <div className="text-sm font-medium">{activity.client}</div>
-                      <div className="text-sm">{activity.action}</div>
-                      <div className="text-xs text-muted-foreground">{activity.time}</div>
-                    </div>
+                  <div className="flex gap-2">
+                    <Button variant="outline" size="sm">Edit Permissions</Button>
+                    <Button variant="ghost" size="sm">View</Button>
                   </div>
-                ))}
+                </div>
+                
+                <div className="flex justify-between items-center p-4 border-b">
+                  <div>
+                    <h3 className="font-medium">Investment Strategy 2025</h3>
+                    <p className="text-sm text-gray-500">Shared with: Williams Family Trust</p>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button variant="outline" size="sm">Edit Permissions</Button>
+                    <Button variant="ghost" size="sm">View</Button>
+                  </div>
+                </div>
+                
+                <div className="flex justify-between items-center p-4 border-b">
+                  <div>
+                    <h3 className="font-medium">Estate Planning Update</h3>
+                    <p className="text-sm text-gray-500">Shared with: Miller Foundation</p>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button variant="outline" size="sm">Edit Permissions</Button>
+                    <Button variant="ghost" size="sm">View</Button>
+                  </div>
+                </div>
               </div>
+              
+              <Button className="mt-6 w-full" variant="outline">
+                <Plus className="h-4 w-4 mr-2" /> Share New Document
+              </Button>
             </CardContent>
           </Card>
-
+        </TabsContent>
+        
+        <TabsContent value="settings" className="mt-0">
           <Card>
             <CardHeader>
-              <CardTitle>Available Client Reports</CardTitle>
+              <CardTitle className="flex items-center gap-2">
+                <Settings className="h-5 w-5 text-sky-600" /> Portal Configuration
+              </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                {[
-                  { name: "Portfolio Valuation", description: "Current portfolio holdings and value", access: "All clients", updated: "Daily" },
-                  { name: "Performance Report", description: "Investment performance analysis", access: "Full & Reports Only", updated: "Monthly" },
-                  { name: "Tax Documents", description: "Tax statements and forms", access: "Full access only", updated: "Annually" },
-                  { name: "Investment Proposals", description: "New investment opportunities", access: "Full access only", updated: "As needed" }
-                ].map((report, i) => (
-                  <div key={i} className="p-3 border rounded-md">
-                    <div className="flex justify-between">
-                      <div className="font-medium">{report.name}</div>
-                      <div className="text-xs bg-gray-100 px-2 py-1 rounded-full">
-                        {report.updated}
+              <div className="space-y-6">
+                <div className="p-4 border rounded-md">
+                  <h3 className="text-lg font-medium mb-2">Appearance Settings</h3>
+                  <p className="text-sm text-gray-600 mb-4">Customize how the client portal looks for your clients</p>
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className="font-medium">Custom Logo</h4>
+                        <p className="text-xs text-gray-500">Upload your company logo</p>
                       </div>
+                      <Button size="sm">Upload</Button>
                     </div>
-                    <div className="text-sm text-muted-foreground mt-1">
-                      {report.description}
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className="font-medium">Brand Colors</h4>
+                        <p className="text-xs text-gray-500">Set colors to match your brand</p>
+                      </div>
+                      <Button size="sm">Configure</Button>
                     </div>
-                    <div className="text-xs text-muted-foreground mt-2">
-                      Access level: {report.access}
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className="font-medium">Welcome Message</h4>
+                        <p className="text-xs text-gray-500">Customize greeting text for clients</p>
+                      </div>
+                      <Button size="sm">Edit</Button>
                     </div>
                   </div>
-                ))}
+                </div>
+                
+                <div className="p-4 border rounded-md">
+                  <h3 className="text-lg font-medium mb-2">Notification Settings</h3>
+                  <p className="text-sm text-gray-600 mb-4">Configure when and how notifications are sent to clients</p>
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className="font-medium">Document Sharing</h4>
+                        <p className="text-xs text-gray-500">Notify when new documents are shared</p>
+                      </div>
+                      <Button size="sm" variant="outline">
+                        <Bell className="h-4 w-4 mr-2" /> Enabled
+                      </Button>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className="font-medium">Performance Updates</h4>
+                        <p className="text-xs text-gray-500">Notify of portfolio performance changes</p>
+                      </div>
+                      <Button size="sm" variant="outline">
+                        <Bell className="h-4 w-4 mr-2" /> Enabled
+                      </Button>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className="font-medium">Meeting Reminders</h4>
+                        <p className="text-xs text-gray-500">Send reminders for scheduled meetings</p>
+                      </div>
+                      <Button size="sm" variant="outline">
+                        <Bell className="h-4 w-4 mr-2" /> Enabled
+                      </Button>
+                    </div>
+                  </div>
+                </div>
               </div>
             </CardContent>
           </Card>
+        </TabsContent>
+      </Tabs>
+    </div>
+  );
+};
+
+const ClientCard = ({ name, email, company, lastActive, status }) => {
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'active': return 'bg-green-100 text-green-800';
+      case 'pending': return 'bg-yellow-100 text-yellow-800';
+      case 'inactive': return 'bg-gray-100 text-gray-800';
+      default: return 'bg-gray-100 text-gray-800';
+    }
+  };
+  
+  return (
+    <Card>
+      <CardHeader className="pb-2">
+        <div className="flex justify-between items-start">
+          <CardTitle className="text-base">{name}</CardTitle>
+          <span className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(status)}`}>
+            {status.charAt(0).toUpperCase() + status.slice(1)}
+          </span>
         </div>
+        <CardContent className="p-0">
+          <div className="text-sm text-gray-500">{email}</div>
+          <div className="text-sm font-medium mt-1">{company}</div>
+          <div className="flex items-center mt-4 text-xs text-gray-500">
+            <span>Last active: {lastActive}</span>
+          </div>
+          <div className="flex gap-2 mt-4">
+            <Button size="sm" variant="outline" className="w-full">View</Button>
+            <Button size="sm" variant="outline" className="w-full">Manage</Button>
+          </div>
+        </CardContent>
+      </CardHeader>
+    </Card>
+  );
+};
+
+const PermissionItem = ({ title, description, enabled }) => {
+  return (
+    <div className="flex items-center justify-between p-3 border rounded-md">
+      <div>
+        <h4 className="font-medium">{title}</h4>
+        <p className="text-xs text-gray-500">{description}</p>
       </div>
-    </PageTransition>
+      <Button 
+        size="sm" 
+        variant={enabled ? "default" : "outline"}
+        className={enabled ? "" : "text-gray-500"}
+      >
+        {enabled ? "Enabled" : "Disabled"}
+      </Button>
+    </div>
   );
 };
 

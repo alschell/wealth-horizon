@@ -1,543 +1,432 @@
-import React, { useState } from "react";
-import { motion } from "framer-motion";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+
+import React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
-import { Badge } from "@/components/ui/badge";
 import { 
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { PageHeader } from "@/components/ui/design-system";
-import PageTransition from "@/components/ui/page-transition";
-import { 
-  Layers, 
-  MoreVertical, 
-  Plus, 
   Building2, 
+  Plus, 
+  Search, 
+  ChevronRight, 
   Users, 
   FileText, 
-  Link, 
-  Shield, 
-  TrendingUp,
   ArrowUpRight,
-  CheckCircle2,
-  AlertCircle,
+  Clock,
+  Shield,
+  Map
 } from "lucide-react";
-import { useNotifications } from "@/hooks/use-notifications";
-
-interface Entity {
-  id: string;
-  name: string;
-  type: string;
-  jurisdiction: string;
-  status: "Active" | "Pending" | "Inactive";
-  compliance: number;
-  assets: string;
-  relations: {
-    parent?: string;
-    children: string[];
-    associates: string[];
-  };
-  documents: number;
-  lastUpdated: string;
-}
+import { Input } from "@/components/ui/input";
 
 const EntityManagementDashboard = () => {
-  const { showSuccess } = useNotifications();
-  const [entities, setEntities] = useState<Entity[]>([
-    {
-      id: "e1",
-      name: "Global Family Holdings Ltd.",
-      type: "Holding Company",
-      jurisdiction: "Cayman Islands",
-      status: "Active",
-      compliance: 92,
-      assets: "$245M",
-      relations: {
-        children: ["e2", "e3", "e4"],
-        associates: []
-      },
-      documents: 24,
-      lastUpdated: "2024-03-28"
-    },
-    {
-      id: "e2",
-      name: "European Investments SA",
-      type: "Investment Vehicle",
-      jurisdiction: "Luxembourg",
-      status: "Active",
-      compliance: 87,
-      assets: "$108M",
-      relations: {
-        parent: "e1",
-        children: ["e5"],
-        associates: ["e6"]
-      },
-      documents: 18,
-      lastUpdated: "2024-03-15"
-    },
-    {
-      id: "e3",
-      name: "US Asset Management LLC",
-      type: "Asset Management",
-      jurisdiction: "Delaware, USA",
-      status: "Active",
-      compliance: 95,
-      assets: "$86M",
-      relations: {
-        parent: "e1",
-        children: [],
-        associates: []
-      },
-      documents: 15,
-      lastUpdated: "2024-04-01"
-    },
-    {
-      id: "e4",
-      name: "APAC Holdings Pte Ltd",
-      type: "Holding Company",
-      jurisdiction: "Singapore",
-      status: "Active",
-      compliance: 89,
-      assets: "$52M",
-      relations: {
-        parent: "e1",
-        children: [],
-        associates: ["e7"]
-      },
-      documents: 12,
-      lastUpdated: "2024-02-18"
-    },
-    {
-      id: "e5",
-      name: "Swiss Real Estate GmbH",
-      type: "Real Estate",
-      jurisdiction: "Switzerland",
-      status: "Active",
-      compliance: 93,
-      assets: "$34M",
-      relations: {
-        parent: "e2",
-        children: [],
-        associates: []
-      },
-      documents: 9,
-      lastUpdated: "2024-03-22"
-    },
-    {
-      id: "e6",
-      name: "Innovation Ventures Ltd",
-      type: "Venture Capital",
-      jurisdiction: "United Kingdom",
-      status: "Pending",
-      compliance: 78,
-      assets: "$18M",
-      relations: {
-        children: [],
-        associates: ["e2"]
-      },
-      documents: 7,
-      lastUpdated: "2024-01-15"
-    },
-    {
-      id: "e7",
-      name: "East Asia Opportunities Fund",
-      type: "Investment Fund",
-      jurisdiction: "Hong Kong",
-      status: "Active",
-      compliance: 91,
-      assets: "$42M",
-      relations: {
-        children: [],
-        associates: ["e4"]
-      },
-      documents: 11,
-      lastUpdated: "2024-02-05"
-    }
-  ]);
-
-  const handleAddEntity = () => {
-    showSuccess("Entity creation initiated", "Please complete the entity setup form");
-  };
-
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case "Active":
-        return <Badge className="bg-green-100 text-green-800 hover:bg-green-100">Active</Badge>;
-      case "Pending":
-        return <Badge className="bg-amber-100 text-amber-800 hover:bg-amber-100">Pending</Badge>;
-      case "Inactive":
-        return <Badge className="bg-gray-100 text-gray-800 hover:bg-gray-100">Inactive</Badge>;
-      default:
-        return <Badge>{status}</Badge>;
-    }
-  };
-
-  const getEntityTypeIcon = (type: string) => {
-    switch (type) {
-      case "Holding Company":
-        return <Building2 className="h-5 w-5" />;
-      case "Investment Vehicle":
-      case "Investment Fund":
-        return <TrendingUp className="h-5 w-5" />;
-      case "Asset Management":
-        return <Layers className="h-5 w-5" />;
-      case "Real Estate":
-        return <Building2 className="h-5 w-5" />;
-      case "Venture Capital":
-        return <TrendingUp className="h-5 w-5" />;
-      default:
-        return <Building2 className="h-5 w-5" />;
-    }
-  };
-
-  const getComplianceStatus = (score: number) => {
-    if (score >= 90) return "High";
-    if (score >= 80) return "Moderate";
-    return "Attention Required";
-  };
-
-  const getComplianceColor = (score: number) => {
-    if (score >= 90) return "text-green-600";
-    if (score >= 80) return "text-amber-600";
-    return "text-red-600";
-  };
-
-  const getComplianceIcon = (score: number) => {
-    if (score >= 90) return <CheckCircle2 className="h-5 w-5 text-green-500" />;
-    if (score >= 80) return <CheckCircle2 className="h-5 w-5 text-amber-500" />;
-    return <AlertCircle className="h-5 w-5 text-red-500" />;
-  };
-
-  const getEntityChildren = (entityId: string) => {
-    return entities.filter(e => e.relations.parent === entityId);
-  };
-
   return (
-    <PageTransition>
-      <div className="space-y-6">
-        <PageHeader className="flex flex-col gap-1">
-          <h1 className="text-2xl font-bold tracking-tight">Multi-Entity Management</h1>
-          <p className="text-muted-foreground">
-            Manage and monitor your complex legal entity structure
-          </p>
-        </PageHeader>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Entity Summary</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center gap-2">
-                    <Building2 className="h-5 w-5 text-gray-500" />
-                    <span>Total Entities</span>
-                  </div>
-                  <span className="font-bold">{entities.length}</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="h-5 w-5 text-green-500" />
-                    <span>Active Entities</span>
-                  </div>
-                  <span className="font-bold">{entities.filter(e => e.status === "Active").length}</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center gap-2">
-                    <AlertCircle className="h-5 w-5 text-amber-500" />
-                    <span>Compliance Issues</span>
-                  </div>
-                  <span className="font-bold">{entities.filter(e => e.compliance < 80).length}</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center gap-2">
-                    <Users className="h-5 w-5 text-gray-500" />
-                    <span>Jurisdictions</span>
-                  </div>
-                  <span className="font-bold">{new Set(entities.map(e => e.jurisdiction)).size}</span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Compliance Overview</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="flex justify-between items-center">
-                  <span className="text-sm font-medium">Overall Compliance</span>
-                  <span className="text-sm font-medium">
-                    {Math.round(entities.reduce((acc, curr) => acc + curr.compliance, 0) / entities.length)}%
-                  </span>
-                </div>
-                <Progress 
-                  value={Math.round(entities.reduce((acc, curr) => acc + curr.compliance, 0) / entities.length)} 
-                  max={100} 
-                  className="h-2"
-                />
-                <div className="pt-4 space-y-2">
-                  {[
-                    { name: "KYC/AML Compliance", value: 94 },
-                    { name: "Regulatory Filings", value: 88 },
-                    { name: "Document Completeness", value: 92 }
-                  ].map((item, i) => (
-                    <div key={i} className="flex justify-between items-center">
-                      <span className="text-sm">{item.name}</span>
-                      <div className="flex items-center gap-2">
-                        <span className={`text-xs ${item.value >= 90 ? "text-green-600" : "text-amber-600"}`}>
-                          {item.value}%
-                        </span>
-                        <div className="w-16 h-1.5 bg-gray-100 rounded-full">
-                          <div 
-                            className={`h-1.5 rounded-full ${item.value >= 90 ? "bg-green-500" : "bg-amber-500"}`} 
-                            style={{ width: `${item.value}%` }}
-                          ></div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Recent Updates</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                {[
-                  { entity: "US Asset Management LLC", event: "Compliance review completed", date: "Apr 1, 2024" },
-                  { entity: "Global Family Holdings Ltd.", event: "Ownership structure updated", date: "Mar 28, 2024" },
-                  { entity: "Swiss Real Estate GmbH", event: "New document added", date: "Mar 22, 2024" },
-                  { entity: "European Investments SA", event: "Tax filing submitted", date: "Mar 15, 2024" }
-                ].map((update, i) => (
-                  <div key={i} className="border-b pb-2 last:border-0 last:pb-0">
-                    <div className="font-medium text-sm">{update.entity}</div>
-                    <div className="text-xs text-muted-foreground flex justify-between">
-                      <span>{update.event}</span>
-                      <span>{update.date}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row justify-between space-y-4 sm:space-y-0 sm:items-center">
+        <div className="relative w-full sm:w-1/3">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <Input placeholder="Search entities..." className="pl-10" />
         </div>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between">
-            <div>
-              <CardTitle>Entity Structure</CardTitle>
-              <CardDescription>Manage your legal entities and their relationships</CardDescription>
-            </div>
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button onClick={handleAddEntity}>
-                  <Plus className="h-4 w-4 mr-2" />
-                  Add Entity
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Add New Entity</DialogTitle>
-                </DialogHeader>
-                <div className="py-4">
-                  <p className="text-center text-muted-foreground">
-                    Entity creation form would go here
-                  </p>
-                </div>
-              </DialogContent>
-            </Dialog>
-          </CardHeader>
-          <CardContent>
-            <Tabs defaultValue="list" className="space-y-4">
-              <TabsList>
-                <TabsTrigger value="list">List View</TabsTrigger>
-                <TabsTrigger value="hierarchy">Hierarchy View</TabsTrigger>
-                <TabsTrigger value="compliance">Compliance View</TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="list" className="space-y-4">
-                <div className="space-y-3">
-                  {entities.map((entity) => (
-                    <motion.div
-                      key={entity.id}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      className="flex items-center justify-between p-4 border rounded-md"
-                    >
-                      <div className="flex items-center gap-4">
-                        <div className="p-2 bg-gray-100 rounded-full">
-                          {getEntityTypeIcon(entity.type)}
-                        </div>
-                        <div>
-                          <div className="font-medium">{entity.name}</div>
-                          <div className="text-sm text-muted-foreground">
-                            {entity.type} �� {entity.jurisdiction}
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-4">
-                        <div className="text-right">
-                          <div className="font-medium">{entity.assets}</div>
-                          <div>{getStatusBadge(entity.status)}</div>
-                        </div>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon">
-                              <MoreVertical className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent>
-                            <DropdownMenuItem>
-                              <FileText className="h-4 w-4 mr-2" />
-                              View Details
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                              <Shield className="h-4 w-4 mr-2" />
-                              Compliance Review
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                              <Link className="h-4 w-4 mr-2" />
-                              Manage Relationships
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-              </TabsContent>
-
-              <TabsContent value="hierarchy">
-                <Card>
-                  <CardContent className="p-6">
-                    <div className="space-y-8">
-                      {entities
-                        .filter(entity => !entity.relations.parent)
-                        .map(entity => (
-                          <div key={entity.id} className="space-y-4">
-                            <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-md">
-                              <div className="p-2 bg-gray-100 rounded-full">
-                                {getEntityTypeIcon(entity.type)}
-                              </div>
-                              <div className="flex-1">
-                                <div className="font-medium">{entity.name}</div>
-                                <div className="text-sm text-muted-foreground">
-                                  {entity.type} • {entity.jurisdiction} • {entity.assets}
-                                </div>
-                              </div>
-                              <div>
-                                {getStatusBadge(entity.status)}
-                              </div>
-                            </div>
-                            
-                            {getEntityChildren(entity.id).length > 0 && (
-                              <div className="pl-8 space-y-3 border-l-2 border-gray-200">
-                                {getEntityChildren(entity.id).map(childEntity => (
-                                  <div key={childEntity.id} className="flex items-center gap-3 p-3 bg-gray-50 rounded-md">
-                                    <div className="p-2 bg-gray-100 rounded-full">
-                                      {getEntityTypeIcon(childEntity.type)}
-                                    </div>
-                                    <div className="flex-1">
-                                      <div className="font-medium">{childEntity.name}</div>
-                                      <div className="text-sm text-muted-foreground">
-                                        {childEntity.type} • {childEntity.jurisdiction} • {childEntity.assets}
-                                      </div>
-                                    </div>
-                                    <div>
-                                      {getStatusBadge(childEntity.status)}
-                                    </div>
-                                  </div>
-                                ))}
-                              </div>
-                            )}
-                          </div>
-                        ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-
-              <TabsContent value="compliance">
-                <div className="space-y-3">
-                  {entities
-                    .sort((a, b) => a.compliance - b.compliance)
-                    .map((entity) => (
-                      <motion.div
-                        key={entity.id}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        className="flex items-center justify-between p-4 border rounded-md"
-                      >
-                        <div className="flex items-center gap-4">
-                          <div className="p-2 bg-gray-100 rounded-full">
-                            {getComplianceIcon(entity.compliance)}
-                          </div>
-                          <div>
-                            <div className="font-medium">{entity.name}</div>
-                            <div className="text-sm text-muted-foreground">
-                              {entity.type} • {entity.jurisdiction}
-                            </div>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-4">
-                          <div className="text-right">
-                            <div className={`font-medium ${getComplianceColor(entity.compliance)}`}>
-                              {entity.compliance}% - {getComplianceStatus(entity.compliance)}
-                            </div>
-                            <div className="flex items-center mt-1">
-                              <Progress 
-                                value={entity.compliance} 
-                                max={100} 
-                                className="h-1.5 w-24"
-                                indicatorClassName={
-                                  entity.compliance >= 90 ? "bg-green-500" : 
-                                  entity.compliance >= 80 ? "bg-amber-500" : 
-                                  "bg-red-500"
-                                }
-                              />
-                            </div>
-                          </div>
-                          <Button variant="outline" size="sm">
-                            <Shield className="h-4 w-4 mr-2" />
-                            Review
-                          </Button>
-                        </div>
-                      </motion.div>
-                    ))}
-                </div>
-              </TabsContent>
-            </Tabs>
-          </CardContent>
-        </Card>
-
-        <div className="flex items-center justify-between">
-          <div></div>
-          <Button variant="outline" className="flex items-center gap-2">
-            Entity Structure Report
-            <ArrowUpRight className="h-4 w-4" />
-          </Button>
-        </div>
+        <Button className="flex items-center gap-2">
+          <Plus className="h-4 w-4" /> Add New Entity
+        </Button>
       </div>
-    </PageTransition>
+      
+      <Tabs defaultValue="all" className="w-full">
+        <TabsList className="grid grid-cols-4 mb-6">
+          <TabsTrigger value="all">All Entities</TabsTrigger>
+          <TabsTrigger value="structure">Entity Structure</TabsTrigger>
+          <TabsTrigger value="governance">Governance</TabsTrigger>
+          <TabsTrigger value="compliance">Compliance</TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="all" className="mt-0">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <EntityCard 
+              name="Smith Family Holdings LLC" 
+              type="Holding Company"
+              jurisdiction="Delaware, USA"
+              complianceStatus="Compliant"
+            />
+            <EntityCard 
+              name="Smith Investments LP" 
+              type="Limited Partnership"
+              jurisdiction="Nevada, USA"
+              complianceStatus="Compliant"
+            />
+            <EntityCard 
+              name="Smith Properties LLC" 
+              type="Real Estate Holding"
+              jurisdiction="California, USA"
+              complianceStatus="Action Required"
+              alert={true}
+            />
+            <EntityCard 
+              name="Smith Family Trust" 
+              type="Family Trust"
+              jurisdiction="Wyoming, USA"
+              complianceStatus="Compliant"
+            />
+            <EntityCard 
+              name="Smith International Corp." 
+              type="International Business"
+              jurisdiction="Singapore"
+              complianceStatus="Under Review"
+            />
+            <EntityCard 
+              name="Smith Foundation" 
+              type="Non-Profit"
+              jurisdiction="New York, USA"
+              complianceStatus="Compliant"
+            />
+          </div>
+        </TabsContent>
+        
+        <TabsContent value="structure" className="mt-0">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Map className="h-5 w-5 text-purple-600" /> Entity Structure Map
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="bg-gray-50 p-4 rounded-md mb-4 text-center text-gray-500">
+                Interactive entity structure map visualization would be shown here
+              </div>
+              
+              <h3 className="text-lg font-medium mt-6 mb-4">Entity Relationships</h3>
+              <div className="space-y-4">
+                <div className="p-4 border rounded-md">
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <h4 className="font-medium">Smith Family Holdings LLC</h4>
+                      <p className="text-sm text-gray-500">Parent Entity</p>
+                    </div>
+                    <Button variant="ghost" size="sm">
+                      <ChevronRight className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  <div className="mt-2 pl-6 border-l-2 border-gray-200 space-y-2">
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <h4 className="text-sm font-medium">Smith Investments LP</h4>
+                        <p className="text-xs text-gray-500">100% Ownership</p>
+                      </div>
+                      <Button variant="ghost" size="sm">
+                        <ChevronRight className="h-4 w-4" />
+                      </Button>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <h4 className="text-sm font-medium">Smith Properties LLC</h4>
+                        <p className="text-xs text-gray-500">85% Ownership</p>
+                      </div>
+                      <Button variant="ghost" size="sm">
+                        <ChevronRight className="h-4 w-4" />
+                      </Button>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <h4 className="text-sm font-medium">Smith International Corp.</h4>
+                        <p className="text-xs text-gray-500">75% Ownership</p>
+                      </div>
+                      <Button variant="ghost" size="sm">
+                        <ChevronRight className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="p-4 border rounded-md">
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <h4 className="font-medium">Smith Family Trust</h4>
+                      <p className="text-sm text-gray-500">Independent Entity</p>
+                    </div>
+                    <Button variant="ghost" size="sm">
+                      <ChevronRight className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  <div className="mt-2 pl-6 border-l-2 border-gray-200 space-y-2">
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <h4 className="text-sm font-medium">Smith Family Holdings LLC</h4>
+                        <p className="text-xs text-gray-500">15% Ownership</p>
+                      </div>
+                      <Button variant="ghost" size="sm">
+                        <ChevronRight className="h-4 w-4" />
+                      </Button>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <h4 className="text-sm font-medium">Smith Foundation</h4>
+                        <p className="text-xs text-gray-500">100% Control</p>
+                      </div>
+                      <Button variant="ghost" size="sm">
+                        <ChevronRight className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+        
+        <TabsContent value="governance" className="mt-0">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Users className="h-5 w-5 text-purple-600" /> Governance & Management
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <h3 className="text-lg font-medium mb-4">Board Members & Directors</h3>
+              <div className="space-y-4 mb-6">
+                <div className="p-4 border rounded-md">
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <h4 className="font-medium">Smith Family Holdings LLC</h4>
+                      <div className="flex flex-wrap gap-2 mt-2">
+                        <span className="px-2 py-1 bg-gray-100 text-xs rounded-full">John Smith (Chair)</span>
+                        <span className="px-2 py-1 bg-gray-100 text-xs rounded-full">Sarah Johnson</span>
+                        <span className="px-2 py-1 bg-gray-100 text-xs rounded-full">Michael Chen</span>
+                      </div>
+                    </div>
+                    <Button size="sm">Manage</Button>
+                  </div>
+                </div>
+                <div className="p-4 border rounded-md">
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <h4 className="font-medium">Smith Investments LP</h4>
+                      <div className="flex flex-wrap gap-2 mt-2">
+                        <span className="px-2 py-1 bg-gray-100 text-xs rounded-full">Sarah Johnson (Chair)</span>
+                        <span className="px-2 py-1 bg-gray-100 text-xs rounded-full">Robert Garcia</span>
+                      </div>
+                    </div>
+                    <Button size="sm">Manage</Button>
+                  </div>
+                </div>
+                <div className="p-4 border rounded-md">
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <h4 className="font-medium">Smith Family Trust</h4>
+                      <div className="flex flex-wrap gap-2 mt-2">
+                        <span className="px-2 py-1 bg-gray-100 text-xs rounded-full">John Smith (Trustee)</span>
+                        <span className="px-2 py-1 bg-gray-100 text-xs rounded-full">Emily Smith (Trustee)</span>
+                      </div>
+                    </div>
+                    <Button size="sm">Manage</Button>
+                  </div>
+                </div>
+              </div>
+              
+              <h3 className="text-lg font-medium mb-4">Governance Documents</h3>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between p-3 border-b">
+                  <div className="flex items-center gap-3">
+                    <FileText className="h-5 w-5 text-gray-400" />
+                    <div>
+                      <h4 className="font-medium">Operating Agreement - Smith Family Holdings</h4>
+                      <p className="text-xs text-gray-500">Last updated: Mar 15, 2025</p>
+                    </div>
+                  </div>
+                  <Button size="sm" variant="ghost">View</Button>
+                </div>
+                <div className="flex items-center justify-between p-3 border-b">
+                  <div className="flex items-center gap-3">
+                    <FileText className="h-5 w-5 text-gray-400" />
+                    <div>
+                      <h4 className="font-medium">Partnership Agreement - Smith Investments LP</h4>
+                      <p className="text-xs text-gray-500">Last updated: Feb 10, 2025</p>
+                    </div>
+                  </div>
+                  <Button size="sm" variant="ghost">View</Button>
+                </div>
+                <div className="flex items-center justify-between p-3 border-b">
+                  <div className="flex items-center gap-3">
+                    <FileText className="h-5 w-5 text-gray-400" />
+                    <div>
+                      <h4 className="font-medium">Trust Agreement - Smith Family Trust</h4>
+                      <p className="text-xs text-gray-500">Last updated: Jan 22, 2025</p>
+                    </div>
+                  </div>
+                  <Button size="sm" variant="ghost">View</Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+        
+        <TabsContent value="compliance" className="mt-0">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Shield className="h-5 w-5 text-purple-600" /> Compliance Status
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-6">
+                <div className="bg-yellow-50 border border-yellow-200 p-4 rounded-md">
+                  <h3 className="font-medium text-yellow-800 flex items-center gap-2">
+                    <Clock className="h-5 w-5" /> Upcoming Compliance Deadlines
+                  </h3>
+                  <div className="mt-3 space-y-2">
+                    <div className="flex justify-between items-center p-2 bg-white rounded border border-yellow-100">
+                      <div>
+                        <p className="font-medium text-sm">Smith Properties LLC - Annual Report</p>
+                        <p className="text-xs text-gray-500">Due in 15 days (Apr 22, 2025)</p>
+                      </div>
+                      <Button size="sm">Take Action</Button>
+                    </div>
+                    <div className="flex justify-between items-center p-2 bg-white rounded border border-yellow-100">
+                      <div>
+                        <p className="font-medium text-sm">Smith International Corp. - Tax Filing</p>
+                        <p className="text-xs text-gray-500">Due in 30 days (May 7, 2025)</p>
+                      </div>
+                      <Button size="sm">Take Action</Button>
+                    </div>
+                  </div>
+                </div>
+                
+                <div>
+                  <h3 className="text-lg font-medium mb-3">Entity Compliance Status</h3>
+                  <div className="space-y-3">
+                    <ComplianceStatusCard 
+                      entity="Smith Family Holdings LLC" 
+                      status="Compliant" 
+                      lastUpdate="Apr 1, 2025"
+                      items={[
+                        { name: "Annual Filing", status: "Complete", date: "Mar 15, 2025" },
+                        { name: "Tax Reporting", status: "Complete", date: "Mar 1, 2025" },
+                        { name: "Ownership Disclosure", status: "Complete", date: "Feb 10, 2025" }
+                      ]}
+                    />
+                    <ComplianceStatusCard 
+                      entity="Smith Properties LLC" 
+                      status="Action Required" 
+                      lastUpdate="Mar 30, 2025"
+                      alert={true}
+                      items={[
+                        { name: "Annual Filing", status: "Pending", date: "Due Apr 22, 2025", alert: true },
+                        { name: "Tax Reporting", status: "Complete", date: "Mar 1, 2025" },
+                        { name: "Property Assessment", status: "Complete", date: "Feb 28, 2025" }
+                      ]}
+                    />
+                    <ComplianceStatusCard 
+                      entity="Smith International Corp." 
+                      status="Under Review" 
+                      lastUpdate="Mar 25, 2025"
+                      items={[
+                        { name: "International Filing", status: "Under Review", date: "Submitted Mar 20, 2025" },
+                        { name: "Tax Reporting", status: "Pending", date: "Due May 7, 2025" },
+                        { name: "Regulatory Disclosure", status: "Complete", date: "Feb 15, 2025" }
+                      ]}
+                    />
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
+    </div>
+  );
+};
+
+const EntityCard = ({ name, type, jurisdiction, complianceStatus, alert = false }) => {
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'Compliant': return 'bg-green-100 text-green-800';
+      case 'Action Required': return 'bg-red-100 text-red-800';
+      case 'Under Review': return 'bg-yellow-100 text-yellow-800';
+      default: return 'bg-gray-100 text-gray-800';
+    }
+  };
+  
+  return (
+    <Card className={alert ? "border-red-300" : ""}>
+      <CardHeader className="pb-2">
+        <div className="flex justify-between items-start">
+          <div className="flex items-center">
+            <Building2 className="h-5 w-5 mr-2 text-purple-600" />
+            <CardTitle className="text-base">{name}</CardTitle>
+          </div>
+        </div>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-3">
+          <div className="flex justify-between text-sm">
+            <span className="text-gray-500">Type:</span>
+            <span className="font-medium">{type}</span>
+          </div>
+          <div className="flex justify-between text-sm">
+            <span className="text-gray-500">Jurisdiction:</span>
+            <span className="font-medium">{jurisdiction}</span>
+          </div>
+          <div className="flex justify-between text-sm items-center">
+            <span className="text-gray-500">Status:</span>
+            <span className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(complianceStatus)}`}>
+              {complianceStatus}
+            </span>
+          </div>
+          
+          <div className="flex gap-2 mt-4 pt-2 border-t">
+            <Button size="sm" className="w-full">View Details</Button>
+            <Button size="sm" variant="outline" className="w-auto">
+              <ArrowUpRight className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
+
+const ComplianceStatusCard = ({ entity, status, lastUpdate, items, alert = false }) => {
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'Compliant': return 'bg-green-100 text-green-800';
+      case 'Action Required': return 'bg-red-100 text-red-800';
+      case 'Under Review': return 'bg-yellow-100 text-yellow-800';
+      default: return 'bg-gray-100 text-gray-800';
+    }
+  };
+  
+  const getItemStatusColor = (status) => {
+    switch (status) {
+      case 'Complete': return 'text-green-600';
+      case 'Pending': return 'text-yellow-600';
+      case 'Under Review': return 'text-blue-600';
+      default: return 'text-gray-600';
+    }
+  };
+  
+  return (
+    <div className={`p-4 border rounded-md ${alert ? "border-red-300" : ""}`}>
+      <div className="flex justify-between items-center mb-3">
+        <h4 className="font-medium">{entity}</h4>
+        <span className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(status)}`}>
+          {status}
+        </span>
+      </div>
+      <p className="text-xs text-gray-500 mb-3">Last updated: {lastUpdate}</p>
+      
+      <div className="space-y-2 mt-3">
+        {items.map((item, index) => (
+          <div key={index} className="flex justify-between items-center p-2 bg-gray-50 rounded">
+            <div className="text-sm">
+              <span className="font-medium">{item.name}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className={`text-xs ${getItemStatusColor(item.status)}`}>{item.status}</span>
+              <span className="text-xs text-gray-500">{item.date}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+      
+      <Button size="sm" className="w-full mt-3">View All Requirements</Button>
+    </div>
   );
 };
 

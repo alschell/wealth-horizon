@@ -15,6 +15,8 @@ import {
   LineChart,
   DollarSign,
   Lightbulb,
+  Briefcase,
+  Gift,
   LucideIcon
 } from "lucide-react";
 import { QuickLinkItem } from "./types";
@@ -50,7 +52,7 @@ export const allQuickLinks: QuickLinkItem[] = [
     id: "credit-facilities",
     title: "Manage credit facilities",
     description: "Manage credit facilities",
-    icon: createIcon(Building2),
+    icon: createIcon(Briefcase), // Changed from Building2 to Briefcase
     link: "/credit-facilities"
   },
   {
@@ -71,7 +73,7 @@ export const allQuickLinks: QuickLinkItem[] = [
     id: "reports",
     title: "Generate reports",
     description: "Generate financial reports",
-    icon: createIcon(FileText),
+    icon: createIcon(BarChart3), // Changed from FileText to BarChart3
     link: "/reporting"
   },
   {
@@ -127,7 +129,7 @@ export const allQuickLinks: QuickLinkItem[] = [
     id: "client-portal",
     title: "Client Portal",
     description: "Manage client access",
-    icon: createIcon(Users),
+    icon: createIcon(Gift), // Changed from Users to Gift
     link: "/client-portal"
   },
   {

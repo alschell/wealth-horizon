@@ -32,9 +32,14 @@ const QuickAccessGrid = () => {
     const rows = Math.ceil(itemsCount / itemsPerRow);
     
     // Each row is roughly 120px tall plus some padding
-    const calculatedHeight = Math.max(rows * 120 + 100, 350);
+    const calculatedHeight = Math.max(rows * 120 + 80, 350);
     setContainerHeight(`${calculatedHeight}px`);
   }, [filteredItems]);
+
+  // Sort items alphabetically by label
+  const sortedItems = [...filteredItems].sort((a, b) => 
+    a.label.localeCompare(b.label)
+  );
 
   return (
     <Card className={`shadow-sm flex flex-col`} style={{ height: containerHeight }}>
@@ -52,8 +57,8 @@ const QuickAccessGrid = () => {
           </Button>
         </div>
       </CardHeader>
-      <CardContent className="flex-grow pb-4">
-        <QuickAccessItems items={filteredItems} />
+      <CardContent className="flex-grow pb-2">
+        <QuickAccessItems items={sortedItems} />
       </CardContent>
 
       <CustomizeQuickAccessDialog

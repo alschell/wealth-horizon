@@ -1,4 +1,10 @@
 
+/**
+ * @deprecated This file is deprecated. Please use the individual animation components 
+ * from the animation directory instead:
+ * import { FadeIn, StaggerContainer, StaggerItem, ScaleIn } from "@/components/ui/animation";
+ */
+
 import React, { ReactNode } from 'react';
 import { motion, HTMLMotionProps } from 'framer-motion';
 

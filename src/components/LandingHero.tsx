@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, CheckCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { ScaleIn } from '@/components/ui/animation/index';
+import { ScaleIn } from '@/components/ui/animation';
 
 const LandingHero = () => {
   const navigate = useNavigate();

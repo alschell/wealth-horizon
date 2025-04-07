@@ -20,7 +20,7 @@ const AssetAllocationChart: React.FC = () => {
       </div>
       
       <div className="h-[140px] flex justify-center items-center">
-        {/* Full Circle Pie Chart with thick outline style instead of filled segments */}
+        {/* Full Circle Pie Chart with thick outline style */}
         <motion.svg 
           width="120" 
           height="120" 
@@ -32,12 +32,13 @@ const AssetAllocationChart: React.FC = () => {
             ease: "easeInOut"
           }}
         >
+          {/* Background circle */}
           <motion.circle 
             cx="50" 
             cy="50" 
             r="40" 
             fill="none" 
-            strokeWidth="10"
+            strokeWidth="12"
             stroke="#E5E7EB"
             initial={{ pathLength: 0, opacity: 0 }}
             animate={{ pathLength: 1, opacity: 1 }}
@@ -49,7 +50,7 @@ const AssetAllocationChart: React.FC = () => {
             d="M50,10 A40,40 0 0,1 87.32,35.86"
             fill="none"
             stroke="#818CF8"
-            strokeWidth="10"
+            strokeWidth="12"
             strokeLinecap="round"
             initial={{ pathLength: 0 }}
             animate={{ pathLength: 1 }}
@@ -61,7 +62,7 @@ const AssetAllocationChart: React.FC = () => {
             d="M87.32,35.86 A40,40 0 0,1 66.82,85.36"
             fill="none"
             stroke="#34D399"
-            strokeWidth="10"
+            strokeWidth="12"
             strokeLinecap="round"
             initial={{ pathLength: 0 }}
             animate={{ pathLength: 1 }}
@@ -73,7 +74,7 @@ const AssetAllocationChart: React.FC = () => {
             d="M66.82,85.36 A40,40 0 0,1 10,50 A40,40 0 0,1 50,10"
             fill="none"
             stroke="#F59E0B"
-            strokeWidth="10"
+            strokeWidth="12"
             strokeLinecap="round"
             initial={{ pathLength: 0 }}
             animate={{ pathLength: 1 }}

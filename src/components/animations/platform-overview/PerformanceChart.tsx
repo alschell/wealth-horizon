@@ -32,24 +32,36 @@ const PerformanceChart: React.FC = () => {
           <motion.path
             d="M0,80 C20,70 40,85 60,50 S120,20 200,10"
             stroke="#34D399"
-            strokeWidth="3"
+            strokeWidth="4"
             fill="none"
             initial={{ pathLength: 0 }}
-            animate={{ pathLength: 1 }}
-            transition={{ duration: 1.5, delay: 0.5 }}
+            animate={{ 
+              pathLength: 1,
+              y: [0, -3, 0, 3, 0]
+            }}
+            transition={{ 
+              pathLength: { duration: 1.5, delay: 0.5 },
+              y: { repeat: Infinity, duration: 5, ease: "easeInOut" }
+            }}
           />
           
           <motion.path
             d="M0,80 C20,70 40,85 60,50 S120,20 200,10 V100 H0 Z"
             fill="url(#performanceGradient)"
             initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 1.5 }}
+            animate={{ 
+              opacity: 1,
+              y: [0, -3, 0, 3, 0]
+            }}
+            transition={{ 
+              opacity: { duration: 0.8, delay: 1.5 },
+              y: { repeat: Infinity, duration: 5, ease: "easeInOut" }
+            }}
           />
           
           {/* Animated dot that follows the path */}
           <motion.circle
-            r="4"
+            r="5"
             fill="#34D399"
             initial={{ opacity: 0 }}
             animate={{ 
@@ -72,8 +84,15 @@ const PerformanceChart: React.FC = () => {
         <motion.div 
           className="absolute top-0 right-4 bg-green-50 text-green-600 text-xs font-medium px-2 py-1 rounded"
           initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, delay: 2 }}
+          animate={{ 
+            opacity: 1, 
+            y: 0,
+            scale: [1, 1.05, 1]
+          }}
+          transition={{ 
+            opacity: { duration: 0.3, delay: 2 },
+            scale: { repeat: Infinity, duration: 2, ease: "easeInOut" }
+          }}
         >
           +12.4%
         </motion.div>

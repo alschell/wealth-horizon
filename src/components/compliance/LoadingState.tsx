@@ -13,10 +13,14 @@ interface LoadingStateProps {
 export const LoadingState: React.FC<LoadingStateProps> = ({ 
   message = "Loading data...",
   className,
-  iconSize = 10,
+  iconSize = 24,
   fullPage = false
 }) => {
-  const iconClass = `h-${iconSize} w-${iconSize} text-gray-400 animate-spin mb-3`;
+  // Use string template for iconSize instead of dynamic class
+  const iconClass = cn(
+    "text-gray-400 animate-spin mb-3",
+    `h-${iconSize} w-${iconSize}`
+  );
   
   const containerClasses = cn(
     "flex flex-col items-center justify-center",

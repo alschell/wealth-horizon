@@ -33,7 +33,7 @@ const Layout = ({
 
   if (withAnimation) {
     return (
-      <FadeIn duration={0.5}>
+      <FadeIn>
         {content}
       </FadeIn>
     );

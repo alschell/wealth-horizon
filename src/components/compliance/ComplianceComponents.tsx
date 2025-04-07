@@ -11,6 +11,8 @@ import {
   getStatusColor, 
   getPriorityLabel, 
   RenderStatusIndicator,
+  getStatusLabel,
+  getImpactType,
   ComplianceStatus,
   PriorityLevel
 } from './StatusUtils';
@@ -26,6 +28,8 @@ export {
   LoadingState,
   getStatusColor,
   getPriorityLabel,
+  getStatusLabel,
+  getImpactType,
   RenderStatusIndicator
 };
 

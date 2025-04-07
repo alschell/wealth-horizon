@@ -8,14 +8,16 @@ import {
   ComplianceOverview, 
   ComplianceFilings,
   ComplianceChanges,
-  ComplianceCalendar
+  ComplianceCalendar,
+  ComplianceStatus,
+  PriorityLevel
 } from '@/components/compliance';
 
-// Mock data for compliance filings
+// Mock data for compliance filings with proper typing
 const upcomingFilings = [
-  { id: 1, name: "Quarterly Tax Filing", deadline: "April 15, 2025", status: "pending", priority: "high" },
-  { id: 2, name: "Annual Regulatory Report", deadline: "May 30, 2025", status: "pending", priority: "medium" },
-  { id: 3, name: "ESG Compliance Report", deadline: "June 12, 2025", status: "pending", priority: "low" }
+  { id: 1, name: "Quarterly Tax Filing", deadline: "April 15, 2025", status: "pending" as ComplianceStatus, priority: "high" as PriorityLevel },
+  { id: 2, name: "Annual Regulatory Report", deadline: "May 30, 2025", status: "pending" as ComplianceStatus, priority: "medium" as PriorityLevel },
+  { id: 3, name: "ESG Compliance Report", deadline: "June 12, 2025", status: "pending" as ComplianceStatus, priority: "low" as PriorityLevel }
 ];
 
 // Mock data for regulatory changes

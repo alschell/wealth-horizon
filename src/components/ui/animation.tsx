@@ -2,7 +2,7 @@
 import React, { ReactNode } from 'react';
 import { motion, HTMLMotionProps } from 'framer-motion';
 
-interface FadeInProps extends HTMLMotionProps<"div"> {
+export interface FadeInProps extends HTMLMotionProps<"div"> {
   children: ReactNode;
   direction?: "up" | "down" | "left" | "right";
   delay?: number;

@@ -5,6 +5,13 @@ import { Button } from "@/components/ui/button";
 import { FadeIn } from "@/components/ui/animation";
 
 const CTASection: React.FC = () => {
+  const scrollToContact = () => {
+    const contactSection = document.getElementById('contact');
+    if (contactSection) {
+      contactSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <section className="py-20 bg-indigo-600">
       <div className="max-w-7xl mx-auto px-6">
@@ -17,11 +24,15 @@ const CTASection: React.FC = () => {
           </FadeIn>
           <FadeIn delay={0.2}>
             <div className="flex flex-col sm:flex-row gap-4 justify-end">
-              <Button size="lg" className="bg-white text-indigo-600 hover:bg-gray-100 text-md px-8">
+              <Button size="lg" className="bg-white text-indigo-600 hover:bg-gray-100 text-md px-8" asChild>
                 <Link to="/onboarding">Get Started</Link>
               </Button>
-              <Button size="lg" className="bg-white text-indigo-600 hover:bg-gray-100 text-md px-8">
-                <Link to="/contact">Contact Sales</Link>
+              <Button 
+                size="lg" 
+                className="bg-white text-indigo-600 hover:bg-gray-100 text-md px-8"
+                onClick={scrollToContact}
+              >
+                Contact Sales
               </Button>
             </div>
           </FadeIn>

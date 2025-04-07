@@ -26,7 +26,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToFeatures }) => {
               All your bankable wealth made actionable over one platform across all your banks, brokers & custodians
             </p>
             <div className="mt-10 flex flex-col sm:flex-row gap-4">
-              <Button size="lg" className="text-md px-8">
+              <Button size="lg" className="text-md px-8" asChild>
                 <Link to="/onboarding">Get Started</Link>
               </Button>
               <Button

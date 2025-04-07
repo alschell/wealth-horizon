@@ -32,6 +32,13 @@ const Navigation: React.FC = () => {
     navigate('/logout');
   };
 
+  const scrollToSection = (id: string) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   // Landing page navigation
   if (isHomePage) {
     return (
@@ -44,10 +51,30 @@ const Navigation: React.FC = () => {
             </Link>
             
             <div className="hidden md:flex items-center ml-10 space-x-8">
-              <Link to="#features" className="text-gray-700 hover:text-indigo-600 transition-colors">Features</Link>
-              <Link to="#benefits" className="text-gray-700 hover:text-indigo-600 transition-colors">Benefits</Link>
-              <Link to="#testimonials" className="text-gray-700 hover:text-indigo-600 transition-colors">Testimonials</Link>
-              <Link to="#about" className="text-gray-700 hover:text-indigo-600 transition-colors">About</Link>
+              <button 
+                onClick={() => scrollToSection('features')} 
+                className="text-gray-700 hover:text-indigo-600 transition-colors"
+              >
+                Features
+              </button>
+              <button 
+                onClick={() => scrollToSection('benefits')} 
+                className="text-gray-700 hover:text-indigo-600 transition-colors"
+              >
+                Benefits
+              </button>
+              <button 
+                onClick={() => scrollToSection('testimonials')} 
+                className="text-gray-700 hover:text-indigo-600 transition-colors"
+              >
+                Testimonials
+              </button>
+              <button 
+                onClick={() => scrollToSection('contact')} 
+                className="text-gray-700 hover:text-indigo-600 transition-colors"
+              >
+                Contact
+              </button>
             </div>
           </div>
           

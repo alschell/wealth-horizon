@@ -1,10 +1,18 @@
 
 import React from "react";
 import { Separator } from "@/components/ui/separator";
+import { Link } from "react-router-dom";
 
 const FooterSection: React.FC = () => {
+  const scrollToSection = (id: string) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
-    <footer className="bg-gray-900 text-gray-400 py-16">
+    <footer className="bg-gray-900 text-gray-400 py-16" id="about">
       <div className="max-w-7xl mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           <div>
@@ -21,22 +29,22 @@ const FooterSection: React.FC = () => {
           <div>
             <h4 className="text-white font-semibold mb-4">Solutions</h4>
             <ul className="space-y-2">
-              <li><a href="#" className="hover:text-white transition-colors">Portfolio Management</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Trading</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Wealth Analysis</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Reporting</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Compliance</a></li>
+              <li><button onClick={() => scrollToSection('features')} className="hover:text-white transition-colors">Portfolio Management</button></li>
+              <li><Link to="/trading" className="hover:text-white transition-colors">Trading</Link></li>
+              <li><Link to="/analyze-wealth" className="hover:text-white transition-colors">Wealth Analysis</Link></li>
+              <li><Link to="/reporting" className="hover:text-white transition-colors">Reporting</Link></li>
+              <li><Link to="/compliance-monitoring" className="hover:text-white transition-colors">Compliance</Link></li>
             </ul>
           </div>
           
           <div>
             <h4 className="text-white font-semibold mb-4">Company</h4>
             <ul className="space-y-2">
-              <li><a href="#" className="hover:text-white transition-colors">About Us</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Careers</a></li>
+              <li><button onClick={() => scrollToSection('about')} className="hover:text-white transition-colors">About Us</button></li>
+              <li><a href="mailto:careers@wealthhorizon.com" className="hover:text-white transition-colors">Careers</a></li>
               <li><a href="#" className="hover:text-white transition-colors">Blog</a></li>
               <li><a href="#" className="hover:text-white transition-colors">Press</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Contact</a></li>
+              <li><button onClick={() => scrollToSection('contact')} className="hover:text-white transition-colors">Contact</button></li>
             </ul>
           </div>
           

@@ -20,7 +20,7 @@ import {
 import { QuickLinkItem } from "./types";
 
 // Function to create consistent icon elements with proper sizing
-const createIcon = (Icon: LucideIcon) => {
+const createIcon = (Icon: LucideIcon): React.ReactNode => {
   return <Icon className="h-4 w-4" />;
 };
 
@@ -136,7 +136,7 @@ export const allQuickLinks: QuickLinkItem[] = [
     description: "Document management",
     icon: createIcon(FileText),
     link: "/documents"
-  },
+  }
 ];
 
 export const defaultQuickLinks = allQuickLinks.slice(0, 8);

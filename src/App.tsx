@@ -7,7 +7,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { OnboardingProvider } from "./context/OnboardingContext";
 import Navigation from "./components/Navigation";
-import LandingPage from "./pages/LandingPage";
 import NotFound from "./pages/NotFound";
 import Onboarding from "./pages/Onboarding";
 import Dashboard from "./pages/Dashboard"; 

@@ -16,7 +16,9 @@ const QuickAccessGrid = () => {
     temporarySelection, 
     toggleItem,
     handleCustomizeOpen,
-    handleCustomizeSave
+    handleCustomizeSave,
+    orderedItems,
+    updateItemOrder
   } = useQuickAccessStore();
 
   return (
@@ -25,7 +27,12 @@ const QuickAccessGrid = () => {
         <div>
           <CardTitle className="text-xl">Quick Access</CardTitle>
         </div>
-        <Button variant="outline" size="sm" onClick={handleCustomizeOpen} className="flex items-center gap-1">
+        <Button 
+          variant="outline" 
+          size="sm" 
+          onClick={handleCustomizeOpen} 
+          className="flex items-center gap-1"
+        >
           <Sliders className="h-4 w-4 mr-1" />
           Customize
         </Button>
@@ -39,7 +46,9 @@ const QuickAccessGrid = () => {
         onOpenChange={setIsCustomizing}
         items={allActionItems}
         selectedItems={temporarySelection}
+        orderedItems={orderedItems}
         onItemToggle={toggleItem}
+        onOrderChange={updateItemOrder}
         onSave={handleCustomizeSave}
       />
     </Card>

@@ -52,7 +52,7 @@ export const allQuickLinks: QuickLinkItem[] = [
     id: "credit-facilities",
     title: "Manage credit facilities",
     description: "Manage credit facilities",
-    icon: createIcon(Briefcase), // Changed from Building2 to Briefcase
+    icon: createIcon(Briefcase),
     link: "/credit-facilities"
   },
   {
@@ -73,7 +73,7 @@ export const allQuickLinks: QuickLinkItem[] = [
     id: "reports",
     title: "Generate reports",
     description: "Generate financial reports",
-    icon: createIcon(BarChart3), // Changed from FileText to BarChart3
+    icon: createIcon(BarChart3),
     link: "/reporting"
   },
   {
@@ -129,7 +129,7 @@ export const allQuickLinks: QuickLinkItem[] = [
     id: "client-portal",
     title: "Client Portal",
     description: "Manage client access",
-    icon: createIcon(Gift), // Changed from Users to Gift
+    icon: createIcon(Gift),
     link: "/client-portal"
   },
   {

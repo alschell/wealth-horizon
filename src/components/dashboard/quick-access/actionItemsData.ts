@@ -55,7 +55,7 @@ export const allActionItems: ActionItem[] = [
   },
   {
     id: "credit-facilities",
-    icon: Briefcase, // Changed from Building2 to Briefcase
+    icon: Briefcase,
     label: "Manage Credit Facilities",
     description: "Apply for credit facilities and borrow",
     path: "/credit-facilities",
@@ -79,7 +79,7 @@ export const allActionItems: ActionItem[] = [
   },
   {
     id: "reports",
-    icon: BarChart3, // Changed from FileText to BarChart3
+    icon: BarChart3,
     label: "Generate Reports",
     description: "Create financial reports and statements",
     path: "/reporting",
@@ -143,7 +143,7 @@ export const allActionItems: ActionItem[] = [
   },
   {
     id: "client-access",
-    icon: Gift, // Changed from Users to Gift
+    icon: Gift,
     label: "Manage Client Access",
     description: "Control client portal permissions and visibility",
     path: "/client-portal",

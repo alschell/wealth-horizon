@@ -27,7 +27,7 @@ const ComplianceMonitoring = () => {
         <PageHeaderCard
           icon={Shield}
           title="Monitor Compliance"
-          description="Track, manage, and report on regulatory compliance activities"
+          description="Regulatory compliance tracking"
           iconColor="text-gray-600"
           iconBgColor="bg-gray-100"
         />

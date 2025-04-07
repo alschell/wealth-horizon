@@ -10,8 +10,8 @@ import RecentActivity from "@/components/dashboard/RecentActivity";
 import PageHeaderCard from "@/components/dashboard/PageHeaderCard";
 import KeyMetricsGrid from "@/components/dashboard/performance/KeyMetricsGrid";
 import { LayoutDashboard, Sliders } from "lucide-react";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Card, CardHeader } from "@/components/ui/card";
 import { newsData } from "@/components/dashboard/performance/PerformanceData";
 import TopAssets from "@/components/dashboard/performance/TopAssets";
 import RecentNewsList from "@/components/dashboard/performance/RecentNewsList";
@@ -35,7 +35,7 @@ const Dashboard = () => {
             className="h-9 px-3 flex items-center gap-1"
           >
             <Sliders className="h-4 w-4 mr-1" />
-            <span>Customize</span>
+            <span>Preferences</span>
           </Button>
         </div>
 

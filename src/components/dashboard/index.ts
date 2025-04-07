@@ -10,5 +10,7 @@ export { default as PageHeaderCard } from './PageHeaderCard';
 export { default as SectionHeader } from './SectionHeader';
 export { default as HeaderAction } from './HeaderAction';
 export { default as QuickActions } from './QuickActions';
+export { default as DashboardHeader } from './DashboardHeader';
 export * from './recommendations';
+export * from './quick-access';
 // Add any new exports here

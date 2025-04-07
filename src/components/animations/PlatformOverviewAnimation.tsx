@@ -1,367 +1,274 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { BarChart3, Wallet, FileText, Users, MessageSquare, Briefcase, Lock, BellRing, ArrowUpRight, PieChart, TrendingUp, EyeOff } from "lucide-react";
+import { BarChart3, PieChart, Wallet, ArrowUpRight, Shield, TrendingUp, Briefcase, Lock } from "lucide-react";
 
 const PlatformOverviewAnimation = () => {
   return (
-    <div className="relative w-full h-full bg-white overflow-hidden rounded-lg shadow-md">
-      {/* Header with tabs and logo */}
-      <div className="bg-gray-50 border-b border-gray-200 px-6 pt-4 pb-0">
-        <div className="flex items-center justify-between mb-4">
-          <motion.div 
-            className="flex items-center"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-          >
-            <span className="font-bold text-xl">
-              <span className="text-indigo-600">Wealth</span>
-              <span className="text-gray-900">Horizon</span>
-            </span>
-          </motion.div>
+    <div className="relative w-full h-full bg-white overflow-hidden rounded-lg">
+      {/* Header with tabs */}
+      <motion.div 
+        className="bg-gray-50 border-b border-gray-200 p-4"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        <div className="flex items-center justify-between">
+          <span className="font-bold text-xl">
+            <span className="text-indigo-600">Wealth</span>
+            <span className="text-gray-900">Horizon</span>
+          </span>
           
-          <motion.div 
-            className="flex items-center space-x-3"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          >
-            <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-600">
-              <BellRing size={16} />
-            </div>
-            <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600">
-              <Lock size={16} />
-            </div>
-            <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
-              <Users size={16} />
-            </div>
-          </motion.div>
+          <div className="flex items-center space-x-3">
+            <div className="w-6 h-6 rounded-full bg-gray-200"></div>
+            <div className="w-6 h-6 rounded-full bg-indigo-100"></div>
+          </div>
         </div>
-        
-        <div className="flex space-x-6">
-          {["Overview", "Portfolio", "Trading", "Analysis", "Reports"].map((tab, i) => (
-            <motion.div 
-              key={tab}
-              className={`pb-4 relative ${i === 0 ? 'border-b-2 border-indigo-500' : ''}`}
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.3 + (i * 0.1) }}
-            >
-              <span className={`font-medium ${i === 0 ? 'text-indigo-600' : 'text-gray-500'}`}>{tab}</span>
-              {i === 0 && (
-                <motion.div 
-                  className="absolute bottom-0 left-0 w-full h-0.5 bg-indigo-500"
-                  initial={{ width: 0 }}
-                  animate={{ width: "100%" }}
-                  transition={{ duration: 0.3, delay: 0.8 }}
-                />
-              )}
-            </motion.div>
-          ))}
-        </div>
-      </div>
+      </motion.div>
       
       {/* Main Content */}
-      <div className="p-6 grid grid-cols-12 gap-6">
-        {/* Sidebar/Navigation */}
+      <div className="p-6 grid grid-cols-10 gap-6 h-[calc(100%-60px)]">
+        {/* Sidebar Navigation */}
         <motion.div 
-          className="col-span-2 space-y-6"
+          className="col-span-2 bg-white rounded-lg border border-gray-100 shadow-sm"
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5, delay: 0.6 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
         >
-          {/* Module Navigation */}
-          <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
-            <div className="p-3 border-b border-gray-100">
-              <div className="text-sm font-medium text-gray-700">Modules</div>
-            </div>
-            
-            {[
-              { name: 'Portfolio', icon: <Briefcase size={16} />, active: true },
-              { name: 'Trading', icon: <TrendingUp size={16} /> },
-              { name: 'Advice', icon: <MessageSquare size={16} /> },
-              { name: 'Reports', icon: <FileText size={16} /> },
-              { name: 'Analysis', icon: <BarChart3 size={16} /> },
-              { name: 'Cash Flow', icon: <Wallet size={16} /> },
-            ].map((item, i) => (
-              <motion.div 
-                key={item.name}
-                className={`flex items-center gap-3 p-3 ${item.active ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50'}`}
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.3, delay: 0.8 + (i * 0.1) }}
-              >
-                <div className={`${item.active ? 'text-indigo-600' : 'text-gray-400'}`}>
-                  {item.icon}
-                </div>
-                <div className={`text-sm ${item.active ? 'font-medium' : ''}`}>{item.name}</div>
-                {item.active && (
-                  <motion.div 
-                    className="ml-auto w-1.5 h-1.5 rounded-full bg-indigo-600"
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ duration: 0.3, delay: 1 }}
-                  />
-                )}
-              </motion.div>
-            ))}
-          </div>
-          
-          {/* Quick Access */}
-          <motion.div 
-            className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 1.2 }}
-          >
-            <div className="p-3 border-b border-gray-100">
-              <div className="text-sm font-medium text-gray-700">Quick Access</div>
-            </div>
-            
-            <div className="p-3 space-y-3">
-              {['Recent Files', 'Saved Reports', 'Watchlist'].map((item, i) => (
-                <motion.div 
-                  key={item}
-                  className="text-sm text-gray-600 py-1 px-2 rounded hover:bg-gray-50"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.3, delay: 1.3 + (i * 0.1) }}
-                >
-                  {item}
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
+          {[
+            { name: 'Portfolio', icon: <Briefcase size={16} />, active: true },
+            { name: 'Trading', icon: <TrendingUp size={16} /> },
+            { name: 'Analysis', icon: <BarChart3 size={16} /> },
+            { name: 'Cash Flow', icon: <Wallet size={16} /> },
+            { name: 'Security', icon: <Lock size={16} /> },
+          ].map((item, i) => (
+            <motion.div 
+              key={item.name}
+              className={`flex items-center gap-3 p-3 ${item.active ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600'}`}
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.3, delay: 0.4 + (i * 0.1) }}
+            >
+              <div className={`${item.active ? 'text-indigo-600' : 'text-gray-400'}`}>
+                {item.icon}
+              </div>
+              <div className={`text-sm ${item.active ? 'font-medium' : ''}`}>{item.name}</div>
+            </motion.div>
+          ))}
         </motion.div>
         
         {/* Main Content Area */}
         <motion.div 
-          className="col-span-10 space-y-6"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.7 }}
+          className="col-span-8 space-y-6"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.6 }}
         >
-          {/* Page Title and Actions */}
+          {/* Title */}
           <motion.div 
-            className="flex justify-between items-center"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.9 }}
+            className="flex items-start justify-between"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.7 }}
           >
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Portfolio Overview</h1>
-              <p className="text-gray-500">Manage and monitor your assets across all accounts</p>
+              <h2 className="text-xl font-bold text-gray-900">Wealth Overview</h2>
+              <p className="text-sm text-gray-500">Unified view across all accounts</p>
             </div>
             
-            <div className="flex space-x-3">
-              <motion.button 
-                className="px-4 py-2 rounded-lg border border-gray-200 text-gray-700 text-sm font-medium flex items-center gap-2"
-                whileHover={{ scale: 1.05 }}
-                transition={{ duration: 0.2 }}
-              >
-                <EyeOff size={16} />
-                <span>Hide Inactive</span>
-              </motion.button>
-              
-              <motion.button 
-                className="px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm font-medium"
-                whileHover={{ scale: 1.05 }}
-                transition={{ duration: 0.2 }}
-              >
-                Generate Report
-              </motion.button>
-            </div>
+            <motion.button 
+              className="px-3 py-1.5 text-sm bg-indigo-600 text-white rounded-lg"
+              whileHover={{ scale: 1.05 }}
+              transition={{ duration: 0.2 }}
+            >
+              Generate Report
+            </motion.button>
           </motion.div>
           
-          {/* Portfolio Summary */}
+          {/* Key Metrics */}
           <motion.div 
-            className="grid grid-cols-3 gap-4"
+            className="grid grid-cols-4 gap-4"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 1 }}
+            transition={{ duration: 0.5, delay: 0.8 }}
           >
             {[
-              { title: 'Total Assets', value: '$3.6M', change: '+8.2%', color: 'text-green-500' },
-              { title: 'Growth YTD', value: '12.4%', change: '+2.3%', color: 'text-green-500' },
-              { title: 'Asset Classes', value: '6', change: 'Diversified', color: 'text-blue-500' }
-            ].map((item, i) => (
+              { title: 'Total Assets', value: '$3.6M', change: '+8.2%' },
+              { title: 'Monthly Return', value: '+2.1%', change: '+0.5%' },
+              { title: 'Risk Score', value: 'Moderate', change: 'AA+' },
+              { title: 'Asset Classes', value: '6', change: 'Diversified' }
+            ].map((metric, i) => (
               <motion.div 
                 key={i}
-                className="bg-white p-5 rounded-xl shadow-sm border border-gray-100"
+                className="bg-white p-4 rounded-lg border border-gray-100 shadow-sm"
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.4, delay: 1.1 + (i * 0.1) }}
+                transition={{ duration: 0.4, delay: 0.9 + (i * 0.1) }}
               >
-                <div className="text-gray-500 text-sm">{item.title}</div>
-                <div className="flex items-end justify-between mt-1">
-                  <div className="text-2xl font-bold text-gray-900">{item.value}</div>
-                  <div className={`flex items-center gap-1 ${item.color}`}>
-                    <ArrowUpRight size={16} />
-                    <span className="text-sm font-medium">{item.change}</span>
+                <div className="text-sm text-gray-500">{metric.title}</div>
+                <div className="mt-1 flex items-end justify-between">
+                  <div className="text-xl font-bold text-gray-900">{metric.value}</div>
+                  <div className="text-xs text-green-500 flex items-center">
+                    <ArrowUpRight size={14} />
+                    <span>{metric.change}</span>
                   </div>
                 </div>
               </motion.div>
             ))}
           </motion.div>
           
-          {/* Portfolio Breakdown */}
+          {/* Charts Area */}
           <div className="grid grid-cols-12 gap-6">
-            {/* Asset Allocation */}
+            {/* Portfolio Breakdown */}
             <motion.div 
-              className="col-span-5 bg-white p-5 rounded-xl shadow-sm border border-gray-100"
+              className="col-span-5 bg-white p-4 rounded-lg border border-gray-100 shadow-sm"
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 1.3 }}
+              transition={{ duration: 0.5, delay: 1.1 }}
             >
-              <div className="flex justify-between items-center mb-6">
-                <h3 className="font-medium text-gray-900">Asset Allocation</h3>
-                <div className="flex items-center gap-1 text-sm text-indigo-600">
-                  <PieChart size={16} />
-                  <span>View Details</span>
-                </div>
+              <div className="mb-3 text-sm font-medium text-gray-900">Asset Allocation</div>
+              
+              <div className="relative h-[140px] flex items-center justify-center">
+                {/* Simplified Pie Chart Animation */}
+                <svg width="100%" height="100%" viewBox="0 0 100 100">
+                  <motion.path
+                    d="M50,50 L50,10 A40,40 0 0,1 85,65 Z"
+                    fill="#818CF8"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.5, delay: 1.2 }}
+                  />
+                  <motion.path
+                    d="M50,50 L85,65 A40,40 0 0,1 30,85 Z"
+                    fill="#34D399"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.5, delay: 1.3 }}
+                  />
+                  <motion.path
+                    d="M50,50 L30,85 A40,40 0 0,1 15,40 Z"
+                    fill="#F59E0B"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.5, delay: 1.4 }}
+                  />
+                  <motion.path
+                    d="M50,50 L15,40 A40,40 0 0,1 50,10 Z"
+                    fill="#EC4899"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.5, delay: 1.5 }}
+                  />
+                </svg>
               </div>
               
-              <div className="relative h-48 flex items-center justify-center">
-                {/* Donut Chart Animation */}
-                <div className="relative w-full h-full flex items-center justify-center">
-                  {[
-                    { color: '#818CF8', percent: 35, delay: 0 },
-                    { color: '#34D399', percent: 25, delay: 0.1 },
-                    { color: '#F59E0B', percent: 20, delay: 0.2 },
-                    { color: '#EC4899', percent: 12, delay: 0.3 },
-                    { color: '#60A5FA', percent: 8, delay: 0.4 }
-                  ].map((segment, i) => (
-                    <motion.div 
-                      key={i}
-                      className="absolute inset-0"
-                      style={{ 
-                        clipPath: i === 0 ? 
-                          'polygon(50% 50%, 50% 0%, 100% 0%, 100% 100%, 50% 100%)' : 
-                          i === 1 ? 
-                            'polygon(50% 50%, 100% 0%, 100% 100%, 50% 100%)' : 
-                            i === 2 ? 
-                              'polygon(50% 50%, 100% 100%, 0% 100%, 0% 50%)' : 
-                              i === 3 ? 
-                                'polygon(50% 50%, 0% 50%, 0% 0%, 30% 0%)' :
-                                'polygon(50% 50%, 30% 0%, 50% 0%)'
-                      }}
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ duration: 0.5, delay: 1.4 + (i * 0.1) }}
-                    >
-                      <div 
-                        className="w-full h-full rounded-full" 
-                        style={{ backgroundColor: segment.color }}
-                      />
-                    </motion.div>
-                  ))}
-                  
-                  <div className="absolute inset-[20%] bg-white rounded-full z-10 flex flex-col items-center justify-center">
-                    <motion.div 
-                      className="text-sm text-gray-500"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ duration: 0.3, delay: 1.9 }}
-                    >
-                      Total Assets
-                    </motion.div>
-                    <motion.div 
-                      className="text-xl font-bold text-gray-900"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ duration: 0.3, delay: 2 }}
-                    >
-                      $3.6M
-                    </motion.div>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="grid grid-cols-2 gap-3 mt-2">
+              <div className="grid grid-cols-2 gap-2 mt-2">
                 {[
                   { label: 'Equities', value: '35%', color: '#818CF8' },
                   { label: 'Fixed Income', value: '25%', color: '#34D399' },
                   { label: 'Real Estate', value: '20%', color: '#F59E0B' },
-                  { label: 'Alternatives', value: '12%', color: '#EC4899' },
-                  { label: 'Cash', value: '8%', color: '#60A5FA' },
+                  { label: 'Alternatives', value: '20%', color: '#EC4899' },
                 ].map((item, i) => (
                   <motion.div 
-                    key={item.label} 
+                    key={i} 
                     className="flex items-center gap-2"
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.3, delay: 2 + (i * 0.1) }}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.3, delay: 1.6 + (i * 0.1) }}
                   >
-                    <div className="w-3 h-3 rounded-sm" style={{ backgroundColor: item.color }}></div>
-                    <div className="text-sm text-gray-600 flex-1">{item.label}</div>
-                    <div className="text-sm font-medium text-gray-900">{item.value}</div>
+                    <div className="w-2 h-2 rounded-sm" style={{ backgroundColor: item.color }}></div>
+                    <div className="text-xs text-gray-600">{item.label}</div>
+                    <div className="text-xs font-medium ml-auto">{item.value}</div>
                   </motion.div>
                 ))}
               </div>
             </motion.div>
             
-            {/* Top Holdings */}
+            {/* Performance Chart */}
             <motion.div 
-              className="col-span-7 bg-white p-5 rounded-xl shadow-sm border border-gray-100"
+              className="col-span-7 bg-white p-4 rounded-lg border border-gray-100 shadow-sm"
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 1.3 }}
+              transition={{ duration: 0.5, delay: 1.1 }}
             >
-              <div className="flex justify-between items-center mb-6">
-                <h3 className="font-medium text-gray-900">Top Holdings</h3>
-                <div className="flex items-center gap-1 text-sm text-indigo-600">
-                  <BarChart3 size={16} />
-                  <span>View All</span>
-                </div>
-              </div>
+              <div className="mb-3 text-sm font-medium text-gray-900">Performance Trend</div>
               
-              <div className="space-y-4">
-                {[
-                  { name: 'US Technology ETF', ticker: 'USTEC', value: '$820,500', allocation: '22%', change: '+12.4%', color: 'text-green-500' },
-                  { name: 'Global Bond Fund', ticker: 'GBND', value: '$535,000', allocation: '15%', change: '+3.2%', color: 'text-green-500' },
-                  { name: 'Real Estate Portfolio', ticker: 'REIT', value: '$430,000', allocation: '12%', change: '+6.8%', color: 'text-green-500' },
-                  { name: 'Emerging Markets', ticker: 'EMKT', value: '$320,000', allocation: '9%', change: '-2.3%', color: 'text-red-500' },
-                  { name: 'Healthcare Innovation', ticker: 'HLTH', value: '$285,000', allocation: '8%', change: '+9.1%', color: 'text-green-500' },
-                ].map((holding, i) => (
-                  <motion.div 
-                    key={i}
-                    className="flex items-center border-b border-gray-100 pb-4 last:border-0 last:pb-0"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3, delay: 1.5 + (i * 0.1) }}
-                  >
-                    <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center text-gray-500 mr-3">
-                      {holding.ticker.charAt(0)}
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex justify-between">
-                        <div>
-                          <div className="text-sm font-medium text-gray-900">{holding.name}</div>
-                          <div className="text-xs text-gray-500">{holding.ticker}</div>
-                        </div>
-                        <div className="text-right">
-                          <div className="text-sm font-medium text-gray-900">{holding.value}</div>
-                          <div className="text-xs text-gray-500">{holding.allocation}</div>
-                        </div>
-                      </div>
-                      <div className="mt-2 flex justify-between items-center">
-                        <div className="bg-gray-100 h-1.5 rounded-full flex-1 mr-3">
-                          <motion.div 
-                            className="h-full bg-indigo-500 rounded-full"
-                            style={{ width: holding.allocation }}
-                            initial={{ width: 0 }}
-                            animate={{ width: holding.allocation }}
-                            transition={{ duration: 0.8, delay: 1.7 + (i * 0.1) }}
-                          />
-                        </div>
-                        <div className={`text-xs font-medium ${holding.color}`}>
-                          {holding.change}
-                        </div>
-                      </div>
-                    </div>
-                  </motion.div>
-                ))}
+              <div className="h-[140px] relative">
+                {/* Time period filters */}
+                <div className="absolute top-0 right-0 flex space-x-1 text-xs">
+                  {['1M', '3M', '6M', 'YTD', '1Y'].map((period, i) => (
+                    <motion.span 
+                      key={period}
+                      className={`px-2 py-0.5 rounded ${i === 2 ? 'bg-indigo-100 text-indigo-600' : 'text-gray-500'}`}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.3, delay: 1.2 + (i * 0.1) }}
+                    >
+                      {period}
+                    </motion.span>
+                  ))}
+                </div>
+                
+                {/* Simplified Line Chart */}
+                <svg width="100%" height="100%" viewBox="0 0 300 100" preserveAspectRatio="none">
+                  {/* Background grid lines */}
+                  {[20, 40, 60, 80].map((y) => (
+                    <motion.line
+                      key={y}
+                      x1="0" y1={y} x2="300" y2={y}
+                      stroke="#f0f0f0"
+                      strokeWidth="1"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.5, delay: 1.3 }}
+                    />
+                  ))}
+                  
+                  {/* Performance line */}
+                  <motion.path
+                    d="M0,80 C30,75 60,85 90,65 S150,30 180,40 S250,20 300,10"
+                    stroke="#818CF8"
+                    strokeWidth="3"
+                    fill="none"
+                    initial={{ pathLength: 0 }}
+                    animate={{ pathLength: 1 }}
+                    transition={{ duration: 1.5, delay: 1.4 }}
+                  />
+                  
+                  {/* Area fill */}
+                  <motion.path
+                    d="M0,80 C30,75 60,85 90,65 S150,30 180,40 S250,20 300,10 L300,100 L0,100 Z"
+                    fill="url(#performanceGradient)"
+                    fillOpacity="0.2"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 0.2 }}
+                    transition={{ duration: 0.8, delay: 1.8 }}
+                  />
+                  
+                  <defs>
+                    <linearGradient id="performanceGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" stopColor="#818CF8" stopOpacity="0.6" />
+                      <stop offset="100%" stopColor="#818CF8" stopOpacity="0" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+                
+                {/* Data point */}
+                <motion.div
+                  className="absolute top-[40px] right-[100px] w-3 h-3 bg-indigo-600 rounded-full shadow-md"
+                  initial={{ scale: 0, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ duration: 0.3, delay: 2 }}
+                />
+                
+                <motion.div
+                  className="absolute top-[20px] right-[40px] flex items-center justify-center px-2 py-1 bg-indigo-600 text-white text-xs rounded"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: 2.1 }}
+                >
+                  +12.4%
+                </motion.div>
               </div>
             </motion.div>
           </div>

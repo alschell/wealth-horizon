@@ -2,7 +2,8 @@
 import React from "react";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import DashboardContent from "@/components/dashboard/DashboardContent";
-import { DashboardCustomizeDialog, useDashboardCustomize } from "@/components/dashboard/customize";
+import { DashboardCustomizeDialog } from "@/components/dashboard/customize";
+import { useDashboardCustomize } from "@/components/dashboard/customize/useDashboardCustomize";
 
 const Dashboard = () => {
   const {

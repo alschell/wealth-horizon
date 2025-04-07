@@ -19,7 +19,6 @@ export const useQuickAccess = (pathname?: string) => {
       // Default to showing first 8 items sorted alphabetically
       const defaultItems = allQuickLinks
         .slice(0, 8)
-        .sort((a, b) => a.title.localeCompare(b.title))
         .map(item => item.id);
       setVisibleItems(defaultItems);
     }
@@ -46,10 +45,11 @@ export const useQuickAccess = (pathname?: string) => {
     }
   };
 
-  // Filter the quick links based on user selection and their order
+  // Filter the quick links based on user selection and sort alphabetically
   const filteredItems: QuickLinkItem[] = visibleItems
     .map(id => allQuickLinks.find(link => link.id === id))
-    .filter((item): item is QuickLinkItem => !!item);
+    .filter((item): item is QuickLinkItem => !!item)
+    .sort((a, b) => a.title.localeCompare(b.title));
 
   return {
     isCustomizing,

@@ -9,13 +9,12 @@ import MarketSnapshot from "@/components/dashboard/MarketSnapshot";
 import RecentActivity from "@/components/dashboard/RecentActivity";
 import PageHeaderCard from "@/components/dashboard/PageHeaderCard";
 import KeyMetricsGrid from "@/components/dashboard/performance/KeyMetricsGrid";
-import { LayoutDashboard, Sliders } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { LayoutDashboard } from "lucide-react";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { newsData } from "@/components/dashboard/performance/PerformanceData";
 import TopAssets from "@/components/dashboard/performance/TopAssets";
 import RecentNewsList from "@/components/dashboard/performance/RecentNewsList";
 import SectionHeader from "./SectionHeader";
-import { Button } from "@/components/ui/button";
 
 const Dashboard = () => {
   return (
@@ -57,28 +56,10 @@ const Dashboard = () => {
             <CardHeader className="pb-2">
               <div className="flex justify-between items-center">
                 <SectionHeader title="Recent News" />
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  className="h-8 w-8 p-0"
-                >
-                  <Sliders className="h-4 w-4" />
-                  <span className="sr-only">Customize</span>
-                </Button>
               </div>
             </CardHeader>
             <CardContent>
-              <div className="space-y-2">
-                {newsData.map((news, index) => (
-                  <div key={index} className="p-3 rounded-md border border-gray-100">
-                    <p className="text-sm font-medium">{news.title}</p>
-                    <p className="text-xs text-gray-500 mt-1">{news.time}</p>
-                  </div>
-                ))}
-                <Button variant="outline" size="sm" className="w-full">
-                  View All News
-                </Button>
-              </div>
+              <RecentNewsList newsData={newsData} />
             </CardContent>
           </Card>
         </div>

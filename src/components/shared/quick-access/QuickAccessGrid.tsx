@@ -1,24 +1,39 @@
 
 import React from "react";
-import QuickAccessItem from "./QuickAccessItem";
-import { QuickAccessGridProps } from "./types";
+import { Link } from "react-router-dom";
+import { useQuickAccess } from "./useQuickAccess";
+import { QuickLinkItem } from "./types";
+
+interface QuickAccessGridProps {
+  items: QuickLinkItem[];
+}
 
 const QuickAccessGrid = ({ items }: QuickAccessGridProps) => {
-  // Ensure we have items to display
-  const displayItems = items || [];
-  
+  // Sort items alphabetically by title for display
+  const sortedItems = React.useMemo(() => {
+    return [...items].sort((a, b) => a.title.localeCompare(b.title));
+  }, [items]);
+
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-      {displayItems.map((item, index) => (
-        <QuickAccessItem
-          key={item.id || index}
-          title={item.title}
-          description={item.description}
-          icon={item.icon}
-          link={item.link}
-          color={item.color}
-          onClick={item.onClick}
-        />
+      {sortedItems.map((item, index) => (
+        <Link
+          key={index}
+          to={item.link}
+          className="flex flex-col p-3 rounded-lg hover:bg-gray-50 transition-colors text-center"
+        >
+          <div className="flex flex-col items-center justify-center">
+            <div className="h-8 w-8 flex items-center justify-center rounded-full bg-gray-50 mb-2">
+              {item.icon}
+            </div>
+          </div>
+          <div>
+            <h3 className="text-sm font-medium">{item.title}</h3>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              {item.description}
+            </p>
+          </div>
+        </Link>
       ))}
     </div>
   );

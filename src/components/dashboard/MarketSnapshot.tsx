@@ -124,7 +124,11 @@ const MarketSnapshot = () => {
         <ScrollArea className="flex-1 -mr-4 pr-4">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {filteredAndOrderedItems.map((item, index) => (
-              <div key={index} className="p-3 rounded-md bg-white hover:bg-gray-50 transition-colors">
+              <Link 
+                key={index} 
+                to="/market-data" 
+                className="p-3 rounded-md bg-white hover:bg-gray-50 transition-colors cursor-pointer"
+              >
                 <div className="flex items-center mb-1">
                   <span className="text-lg mr-2 w-6 text-center">{item.emoji}</span>
                   <p className="text-sm font-medium">{item.label}</p>
@@ -137,7 +141,7 @@ const MarketSnapshot = () => {
                     {item.change}
                   </p>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </ScrollArea>

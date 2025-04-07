@@ -73,7 +73,7 @@ const RecentNewsList = ({ newsData }: RecentNewsListProps) => {
         </Button>
       </div>
       
-      <ScrollArea className="flex-grow h-[225px]">
+      <ScrollArea className="flex-grow">
         <div className="space-y-3">
           {filteredNews.length > 0 ? (
             filteredNews.map((news, index) => (

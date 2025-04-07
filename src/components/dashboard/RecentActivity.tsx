@@ -1,9 +1,11 @@
+
 import React from "react";
 import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ChevronRight, TrendingUp, DollarSign, Users, File, FileCheck, CreditCard, RefreshCcw, AlertTriangle, ArrowUpRight, ArrowDownRight } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import SectionHeader from "./SectionHeader";
 
 const RecentActivity = () => {
   const navigate = useNavigate();
@@ -102,10 +104,10 @@ const RecentActivity = () => {
   return (
     <>
       <CardHeader className="pb-2">
-        <CardTitle className="text-xl">Recent Activity</CardTitle>
+        <SectionHeader title="Recent Activity" />
       </CardHeader>
       <CardContent className="flex-1 flex flex-col">
-        <ScrollArea className="flex-grow h-[250px]">
+        <ScrollArea className="flex-grow">
           <div className="space-y-3">
             {activities.map((activity, index) => (
               <div 

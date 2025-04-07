@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { CardContent, CardHeader } from "@/components/ui/card";
 import { Sliders } from "lucide-react";
@@ -8,8 +7,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { Checkbox } from "@/components/ui/checkbox";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { GripVertical } from "lucide-react";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
-// Define defaultMarketItems first before using it in useState
 const defaultMarketItems = [
   { id: "sp500", label: "S&P 500", value: "4,400.50", change: "+0.25%", emoji: "📈" },
   { id: "nasdaq", label: "Nasdaq", value: "13,630.75", change: "-0.10%", emoji: "📊" },
@@ -28,7 +27,6 @@ const defaultMarketItems = [
 const MarketSnapshot = () => {
   const [isCustomizing, setIsCustomizing] = useState(false);
   
-  // Sort market items alphabetically by default
   const alphabeticallySortedItems = [...defaultMarketItems].sort((a, b) => 
     a.label.localeCompare(b.label)
   );
@@ -88,7 +86,6 @@ const MarketSnapshot = () => {
     setTemporaryOrder(items);
   };
 
-  // Get filtered and ordered items based on selection and order
   const filteredAndOrderedItems = itemOrder
     .filter(id => visibleItems.includes(id))
     .map(id => defaultMarketItems.find(item => item.id === id))
@@ -110,24 +107,33 @@ const MarketSnapshot = () => {
           </Button>
         </div>
       </CardHeader>
-      <CardContent className="overflow-auto h-[250px]">
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {filteredAndOrderedItems.map((item, index) => (
-            <div key={index} className="p-3 rounded-md bg-gray-50 hover:bg-gray-100 transition-colors">
-              <div className="flex items-center mb-1">
-                <span className="text-lg mr-2 w-6 text-center">{item.emoji}</span>
-                <p className="text-sm font-medium">{item.label}</p>
+      <CardContent className="flex-1 flex flex-col">
+        <ScrollArea className="flex-grow">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {filteredAndOrderedItems.map((item, index) => (
+              <div key={index} className="p-3 rounded-md bg-gray-50 hover:bg-gray-100 transition-colors">
+                <div className="flex items-center mb-1">
+                  <span className="text-lg mr-2 w-6 text-center">{item.emoji}</span>
+                  <p className="text-sm font-medium">{item.label}</p>
+                </div>
+                <div className="flex flex-col ml-8">
+                  <p className="text-sm font-mono font-bold">{item.value}</p>
+                  <p className={`text-xs font-medium ${
+                    item.change.startsWith('+') ? 'text-emerald-600' : 'text-red-500'
+                  }`}>
+                    {item.change}
+                  </p>
+                </div>
               </div>
-              <div className="flex flex-col ml-8">
-                <p className="text-sm font-mono font-bold">{item.value}</p>
-                <p className={`text-xs font-medium ${
-                  item.change.startsWith('+') ? 'text-emerald-600' : 'text-red-500'
-                }`}>
-                  {item.change}
-                </p>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
+        </ScrollArea>
+        
+        <div className="mt-auto pt-4">
+          <Button variant="outline" size="sm" className="w-full flex items-center justify-center">
+            View All Market Data
+            <span className="h-4 w-4 ml-1">→</span>
+          </Button>
         </div>
       </CardContent>
 

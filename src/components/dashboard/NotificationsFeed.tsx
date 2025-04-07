@@ -62,8 +62,8 @@ const NotificationsFeed = () => {
       <CardHeader className="pb-2">
         <SectionHeader title="Notifications, events and tasks" />
       </CardHeader>
-      <CardContent className="flex-1 flex flex-col">
-        <ScrollArea className="flex-grow h-[250px]">
+      <CardContent className="flex-1 flex flex-col p-6 pt-0">
+        <ScrollArea className="flex-grow">
           <div className="space-y-3">
             {notifications.map((notification, index) => (
               <div 

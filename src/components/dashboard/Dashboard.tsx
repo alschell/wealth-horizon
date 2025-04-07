@@ -130,7 +130,7 @@ const Dashboard = () => {
 
         {/* Top Assets, Recent News, and Notifications in separate cards with same height */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Top Assets card with fixed height */}
+          {/* Top Assets card */}
           {orderedVisibleSections.includes("topAssets") && (
             <Card className="shadow-sm h-[350px] flex flex-col">
               <CardHeader className="pb-0">
@@ -139,7 +139,7 @@ const Dashboard = () => {
             </Card>
           )}
           
-          {/* Recent News card with fixed height */}
+          {/* Recent News card */}
           {orderedVisibleSections.includes("recentNews") && (
             <Card className="shadow-sm h-[350px] flex flex-col">
               <CardHeader className="pb-0">
@@ -148,7 +148,7 @@ const Dashboard = () => {
             </Card>
           )}
 
-          {/* Notifications container with fixed height */}
+          {/* Notifications container */}
           {orderedVisibleSections.includes("notifications") && <NotificationsFeed />}
         </div>
 
@@ -156,7 +156,7 @@ const Dashboard = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {orderedVisibleSections.includes("marketSnapshot") && (
             <div className="lg:col-span-2">
-              {/* Market overview card - fixed height */}
+              {/* Market overview card */}
               <Card className="shadow-sm h-[350px] flex flex-col">
                 <MarketSnapshot />
               </Card>
@@ -165,7 +165,7 @@ const Dashboard = () => {
           
           {orderedVisibleSections.includes("recentActivity") && (
             <div>
-              {/* Recent activities card - fixed height */}
+              {/* Recent activities card */}
               <Card className="shadow-sm h-[350px] flex flex-col">
                 <RecentActivity />
               </Card>

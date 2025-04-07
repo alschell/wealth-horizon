@@ -7,6 +7,7 @@ import QuickAccessItems from "./QuickAccessItems";
 import CustomizeQuickAccessDialog from "./CustomizeQuickAccessDialog";
 import { allActionItems } from "./actionItemsData";
 import { useQuickAccessStore } from "./useQuickAccessStore";
+import SectionHeader from "../SectionHeader";
 
 const QuickAccessGrid = () => {
   const { 
@@ -22,24 +23,36 @@ const QuickAccessGrid = () => {
   } = useQuickAccessStore();
 
   return (
-    <Card>
-      <CardHeader className="px-6 pt-6 pb-4 flex flex-row justify-between items-center">
-        <div>
-          <CardTitle className="text-xl">Quick Access</CardTitle>
+    <Card className="shadow-sm h-[350px] flex flex-col">
+      <CardHeader className="pb-2">
+        <div className="flex justify-between items-center">
+          <SectionHeader title="Quick Access" />
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={handleCustomizeOpen} 
+            className="h-8 w-8 p-0"
+          >
+            <Sliders className="h-4 w-4" />
+            <span className="sr-only">Customize</span>
+          </Button>
         </div>
-        <Button 
-          variant="ghost" 
-          size="sm" 
-          onClick={handleCustomizeOpen} 
-          className="h-8 w-8 p-0"
-        >
-          <Sliders className="h-4 w-4" />
-          <span className="sr-only">Customize</span>
-        </Button>
       </CardHeader>
-      <CardContent>
+      <CardContent className="flex-grow overflow-auto pb-4">
         <QuickAccessItems items={filteredItems} />
       </CardContent>
+
+      <div className="px-6 pb-6 mt-auto">
+        <Button 
+          variant="outline" 
+          size="sm" 
+          className="w-full flex items-center justify-center"
+          onClick={() => {}}
+        >
+          View All Shortcuts
+          <span className="h-4 w-4 ml-1">→</span>
+        </Button>
+      </div>
 
       <CustomizeQuickAccessDialog
         isOpen={isCustomizing}

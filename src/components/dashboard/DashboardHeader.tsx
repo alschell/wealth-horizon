@@ -6,7 +6,6 @@ import { Search, LogOut, Settings } from "lucide-react";
 import Logo from "./Logo";
 import NotificationsPopover from "./notifications";
 import HeaderAction from "./HeaderAction";
-import PersonalizedSettings from "./PersonalizedSettings";
 
 const DashboardHeader = () => {
   const navigate = useNavigate();

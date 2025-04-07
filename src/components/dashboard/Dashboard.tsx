@@ -9,12 +9,12 @@ import MarketSnapshot from "@/components/dashboard/MarketSnapshot";
 import RecentActivity from "@/components/dashboard/RecentActivity";
 import PageHeaderCard from "@/components/dashboard/PageHeaderCard";
 import KeyMetricsGrid from "@/components/dashboard/performance/KeyMetricsGrid";
-import { LayoutDashboard } from "lucide-react";
+import { LayoutDashboard, Sliders } from "lucide-react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { newsData } from "@/components/dashboard/performance/PerformanceData";
 import TopAssets from "@/components/dashboard/performance/TopAssets";
 import RecentNewsList from "@/components/dashboard/performance/RecentNewsList";
-import PersonalizedSettings from "./PersonalizedSettings";
 
 const Dashboard = () => {
   return (
@@ -29,7 +29,14 @@ const Dashboard = () => {
             iconColor="text-gray-700"
             iconBgColor="bg-gray-100"
           />
-          <PersonalizedSettings />
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-9 px-3 flex items-center gap-1"
+          >
+            <Sliders className="h-4 w-4 mr-1" />
+            <span>Customize</span>
+          </Button>
         </div>
 
         {/* Welcome header */}
@@ -45,18 +52,23 @@ const Dashboard = () => {
         <QuickAccessGrid />
 
         {/* Top Assets and Recent News in separate cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Card className="shadow-sm">
-            <CardHeader className="pb-2">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* Top Assets card aligned with the same height as notifications */}
+          <Card className="shadow-sm h-full flex flex-col">
+            <CardHeader className="pb-0">
               <TopAssets />
             </CardHeader>
           </Card>
           
-          <Card className="shadow-sm">
-            <CardHeader className="pb-2">
+          {/* Recent News card */}
+          <Card className="shadow-sm h-full flex flex-col">
+            <CardHeader className="pb-0">
               <RecentNewsList newsData={newsData} />
             </CardHeader>
           </Card>
+
+          {/* Notifications container */}
+          <NotificationsFeed />
         </div>
 
         {/* Key summary cards */}
@@ -72,9 +84,6 @@ const Dashboard = () => {
           </div>
           
           <div className="space-y-6">
-            {/* Notifications container */}
-            <NotificationsFeed />
-            
             {/* Recent activities card - only visible on large screens */}
             <div className="hidden lg:block">
               <RecentActivity />

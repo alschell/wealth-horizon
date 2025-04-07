@@ -18,22 +18,22 @@ type RecentNewsListProps = {
   newsData: NewsItem[];
 };
 
-// Default sources and categories
+// Default sources and categories - sorts alphabetically
 const defaultSources: NewsSource[] = [
-  { id: "ft", name: "Financial Times", description: "Global financial news" },
-  { id: "wsj", name: "Wall Street Journal", description: "Business and markets" },
   { id: "bloomberg", name: "Bloomberg", description: "Financial and business news" },
+  { id: "cnbc", name: "CNBC", description: "Financial and business news" },
+  { id: "ft", name: "Financial Times", description: "Global financial news" },
   { id: "reuters", name: "Reuters", description: "Global news and markets" },
-  { id: "cnbc", name: "CNBC", description: "Financial and business news" }
-].sort((a, b) => a.name.localeCompare(b.name));
+  { id: "wsj", name: "Wall Street Journal", description: "Business and markets" }
+];
 
 const defaultCategories: NewsCategory[] = [
-  { id: "markets", name: "Markets", description: "Stock, bond, and commodity markets" },
-  { id: "economy", name: "Economy", description: "Economic news and indicators" },
   { id: "companies", name: "Companies", description: "Corporate news and earnings" },
+  { id: "economy", name: "Economy", description: "Economic news and indicators" },
   { id: "finance", name: "Finance", description: "Financial industry news" },
+  { id: "markets", name: "Markets", description: "Stock, bond, and commodity markets" },
   { id: "technology", name: "Technology", description: "Tech industry news" }
-].sort((a, b) => a.name.localeCompare(b.name));
+];
 
 const RecentNewsList = ({ newsData }: RecentNewsListProps) => {
   const navigate = useNavigate();
@@ -127,7 +127,7 @@ const RecentNewsList = ({ newsData }: RecentNewsListProps) => {
         </Button>
       </div>
       
-      <div className="space-y-3 flex-grow overflow-y-auto max-h-[330px]">
+      <div className="space-y-3 flex-grow overflow-y-auto max-h-[165px]">
         {filteredNews.length > 0 ? (
           filteredNews.map((news, index) => (
             <div 

@@ -185,7 +185,7 @@ const ContactFormSection: React.FC = () => {
                   </div>
                   <div>
                     <h4 className="text-lg font-medium text-gray-900">Call Us</h4>
-                    <p className="text-gray-600">+1 (555) 123-4567</p>
+                    <p className="text-gray-600">+1 (831) 273 1336</p>
                     <p className="text-gray-600">Monday-Friday, 9am-6pm EST</p>
                   </div>
                 </div>
@@ -197,8 +197,8 @@ const ContactFormSection: React.FC = () => {
                   <div>
                     <h4 className="text-lg font-medium text-gray-900">Visit Us</h4>
                     <p className="text-gray-600">
-                      123 Financial District<br />
-                      New York, NY 10004<br />
+                      8 The Green STE B<br />
+                      Dover, DE 19901<br />
                       United States
                     </p>
                   </div>

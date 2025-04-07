@@ -1,71 +1,69 @@
 
 import React from "react";
-import { BarChart3, Briefcase, Shield, Users, Globe, CheckCircle } from "lucide-react";
-import { FadeIn, StaggerContainer, StaggerItem } from "@/components/ui/animation";
+import { FadeIn, ScaleIn, StaggerContainer, StaggerItem } from "@/components/ui/animation";
+import DashboardAnimation from "@/components/animations/DashboardAnimation";
 
 const features = [
   {
-    title: "Comprehensive Portfolio Management",
-    description: "Track, analyze, and optimize your entire investment portfolio with real-time data and advanced analytics.",
-    icon: <BarChart3 size={24} />,
+    title: "Comprehensive Dashboard",
+    description: "Get a holistic view of your wealth management across all banks and brokers."
   },
   {
-    title: "Advanced Trading Platform",
-    description: "Execute trades, manage allocations, and monitor market movements all in one integrated platform.",
-    icon: <Briefcase size={24} />,
+    title: "Real-time Analytics",
+    description: "Monitor your investments with real-time updates and customizable dashboards."
   },
   {
-    title: "Institutional-Grade Security",
-    description: "Enterprise security features with multi-factor authentication and end-to-end encryption for your data.",
-    icon: <Shield size={24} />,
+    title: "Advanced Reporting",
+    description: "Create custom reports with detailed insights and easy-to-understand visualizations."
   },
   {
-    title: "Family Office Management",
-    description: "Specialized tools for family offices including entity management, tax planning, and legacy planning.",
-    icon: <Users size={24} />,
+    title: "Compliance Management",
+    description: "Stay ahead of regulatory requirements with automated compliance monitoring."
   },
   {
-    title: "Global Investment Coverage",
-    description: "Access and analyze investment opportunities across all asset classes and global markets.",
-    icon: <Globe size={24} />,
+    title: "Risk Management",
+    description: "Identify and mitigate risks with our sophisticated analysis tools."
   },
   {
-    title: "Compliance Monitoring",
-    description: "Automated compliance checks and real-time monitoring to ensure regulatory adherence.",
-    icon: <CheckCircle size={24} />,
-  },
+    title: "Secure Collaboration",
+    description: "Share documents and insights securely with team members and stakeholders."
+  }
 ];
 
-interface FeaturesSectionProps {
-  id: string;
-}
-
-const FeaturesSection: React.FC<FeaturesSectionProps> = ({ id }) => {
+const FeaturesSection: React.FC<{ id?: string }> = ({ id }) => {
   return (
-    <section id={id} className="py-24 bg-white">
+    <section className="py-24 bg-gray-50" id={id}>
       <div className="max-w-7xl mx-auto px-6">
-        <div className="text-center mb-16">
-          <FadeIn>
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">One Platform to Replace Them All</h2>
+        <FadeIn>
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Transform Your Wealth Management</h2>
             <p className="mt-4 text-xl text-gray-600 max-w-3xl mx-auto">
-              Eliminate disconnected tools and unify your wealth management operations in a single, powerful platform.
+              Our platform simplifies complex wealth management with intuitive tools designed for family offices and institutions
             </p>
-          </FadeIn>
-        </div>
+          </div>
+        </FadeIn>
 
-        <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {features.map((feature, index) => (
-            <StaggerItem key={index} className="group">
-              <div className="h-full p-8 rounded-2xl border border-gray-100 bg-white shadow-sm hover:shadow-md transition-all duration-300">
-                <div className="w-12 h-12 flex items-center justify-center rounded-lg bg-indigo-50 text-indigo-600 mb-5">
-                  {feature.icon}
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">{feature.title}</h3>
-                <p className="text-gray-600">{feature.description}</p>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-16">
+          <ScaleIn delay={0.2}>
+            <div className="relative rounded-xl overflow-hidden shadow-2xl border border-gray-100">
+              <div className="relative aspect-[4/3]">
+                <DashboardAnimation />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent"></div>
               </div>
-            </StaggerItem>
-          ))}
-        </StaggerContainer>
+            </div>
+          </ScaleIn>
+
+          <div>
+            <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 gap-6" delay={0.3}>
+              {features.map((feature, index) => (
+                <StaggerItem key={index} className="space-y-2">
+                  <h3 className="text-xl font-semibold text-gray-900">{feature.title}</h3>
+                  <p className="text-gray-600">{feature.description}</p>
+                </StaggerItem>
+              ))}
+            </StaggerContainer>
+          </div>
+        </div>
       </div>
     </section>
   );

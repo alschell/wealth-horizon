@@ -13,4 +13,8 @@ if (!rootElement) {
 const root = createRoot(rootElement);
 
 // Make sure the entire app is wrapped in React
-root.render(<App />);
+root.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);

@@ -1,3 +1,4 @@
+
 import React from "react";  // Explicitly import React
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -8,7 +9,7 @@ import { OnboardingProvider } from "./context/OnboardingContext";
 import LandingPage from "./pages/LandingPage";
 import NotFound from "./pages/NotFound";
 import Onboarding from "./pages/Onboarding";
-import Dashboard from "./pages/Dashboard"; // This now points to the new file
+import Dashboard from "./pages/Dashboard"; 
 import Trading from "./pages/Trading";
 import Advice from "./pages/Advice";
 import MarketData from "./pages/MarketData";
@@ -40,62 +41,68 @@ import ComplianceMonitoring from "./pages/ComplianceMonitoring";
 import Logout from "./pages/Logout";
 import Calendar from "./pages/Calendar";
 
-// Create a client
-const queryClient = new QueryClient();
-
 function App() {
+  // Create a query client inside the component
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        refetchOnWindowFocus: false,
+        staleTime: 1000 * 60 * 5, // 5 minutes
+        retry: 1,
+      },
+    }
+  });
+
   return (
-    <React.StrictMode>
-      <QueryClientProvider client={queryClient}>
-        <OnboardingProvider>
-          <BrowserRouter>
-            <TooltipProvider>
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/onboarding/*" element={<Onboarding />} />
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/dashboard/*" element={<Dashboard />} />
-                <Route path="/trading" element={<Trading />} />
-                <Route path="/trading/new" element={<TradingInterface />} />
-                <Route path="/trading/edit/:tradeId" element={<TradingInterface />} />
-                <Route path="/advice" element={<Advice />} />
-                <Route path="/advice/new" element={<NewAdviceInterface />} />
-                <Route path="/market-data" element={<MarketData />} />
-                <Route path="/analyze-wealth" element={<AnalyzeWealth />} />
-                <Route path="/analyze-wealth/asset/:assetId" element={<AssetDetail />} />
-                <Route path="/cashflow-management" element={<CashflowManagement />} />
-                <Route path="/cashflow" element={<CashflowManagement />} />
-                <Route path="/integrations" element={<Integrations />} />
-                <Route path="/integrations/oauth-callback" element={<IntegrationCallback />} />
-                <Route path="/user-management" element={<UserManagement />} />
-                <Route path="/dashboard/users" element={<UserManagement />} />
-                <Route path="/settings" element={<Settings />} />
-                <Route path="/reporting" element={<Reporting />} />
-                <Route path="/notifications" element={<Notifications />} />
-                <Route path="/activity" element={<Activity />} />
-                <Route path="/ai-assistant" element={<AIAssistantPage />} />
-                <Route path="/financial-chat" element={<FinancialChat />} />
-                <Route path="/borrow" element={<Borrow />} />
-                <Route path="/credit-facilities" element={<CreditFacilities />} />
-                <Route path="/esg" element={<ESG />} />
-                <Route path="/client-portal" element={<ClientPortal />} />
-                <Route path="/documents" element={<Documents />} />
-                <Route path="/tax-optimization" element={<TaxOptimization />} />
-                <Route path="/legacy-planning" element={<LegacyPlanning />} />
-                <Route path="/entity-management" element={<EntityManagement />} />
-                <Route path="/compliance-monitoring" element={<ComplianceMonitoring />} />
-                <Route path="/logout" element={<Logout />} />
-                <Route path="/calendar" element={<Calendar />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-              <Toaster />
-              <Sonner />
-              <ChatButton />
-            </TooltipProvider>
-          </BrowserRouter>
-        </OnboardingProvider>
-      </QueryClientProvider>
-    </React.StrictMode>
+    <QueryClientProvider client={queryClient}>
+      <OnboardingProvider>
+        <BrowserRouter>
+          <TooltipProvider>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/onboarding/*" element={<Onboarding />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/dashboard/*" element={<Dashboard />} />
+              <Route path="/trading" element={<Trading />} />
+              <Route path="/trading/new" element={<TradingInterface />} />
+              <Route path="/trading/edit/:tradeId" element={<TradingInterface />} />
+              <Route path="/advice" element={<Advice />} />
+              <Route path="/advice/new" element={<NewAdviceInterface />} />
+              <Route path="/market-data" element={<MarketData />} />
+              <Route path="/analyze-wealth" element={<AnalyzeWealth />} />
+              <Route path="/analyze-wealth/asset/:assetId" element={<AssetDetail />} />
+              <Route path="/cashflow-management" element={<CashflowManagement />} />
+              <Route path="/cashflow" element={<CashflowManagement />} />
+              <Route path="/integrations" element={<Integrations />} />
+              <Route path="/integrations/oauth-callback" element={<IntegrationCallback />} />
+              <Route path="/user-management" element={<UserManagement />} />
+              <Route path="/dashboard/users" element={<UserManagement />} />
+              <Route path="/settings" element={<Settings />} />
+              <Route path="/reporting" element={<Reporting />} />
+              <Route path="/notifications" element={<Notifications />} />
+              <Route path="/activity" element={<Activity />} />
+              <Route path="/ai-assistant" element={<AIAssistantPage />} />
+              <Route path="/financial-chat" element={<FinancialChat />} />
+              <Route path="/borrow" element={<Borrow />} />
+              <Route path="/credit-facilities" element={<CreditFacilities />} />
+              <Route path="/esg" element={<ESG />} />
+              <Route path="/client-portal" element={<ClientPortal />} />
+              <Route path="/documents" element={<Documents />} />
+              <Route path="/tax-optimization" element={<TaxOptimization />} />
+              <Route path="/legacy-planning" element={<LegacyPlanning />} />
+              <Route path="/entity-management" element={<EntityManagement />} />
+              <Route path="/compliance-monitoring" element={<ComplianceMonitoring />} />
+              <Route path="/logout" element={<Logout />} />
+              <Route path="/calendar" element={<Calendar />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+            <Toaster />
+            <Sonner />
+            <ChatButton />
+          </TooltipProvider>
+        </BrowserRouter>
+      </OnboardingProvider>
+    </QueryClientProvider>
   );
 }
 

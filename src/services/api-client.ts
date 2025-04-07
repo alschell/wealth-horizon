@@ -1,17 +1,6 @@
 
-import { QueryClient } from "@tanstack/react-query";
-
-// Initialize React Query client
-export const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      refetchOnWindowFocus: false,
-      staleTime: 1000 * 60 * 5, // 5 minutes
-      retry: 1,
-    },
-  },
-});
-
+// Initialize React Query client - but don't export it directly
+// It should only be used within React components
 const API_BASE_URL = "/api";
 
 // Generic API client with type safety
@@ -56,23 +45,5 @@ export const apiClient = {
       console.error("API error:", error);
       throw error;
     }
-  },
-  
-  // Method to invalidate cached data
-  invalidateQueries: (queryKey: string | string[]) => {
-    const key = Array.isArray(queryKey) ? queryKey : [queryKey];
-    queryClient.invalidateQueries({ queryKey: key });
-  },
-  
-  // Method to prefetch data
-  prefetchQuery: async <T>(
-    queryKey: string | string[],
-    endpoint: string
-  ): Promise<void> => {
-    const key = Array.isArray(queryKey) ? queryKey : [queryKey];
-    await queryClient.prefetchQuery({
-      queryKey: key,
-      queryFn: () => apiClient.get<T>(endpoint),
-    });
-  },
+  }
 };

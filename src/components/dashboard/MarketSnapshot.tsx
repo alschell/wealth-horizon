@@ -11,25 +11,36 @@ import { GripVertical } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Link } from "react-router-dom";
 
-const defaultMarketItems = [
-  { id: "sp500", label: "S&P 500", value: "4,400.50", change: "+0.25%", emoji: "📈" },
-  { id: "nasdaq", label: "Nasdaq", value: "13,630.75", change: "-0.10%", emoji: "📊" },
-  { id: "dowjones", label: "Dow Jones", value: "34,500.20", change: "+0.15%", emoji: "📉" },
-  { id: "bitcoin", label: "Bitcoin", value: "29,500.00", change: "+1.50%", emoji: "₿" },
-  { id: "ethereum", label: "Ethereum", value: "1,850.40", change: "+0.75%", emoji: "Ξ" },
-  { id: "gold", label: "Gold", value: "$1,850.20", change: "+0.35%", emoji: "🥇" },
-  { id: "oil", label: "Crude Oil", value: "$79.15", change: "-0.60%", emoji: "🛢️" },
-  { id: "dollar", label: "US Dollar", value: "1.0870", change: "+0.12%", emoji: "💵" },
-  { id: "japan", label: "Nikkei 225", value: "32,450.80", change: "+1.20%", emoji: "🇯🇵" },
-  { id: "germany", label: "DAX", value: "15,720.30", change: "+0.22%", emoji: "🇩🇪" },
-  { id: "uk", label: "FTSE 100", value: "7,650.10", change: "-0.05%", emoji: "🇬🇧" },
-  { id: "china", label: "Shanghai", value: "3,210.40", change: "-0.30%", emoji: "🇨🇳" },
+// Categorized market items
+const marketItems = [
+  // Indices
+  { id: "sp500", label: "S&P 500", value: "4,400.50", change: "+0.25%", emoji: "📈", category: "Indices" },
+  { id: "nasdaq", label: "Nasdaq", value: "13,630.75", change: "-0.10%", emoji: "📊", category: "Indices" },
+  { id: "dowjones", label: "Dow Jones", value: "34,500.20", change: "+0.15%", emoji: "📉", category: "Indices" },
+  { id: "japan", label: "Nikkei 225", value: "32,450.80", change: "+1.20%", emoji: "🇯🇵", category: "Indices" },
+  { id: "germany", label: "DAX", value: "15,720.30", change: "+0.22%", emoji: "🇩🇪", category: "Indices" },
+  { id: "uk", label: "FTSE 100", value: "7,650.10", change: "-0.05%", emoji: "🇬🇧", category: "Indices" },
+  { id: "china", label: "Shanghai", value: "3,210.40", change: "-0.30%", emoji: "🇨🇳", category: "Indices" },
+  
+  // Cryptocurrencies
+  { id: "bitcoin", label: "Bitcoin", value: "29,500.00", change: "+1.50%", emoji: "₿", category: "Cryptocurrencies" },
+  { id: "ethereum", label: "Ethereum", value: "1,850.40", change: "+0.75%", emoji: "Ξ", category: "Cryptocurrencies" },
+  
+  // Commodities
+  { id: "gold", label: "Gold", value: "$1,850.20", change: "+0.35%", emoji: "🥇", category: "Commodities" },
+  { id: "oil", label: "Crude Oil", value: "$79.15", change: "-0.60%", emoji: "🛢️", category: "Commodities" },
+  
+  // Currencies
+  { id: "dollar", label: "US Dollar", value: "1.0870", change: "+0.12%", emoji: "💵", category: "Currencies" },
 ];
+
+// Get unique categories
+const categories = [...new Set(marketItems.map(item => item.category))];
 
 const MarketSnapshot = () => {
   const [isCustomizing, setIsCustomizing] = useState(false);
   
-  const alphabeticallySortedItems = [...defaultMarketItems].sort((a, b) => 
+  const alphabeticallySortedItems = [...marketItems].sort((a, b) => 
     a.label.localeCompare(b.label)
   );
   
@@ -90,8 +101,8 @@ const MarketSnapshot = () => {
 
   const filteredAndOrderedItems = itemOrder
     .filter(id => visibleItems.includes(id))
-    .map(id => defaultMarketItems.find(item => item.id === id))
-    .filter(Boolean) as typeof defaultMarketItems;
+    .map(id => marketItems.find(item => item.id === id))
+    .filter(Boolean) as typeof marketItems;
 
   return (
     <Card className="shadow-sm h-[350px]">
@@ -113,7 +124,7 @@ const MarketSnapshot = () => {
         <ScrollArea className="flex-1 -mr-4 pr-4">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {filteredAndOrderedItems.map((item, index) => (
-              <div key={index} className="p-3 rounded-md bg-white border hover:bg-gray-50 transition-colors">
+              <div key={index} className="p-3 rounded-md bg-white hover:bg-gray-50 transition-colors">
                 <div className="flex items-center mb-1">
                   <span className="text-lg mr-2 w-6 text-center">{item.emoji}</span>
                   <p className="text-sm font-medium">{item.label}</p>
@@ -153,26 +164,34 @@ const MarketSnapshot = () => {
             <div className="space-y-6">
               <div>
                 <h3 className="text-sm font-medium mb-3">Select Market Items</h3>
-                <div className="space-y-4">
-                  {alphabeticallySortedItems.map((item) => (
-                    <div key={item.id} className="flex items-start space-x-3">
-                      <Checkbox 
-                        id={`market-${item.id}`}
-                        checked={temporarySelection.includes(item.id)}
-                        onCheckedChange={() => toggleItem(item.id)}
-                      />
-                      <div className="grid gap-1.5 leading-none">
-                        <label
-                          htmlFor={`market-${item.id}`}
-                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                        >
-                          <span className="mr-2">{item.emoji}</span>
-                          {item.label}
-                        </label>
-                      </div>
+                {categories.map(category => (
+                  <div key={category} className="mb-4">
+                    <h4 className="text-sm font-medium text-gray-700 mb-2">{category}</h4>
+                    <div className="space-y-3 pl-2">
+                      {marketItems
+                        .filter(item => item.category === category)
+                        .sort((a, b) => a.label.localeCompare(b.label))
+                        .map((item) => (
+                          <div key={item.id} className="flex items-start space-x-3">
+                            <Checkbox 
+                              id={`market-${item.id}`}
+                              checked={temporarySelection.includes(item.id)}
+                              onCheckedChange={() => toggleItem(item.id)}
+                            />
+                            <div className="grid gap-1.5 leading-none">
+                              <label
+                                htmlFor={`market-${item.id}`}
+                                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                              >
+                                <span className="mr-2">{item.emoji}</span>
+                                {item.label}
+                              </label>
+                            </div>
+                          </div>
+                        ))}
                     </div>
-                  ))}
-                </div>
+                  </div>
+                ))}
               </div>
               
               {temporarySelection.length > 0 && (
@@ -191,7 +210,7 @@ const MarketSnapshot = () => {
                           {temporaryOrder
                             .filter(id => temporarySelection.includes(id))
                             .map((id, index) => {
-                              const item = defaultMarketItems.find(m => m.id === id);
+                              const item = marketItems.find(m => m.id === id);
                               if (!item) return null;
                               
                               return (

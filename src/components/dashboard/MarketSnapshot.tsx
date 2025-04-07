@@ -1,9 +1,9 @@
+
 import React from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Sliders } from "lucide-react";
+import { Sliders, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import SectionHeader from "./SectionHeader";
-import { SparklesIcon } from "@radix-ui/react-icons";
 
 const MarketSnapshot = () => {
   const marketData = [

@@ -1,6 +1,7 @@
 
 import React from 'react';
-import { Calendar, Button } from 'lucide-react';
+import { Calendar } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from '@/components/ui/card';
 
 interface ComplianceCalendarProps {

@@ -36,7 +36,7 @@ const FeaturesSection: React.FC<{ id?: string }> = ({ id }) => {
       <div className="max-w-7xl mx-auto px-6">
         <FadeIn>
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Transform Your Wealth Management</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Key Features</h2>
             <p className="mt-4 text-xl text-gray-600 max-w-3xl mx-auto">
               Our platform simplifies complex wealth management with intuitive tools designed for family offices and institutions
             </p>

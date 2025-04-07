@@ -20,7 +20,7 @@ const AssetAllocationChart: React.FC = () => {
       </div>
       
       <div className="h-[140px] flex justify-center items-center">
-        {/* Full Circle Pie Chart with three unequal segments and animated rotation */}
+        {/* Full Circle Pie Chart with thick outline style instead of filled segments */}
         <motion.svg 
           width="120" 
           height="120" 
@@ -32,29 +32,52 @@ const AssetAllocationChart: React.FC = () => {
             ease: "easeInOut"
           }}
         >
-          {/* First segment - 45% */}
-          <motion.path
-            d="M50,50 L50,0 A50,50 0 0,1 97.6,34.2 Z"
-            fill="#818CF8"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
+          <motion.circle 
+            cx="50" 
+            cy="50" 
+            r="40" 
+            fill="none" 
+            strokeWidth="10"
+            stroke="#E5E7EB"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ duration: 1.5 }}
           />
-          {/* Second segment - 30% */}
+          
+          {/* First segment - 45% of the circle (162 degrees) */}
           <motion.path
-            d="M50,50 L97.6,34.2 A50,50 0 0,1 70.7,95.1 Z"
-            fill="#34D399"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
+            d="M50,10 A40,40 0 0,1 87.32,35.86"
+            fill="none"
+            stroke="#818CF8"
+            strokeWidth="10"
+            strokeLinecap="round"
+            initial={{ pathLength: 0 }}
+            animate={{ pathLength: 1 }}
+            transition={{ duration: 0.8, delay: 0.1 }}
           />
-          {/* Third segment - 25% */}
+          
+          {/* Second segment - 30% of the circle (108 degrees) */}
           <motion.path
-            d="M50,50 L70.7,95.1 A50,50 0 0,1 0,50 L50,50 Z"
-            fill="#F59E0B"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.5 }}
+            d="M87.32,35.86 A40,40 0 0,1 66.82,85.36"
+            fill="none"
+            stroke="#34D399"
+            strokeWidth="10"
+            strokeLinecap="round"
+            initial={{ pathLength: 0 }}
+            animate={{ pathLength: 1 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+          />
+          
+          {/* Third segment - 25% of the circle (90 degrees) */}
+          <motion.path
+            d="M66.82,85.36 A40,40 0 0,1 10,50 A40,40 0 0,1 50,10"
+            fill="none"
+            stroke="#F59E0B"
+            strokeWidth="10"
+            strokeLinecap="round"
+            initial={{ pathLength: 0 }}
+            animate={{ pathLength: 1 }}
+            transition={{ duration: 0.8, delay: 0.5 }}
           />
         </motion.svg>
       </div>

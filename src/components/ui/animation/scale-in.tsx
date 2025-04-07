@@ -20,8 +20,13 @@ export const ScaleIn: React.FC<ScaleInProps> = ({
   return (
     <motion.div
       initial={{ opacity: 0, scale }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration, delay }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      viewport={{ once: true }}
+      transition={{ 
+        duration, 
+        delay,
+        ease: "easeOut" 
+      }}
       className={className}
     >
       {children}

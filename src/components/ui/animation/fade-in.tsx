@@ -18,8 +18,13 @@ export const FadeIn: React.FC<FadeInProps> = ({
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration, delay }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ 
+        duration, 
+        delay,
+        ease: "easeOut"
+      }}
       className={className}
     >
       {children}

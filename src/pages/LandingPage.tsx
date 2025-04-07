@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -25,7 +26,7 @@ const LandingPage: React.FC = () => {
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-gray-900 leading-tight">
                 Holistic wealth management for{" "}
                 <span className="text-indigo-600">family offices</span> and{" "}
-                <span className="text-indigo-600">institutional investors</span>
+                <span className="text-indigo-600">institutions</span>
               </h1>
               <p className="mt-6 text-xl text-gray-600 max-w-2xl">
                 All your bankable wealth made actionable over one platform across all your banks, brokers & custodians
@@ -204,7 +205,7 @@ const LandingPage: React.FC = () => {
                 <Button size="lg" className="bg-white text-indigo-600 hover:bg-gray-100 text-md px-8">
                   <Link to="/onboarding">Get Started</Link>
                 </Button>
-                <Button variant="outline" size="lg" className="border-white text-white hover:bg-indigo-700 text-md px-8">
+                <Button size="lg" className="bg-white text-indigo-600 hover:bg-gray-100 text-md px-8">
                   <Link to="/contact">Contact Sales</Link>
                 </Button>
               </div>
@@ -219,7 +220,7 @@ const LandingPage: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
             <div>
               <h3 className="text-white font-bold text-xl mb-4">Wealth Horizon</h3>
-              <p className="mb-4">Complete wealth management platform for family offices and institutional investors.</p>
+              <p className="mb-4">Holistic wealth management for family offices and institutions.</p>
               <div className="flex space-x-4">
                 {/* Social media icons would go here */}
               </div>

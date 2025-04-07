@@ -23,7 +23,7 @@ const QuickAccessGrid = () => {
   } = useQuickAccessStore();
 
   return (
-    <Card className="shadow-sm h-[350px] flex flex-col">
+    <Card className="shadow-sm h-[700px] flex flex-col">
       <CardHeader className="pb-2">
         <div className="flex justify-between items-center">
           <SectionHeader title="Quick Access" />
@@ -41,18 +41,6 @@ const QuickAccessGrid = () => {
       <CardContent className="flex-grow overflow-auto pb-4">
         <QuickAccessItems items={filteredItems} />
       </CardContent>
-
-      <div className="px-6 pb-6 mt-auto">
-        <Button 
-          variant="outline" 
-          size="sm" 
-          className="w-full flex items-center justify-center"
-          onClick={() => {}}
-        >
-          View All Shortcuts
-          <span className="h-4 w-4 ml-1">→</span>
-        </Button>
-      </div>
 
       <CustomizeQuickAccessDialog
         isOpen={isCustomizing}

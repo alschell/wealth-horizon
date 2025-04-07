@@ -102,7 +102,7 @@ export const allActionItems: ActionItem[] = [
   {
     id: "esg",
     icon: Leaf,
-    label: "Assess ESG Investments",
+    label: "Assess ESG Performance",
     description: "Sustainable investment metrics and benchmarks",
     path: "/esg",
     color: "bg-gray-50 text-gray-500"

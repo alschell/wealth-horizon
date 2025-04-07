@@ -26,7 +26,7 @@ const ESG = () => {
         
         <PageHeaderCard
           icon={Leaf}
-          title="Assess ESG Investments"
+          title="Assess ESG Performance"
           description="Track environmental, social, and governance metrics for your portfolio"
           iconColor="text-emerald-600"
           iconBgColor="bg-emerald-100"

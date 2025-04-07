@@ -1,9 +1,10 @@
 
 import React from "react";
-import LandingPage from "./LandingPage";
+import { Navigate } from "react-router-dom";
 
 const Index = () => {
-  return <LandingPage />;
+  // Temporarily redirect to dashboard instead of showing a landing page
+  return <Navigate to="/dashboard" replace />;
 };
 
 export default Index;

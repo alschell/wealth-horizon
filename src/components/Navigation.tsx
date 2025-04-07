@@ -12,7 +12,7 @@ const Navigation: React.FC = () => {
   const navigate = useNavigate();
   
   const isOnboarding = location.pathname.includes('/onboarding');
-  const isLandingPage = location.pathname === '/';
+  const isHomePage = location.pathname === '/';
 
   // Don't show navigation on onboarding pages
   if (isOnboarding) {
@@ -42,7 +42,7 @@ const Navigation: React.FC = () => {
         </div>
         
         <div className="flex items-center gap-3">
-          {!isOnboarding && !isLandingPage && (
+          {!isOnboarding && !isHomePage && (
             <>
               <div className="relative w-64 mr-2">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />

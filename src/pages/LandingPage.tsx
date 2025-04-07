@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -24,12 +23,12 @@ const LandingPage: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <FadeIn delay={0.2}>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-gray-900 leading-tight">
-                Complete wealth management for{" "}
-                <span className="text-indigo-600">family offices</span> and{" "}
-                <span className="text-indigo-600">institutions</span>
+                All your bankable wealth{" "}
+                <span className="text-indigo-600">made actionable</span> over{" "}
+                <span className="text-indigo-600">one platform</span>
               </h1>
               <p className="mt-6 text-xl text-gray-600 max-w-2xl">
-                Streamline operations, optimize portfolios, and make data-driven decisions with our comprehensive wealth management platform.
+                Holistic wealth management for family offices and institutional investors
               </p>
               <div className="mt-10 flex flex-col sm:flex-row gap-4">
                 <Button size="lg" className="text-md px-8">

@@ -23,12 +23,12 @@ const LandingPage: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <FadeIn delay={0.2}>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-gray-900 leading-tight">
-                All your bankable wealth{" "}
-                <span className="text-indigo-600">made actionable</span> over{" "}
-                <span className="text-indigo-600">one platform</span>
+                Holistic wealth management for{" "}
+                <span className="text-indigo-600">family offices</span> and{" "}
+                <span className="text-indigo-600">institutional investors</span>
               </h1>
               <p className="mt-6 text-xl text-gray-600 max-w-2xl">
-                Holistic wealth management for family offices and institutional investors
+                All your bankable wealth made actionable over one platform across all your banks, brokers & custodians
               </p>
               <div className="mt-10 flex flex-col sm:flex-row gap-4">
                 <Button size="lg" className="text-md px-8">
@@ -52,6 +52,7 @@ const LandingPage: React.FC = () => {
                 ))}
               </div>
             </FadeIn>
+
             <ScaleIn delay={0.4}>
               <div className="relative rounded-xl overflow-hidden shadow-2xl border border-gray-100">
                 <div className="relative aspect-[4/3]">

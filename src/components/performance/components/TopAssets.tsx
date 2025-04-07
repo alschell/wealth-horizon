@@ -12,7 +12,7 @@ const TopAssets = () => {
   ];
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-2 flex flex-col h-full">
       <div className="flex justify-between items-center mb-2">
         <h3 className="text-sm font-medium flex items-center">
           <Briefcase className="h-4 w-4 mr-1 text-gray-500" /> Top Assets
@@ -21,7 +21,8 @@ const TopAssets = () => {
           View all
         </Button>
       </div>
-      <div className="space-y-2">
+      
+      <div className="space-y-2 flex-grow">
         {assets.map((asset, index) => (
           <div 
             key={index} 
@@ -39,6 +40,9 @@ const TopAssets = () => {
             </div>
           </div>
         ))}
+      </div>
+      
+      <div className="mt-auto pt-4">
         <Button variant="outline" size="sm" className="w-full flex items-center justify-center">
           View All Assets
           <ChevronRight className="h-4 w-4 ml-1" />

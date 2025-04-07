@@ -1,4 +1,3 @@
-
 import React from "react";
 import { ChevronRight, Sliders } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -24,7 +23,7 @@ const defaultSources: NewsSource[] = [
   { id: "bloomberg", name: "Bloomberg", description: "Financial and business news" },
   { id: "reuters", name: "Reuters", description: "Global news and markets" },
   { id: "cnbc", name: "CNBC", description: "Financial and business news" }
-];
+].sort((a, b) => a.name.localeCompare(b.name));
 
 const defaultCategories: NewsCategory[] = [
   { id: "markets", name: "Markets", description: "Stock, bond, and commodity markets" },
@@ -32,7 +31,7 @@ const defaultCategories: NewsCategory[] = [
   { id: "companies", name: "Companies", description: "Corporate news and earnings" },
   { id: "finance", name: "Finance", description: "Financial industry news" },
   { id: "technology", name: "Technology", description: "Tech industry news" }
-];
+].sort((a, b) => a.name.localeCompare(b.name));
 
 const RecentNewsList = ({ newsData }: RecentNewsListProps) => {
   const navigate = useNavigate();

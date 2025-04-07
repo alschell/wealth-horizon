@@ -39,6 +39,17 @@ const CustomizeNewsDialog = ({
   onCategoryToggle,
   onSave
 }: CustomizeNewsDialogProps) => {
+  // Sort sources and categories alphabetically by name
+  const sortedSources = React.useMemo(() => 
+    [...allSources].sort((a, b) => a.name.localeCompare(b.name)), 
+    [allSources]
+  );
+  
+  const sortedCategories = React.useMemo(() => 
+    [...allCategories].sort((a, b) => a.name.localeCompare(b.name)), 
+    [allCategories]
+  );
+  
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
@@ -54,7 +65,7 @@ const CustomizeNewsDialog = ({
             <div>
               <h3 className="text-sm font-medium mb-3">News Sources</h3>
               <div className="space-y-3">
-                {allSources.map((source) => (
+                {sortedSources.map((source) => (
                   <div key={source.id} className="flex items-start space-x-3">
                     <Checkbox 
                       id={`source-${source.id}`}
@@ -82,7 +93,7 @@ const CustomizeNewsDialog = ({
             <div>
               <h3 className="text-sm font-medium mb-3">News Categories</h3>
               <div className="space-y-3">
-                {allCategories.map((category) => (
+                {sortedCategories.map((category) => (
                   <div key={category.id} className="flex items-start space-x-3">
                     <Checkbox 
                       id={`category-${category.id}`}

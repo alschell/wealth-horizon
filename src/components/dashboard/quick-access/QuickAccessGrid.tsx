@@ -36,11 +36,6 @@ const QuickAccessGrid = () => {
     setContainerHeight(`${calculatedHeight}px`);
   }, [filteredItems]);
 
-  // Sort items alphabetically by label
-  const sortedItems = [...filteredItems].sort((a, b) => 
-    a.label.localeCompare(b.label)
-  );
-
   return (
     <Card className={`shadow-sm flex flex-col`} style={{ height: containerHeight }}>
       <CardHeader className="pb-2">
@@ -58,7 +53,7 @@ const QuickAccessGrid = () => {
         </div>
       </CardHeader>
       <CardContent className="flex-grow pb-2">
-        <QuickAccessItems items={sortedItems} />
+        <QuickAccessItems items={filteredItems} />
       </CardContent>
 
       <CustomizeQuickAccessDialog

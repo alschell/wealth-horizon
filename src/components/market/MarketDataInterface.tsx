@@ -7,8 +7,6 @@ import IndicesTracker from "./sections/IndicesTracker";
 import NewsSection from "./sections/NewsSection";
 import WatchlistSection from "./sections/WatchlistSection";
 import { useLocation, useSearchParams } from "react-router-dom";
-import PageHeaderCard from "@/components/dashboard/PageHeaderCard";
-import { LineChart } from "lucide-react";
 
 const MarketDataInterface = () => {
   const location = useLocation();
@@ -38,14 +36,6 @@ const MarketDataInterface = () => {
 
   return (
     <div className="max-w-7xl mx-auto w-full p-4 space-y-6">
-      <PageHeaderCard
-        icon={LineChart}
-        title="Market Data"
-        description="Access real-time financial data and market insights"
-        iconColor="text-gray-700"
-        iconBgColor="bg-gray-100"
-      />
-      
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}

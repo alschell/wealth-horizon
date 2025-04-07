@@ -55,6 +55,12 @@ const CustomizeQuickAccessDialog = ({
     onOrderChange(reorderedItemIds);
   };
   
+  const handleSave = () => {
+    // Pass the current order of displayed items as the ordered items
+    const currentOrder = displayItems.map(item => item.id);
+    onSave();
+  };
+  
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">

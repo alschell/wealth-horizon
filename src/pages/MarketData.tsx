@@ -31,6 +31,8 @@ const MarketData = () => {
           iconColor="text-gray-700"
           iconBgColor="bg-gray-100"
         />
+        
+        {/* Remove the duplicative header in MarketDataInterface */}
         <MarketDataInterface />
       </div>
     </DashboardLayout>

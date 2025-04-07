@@ -16,19 +16,18 @@ export const useQuickAccessStore = () => {
       setVisibleItems(JSON.parse(savedItems));
     } else {
       // Default to showing first 9 items
-      setVisibleItems(allActionItems.slice(0, 9).map(item => item.id));
+      const defaultItems = allActionItems.slice(0, 9).map(item => item.id);
+      setVisibleItems(defaultItems);
     }
     
     if (savedOrder) {
       setOrderedItems(JSON.parse(savedOrder));
     } else {
       // Default order is alphabetical
-      setOrderedItems(
-        allActionItems
-          .slice(0, 9)
-          .sort((a, b) => a.label.localeCompare(b.label))
-          .map(item => item.id)
-      );
+      const defaultOrder = allActionItems
+        .sort((a, b) => a.label.localeCompare(b.label))
+        .map(item => item.id);
+      setOrderedItems(defaultOrder);
     }
   }, []);
 

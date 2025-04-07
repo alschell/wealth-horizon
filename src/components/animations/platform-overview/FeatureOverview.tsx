@@ -1,3 +1,4 @@
+
 import React from "react";
 import { motion } from "framer-motion";
 import { featureVariants } from "./AnimationVariants";
@@ -90,11 +91,12 @@ const FeatureOverview: React.FC = () => {
             initial={{ opacity: 0, y: 10 }}
             animate={{ 
               opacity: 1, 
-              y: 0,
-              transition: { duration: 0.5 }
+              y: 0
             }}
+            transition={{ duration: 0.5 }}
             whileHover={{ y: -2 }}
-            animate={{ 
+            // Add floating animation
+            whileInView={{ 
               y: [0, -3, 0],
               transition: { 
                 repeat: Infinity, 

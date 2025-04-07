@@ -12,7 +12,8 @@ import {
   navigationMenuTriggerStyle
 } from '@/components/ui/navigation-menu';
 import { Button } from '@/components/ui/button';
-import { BellIcon, Settings, User } from 'lucide-react';
+import { Settings, User } from 'lucide-react';
+import NotificationsPopover from '@/components/dashboard/notifications/NotificationsPopover';
 
 const Navigation: React.FC = () => {
   const location = useLocation();
@@ -94,9 +95,7 @@ const Navigation: React.FC = () => {
         <div className="flex items-center gap-2">
           {!isOnboarding && (
             <>
-              <Button variant="ghost" size="icon">
-                <BellIcon className="h-5 w-5" />
-              </Button>
+              <NotificationsPopover />
               <Button variant="ghost" size="icon">
                 <Settings className="h-5 w-5" />
               </Button>

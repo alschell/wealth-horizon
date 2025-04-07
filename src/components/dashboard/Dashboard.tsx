@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import WelcomeHeader from "@/components/dashboard/WelcomeHeader";
 import NotificationsFeed from "@/components/dashboard/NotificationsFeed";
@@ -9,7 +9,7 @@ import MarketSnapshot from "@/components/dashboard/MarketSnapshot";
 import RecentActivity from "@/components/dashboard/RecentActivity";
 import PageHeaderCard from "@/components/dashboard/PageHeaderCard";
 import KeyMetricsGrid from "@/components/dashboard/performance/KeyMetricsGrid";
-import { LayoutDashboard, Sliders } from "lucide-react";
+import { LayoutDashboard, Sliders, GripVertical } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader } from "@/components/ui/card";
 import { newsData } from "@/components/dashboard/performance/PerformanceData";
@@ -24,6 +24,19 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Checkbox } from "@/components/ui/checkbox";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+
+// Default sections for the dashboard
+const defaultSections = [
+  { id: "keyMetrics", name: "Key Metrics", description: "Important financial metrics and indicators" },
+  { id: "performanceOverview", name: "Performance Overview", description: "Charts and graphs showing your portfolio performance" },
+  { id: "quickAccess", name: "Quick Access", description: "Shortcuts to frequently used features" },
+  { id: "topAssets", name: "Top Assets", description: "Your highest value assets and their performance" },
+  { id: "recentNews", name: "Recent News", description: "Latest financial news and updates" },
+  { id: "notifications", name: "Notifications", description: "Important alerts and notifications" },
+  { id: "marketSnapshot", name: "Market Snapshot", description: "Current market conditions and trends" },
+  { id: "recentActivity", name: "Recent Activity", description: "Recent transactions and account activity" },
+];
 
 const Dashboard = () => {
   const [isCustomizing, setIsCustomizing] = useState(false);
@@ -37,8 +50,26 @@ const Dashboard = () => {
     marketSnapshot: true,
     recentActivity: true,
   });
+  const [sectionsOrder, setSectionsOrder] = useState<string[]>([]);
 
-  const toggleSection = (section) => {
+  useEffect(() => {
+    // Load saved settings from localStorage
+    const savedSections = localStorage.getItem("dashboardSections");
+    const savedOrder = localStorage.getItem("dashboardSectionsOrder");
+    
+    if (savedSections) {
+      setDashboardSections(JSON.parse(savedSections));
+    }
+    
+    if (savedOrder) {
+      setSectionsOrder(JSON.parse(savedOrder));
+    } else {
+      // Default order is all sections in their original order
+      setSectionsOrder(defaultSections.map(section => section.id));
+    }
+  }, []);
+
+  const toggleSection = (section: string) => {
     setDashboardSections({
       ...dashboardSections,
       [section]: !dashboardSections[section],
@@ -48,8 +79,23 @@ const Dashboard = () => {
   const handleCustomizeSave = () => {
     // Save to localStorage for persistence
     localStorage.setItem("dashboardSections", JSON.stringify(dashboardSections));
+    localStorage.setItem("dashboardSectionsOrder", JSON.stringify(sectionsOrder));
     setIsCustomizing(false);
   };
+
+  const handleDragEnd = (result: any) => {
+    if (!result.destination) return;
+    
+    const items = Array.from(sectionsOrder);
+    const [reorderedItem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reorderedItem);
+    
+    setSectionsOrder(items);
+  };
+
+  // Get the ordered and filtered sections
+  const orderedVisibleSections = sectionsOrder
+    .filter(id => dashboardSections[id as keyof typeof dashboardSections]);
 
   return (
     <DashboardLayout>
@@ -63,33 +109,29 @@ const Dashboard = () => {
             iconColor="text-gray-700"
             iconBgColor="bg-gray-100"
           />
-          <Button
-            variant="outline" 
+          <Button 
+            variant="ghost" 
             size="sm"
             onClick={() => setIsCustomizing(true)}
-            className="h-9 px-3 flex items-center gap-1"
+            className="h-8 w-8 p-0"
           >
-            <Sliders className="h-4 w-4 mr-1" />
-            Customize
+            <Sliders className="h-4 w-4" />
+            <span className="sr-only">Customize</span>
           </Button>
         </div>
 
         {/* Welcome header */}
         <WelcomeHeader />
         
-        {/* Key metrics grid - at the top */}
-        {dashboardSections.keyMetrics && <KeyMetricsGrid />}
-        
-        {/* Performance Overview with enhanced visuals */}
-        {dashboardSections.performanceOverview && <PerformanceOverview />}
-        
-        {/* Quick Access section - moved below performance overview */}
-        {dashboardSections.quickAccess && <QuickAccessGrid />}
+        {/* Render sections in the correct order */}
+        {orderedVisibleSections.includes("keyMetrics") && <KeyMetricsGrid />}
+        {orderedVisibleSections.includes("performanceOverview") && <PerformanceOverview />}
+        {orderedVisibleSections.includes("quickAccess") && <QuickAccessGrid />}
 
         {/* Top Assets, Recent News, and Notifications in separate cards with same height */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Top Assets card with fixed height */}
-          {dashboardSections.topAssets && (
+          {orderedVisibleSections.includes("topAssets") && (
             <Card className="shadow-sm h-[350px] flex flex-col">
               <CardHeader className="pb-0">
                 <TopAssets />
@@ -98,7 +140,7 @@ const Dashboard = () => {
           )}
           
           {/* Recent News card with fixed height */}
-          {dashboardSections.recentNews && (
+          {orderedVisibleSections.includes("recentNews") && (
             <Card className="shadow-sm h-[350px] flex flex-col">
               <CardHeader className="pb-0">
                 <RecentNewsList newsData={newsData} />
@@ -107,12 +149,12 @@ const Dashboard = () => {
           )}
 
           {/* Notifications container with fixed height */}
-          {dashboardSections.notifications && <NotificationsFeed />}
+          {orderedVisibleSections.includes("notifications") && <NotificationsFeed />}
         </div>
 
         {/* Key summary cards - Market Snapshot and Recent Activity */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {dashboardSections.marketSnapshot && (
+          {orderedVisibleSections.includes("marketSnapshot") && (
             <div className="lg:col-span-2">
               {/* Market overview card - fixed height */}
               <Card className="shadow-sm h-[350px] flex flex-col">
@@ -121,7 +163,7 @@ const Dashboard = () => {
             </div>
           )}
           
-          {dashboardSections.recentActivity && (
+          {orderedVisibleSections.includes("recentActivity") && (
             <div>
               {/* Recent activities card - fixed height */}
               <Card className="shadow-sm h-[350px] flex flex-col">
@@ -138,161 +180,78 @@ const Dashboard = () => {
           <DialogHeader>
             <DialogTitle>Customize Dashboard</DialogTitle>
             <DialogDescription>
-              Select which sections to display on your dashboard.
+              Select which sections to display on your dashboard and drag to reorder them.
             </DialogDescription>
           </DialogHeader>
           <div className="py-4">
             <div className="space-y-4">
-              <div className="flex items-start space-x-3">
-                <Checkbox 
-                  id="section-keyMetrics"
-                  checked={dashboardSections.keyMetrics}
-                  onCheckedChange={() => toggleSection('keyMetrics')}
-                />
-                <div className="grid gap-1.5 leading-none">
-                  <label
-                    htmlFor="section-keyMetrics"
-                    className="text-sm font-medium leading-none"
-                  >
-                    Key Metrics
-                  </label>
-                  <p className="text-xs text-muted-foreground">
-                    Important financial metrics and indicators
-                  </p>
+              {/* Section for enabling/disabling sections */}
+              <div>
+                <h3 className="text-sm font-medium mb-3">Available Sections</h3>
+                <div className="space-y-4">
+                  {defaultSections.map((section) => (
+                    <div key={section.id} className="flex items-start space-x-3">
+                      <Checkbox 
+                        id={`section-${section.id}`}
+                        checked={dashboardSections[section.id as keyof typeof dashboardSections]}
+                        onCheckedChange={() => toggleSection(section.id)}
+                      />
+                      <div className="grid gap-1.5 leading-none">
+                        <label
+                          htmlFor={`section-${section.id}`}
+                          className="text-sm font-medium leading-none"
+                        >
+                          {section.name}
+                        </label>
+                        <p className="text-xs text-muted-foreground">
+                          {section.description}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
 
-              <div className="flex items-start space-x-3">
-                <Checkbox 
-                  id="section-performanceOverview"
-                  checked={dashboardSections.performanceOverview}
-                  onCheckedChange={() => toggleSection('performanceOverview')}
-                />
-                <div className="grid gap-1.5 leading-none">
-                  <label
-                    htmlFor="section-performanceOverview"
-                    className="text-sm font-medium leading-none"
-                  >
-                    Performance Overview
-                  </label>
-                  <p className="text-xs text-muted-foreground">
-                    Charts and graphs showing your portfolio performance
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start space-x-3">
-                <Checkbox 
-                  id="section-quickAccess"
-                  checked={dashboardSections.quickAccess}
-                  onCheckedChange={() => toggleSection('quickAccess')}
-                />
-                <div className="grid gap-1.5 leading-none">
-                  <label
-                    htmlFor="section-quickAccess"
-                    className="text-sm font-medium leading-none"
-                  >
-                    Quick Access
-                  </label>
-                  <p className="text-xs text-muted-foreground">
-                    Shortcuts to frequently used features
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start space-x-3">
-                <Checkbox 
-                  id="section-topAssets"
-                  checked={dashboardSections.topAssets}
-                  onCheckedChange={() => toggleSection('topAssets')}
-                />
-                <div className="grid gap-1.5 leading-none">
-                  <label
-                    htmlFor="section-topAssets"
-                    className="text-sm font-medium leading-none"
-                  >
-                    Top Assets
-                  </label>
-                  <p className="text-xs text-muted-foreground">
-                    Your highest value assets and their performance
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start space-x-3">
-                <Checkbox 
-                  id="section-recentNews"
-                  checked={dashboardSections.recentNews}
-                  onCheckedChange={() => toggleSection('recentNews')}
-                />
-                <div className="grid gap-1.5 leading-none">
-                  <label
-                    htmlFor="section-recentNews"
-                    className="text-sm font-medium leading-none"
-                  >
-                    Recent News
-                  </label>
-                  <p className="text-xs text-muted-foreground">
-                    Latest financial news and updates
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start space-x-3">
-                <Checkbox 
-                  id="section-notifications"
-                  checked={dashboardSections.notifications}
-                  onCheckedChange={() => toggleSection('notifications')}
-                />
-                <div className="grid gap-1.5 leading-none">
-                  <label
-                    htmlFor="section-notifications"
-                    className="text-sm font-medium leading-none"
-                  >
-                    Notifications
-                  </label>
-                  <p className="text-xs text-muted-foreground">
-                    Important alerts and notifications
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start space-x-3">
-                <Checkbox 
-                  id="section-marketSnapshot"
-                  checked={dashboardSections.marketSnapshot}
-                  onCheckedChange={() => toggleSection('marketSnapshot')}
-                />
-                <div className="grid gap-1.5 leading-none">
-                  <label
-                    htmlFor="section-marketSnapshot"
-                    className="text-sm font-medium leading-none"
-                  >
-                    Market Snapshot
-                  </label>
-                  <p className="text-xs text-muted-foreground">
-                    Current market conditions and trends
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start space-x-3">
-                <Checkbox 
-                  id="section-recentActivity"
-                  checked={dashboardSections.recentActivity}
-                  onCheckedChange={() => toggleSection('recentActivity')}
-                />
-                <div className="grid gap-1.5 leading-none">
-                  <label
-                    htmlFor="section-recentActivity"
-                    className="text-sm font-medium leading-none"
-                  >
-                    Recent Activity
-                  </label>
-                  <p className="text-xs text-muted-foreground">
-                    Recent transactions and account activity
-                  </p>
-                </div>
+              {/* Section for reordering visible sections */}
+              <div className="mt-6">
+                <h3 className="text-sm font-medium mb-3">Order of Display</h3>
+                <p className="text-xs text-muted-foreground mb-2">Drag to reorder sections</p>
+                
+                <DragDropContext onDragEnd={handleDragEnd}>
+                  <Droppable droppableId="dashboard-sections">
+                    {(provided) => (
+                      <div
+                        {...provided.droppableProps}
+                        ref={provided.innerRef}
+                        className="space-y-2"
+                      >
+                        {sectionsOrder
+                          .filter(id => dashboardSections[id as keyof typeof dashboardSections])
+                          .map((sectionId, index) => {
+                            const section = defaultSections.find(s => s.id === sectionId);
+                            if (!section) return null;
+                            
+                            return (
+                              <Draggable key={sectionId} draggableId={sectionId} index={index}>
+                                {(provided) => (
+                                  <div
+                                    ref={provided.innerRef}
+                                    {...provided.draggableProps}
+                                    {...provided.dragHandleProps}
+                                    className="flex items-center p-2 border rounded bg-white"
+                                  >
+                                    <GripVertical className="h-4 w-4 mr-2 text-gray-400" />
+                                    <span className="text-sm">{section.name}</span>
+                                  </div>
+                                )}
+                              </Draggable>
+                            );
+                          })}
+                        {provided.placeholder}
+                      </div>
+                    )}
+                  </Droppable>
+                </DragDropContext>
               </div>
             </div>
           </div>

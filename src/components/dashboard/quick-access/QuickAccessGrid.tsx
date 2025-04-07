@@ -28,13 +28,13 @@ const QuickAccessGrid = () => {
           <CardTitle className="text-xl">Quick Access</CardTitle>
         </div>
         <Button 
-          variant="outline" 
+          variant="ghost" 
           size="sm" 
           onClick={handleCustomizeOpen} 
-          className="flex items-center gap-1"
+          className="h-8 w-8 p-0"
         >
-          <Sliders className="h-4 w-4 mr-1" />
-          Customize
+          <Sliders className="h-4 w-4" />
+          <span className="sr-only">Customize</span>
         </Button>
       </CardHeader>
       <CardContent>

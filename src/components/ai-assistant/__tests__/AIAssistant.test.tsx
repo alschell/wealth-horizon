@@ -46,7 +46,7 @@ describe("AIAssistant Component", () => {
     render(<AIAssistant minified={true} />);
     
     // In minified mode, only the recent recommendation should be visible
-    expect(screen.getByText("Tesla position up 15% this week. Consider taking profits.")).toBeInTheDocument();
+    expect(screen.getByText("Your Tesla position has increased by 15%.")).toBeInTheDocument();
     
     // Welcome message should not be visible in minified mode
     expect(screen.queryByText("Welcome to your AI Financial Assistant.")).not.toBeInTheDocument();

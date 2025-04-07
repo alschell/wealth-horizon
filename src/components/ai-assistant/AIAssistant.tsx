@@ -30,6 +30,7 @@ const AIAssistant = ({ minified = false, showHeader = false }: AIAssistantProps)
         input={input}
         setInput={setInput}
         handleSubmit={handleSubmit}
+        messages={messages}
       />
     );
   }

@@ -15,7 +15,8 @@ import {
   Calculator,
   Scroll,
   Briefcase,
-  Gift
+  Gift,
+  LucideIcon
 } from "lucide-react";
 
 export interface ActionItem {

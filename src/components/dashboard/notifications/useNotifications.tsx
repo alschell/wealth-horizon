@@ -62,7 +62,8 @@ export const useNotifications = () => {
       '/compliance-monitoring',
       '/client-portal',
       '/trading',
-      '/credit-facilities'
+      '/credit-facilities',
+      '/reports'
     ];
     
     // Check if the link is valid or default to dashboard

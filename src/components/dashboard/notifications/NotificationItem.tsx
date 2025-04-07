@@ -4,6 +4,7 @@ import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Notification } from "./types";
+import { format } from "date-fns";
 
 interface NotificationItemProps {
   notification: Notification;
@@ -12,6 +13,11 @@ interface NotificationItemProps {
 }
 
 const NotificationItem = ({ notification, onDismiss, onClick }: NotificationItemProps) => {
+  // Format the time if it's a Date object
+  const formattedTime = typeof notification.time === 'string' 
+    ? notification.time 
+    : format(notification.time, 'MMM dd, yyyy');
+    
   return (
     <div 
       key={notification.id} 
@@ -35,7 +41,7 @@ const NotificationItem = ({ notification, onDismiss, onClick }: NotificationItem
         <p className="text-xs text-muted-foreground line-clamp-2">
           {notification.description}
         </p>
-        <p className="text-xs text-muted-foreground">{notification.time}</p>
+        <p className="text-xs text-muted-foreground">{formattedTime}</p>
       </div>
       
       <Button

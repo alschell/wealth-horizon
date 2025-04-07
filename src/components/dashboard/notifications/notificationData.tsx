@@ -7,9 +7,11 @@ export const notificationData: Notification[] = [
   {
     id: 1,
     title: "New advisory proposal",
+    message: "UBS has sent a new proposal for your review",
     description: "UBS has sent a new proposal for your review",
     time: "10 minutes ago",
     read: false,
+    type: "info",
     icon: <FileText className="h-4 w-4" />,
     link: "/advice",
     details: {
@@ -25,9 +27,11 @@ export const notificationData: Notification[] = [
   {
     id: 2,
     title: "Market alert",
+    message: "Unusual volatility detected in your portfolio",
     description: "Unusual volatility detected in your portfolio",
     time: "2 hours ago",
     read: false,
+    type: "warning",
     icon: <AlertTriangle className="h-4 w-4" />,
     link: "/market-data",
     details: {
@@ -40,9 +44,11 @@ export const notificationData: Notification[] = [
   {
     id: 3,
     title: "Document signed",
+    message: "Your mandate agreement was successfully signed",
     description: "Your mandate agreement was successfully signed",
     time: "Yesterday",
     read: true,
+    type: "success",
     icon: <Check className="h-4 w-4" />,
     link: "/documents",
     details: {
@@ -55,9 +61,11 @@ export const notificationData: Notification[] = [
   {
     id: 4,
     title: "Quarterly report available",
+    message: "Your Q1 performance report is now available",
     description: "Your Q1 performance report is now available",
     time: "3 days ago",
     read: true,
+    type: "info",
     icon: <TrendingUp className="h-4 w-4" />,
     link: "/reports",
     details: {

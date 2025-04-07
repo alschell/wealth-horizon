@@ -23,7 +23,7 @@ const QuickAccessGrid = () => {
   } = useQuickAccessStore();
 
   return (
-    <Card className="shadow-sm h-[700px] flex flex-col">
+    <Card className="shadow-sm h-[350px] flex flex-col">
       <CardHeader className="pb-2">
         <div className="flex justify-between items-center">
           <SectionHeader title="Quick Access" />

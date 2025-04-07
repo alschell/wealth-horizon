@@ -58,7 +58,7 @@ const NotificationsFeed = () => {
   };
 
   return (
-    <Card className="shadow-sm h-[700px] flex flex-col">
+    <Card className="shadow-sm h-[350px] flex flex-col">
       <CardHeader className="pb-2">
         <SectionHeader title="Notifications, events and tasks" />
       </CardHeader>

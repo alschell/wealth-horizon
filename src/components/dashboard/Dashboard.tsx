@@ -132,7 +132,7 @@ const Dashboard = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Top Assets card */}
           {orderedVisibleSections.includes("topAssets") && (
-            <Card className="shadow-sm h-[700px] flex flex-col">
+            <Card className="shadow-sm h-[350px] flex flex-col">
               <CardHeader className="pb-0">
                 <TopAssets />
               </CardHeader>
@@ -141,7 +141,7 @@ const Dashboard = () => {
           
           {/* Recent News card */}
           {orderedVisibleSections.includes("recentNews") && (
-            <Card className="shadow-sm h-[700px] flex flex-col">
+            <Card className="shadow-sm h-[350px] flex flex-col">
               <CardHeader className="pb-0">
                 <RecentNewsList newsData={newsData} />
               </CardHeader>
@@ -157,7 +157,7 @@ const Dashboard = () => {
           {orderedVisibleSections.includes("marketSnapshot") && (
             <div className="lg:col-span-2">
               {/* Market overview card */}
-              <Card className="shadow-sm h-[700px] flex flex-col">
+              <Card className="shadow-sm h-[350px] flex flex-col">
                 <MarketSnapshot />
               </Card>
             </div>
@@ -166,7 +166,7 @@ const Dashboard = () => {
           {orderedVisibleSections.includes("recentActivity") && (
             <div>
               {/* Recent activities card */}
-              <Card className="shadow-sm h-[700px] flex flex-col">
+              <Card className="shadow-sm h-[350px] flex flex-col">
                 <RecentActivity />
               </Card>
             </div>

@@ -7,75 +7,55 @@ import { motion } from 'framer-motion';
 
 const LandingHero = () => {
   const navigate = useNavigate();
-
-  // Animation variants
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: { 
-      opacity: 1,
-      transition: { 
-        staggerChildren: 0.2
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: { 
-      y: 0, 
-      opacity: 1,
-      transition: { duration: 0.6, ease: "easeOut" }
-    }
-  };
-
-  const imageVariants = {
-    hidden: { scale: 0.95, opacity: 0 },
-    visible: { 
-      scale: 1, 
-      opacity: 1,
-      transition: { delay: 0.4, duration: 0.7, ease: "easeOut" }
-    }
-  };
-
+  
   return (
-    <section className="relative min-h-screen flex items-center justify-center pt-24 overflow-hidden bg-white">
+    <section className="relative min-h-[85vh] flex items-center justify-center pt-20 overflow-hidden bg-white">
       <div className="absolute inset-0 -z-10 h-full w-full bg-[linear-gradient(to_bottom,#ffffff_0%,#f5f5f5_100%)] opacity-70"></div>
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent"></div>
       
-      <div className="max-w-7xl w-full px-6 md:px-12 py-12 md:py-24 mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+      <div className="max-w-7xl w-full px-6 md:px-12 py-12 mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           <motion.div 
             className="space-y-8"
-            initial="hidden"
-            animate="visible"
-            variants={containerVariants}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
           >
-            <motion.div variants={itemVariants}>
-              <div className="inline-flex items-center px-4 py-2 rounded-full bg-gray-100 border border-gray-200 mb-4">
-                <span className="text-sm text-gray-700 font-medium">Family Office Management</span>
-              </div>
+            <motion.div 
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+            >
+              <span className="inline-flex items-center px-4 py-2 rounded-full bg-gray-100 border border-gray-200 text-sm text-gray-700 font-medium">
+                Family Office Management
+              </span>
             </motion.div>
             
             <motion.h1 
               className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-black"
-              variants={itemVariants}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
             >
               All your bankable wealth made actionable over one platform
             </motion.h1>
             
             <motion.p 
               className="text-lg md:text-xl text-gray-600 max-w-xl"
-              variants={itemVariants}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
             >
               Across all your banks, brokers and custodians - our comprehensive platform helps family offices manage their wealth efficiently.
             </motion.p>
             
             <motion.div 
               className="flex flex-col sm:flex-row gap-4"
-              variants={itemVariants}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
             >
               <Button 
-                className="h-12 px-8 rounded-xl font-medium shadow-lg hover:shadow-xl transition-all bg-black text-white hover:bg-gray-800"
+                className="h-12 px-8 rounded-xl font-medium shadow-lg bg-black text-white hover:bg-gray-800"
                 onClick={() => navigate('/onboarding')}
               >
                 Start Onboarding
@@ -93,7 +73,9 @@ const LandingHero = () => {
             
             <motion.div 
               className="flex flex-col sm:flex-row items-center gap-6"
-              variants={itemVariants}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.5 }}
             >
               <div className="flex items-center gap-2">
                 <CheckCircle className="h-5 w-5 text-gray-600" />
@@ -112,9 +94,9 @@ const LandingHero = () => {
           
           <motion.div 
             className="relative"
-            initial="hidden"
-            animate="visible"
-            variants={imageVariants}
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.7, delay: 0.4 }}
           >
             <div className="relative bg-white rounded-2xl overflow-hidden shadow-2xl border border-gray-100">
               <div className="absolute inset-0 bg-[url('/assets/grid-pattern.svg')] opacity-10"></div>

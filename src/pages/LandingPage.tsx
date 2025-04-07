@@ -10,25 +10,18 @@ import { toast } from "sonner";
 import {
   ArrowRight,
   CheckCircle,
-  Globe,
-  LayoutDashboard,
   Mail,
   Phone,
-  TrendingUp,
+  Globe,
   PieChart,
-  Shield,
   Link as LinkIcon,
-  Laptop,
+  TrendingUp,
+  Shield,
+  LayoutDashboard,
   Lock
 } from "lucide-react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { FadeIn, StaggerContainer, StaggerItem } from "@/components/ui/animation";
 
 const LandingPage = () => {
   const navigate = useNavigate();
@@ -104,7 +97,7 @@ const LandingPage = () => {
             </div>
           </div>
           
-          <div className="hidden md:flex items-center space-x-8">
+          <nav className="hidden md:flex items-center space-x-8">
             <Button 
               variant="link" 
               className="text-gray-700 hover:text-black transition-colors"
@@ -126,7 +119,7 @@ const LandingPage = () => {
             >
               Contact
             </Button>
-          </div>
+          </nav>
           
           <div className="flex items-center space-x-3">
             <Button
@@ -156,33 +149,32 @@ const LandingPage = () => {
           className="py-20 md:py-32 bg-gray-50"
         >
           <div className="max-w-7xl mx-auto px-6 md:px-12">
-            <div className="text-center mb-16">
+            <FadeIn className="text-center mb-16">
               <h2 className="text-3xl md:text-4xl font-bold mb-6 text-black">Powerful Features for Wealth Management</h2>
               <p className="text-gray-600 max-w-2xl mx-auto text-lg">
                 Our comprehensive platform helps you manage your wealth efficiently across all your financial institutions.
               </p>
-            </div>
+            </FadeIn>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {features.map((feature, index) => (
-                <Card 
-                  key={feature.title}
-                  className="bg-white shadow-md hover:shadow-lg transition-shadow duration-300 border-0"
-                >
-                  <CardHeader className="pb-2">
-                    <div className="p-3 rounded-full bg-gray-100 w-fit mb-2">
-                      {feature.icon}
-                    </div>
-                    <CardTitle className="text-xl font-semibold text-black">{feature.title}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-gray-600">{feature.description}</p>
-                  </CardContent>
-                </Card>
+            <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {features.map((feature) => (
+                <StaggerItem key={feature.title} className="h-full">
+                  <Card className="h-full bg-white shadow-md hover:shadow-lg transition-shadow duration-300 border-0">
+                    <CardHeader className="pb-2">
+                      <div className="p-3 rounded-full bg-gray-100 w-fit mb-2">
+                        {feature.icon}
+                      </div>
+                      <CardTitle className="text-xl font-semibold text-black">{feature.title}</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-gray-600">{feature.description}</p>
+                    </CardContent>
+                  </Card>
+                </StaggerItem>
               ))}
-            </div>
+            </StaggerContainer>
             
-            <div className="mt-16 text-center">
+            <FadeIn className="mt-16 text-center">
               <Button 
                 className="h-12 px-6 rounded-lg bg-black text-white hover:bg-gray-800 transition-all text-base"
                 onClick={() => navigate('/onboarding')}
@@ -190,7 +182,7 @@ const LandingPage = () => {
                 Start Using Our Platform
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
-            </div>
+            </FadeIn>
           </div>
         </section>
 
@@ -201,7 +193,7 @@ const LandingPage = () => {
         >
           <div className="max-w-7xl mx-auto px-6 md:px-12">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-              <div>
+              <FadeIn>
                 <h2 className="text-3xl md:text-4xl font-bold mb-6 text-black">About Our Platform</h2>
                 <p className="text-gray-600 mb-6 text-lg">
                   We provide a comprehensive wealth management solution designed for high-net-worth individuals and family offices.
@@ -224,19 +216,21 @@ const LandingPage = () => {
                     <span className="text-gray-700">24/7 Support</span>
                   </div>
                 </div>
-              </div>
+              </FadeIn>
               
-              <div className="bg-gray-100 rounded-2xl p-10 shadow-xl">
-                <img 
-                  src="/assets/dashboard-preview.png" 
-                  alt="Platform Preview" 
-                  className="w-full rounded-lg shadow-lg"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.src = "/assets/dashboard-fallback.png";
-                  }}
-                />
-              </div>
+              <FadeIn delay={0.2} direction="right">
+                <div className="bg-gray-100 rounded-2xl p-10 shadow-xl">
+                  <img 
+                    src="/assets/dashboard-preview.png" 
+                    alt="Platform Preview" 
+                    className="w-full rounded-lg shadow-lg"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.src = "/assets/dashboard-fallback.png";
+                    }}
+                  />
+                </div>
+              </FadeIn>
             </div>
           </div>
         </section>
@@ -247,109 +241,77 @@ const LandingPage = () => {
           className="py-20 md:py-32 bg-gray-50"
         >
           <div className="max-w-7xl mx-auto px-6 md:px-12">
-            <div className="text-center mb-16">
+            <FadeIn className="text-center mb-16">
               <h2 className="text-3xl md:text-4xl font-bold mb-6 text-black">Get in Touch</h2>
               <p className="text-gray-600 max-w-2xl mx-auto">
                 Have questions about our platform? Our team is here to help you.
               </p>
-            </div>
+            </FadeIn>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
               {/* Contact Form */}
-              <Card className="bg-white shadow-md border-0">
-                <CardHeader>
-                  <CardTitle className="text-2xl font-bold text-black">Contact Us</CardTitle>
-                  <CardDescription className="text-gray-600">
-                    Fill out the form below and we'll get back to you as soon as possible.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <form className="space-y-6" onSubmit={handleContactSubmit}>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <label htmlFor="firstName" className="text-sm text-gray-600">First Name</label>
-                        <Input 
-                          id="firstName" 
-                          name="firstName"
-                          className="bg-white border-gray-300 text-gray-900" 
-                          placeholder="John"
-                          required
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <label htmlFor="lastName" className="text-sm text-gray-600">Last Name</label>
-                        <Input 
-                          id="lastName" 
-                          name="lastName"
-                          className="bg-white border-gray-300 text-gray-900" 
-                          placeholder="Doe"
-                          required
-                        />
-                      </div>
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <label htmlFor="email" className="text-sm text-gray-600">Email</label>
-                      <Input 
-                        id="email" 
-                        name="email"
-                        type="email" 
-                        className="bg-white border-gray-300 text-gray-900" 
-                        placeholder="john@example.com"
-                        required
-                      />
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <label htmlFor="company" className="text-sm text-gray-600">Company</label>
-                      <Input 
-                        id="company" 
-                        name="company"
-                        className="bg-white border-gray-300 text-gray-900" 
-                        placeholder="Company Ltd."
-                      />
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <label htmlFor="message" className="text-sm text-gray-600">Message</label>
-                      <Textarea 
-                        id="message" 
-                        name="message"
-                        className="bg-white border-gray-300 text-gray-900 min-h-[100px]" 
-                        placeholder="How can we help you?"
-                        required
-                      />
-                    </div>
-                    
-                    <Button 
-                      type="submit" 
-                      className="w-full bg-black text-white hover:bg-gray-800"
-                    >
-                      Send Message
-                    </Button>
-                  </form>
-                </CardContent>
-              </Card>
-              
-              {/* Contact Info */}
-              <div className="space-y-8">
-                <Card className="bg-white shadow-md border-0">
+              <FadeIn>
+                <Card className="bg-white shadow-md border-0 h-full">
                   <CardHeader>
-                    <CardTitle className="text-2xl font-bold text-black">Subscribe to Our Newsletter</CardTitle>
+                    <CardTitle className="text-2xl font-bold text-black">Contact Us</CardTitle>
                     <CardDescription className="text-gray-600">
-                      Stay updated with the latest in wealth management technology and insights.
+                      Fill out the form below and we'll get back to you as soon as possible.
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <form onSubmit={handleNewsletterSignup} className="space-y-4">
+                    <form className="space-y-6" onSubmit={handleContactSubmit}>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <label htmlFor="firstName" className="text-sm text-gray-600">First Name</label>
+                          <Input 
+                            id="firstName" 
+                            name="firstName"
+                            className="bg-white border-gray-300 text-gray-900" 
+                            placeholder="John"
+                            required
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <label htmlFor="lastName" className="text-sm text-gray-600">Last Name</label>
+                          <Input 
+                            id="lastName" 
+                            name="lastName"
+                            className="bg-white border-gray-300 text-gray-900" 
+                            placeholder="Doe"
+                            required
+                          />
+                        </div>
+                      </div>
+                      
                       <div className="space-y-2">
-                        <label htmlFor="newsletterEmail" className="text-sm text-gray-600">Email Address</label>
+                        <label htmlFor="email" className="text-sm text-gray-600">Email</label>
                         <Input 
-                          id="newsletterEmail" 
+                          id="email" 
                           name="email"
                           type="email" 
                           className="bg-white border-gray-300 text-gray-900" 
-                          placeholder="your@email.com"
+                          placeholder="john@example.com"
+                          required
+                        />
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <label htmlFor="company" className="text-sm text-gray-600">Company</label>
+                        <Input 
+                          id="company" 
+                          name="company"
+                          className="bg-white border-gray-300 text-gray-900" 
+                          placeholder="Company Ltd."
+                        />
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <label htmlFor="message" className="text-sm text-gray-600">Message</label>
+                        <Textarea 
+                          id="message" 
+                          name="message"
+                          className="bg-white border-gray-300 text-gray-900 min-h-[100px]" 
+                          placeholder="How can we help you?"
                           required
                         />
                       </div>
@@ -358,51 +320,89 @@ const LandingPage = () => {
                         type="submit" 
                         className="w-full bg-black text-white hover:bg-gray-800"
                       >
-                        Subscribe
+                        Send Message
                       </Button>
                     </form>
                   </CardContent>
                 </Card>
+              </FadeIn>
+              
+              {/* Contact Info */}
+              <div className="space-y-8">
+                <FadeIn delay={0.1}>
+                  <Card className="bg-white shadow-md border-0">
+                    <CardHeader>
+                      <CardTitle className="text-2xl font-bold text-black">Subscribe to Our Newsletter</CardTitle>
+                      <CardDescription className="text-gray-600">
+                        Stay updated with the latest in wealth management technology and insights.
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <form onSubmit={handleNewsletterSignup} className="space-y-4">
+                        <div className="space-y-2">
+                          <label htmlFor="newsletterEmail" className="text-sm text-gray-600">Email Address</label>
+                          <Input 
+                            id="newsletterEmail" 
+                            name="email"
+                            type="email" 
+                            className="bg-white border-gray-300 text-gray-900" 
+                            placeholder="your@email.com"
+                            required
+                          />
+                        </div>
+                        
+                        <Button 
+                          type="submit" 
+                          className="w-full bg-black text-white hover:bg-gray-800"
+                        >
+                          Subscribe
+                        </Button>
+                      </form>
+                    </CardContent>
+                  </Card>
+                </FadeIn>
                 
-                <Card className="bg-white shadow-md border-0">
-                  <CardHeader>
-                    <CardTitle className="text-2xl font-bold text-black">Contact Information</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-6">
-                    <div className="flex items-start gap-4">
-                      <div className="p-3 rounded-full bg-gray-100">
-                        <Mail className="h-5 w-5 text-gray-900" />
+                <FadeIn delay={0.2}>
+                  <Card className="bg-white shadow-md border-0">
+                    <CardHeader>
+                      <CardTitle className="text-2xl font-bold text-black">Contact Information</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-6">
+                      <div className="flex items-start gap-4">
+                        <div className="p-3 rounded-full bg-gray-100">
+                          <Mail className="h-5 w-5 text-gray-900" />
+                        </div>
+                        <div>
+                          <h3 className="text-lg font-medium text-black">Email Us</h3>
+                          <p className="text-gray-600 mt-1">info@wpro.com</p>
+                        </div>
                       </div>
-                      <div>
-                        <h3 className="text-lg font-medium text-black">Email Us</h3>
-                        <p className="text-gray-600 mt-1">info@wpro.com</p>
+                      
+                      <div className="flex items-start gap-4">
+                        <div className="p-3 rounded-full bg-gray-100">
+                          <Phone className="h-5 w-5 text-gray-900" />
+                        </div>
+                        <div>
+                          <h3 className="text-lg font-medium text-black">Call Us</h3>
+                          <p className="text-gray-600 mt-1">+1 (555) 000-0000</p>
+                        </div>
                       </div>
-                    </div>
-                    
-                    <div className="flex items-start gap-4">
-                      <div className="p-3 rounded-full bg-gray-100">
-                        <Phone className="h-5 w-5 text-gray-900" />
+                      
+                      <div className="flex items-start gap-4">
+                        <div className="p-3 rounded-full bg-gray-100">
+                          <Globe className="h-5 w-5 text-gray-900" />
+                        </div>
+                        <div>
+                          <h3 className="text-lg font-medium text-black">Visit Us</h3>
+                          <p className="text-gray-600 mt-1">
+                            123 Finance Street<br />
+                            New York, NY 10001
+                          </p>
+                        </div>
                       </div>
-                      <div>
-                        <h3 className="text-lg font-medium text-black">Call Us</h3>
-                        <p className="text-gray-600 mt-1">+1 (555) 000-0000</p>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-start gap-4">
-                      <div className="p-3 rounded-full bg-gray-100">
-                        <Globe className="h-5 w-5 text-gray-900" />
-                      </div>
-                      <div>
-                        <h3 className="text-lg font-medium text-black">Visit Us</h3>
-                        <p className="text-gray-600 mt-1">
-                          123 Finance Street<br />
-                          New York, NY 10001
-                        </p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+                    </CardContent>
+                  </Card>
+                </FadeIn>
               </div>
             </div>
           </div>

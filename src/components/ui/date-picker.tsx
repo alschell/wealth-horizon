@@ -57,6 +57,7 @@ export function DatePicker({
 
   const handleSelect = (date?: Date) => {
     onChange?.(date);
+    // Always close the popover after selection
     handleOpenChange(false);
   };
 

@@ -241,17 +241,19 @@ const CalendarPage = () => {
             </div>
             
             <div className="grid grid-cols-2 gap-4">
-              <TimePicker
-                id="time"
-                label="Start Time"
-                value={meetingTime}
-                onChange={setMeetingTime}
-              />
+              <div className="space-y-2">
+                <TimePicker
+                  id="time"
+                  label="Start Time"
+                  value={meetingTime}
+                  onChange={setMeetingTime}
+                />
+              </div>
               
               <div className="space-y-2">
                 <Label htmlFor="duration">Duration (minutes)</Label>
                 <Select value={meetingDuration} onValueChange={setMeetingDuration}>
-                  <SelectTrigger>
+                  <SelectTrigger className="h-11">
                     <SelectValue placeholder="Select duration" />
                   </SelectTrigger>
                   <SelectContent>

@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { IndexData } from "../types";
-import { indices } from "../data/mockData";
+import { mockIndices, searchIndices, filterIndicesByRegion } from "../data/mockData";
 
 export const useIndicesTracker = () => {
   const [filter, setFilter] = useState("all");
@@ -19,14 +19,14 @@ export const useIndicesTracker = () => {
     const indexName = params.get('index');
     
     if (indexName) {
-      const foundIndex = indices.find(idx => idx.name === indexName);
+      const foundIndex = mockIndices.find(idx => idx.name === indexName);
       if (foundIndex) {
         setSelectedIndex(foundIndex);
       }
     }
   }, [location]);
   
-  const filteredIndices = indices.filter(index => {
+  const filteredIndices = mockIndices.filter(index => {
     if (filter !== "all" && index.region !== filter) return false;
     if (searchTerm && !index.name.toLowerCase().includes(searchTerm.toLowerCase())) return false;
     return true;
@@ -57,6 +57,6 @@ export const useIndicesTracker = () => {
     filteredIndices,
     toggleSubscription,
     handleSelectIndex,
-    indices
+    indices: mockIndices
   };
 };

@@ -2,7 +2,7 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Search, LogOut, Settings, Sliders } from "lucide-react";
+import { Search, LogOut, Settings } from "lucide-react";
 import Logo from "./Logo";
 import NotificationsPopover from "./notifications";
 import HeaderAction from "./HeaderAction";

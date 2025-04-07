@@ -1,13 +1,18 @@
 
 import React from "react";
 import { Separator } from "@/components/ui/separator";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const FooterSection: React.FC = () => {
+  const navigate = useNavigate();
+
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
       element.scrollIntoView({ behavior: "smooth" });
+    } else {
+      // If not found on current page, navigate to home with hash
+      navigate(`/#${id}`);
     }
   };
 

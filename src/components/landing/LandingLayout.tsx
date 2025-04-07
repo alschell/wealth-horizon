@@ -1,5 +1,6 @@
 
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import HeroSection from "./HeroSection";
 import FeaturesSection from "./FeaturesSection";
 import BenefitsSection from "./BenefitsSection";
@@ -9,11 +10,25 @@ import FooterSection from "./FooterSection";
 import ContactFormSection from "./ContactFormSection";
 
 const LandingLayout: React.FC = () => {
+  const location = useLocation();
   const featuresRef = useRef<HTMLDivElement>(null);
   const benefitsRef = useRef<HTMLDivElement>(null);
   const testimonialsRef = useRef<HTMLDivElement>(null);
   const contactRef = useRef<HTMLDivElement>(null);
   const aboutRef = useRef<HTMLDivElement>(null);
+
+  // Handle hash navigation when the component mounts or location changes
+  useEffect(() => {
+    if (location.hash) {
+      const id = location.hash.substring(1); // Remove the # character
+      const element = document.getElementById(id);
+      if (element) {
+        setTimeout(() => {
+          element.scrollIntoView({ behavior: "smooth" });
+        }, 100);
+      }
+    }
+  }, [location]);
 
   const scrollToSection = (sectionRef: React.RefObject<HTMLDivElement>) => {
     if (sectionRef.current) {
@@ -24,20 +39,20 @@ const LandingLayout: React.FC = () => {
   return (
     <div className="min-h-screen bg-white">
       <HeroSection onScrollToFeatures={() => scrollToSection(featuresRef)} />
-      <div ref={featuresRef}>
+      <div ref={featuresRef} id="features">
         <FeaturesSection id="features" />
       </div>
-      <div ref={benefitsRef}>
+      <div ref={benefitsRef} id="benefits">
         <BenefitsSection />
       </div>
-      <div ref={testimonialsRef}>
+      <div ref={testimonialsRef} id="testimonials">
         <TestimonialsSection />
       </div>
-      <div ref={contactRef}>
+      <div ref={contactRef} id="contact">
         <ContactFormSection />
       </div>
       <CTASection />
-      <div ref={aboutRef}>
+      <div ref={aboutRef} id="about">
         <FooterSection />
       </div>
     </div>

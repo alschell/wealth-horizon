@@ -18,48 +18,34 @@ const AssetAllocationChart: React.FC = () => {
       </div>
       
       <div className="h-[120px] flex justify-center items-center">
-        {/* Simple Donut Chart */}
+        {/* Simple Pie Chart with three segments */}
         <svg width="100" height="100" viewBox="0 0 100 100">
-          <motion.circle
-            cx="50"
-            cy="50"
-            r="40"
-            fill="transparent"
-            stroke="#818CF8"
-            strokeWidth="20"
-            strokeDasharray="251.2"
-            strokeDashoffset="251.2"
-            initial={{ strokeDashoffset: 251.2 }}
-            animate={{ strokeDashoffset: 150 }}
-            transition={{ duration: 1, delay: 1 }}
+          {/* First segment - 40% */}
+          <motion.path
+            d="M50,50 L50,0 A50,50 0 0,1 96.6,35 Z"
+            fill="#818CF8"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
           />
-          <motion.circle
-            cx="50"
-            cy="50"
-            r="40"
-            fill="transparent"
-            stroke="#34D399"
-            strokeWidth="20"
-            strokeDasharray="251.2"
-            strokeDashoffset="150"
-            initial={{ strokeDashoffset: 150 }}
-            animate={{ strokeDashoffset: 70 }}
-            transition={{ duration: 1, delay: 1.2 }}
+          {/* Second segment - 35% */}
+          <motion.path
+            d="M50,50 L96.6,35 A50,50 0 0,1 69.1,95.1 Z"
+            fill="#34D399"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
           />
-          <motion.circle
-            cx="50"
-            cy="50"
-            r="40"
-            fill="transparent"
-            stroke="#F59E0B"
-            strokeWidth="20"
-            strokeDasharray="251.2"
-            strokeDashoffset="70"
-            initial={{ strokeDashoffset: 70 }}
-            animate={{ strokeDashoffset: 0 }}
-            transition={{ duration: 1, delay: 1.4 }}
+          {/* Third segment - 25% */}
+          <motion.path
+            d="M50,50 L69.1,95.1 A50,50 0 0,1 0,50 L50,50 Z"
+            fill="#F59E0B"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.5 }}
           />
-          <circle cx="50" cy="50" r="30" fill="white" />
+          {/* Center circle for cleaner look */}
+          <circle cx="50" cy="50" r="15" fill="white" />
         </svg>
       </div>
     </motion.div>

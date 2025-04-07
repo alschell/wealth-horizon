@@ -1,7 +1,6 @@
 
 import React, { useState } from "react";
-import { motion } from "framer-motion";
-import { Settings, Save, X } from "lucide-react";
+import { Sliders, Save, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -38,8 +37,13 @@ const PersonalizedSettings = () => {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button variant="ghost" size="icon" className="h-8 w-8">
-          <Settings className="h-4 w-4" />
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          className="h-8 w-8 p-0"
+        >
+          <Sliders className="h-4 w-4" />
+          <span className="sr-only">Dashboard Preferences</span>
         </Button>
       </SheetTrigger>
       <SheetContent className="w-[300px] sm:w-[400px]">

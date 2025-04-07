@@ -1,8 +1,9 @@
 
 import React from "react";
-import { ArrowUp, ArrowDown, ChevronRight } from "lucide-react";
+import { ArrowUp, ArrowDown, ChevronRight, Sliders } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import SectionHeader from "../SectionHeader";
 
 const TopAssets = () => {
   const navigate = useNavigate();
@@ -24,7 +25,19 @@ const TopAssets = () => {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="space-y-2 flex-grow overflow-y-auto max-h-[330px]">
+      <div className="flex justify-between items-center mb-3">
+        <SectionHeader title="Top Assets" />
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          className="h-8 w-8 p-0"
+        >
+          <Sliders className="h-4 w-4" />
+          <span className="sr-only">Customize</span>
+        </Button>
+      </div>
+      
+      <div className="space-y-3 flex-grow overflow-y-auto max-h-[330px]">
         {assets.map((asset, index) => (
           <div 
             key={index} 
@@ -44,6 +57,7 @@ const TopAssets = () => {
           </div>
         ))}
       </div>
+      
       <div className="mt-auto pt-4">
         <Button 
           variant="outline" 

@@ -1,8 +1,10 @@
+
 import React from "react";
 import { ChevronRight, Sliders } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import CustomizeNewsDialog, { NewsSource, NewsCategory } from "./CustomizeNewsDialog";
+import SectionHeader from "../SectionHeader";
 
 type NewsItem = {
   title: string;
@@ -113,12 +115,12 @@ const RecentNewsList = ({ newsData }: RecentNewsListProps) => {
   return (
     <div className="flex flex-col h-full">
       <div className="flex justify-between items-center mb-3">
-        <h3 className="text-sm font-medium">Recent News</h3>
+        <SectionHeader title="Recent News" />
         <Button 
           variant="ghost" 
           size="sm" 
-          onClick={() => setIsCustomizing(true)}
           className="h-8 w-8 p-0"
+          onClick={() => setIsCustomizing(true)}
         >
           <Sliders className="h-4 w-4" />
           <span className="sr-only">Customize</span>

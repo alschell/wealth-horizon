@@ -2,7 +2,7 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Search, LogOut, Settings, Sliders } from "lucide-react";
+import { Search, LogOut, Settings } from "lucide-react";
 import Logo from "./Logo";
 import NotificationsPopover from "./notifications";
 import HeaderAction from "./HeaderAction";
@@ -34,7 +34,6 @@ const DashboardHeader = () => {
                 focus-visible:outline-none focus-visible:ring-0 focus-visible:border-black focus-visible:border-2"
               />
             </div>
-            <PersonalizedSettings />
             <NotificationsPopover />
             <HeaderAction 
               icon={Settings} 

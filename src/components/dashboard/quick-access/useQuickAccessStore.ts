@@ -36,10 +36,10 @@ export const useQuickAccessStore = () => {
     }
   };
 
-  // Get filtered items based on visible selection
-  const filteredItems = allActionItems.filter(item => 
-    visibleItems.includes(item.id)
-  );
+  // Get filtered items based on visible selection and sort alphabetically
+  const filteredItems = allActionItems
+    .filter(item => visibleItems.includes(item.id))
+    .sort((a, b) => a.label.localeCompare(b.label));
 
   return {
     isCustomizing,

@@ -14,20 +14,23 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { newsData } from "@/components/dashboard/performance/PerformanceData";
 import TopAssets from "@/components/dashboard/performance/TopAssets";
 import RecentNewsList from "@/components/dashboard/performance/RecentNewsList";
-import SectionHeader from "./SectionHeader";
+import PersonalizedSettings from "./PersonalizedSettings";
 
 const Dashboard = () => {
   return (
     <DashboardLayout>
       <div className="space-y-6">
         {/* Dashboard header */}
-        <PageHeaderCard
-          icon={LayoutDashboard}
-          title="Dashboard"
-          description="Your complete financial overview at a glance"
-          iconColor="text-gray-700"
-          iconBgColor="bg-gray-100"
-        />
+        <div className="flex justify-between items-center">
+          <PageHeaderCard
+            icon={LayoutDashboard}
+            title="Dashboard"
+            description="Your complete financial overview at a glance"
+            iconColor="text-gray-700"
+            iconBgColor="bg-gray-100"
+          />
+          <PersonalizedSettings />
+        </div>
 
         {/* Welcome header */}
         <WelcomeHeader />
@@ -45,22 +48,14 @@ const Dashboard = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Card className="shadow-sm">
             <CardHeader className="pb-2">
-              <SectionHeader title="Top Assets" />
-            </CardHeader>
-            <CardContent>
               <TopAssets />
-            </CardContent>
+            </CardHeader>
           </Card>
           
           <Card className="shadow-sm">
             <CardHeader className="pb-2">
-              <div className="flex justify-between items-center">
-                <SectionHeader title="Recent News" />
-              </div>
-            </CardHeader>
-            <CardContent>
               <RecentNewsList newsData={newsData} />
-            </CardContent>
+            </CardHeader>
           </Card>
         </div>
 

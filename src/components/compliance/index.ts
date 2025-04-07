@@ -7,3 +7,5 @@ export * from './ComplianceCalendar';
 export * from './StatusUtils';
 export * from './EmptyState';
 export * from './LoadingState';
+export { default as ComplianceMonitoring } from './ComplianceMonitoring';
+export * from './types';

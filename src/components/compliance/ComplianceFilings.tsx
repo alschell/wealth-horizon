@@ -5,19 +5,8 @@ import { Card, CardHeader, CardContent, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button';
 import { RenderStatusIndicator } from './StatusUtils';
 import { EmptyState } from './EmptyState';
-
-interface FilingItem {
-  id: number;
-  name: string;
-  deadline: string;
-  status: string;
-  priority: string;
-}
-
-interface ComplianceFilingsProps {
-  upcomingFilings: FilingItem[];
-  isLoading?: boolean;
-}
+import { LoadingState } from './LoadingState';
+import { ComplianceFilingsProps, FilingItem } from './types';
 
 export const ComplianceFilings: React.FC<ComplianceFilingsProps> = ({ 
   upcomingFilings,
@@ -30,15 +19,17 @@ export const ComplianceFilings: React.FC<ComplianceFilingsProps> = ({
           <CardTitle>Upcoming Filings</CardTitle>
           <CardDescription>Regulatory filings due in the next 90 days</CardDescription>
         </CardHeader>
-        <CardContent className="min-h-[200px] flex items-center justify-center">
-          <div className="animate-pulse flex flex-col items-center">
-            <FileText className="h-10 w-10 text-gray-300 mb-3" />
-            <p className="text-muted-foreground">Loading filings...</p>
-          </div>
+        <CardContent>
+          <LoadingState message="Loading filings..." />
         </CardContent>
       </Card>
     );
   }
+
+  const handleViewDetails = (filingId: number) => {
+    console.log(`View details for filing ${filingId}`);
+    // Implementation would go here in a real app
+  };
 
   return (
     <Card>
@@ -60,7 +51,7 @@ export const ComplianceFilings: React.FC<ComplianceFilingsProps> = ({
                 </div>
                 <div className="flex items-center gap-3">
                   <RenderStatusIndicator status={filing.status} priority={filing.priority} />
-                  <Button size="sm">View Details</Button>
+                  <Button size="sm" onClick={() => handleViewDetails(filing.id)}>View Details</Button>
                 </div>
               </div>
             ))}
@@ -70,6 +61,10 @@ export const ComplianceFilings: React.FC<ComplianceFilingsProps> = ({
             icon={FileText}
             title="No Upcoming Filings"
             description="No upcoming filings due in the next 90 days."
+            action={{
+              label: "Create Filing",
+              onClick: () => console.log("Create filing clicked")
+            }}
           />
         )}
       </CardContent>

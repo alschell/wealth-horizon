@@ -1,128 +1,115 @@
 
 import { useState, useEffect } from 'react';
+import { FilingItem, RegulatoryChange, CalendarEvent, ComplianceTab } from '../types';
 
-export interface FilingItem {
-  id: number;
-  name: string;
-  deadline: string;
-  status: string;
-  priority: string;
+interface UseComplianceDataProps {
+  initialTab?: ComplianceTab;
 }
 
-export interface RegulatoryChange {
-  id: number;
-  title: string;
-  date: string;
-  impact: string;
-  description: string;
-}
-
-export interface CalendarEvent {
-  id: number;
-  title: string;
-  date: string;
-  type: string;
-}
-
-interface ComplianceData {
-  filings: FilingItem[];
-  changes: RegulatoryChange[];
-  events: CalendarEvent[];
-  isLoading: boolean;
-  error: Error | null;
-  refetch: () => Promise<void>;
-}
-
-export const useComplianceData = (initialFetch = true): ComplianceData => {
-  const [filings, setFilings] = useState<FilingItem[]>([]);
-  const [changes, setChanges] = useState<RegulatoryChange[]>([]);
-  const [events, setEvents] = useState<CalendarEvent[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<Error | null>(null);
-
-  const fetchData = async () => {
-    setIsLoading(true);
-    setError(null);
-    
-    try {
-      // This would typically be API calls. For now, we're using mock data
-      // In a real application, these would be separate API endpoints
-      
-      // Mock delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Mock data for demonstration purposes
-      const mockFilings: FilingItem[] = [
-        {
-          id: 1,
-          name: "Quarterly Tax Filing",
-          deadline: "April 15, 2025",
-          status: "pending",
-          priority: "high"
-        },
-        {
-          id: 2,
-          name: "Annual Regulatory Report",
-          deadline: "May 30, 2025",
-          status: "pending",
-          priority: "medium"
-        }
-      ];
-      
-      const mockChanges: RegulatoryChange[] = [
-        {
-          id: 1,
-          title: "New ESG Reporting Requirements",
-          date: "June 1, 2025",
-          impact: "medium",
-          description: "Companies must include additional environmental impact metrics in quarterly reports."
-        }
-      ];
-      
-      const mockEvents: CalendarEvent[] = [
-        {
-          id: 1,
-          title: "Quarterly Filing Deadline",
-          date: "Apr 15, 2025",
-          type: "deadline"
-        },
-        {
-          id: 2,
-          title: "Annual Report Due",
-          date: "May 30, 2025",
-          type: "deadline"
-        },
-        {
-          id: 3,
-          title: "New Regulations Effective",
-          date: "Jun 1, 2025",
-          type: "regulatory"
-        }
-      ];
-      
-      setFilings(mockFilings);
-      setChanges(mockChanges);
-      setEvents(mockEvents);
-    } catch (err) {
-      setError(err instanceof Error ? err : new Error('An unknown error occurred'));
-      console.error('Error fetching compliance data:', err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+export const useComplianceData = ({ initialTab = 'overview' }: UseComplianceDataProps = {}) => {
+  const [activeTab, setActiveTab] = useState<ComplianceTab>(initialTab);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [upcomingFilings, setUpcomingFilings] = useState<FilingItem[]>([]);
+  const [regulatoryChanges, setRegulatoryChanges] = useState<RegulatoryChange[]>([]);
+  const [calendarEvents, setCalendarEvents] = useState<CalendarEvent[]>([]);
 
   useEffect(() => {
-    if (initialFetch) {
-      fetchData();
-    }
-  }, [initialFetch]);
-
+    const fetchComplianceData = async () => {
+      setIsLoading(true);
+      setError(null);
+      
+      try {
+        // In a real application, this would be an API call
+        // For now, we'll simulate with mock data
+        
+        // Simulate API latency
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // Mock data
+        const filingsData: FilingItem[] = [
+          { 
+            id: 1, 
+            name: "Quarterly Tax Filing", 
+            deadline: "May 15, 2025", 
+            status: "pending", 
+            priority: "high" 
+          },
+          { 
+            id: 2, 
+            name: "Annual Regulatory Report", 
+            deadline: "June 30, 2025", 
+            status: "in_progress", 
+            priority: "medium" 
+          },
+          { 
+            id: 3, 
+            name: "ESG Disclosure", 
+            deadline: "July 15, 2025", 
+            status: "not_started", 
+            priority: "low" 
+          }
+        ];
+        
+        const changesData: RegulatoryChange[] = [
+          {
+            id: 1,
+            title: "Updated ESG Reporting Requirements",
+            date: "June 1, 2025",
+            impact: "medium",
+            description: "New environmental reporting standards affecting all public companies with more than $500M in annual revenue."
+          },
+          {
+            id: 2,
+            title: "Cross-border Payment Regulation Changes",
+            date: "July 15, 2025",
+            impact: "high",
+            description: "Significant changes to international payment processing requirements affecting all financial institutions."
+          }
+        ];
+        
+        const eventsData: CalendarEvent[] = [
+          {
+            id: 1,
+            title: "Quarterly Compliance Review",
+            date: "May 12, 2025",
+            type: "meeting"
+          },
+          {
+            id: 2,
+            title: "Tax Filing Deadline",
+            date: "May 15, 2025",
+            type: "deadline"
+          },
+          {
+            id: 3,
+            title: "Regulatory Update Webinar",
+            date: "May 20, 2025",
+            type: "training"
+          }
+        ];
+        
+        setUpcomingFilings(filingsData);
+        setRegulatoryChanges(changesData);
+        setCalendarEvents(eventsData);
+      } catch (err) {
+        console.error('Error fetching compliance data:', err);
+        setError('Failed to load compliance data. Please try again later.');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    fetchComplianceData();
+  }, []);
+  
   return {
-    filings,
-    changes,
-    events,
+    activeTab,
+    setActiveTab,
     isLoading,
     error,
-    refetch: fetchData
+    upcomingFilings,
+    regulatoryChanges,
+    calendarEvents
   };
 };

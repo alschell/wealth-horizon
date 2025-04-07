@@ -5,31 +5,10 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button';
 import { ContentGrid } from '@/components/ui/design-system';
 import { StatusIndicator } from '@/components/ui/status-indicator';
-import { getStatusColor, getPriorityLabel, ComplianceStatus, PriorityLevel } from './StatusUtils';
+import { getStatusColor, getPriorityLabel, getImpactType } from './StatusUtils';
 import { EmptyState } from './EmptyState';
-
-interface FilingItem {
-  id: number;
-  name: string;
-  deadline: string;
-  status: ComplianceStatus;
-  priority: PriorityLevel;
-}
-
-interface RegulatoryChange {
-  id: number;
-  title: string;
-  date: string;
-  impact: string;
-  description: string;
-}
-
-interface ComplianceOverviewProps {
-  upcomingFilings: FilingItem[];
-  regulatoryChanges: RegulatoryChange[];
-  setActiveTab: (tab: string) => void;
-  isLoading?: boolean;
-}
+import { LoadingState } from './LoadingState';
+import { ComplianceOverviewProps } from './types';
 
 export const ComplianceOverview: React.FC<ComplianceOverviewProps> = ({
   upcomingFilings,
@@ -38,39 +17,7 @@ export const ComplianceOverview: React.FC<ComplianceOverviewProps> = ({
   isLoading = false
 }) => {
   if (isLoading) {
-    return (
-      <div className="space-y-6">
-        <ContentGrid columns="3">
-          {Array.from({ length: 3 }).map((_, i) => (
-            <Card key={i}>
-              <CardHeader className="pb-2">
-                <div className="h-6 w-40 bg-gray-200 rounded animate-pulse"></div>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  <div className="h-4 w-full bg-gray-200 rounded animate-pulse"></div>
-                  <div className="h-4 w-3/4 bg-gray-200 rounded animate-pulse"></div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </ContentGrid>
-        
-        <Card>
-          <CardHeader>
-            <div className="h-6 w-40 bg-gray-200 rounded animate-pulse"></div>
-            <div className="h-4 w-60 bg-gray-200 rounded animate-pulse"></div>
-          </CardHeader>
-          <CardContent className="min-h-[150px] flex items-center justify-center">
-            <div className="animate-pulse flex flex-col items-center">
-              <div className="h-12 w-12 bg-gray-200 rounded-full mb-3"></div>
-              <div className="h-5 w-40 bg-gray-200 rounded mb-2"></div>
-              <div className="h-4 w-60 bg-gray-200 rounded"></div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    );
+    return <LoadingState message="Loading compliance overview..." fullPage />;
   }
   
   return (
@@ -126,7 +73,13 @@ export const ComplianceOverview: React.FC<ComplianceOverviewProps> = ({
               <div className="space-y-4">
                 {regulatoryChanges.slice(0, 1).map(change => (
                   <div key={change.id}>
-                    <p className="font-medium">{change.title}</p>
+                    <div className="flex justify-between items-start">
+                      <p className="font-medium">{change.title}</p>
+                      <StatusIndicator 
+                        type={getImpactType(change.impact)} 
+                        size="sm" 
+                      />
+                    </div>
                     <p className="text-sm text-muted-foreground line-clamp-2">{change.description}</p>
                     <div className="flex items-center mt-2 text-sm text-muted-foreground">
                       <Clock className="h-3.5 w-3.5 mr-1" />
@@ -165,7 +118,7 @@ export const ComplianceOverview: React.FC<ComplianceOverviewProps> = ({
                 </div>
                 <span className="text-sm font-medium">100%</span>
               </div>
-              <p className="text-xs text-muted-foreground mt-2">Last verified: April 5, 2025</p>
+              <p className="text-xs text-muted-foreground mt-2">Last verified: April 7, 2025</p>
             </div>
           </CardContent>
         </Card>
@@ -184,6 +137,10 @@ export const ComplianceOverview: React.FC<ComplianceOverviewProps> = ({
             icon={ClipboardCheck}
             title="All Clear"
             description="There are no pending compliance tasks requiring immediate attention."
+            action={{
+              label: "Create Task",
+              onClick: () => console.log("Create task clicked")
+            }}
           />
         </CardContent>
       </Card>

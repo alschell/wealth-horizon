@@ -4,12 +4,13 @@ import { Link } from 'react-router-dom';
 import { ArrowLeft, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import PageHeaderCard from '@/components/dashboard/PageHeaderCard';
+import { ComplianceHeaderProps } from './types';
 
-interface ComplianceHeaderProps {
-  loading?: boolean;
-}
-
-export const ComplianceHeader: React.FC<ComplianceHeaderProps> = ({ loading = false }) => {
+export const ComplianceHeader: React.FC<ComplianceHeaderProps> = ({ 
+  loading = false,
+  title = "Monitor Compliance",
+  description = "Track regulatory activities and manage compliance tasks" 
+}) => {
   return (
     <>
       <div className="flex items-center justify-between">
@@ -34,8 +35,8 @@ export const ComplianceHeader: React.FC<ComplianceHeaderProps> = ({ loading = fa
       ) : (
         <PageHeaderCard
           icon={Shield}
-          title="Monitor Compliance"
-          description="Track regulatory activities"
+          title={title}
+          description={description}
           iconColor="text-blue-600"
           iconBgColor="bg-blue-100"
         />

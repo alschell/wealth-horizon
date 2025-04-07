@@ -1,34 +1,55 @@
 
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
+import { FileText } from 'lucide-react';
 import { EmptyState } from '../EmptyState';
-import { Calendar } from 'lucide-react';
 
-describe('EmptyState', () => {
-  it('renders with the provided icon, title and description', () => {
+describe('EmptyState Component', () => {
+  const mockOnClick = jest.fn();
+  
+  it('renders with basic props correctly', () => {
     render(
-      <EmptyState 
-        icon={Calendar} 
-        title="No Data" 
-        description="There is no data to display." 
+      <EmptyState
+        icon={FileText}
+        title="No Data"
+        description="There is no data available."
       />
     );
     
     expect(screen.getByText('No Data')).toBeInTheDocument();
-    expect(screen.getByText('There is no data to display.')).toBeInTheDocument();
+    expect(screen.getByText('There is no data available.')).toBeInTheDocument();
   });
   
-  it('applies the correct CSS classes', () => {
-    const { container } = render(
-      <EmptyState 
-        icon={Calendar} 
-        title="No Data" 
-        description="There is no data to display." 
+  it('renders with action button when action prop is provided', () => {
+    render(
+      <EmptyState
+        icon={FileText}
+        title="No Data"
+        description="There is no data available."
+        action={{
+          label: "Create New",
+          onClick: mockOnClick
+        }}
       />
     );
     
-    const emptyStateElement = container.firstChild;
-    expect(emptyStateElement).toHaveClass('text-center');
-    expect(emptyStateElement).toHaveClass('py-12');
+    const button = screen.getByRole('button', { name: 'Create New' });
+    expect(button).toBeInTheDocument();
+    
+    fireEvent.click(button);
+    expect(mockOnClick).toHaveBeenCalledTimes(1);
+  });
+  
+  it('applies custom className when provided', () => {
+    const { container } = render(
+      <EmptyState
+        icon={FileText}
+        title="No Data"
+        description="There is no data available."
+        className="custom-class"
+      />
+    );
+    
+    expect(container.firstChild).toHaveClass('custom-class');
   });
 });

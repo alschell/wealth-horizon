@@ -4,19 +4,9 @@ import { Calendar, AlertTriangle } from 'lucide-react';
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from '@/components/ui/card';
 import { StatusIndicator } from '@/components/ui/status-indicator';
 import { EmptyState } from './EmptyState';
-
-interface RegulatoryChange {
-  id: number;
-  title: string;
-  date: string;
-  impact: string;
-  description: string;
-}
-
-interface ComplianceChangesProps {
-  regulatoryChanges: RegulatoryChange[];
-  isLoading?: boolean;
-}
+import { LoadingState } from './LoadingState';
+import { getImpactType } from './StatusUtils';
+import { ComplianceChangesProps } from './types';
 
 export const ComplianceChanges: React.FC<ComplianceChangesProps> = ({ 
   regulatoryChanges,
@@ -29,26 +19,12 @@ export const ComplianceChanges: React.FC<ComplianceChangesProps> = ({
           <CardTitle>Regulatory Changes</CardTitle>
           <CardDescription>Recent regulatory changes that may affect your portfolios</CardDescription>
         </CardHeader>
-        <CardContent className="min-h-[200px] flex items-center justify-center">
-          <div className="animate-pulse flex flex-col items-center">
-            <AlertTriangle className="h-10 w-10 text-gray-300 mb-3" />
-            <p className="text-muted-foreground">Loading regulatory changes...</p>
-          </div>
+        <CardContent>
+          <LoadingState message="Loading regulatory changes..." />
         </CardContent>
       </Card>
     );
   }
-
-  const getImpactType = (impact: string): "error" | "warning" | "info" => {
-    switch (impact) {
-      case 'high':
-        return 'error';
-      case 'medium':
-        return 'warning';
-      default:
-        return 'info';
-    }
-  };
 
   return (
     <Card>
@@ -82,6 +58,10 @@ export const ComplianceChanges: React.FC<ComplianceChangesProps> = ({
             icon={AlertTriangle}
             title="No Regulatory Changes"
             description="No recent regulatory changes to display."
+            action={{
+              label: "Refresh",
+              onClick: () => console.log("Refresh regulatory changes")
+            }}
           />
         )}
       </CardContent>

@@ -4,18 +4,8 @@ import { Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from '@/components/ui/card';
 import { EmptyState } from './EmptyState';
-
-interface CalendarEvent {
-  id: number;
-  title: string;
-  date: string;
-  type: string;
-}
-
-interface ComplianceCalendarProps {
-  calendarEvents: CalendarEvent[];
-  isLoading?: boolean;
-}
+import { LoadingState } from './LoadingState';
+import { ComplianceCalendarProps } from './types';
 
 export const ComplianceCalendar: React.FC<ComplianceCalendarProps> = ({ 
   calendarEvents,
@@ -28,15 +18,17 @@ export const ComplianceCalendar: React.FC<ComplianceCalendarProps> = ({
           <CardTitle>Compliance Calendar</CardTitle>
           <CardDescription>Upcoming compliance deadlines and events</CardDescription>
         </CardHeader>
-        <CardContent className="min-h-[200px] flex items-center justify-center">
-          <div className="animate-pulse flex flex-col items-center">
-            <Calendar className="h-10 w-10 text-gray-300 mb-3" />
-            <p className="text-muted-foreground">Loading calendar events...</p>
-          </div>
+        <CardContent>
+          <LoadingState message="Loading calendar events..." />
         </CardContent>
       </Card>
     );
   }
+
+  const handleViewDetails = (eventId: number) => {
+    console.log(`Viewing details for event ${eventId}`);
+    // Implementation would go here in a real app
+  };
 
   return (
     <Card>
@@ -61,7 +53,7 @@ export const ComplianceCalendar: React.FC<ComplianceCalendarProps> = ({
                     </span>
                   </div>
                 </div>
-                <Button size="sm" variant="outline">Details</Button>
+                <Button size="sm" variant="outline" onClick={() => handleViewDetails(event.id)}>Details</Button>
               </div>
             ))}
           </div>
@@ -70,6 +62,10 @@ export const ComplianceCalendar: React.FC<ComplianceCalendarProps> = ({
             icon={Calendar}
             title="No Upcoming Events"
             description="No upcoming compliance events scheduled for the next 90 days."
+            action={{
+              label: "Add Event",
+              onClick: () => console.log("Add calendar event clicked")
+            }}
           />
         )}
       </CardContent>

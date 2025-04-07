@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import SectionHeader from "./SectionHeader";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Checkbox } from "@/components/ui/checkbox";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { GripVertical } from "lucide-react";
 
 const MarketSnapshot = () => {
   const [isCustomizing, setIsCustomizing] = useState(false);
@@ -26,41 +28,74 @@ const MarketSnapshot = () => {
     { id: "china", label: "Shanghai", value: "3,210.40", change: "-0.30%", emoji: "🇨🇳" },
   ];
   
+  // Sort market items alphabetically by default
+  const alphabeticallySortedItems = [...defaultMarketItems].sort((a, b) => 
+    a.label.localeCompare(b.label)
+  );
+  
   const [visibleItems, setVisibleItems] = useState<string[]>(() => {
     try {
       const saved = localStorage.getItem("marketSnapshotVisibleItems");
-      return saved ? JSON.parse(saved) : defaultMarketItems.map(item => item.id);
+      return saved ? JSON.parse(saved) : alphabeticallySortedItems.map(item => item.id);
     } catch (e) {
-      return defaultMarketItems.map(item => item.id);
+      return alphabeticallySortedItems.map(item => item.id);
+    }
+  });
+  
+  const [itemOrder, setItemOrder] = useState<string[]>(() => {
+    try {
+      const savedOrder = localStorage.getItem("marketSnapshotItemOrder");
+      return savedOrder ? JSON.parse(savedOrder) : alphabeticallySortedItems.map(item => item.id);
+    } catch (e) {
+      return alphabeticallySortedItems.map(item => item.id);
     }
   });
   
   const [temporarySelection, setTemporarySelection] = useState<string[]>([]);
+  const [temporaryOrder, setTemporaryOrder] = useState<string[]>([]);
 
   const handleCustomizeOpen = () => {
     setTemporarySelection([...visibleItems]);
+    setTemporaryOrder([...itemOrder]);
     setIsCustomizing(true);
   };
 
   const handleCustomizeSave = () => {
     setVisibleItems(temporarySelection);
+    setItemOrder(temporaryOrder);
     localStorage.setItem("marketSnapshotVisibleItems", JSON.stringify(temporarySelection));
+    localStorage.setItem("marketSnapshotItemOrder", JSON.stringify(temporaryOrder));
     setIsCustomizing(false);
   };
 
   const toggleItem = (id: string) => {
     if (temporarySelection.includes(id)) {
       setTemporarySelection(temporarySelection.filter(item => item !== id));
+      setTemporaryOrder(temporaryOrder.filter(item => item !== id));
     } else {
       setTemporarySelection([...temporarySelection, id]);
+      setTemporaryOrder([...temporaryOrder, id]);
     }
   };
+  
+  const handleDragEnd = (result: any) => {
+    if (!result.destination) return;
+    
+    const items = Array.from(temporaryOrder);
+    const [reorderedItem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reorderedItem);
+    
+    setTemporaryOrder(items);
+  };
 
-  // Get filtered items based on visible selection
-  const filteredItems = defaultMarketItems.filter(item => visibleItems.includes(item.id));
+  // Get filtered and ordered items based on selection and order
+  const filteredAndOrderedItems = itemOrder
+    .filter(id => visibleItems.includes(id))
+    .map(id => defaultMarketItems.find(item => item.id === id))
+    .filter(Boolean) as typeof defaultMarketItems;
 
   return (
-    <Card className="shadow-sm h-full">
+    <Card className="shadow-sm h-full flex flex-col">
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
           <SectionHeader title="Market Snapshot" />
@@ -75,9 +110,9 @@ const MarketSnapshot = () => {
           </Button>
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="flex-1 overflow-auto">
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {filteredItems.map((item, index) => (
+          {filteredAndOrderedItems.map((item, index) => (
             <div key={index} className="p-3 rounded-md bg-gray-50 hover:bg-gray-100 transition-colors">
               <div className="flex items-center mb-1">
                 <span className="text-lg mr-2 w-6 text-center">{item.emoji}</span>
@@ -101,29 +136,76 @@ const MarketSnapshot = () => {
           <DialogHeader>
             <DialogTitle>Customize Market Snapshot</DialogTitle>
             <DialogDescription>
-              Select which market data to display in your snapshot.
+              Select which market data to display and drag to reorder.
             </DialogDescription>
           </DialogHeader>
           <div className="max-h-[60vh] overflow-y-auto py-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {defaultMarketItems.map((item) => (
-                <div key={item.id} className="flex items-start space-x-3">
-                  <Checkbox 
-                    id={`market-${item.id}`}
-                    checked={temporarySelection.includes(item.id)}
-                    onCheckedChange={() => toggleItem(item.id)}
-                  />
-                  <div className="grid gap-1.5 leading-none">
-                    <label
-                      htmlFor={`market-${item.id}`}
-                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    >
-                      <span className="mr-2">{item.emoji}</span>
-                      {item.label}
-                    </label>
-                  </div>
+            <div className="space-y-6">
+              <div>
+                <h3 className="text-sm font-medium mb-3">Select Market Items</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {alphabeticallySortedItems.map((item) => (
+                    <div key={item.id} className="flex items-start space-x-3">
+                      <Checkbox 
+                        id={`market-${item.id}`}
+                        checked={temporarySelection.includes(item.id)}
+                        onCheckedChange={() => toggleItem(item.id)}
+                      />
+                      <div className="grid gap-1.5 leading-none">
+                        <label
+                          htmlFor={`market-${item.id}`}
+                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                        >
+                          <span className="mr-2">{item.emoji}</span>
+                          {item.label}
+                        </label>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              </div>
+              
+              <div>
+                <h3 className="text-sm font-medium mb-3">Order of Display</h3>
+                <p className="text-xs text-muted-foreground mb-2">Drag to reorder items</p>
+                
+                <DragDropContext onDragEnd={handleDragEnd}>
+                  <Droppable droppableId="market-items">
+                    {(provided) => (
+                      <div
+                        {...provided.droppableProps}
+                        ref={provided.innerRef}
+                        className="space-y-2"
+                      >
+                        {temporaryOrder
+                          .filter(id => temporarySelection.includes(id))
+                          .map((id, index) => {
+                            const item = defaultMarketItems.find(m => m.id === id);
+                            if (!item) return null;
+                            
+                            return (
+                              <Draggable key={id} draggableId={id} index={index}>
+                                {(provided) => (
+                                  <div
+                                    ref={provided.innerRef}
+                                    {...provided.draggableProps}
+                                    {...provided.dragHandleProps}
+                                    className="flex items-center p-2 border rounded bg-white"
+                                  >
+                                    <GripVertical className="h-4 w-4 mr-2 text-gray-400" />
+                                    <span className="mr-2">{item.emoji}</span>
+                                    <span className="text-sm">{item.label}</span>
+                                  </div>
+                                )}
+                              </Draggable>
+                            );
+                          })}
+                        {provided.placeholder}
+                      </div>
+                    )}
+                  </Droppable>
+                </DragDropContext>
+              </div>
             </div>
           </div>
           <DialogFooter>

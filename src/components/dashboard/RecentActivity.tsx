@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ChevronRight, TrendingUp, DollarSign, Users, File, FileCheck, CreditCard, RefreshCcw, AlertTriangle, ArrowUpRight, ArrowDownRight } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const RecentActivity = () => {
   const navigate = useNavigate();
@@ -100,12 +101,12 @@ const RecentActivity = () => {
   };
 
   return (
-    <Card className="shadow-sm h-full flex flex-col">
+    <Card className="shadow-sm h-[350px] flex flex-col">
       <CardHeader className="pb-2">
         <CardTitle className="text-xl">Recent Activity</CardTitle>
       </CardHeader>
       <CardContent className="flex-1 flex flex-col">
-        <div className="flex-grow overflow-y-auto max-h-[165px]">
+        <ScrollArea className="flex-grow">
           <div className="space-y-3">
             {activities.map((activity, index) => (
               <div 
@@ -125,7 +126,7 @@ const RecentActivity = () => {
               </div>
             ))}
           </div>
-        </div>
+        </ScrollArea>
         
         <div className="mt-auto pt-4">
           <Link to="/activity">

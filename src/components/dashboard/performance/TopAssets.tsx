@@ -4,6 +4,7 @@ import { ArrowUp, ArrowDown, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import SectionHeader from "../SectionHeader";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const TopAssets = () => {
   const navigate = useNavigate();
@@ -29,26 +30,28 @@ const TopAssets = () => {
         <SectionHeader title="Top Assets" />
       </div>
       
-      <div className="space-y-3 flex-grow overflow-y-auto max-h-[165px]">
-        {assets.map((asset, index) => (
-          <div 
-            key={index} 
-            className="p-3 rounded-md hover:bg-gray-50 transition-colors cursor-pointer"
-            onClick={() => handleAssetClick(asset.id)}
-          >
-            <div className="flex justify-between items-center">
-              <p className="text-sm font-medium">{asset.name}</p>
-              <p className="text-sm font-bold">{asset.value}</p>
+      <ScrollArea className="flex-grow">
+        <div className="space-y-3">
+          {assets.map((asset, index) => (
+            <div 
+              key={index} 
+              className="p-3 rounded-md hover:bg-gray-50 transition-colors cursor-pointer"
+              onClick={() => handleAssetClick(asset.id)}
+            >
+              <div className="flex justify-between items-center">
+                <p className="text-sm font-medium">{asset.name}</p>
+                <p className="text-sm font-bold">{asset.value}</p>
+              </div>
+              <div className="flex justify-end mt-1">
+                <span className={`text-xs flex items-center ${asset.isPositive ? 'text-emerald-600' : 'text-red-500'}`}>
+                  {asset.isPositive ? <ArrowUp className="h-3 w-3 mr-0.5" /> : <ArrowDown className="h-3 w-3 mr-0.5" />}
+                  {asset.change}
+                </span>
+              </div>
             </div>
-            <div className="flex justify-end mt-1">
-              <span className={`text-xs flex items-center ${asset.isPositive ? 'text-emerald-600' : 'text-red-500'}`}>
-                {asset.isPositive ? <ArrowUp className="h-3 w-3 mr-0.5" /> : <ArrowDown className="h-3 w-3 mr-0.5" />}
-                {asset.change}
-              </span>
-            </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      </ScrollArea>
       
       <div className="mt-auto pt-4">
         <Button 

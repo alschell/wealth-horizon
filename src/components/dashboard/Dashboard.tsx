@@ -32,10 +32,9 @@ const Dashboard = () => {
           <Button
             variant="ghost"
             size="sm"
-            className="h-9 px-3 flex items-center gap-1"
+            className="h-9 px-3 flex items-center"
           >
-            <Sliders className="h-4 w-4 mr-1" />
-            <span>Preferences</span>
+            <Sliders className="h-4 w-4" />
           </Button>
         </div>
 
@@ -51,30 +50,30 @@ const Dashboard = () => {
         {/* Quick Access section - moved below performance overview */}
         <QuickAccessGrid />
 
-        {/* Top Assets and Recent News in separate cards */}
+        {/* Top Assets, Recent News, and Notifications in separate cards with same height */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Top Assets card aligned with the same height as notifications */}
-          <Card className="shadow-sm h-full flex flex-col">
+          {/* Top Assets card with fixed height */}
+          <Card className="shadow-sm h-[350px] flex flex-col">
             <CardHeader className="pb-0">
               <TopAssets />
             </CardHeader>
           </Card>
           
-          {/* Recent News card */}
-          <Card className="shadow-sm h-full flex flex-col">
+          {/* Recent News card with fixed height */}
+          <Card className="shadow-sm h-[350px] flex flex-col">
             <CardHeader className="pb-0">
               <RecentNewsList newsData={newsData} />
             </CardHeader>
           </Card>
 
-          {/* Notifications container */}
+          {/* Notifications container with fixed height */}
           <NotificationsFeed />
         </div>
 
-        {/* Key summary cards */}
+        {/* Key summary cards - Market Snapshot and Recent Activity */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-6">
-            {/* Market overview card */}
+            {/* Market overview card - fixed height */}
             <MarketSnapshot />
             
             {/* Recent activities card - moved up to align with Market Snapshot */}

@@ -37,7 +37,6 @@ import Documents from "./pages/Documents";
 import TaxOptimization from "./pages/TaxOptimization";
 import LegacyPlanning from "./pages/LegacyPlanning";
 import EntityManagement from "./pages/EntityManagement";
-import ComplianceMonitoring from "./pages/ComplianceMonitoring";
 import Logout from "./pages/Logout";
 import Calendar from "./pages/Calendar";
 
@@ -91,7 +90,6 @@ function App() {
               <Route path="/tax-optimization" element={<TaxOptimization />} />
               <Route path="/legacy-planning" element={<LegacyPlanning />} />
               <Route path="/entity-management" element={<EntityManagement />} />
-              <Route path="/compliance-monitoring" element={<ComplianceMonitoring />} />
               <Route path="/logout" element={<Logout />} />
               <Route path="/calendar" element={<Calendar />} />
               <Route path="*" element={<NotFound />} />

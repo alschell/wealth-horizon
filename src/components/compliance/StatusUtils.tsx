@@ -1,7 +1,10 @@
 
 import React from 'react';
 import { StatusIndicator } from '@/components/ui/status-indicator';
-import { ComplianceStatus, PriorityLevel } from './types';
+
+// Define and export types
+export type ComplianceStatus = 'completed' | 'in_progress' | 'pending' | 'overdue' | 'not_started';
+export type PriorityLevel = 'high' | 'medium' | 'low';
 
 // Status color mapping
 export const getStatusColor = (status: ComplianceStatus): "success" | "warning" | "error" | "info" | "neutral" => {

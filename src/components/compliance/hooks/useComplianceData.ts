@@ -1,6 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { FilingItem, RegulatoryChange, CalendarEvent, ComplianceTab } from '../types';
+import { ComplianceStatus, PriorityLevel } from '../StatusUtils';
 
 interface UseComplianceDataProps {
   initialTab?: ComplianceTab;
@@ -32,22 +33,22 @@ export const useComplianceData = ({ initialTab = 'overview' }: UseComplianceData
             id: 1, 
             name: "Quarterly Tax Filing", 
             deadline: "May 15, 2025", 
-            status: "pending", 
-            priority: "high" 
+            status: "pending" as ComplianceStatus, 
+            priority: "high" as PriorityLevel 
           },
           { 
             id: 2, 
             name: "Annual Regulatory Report", 
             deadline: "June 30, 2025", 
-            status: "in_progress", 
-            priority: "medium" 
+            status: "in_progress" as ComplianceStatus, 
+            priority: "medium" as PriorityLevel 
           },
           { 
             id: 3, 
             name: "ESG Disclosure", 
             deadline: "July 15, 2025", 
-            status: "not_started", 
-            priority: "low" 
+            status: "not_started" as ComplianceStatus, 
+            priority: "low" as PriorityLevel 
           }
         ];
         

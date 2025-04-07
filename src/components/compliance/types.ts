@@ -1,10 +1,8 @@
 
-export interface CalendarEvent {
-  id: number;
-  title: string;
-  date: string;
-  type: 'meeting' | 'deadline' | 'training' | 'regulatory' | string;
-}
+import { ReactNode } from 'react';
+import { ComplianceStatus, PriorityLevel } from './StatusUtils';
+
+export type ComplianceTab = 'overview' | 'filings' | 'changes' | 'calendar';
 
 export interface FilingItem {
   id: number;
@@ -18,41 +16,41 @@ export interface RegulatoryChange {
   id: number;
   title: string;
   date: string;
-  impact: 'low' | 'medium' | 'high' | string;
+  impact: string;
   description: string;
 }
 
-export type ComplianceTab = 'overview' | 'filings' | 'changes' | 'calendar';
-
-// Status and priority types - moved from StatusUtils for centralization
-export type ComplianceStatus = 'completed' | 'in_progress' | 'pending' | 'overdue' | 'not_started';
-export type PriorityLevel = 'low' | 'medium' | 'high';
-
-// Common props for compliance components
-export interface ComplianceComponentProps {
-  isLoading?: boolean;
+export interface CalendarEvent {
+  id: number;
+  title: string;
+  date: string;
+  type: string;
 }
 
-// Specific component props
-export interface ComplianceHeaderProps extends ComplianceComponentProps {
+export interface ComplianceHeaderProps {
+  isLoading?: boolean;
   title?: string;
   description?: string;
 }
 
-export interface ComplianceOverviewProps extends ComplianceComponentProps {
+export interface ComplianceOverviewProps {
   upcomingFilings: FilingItem[];
   regulatoryChanges: RegulatoryChange[];
   setActiveTab: (tab: ComplianceTab) => void;
+  isLoading?: boolean;
 }
 
-export interface ComplianceFilingsProps extends ComplianceComponentProps {
+export interface ComplianceFilingsProps {
   upcomingFilings: FilingItem[];
+  isLoading?: boolean;
 }
 
-export interface ComplianceChangesProps extends ComplianceComponentProps {
+export interface ComplianceChangesProps {
   regulatoryChanges: RegulatoryChange[];
+  isLoading?: boolean;
 }
 
-export interface ComplianceCalendarProps extends ComplianceComponentProps {
+export interface ComplianceCalendarProps {
   calendarEvents: CalendarEvent[];
+  isLoading?: boolean;
 }

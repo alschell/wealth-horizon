@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Button } from '@/components/ui/button';
 import { ComplianceHeader } from './ComplianceHeader';
 import { ComplianceOverview } from './ComplianceOverview';
 import { ComplianceFilings } from './ComplianceFilings';
@@ -41,7 +42,7 @@ const ComplianceMonitoring: React.FC = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
-      <ComplianceHeader loading={isLoading} />
+      <ComplianceHeader isLoading={isLoading} />
       
       <Tabs defaultValue={activeTab} onValueChange={handleTabChange} className="space-y-6">
         <TabsList className="grid grid-cols-4 w-full max-w-md">

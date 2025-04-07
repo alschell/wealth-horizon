@@ -16,6 +16,8 @@ export const LoadingState: React.FC<LoadingStateProps> = ({
   iconSize = 10,
   fullPage = false
 }) => {
+  const iconClass = `h-${iconSize} w-${iconSize} text-gray-400 animate-spin mb-3`;
+  
   const containerClasses = cn(
     "flex flex-col items-center justify-center",
     fullPage ? "min-h-[50vh]" : "py-12",
@@ -24,7 +26,7 @@ export const LoadingState: React.FC<LoadingStateProps> = ({
   
   return (
     <div className={containerClasses}>
-      <Loader2 className={`h-${iconSize} w-${iconSize} text-gray-400 animate-spin mb-3`} />
+      <Loader2 className={iconClass} />
       <p className="text-muted-foreground">{message}</p>
     </div>
   );

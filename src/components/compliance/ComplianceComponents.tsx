@@ -11,8 +11,8 @@ import {
   getStatusColor, 
   getPriorityLabel, 
   RenderStatusIndicator,
-  type ComplianceStatus,
-  type PriorityLevel
+  ComplianceStatus,
+  PriorityLevel
 } from './StatusUtils';
 
 // Export all compliance components

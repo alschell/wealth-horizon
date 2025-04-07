@@ -7,7 +7,7 @@ import PageHeaderCard from '@/components/dashboard/PageHeaderCard';
 import { ComplianceHeaderProps } from './types';
 
 export const ComplianceHeader: React.FC<ComplianceHeaderProps> = ({ 
-  loading = false,
+  isLoading = false,
   title = "Monitor Compliance",
   description = "Track regulatory activities and manage compliance tasks" 
 }) => {
@@ -22,7 +22,7 @@ export const ComplianceHeader: React.FC<ComplianceHeaderProps> = ({
         </Button>
       </div>
       
-      {loading ? (
+      {isLoading ? (
         <div className="w-full p-6 rounded-lg border bg-card animate-pulse mb-6">
           <div className="flex items-center gap-4">
             <div className="h-12 w-12 rounded-full bg-gray-200"></div>

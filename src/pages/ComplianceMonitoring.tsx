@@ -1,9 +1,10 @@
 
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import Layout from "@/components/Layout";
 import PageHeaderCard from "@/components/dashboard/PageHeaderCard";
-import { Shield, Calendar, FileText, AlertTriangle, CheckCircle, Bell, Clock, ClipboardCheck } from "lucide-react";
+import { Shield, Calendar, FileText, AlertTriangle, CheckCircle, Bell, Clock, ClipboardCheck, ArrowLeft } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { StatusIndicator } from '@/components/ui/status-indicator';
@@ -65,6 +66,15 @@ const ComplianceMonitoring = () => {
     <DashboardLayout>
       <Layout>
         <div className="space-y-6">
+          <div className="flex items-center justify-between">
+            <Button variant="outline" size="sm" asChild className="mb-2">
+              <Link to="/dashboard" className="flex items-center gap-1">
+                <ArrowLeft className="h-4 w-4" />
+                Back to Dashboard
+              </Link>
+            </Button>
+          </div>
+          
           <PageHeaderCard
             icon={Shield}
             title="Monitor Compliance"

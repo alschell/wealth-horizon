@@ -2,7 +2,6 @@
 import React from "react";
 import { BarChart3, Shield } from "lucide-react";
 import { FadeIn, StaggerContainer, StaggerItem } from "@/components/ui/animation";
-import PlatformOverviewAnimation from "@/components/animations/PlatformOverviewAnimation";
 
 const benefits = [
   {
@@ -40,30 +39,22 @@ const BenefitsSection: React.FC = () => {
           </FadeIn>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
-          <FadeIn delay={0.2}>
-            <div className="relative rounded-xl overflow-hidden shadow-xl">
-              <PlatformOverviewAnimation />
-            </div>
-          </FadeIn>
-          
-          <div>
-            <StaggerContainer className="space-y-8">
-              {benefits.map((benefit, index) => (
-                <StaggerItem key={index}>
-                  <div className="flex gap-4">
-                    <div className="flex-shrink-0 w-12 h-12 flex items-center justify-center rounded-lg bg-indigo-50 text-indigo-600">
-                      {benefit.icon}
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-semibold text-gray-900 mb-2">{benefit.title}</h3>
-                      <p className="text-gray-600">{benefit.description}</p>
-                    </div>
+        <div className="mx-auto max-w-4xl">
+          <StaggerContainer className="space-y-8">
+            {benefits.map((benefit, index) => (
+              <StaggerItem key={index}>
+                <div className="flex gap-4">
+                  <div className="flex-shrink-0 w-12 h-12 flex items-center justify-center rounded-lg bg-indigo-50 text-indigo-600">
+                    {benefit.icon}
                   </div>
-                </StaggerItem>
-              ))}
-            </StaggerContainer>
-          </div>
+                  <div>
+                    <h3 className="text-xl font-semibold text-gray-900 mb-2">{benefit.title}</h3>
+                    <p className="text-gray-600">{benefit.description}</p>
+                  </div>
+                </div>
+              </StaggerItem>
+            ))}
+          </StaggerContainer>
         </div>
       </div>
     </section>

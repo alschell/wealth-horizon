@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/popover"
 import { cn } from "@/lib/utils"
 import { Label } from "@/components/ui/label"
+import { ScrollArea } from "@/components/ui/scroll-area"
 
 interface TimePickerProps {
   value: string;
@@ -63,21 +64,23 @@ export function TimePicker({
           <div className="p-3 grid grid-cols-2 gap-4 w-[280px]">
             <div className="space-y-2">
               <Label className="text-xs text-gray-500">Hour</Label>
-              <div className="h-[180px] overflow-y-auto pr-2 flex flex-col border rounded-md">
-                {hours.map((h) => (
-                  <Button
-                    key={h}
-                    variant="ghost"
-                    className={cn(
-                      "justify-start font-normal rounded-none",
-                      hour === h ? "bg-black text-white hover:bg-black hover:text-white" : ""
-                    )}
-                    onClick={() => handleSelectTime(h, minute)}
-                  >
-                    {h}
-                  </Button>
-                ))}
-              </div>
+              <ScrollArea className="h-[180px] border rounded-md">
+                <div className="py-1">
+                  {hours.map((h) => (
+                    <Button
+                      key={h}
+                      variant="ghost"
+                      className={cn(
+                        "justify-start font-normal rounded-none w-full",
+                        hour === h ? "bg-black text-white hover:bg-black hover:text-white" : ""
+                      )}
+                      onClick={() => handleSelectTime(h, minute)}
+                    >
+                      {h}
+                    </Button>
+                  ))}
+                </div>
+              </ScrollArea>
             </div>
             <div className="space-y-2">
               <Label className="text-xs text-gray-500">Minute</Label>

@@ -40,6 +40,7 @@ import EntityManagement from "./pages/EntityManagement";
 import ComplianceMonitoring from "./pages/ComplianceMonitoring";
 import Logout from "./pages/Logout";
 import Calendar from "./pages/Calendar";
+import Contact from "./pages/Contact";
 
 function App() {
   // Create a query client inside the component
@@ -95,6 +96,7 @@ function App() {
               <Route path="/compliance-monitoring" element={<ComplianceMonitoring />} />
               <Route path="/logout" element={<Logout />} />
               <Route path="/calendar" element={<Calendar />} />
+              <Route path="/contact" element={<Contact />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
             <Toaster />

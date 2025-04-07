@@ -33,15 +33,15 @@ const Navigation: React.FC = () => {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-white">
-      <div className="container flex h-16 items-center justify-between px-8">
-        <div className="flex items-center pl-0">
+      <div className="container flex h-16 items-center justify-between px-0">
+        <div className="flex items-center">
           <Link to="/" className="font-bold text-xl flex items-center">
             <span className="text-indigo-500">Wealth</span>
             <span className="ml-1">Horizon</span>
           </Link>
         </div>
         
-        <div className="flex items-center gap-3 pr-0">
+        <div className="flex items-center gap-3">
           {!isOnboarding && (
             <>
               <NotificationsPopover />
@@ -63,11 +63,6 @@ const Navigation: React.FC = () => {
                 <LogOut className="h-5 w-5" />
                 <span className="sr-only">Logout</span>
               </Button>
-              {!isDashboard && (
-                <Button asChild className="ml-2 hidden md:inline-flex">
-                  <Link to="/dashboard">Go to Dashboard</Link>
-                </Button>
-              )}
             </>
           )}
         </div>

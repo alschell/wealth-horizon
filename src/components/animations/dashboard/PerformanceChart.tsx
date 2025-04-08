@@ -11,9 +11,9 @@ const PerformanceChart = () => {
       transition={{ duration: 0.4, delay: 0.7 }}
     >
       <div className="mb-3 text-sm font-medium">Portfolio Performance</div>
-      <div className="h-[180px] relative">
+      <div className="h-[240px] relative">
         {/* Simplified Line Chart */}
-        <svg width="100%" height="100%" viewBox="0 0 300 120" preserveAspectRatio="none">
+        <svg width="100%" height="100%" viewBox="0 0 300 140" preserveAspectRatio="none">
           <motion.path
             d="M0,80 C20,70 40,85 60,75 S100,50 140,60 S220,40 280,20"
             stroke="#818CF8"

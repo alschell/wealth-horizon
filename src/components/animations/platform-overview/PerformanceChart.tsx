@@ -19,9 +19,9 @@ const PerformanceChart: React.FC = () => {
         <span className="text-sm font-medium">Performance</span>
       </div>
       
-      <div className="h-[180px] relative">
+      <div className="h-[240px] relative">
         {/* Enhanced Line Chart with better visual effects */}
-        <svg width="100%" height="100%" viewBox="0 0 200 120" preserveAspectRatio="none">
+        <svg width="100%" height="100%" viewBox="0 0 200 140" preserveAspectRatio="none">
           <defs>
             <linearGradient id="performanceGradient" x1="0%" y1="0%" x2="0%" y2="100%">
               <stop offset="0%" stopColor="#34D399" stopOpacity="0.5" />

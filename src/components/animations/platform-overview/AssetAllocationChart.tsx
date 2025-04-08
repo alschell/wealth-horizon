@@ -19,7 +19,7 @@ const AssetAllocationChart: React.FC = () => {
         <span className="text-sm font-medium">Asset Allocation</span>
       </div>
       
-      <div className="h-[180px] flex justify-center items-center">
+      <div className="h-[240px] flex justify-center items-center">
         {/* Full Circle Pie Chart with thick outline style */}
         <motion.svg 
           width="120" 

@@ -16,7 +16,7 @@ const NotificationsFeed = () => {
       title: "New Trade Executed",
       description: "Your order to buy 100 shares of AAPL has been executed.",
       time: "2 hours ago",
-      icon: <BellRing className="h-4 w-4 text-gray-500" />,
+      icon: <BellRing className="h-4 w-4 text-[#4E46DC]" />,
       link: "/trading"
     },
     {
@@ -24,7 +24,7 @@ const NotificationsFeed = () => {
       title: "Review Portfolio Allocation",
       description: "Task: Review and approve the new portfolio allocation strategy.",
       time: "Today",
-      icon: <CheckCircle className="h-4 w-4 text-gray-500" />,
+      icon: <CheckCircle className="h-4 w-4 text-[#4E46DC]" />,
       link: "/analyze-wealth"
     },
     {
@@ -32,7 +32,7 @@ const NotificationsFeed = () => {
       title: "Credit Application Approved",
       description: "Your application for a new credit line has been approved.",
       time: "Yesterday",
-      icon: <Bell className="h-4 w-4 text-gray-500" />,
+      icon: <Bell className="h-4 w-4 text-[#4E46DC]" />,
       link: "/dashboard"
     },
     {
@@ -40,7 +40,7 @@ const NotificationsFeed = () => {
       title: "Quarterly Review Meeting",
       description: "Event: Your quarterly financial review is scheduled for June 15.",
       time: "1 week ago",
-      icon: <Calendar className="h-4 w-4 text-gray-500" />,
+      icon: <Calendar className="h-4 w-4 text-[#4E46DC]" />,
       link: "/dashboard"
     },
     {
@@ -48,7 +48,7 @@ const NotificationsFeed = () => {
       title: "Portfolio Alert",
       description: "Your portfolio has increased by 5% this month.",
       time: "2 days ago",
-      icon: <AlertTriangle className="h-4 w-4 text-gray-500" />,
+      icon: <AlertTriangle className="h-4 w-4 text-[#4E46DC]" />,
       link: "/analyze-wealth"
     }
   ];
@@ -92,7 +92,7 @@ const NotificationsFeed = () => {
           <Link to="/notifications">
             <Button variant="outline" size="sm" className="w-full flex items-center justify-center">
               View All Notifications
-              <ChevronRight className="h-4 w-4 ml-1" />
+              <ChevronRight className="h-4 w-4 ml-1 text-[#4E46DC]" />
             </Button>
           </Link>
         </div>

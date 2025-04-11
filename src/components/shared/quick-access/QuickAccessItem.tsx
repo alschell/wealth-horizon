@@ -12,6 +12,11 @@ const QuickAccessItem = ({
   color = "bg-gray-50",
   onClick
 }: QuickAccessItemProps) => {
+  // Clone the icon element and apply the color
+  const coloredIcon = React.cloneElement(icon as React.ReactElement, {
+    className: `h-5 w-5 text-[#4E46DC]`
+  });
+
   return (
     <Link
       to={link}
@@ -20,7 +25,7 @@ const QuickAccessItem = ({
     >
       <div className="flex items-start gap-3">
         <div className={cn("h-10 w-10 flex-shrink-0 flex items-center justify-center rounded-full", color)}>
-          {icon}
+          {coloredIcon}
         </div>
         <div className="flex flex-col">
           <h3 className="text-sm font-medium mb-1">{title}</h3>

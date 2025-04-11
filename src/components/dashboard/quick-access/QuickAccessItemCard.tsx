@@ -26,7 +26,7 @@ const QuickAccessItemCard = ({
       <div className="h-full p-4 transition-all duration-200 hover:bg-gray-50 rounded-md">
         <div className="flex items-start gap-3">
           <div className={cn("h-10 w-10 flex-shrink-0 flex items-center justify-center rounded-full", color)}>
-            <Icon className="h-5 w-5" />
+            <Icon className="h-5 w-5 text-[#4E46DC]" />
           </div>
           <div className="flex flex-col">
             <h3 className="text-sm font-medium mb-1">{label}</h3>

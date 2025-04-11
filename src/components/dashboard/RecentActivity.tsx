@@ -15,84 +15,84 @@ const RecentActivity = () => {
       id: "rebalance-01",
       title: "Portfolio rebalanced", 
       time: "Today at 09:45 AM",
-      icon: <TrendingUp className="h-4 w-4 text-gray-500" />,
+      icon: <TrendingUp className="h-4 w-4 text-[#4E46DC]" />,
       link: "/activity"
     },
     { 
       id: "deposit-01",
       title: "Cash deposit received", 
       time: "Yesterday at 2:30 PM",
-      icon: <DollarSign className="h-4 w-4 text-gray-500" />,
+      icon: <DollarSign className="h-4 w-4 text-[#4E46DC]" />,
       link: "/activity"
     },
     { 
       id: "docs-01",
       title: "New tax documents uploaded", 
       time: "Yesterday at 11:20 AM",
-      icon: <FileCheck className="h-4 w-4 text-gray-500" />,
+      icon: <FileCheck className="h-4 w-4 text-[#4E46DC]" />,
       link: "/activity"
     },
     { 
       id: "trade-01",
       title: "Trade executed: AAPL", 
       time: "2 days ago at 3:15 PM",
-      icon: <ArrowUpRight className="h-4 w-4 text-gray-500" />,
+      icon: <ArrowUpRight className="h-4 w-4 text-[#4E46DC]" />,
       link: "/activity"
     },
     { 
       id: "permission-01",
       title: "User permission updated", 
       time: "2 days ago at 10:45 AM",
-      icon: <Users className="h-4 w-4 text-gray-500" />,
+      icon: <Users className="h-4 w-4 text-[#4E46DC]" />,
       link: "/activity"
     },
     { 
       id: "loan-01",
       title: "Credit facility application submitted", 
       time: "3 days ago at 4:20 PM",
-      icon: <CreditCard className="h-4 w-4 text-gray-500" />,
+      icon: <CreditCard className="h-4 w-4 text-[#4E46DC]" />,
       link: "/activity"
     },
     { 
       id: "trade-02",
       title: "Trade executed: TSLA", 
       time: "3 days ago at 11:30 AM",
-      icon: <ArrowDownRight className="h-4 w-4 text-gray-500" />,
+      icon: <ArrowDownRight className="h-4 w-4 text-[#4E46DC]" />,
       link: "/activity"
     },
     { 
       id: "report-01",
       title: "Monthly performance report generated", 
       time: "4 days ago at 9:00 AM",
-      icon: <File className="h-4 w-4 text-gray-500" />,
+      icon: <File className="h-4 w-4 text-[#4E46DC]" />,
       link: "/activity"
     },
     { 
       id: "alert-01",
       title: "Market volatility alert", 
       time: "5 days ago at 2:45 PM",
-      icon: <AlertTriangle className="h-4 w-4 text-gray-500" />,
+      icon: <AlertTriangle className="h-4 w-4 text-[#4E46DC]" />,
       link: "/activity"
     },
     { 
       id: "rebalance-02",
       title: "Strategy allocation adjusted", 
       time: "1 week ago at 10:30 AM",
-      icon: <RefreshCcw className="h-4 w-4 text-gray-500" />,
+      icon: <RefreshCcw className="h-4 w-4 text-[#4E46DC]" />,
       link: "/activity"
     },
     { 
       id: "deposit-02",
       title: "Term deposit matured", 
       time: "1 week ago at 9:15 AM",
-      icon: <DollarSign className="h-4 w-4 text-gray-500" />,
+      icon: <DollarSign className="h-4 w-4 text-[#4E46DC]" />,
       link: "/activity"
     },
     { 
       id: "trade-03",
       title: "Trade executed: GOOGL", 
       time: "1 week ago at 3:45 PM",
-      icon: <ArrowUpRight className="h-4 w-4 text-gray-500" />,
+      icon: <ArrowUpRight className="h-4 w-4 text-[#4E46DC]" />,
       link: "/activity"
     }
   ];
@@ -133,7 +133,7 @@ const RecentActivity = () => {
           <Link to="/activity">
             <Button variant="outline" size="sm" className="w-full flex items-center justify-center">
               View All Activity
-              <ChevronRight className="h-4 w-4 ml-1" />
+              <ChevronRight className="h-4 w-4 ml-1 text-[#4E46DC]" />
             </Button>
           </Link>
         </div>

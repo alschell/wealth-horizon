@@ -88,7 +88,7 @@ const Navigation: React.FC = () => {
               <Link to="/dashboard">Log In</Link>
             </Button>
             <Button asChild>
-              <Link to="/onboarding">Sign Up</Link>
+              <Link to="/onboarding">Get Started</Link>
             </Button>
           </div>
         </nav>

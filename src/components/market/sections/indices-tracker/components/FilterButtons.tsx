@@ -18,9 +18,9 @@ const FilterButtons: React.FC<FilterButtonsProps> = ({ filter, setFilter }) => {
         All
       </Button>
       <Button 
-        variant={filter === "US" ? "default" : "outline"} 
+        variant={filter === "United States" ? "default" : "outline"} 
         size="sm"
-        onClick={() => setFilter("US")}
+        onClick={() => setFilter("United States")}
       >
         US
       </Button>

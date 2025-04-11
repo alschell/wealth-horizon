@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { IndexData } from "../types";
-import { mockIndices, searchIndices, filterIndicesByRegion } from "../data/mockData";
+import { mockIndices } from "../data/mockData";
 
 export const useIndicesTracker = () => {
   const [filter, setFilter] = useState("all");
@@ -26,11 +26,29 @@ export const useIndicesTracker = () => {
     }
   }, [location]);
   
-  const filteredIndices = mockIndices.filter(index => {
-    if (filter !== "all" && index.region !== filter) return false;
-    if (searchTerm && !index.name.toLowerCase().includes(searchTerm.toLowerCase())) return false;
-    return true;
-  });
+  // Apply filtering and sorting
+  const filteredIndices = mockIndices
+    .filter(index => {
+      // Apply search filter
+      if (searchTerm && !index.name.toLowerCase().includes(searchTerm.toLowerCase())) {
+        return false;
+      }
+      
+      // Apply region filter
+      if (filter === "all") {
+        return true;
+      } else if (filter === "United States") {
+        return index.region === "United States";
+      } else if (filter === "Europe") {
+        return ["United Kingdom", "Germany", "France", "Italy", "Spain", "Netherlands", "Switzerland"].includes(index.region);
+      } else if (filter === "Asia") {
+        return ["Japan", "China", "Hong Kong", "Singapore", "South Korea", "India", "Australia"].includes(index.region);
+      }
+      
+      return index.region === filter;
+    })
+    // Sort alphabetically by name
+    .sort((a, b) => a.name.localeCompare(b.name));
   
   const toggleSubscription = (indexName: string) => {
     if (subscribedIndices.includes(indexName)) {
@@ -57,6 +75,6 @@ export const useIndicesTracker = () => {
     filteredIndices,
     toggleSubscription,
     handleSelectIndex,
-    indices: mockIndices
+    indices: mockIndices.sort((a, b) => a.name.localeCompare(b.name))
   };
 };

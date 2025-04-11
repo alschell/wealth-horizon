@@ -11,7 +11,7 @@ const AssetAllocationChart = () => {
       transition={{ duration: 0.4, delay: 0.7 }}
     >
       <div className="mb-3 text-sm font-medium">Asset Allocation</div>
-      <div className="relative h-[240px] flex items-center justify-center">
+      <div className="relative h-[180px] flex items-center justify-center">
         {/* Updated pie chart with thick stroke instead of fill */}
         <svg viewBox="0 0 100 100" className="w-full h-full">
           <motion.circle 
@@ -63,6 +63,7 @@ const AssetAllocationChart = () => {
           />
         </svg>
       </div>
+      <div className="h-[20px]"></div> {/* Added spacing at bottom for consistency */}
     </motion.div>
   );
 };

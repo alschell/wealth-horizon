@@ -11,7 +11,7 @@ const PerformanceChart = () => {
       transition={{ duration: 0.4, delay: 0.7 }}
     >
       <div className="mb-3 text-sm font-medium">Portfolio Performance</div>
-      <div className="h-[240px] relative">
+      <div className="h-[180px] relative">
         {/* Simplified Line Chart */}
         <svg width="100%" height="100%" viewBox="0 0 300 140" preserveAspectRatio="none">
           <motion.path
@@ -51,6 +51,7 @@ const PerformanceChart = () => {
           +12.4%
         </motion.div>
       </div>
+      <div className="h-[20px]"></div> {/* Added spacing at bottom for consistency */}
     </motion.div>
   );
 };

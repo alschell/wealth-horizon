@@ -4,7 +4,7 @@ export { default as DashboardLayout } from './DashboardLayout';
 export { default as WelcomeHeader } from './WelcomeHeader';
 export { default as NotificationsFeed } from './NotificationsFeed';
 export { default as PerformanceOverview } from './PerformanceOverview';
-export { default as MarketSnapshot } from './MarketSnapshot';
+export { default as MarketSnapshot } from './market-snapshot';
 export { default as RecentActivity } from './RecentActivity';
 export { default as PageHeaderCard } from './PageHeaderCard';
 export { default as SectionHeader } from './SectionHeader';

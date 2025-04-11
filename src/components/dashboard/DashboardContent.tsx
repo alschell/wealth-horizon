@@ -5,7 +5,7 @@ import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import { QuickAccessGrid } from "@/components/dashboard/quick-access";
 import PerformanceOverview from "@/components/dashboard/PerformanceOverview";
 import NotificationsFeed from "@/components/dashboard/NotificationsFeed";
-import MarketSnapshot from "@/components/dashboard/MarketSnapshot";
+import MarketSnapshot from "@/components/dashboard/market-snapshot";
 import RecentActivity from "@/components/dashboard/RecentActivity";
 import KeyMetricsGrid from "@/components/dashboard/performance/KeyMetricsGrid";
 import TopAssets from "@/components/dashboard/performance/TopAssets";

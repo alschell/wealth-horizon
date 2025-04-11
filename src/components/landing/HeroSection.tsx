@@ -23,7 +23,8 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToFeatures }) => {
               <span className="text-indigo-600">institutions</span>
             </h1>
             <p className="mt-6 text-xl text-gray-600 max-w-2xl">
-              All your bankable wealth made actionable on one platform across all your banks, brokers & custodians
+              All your wealth made actionable on one platform<br />
+              across all your banks, brokers & custodians
             </p>
             <div className="mt-10 flex flex-col sm:flex-row gap-4">
               <Button size="lg" className="text-md px-8" asChild>

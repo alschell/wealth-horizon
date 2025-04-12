@@ -1,120 +1,102 @@
 
-import React from "react";
-import PageTemplate from "@/components/shared/PageTemplate";
-import { Briefcase, FileText, HelpCircle } from "lucide-react";
+import React from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
+import { Link } from 'react-router-dom';
+import { ChevronLeft } from 'lucide-react';
+import { FadeIn } from '@/components/ui/animation';
 
-const CareersFAQ = () => {
-  const navigate = useNavigate();
+type FAQItem = {
+  question: string;
+  answer: string;
+};
 
+const faqItems: FAQItem[] = [
+  {
+    question: "What is the hiring process at WealthHorizon?",
+    answer: "Our hiring process typically includes an initial resume screening, a phone interview, one or more technical assessments relevant to the role, and final interviews with the team and leadership. The entire process usually takes 2-4 weeks, depending on the position."
+  },
+  {
+    question: "Do you offer remote work opportunities?",
+    answer: "Yes, we offer both remote and hybrid work options for many positions. The specific arrangement depends on the role and team needs. We believe in providing flexibility while maintaining strong collaboration."
+  },
+  {
+    question: "What benefits do you offer employees?",
+    answer: "We offer a comprehensive benefits package including health insurance, 401(k) matching, generous paid time off, professional development stipends, wellness programs, and equity options. We're committed to supporting our employees' wellbeing and growth."
+  },
+  {
+    question: "How would you describe your company culture?",
+    answer: "Our culture is collaborative, innovative, and focused on excellence. We value diverse perspectives, continuous learning, and a healthy work-life balance. We encourage open communication and provide autonomy while maintaining high standards."
+  },
+  {
+    question: "Do you have internship or entry-level positions?",
+    answer: "Yes, we regularly offer internships and entry-level positions across various departments. We're committed to developing early-career talent and providing meaningful growth opportunities."
+  },
+  {
+    question: "What growth opportunities are available at WealthHorizon?",
+    answer: "We invest in our employees' growth through mentorship, training programs, cross-functional projects, and clear advancement paths. We regularly promote from within and encourage employees to develop new skills."
+  },
+  {
+    question: "How do I apply for a position if I don't see a relevant job posting?",
+    answer: "We encourage you to submit your resume for general consideration through our careers page. We're always looking for exceptional talent, even when we don't have specific openings listed."
+  },
+  {
+    question: "What makes WealthHorizon different from other fintech companies?",
+    answer: "WealthHorizon stands out with our AI-native platform, focus on family offices and institutions, and our commitment to innovation. We combine cutting-edge technology with deep industry expertise and a client-first approach."
+  }
+];
+
+const CareersFAQ: React.FC = () => {
   return (
-    <PageTemplate
-      title="Careers FAQ"
-      description="Frequently asked questions about careers at WealthHorizon"
-      icon={HelpCircle}
-    >
-      <Button 
-        variant="outline" 
-        className="mb-6 flex items-center"
-        onClick={() => navigate("/careers")}
-      >
-        <Briefcase className="mr-2 h-4 w-4" /> Back to Careers
-      </Button>
-
-      <div className="space-y-8">
-        <div className="bg-white rounded-lg border border-gray-100 shadow-sm p-6">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-6">Frequently Asked Questions</h2>
-          
-          <div className="space-y-6">
-            <div>
-              <h3 className="text-lg font-semibold text-gray-800 mb-2">What is the hiring process like at WealthHorizon?</h3>
-              <p className="text-gray-600">
-                Our hiring process typically consists of an initial application review, followed by a screening call with our recruiting team, a technical or role-specific assessment, team interviews, and finally an offer and onboarding. The entire process usually takes 3-4 weeks, depending on the role and candidate availability.
-              </p>
-            </div>
-            
-            <Separator />
-            
-            <div>
-              <h3 className="text-lg font-semibold text-gray-800 mb-2">Do you offer remote work options?</h3>
-              <p className="text-gray-600">
-                Yes, we offer flexible work arrangements including fully remote positions for many roles. Some positions may require periodic in-office presence or may be location-specific. Each job posting will specify the location requirements.
-              </p>
-            </div>
-            
-            <Separator />
-            
-            <div>
-              <h3 className="text-lg font-semibold text-gray-800 mb-2">What benefits does WealthHorizon offer?</h3>
-              <p className="text-gray-600">
-                We offer competitive compensation packages including base salary and equity options, comprehensive health, dental, and vision insurance, flexible PTO, professional development budgets, parental leave, 401(k) matching, and various wellness programs.
-              </p>
-            </div>
-            
-            <Separator />
-            
-            <div>
-              <h3 className="text-lg font-semibold text-gray-800 mb-2">I don't see a position that matches my skills. Can I still apply?</h3>
-              <p className="text-gray-600">
-                Absolutely! We're always interested in connecting with talented individuals. You can submit your resume through our "Submit Your Resume" option on the Careers page, and we'll reach out if a suitable position becomes available.
-              </p>
-            </div>
-            
-            <Separator />
-            
-            <div>
-              <h3 className="text-lg font-semibold text-gray-800 mb-2">How can I prepare for interviews at WealthHorizon?</h3>
-              <p className="text-gray-600">
-                Research our platform and services, review the job description thoroughly, prepare examples of relevant past work, and be ready to discuss how your skills align with our mission of transforming wealth management. For technical roles, brush up on relevant technologies mentioned in the job posting.
-              </p>
-            </div>
-            
-            <Separator />
-            
-            <div>
-              <h3 className="text-lg font-semibold text-gray-800 mb-2">What is the company culture like?</h3>
-              <p className="text-gray-600">
-                We foster a collaborative, innovative environment where ideas are valued regardless of where they come from. We believe in work-life balance, continuous learning, and maintaining high standards of excellence. Our team is diverse, inclusive, and united by our mission to transform wealth management.
-              </p>
-            </div>
-            
-            <Separator />
-            
-            <div>
-              <h3 className="text-lg font-semibold text-gray-800 mb-2">How long does it take to hear back after applying?</h3>
-              <p className="text-gray-600">
-                We typically review applications within 1-2 weeks of submission. If your qualifications match our needs, our recruiting team will reach out to schedule an initial conversation. Due to the volume of applications, we may not be able to respond to every applicant individually.
-              </p>
-            </div>
-            
-            <Separator />
-            
-            <div>
-              <h3 className="text-lg font-semibold text-gray-800 mb-2">Are there opportunities for growth and advancement?</h3>
-              <p className="text-gray-600">
-                Yes, we strongly believe in promoting from within and providing clear pathways for career development. We offer mentorship opportunities, regular performance feedback, and professional development resources to help you grow your career at WealthHorizon.
-              </p>
-            </div>
+    <div className="bg-gray-50 py-16 min-h-screen">
+      <div className="max-w-4xl mx-auto px-6">
+        <Link to="/careers" className="flex items-center text-indigo-600 hover:text-indigo-800 mb-8">
+          <ChevronLeft size={20} />
+          <span className="ml-1">Back to Careers</span>
+        </Link>
+        
+        <FadeIn>
+          <div className="mb-10">
+            <h1 className="text-3xl font-bold text-gray-900 mb-4">Careers FAQ</h1>
+            <p className="text-xl text-gray-600">
+              Find answers to commonly asked questions about careers at WealthHorizon.
+            </p>
           </div>
+        </FadeIn>
+
+        <div className="space-y-6">
+          {faqItems.map((faq, index) => (
+            <FadeIn key={index} delay={index * 0.05}>
+              <Card className="border border-gray-200 shadow-sm">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-xl font-semibold text-gray-900">{faq.question}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <CardDescription className="text-gray-700 text-base">{faq.answer}</CardDescription>
+                </CardContent>
+              </Card>
+            </FadeIn>
+          ))}
         </div>
         
-        <div className="bg-indigo-50 rounded-xl p-8 text-center">
-          <h2 className="text-2xl font-semibold mb-4 text-gray-800">Still have questions?</h2>
-          <p className="mb-6 max-w-2xl mx-auto text-gray-600">
-            If you couldn't find the answer you're looking for, feel free to reach out to our recruiting team directly.
-          </p>
-          <Button 
-            className="bg-indigo-600 hover:bg-indigo-700"
-            onClick={() => window.location.href = "mailto:careers@wealthhorizon.ai"}
-          >
-            <FileText className="mr-2 h-4 w-4" />
-            Contact Recruiting
-          </Button>
-        </div>
+        <Separator className="my-12" />
+        
+        <FadeIn delay={0.3}>
+          <div className="text-center">
+            <h2 className="text-2xl font-semibold mb-4">Have more questions?</h2>
+            <p className="text-gray-600 mb-6">
+              We'd love to hear from you. Contact our recruiting team for any additional questions.
+            </p>
+            <Link 
+              to="/careers" 
+              className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
+            >
+              View Open Positions
+            </Link>
+          </div>
+        </FadeIn>
       </div>
-    </PageTemplate>
+    </div>
   );
 };
 

@@ -76,7 +76,7 @@ const ContactInformation: React.FC = () => {
           </div>
         </div>
         
-        {/* Partnership Section - Moved after Marketing */}
+        {/* Partnership Section - After Marketing per request */}
         <div className="flex items-start">
           <div className="mt-1 mr-4 flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-gray-50 text-[#4E46DC]">
             <Handshake size={20} />

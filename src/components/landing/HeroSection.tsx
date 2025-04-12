@@ -1,6 +1,5 @@
 
 import React, { useEffect } from "react";
-import { Link } from "react-router-dom";
 import { ChevronDown, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FadeIn, ScaleIn } from "@/components/ui/animation";
@@ -16,6 +15,13 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToFeatures }) => {
     console.log("HeroSection component mounted");
     console.log("HeroSection container:", document.querySelector('section.relative'));
   }, []);
+
+  const scrollToContact = () => {
+    const contactSection = document.getElementById('contact');
+    if (contactSection) {
+      contactSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   return (
     <section className="relative overflow-hidden">
@@ -33,8 +39,8 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToFeatures }) => {
               across all your banks, brokers & custodians
             </p>
             <div className="mt-10 flex flex-col sm:flex-row gap-4">
-              <Button size="lg" className="text-md px-8" asChild>
-                <Link to="/contact">Contact us</Link>
+              <Button size="lg" className="text-md px-8" onClick={scrollToContact}>
+                Contact us
               </Button>
               <Button
                 variant="outline"

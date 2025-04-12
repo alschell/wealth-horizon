@@ -113,8 +113,8 @@ const Navigation: React.FC = () => {
             <Button variant="ghost" onClick={() => navigate('/login')}>
               Log In
             </Button>
-            <Button asChild>
-              <Link to="/onboarding">Get Started</Link>
+            <Button onClick={() => scrollToSection('contact')}>
+              Contact Us
             </Button>
           </div>
         </nav>

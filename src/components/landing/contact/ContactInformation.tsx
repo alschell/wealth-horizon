@@ -17,12 +17,9 @@ const ContactInformation: React.FC = () => {
             </div>
             <div>
               <h4 className="text-gray-900 font-medium mb-1">Client Support</h4>
-              <p className="text-gray-600 text-sm mb-2">
-                If you are an existing client with a question, please connect directly with your team or
-              </p>
               <p className="text-gray-600 text-sm">
                 <a href="mailto:support@wealthhorizon.ai" className="text-indigo-600 hover:text-indigo-800">
-                  Email us at support@wealthhorizon.ai
+                  support@wealthhorizon.ai
                 </a>
               </p>
               <p className="text-gray-600 text-sm">

@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import PageTemplate from "@/components/shared/PageTemplate";
@@ -20,7 +19,6 @@ const DeveloperPortal = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
   
-  // If no section is specified, redirect to join
   if (!section) {
     navigate("/developer-portal/join");
     return null;
@@ -84,7 +82,6 @@ const JoinProgramSection = () => {
     
     setFormState(prev => ({ ...prev, isSubmitting: true }));
     
-    // Simulate API call
     setTimeout(() => {
       toast({
         title: "Application Submitted",
@@ -270,7 +267,7 @@ const JoinProgramSection = () => {
                   >
                     <div className="flex items-center space-x-2">
                       <RadioGroupItem value="low" id="low" />
-                      <Label htmlFor="low">Low (< 1,000 requests/day)</Label>
+                      <Label htmlFor="low">Low (&lt; 1,000 requests/day)</Label>
                     </div>
                     <div className="flex items-center space-x-2">
                       <RadioGroupItem value="medium" id="medium" />
@@ -278,7 +275,7 @@ const JoinProgramSection = () => {
                     </div>
                     <div className="flex items-center space-x-2">
                       <RadioGroupItem value="high" id="high" />
-                      <Label htmlFor="high">High (> 10,000 requests/day)</Label>
+                      <Label htmlFor="high">High (&gt; 10,000 requests/day)</Label>
                     </div>
                   </RadioGroup>
                 </div>
@@ -396,7 +393,6 @@ const SuccessView = () => {
 };
 
 const DeveloperDashboard = () => {
-  // This is a placeholder for the dashboard that would be shown after approval
   return (
     <div className="space-y-6">
       <div className="bg-white rounded-lg shadow-md p-8">

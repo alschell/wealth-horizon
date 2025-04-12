@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -34,7 +33,6 @@ const ContactForm: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Validate form
     if (!formData.name || !formData.email || !formData.message) {
       toast.error("Please fill out all required fields");
       return;
@@ -42,13 +40,11 @@ const ContactForm: React.FC = () => {
     
     setIsSubmitting(true);
     
-    // Simulate API call
     setTimeout(() => {
       setIsSubmitting(false);
       setIsSuccess(true);
       setShowSuccessModal(true);
       
-      // Reset form after 2 seconds
       setTimeout(() => {
         setFormData({
           name: "",
@@ -161,14 +157,16 @@ const ContactForm: React.FC = () => {
         <DialogContent className="max-w-md p-0 overflow-hidden rounded-xl">
           <div className="bg-gradient-to-br from-indigo-50 to-white p-6 pb-0">
             <div className="flex justify-center mb-2">
-              <div className="rounded-full bg-green-100 p-3">
-                <CheckCircle className="h-8 w-8 text-green-600" />
+              <div className="rounded-full bg-gray-50 p-3">
+                <CheckCircle className="h-8 w-8 text-[#4E46DC]" />
               </div>
             </div>
             <DialogHeader className="pb-6">
               <DialogTitle className="text-xl font-semibold text-center">Message Sent Successfully</DialogTitle>
               <DialogDescription className="text-center text-gray-600 mt-2">
-                Thank you for your message. We will get back to you within 1-2 working days.
+                Thank you for your message.
+                <br />
+                We will get back to you within 1-2 working days.
               </DialogDescription>
             </DialogHeader>
           </div>

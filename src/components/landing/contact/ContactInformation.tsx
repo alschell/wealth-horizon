@@ -9,7 +9,7 @@ const ContactInformation: React.FC = () => {
       
       <div className="space-y-6">
         <div className="flex items-start">
-          <div className="mt-1 mr-4 flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-indigo-50 text-indigo-600">
+          <div className="mt-1 mr-4 flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-gray-50 text-[#4E46DC]">
             <Mail size={20} />
           </div>
           <div>
@@ -20,7 +20,7 @@ const ContactInformation: React.FC = () => {
         </div>
         
         <div className="flex items-start">
-          <div className="mt-1 mr-4 flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-indigo-50 text-indigo-600">
+          <div className="mt-1 mr-4 flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-gray-50 text-[#4E46DC]">
             <Phone size={20} />
           </div>
           <div>
@@ -31,7 +31,7 @@ const ContactInformation: React.FC = () => {
         </div>
         
         <div className="flex items-start">
-          <div className="mt-1 mr-4 flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-indigo-50 text-indigo-600">
+          <div className="mt-1 mr-4 flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-gray-50 text-[#4E46DC]">
             <MapPin size={20} />
           </div>
           <div>

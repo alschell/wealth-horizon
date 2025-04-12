@@ -55,7 +55,7 @@ const BenefitsSection: React.FC = () => {
               {benefits.map((benefit, index) => (
                 <StaggerItem key={index}>
                   <div className="flex gap-4">
-                    <div className="flex-shrink-0 w-12 h-12 flex items-center justify-center rounded-lg bg-indigo-50 text-indigo-600">
+                    <div className="flex-shrink-0 w-12 h-12 flex items-center justify-center rounded-lg bg-gray-50 text-[#4E46DC]">
                       {benefit.icon}
                     </div>
                     <div>

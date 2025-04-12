@@ -41,7 +41,7 @@ const ContactForm: React.FC = () => {
   };
 
   return (
-    <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-200">
+    <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-200" style={{ minHeight: '840px' }}>
       <h3 className="text-xl font-semibold text-gray-900 mb-6">Send us a message</h3>
       
       <form onSubmit={handleSubmit} className="space-y-6">
@@ -67,46 +67,8 @@ const ContactForm: React.FC = () => {
           />
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-2">
-            <Label htmlFor="email">Email<span className="text-red-500 ml-1">*</span></Label>
-            <Input 
-              id="email" 
-              type="email" 
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="john@example.com" 
-              required 
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="phone">Phone (optional)</Label>
-            <Input 
-              id="phone" 
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              placeholder="+1 (555) 000-0000" 
-            />
-          </div>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <CustomSearchableSelect 
-            id="inquiry-type"
-            label="Type of inquiry"
-            value={inquiry}
-            placeholder="Select inquiry type"
-            options={[
-              "Speak with a sales representative",
-              "Request a demo",
-              "Get information on our partnership program",
-              "Other"
-            ]}
-            onChange={(value) => setInquiry(value)}
-            required
-            allowCustomValue
-          />
-          
+        <div className="space-y-2">
+          <Label htmlFor="industry">Industry<span className="text-red-500 ml-1">*</span></Label>
           <CustomSearchableSelect 
             id="industry"
             label="Industry"
@@ -131,6 +93,49 @@ const ContactForm: React.FC = () => {
         </div>
         
         <div className="space-y-2">
+          <Label htmlFor="inquiry-type">Type of inquiry<span className="text-red-500 ml-1">*</span></Label>
+          <CustomSearchableSelect 
+            id="inquiry-type"
+            label="Type of inquiry"
+            value={inquiry}
+            placeholder="Select inquiry type"
+            options={[
+              "Speak with a sales representative",
+              "Request a demo",
+              "Get information on our partnership program",
+              "Other"
+            ]}
+            onChange={(value) => setInquiry(value)}
+            required
+            allowCustomValue
+          />
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <Label htmlFor="email">Email<span className="text-red-500 ml-1">*</span></Label>
+            <Input 
+              id="email" 
+              type="email" 
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="john@example.com" 
+              required 
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="phone">Phone<span className="text-red-500 ml-1">*</span></Label>
+            <Input 
+              id="phone" 
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="+1 (555) 000-0000" 
+              required
+            />
+          </div>
+        </div>
+        
+        <div className="space-y-2">
           <Label htmlFor="message">Message<span className="text-red-500 ml-1">*</span></Label>
           <Textarea 
             id="message" 
@@ -139,6 +144,7 @@ const ContactForm: React.FC = () => {
             placeholder="How can we help you?"
             rows={6}
             required
+            className="focus-visible:outline-none focus-visible:ring-0 focus-visible:border-black"
           />
         </div>
         

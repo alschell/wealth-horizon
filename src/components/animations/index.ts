@@ -4,3 +4,4 @@ export { default as PlatformOverviewAnimation } from './PlatformOverviewAnimatio
 export { default as LoginAnimation } from './login/LoginAnimation';
 export { default as PlatformAnimation } from './login/PlatformAnimation';
 export { default as FeatureAnimation } from './FeatureAnimation';
+export { default as WealthTransformAnimation } from './WealthTransformAnimation';

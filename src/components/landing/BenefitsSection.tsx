@@ -2,7 +2,7 @@
 import React from "react";
 import { BarChart3, Shield, Layers, Clock } from "lucide-react";
 import { FadeIn, StaggerContainer, StaggerItem, ScaleIn } from "@/components/ui/animation";
-import DashboardAnimation from "@/components/animations/DashboardAnimation";
+import WealthTransformAnimation from "@/components/animations/WealthTransformAnimation";
 
 const benefits = [
   {
@@ -41,28 +41,26 @@ const BenefitsSection: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
-          <div>
-            <StaggerContainer className="space-y-8">
-              {benefits.map((benefit, index) => (
-                <StaggerItem key={index}>
-                  <div className="flex gap-4">
-                    <div className="flex-shrink-0 w-12 h-12 flex items-center justify-center rounded-lg bg-gray-50 text-[#4E46DC]">
-                      {benefit.icon}
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-semibold text-gray-900 mb-2">{benefit.title}</h3>
-                      <p className="text-gray-600">{benefit.description}</p>
-                    </div>
+          <StaggerContainer className="space-y-8">
+            {benefits.map((benefit, index) => (
+              <StaggerItem key={index}>
+                <div className="flex gap-4">
+                  <div className="flex-shrink-0 w-12 h-12 flex items-center justify-center rounded-lg bg-gray-50 text-[#4E46DC]">
+                    {benefit.icon}
                   </div>
-                </StaggerItem>
-              ))}
-            </StaggerContainer>
-          </div>
+                  <div>
+                    <h3 className="text-xl font-semibold text-gray-900 mb-2">{benefit.title}</h3>
+                    <p className="text-gray-600">{benefit.description}</p>
+                  </div>
+                </div>
+              </StaggerItem>
+            ))}
+          </StaggerContainer>
           
           <ScaleIn delay={0.2}>
             <div className="relative rounded-xl overflow-hidden shadow-2xl border border-gray-100">
               <div className="relative aspect-[4/3]">
-                <DashboardAnimation />
+                <WealthTransformAnimation />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent"></div>
               </div>
             </div>

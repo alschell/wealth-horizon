@@ -1,24 +1,85 @@
 
 import React from "react";
-import { Mail, Phone, MapPin } from "lucide-react";
+import { Mail, Phone, MapPin, HelpCircle, Briefcase, FileText, Users } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const ContactInformation: React.FC = () => {
   return (
     <div className="bg-white rounded-2xl p-8 h-full shadow-sm border border-gray-200">
       <h3 className="text-xl font-semibold text-gray-900 mb-6">Contact Information</h3>
       
-      <div className="space-y-6">
-        <div className="flex items-start">
-          <div className="mt-1 mr-4 flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-gray-50 text-[#4E46DC]">
-            <Mail size={20} />
-          </div>
-          <div>
-            <h4 className="text-gray-900 font-medium mb-1">Email</h4>
-            <p className="text-gray-600 text-sm">sales@wealthhorizon.ai</p>
-            <p className="text-gray-600 text-sm">support@wealthhorizon.ai</p>
+      <div className="space-y-8">
+        {/* Client Support Section */}
+        <div className="space-y-4">
+          <div className="flex items-start">
+            <div className="mt-1 mr-4 flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-gray-50 text-[#4E46DC]">
+              <HelpCircle size={20} />
+            </div>
+            <div>
+              <h4 className="text-gray-900 font-medium mb-1">Client Support</h4>
+              <p className="text-gray-600 text-sm mb-2">
+                If you are an existing client with a question, please connect directly with your team or
+              </p>
+              <p className="text-gray-600 text-sm">
+                <a href="mailto:support@wealthhorizon.ai" className="text-indigo-600 hover:text-indigo-800">
+                  Email us at support@wealthhorizon.ai
+                </a>
+              </p>
+              <p className="text-gray-600 text-sm">
+                <Link to="/help-center" className="text-indigo-600 hover:text-indigo-800">
+                  Log in to the Help Center
+                </Link>
+              </p>
+            </div>
           </div>
         </div>
         
+        {/* Sales Section */}
+        <div className="flex items-start">
+          <div className="mt-1 mr-4 flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-gray-50 text-[#4E46DC]">
+            <Briefcase size={20} />
+          </div>
+          <div>
+            <h4 className="text-gray-900 font-medium mb-1">Sales</h4>
+            <p className="text-gray-600 text-sm">
+              <a href="mailto:sales@wealthhorizon.ai" className="text-indigo-600 hover:text-indigo-800">
+                sales@wealthhorizon.ai
+              </a>
+            </p>
+          </div>
+        </div>
+        
+        {/* Press Inquiries */}
+        <div className="flex items-start">
+          <div className="mt-1 mr-4 flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-gray-50 text-[#4E46DC]">
+            <FileText size={20} />
+          </div>
+          <div>
+            <h4 className="text-gray-900 font-medium mb-1">Press Inquiries</h4>
+            <p className="text-gray-600 text-sm">
+              <a href="mailto:media@wealthhorizon.ai" className="text-indigo-600 hover:text-indigo-800">
+                media@wealthhorizon.ai
+              </a>
+            </p>
+          </div>
+        </div>
+        
+        {/* Marketing Inquiries */}
+        <div className="flex items-start">
+          <div className="mt-1 mr-4 flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-gray-50 text-[#4E46DC]">
+            <Users size={20} />
+          </div>
+          <div>
+            <h4 className="text-gray-900 font-medium mb-1">Marketing Inquiries</h4>
+            <p className="text-gray-600 text-sm">
+              <a href="mailto:marketing@wealthhorizon.ai" className="text-indigo-600 hover:text-indigo-800">
+                marketing@wealthhorizon.ai
+              </a>
+            </p>
+          </div>
+        </div>
+        
+        {/* Phone - Moved to bottom */}
         <div className="flex items-start">
           <div className="mt-1 mr-4 flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-gray-50 text-[#4E46DC]">
             <Phone size={20} />
@@ -30,6 +91,7 @@ const ContactInformation: React.FC = () => {
           </div>
         </div>
         
+        {/* Address - Moved to bottom */}
         <div className="flex items-start">
           <div className="mt-1 mr-4 flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-gray-50 text-[#4E46DC]">
             <MapPin size={20} />

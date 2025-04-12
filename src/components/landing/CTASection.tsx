@@ -1,6 +1,5 @@
 
 import React from "react";
-import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { FadeIn } from "@/components/ui/animation";
 
@@ -24,9 +23,6 @@ const CTASection: React.FC = () => {
           </FadeIn>
           <FadeIn delay={0.2}>
             <div className="flex flex-col sm:flex-row gap-4 justify-end">
-              <Button size="lg" className="bg-black hover:bg-gray-800 text-white text-md px-8" asChild>
-                <Link to="/onboarding">Get Started</Link>
-              </Button>
               <Button 
                 size="lg" 
                 className="bg-black hover:bg-gray-800 text-white text-md px-8"

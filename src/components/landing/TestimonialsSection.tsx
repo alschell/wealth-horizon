@@ -4,7 +4,7 @@ import { FadeIn } from "@/components/ui/animation";
 
 const testimonials = [
   {
-    quote: "Wealth Horizon has transformed how our family office operates. We've eliminated multiple tools and streamlined our entire wealth management process.",
+    quote: "WealthHorizon has transformed how our family office operates. We've eliminated multiple tools and streamlined the way we facilitate our business.",
     name: "Alexandra Chen",
     position: "CEO, Chen Family Office",
   },
@@ -14,7 +14,7 @@ const testimonials = [
     position: "CIO, Granite Investments",
   },
   {
-    quote: "The compliance monitoring alone has saved us countless hours and helped us avoid potential regulatory issues. Incredible value for any institution.",
+    quote: "We were not aware that this degree of automation and efficiency is possible using artificial intelligence.",
     name: "Sarah Rodriguez",
     position: "Head of Compliance, Legacy Capital",
   },
@@ -22,7 +22,7 @@ const testimonials = [
 
 const TestimonialsSection: React.FC = () => {
   return (
-    <section className="py-24 bg-white">
+    <section className="py-24 bg-white" id="testimonials">
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-16">
           <FadeIn>

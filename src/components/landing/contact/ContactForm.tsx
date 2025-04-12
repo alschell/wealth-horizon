@@ -35,34 +35,34 @@ const ContactForm: React.FC = () => {
       
       <div>
         <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-          Full name
+          Full name <span className="text-red-500">*</span>
         </label>
         <Input id="name" placeholder="Your name" required />
       </div>
       
       <div>
         <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-          Email address
+          Email address <span className="text-red-500">*</span>
         </label>
         <Input id="email" type="email" placeholder="Your email" required />
       </div>
       
       <div>
         <label htmlFor="company" className="block text-sm font-medium text-gray-700 mb-1">
-          Company
+          Company <span className="text-red-500">*</span>
         </label>
         <Input id="company" placeholder="Your company" required />
       </div>
 
       <div>
         <label htmlFor="companyType" className="block text-sm font-medium text-gray-700 mb-1">
-          Type of company
+          Type of company <span className="text-red-500">*</span>
         </label>
-        <Select>
-          <SelectTrigger id="companyType">
+        <Select required>
+          <SelectTrigger id="companyType" className="h-11">
             <SelectValue placeholder="Select company type" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="bg-white z-[9999]">
             {companyTypes.map((type) => (
               <SelectItem key={type} value={type}>
                 {type}
@@ -74,13 +74,13 @@ const ContactForm: React.FC = () => {
 
       <div>
         <label htmlFor="inquiryType" className="block text-sm font-medium text-gray-700 mb-1">
-          Type of inquiry
+          Type of inquiry <span className="text-red-500">*</span>
         </label>
-        <Select>
-          <SelectTrigger id="inquiryType">
+        <Select required>
+          <SelectTrigger id="inquiryType" className="h-11">
             <SelectValue placeholder="Select inquiry type" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="bg-white z-[9999]">
             {inquiryTypes.map((type) => (
               <SelectItem key={type} value={type}>
                 {type}
@@ -92,7 +92,7 @@ const ContactForm: React.FC = () => {
       
       <div>
         <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
-          Message
+          Message <span className="text-red-500">*</span>
         </label>
         <Textarea
           id="message"

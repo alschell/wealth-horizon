@@ -6,7 +6,7 @@ import WealthTransformAnimation from "@/components/animations/WealthTransformAni
 
 const benefits = [
   {
-    title: "Centralized Wealth Management",
+    title: "Centralized Asset Management",
     description: "Eliminate data silos and manage all assets, investments, and operations in one unified platform.",
     icon: <Layers size={24} />,
   },

@@ -1,111 +1,80 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 
-const companyTypes = [
-  "Aggregator",
-  "Asset Manager",
-  "Advisor",
-  "Broker Dealer",
-  "Family Office",
-  "Institutional",
-  "Other"
-];
-
-const inquiryTypes = [
-  "Speak with a sales representative",
-  "Request a demo",
-  "Get information on our partnership program",
-  "Other"
-];
-
 const ContactForm: React.FC = () => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    toast.success("Your message has been sent! We'll get back to you soon.");
+    
+    setIsSubmitting(true);
+    
+    // Simulate API call with a timeout
+    setTimeout(() => {
+      // Show success message
+      toast.success("Your message has been sent! We'll be in touch shortly.");
+      
+      // In a real application, you would handle the form submission with API call here
+      // Reset form fields
+      const form = e.target as HTMLFormElement;
+      form.reset();
+      
+      setIsSubmitting(false);
+    }, 1000);
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 bg-white p-8 rounded-2xl shadow-sm border border-gray-200">
-      <h3 className="text-xl font-semibold">Send us a message</h3>
+    <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-200">
+      <h3 className="text-xl font-semibold text-gray-900 mb-6">Send us a message</h3>
       
-      <div>
-        <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-          Full name <span className="text-red-500">*</span>
-        </label>
-        <Input id="name" placeholder="Your name" required />
-      </div>
-      
-      <div>
-        <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-          Email address <span className="text-red-500">*</span>
-        </label>
-        <Input id="email" type="email" placeholder="Your email" required />
-      </div>
-      
-      <div>
-        <label htmlFor="company" className="block text-sm font-medium text-gray-700 mb-1">
-          Company <span className="text-red-500">*</span>
-        </label>
-        <Input id="company" placeholder="Your company" required />
-      </div>
-
-      <div>
-        <label htmlFor="companyType" className="block text-sm font-medium text-gray-700 mb-1">
-          Type of company <span className="text-red-500">*</span>
-        </label>
-        <Select required>
-          <SelectTrigger id="companyType" className="h-11">
-            <SelectValue placeholder="Select company type" />
-          </SelectTrigger>
-          <SelectContent className="bg-white z-[9999]">
-            {companyTypes.map((type) => (
-              <SelectItem key={type} value={type}>
-                {type}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
-      <div>
-        <label htmlFor="inquiryType" className="block text-sm font-medium text-gray-700 mb-1">
-          Type of inquiry <span className="text-red-500">*</span>
-        </label>
-        <Select required>
-          <SelectTrigger id="inquiryType" className="h-11">
-            <SelectValue placeholder="Select inquiry type" />
-          </SelectTrigger>
-          <SelectContent className="bg-white z-[9999]">
-            {inquiryTypes.map((type) => (
-              <SelectItem key={type} value={type}>
-                {type}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-      
-      <div>
-        <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
-          Message <span className="text-red-500">*</span>
-        </label>
-        <Textarea
-          id="message"
-          placeholder="Tell us how we can help..."
-          className="min-h-[120px]"
-          required
-        />
-      </div>
-      
-      <Button type="submit" className="w-full">
-        Send Message
-      </Button>
-    </form>
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <Label htmlFor="first-name">First name</Label>
+            <Input id="first-name" placeholder="John" required />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="last-name">Last name</Label>
+            <Input id="last-name" placeholder="Doe" required />
+          </div>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <Label htmlFor="email">Email</Label>
+            <Input id="email" type="email" placeholder="john@example.com" required />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="phone">Phone (optional)</Label>
+            <Input id="phone" placeholder="+1 (555) 000-0000" />
+          </div>
+        </div>
+        
+        <div className="space-y-2">
+          <Label htmlFor="company">Company</Label>
+          <Input id="company" placeholder="Your company" required />
+        </div>
+        
+        <div className="space-y-2">
+          <Label htmlFor="message">Message</Label>
+          <Textarea 
+            id="message" 
+            placeholder="How can we help you?"
+            rows={6}
+            required
+          />
+        </div>
+        
+        <Button type="submit" className="w-full md:w-auto" disabled={isSubmitting}>
+          {isSubmitting ? "Sending..." : "Send Message"}
+        </Button>
+      </form>
+    </div>
   );
 };
 

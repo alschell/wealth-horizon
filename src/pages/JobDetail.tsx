@@ -1,15 +1,26 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import PageTemplate from "@/components/shared/PageTemplate";
-import { Briefcase, ArrowLeft, Building, MapPin, Clock, FileText, CheckCircle, Calendar } from "lucide-react";
+import { Briefcase, ArrowLeft, Building, MapPin, Clock, FileText, CheckCircle, Calendar, Upload, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogClose } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 
 const JobDetail = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
+  const [resumeFile, setResumeFile] = useState<File | null>(null);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [coverLetter, setCoverLetter] = useState("");
+  
   const { job } = location.state || { 
     job: {
       id: 1,
@@ -20,8 +31,28 @@ const JobDetail = () => {
     }
   };
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setResumeFile(e.target.files[0]);
+    }
+  };
+
   const handleApply = () => {
-    toast.success("Your application has been submitted! We'll be in touch soon.");
+    setIsApplyModalOpen(true);
+  };
+  
+  const handleSubmitApplication = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // In a real app, this would send the application data to a server
+    // For now, we'll just show a success toast and close the modal
+    toast.success("Your application has been submitted successfully! We'll be in touch soon.");
+    setIsApplyModalOpen(false);
+    setResumeFile(null);
+    setName("");
+    setEmail("");
+    setPhone("");
+    setCoverLetter("");
   };
 
   return (
@@ -177,6 +208,103 @@ const JobDetail = () => {
           </Button>
         </div>
       </div>
+
+      {/* Job Application Modal */}
+      <Dialog open={isApplyModalOpen} onOpenChange={setIsApplyModalOpen}>
+        <DialogContent className="sm:max-w-md md:max-w-xl">
+          <DialogHeader>
+            <DialogTitle>Apply for {job.title}</DialogTitle>
+            <DialogDescription>
+              Complete the form below to apply for this position. We'll review your application and get back to you soon.
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleSubmitApplication} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="name">Full Name</Label>
+              <Input 
+                id="name" 
+                value={name} 
+                onChange={(e) => setName(e.target.value)} 
+                placeholder="John Doe" 
+                required 
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="email">Email Address</Label>
+              <Input 
+                id="email" 
+                type="email" 
+                value={email} 
+                onChange={(e) => setEmail(e.target.value)} 
+                placeholder="john@example.com" 
+                required 
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="phone">Phone Number</Label>
+              <Input 
+                id="phone" 
+                value={phone} 
+                onChange={(e) => setPhone(e.target.value)} 
+                placeholder="+1 (555) 123-4567" 
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="resume">Resume</Label>
+              <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                {resumeFile ? (
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-gray-600">{resumeFile.name}</span>
+                    <Button 
+                      type="button" 
+                      variant="ghost" 
+                      size="sm"
+                      onClick={() => setResumeFile(null)}
+                    >
+                      <X size={16} />
+                    </Button>
+                  </div>
+                ) : (
+                  <div>
+                    <Upload className="mx-auto h-12 w-12 text-gray-400" />
+                    <div className="mt-2">
+                      <label htmlFor="resume-upload" className="cursor-pointer text-indigo-600 hover:text-indigo-700">
+                        Upload a file
+                      </label>
+                      <input
+                        id="resume-upload"
+                        name="resume"
+                        type="file"
+                        accept=".pdf,.doc,.docx"
+                        className="sr-only"
+                        onChange={handleFileChange}
+                        required
+                      />
+                      <p className="text-xs text-gray-500 mt-1">PDF, DOC, or DOCX up to 5MB</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="coverLetter">Cover Letter (Optional)</Label>
+              <Textarea 
+                id="coverLetter" 
+                value={coverLetter}
+                onChange={(e) => setCoverLetter(e.target.value)}
+                placeholder="Tell us why you're interested in this position and what makes you a great fit."
+                rows={5}
+              />
+            </div>
+            <div className="flex justify-end gap-2 mt-4">
+              <DialogClose asChild>
+                <Button type="button" variant="outline">Cancel</Button>
+              </DialogClose>
+              <Button type="submit" disabled={!resumeFile || !name || !email}>Submit Application</Button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
     </PageTemplate>
   );
 };

@@ -28,7 +28,7 @@ const CTASection: React.FC = () => {
                 className="bg-black hover:bg-gray-800 text-white text-md px-8"
                 onClick={scrollToContact}
               >
-                Contact Sales
+                Contact Us
               </Button>
             </div>
           </FadeIn>

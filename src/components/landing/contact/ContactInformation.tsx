@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Mail, Phone, MapPin, HelpCircle, Briefcase, FileText, Users } from "lucide-react";
+import { Mail, Phone, MapPin, HelpCircle, Briefcase, FileText, Users, Handshake } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const ContactInformation: React.FC = () => {
@@ -28,6 +28,21 @@ const ContactInformation: React.FC = () => {
                 </Link>
               </p>
             </div>
+          </div>
+        </div>
+        
+        {/* Partnership Section - New */}
+        <div className="flex items-start">
+          <div className="mt-1 mr-4 flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-gray-50 text-[#4E46DC]">
+            <Handshake size={20} />
+          </div>
+          <div>
+            <h4 className="text-gray-900 font-medium mb-1">Partnerships</h4>
+            <p className="text-gray-600 text-sm">
+              <a href="mailto:partnerships@wealthhorizon.ai" className="text-indigo-600 hover:text-indigo-800">
+                partnerships@wealthhorizon.ai
+              </a>
+            </p>
           </div>
         </div>
         

@@ -1,7 +1,6 @@
 
 import React from "react";
 import { Mail, Phone, MapPin, HelpCircle, Briefcase, FileText, Users, Handshake } from "lucide-react";
-import { Link } from "react-router-dom";
 
 const ContactInformation: React.FC = () => {
   return (
@@ -21,11 +20,6 @@ const ContactInformation: React.FC = () => {
                 <a href="mailto:support@wealthhorizon.ai" className="text-indigo-600 hover:text-indigo-800">
                   support@wealthhorizon.ai
                 </a>
-              </p>
-              <p className="text-gray-600 text-sm">
-                <Link to="/help-center" className="text-indigo-600 hover:text-indigo-800">
-                  Log in to the Help Center
-                </Link>
               </p>
             </div>
           </div>

@@ -5,9 +5,14 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
+import { CustomSelect } from "@/components/ui/custom-select";
+import CustomSearchableSelect from "@/components/ui/custom-searchable-select";
 
 const ContactForm: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [inquiry, setInquiry] = useState("");
+  const [company, setCompany] = useState("");
+  const [industry, setIndustry] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,6 +28,9 @@ const ContactForm: React.FC = () => {
       // Reset form fields
       const form = e.target as HTMLFormElement;
       form.reset();
+      setInquiry("");
+      setCompany("");
+      setIndustry("");
       
       setIsSubmitting(false);
     }, 1000);
@@ -55,9 +63,50 @@ const ContactForm: React.FC = () => {
           </div>
         </div>
         
-        <div className="space-y-2">
-          <Label htmlFor="company">Company</Label>
-          <Input id="company" placeholder="Your company" required />
+        <CustomSelect
+          id="inquiry-type"
+          label="Type of inquiry"
+          value={inquiry}
+          placeholder="Select inquiry type"
+          options={[
+            "General Information", 
+            "Product Demo", 
+            "Pricing", 
+            "Partnership", 
+            "Technical Support",
+            "Other"
+          ]}
+          required
+          onChange={(value) => setInquiry(value)}
+        />
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <Label htmlFor="company">Company</Label>
+            <Input id="company" placeholder="Your company" required />
+          </div>
+          
+          <CustomSearchableSelect 
+            id="industry"
+            label="Industry"
+            value={industry}
+            placeholder="Select your industry"
+            options={[
+              "Banking & Financial Services",
+              "Family Office",
+              "Wealth Management",
+              "Private Equity",
+              "Hedge Fund",
+              "Insurance",
+              "Real Estate",
+              "Technology",
+              "Legal Services",
+              "Other"
+            ]}
+            onChange={(value) => setIndustry(value)}
+            required
+            allowCustomValue
+          />
         </div>
         
         <div className="space-y-2">

@@ -28,7 +28,7 @@ const TestimonialsSection: React.FC = () => {
           <FadeIn>
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Trusted by Leading Institutions</h2>
             <p className="mt-4 text-xl text-gray-600 max-w-3xl mx-auto">
-              See what family offices and institutional investors say about Wealth Horizon.
+              See what family offices and institutional investors say about <span className="text-indigo-600">Wealth</span><span>Horizon</span>.
             </p>
           </FadeIn>
         </div>

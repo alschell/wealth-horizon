@@ -27,7 +27,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToFeatures }) => {
               across all your banks, brokers & custodians
             </p>
             <div className="mt-10 flex flex-col sm:flex-row gap-4">
-              <Button size="lg" className="text-md px-8 bg-indigo-600 hover:bg-indigo-700 text-white" asChild>
+              <Button size="lg" className="text-md px-8" asChild>
                 <Link to="/onboarding">Get Started</Link>
               </Button>
               <Button

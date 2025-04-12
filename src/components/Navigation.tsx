@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { LogOut, Settings, Search } from 'lucide-react';
@@ -17,7 +16,6 @@ const Navigation: React.FC = () => {
   const isLoginPage = location.pathname === '/login';
   const isDashboard = !isOnboarding && !isHomePage && !isLoginPage;
 
-  // Add scroll listener to detect when user scrolls for sticky navigation
   useEffect(() => {
     const handleScroll = () => {
       const isScrolled = window.scrollY > 10;
@@ -30,20 +28,16 @@ const Navigation: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [scrolled]);
 
-  // Don't show navigation on onboarding or login pages
   if (isOnboarding || isLoginPage) {
     return null;
   }
 
   const handleLogout = () => {
-    // Clear any auth data from localStorage
     localStorage.removeItem("auth_token");
     localStorage.removeItem("user_data");
     
-    // Show success toast
     toast.success("You have been successfully logged out");
     
-    // Navigate to logout page
     navigate('/logout');
   };
 
@@ -54,12 +48,10 @@ const Navigation: React.FC = () => {
         element.scrollIntoView({ behavior: "smooth" });
       }
     } else {
-      // If not on home page, navigate to home page with hash
       navigate(`/#${id}`);
     }
   };
 
-  // Landing page navigation
   if (isHomePage) {
     return (
       <header 
@@ -108,10 +100,7 @@ const Navigation: React.FC = () => {
             <Button variant="ghost" onClick={() => navigate('/login')}>
               Log In
             </Button>
-            <Button 
-              className="bg-indigo-600 hover:bg-indigo-700 text-white" 
-              asChild
-            >
+            <Button asChild>
               <Link to="/onboarding">Get Started</Link>
             </Button>
           </div>
@@ -120,7 +109,6 @@ const Navigation: React.FC = () => {
     );
   }
 
-  // Dashboard navigation (original)
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-white shadow-sm">
       <div className="flex h-16 items-center justify-between mx-auto max-w-7xl px-6">

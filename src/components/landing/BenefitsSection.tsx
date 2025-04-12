@@ -25,11 +25,11 @@ const benefits = [
     description: "Streamline workflows, automate routine tasks, and reduce manual work to focus on high-value activities.",
     icon: <Clock size={24} />,
   },
-];
+].sort((a, b) => a.title.localeCompare(b.title));
 
 const BenefitsSection: React.FC = () => {
   return (
-    <section className="py-24 bg-gray-50">
+    <section className="py-24 bg-gray-50" id="benefits">
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-16">
           <FadeIn>

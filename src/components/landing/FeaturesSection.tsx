@@ -4,13 +4,8 @@ import { FadeIn, ScaleIn, StaggerContainer, StaggerItem } from "@/components/ui/
 import { LineChart, Shield, BarChart3, FileText, Users, Lock, LucideIcon } from "lucide-react";
 import FeatureAnimation from "@/components/animations/FeatureAnimation";
 
-// Define the features with the correct icon type
+// Define the features with the correct icon type and sort them alphabetically
 const features = [
-  {
-    title: "Advanced Reporting",
-    description: "Create custom reports with detailed insights and easy-to-understand visualizations.",
-    icon: FileText
-  },
   {
     title: "Compliance Management",
     description: "Stay ahead of regulatory requirements with automated compliance monitoring.",
@@ -35,8 +30,13 @@ const features = [
     title: "Secure Collaboration",
     description: "Invite team members and stakeholders to the platform.",
     icon: Users
+  },
+  {
+    title: "Advanced Reporting",
+    description: "Create custom reports with detailed insights and easy-to-understand visualizations.",
+    icon: FileText
   }
-];
+].sort((a, b) => a.title.localeCompare(b.title));
 
 const FeaturesSection: React.FC<{ id?: string }> = ({ id }) => {
   return (

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { LogOut, Settings, Search } from 'lucide-react';
@@ -18,6 +19,8 @@ const Navigation: React.FC = () => {
   const isDashboard = !isOnboarding && !isHomePage && !isLoginPage && !isResetPasswordPage;
 
   useEffect(() => {
+    console.log("Navigation mounted. Homepage:", isHomePage);
+    
     const handleScroll = () => {
       const isScrolled = window.scrollY > 10;
       if (isScrolled !== scrolled) {
@@ -27,7 +30,7 @@ const Navigation: React.FC = () => {
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [scrolled]);
+  }, [scrolled, isHomePage]);
 
   if (isOnboarding || isLoginPage || isResetPasswordPage) {
     return null;

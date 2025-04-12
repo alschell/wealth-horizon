@@ -74,6 +74,19 @@
 
   body {
     @apply bg-background text-foreground font-sans antialiased;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    display: block;
+  }
+
+  html {
+    height: 100%;
+  }
+
+  #root {
+    height: 100%;
+    display: block;
   }
 
   h1, h2, h3, h4, h5, h6 {

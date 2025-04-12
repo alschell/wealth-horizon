@@ -20,6 +20,7 @@ const LandingLayout: React.FC = () => {
   // Add debugging
   useEffect(() => {
     console.log("LandingLayout component mounted");
+    console.log("LandingLayout element:", document.querySelector('.min-h-screen'));
   }, []);
 
   useEffect(() => {
@@ -41,7 +42,7 @@ const LandingLayout: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white w-full" style={{ display: 'block' }}>
       <HeroSection onScrollToFeatures={() => scrollToSection(featuresRef)} />
       <div ref={featuresRef} id="features">
         <FeaturesSection id="features" />

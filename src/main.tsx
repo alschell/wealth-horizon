@@ -13,6 +13,8 @@ if (!rootElement) {
   throw new Error("Failed to find the root element");
 }
 
+console.log("Root element found:", rootElement);
+
 const root = createRoot(rootElement);
 
 // Make sure the entire app is wrapped in React

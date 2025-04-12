@@ -14,8 +14,8 @@ const ContactInformation: React.FC = () => {
           </div>
           <div>
             <h4 className="text-gray-900 font-medium mb-1">Email</h4>
-            <p className="text-gray-600 text-sm">support@wealthhorizon.com</p>
-            <p className="text-gray-600 text-sm">info@wealthhorizon.com</p>
+            <p className="text-gray-600 text-sm">sales@wealthhorizon.ai</p>
+            <p className="text-gray-600 text-sm">support@wealthhorizon.ai</p>
           </div>
         </div>
         

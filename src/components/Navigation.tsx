@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { LogOut, Settings, Search } from 'lucide-react';
@@ -14,7 +15,8 @@ const Navigation: React.FC = () => {
   const isOnboarding = location.pathname.includes('/onboarding');
   const isHomePage = location.pathname === '/';
   const isLoginPage = location.pathname === '/login';
-  const isDashboard = !isOnboarding && !isHomePage && !isLoginPage;
+  const isResetPasswordPage = location.pathname === '/reset-password';
+  const isDashboard = !isOnboarding && !isHomePage && !isLoginPage && !isResetPasswordPage;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -28,7 +30,7 @@ const Navigation: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [scrolled]);
 
-  if (isOnboarding || isLoginPage) {
+  if (isOnboarding || isLoginPage || isResetPasswordPage) {
     return null;
   }
 
@@ -113,7 +115,7 @@ const Navigation: React.FC = () => {
     <header className="sticky top-0 z-50 w-full border-b bg-white shadow-sm">
       <div className="flex h-16 items-center justify-between mx-auto max-w-7xl px-6">
         <div className="flex items-center">
-          <Link to="/dashboard" className="font-bold text-xl flex items-center">
+          <Link to="/" className="font-bold text-xl flex items-center">
             <span className="text-indigo-500">Wealth</span>
             <span>Horizon</span>
           </Link>

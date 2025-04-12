@@ -5,7 +5,7 @@ import { Wallet, TrendingUp, Shield, ArrowUpRight } from "lucide-react";
 
 const SummaryCards = () => {
   const cards = [
-    { title: 'Total Assets', value: '$2.4M', icon: <Wallet size={18} />, color: 'bg-blue-500' },
+    { title: 'Total Assets', value: '$1.3B', icon: <Wallet size={18} />, color: 'bg-blue-500' },
     { title: 'Performance', value: '+8.2%', icon: <TrendingUp size={18} />, color: 'bg-green-500' },
     { title: 'Risk Score', value: 'AA+', icon: <Shield size={18} />, color: 'bg-amber-500' }
   ];

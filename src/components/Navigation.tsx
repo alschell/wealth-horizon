@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { LogOut, Settings, Search } from 'lucide-react';
@@ -21,7 +22,8 @@ const Navigation: React.FC = () => {
   const footerPages = [
     '/about', '/portfolio-management', '/trading', '/analyze-wealth', '/reporting', 
     '/compliance-monitoring', '/blog', '/press', '/careers', '/documentation', 
-    '/help-center', '/security', '/privacy-policy', '/terms-of-service', '/cookies-policy'
+    '/help-center', '/security', '/privacy-policy', '/terms-of-service', '/cookies-policy',
+    '/careers/faq' // Add the careers/faq route to hide navigation
   ];
   
   const isFooterPage = footerPages.includes(location.pathname);

@@ -1,3 +1,4 @@
+
 import React from "react";  // Explicitly import React
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -50,7 +51,8 @@ import PortfolioManagement from "./pages/PortfolioManagement";
 import Blog from "./pages/Blog";
 import Press from "./pages/Press";
 import Careers from "./pages/Careers";
-import JobDetail from "./pages/JobDetail"; // Import JobDetail component
+import CareersFAQ from "./pages/CareersFAQ"; // Add the import for CareersFAQ
+import JobDetail from "./pages/JobDetail";
 import Documentation from "./pages/Documentation";
 import HelpCenter from "./pages/HelpCenter";
 import Security from "./pages/Security";

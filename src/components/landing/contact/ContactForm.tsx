@@ -5,14 +5,17 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { CustomSelect } from "@/components/ui/custom-select";
 import CustomSearchableSelect from "@/components/ui/custom-searchable-select";
 
 const ContactForm: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [inquiry, setInquiry] = useState("");
   const [company, setCompany] = useState("");
   const [industry, setIndustry] = useState("");
+  const [message, setMessage] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,13 +27,14 @@ const ContactForm: React.FC = () => {
       // Show success message
       toast.success("Your message has been sent! We'll be in touch shortly.");
       
-      // In a real application, you would handle the form submission with API call here
       // Reset form fields
-      const form = e.target as HTMLFormElement;
-      form.reset();
+      setFullName("");
+      setEmail("");
+      setPhone("");
       setInquiry("");
       setCompany("");
       setIndustry("");
+      setMessage("");
       
       setIsSubmitting(false);
     }, 1000);
@@ -41,50 +45,67 @@ const ContactForm: React.FC = () => {
       <h3 className="text-xl font-semibold text-gray-900 mb-6">Send us a message</h3>
       
       <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-2">
-            <Label htmlFor="first-name">First name</Label>
-            <Input id="first-name" placeholder="John" required />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="last-name">Last name</Label>
-            <Input id="last-name" placeholder="Doe" required />
-          </div>
+        <div className="space-y-2">
+          <Label htmlFor="full-name">Full name<span className="text-red-500 ml-1">*</span></Label>
+          <Input 
+            id="full-name" 
+            value={fullName}
+            onChange={(e) => setFullName(e.target.value)}
+            placeholder="John Doe" 
+            required 
+          />
+        </div>
+        
+        <div className="space-y-2">
+          <Label htmlFor="company">Company<span className="text-red-500 ml-1">*</span></Label>
+          <Input 
+            id="company" 
+            value={company}
+            onChange={(e) => setCompany(e.target.value)}
+            placeholder="Your company" 
+            required 
+          />
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <Input id="email" type="email" placeholder="john@example.com" required />
+            <Label htmlFor="email">Email<span className="text-red-500 ml-1">*</span></Label>
+            <Input 
+              id="email" 
+              type="email" 
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="john@example.com" 
+              required 
+            />
           </div>
           <div className="space-y-2">
             <Label htmlFor="phone">Phone (optional)</Label>
-            <Input id="phone" placeholder="+1 (555) 000-0000" />
+            <Input 
+              id="phone" 
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="+1 (555) 000-0000" 
+            />
           </div>
         </div>
         
-        <CustomSelect
-          id="inquiry-type"
-          label="Type of inquiry"
-          value={inquiry}
-          placeholder="Select inquiry type"
-          options={[
-            "General Information", 
-            "Product Demo", 
-            "Pricing", 
-            "Partnership", 
-            "Technical Support",
-            "Other"
-          ]}
-          required
-          onChange={(value) => setInquiry(value)}
-        />
-        
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-2">
-            <Label htmlFor="company">Company</Label>
-            <Input id="company" placeholder="Your company" required />
-          </div>
+          <CustomSearchableSelect 
+            id="inquiry-type"
+            label="Type of inquiry"
+            value={inquiry}
+            placeholder="Select inquiry type"
+            options={[
+              "Speak with a sales representative",
+              "Request a demo",
+              "Get information on our partnership program",
+              "Other"
+            ]}
+            onChange={(value) => setInquiry(value)}
+            required
+            allowCustomValue
+          />
           
           <CustomSearchableSelect 
             id="industry"
@@ -110,9 +131,11 @@ const ContactForm: React.FC = () => {
         </div>
         
         <div className="space-y-2">
-          <Label htmlFor="message">Message</Label>
+          <Label htmlFor="message">Message<span className="text-red-500 ml-1">*</span></Label>
           <Textarea 
             id="message" 
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
             placeholder="How can we help you?"
             rows={6}
             required

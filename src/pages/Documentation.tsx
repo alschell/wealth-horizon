@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import PageTemplate from "@/components/shared/PageTemplate";
 import { BookOpen, FileText, Code, Link, Download, Copy, ExternalLink, CheckCircle, Info, Check } from "lucide-react";
@@ -8,10 +7,17 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/components/ui/use-toast";
 import { useNavigate } from "react-router-dom";
 
+const API_DOCS_URL = "https://api.wealthhorizon.ai/docs";
+const DEVELOPER_PORTAL_URL = "https://developers.wealthhorizon.ai";
+const SDK_BASE_URL = "https://downloads.wealthhorizon.ai/sdk";
+
 const Documentation = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
+  const [downloadingSDK, setDownloadingSDK] = useState<string | null>(null);
+  const [joiningProgram, setJoiningProgram] = useState(false);
+  const [openingDocs, setOpeningDocs] = useState<string | null>(null);
 
   const handleCopyClick = (text: string, id: string) => {
     navigator.clipboard.writeText(text);
@@ -28,41 +34,77 @@ const Documentation = () => {
   };
 
   const handleDownloadSDK = (sdkName: string, version: string) => {
+    setDownloadingSDK(sdkName);
     toast({
       title: `Downloading ${sdkName} SDK v${version}`,
       description: "Your download will begin shortly",
     });
     
-    // In a real app, this would redirect to actual download URL
-    // For now we'll simulate the download with a toast notification
+    let filename;
+    switch(sdkName) {
+      case "JavaScript":
+        filename = `wealthhorizon-js-sdk-v${version}.zip`;
+        break;
+      case "Python":
+        filename = `wealthhorizon-python-sdk-v${version}.tar.gz`;
+        break;
+      case "Java":
+        filename = `wealthhorizon-java-sdk-v${version}.jar`;
+        break;
+      case ".NET":
+        filename = `wealthhorizon-dotnet-sdk-v${version}.dll`;
+        break;
+      default:
+        filename = `wealthhorizon-${sdkName.toLowerCase()}-sdk-v${version}.zip`;
+    }
+    
+    const downloadUrl = `${SDK_BASE_URL}/${filename.toLowerCase()}`;
+    const a = document.createElement('a');
+    a.href = downloadUrl;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    
     setTimeout(() => {
       toast({
         title: "Download complete",
         description: `${sdkName} SDK v${version} has been downloaded`,
+        duration: 3000,
       });
+      setDownloadingSDK(null);
     }, 1500);
   };
 
   const openDocumentation = (docType: string) => {
+    setOpeningDocs(docType);
     toast({
       title: `Opening ${docType} documentation`,
       description: "Loading documentation resources",
     });
     
-    // In a real app, this would open the actual documentation page
-    // For demo purposes, we'll just show a toast
-    window.open(`https://api.wealthhorizon.ai/docs/${docType.toLowerCase().replace(/\s/g, '-')}`, '_blank');
+    const docsPath = docType.toLowerCase().replace(/\s/g, '-');
+    const completeUrl = `${API_DOCS_URL}/${docsPath}`;
+    
+    window.open(completeUrl, '_blank');
+    
+    setTimeout(() => {
+      setOpeningDocs(null);
+    }, 1000);
   };
 
   const joinDeveloperProgram = () => {
+    setJoiningProgram(true);
     toast({
       title: "Joining Developer Program",
       description: "Redirecting to developer registration portal",
     });
     
-    // In a real app, this would redirect to the registration page
-    // For now, we'll simply navigate to a "coming soon" state
-    window.open('https://developers.wealthhorizon.ai/join', '_blank');
+    window.open(`${DEVELOPER_PORTAL_URL}/join`, '_blank');
+    
+    setTimeout(() => {
+      setJoiningProgram(false);
+    }, 1500);
   };
 
   return (
@@ -85,15 +127,25 @@ const Documentation = () => {
                 <Button 
                   className="flex items-center gap-2"
                   onClick={() => openDocumentation("API Reference")}
+                  disabled={openingDocs === "API Reference"}
                 >
-                  <FileText size={16} /> API Reference
+                  {openingDocs === "API Reference" ? (
+                    <>Loading... <span className="animate-spin ml-1">⟳</span></>
+                  ) : (
+                    <><FileText size={16} /> API Reference</>
+                  )}
                 </Button>
                 <Button 
                   variant="outline" 
                   className="flex items-center gap-2"
                   onClick={() => handleDownloadSDK("WealthHorizon", "2.1.0")}
+                  disabled={downloadingSDK === "WealthHorizon"}
                 >
-                  <Download size={16} /> Download SDK
+                  {downloadingSDK === "WealthHorizon" ? (
+                    <>Downloading... <span className="animate-spin ml-1">⟳</span></>
+                  ) : (
+                    <><Download size={16} /> Download SDK</>
+                  )}
                 </Button>
               </div>
             </div>
@@ -153,8 +205,13 @@ const Documentation = () => {
                 variant="outline" 
                 className="w-full flex items-center justify-center gap-2"
                 onClick={() => openDocumentation("Integration Guide")}
+                disabled={openingDocs === "Integration Guide"}
               >
-                <Link size={16} /> View Integration Guide
+                {openingDocs === "Integration Guide" ? (
+                  <>Loading... <span className="animate-spin ml-1">⟳</span></>
+                ) : (
+                  <><Link size={16} /> View Integration Guide</>
+                )}
               </Button>
             </div>
             
@@ -181,8 +238,13 @@ const Documentation = () => {
                 variant="outline" 
                 className="w-full flex items-center justify-center gap-2"
                 onClick={() => openDocumentation("Reporting Guide")}
+                disabled={openingDocs === "Reporting Guide"}
               >
-                <FileText size={16} /> View Reporting Guide
+                {openingDocs === "Reporting Guide" ? (
+                  <>Loading... <span className="animate-spin ml-1">⟳</span></>
+                ) : (
+                  <><FileText size={16} /> View Reporting Guide</>
+                )}
               </Button>
             </div>
           </div>
@@ -559,41 +621,69 @@ public class WealthHorizonApi
                 variant="outline" 
                 className="w-full justify-start" 
                 onClick={() => handleDownloadSDK("JavaScript", "2.1.0")}
+                disabled={!!downloadingSDK}
               >
                 <span className="bg-indigo-100 w-8 h-8 rounded-full flex items-center justify-center text-indigo-600 mr-3">
                   JS
                 </span>
-                JavaScript SDK v2.1.0
+                {downloadingSDK === "JavaScript" ? (
+                  <span className="flex items-center">
+                    Downloading... <span className="animate-spin ml-2">⟳</span>
+                  </span>
+                ) : (
+                  "JavaScript SDK v2.1.0"
+                )}
               </Button>
               <Button 
                 variant="outline" 
                 className="w-full justify-start"
                 onClick={() => handleDownloadSDK("Python", "1.8.2")}
+                disabled={!!downloadingSDK}
               >
                 <span className="bg-indigo-100 w-8 h-8 rounded-full flex items-center justify-center text-indigo-600 mr-3">
                   PY
                 </span>
-                Python SDK v1.8.2
+                {downloadingSDK === "Python" ? (
+                  <span className="flex items-center">
+                    Downloading... <span className="animate-spin ml-2">⟳</span>
+                  </span>
+                ) : (
+                  "Python SDK v1.8.2"
+                )}
               </Button>
               <Button 
                 variant="outline" 
                 className="w-full justify-start"
                 onClick={() => handleDownloadSDK("Java", "1.5.0")}
+                disabled={!!downloadingSDK}
               >
                 <span className="bg-indigo-100 w-8 h-8 rounded-full flex items-center justify-center text-indigo-600 mr-3">
                   JV
                 </span>
-                Java SDK v1.5.0
+                {downloadingSDK === "Java" ? (
+                  <span className="flex items-center">
+                    Downloading... <span className="animate-spin ml-2">⟳</span>
+                  </span>
+                ) : (
+                  "Java SDK v1.5.0"
+                )}
               </Button>
               <Button 
                 variant="outline" 
                 className="w-full justify-start"
                 onClick={() => handleDownloadSDK(".NET", "1.4.1")}
+                disabled={!!downloadingSDK}
               >
                 <span className="bg-indigo-100 w-8 h-8 rounded-full flex items-center justify-center text-indigo-600 mr-3">
                   C#
                 </span>
-                .NET SDK v1.4.1
+                {downloadingSDK === ".NET" ? (
+                  <span className="flex items-center">
+                    Downloading... <span className="animate-spin ml-2">⟳</span>
+                  </span>
+                ) : (
+                  ".NET SDK v1.4.1"
+                )}
               </Button>
             </div>
           </div>
@@ -627,8 +717,15 @@ public class WealthHorizonApi
             <Button 
               className="flex items-center gap-2 bg-white text-gray-800 hover:bg-gray-100"
               onClick={joinDeveloperProgram}
+              disabled={joiningProgram}
             >
-              Join Developer Program <ExternalLink size={16} />
+              {joiningProgram ? (
+                <span className="flex items-center">
+                  Joining Program... <span className="animate-spin ml-2">⟳</span>
+                </span>
+              ) : (
+                <>Join Developer Program <ExternalLink size={16} /></>
+              )}
             </Button>
           </div>
         </section>

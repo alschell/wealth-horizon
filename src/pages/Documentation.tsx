@@ -1,15 +1,68 @@
 
-import React from "react";
+import React, { useState } from "react";
 import PageTemplate from "@/components/shared/PageTemplate";
-import { BookOpen, FileText, Code, Link, Download, Copy, ExternalLink, CheckCircle, Info } from "lucide-react";
+import { BookOpen, FileText, Code, Link, Download, Copy, ExternalLink, CheckCircle, Info, Check } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useToast } from "@/components/ui/use-toast";
+import { useNavigate } from "react-router-dom";
 
 const Documentation = () => {
-  const handleCopyClick = (text: string) => {
+  const { toast } = useToast();
+  const navigate = useNavigate();
+  const [copiedCode, setCopiedCode] = useState<string | null>(null);
+
+  const handleCopyClick = (text: string, id: string) => {
     navigator.clipboard.writeText(text);
-    // In a real app, you would add a toast notification here
+    setCopiedCode(id);
+    toast({
+      title: "Code copied to clipboard",
+      description: "You can now paste it in your application",
+      duration: 3000,
+    });
+    
+    setTimeout(() => {
+      setCopiedCode(null);
+    }, 2000);
+  };
+
+  const handleDownloadSDK = (sdkName: string, version: string) => {
+    toast({
+      title: `Downloading ${sdkName} SDK v${version}`,
+      description: "Your download will begin shortly",
+    });
+    
+    // In a real app, this would redirect to actual download URL
+    // For now we'll simulate the download with a toast notification
+    setTimeout(() => {
+      toast({
+        title: "Download complete",
+        description: `${sdkName} SDK v${version} has been downloaded`,
+      });
+    }, 1500);
+  };
+
+  const openDocumentation = (docType: string) => {
+    toast({
+      title: `Opening ${docType} documentation`,
+      description: "Loading documentation resources",
+    });
+    
+    // In a real app, this would open the actual documentation page
+    // For demo purposes, we'll just show a toast
+    window.open(`https://api.wealthhorizon.ai/docs/${docType.toLowerCase().replace(/\s/g, '-')}`, '_blank');
+  };
+
+  const joinDeveloperProgram = () => {
+    toast({
+      title: "Joining Developer Program",
+      description: "Redirecting to developer registration portal",
+    });
+    
+    // In a real app, this would redirect to the registration page
+    // For now, we'll simply navigate to a "coming soon" state
+    window.open('https://developers.wealthhorizon.ai/join', '_blank');
   };
 
   return (
@@ -29,10 +82,17 @@ const Documentation = () => {
                 </p>
               </div>
               <div className="flex flex-col sm:flex-row gap-3">
-                <Button className="flex items-center gap-2">
+                <Button 
+                  className="flex items-center gap-2"
+                  onClick={() => openDocumentation("API Reference")}
+                >
                   <FileText size={16} /> API Reference
                 </Button>
-                <Button variant="outline" className="flex items-center gap-2">
+                <Button 
+                  variant="outline" 
+                  className="flex items-center gap-2"
+                  onClick={() => handleDownloadSDK("WealthHorizon", "2.1.0")}
+                >
                   <Download size={16} /> Download SDK
                 </Button>
               </div>
@@ -54,9 +114,9 @@ const Documentation = () => {
                   variant="ghost" 
                   size="sm" 
                   className="h-8 text-gray-500 hover:text-gray-700"
-                  onClick={() => handleCopyClick('curl -X GET "https://api.wealthhorizon.ai/v1/portfolios" -H "Authorization: Bearer YOUR_API_KEY"')}
+                  onClick={() => handleCopyClick('curl -X GET "https://api.wealthhorizon.ai/v1/portfolios" -H "Authorization: Bearer YOUR_API_KEY"', 'auth-example')}
                 >
-                  <Copy size={16} />
+                  {copiedCode === 'auth-example' ? <Check size={16} className="text-green-500" /> : <Copy size={16} />}
                 </Button>
               </div>
               <pre className="text-sm overflow-x-auto p-2 bg-gray-800 text-gray-200 rounded">
@@ -89,7 +149,11 @@ const Documentation = () => {
                   <span className="text-gray-600">Automated data synchronization</span>
                 </li>
               </ul>
-              <Button variant="outline" className="w-full flex items-center justify-center gap-2">
+              <Button 
+                variant="outline" 
+                className="w-full flex items-center justify-center gap-2"
+                onClick={() => openDocumentation("Integration Guide")}
+              >
                 <Link size={16} /> View Integration Guide
               </Button>
             </div>
@@ -113,7 +177,11 @@ const Documentation = () => {
                   <span className="text-gray-600">Scheduled report generation</span>
                 </li>
               </ul>
-              <Button variant="outline" className="w-full flex items-center justify-center gap-2">
+              <Button 
+                variant="outline" 
+                className="w-full flex items-center justify-center gap-2"
+                onClick={() => openDocumentation("Reporting Guide")}
+              >
                 <FileText size={16} /> View Reporting Guide
               </Button>
             </div>
@@ -157,10 +225,9 @@ const fetchPortfolioData = async (apiKey, portfolioId) => {
   }
   
   return await response.json();
-};
-                    `)}
+};`, 'js-fetch')}
                   >
-                    <Copy size={16} />
+                    {copiedCode === 'js-fetch' ? <Check size={16} className="text-green-500" /> : <Copy size={16} />}
                   </Button>
                 </div>
                 <div className="p-4 bg-gray-900">
@@ -189,8 +256,32 @@ const fetchPortfolioData = async (apiKey, portfolioId) => {
               <div className="bg-white border border-gray-100 rounded-lg shadow-sm overflow-hidden">
                 <div className="bg-gray-100 px-4 py-2 flex items-center justify-between">
                   <span className="font-medium text-gray-700">Create a Transaction</span>
-                  <Button variant="ghost" size="sm" className="h-8 text-gray-500 hover:text-gray-700">
-                    <Copy size={16} />
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="h-8 text-gray-500 hover:text-gray-700"
+                    onClick={() => handleCopyClick(`const createTransaction = async (apiKey, transactionData) => {
+  const response = await fetch(
+    'https://api.wealthhorizon.ai/v1/transactions',
+    {
+      method: 'POST',
+      headers: {
+        Authorization: \`Bearer \${apiKey}\`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(transactionData)
+    }
+  );
+  
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || \`API error: \${response.status}\`);
+  }
+  
+  return await response.json();
+};`, 'js-create')}
+                  >
+                    {copiedCode === 'js-create' ? <Check size={16} className="text-green-500" /> : <Copy size={16} />}
                   </Button>
                 </div>
                 <div className="p-4 bg-gray-900">
@@ -224,8 +315,27 @@ const fetchPortfolioData = async (apiKey, portfolioId) => {
               <div className="bg-white border border-gray-100 rounded-lg shadow-sm overflow-hidden">
                 <div className="bg-gray-100 px-4 py-2 flex items-center justify-between">
                   <span className="font-medium text-gray-700">Fetch Portfolio Data</span>
-                  <Button variant="ghost" size="sm" className="h-8 text-gray-500 hover:text-gray-700">
-                    <Copy size={16} />
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="h-8 text-gray-500 hover:text-gray-700"
+                    onClick={() => handleCopyClick(`import requests
+
+def fetch_portfolio_data(api_key, portfolio_id):
+    headers = {
+        'Authorization': f'Bearer {api_key}',
+        'Content-Type': 'application/json'
+    }
+    
+    response = requests.get(
+        f'https://api.wealthhorizon.ai/v1/portfolios/{portfolio_id}',
+        headers=headers
+    )
+    
+    response.raise_for_status()
+    return response.json()`, 'py-fetch')}
+                  >
+                    {copiedCode === 'py-fetch' ? <Check size={16} className="text-green-500" /> : <Copy size={16} />}
                   </Button>
                 </div>
                 <div className="p-4 bg-gray-900">
@@ -254,8 +364,42 @@ def fetch_portfolio_data(api_key, portfolio_id):
               <div className="bg-white border border-gray-100 rounded-lg shadow-sm overflow-hidden">
                 <div className="bg-gray-100 px-4 py-2 flex items-center justify-between">
                   <span className="font-medium text-gray-700">Fetch Portfolio Data</span>
-                  <Button variant="ghost" size="sm" className="h-8 text-gray-500 hover:text-gray-700">
-                    <Copy size={16} />
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="h-8 text-gray-500 hover:text-gray-700"
+                    onClick={() => handleCopyClick(`import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+
+public class WealthHorizonApi {
+    private final HttpClient httpClient = HttpClient.newBuilder().build();
+    private final String apiKey;
+    
+    public WealthHorizonApi(String apiKey) {
+        this.apiKey = apiKey;
+    }
+    
+    public String fetchPortfolioData(String portfolioId) throws Exception {
+        HttpRequest request = HttpRequest.newBuilder()
+            .uri(URI.create("https://api.wealthhorizon.ai/v1/portfolios/" + portfolioId))
+            .header("Authorization", "Bearer " + apiKey)
+            .header("Content-Type", "application/json")
+            .GET()
+            .build();
+            
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        
+        if (response.statusCode() != 200) {
+            throw new RuntimeException("API error: " + response.statusCode());
+        }
+        
+        return response.body();
+    }
+}`, 'java-fetch')}
+                  >
+                    {copiedCode === 'java-fetch' ? <Check size={16} className="text-green-500" /> : <Copy size={16} />}
                   </Button>
                 </div>
                 <div className="p-4 bg-gray-900">
@@ -299,8 +443,37 @@ public class WealthHorizonApi {
               <div className="bg-white border border-gray-100 rounded-lg shadow-sm overflow-hidden">
                 <div className="bg-gray-100 px-4 py-2 flex items-center justify-between">
                   <span className="font-medium text-gray-700">Fetch Portfolio Data</span>
-                  <Button variant="ghost" size="sm" className="h-8 text-gray-500 hover:text-gray-700">
-                    <Copy size={16} />
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="h-8 text-gray-500 hover:text-gray-700"
+                    onClick={() => handleCopyClick(`using System;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Threading.Tasks;
+
+public class WealthHorizonApi
+{
+    private readonly HttpClient _httpClient;
+    private readonly string _apiKey;
+    
+    public WealthHorizonApi(string apiKey)
+    {
+        _httpClient = new HttpClient();
+        _apiKey = apiKey;
+        _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
+    }
+    
+    public async Task<string> FetchPortfolioDataAsync(string portfolioId)
+    {
+        var response = await _httpClient.GetAsync($"https://api.wealthhorizon.ai/v1/portfolios/{portfolioId}");
+        
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadAsStringAsync();
+    }
+}`, 'csharp-fetch')}
+                  >
+                    {copiedCode === 'csharp-fetch' ? <Check size={16} className="text-green-500" /> : <Copy size={16} />}
                   </Button>
                 </div>
                 <div className="p-4 bg-gray-900">
@@ -359,7 +532,12 @@ public class WealthHorizonApi
                   </span>
                 </div>
                 <p className="text-gray-500 text-sm mb-4">{api.endpoints} endpoints</p>
-                <Button variant="outline" size="sm" className="w-full flex items-center justify-center gap-1">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="w-full flex items-center justify-center gap-1"
+                  onClick={() => openDocumentation(api.title)}
+                >
                   <Code size={14} /> View Reference
                 </Button>
               </div>
@@ -377,37 +555,45 @@ public class WealthHorizonApi
               Download our official client libraries to simplify integration with your applications.
             </p>
             <div className="space-y-3">
-              <Button variant="outline" className="w-full justify-start" asChild>
-                <a href="#" className="flex items-center">
-                  <span className="bg-indigo-100 w-8 h-8 rounded-full flex items-center justify-center text-indigo-600 mr-3">
-                    JS
-                  </span>
-                  JavaScript SDK v2.1.0
-                </a>
+              <Button 
+                variant="outline" 
+                className="w-full justify-start" 
+                onClick={() => handleDownloadSDK("JavaScript", "2.1.0")}
+              >
+                <span className="bg-indigo-100 w-8 h-8 rounded-full flex items-center justify-center text-indigo-600 mr-3">
+                  JS
+                </span>
+                JavaScript SDK v2.1.0
               </Button>
-              <Button variant="outline" className="w-full justify-start" asChild>
-                <a href="#" className="flex items-center">
-                  <span className="bg-indigo-100 w-8 h-8 rounded-full flex items-center justify-center text-indigo-600 mr-3">
-                    PY
-                  </span>
-                  Python SDK v1.8.2
-                </a>
+              <Button 
+                variant="outline" 
+                className="w-full justify-start"
+                onClick={() => handleDownloadSDK("Python", "1.8.2")}
+              >
+                <span className="bg-indigo-100 w-8 h-8 rounded-full flex items-center justify-center text-indigo-600 mr-3">
+                  PY
+                </span>
+                Python SDK v1.8.2
               </Button>
-              <Button variant="outline" className="w-full justify-start" asChild>
-                <a href="#" className="flex items-center">
-                  <span className="bg-indigo-100 w-8 h-8 rounded-full flex items-center justify-center text-indigo-600 mr-3">
-                    JV
-                  </span>
-                  Java SDK v1.5.0
-                </a>
+              <Button 
+                variant="outline" 
+                className="w-full justify-start"
+                onClick={() => handleDownloadSDK("Java", "1.5.0")}
+              >
+                <span className="bg-indigo-100 w-8 h-8 rounded-full flex items-center justify-center text-indigo-600 mr-3">
+                  JV
+                </span>
+                Java SDK v1.5.0
               </Button>
-              <Button variant="outline" className="w-full justify-start" asChild>
-                <a href="#" className="flex items-center">
-                  <span className="bg-indigo-100 w-8 h-8 rounded-full flex items-center justify-center text-indigo-600 mr-3">
-                    C#
-                  </span>
-                  .NET SDK v1.4.1
-                </a>
+              <Button 
+                variant="outline" 
+                className="w-full justify-start"
+                onClick={() => handleDownloadSDK(".NET", "1.4.1")}
+              >
+                <span className="bg-indigo-100 w-8 h-8 rounded-full flex items-center justify-center text-indigo-600 mr-3">
+                  C#
+                </span>
+                .NET SDK v1.4.1
               </Button>
             </div>
           </div>
@@ -438,10 +624,11 @@ public class WealthHorizonApi
                 <span>Webhook Integration Guide</span>
               </li>
             </ul>
-            <Button className="flex items-center gap-2 bg-white text-gray-800 hover:bg-gray-100" asChild>
-              <a href="#">
-                Join Developer Program <ExternalLink size={16} />
-              </a>
+            <Button 
+              className="flex items-center gap-2 bg-white text-gray-800 hover:bg-gray-100"
+              onClick={joinDeveloperProgram}
+            >
+              Join Developer Program <ExternalLink size={16} />
             </Button>
           </div>
         </section>

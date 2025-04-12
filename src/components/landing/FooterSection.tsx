@@ -69,7 +69,7 @@ const FooterSection: React.FC = () => {
         <div className="flex flex-col md:flex-row justify-between items-center">
           <p>© 2025 WealthHorizon. All rights reserved.</p>
           <div className="mt-4 md:mt-0">
-            {/* All footer links are removed as requested */}
+            {/* All footer links completely removed per user request */}
           </div>
         </div>
       </div>

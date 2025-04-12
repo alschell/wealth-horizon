@@ -14,7 +14,8 @@ const Navigation: React.FC = () => {
   
   const isOnboarding = location.pathname.includes('/onboarding');
   const isHomePage = location.pathname === '/';
-  const isDashboard = !isOnboarding && !isHomePage;
+  const isLoginPage = location.pathname === '/login';
+  const isDashboard = !isOnboarding && !isHomePage && !isLoginPage;
 
   // Add scroll listener to detect when user scrolls for sticky navigation
   useEffect(() => {
@@ -29,8 +30,8 @@ const Navigation: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [scrolled]);
 
-  // Don't show navigation on onboarding pages
-  if (isOnboarding) {
+  // Don't show navigation on onboarding or login pages
+  if (isOnboarding || isLoginPage) {
     return null;
   }
 
@@ -105,7 +106,7 @@ const Navigation: React.FC = () => {
           
           <div className="flex items-center gap-3">
             <Button variant="ghost" asChild>
-              <Link to="/dashboard">Log In</Link>
+              <Link to="/login">Log In</Link>
             </Button>
             <Button asChild>
               <Link to="/onboarding">Get Started</Link>

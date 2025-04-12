@@ -58,6 +58,11 @@ function App() {
     }
   });
 
+  // Add debugging to identify when App renders
+  React.useEffect(() => {
+    console.log("App component mounted");
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <OnboardingProvider>

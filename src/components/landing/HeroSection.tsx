@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ChevronDown, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -11,6 +11,11 @@ interface HeroSectionProps {
 }
 
 const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToFeatures }) => {
+  // Add debugging
+  useEffect(() => {
+    console.log("HeroSection component mounted");
+  }, []);
+
   return (
     <section className="relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-br from-indigo-50 to-white -z-10"></div>

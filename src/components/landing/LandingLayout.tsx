@@ -1,3 +1,4 @@
+
 import React, { useRef, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import HeroSection from "./HeroSection";
@@ -15,6 +16,11 @@ const LandingLayout: React.FC = () => {
   const testimonialsRef = useRef<HTMLDivElement>(null);
   const contactRef = useRef<HTMLDivElement>(null);
   const aboutRef = useRef<HTMLDivElement>(null);
+
+  // Add debugging
+  useEffect(() => {
+    console.log("LandingLayout component mounted");
+  }, []);
 
   useEffect(() => {
     if (location.hash) {

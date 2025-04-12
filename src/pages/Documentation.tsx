@@ -7,9 +7,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/components/ui/use-toast";
 import { useNavigate } from "react-router-dom";
 
-const API_DOCS_URL = "https://api.wealthhorizon.ai/docs";
-const DEVELOPER_PORTAL_URL = "https://developers.wealthhorizon.ai";
-const SDK_BASE_URL = "https://downloads.wealthhorizon.ai/sdk";
+const API_DOCS_URL = "/api-docs";
+const DEVELOPER_PORTAL_URL = "/developer-portal";
+const SDK_BASE_URL = "/sdk";
 
 const Documentation = () => {
   const { toast } = useToast();
@@ -58,13 +58,7 @@ const Documentation = () => {
         filename = `wealthhorizon-${sdkName.toLowerCase()}-sdk-v${version}.zip`;
     }
     
-    const downloadUrl = `${SDK_BASE_URL}/${filename.toLowerCase()}`;
-    const a = document.createElement('a');
-    a.href = downloadUrl;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+    navigate(`${SDK_BASE_URL}/download/${sdkName.toLowerCase()}/${version}`);
     
     setTimeout(() => {
       toast({
@@ -86,7 +80,7 @@ const Documentation = () => {
     const docsPath = docType.toLowerCase().replace(/\s/g, '-');
     const completeUrl = `${API_DOCS_URL}/${docsPath}`;
     
-    window.open(completeUrl, '_blank');
+    navigate(completeUrl);
     
     setTimeout(() => {
       setOpeningDocs(null);
@@ -100,7 +94,7 @@ const Documentation = () => {
       description: "Redirecting to developer registration portal",
     });
     
-    window.open(`${DEVELOPER_PORTAL_URL}/join`, '_blank');
+    navigate(`${DEVELOPER_PORTAL_URL}/join`);
     
     setTimeout(() => {
       setJoiningProgram(false);

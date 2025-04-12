@@ -56,7 +56,11 @@ import HelpCenter from "./pages/HelpCenter";
 import Security from "./pages/Security";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
-// Removed CookiesPolicy import
+
+// Import new documentation and developer portal pages
+import ApiDocumentation from "./pages/ApiDocumentation";
+import SDKDownload from "./pages/SDKDownload";
+import DeveloperPortal from "./pages/DeveloperPortal";
 
 function App() {
   // Create a query client inside the component
@@ -131,7 +135,13 @@ function App() {
               <Route path="/security" element={<Security />} />
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               <Route path="/terms-of-service" element={<TermsOfService />} />
-              {/* Removed CookiesPolicy route */}
+              
+              {/* New documentation and developer portal routes */}
+              <Route path="/api-docs" element={<ApiDocumentation />} />
+              <Route path="/api-docs/:docType" element={<ApiDocumentation />} />
+              <Route path="/sdk/download/:sdkName/:version" element={<SDKDownload />} />
+              <Route path="/developer-portal" element={<DeveloperPortal />} />
+              <Route path="/developer-portal/:section" element={<DeveloperPortal />} />
               
               <Route path="*" element={<NotFound />} />
             </Routes>

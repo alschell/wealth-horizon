@@ -4,7 +4,7 @@ import { FadeIn } from "@/components/ui/animation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Mail, Phone, MapPin, Send, CheckCircle } from "lucide-react";
+import { Mail, Phone, MapPin, Send, CheckCircle, Linkedin, Twitter, Youtube } from "lucide-react";
 import { toast } from "sonner";
 
 const ContactFormSection: React.FC = () => {

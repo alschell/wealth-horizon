@@ -24,12 +24,12 @@ const CTASection: React.FC = () => {
           </FadeIn>
           <FadeIn delay={0.2}>
             <div className="flex flex-col sm:flex-row gap-4 justify-end">
-              <Button size="lg" className="bg-white text-indigo-600 hover:bg-gray-100 text-md px-8" asChild>
+              <Button size="lg" className="bg-indigo-600 hover:bg-indigo-700 text-white text-md px-8" asChild>
                 <Link to="/onboarding">Get Started</Link>
               </Button>
               <Button 
                 size="lg" 
-                className="bg-white text-indigo-600 hover:bg-gray-100 text-md px-8"
+                className="bg-indigo-600 hover:bg-indigo-700 text-white text-md px-8"
                 onClick={scrollToContact}
               >
                 Contact Sales

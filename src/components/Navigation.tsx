@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { LogOut, Settings, Search, Linkedin, Twitter, Youtube } from 'lucide-react';
+import { LogOut, Settings, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import NotificationsPopover from '@/components/dashboard/notifications/NotificationsPopover';
@@ -108,7 +108,10 @@ const Navigation: React.FC = () => {
             <Button variant="ghost" onClick={() => navigate('/login')}>
               Log In
             </Button>
-            <Button asChild>
+            <Button 
+              className="bg-indigo-600 hover:bg-indigo-700 text-white" 
+              asChild
+            >
               <Link to="/onboarding">Get Started</Link>
             </Button>
           </div>

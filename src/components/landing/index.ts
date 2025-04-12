@@ -6,4 +6,4 @@ export { default as TestimonialsSection } from './TestimonialsSection';
 export { default as CTASection } from './CTASection';
 export { default as FooterSection } from './FooterSection';
 export { default as LandingLayout } from './LandingLayout';
-export { default as ContactFormSection } from './ContactFormSection';
+export { ContactFormSection } from './contact';

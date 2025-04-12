@@ -1,4 +1,3 @@
-
 import React, { useRef, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import HeroSection from "./HeroSection";
@@ -7,7 +6,7 @@ import BenefitsSection from "./BenefitsSection";
 import TestimonialsSection from "./TestimonialsSection";
 import CTASection from "./CTASection";
 import FooterSection from "./FooterSection";
-import ContactFormSection from "./ContactFormSection";
+import { ContactFormSection } from "./contact";
 
 const LandingLayout: React.FC = () => {
   const location = useLocation();
@@ -17,10 +16,9 @@ const LandingLayout: React.FC = () => {
   const contactRef = useRef<HTMLDivElement>(null);
   const aboutRef = useRef<HTMLDivElement>(null);
 
-  // Handle hash navigation when the component mounts or location changes
   useEffect(() => {
     if (location.hash) {
-      const id = location.hash.substring(1); // Remove the # character
+      const id = location.hash.substring(1);
       const element = document.getElementById(id);
       if (element) {
         setTimeout(() => {

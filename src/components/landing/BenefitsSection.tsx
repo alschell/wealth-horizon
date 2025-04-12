@@ -1,6 +1,6 @@
 
 import React from "react";
-import { BarChart3, Shield } from "lucide-react";
+import { BarChart3, Shield, Layers, Clock } from "lucide-react";
 import { FadeIn, StaggerContainer, StaggerItem, ScaleIn } from "@/components/ui/animation";
 import DashboardAnimation from "@/components/animations/DashboardAnimation";
 
@@ -8,7 +8,7 @@ const benefits = [
   {
     title: "Centralized Wealth Management",
     description: "Eliminate data silos and manage all assets, investments, and operations in one unified platform.",
-    icon: <BarChart3 size={24} />,
+    icon: <Layers size={24} />,
   },
   {
     title: "Data-Driven Decision Making",
@@ -18,7 +18,7 @@ const benefits = [
   {
     title: "Operational Efficiency",
     description: "Streamline workflows, automate routine tasks, and reduce manual work to focus on high-value activities.",
-    icon: <BarChart3 size={24} />,
+    icon: <Clock size={24} />,
   },
   {
     title: "Enterprise-Grade Security",

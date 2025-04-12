@@ -21,9 +21,9 @@ export const SearchSection: React.FC<SearchSectionProps> = ({
   return (
     <section className="relative">
       <div className="bg-indigo-50 rounded-xl p-8">
-        <div className="max-w-xl">
+        <div className="max-w-full">
           <h2 className="text-2xl font-semibold text-gray-800 mb-4">How can we help you today?</h2>
-          <p className="text-gray-600 mb-6">
+          <p className="text-gray-600 mb-6 whitespace-normal">
             Search our knowledge base for quick answers or browse through our help articles.
           </p>
           <div className="relative">

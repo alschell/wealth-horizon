@@ -213,7 +213,7 @@ const CookiesPolicy = () => {
           <div className="bg-white rounded-lg p-6 shadow-sm">
             <p className="text-gray-600 mb-2 font-medium">If you have any questions about our Cookies Policy, please contact us at:</p>
             <ul className="space-y-2 text-gray-600">
-              <li>Email: privacy@wealthhorizon.ai</li>
+              <li>Email: contact@wealthhorizon.ai</li>
               <li>Address: 8 The Green STE B, Dover, DE 19901, United States</li>
               <li>Last Updated: April 1, 2025</li>
             </ul>

@@ -48,7 +48,7 @@ const FooterSection: React.FC = () => {
               <li><Link to="/careers" className="hover:text-white transition-colors">Careers</Link></li>
               <li><Link to="/blog" className="hover:text-white transition-colors">Blog</Link></li>
               <li><Link to="/press" className="hover:text-white transition-colors">Press</Link></li>
-              <li><a href="#contact" onClick={(e) => {e.preventDefault(); scrollToSection('contact');}} className="hover:text-white transition-colors">Contact us</a></li>
+              <li><a href="#contact" onClick={(e) => {e.preventDefault(); scrollToSection('contact');}} className="hover:text-white transition-colors">Contact</a></li>
             </ul>
           </div>
           
@@ -70,8 +70,6 @@ const FooterSection: React.FC = () => {
           <p>© 2025 WealthHorizon. All rights reserved.</p>
           <div className="mt-4 md:mt-0">
             <ul className="flex space-x-6">
-              <li><Link to="/privacy-policy" className="hover:text-white transition-colors">Privacy</Link></li>
-              <li><Link to="/terms-of-service" className="hover:text-white transition-colors">Terms</Link></li>
               <li><Link to="/cookies-policy" className="hover:text-white transition-colors">Cookies</Link></li>
             </ul>
           </div>

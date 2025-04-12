@@ -25,6 +25,10 @@ const FeatureAnimation: React.FC<FeatureAnimationProps> = ({ features }) => {
     return () => clearInterval(interval);
   }, [features.length]);
 
+  // Get the current active feature
+  const activeFeature = features[activeFeatureIndex];
+  const ActiveIcon = activeFeature?.icon;
+
   return (
     <div className="bg-white h-full w-full overflow-hidden p-6">
       {/* Header Bar */}
@@ -53,29 +57,32 @@ const FeatureAnimation: React.FC<FeatureAnimationProps> = ({ features }) => {
 
       {/* Main visualization area */}
       <div className="grid grid-cols-3 gap-4 mb-6">
-        {features.slice(0, 3).map((feature, index) => (
-          <motion.div
-            key={`summary-${index}`}
-            className={`bg-white rounded-lg border p-4 shadow-sm ${index === activeFeatureIndex % 3 ? 'border-indigo-300 ring-1 ring-indigo-300' : 'border-gray-100'}`}
-            animate={{ 
-              scale: index === activeFeatureIndex % 3 ? 1.05 : 1,
-              boxShadow: index === activeFeatureIndex % 3 ? "0 8px 30px rgba(0, 0, 0, 0.12)" : "0 1px 3px rgba(0, 0, 0, 0.1)"
-            }}
-            transition={{ duration: 0.3 }}
-          >
-            <div className="flex justify-between items-start mb-2">
-              <div className={`w-8 h-8 rounded-lg text-white flex items-center justify-center ${
-                index === 0 ? 'bg-blue-500' : index === 1 ? 'bg-green-500' : 'bg-amber-500'
-              }`}>
-                <feature.icon size={16} />
+        {features.slice(0, 3).map((feature, index) => {
+          const FeatureIcon = feature.icon;
+          return (
+            <motion.div
+              key={`summary-${index}`}
+              className={`bg-white rounded-lg border p-4 shadow-sm ${index === activeFeatureIndex % 3 ? 'border-indigo-300 ring-1 ring-indigo-300' : 'border-gray-100'}`}
+              animate={{ 
+                scale: index === activeFeatureIndex % 3 ? 1.05 : 1,
+                boxShadow: index === activeFeatureIndex % 3 ? "0 8px 30px rgba(0, 0, 0, 0.12)" : "0 1px 3px rgba(0, 0, 0, 0.1)"
+              }}
+              transition={{ duration: 0.3 }}
+            >
+              <div className="flex justify-between items-start mb-2">
+                <div className={`w-8 h-8 rounded-lg text-white flex items-center justify-center ${
+                  index === 0 ? 'bg-blue-500' : index === 1 ? 'bg-green-500' : 'bg-amber-500'
+                }`}>
+                  <FeatureIcon size={16} />
+                </div>
               </div>
-            </div>
-            <div>
-              <div className="text-xs text-gray-500">{feature.title}</div>
-              <div className="text-sm font-medium">{index === 0 ? "$1.3B" : index === 1 ? "+8.2%" : "AA+"}</div>
-            </div>
-          </motion.div>
-        ))}
+              <div>
+                <div className="text-xs text-gray-500">{feature.title}</div>
+                <div className="text-sm font-medium">{index === 0 ? "$1.3B" : index === 1 ? "+8.2%" : "AA+"}</div>
+              </div>
+            </motion.div>
+          );
+        })}
       </div>
 
       {/* Feature highlight */}
@@ -89,12 +96,12 @@ const FeatureAnimation: React.FC<FeatureAnimationProps> = ({ features }) => {
           className="bg-gray-50 rounded-lg p-5 border border-gray-100 shadow-sm mb-6"
         >
           <div className="flex items-center gap-3 mb-3">
-            <div className={`w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600`}>
-              <features[activeFeatureIndex].icon size={20} />
+            <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600">
+              {ActiveIcon && <ActiveIcon size={20} />}
             </div>
-            <h3 className="text-lg font-semibold text-gray-900">{features[activeFeatureIndex].title}</h3>
+            <h3 className="text-lg font-semibold text-gray-900">{activeFeature?.title}</h3>
           </div>
-          <p className="text-sm text-gray-600">{features[activeFeatureIndex].description}</p>
+          <p className="text-sm text-gray-600">{activeFeature?.description}</p>
         </motion.div>
       </AnimatePresence>
 

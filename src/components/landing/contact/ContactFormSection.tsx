@@ -11,8 +11,10 @@ const ContactFormSection: React.FC = () => {
         <FadeIn>
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Contact Us</h2>
-            <p className="mt-4 text-xl text-gray-600 max-w-3xl mx-auto whitespace-nowrap md:whitespace-normal mx-auto">
-              Have questions about how <span className="text-indigo-600">Wealth</span><span>Horizon</span> can transform your wealth management?
+            <p className="mt-4 text-xl text-gray-600 max-w-3xl mx-auto">
+              <span className="inline-block whitespace-nowrap">
+                Have questions about how <span className="text-indigo-600">Wealth</span>Horizon can transform your wealth management?
+              </span>
             </p>
             <p className="mt-2 text-xl text-gray-600">
               Get in touch with our team.

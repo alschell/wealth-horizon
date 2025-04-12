@@ -10,9 +10,12 @@ const ChatButton = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
   
-  // Hide the chat button on the homepage
+  // Hide the chat button on the homepage and when not logged in
   const isHomePage = location.pathname === '/';
-  if (isHomePage) return null;
+  const isLoggedIn = localStorage.getItem("auth_token") !== null;
+  
+  // Only show the chat button when user is logged in and not on the homepage
+  if (isHomePage || !isLoggedIn) return null;
   
   const toggleChat = () => {
     setIsOpen(!isOpen);

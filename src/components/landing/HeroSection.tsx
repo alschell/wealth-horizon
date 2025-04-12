@@ -46,7 +46,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToFeatures }) => {
               </Button>
             </div>
             <div className="mt-10 flex flex-wrap gap-x-8 gap-y-4 items-center text-sm text-gray-600">
-              {["Bank-level security", "Full compliance", "Real-time analytics"].map((item, index) => (
+              {["SOC 2 certified", "AI-powered insights", "Real-time analytics"].map((item, index) => (
                 <div key={index} className="flex items-center gap-2">
                   <CheckCircle size={16} className="text-indigo-600" />
                   <span>{item}</span>

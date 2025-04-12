@@ -41,15 +41,6 @@ const BenefitsSection: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
-          <ScaleIn delay={0.2}>
-            <div className="relative rounded-xl overflow-hidden shadow-2xl border border-gray-100">
-              <div className="relative aspect-[4/3]">
-                <DashboardAnimation />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent"></div>
-              </div>
-            </div>
-          </ScaleIn>
-          
           <div>
             <StaggerContainer className="space-y-8">
               {benefits.map((benefit, index) => (
@@ -67,6 +58,15 @@ const BenefitsSection: React.FC = () => {
               ))}
             </StaggerContainer>
           </div>
+          
+          <ScaleIn delay={0.2}>
+            <div className="relative rounded-xl overflow-hidden shadow-2xl border border-gray-100">
+              <div className="relative aspect-[4/3]">
+                <DashboardAnimation />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent"></div>
+              </div>
+            </div>
+          </ScaleIn>
         </div>
       </div>
     </section>

@@ -1,7 +1,7 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { LogOut, Settings, Search } from 'lucide-react';
+import { LogOut, Settings, Search, Linkedin, Twitter, Youtube } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import NotificationsPopover from '@/components/dashboard/notifications/NotificationsPopover';
@@ -10,10 +10,24 @@ import { toast } from 'sonner';
 const Navigation: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const [scrolled, setScrolled] = useState(false);
   
   const isOnboarding = location.pathname.includes('/onboarding');
   const isHomePage = location.pathname === '/';
   const isDashboard = !isOnboarding && !isHomePage;
+
+  // Add scroll listener to detect when user scrolls for sticky navigation
+  useEffect(() => {
+    const handleScroll = () => {
+      const isScrolled = window.scrollY > 10;
+      if (isScrolled !== scrolled) {
+        setScrolled(isScrolled);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [scrolled]);
 
   // Don't show navigation on onboarding pages
   if (isOnboarding) {
@@ -47,7 +61,13 @@ const Navigation: React.FC = () => {
   // Landing page navigation
   if (isHomePage) {
     return (
-      <header className="absolute top-0 left-0 right-0 z-50 border-b border-transparent bg-transparent">
+      <header 
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+          scrolled 
+            ? 'bg-white shadow-md border-b border-gray-100' 
+            : 'bg-transparent border-b border-transparent'
+        }`}
+      >
         <nav className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           <div className="flex items-center">
             <Link to="/" className="font-bold text-xl flex items-center">
@@ -98,7 +118,7 @@ const Navigation: React.FC = () => {
 
   // Dashboard navigation (original)
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-white">
+    <header className="sticky top-0 z-50 w-full border-b bg-white shadow-sm">
       <div className="flex h-16 items-center justify-between mx-auto max-w-7xl px-6">
         <div className="flex items-center">
           <Link to="/dashboard" className="font-bold text-xl flex items-center">

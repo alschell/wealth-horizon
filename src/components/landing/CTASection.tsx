@@ -19,7 +19,7 @@ const CTASection: React.FC = () => {
           <FadeIn>
             <h2 className="text-3xl md:text-4xl font-bold text-white">Ready to Optimize Your Wealth Management?</h2>
             <p className="mt-4 text-xl text-indigo-100 max-w-2xl">
-              Join leading family offices and institutions that have transformed their operations with <span className="font-semibold">Wealth<span className="text-white">Horizon</span></span>.
+              Join leading family offices and institutions that have transformed their operations with <span className="font-semibold"><span className="text-indigo-200">Wealth</span><span className="text-white">Horizon</span></span>.
             </p>
           </FadeIn>
           <FadeIn delay={0.2}>

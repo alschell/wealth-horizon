@@ -13,12 +13,32 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
+const companyTypes = [
+  "Aggregator",
+  "Asset Manager",
+  "Advisor",
+  "Broker Dealer",
+  "Family Office",
+  "Institutional",
+  "Other"
+];
+
+const inquiryTypes = [
+  "Speak with a sales representative",
+  "Request a demo",
+  "Get information on our partnership program",
+  "Other"
+];
 
 const ContactForm: React.FC = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     company: "",
+    companyType: "",
+    inquiryType: "",
     message: ""
   });
   
@@ -29,6 +49,10 @@ const ContactForm: React.FC = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSelectChange = (field: string, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -51,6 +75,8 @@ const ContactForm: React.FC = () => {
           name: "",
           email: "",
           company: "",
+          companyType: "",
+          inquiryType: "",
           message: ""
         });
         setIsSuccess(false);
@@ -68,34 +94,33 @@ const ContactForm: React.FC = () => {
         <h3 className="text-2xl font-bold text-gray-900 mb-6">Send us a message</h3>
         
         <form onSubmit={handleSubmit} className="space-y-6 flex-1 flex flex-col">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-                Full Name <span className="text-red-500">*</span>
-              </label>
-              <Input 
-                id="name" 
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                required 
-                placeholder="John Doe" 
-              />
-            </div>
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                Email Address <span className="text-red-500">*</span>
-              </label>
-              <Input 
-                id="email" 
-                name="email"
-                type="email" 
-                value={formData.email}
-                onChange={handleChange}
-                required 
-                placeholder="john@example.com" 
-              />
-            </div>
+          <div>
+            <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+              Full Name <span className="text-red-500">*</span>
+            </label>
+            <Input 
+              id="name" 
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              required 
+              placeholder="John Doe" 
+            />
+          </div>
+          
+          <div>
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+              Email Address <span className="text-red-500">*</span>
+            </label>
+            <Input 
+              id="email" 
+              name="email"
+              type="email" 
+              value={formData.email}
+              onChange={handleChange}
+              required 
+              placeholder="john@example.com" 
+            />
           </div>
           
           <div>
@@ -109,6 +134,48 @@ const ContactForm: React.FC = () => {
               onChange={handleChange}
               placeholder="Your Company" 
             />
+          </div>
+          
+          <div>
+            <label htmlFor="companyType" className="block text-sm font-medium text-gray-700 mb-1">
+              Type of Company
+            </label>
+            <Select
+              value={formData.companyType}
+              onValueChange={(value) => handleSelectChange("companyType", value)}
+            >
+              <SelectTrigger id="companyType" className="w-full">
+                <SelectValue placeholder="Select company type" />
+              </SelectTrigger>
+              <SelectContent>
+                {companyTypes.map((type) => (
+                  <SelectItem key={type} value={type}>
+                    {type}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          
+          <div>
+            <label htmlFor="inquiryType" className="block text-sm font-medium text-gray-700 mb-1">
+              Type of Inquiry
+            </label>
+            <Select
+              value={formData.inquiryType}
+              onValueChange={(value) => handleSelectChange("inquiryType", value)}
+            >
+              <SelectTrigger id="inquiryType" className="w-full">
+                <SelectValue placeholder="Select inquiry type" />
+              </SelectTrigger>
+              <SelectContent>
+                {inquiryTypes.map((type) => (
+                  <SelectItem key={type} value={type}>
+                    {type}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
           
           <div className="flex-1 flex flex-col">

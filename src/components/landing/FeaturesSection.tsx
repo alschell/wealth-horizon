@@ -7,16 +7,6 @@ import FeatureAnimation from "@/components/animations/FeatureAnimation";
 // Define the features with the correct icon type
 const features = [
   {
-    title: "Comprehensive Dashboard",
-    description: "Get a holistic view of your wealth across all your banks, brokers and custodians.",
-    icon: LineChart
-  },
-  {
-    title: "Real-time Analytics",
-    description: "Monitor your investments with real-time updates and customizable dashboards.",
-    icon: BarChart3
-  },
-  {
     title: "Advanced Reporting",
     description: "Create custom reports with detailed insights and easy-to-understand visualizations.",
     icon: FileText
@@ -25,6 +15,16 @@ const features = [
     title: "Compliance Management",
     description: "Stay ahead of regulatory requirements with automated compliance monitoring.",
     icon: Shield
+  },
+  {
+    title: "Comprehensive Dashboard",
+    description: "Get a holistic view of your wealth across all your banks, brokers and custodians.",
+    icon: LineChart
+  },
+  {
+    title: "Real-time Analytics",
+    description: "Monitor your investments with real-time updates and customizable dashboards.",
+    icon: BarChart3
   },
   {
     title: "Risk Management",

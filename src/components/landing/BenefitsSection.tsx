@@ -16,14 +16,14 @@ const benefits = [
     icon: <BarChart3 size={24} />,
   },
   {
-    title: "Operational Efficiency",
-    description: "Streamline workflows, automate routine tasks, and reduce manual work to focus on high-value activities.",
-    icon: <Clock size={24} />,
-  },
-  {
     title: "Enterprise-Grade Security",
     description: "Safeguard sensitive financial data with bank-level security, encryption, and access controls.",
     icon: <Shield size={24} />,
+  },
+  {
+    title: "Operational Efficiency",
+    description: "Streamline workflows, automate routine tasks, and reduce manual work to focus on high-value activities.",
+    icon: <Clock size={24} />,
   },
 ];
 

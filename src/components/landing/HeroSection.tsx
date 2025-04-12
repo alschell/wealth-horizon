@@ -34,7 +34,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToFeatures }) => {
             </p>
             <div className="mt-10 flex flex-col sm:flex-row gap-4">
               <Button size="lg" className="text-md px-8" asChild>
-                <Link to="/onboarding">Get Started</Link>
+                <Link to="/contact">Contact us</Link>
               </Button>
               <Button
                 variant="outline"

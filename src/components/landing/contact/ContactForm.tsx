@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -154,14 +155,14 @@ const ContactForm: React.FC = () => {
       </div>
 
       <Dialog open={showSuccessModal} onOpenChange={setShowSuccessModal}>
-        <DialogContent className="max-w-md p-0 overflow-hidden rounded-xl">
-          <div className="bg-gradient-to-br from-indigo-50 to-white p-6 pb-0">
-            <div className="flex justify-center mb-2">
+        <DialogContent className="max-w-md p-0 overflow-hidden rounded-xl border-none" hideCloseButton>
+          <div className="bg-gradient-to-br from-indigo-50 to-white p-6 flex flex-col items-center justify-center min-h-[250px]">
+            <div className="flex justify-center mb-4">
               <div className="rounded-full bg-gray-50 p-3">
                 <CheckCircle className="h-8 w-8 text-[#4E46DC]" />
               </div>
             </div>
-            <DialogHeader className="pb-6">
+            <DialogHeader>
               <DialogTitle className="text-xl font-semibold text-center">Message Sent Successfully</DialogTitle>
               <DialogDescription className="text-center text-gray-600 mt-2">
                 Thank you for your message.
@@ -169,15 +170,15 @@ const ContactForm: React.FC = () => {
                 We will get back to you within 1-2 working days.
               </DialogDescription>
             </DialogHeader>
+            <DialogFooter className="mt-6">
+              <Button 
+                onClick={closeSuccessModal}
+                className="px-8 bg-black hover:bg-gray-800"
+              >
+                Close
+              </Button>
+            </DialogFooter>
           </div>
-          <DialogFooter className="bg-white p-4 flex justify-center">
-            <Button 
-              onClick={closeSuccessModal}
-              className="px-8 bg-black hover:bg-gray-800"
-            >
-              Close
-            </Button>
-          </DialogFooter>
         </DialogContent>
       </Dialog>
     </>

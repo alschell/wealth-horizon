@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { LogOut, Settings, Search } from 'lucide-react';
@@ -63,7 +62,7 @@ const Navigation: React.FC = () => {
             : 'bg-transparent border-b border-transparent'
         }`}
       >
-        <nav className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+        <nav className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center">
             <Link to="/" className="font-bold text-xl flex items-center">
               <span className="text-indigo-600">Wealth</span>

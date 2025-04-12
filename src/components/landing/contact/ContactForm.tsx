@@ -67,10 +67,10 @@ const ContactForm: React.FC = () => {
 
   return (
     <>
-      <div className="bg-white rounded-2xl shadow-sm p-8 border border-gray-200 h-[600px]">
+      <div className="bg-white rounded-2xl shadow-sm p-8 border border-gray-200 h-[600px] flex flex-col">
         <h3 className="text-2xl font-bold text-gray-900 mb-6">Send us a message</h3>
         
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6 flex-1 flex flex-col">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
@@ -114,7 +114,7 @@ const ContactForm: React.FC = () => {
             />
           </div>
           
-          <div>
+          <div className="flex-1 flex flex-col">
             <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
               Message <span className="text-red-500">*</span>
             </label>
@@ -125,8 +125,7 @@ const ContactForm: React.FC = () => {
               onChange={handleChange}
               required
               placeholder="Tell us about your needs and how we can help"
-              rows={6}
-              className="resize-none"
+              className="resize-none flex-1"
             />
           </div>
           
@@ -159,20 +158,25 @@ const ContactForm: React.FC = () => {
       </div>
 
       <Dialog open={showSuccessModal} onOpenChange={setShowSuccessModal}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle className="text-center">Message Sent Successfully</DialogTitle>
-            <DialogDescription className="text-center">
-              Thank you for your message. We will get back to you within 1-2 working days.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="flex justify-center items-center py-4">
-            <div className="rounded-full bg-green-100 p-3">
-              <CheckCircle className="h-8 w-8 text-green-600" />
+        <DialogContent className="max-w-md p-0 overflow-hidden rounded-xl">
+          <div className="bg-gradient-to-br from-indigo-50 to-white p-6 pb-0">
+            <div className="flex justify-center mb-2">
+              <div className="rounded-full bg-green-100 p-3">
+                <CheckCircle className="h-8 w-8 text-green-600" />
+              </div>
             </div>
+            <DialogHeader className="pb-6">
+              <DialogTitle className="text-xl font-semibold text-center">Message Sent Successfully</DialogTitle>
+              <DialogDescription className="text-center text-gray-600 mt-2">
+                Thank you for your message. We will get back to you within 1-2 working days.
+              </DialogDescription>
+            </DialogHeader>
           </div>
-          <DialogFooter className="sm:justify-center">
-            <Button onClick={closeSuccessModal}>
+          <DialogFooter className="bg-white p-4 flex justify-center">
+            <Button 
+              onClick={closeSuccessModal}
+              className="px-8 bg-black hover:bg-gray-800"
+            >
               Close
             </Button>
           </DialogFooter>

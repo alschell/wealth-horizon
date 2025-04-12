@@ -33,7 +33,7 @@ const FooterSection: React.FC = () => {
           <div>
             <h4 className="text-white font-semibold mb-4">Solutions</h4>
             <ul className="space-y-2">
-              <li><Link to="/dashboard" className="hover:text-white transition-colors">Portfolio Management</Link></li>
+              <li><Link to="/portfolio-management" className="hover:text-white transition-colors">Portfolio Management</Link></li>
               <li><Link to="/trading" className="hover:text-white transition-colors">Trading</Link></li>
               <li><Link to="/analyze-wealth" className="hover:text-white transition-colors">Wealth Analysis</Link></li>
               <li><Link to="/reporting" className="hover:text-white transition-colors">Reporting</Link></li>
@@ -44,11 +44,11 @@ const FooterSection: React.FC = () => {
           <div>
             <h4 className="text-white font-semibold mb-4">Company</h4>
             <ul className="space-y-2">
-              <li><button onClick={() => scrollToSection('about')} className="hover:text-white transition-colors">About Us</button></li>
+              <li><Link to="/about" className="hover:text-white transition-colors">About Us</Link></li>
               <li><Link to="/careers" className="hover:text-white transition-colors">Careers</Link></li>
               <li><Link to="/blog" className="hover:text-white transition-colors">Blog</Link></li>
               <li><Link to="/press" className="hover:text-white transition-colors">Press</Link></li>
-              <li><button onClick={() => scrollToSection('contact')} className="hover:text-white transition-colors">Contact</button></li>
+              <li><Link to="/contact" className="hover:text-white transition-colors">Contact</Link></li>
             </ul>
           </div>
           

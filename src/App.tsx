@@ -46,6 +46,19 @@ import LandingPage from "./pages/LandingPage";
 import Login from "./pages/Login";
 import ResetPassword from "./pages/ResetPassword";
 
+// Import new pages
+import About from "./pages/About";
+import PortfolioManagement from "./pages/PortfolioManagement";
+import Blog from "./pages/Blog";
+import Press from "./pages/Press";
+import Careers from "./pages/Careers";
+import Documentation from "./pages/Documentation";
+import HelpCenter from "./pages/HelpCenter";
+import Security from "./pages/Security";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsOfService from "./pages/TermsOfService";
+import CookiesPolicy from "./pages/CookiesPolicy";
+
 function App() {
   // Create a query client inside the component
   const queryClient = new QueryClient({
@@ -109,16 +122,18 @@ function App() {
               <Route path="/calendar" element={<Calendar />} />
               <Route path="/contact" element={<Contact />} />
               
-              {/* Footer link pages */}
-              <Route path="/careers" element={<LegacyPage />} />
-              <Route path="/blog" element={<LegacyPage />} />
-              <Route path="/press" element={<LegacyPage />} />
-              <Route path="/documentation" element={<LegacyPage />} />
-              <Route path="/help-center" element={<LegacyPage />} />
-              <Route path="/security" element={<LegacyPage />} />
-              <Route path="/privacy-policy" element={<LegacyPage />} />
-              <Route path="/terms-of-service" element={<LegacyPage />} />
-              <Route path="/cookies-policy" element={<LegacyPage />} />
+              {/* New routes for footer links */}
+              <Route path="/about" element={<About />} />
+              <Route path="/portfolio-management" element={<PortfolioManagement />} />
+              <Route path="/careers" element={<Careers />} />
+              <Route path="/blog" element={<Blog />} />
+              <Route path="/press" element={<Press />} />
+              <Route path="/documentation" element={<Documentation />} />
+              <Route path="/help-center" element={<HelpCenter />} />
+              <Route path="/security" element={<Security />} />
+              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+              <Route path="/terms-of-service" element={<TermsOfService />} />
+              <Route path="/cookies-policy" element={<CookiesPolicy />} />
               
               <Route path="*" element={<NotFound />} />
             </Routes>

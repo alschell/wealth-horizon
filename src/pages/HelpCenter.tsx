@@ -120,7 +120,7 @@ const HelpCenter = () => {
             <div className="bg-white border border-gray-100 rounded-lg p-6 shadow-sm">
               <h3 className="text-lg font-semibold text-gray-800 mb-3">How do I connect my financial accounts?</h3>
               <p className="text-gray-600">
-                You can connect your accounts through our secure integration system. Navigate to Settings > Integrations and select your financial institution from the list of available providers. Follow the prompts to securely connect your accounts.
+                You can connect your accounts through our secure integration system. Navigate to Settings {'>'} Integrations and select your financial institution from the list of available providers. Follow the prompts to securely connect your accounts.
               </p>
             </div>
             <div className="bg-white border border-gray-100 rounded-lg p-6 shadow-sm">

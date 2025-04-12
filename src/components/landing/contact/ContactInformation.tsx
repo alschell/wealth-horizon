@@ -1,59 +1,48 @@
 
 import React from "react";
 import { Mail, Phone, MapPin } from "lucide-react";
-import SocialLinks from "./SocialLinks";
 
 const ContactInformation: React.FC = () => {
   return (
-    <div className="space-y-8">
-      <div>
-        <h3 className="text-2xl font-bold text-gray-900 mb-4">Get in Touch</h3>
-        <p className="text-gray-600">
-          Our team is ready answer any questions you might have and to provide you personalized guidance on your <span className="text-indigo-600">Wealth</span><span>Horizon</span> journey.
-        </p>
-      </div>
-
-      <div className="bg-white rounded-2xl shadow-sm p-8 border border-gray-200 space-y-6">
-        <div className="flex items-start gap-4">
-          <div className="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-lg bg-indigo-50 text-indigo-600">
+    <div className="bg-gray-900 rounded-xl p-8 h-full">
+      <h3 className="text-xl font-semibold text-white mb-6">Contact Information</h3>
+      
+      <div className="space-y-6">
+        <div className="flex items-start">
+          <div className="mt-1 mr-4 flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-gray-800 text-indigo-400">
             <Mail size={20} />
           </div>
           <div>
-            <h4 className="text-lg font-medium text-gray-900">Email Us</h4>
-            <p className="text-gray-600">contact@wealthhorizon.ai</p>
+            <h4 className="text-white font-medium mb-1">Email</h4>
+            <p className="text-gray-400 text-sm">support@wealthhorizon.com</p>
+            <p className="text-gray-400 text-sm">info@wealthhorizon.com</p>
           </div>
         </div>
-
-        <div className="flex items-start gap-4">
-          <div className="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-lg bg-indigo-50 text-indigo-600">
+        
+        <div className="flex items-start">
+          <div className="mt-1 mr-4 flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-gray-800 text-indigo-400">
             <Phone size={20} />
           </div>
           <div>
-            <h4 className="text-lg font-medium text-gray-900">Call Us</h4>
-            <p className="text-gray-600">+1 (831) 273 1336</p>
-            <p className="text-gray-600">Monday-Friday, 9am-6pm EST</p>
+            <h4 className="text-white font-medium mb-1">Phone</h4>
+            <p className="text-gray-400 text-sm">+1 (831) 273-1336</p>
+            <p className="text-gray-400 text-sm">Monday-Friday, 9am-6pm EST</p>
           </div>
         </div>
-
-        <div className="flex items-start gap-4">
-          <div className="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-lg bg-indigo-50 text-indigo-600">
+        
+        <div className="flex items-start">
+          <div className="mt-1 mr-4 flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-gray-800 text-indigo-400">
             <MapPin size={20} />
           </div>
           <div>
-            <h4 className="text-lg font-medium text-gray-900">Visit Us</h4>
-            <p className="text-gray-600">
-              Wealth Horizon LLC<br />
+            <h4 className="text-white font-medium mb-1">Office</h4>
+            <p className="text-gray-400 text-sm">
               8 The Green STE B<br />
               Dover, DE 19901<br />
               United States
             </p>
           </div>
         </div>
-      </div>
-
-      <div>
-        <h4 className="text-lg font-medium text-gray-900 mb-3">Connect With Us</h4>
-        <SocialLinks />
       </div>
     </div>
   );

@@ -105,8 +105,8 @@ const Navigation: React.FC = () => {
           </div>
           
           <div className="flex items-center gap-3">
-            <Button variant="ghost" asChild>
-              <Link to="/login">Log In</Link>
+            <Button variant="ghost" onClick={() => navigate('/login')}>
+              Log In
             </Button>
             <Button asChild>
               <Link to="/onboarding">Get Started</Link>

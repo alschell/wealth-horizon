@@ -1,7 +1,6 @@
-
 import React from "react";
 import PageTemplate from "@/components/shared/PageTemplate";
-import { Lock, Eye, UserCheck, Globe, Shield, Calendar } from "lucide-react";
+import { Lock, Eye, UserCheck, Globe, Shield, Calendar, Cookie } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
@@ -70,6 +69,29 @@ const PrivacyPolicy = () => {
             <div className="bg-white border border-gray-100 rounded-lg p-6 shadow-sm">
               <div className="flex items-center mb-4">
                 <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 mr-4">
+                  <Cookie size={20} />
+                </div>
+                <h3 className="text-lg font-semibold text-gray-800">Cookies and Similar Technologies</h3>
+              </div>
+              <p className="text-gray-600 mb-4">
+                We use cookies and similar tracking technologies to collect and track information about your interactions with our platform.
+              </p>
+              <div className="bg-gray-50 p-3 rounded-md mb-4">
+                <h4 className="font-medium text-gray-700 mb-2">Types of Cookies We Use:</h4>
+                <ul className="list-disc pl-6 space-y-2 text-gray-600">
+                  <li><span className="font-medium">Essential Cookies:</span> Necessary for the platform to function properly and cannot be switched off in our systems.</li>
+                  <li><span className="font-medium">Analytical Cookies:</span> Help us count visits and traffic sources so we can measure and improve platform performance.</li>
+                  <li><span className="font-medium">Functional Cookies:</span> Enable enhanced functionality and personalization features.</li>
+                </ul>
+              </div>
+              <p className="text-gray-600">
+                You can control cookies through your browser settings. However, restricting cookies may impact the functionality of our platform. For more details on how we use cookies, please see our Cookies section below.
+              </p>
+            </div>
+            
+            <div className="bg-white border border-gray-100 rounded-lg p-6 shadow-sm">
+              <div className="flex items-center mb-4">
+                <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 mr-4">
                   <Eye size={20} />
                 </div>
                 <h3 className="text-lg font-semibold text-gray-800">Financial Information</h3>
@@ -126,6 +148,133 @@ const PrivacyPolicy = () => {
                   <li>Enforcing our terms and policies</li>
                 </ul>
               </div>
+            </div>
+          </div>
+        </section>
+        
+        <Separator />
+        
+        <section>
+          <h2 className="text-2xl font-semibold text-gray-800 mb-6">Cookies Policy</h2>
+          <div className="bg-white border border-gray-100 rounded-lg p-6 shadow-sm space-y-6">
+            <div>
+              <h3 className="text-lg font-semibold text-gray-800 mb-3">What Are Cookies?</h3>
+              <p className="text-gray-600 mb-4">
+                Cookies are small text files that are stored on your computer or mobile device when you visit a website. They are widely used to make websites work more efficiently and provide information to the website owners. Cookies help:
+              </p>
+              <ul className="list-disc pl-6 space-y-2 text-gray-600">
+                <li>Remember your preferences and settings</li>
+                <li>Understand how you navigate through our platform</li>
+                <li>Enhance your user experience</li>
+                <li>Provide features like secure login and authentication</li>
+                <li>Analyze how our platform is performing</li>
+              </ul>
+            </div>
+            
+            <div>
+              <h3 className="text-lg font-semibold text-gray-800 mb-3">Types of Cookies We Use</h3>
+              <div className="space-y-4">
+                <div className="bg-gray-50 p-4 rounded-md">
+                  <h4 className="font-medium text-gray-700 mb-2">Essential Cookies</h4>
+                  <p className="text-gray-600">
+                    These cookies are necessary for the platform to function properly and cannot be switched off in our systems. They are usually set in response to actions made by you, such as setting your privacy preferences, logging in, or filling in forms.
+                  </p>
+                  <p className="text-gray-600 mt-2">
+                    Examples: Authentication cookies, security cookies, session management
+                  </p>
+                </div>
+                
+                <div className="bg-gray-50 p-4 rounded-md">
+                  <h4 className="font-medium text-gray-700 mb-2">Analytical Cookies</h4>
+                  <p className="text-gray-600">
+                    These cookies allow us to count visits and traffic sources so we can measure and improve the performance of our platform. They help us know which pages are the most and least popular and see how visitors navigate around the site.
+                  </p>
+                  <p className="text-gray-600 mt-2">
+                    Examples: Google Analytics cookies, performance monitoring, usage statistics
+                  </p>
+                </div>
+                
+                <div className="bg-gray-50 p-4 rounded-md">
+                  <h4 className="font-medium text-gray-700 mb-2">Functional Cookies</h4>
+                  <p className="text-gray-600">
+                    These cookies enable enhanced functionality and personalization features. They may be set by us or by third-party providers whose services we have added to our pages.
+                  </p>
+                  <p className="text-gray-600 mt-2">
+                    Examples: Remembering user preferences, language settings, interface customization
+                  </p>
+                </div>
+              </div>
+            </div>
+            
+            <div>
+              <h3 className="text-lg font-semibold text-gray-800 mb-3">How to Control Cookies</h3>
+              <p className="text-gray-600 mb-4">
+                Most web browsers allow you to control cookies through their settings. You can typically find these settings in the "Options" or "Preferences" menu of your browser. However, please note that restricting cookies may impact the functionality of our platform.
+              </p>
+              <Accordion type="single" collapsible className="w-full">
+                <AccordionItem value="item-1" className="border-b">
+                  <AccordionTrigger className="text-gray-800">Managing Cookies in Chrome</AccordionTrigger>
+                  <AccordionContent className="text-gray-600">
+                    <ol className="list-decimal pl-6 space-y-2">
+                      <li>Click the three dots in the top right corner and select "Settings"</li>
+                      <li>Scroll down and click on "Privacy and security"</li>
+                      <li>Click on "Cookies and other site data"</li>
+                      <li>Adjust your cookie settings as needed</li>
+                    </ol>
+                  </AccordionContent>
+                </AccordionItem>
+                <AccordionItem value="item-2" className="border-b">
+                  <AccordionTrigger className="text-gray-800">Managing Cookies in Firefox</AccordionTrigger>
+                  <AccordionContent className="text-gray-600">
+                    <ol className="list-decimal pl-6 space-y-2">
+                      <li>Click the three lines in the top right corner and select "Options"</li>
+                      <li>Click on "Privacy & Security" in the sidebar</li>
+                      <li>Scroll to the "Cookies and Site Data" section</li>
+                      <li>Adjust your cookie settings as needed</li>
+                    </ol>
+                  </AccordionContent>
+                </AccordionItem>
+                <AccordionItem value="item-3" className="border-b">
+                  <AccordionTrigger className="text-gray-800">Managing Cookies in Safari</AccordionTrigger>
+                  <AccordionContent className="text-gray-600">
+                    <ol className="list-decimal pl-6 space-y-2">
+                      <li>Click "Safari" in the menu bar and select "Preferences"</li>
+                      <li>Click on the "Privacy" tab</li>
+                      <li>Adjust your cookie settings in the "Cookies and website data" section</li>
+                    </ol>
+                  </AccordionContent>
+                </AccordionItem>
+                <AccordionItem value="item-4">
+                  <AccordionTrigger className="text-gray-800">Managing Cookies in Edge</AccordionTrigger>
+                  <AccordionContent className="text-gray-600">
+                    <ol className="list-decimal pl-6 space-y-2">
+                      <li>Click the three dots in the top right corner and select "Settings"</li>
+                      <li>Click on "Cookies and site permissions"</li>
+                      <li>Click on "Manage and delete cookies and site data"</li>
+                      <li>Adjust your cookie settings as needed</li>
+                    </ol>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            </div>
+            
+            <div>
+              <h3 className="text-lg font-semibold text-gray-800 mb-3">Third-Party Cookies</h3>
+              <p className="text-gray-600 mb-4">
+                Our platform may use third-party services that set their own cookies. These third parties may collect your information for their own purposes. We recommend reviewing the privacy policies of these third parties to understand how they use your information.
+              </p>
+              <div className="bg-gray-50 p-4 rounded-md">
+                <h4 className="font-medium text-gray-700 mb-2">Third-Party Services We Use:</h4>
+                <ul className="list-disc pl-6 space-y-2 text-gray-600">
+                  <li>Analytics services (e.g., Google Analytics)</li>
+                  <li>Functionality and content providers</li>
+                  <li>Authentication services</li>
+                  <li>Customer support tools</li>
+                </ul>
+              </div>
+              <p className="text-gray-600 mt-4">
+                We have no control over these third-party cookies. You can disable them by changing your browser settings or using opt-out options provided by these services.
+              </p>
             </div>
           </div>
         </section>

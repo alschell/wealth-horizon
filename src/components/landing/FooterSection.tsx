@@ -69,9 +69,7 @@ const FooterSection: React.FC = () => {
         <div className="flex flex-col md:flex-row justify-between items-center">
           <p>© 2025 WealthHorizon. All rights reserved.</p>
           <div className="mt-4 md:mt-0">
-            <ul className="flex space-x-6">
-              <li><Link to="/cookies-policy" className="hover:text-white transition-colors">Cookies</Link></li>
-            </ul>
+            {/* All footer links are removed as requested */}
           </div>
         </div>
       </div>

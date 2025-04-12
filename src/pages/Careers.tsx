@@ -1,5 +1,6 @@
 
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import PageTemplate from "@/components/shared/PageTemplate";
 import { Briefcase, Users, Heart, Target, Search, MapPin, ChevronRight, X, Upload } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
@@ -48,10 +49,12 @@ const openPositions = [
 ];
 
 const Careers = () => {
+  const navigate = useNavigate();
   const [isResumeModalOpen, setIsResumeModalOpen] = useState(false);
   const [resumeFile, setResumeFile] = useState<File | null>(null);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -69,6 +72,16 @@ const Careers = () => {
     setResumeFile(null);
     setName("");
     setEmail("");
+  };
+
+  const filteredPositions = openPositions.filter(position => 
+    position.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    position.department.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    position.location.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const viewPosition = (position: typeof openPositions[0]) => {
+    navigate(`/careers/${position.id}`, { state: { job: position } });
   };
 
   return (
@@ -121,37 +134,49 @@ const Careers = () => {
               <Input
                 placeholder="Search positions..."
                 className="pl-10 w-full md:w-64"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
           </div>
           
           <div className="bg-white border border-gray-100 rounded-lg shadow-sm overflow-hidden">
-            {openPositions.map((position, index) => (
-              <React.Fragment key={position.id}>
-                {index > 0 && <Separator />}
-                <div className="p-6 hover:bg-gray-50 transition-colors">
-                  <div className="flex flex-col md:flex-row md:items-center justify-between">
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-800">{position.title}</h3>
-                      <div className="flex flex-wrap items-center mt-2 text-sm text-gray-600">
-                        <span className="mr-4 flex items-center">
-                          <Briefcase size={16} className="mr-1" /> {position.department}
-                        </span>
-                        <span className="mr-4 flex items-center">
-                          <MapPin size={16} className="mr-1" /> {position.location}
-                        </span>
-                        <span className="flex items-center">
-                          {position.type}
-                        </span>
+            {filteredPositions.length > 0 ? (
+              filteredPositions.map((position, index) => (
+                <React.Fragment key={position.id}>
+                  {index > 0 && <Separator />}
+                  <div className="p-6 hover:bg-gray-50 transition-colors">
+                    <div className="flex flex-col md:flex-row md:items-center justify-between">
+                      <div>
+                        <h3 className="text-lg font-semibold text-gray-800">{position.title}</h3>
+                        <div className="flex flex-wrap items-center mt-2 text-sm text-gray-600">
+                          <span className="mr-4 flex items-center">
+                            <Briefcase size={16} className="mr-1" /> {position.department}
+                          </span>
+                          <span className="mr-4 flex items-center">
+                            <MapPin size={16} className="mr-1" /> {position.location}
+                          </span>
+                          <span className="flex items-center">
+                            {position.type}
+                          </span>
+                        </div>
                       </div>
+                      <Button 
+                        className="mt-4 md:mt-0 flex items-center" 
+                        variant="outline"
+                        onClick={() => viewPosition(position)}
+                      >
+                        View Position <ChevronRight size={16} className="ml-1" />
+                      </Button>
                     </div>
-                    <Button className="mt-4 md:mt-0 flex items-center" variant="outline">
-                      View Position <ChevronRight size={16} className="ml-1" />
-                    </Button>
                   </div>
-                </div>
-              </React.Fragment>
-            ))}
+                </React.Fragment>
+              ))
+            ) : (
+              <div className="p-8 text-center">
+                <p className="text-gray-600">No positions match your search. Try different keywords or check back later.</p>
+              </div>
+            )}
           </div>
         </section>
         

@@ -1,4 +1,3 @@
-
 import React from "react";  // Explicitly import React
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -133,6 +132,7 @@ function App() {
               <Route path="/about" element={<About />} />
               <Route path="/portfolio-management" element={<PortfolioManagement />} />
               <Route path="/careers" element={<Careers />} />
+              <Route path="/careers/:id" element={<JobDetail />} />
               <Route path="/blog" element={<Blog />} />
               <Route path="/press" element={<Press />} />
               <Route path="/documentation" element={<Documentation />} />

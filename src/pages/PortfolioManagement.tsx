@@ -5,6 +5,29 @@ import { BarChart3, Layers, ArrowUpRight, Shield } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 
 const PortfolioManagement = () => {
+  const features = [
+    {
+      title: "Advanced Analytics",
+      description: "Leverage sophisticated analytics tools for performance attribution, risk assessment, and scenario analysis.",
+      icon: BarChart3,
+    },
+    {
+      title: "Compliance Integration",
+      description: "Ensure adherence to investment mandates and regulatory requirements with built-in compliance monitoring.",
+      icon: Shield,
+    },
+    {
+      title: "Multi-Asset Management",
+      description: "Seamlessly manage investments across equities, fixed income, alternatives, real estate, and private market assets.",
+      icon: Layers,
+    },
+    {
+      title: "Strategic Rebalancing",
+      description: "Implement efficient portfolio rebalancing strategies with automated tools and customizable rules.",
+      icon: ArrowUpRight,
+    },
+  ].sort((a, b) => a.title.localeCompare(b.title));
+
   return (
     <PageTemplate
       title="Portfolio Management"
@@ -30,50 +53,19 @@ const PortfolioManagement = () => {
         <section>
           <h2 className="text-2xl font-semibold text-gray-800 mb-4">Key Features</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="border border-gray-200 p-6 rounded-lg">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600">
-                  <Layers size={20} />
+            {features.map((feature) => (
+              <div key={feature.title} className="border border-gray-200 p-6 rounded-lg">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600">
+                    <feature.icon size={20} />
+                  </div>
+                  <h3 className="font-semibold text-gray-800">{feature.title}</h3>
                 </div>
-                <h3 className="font-semibold text-gray-800">Multi-Asset Management</h3>
+                <p className="text-gray-600">
+                  {feature.description}
+                </p>
               </div>
-              <p className="text-gray-600">
-                Seamlessly manage investments across equities, fixed income, alternatives, real estate, and private market assets.
-              </p>
-            </div>
-            <div className="border border-gray-200 p-6 rounded-lg">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600">
-                  <BarChart3 size={20} />
-                </div>
-                <h3 className="font-semibold text-gray-800">Advanced Analytics</h3>
-              </div>
-              <p className="text-gray-600">
-                Leverage sophisticated analytics tools for performance attribution, risk assessment, and scenario analysis.
-              </p>
-            </div>
-            <div className="border border-gray-200 p-6 rounded-lg">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600">
-                  <ArrowUpRight size={20} />
-                </div>
-                <h3 className="font-semibold text-gray-800">Strategic Rebalancing</h3>
-              </div>
-              <p className="text-gray-600">
-                Implement efficient portfolio rebalancing strategies with automated tools and customizable rules.
-              </p>
-            </div>
-            <div className="border border-gray-200 p-6 rounded-lg">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600">
-                  <Shield size={20} />
-                </div>
-                <h3 className="font-semibold text-gray-800">Compliance Integration</h3>
-              </div>
-              <p className="text-gray-600">
-                Ensure adherence to investment mandates and regulatory requirements with built-in compliance monitoring.
-              </p>
-            </div>
+            ))}
           </div>
         </section>
       </div>

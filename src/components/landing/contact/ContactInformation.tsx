@@ -43,8 +43,7 @@ const ContactInformation: React.FC = () => {
             <p className="text-gray-600">
               Wealth Horizon LLC<br />
               8 The Green STE B<br />
-              Dover<br />
-              Delaware 19901<br />
+              Dover, DE 19901<br />
               United States
             </p>
           </div>

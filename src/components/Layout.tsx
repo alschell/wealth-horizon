@@ -1,5 +1,6 @@
 
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { FadeIn } from '@/components/ui/animation';
 
@@ -18,6 +19,13 @@ const Layout = ({
   withAnimation = false,
   fullHeight = false,
 }: LayoutProps) => {
+  const location = useLocation();
+  
+  // Scroll to top when location changes
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
+  
   const content = (
     <div className={cn(
       'flex flex-col',

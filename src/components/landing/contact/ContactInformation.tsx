@@ -1,6 +1,7 @@
 
 import React from "react";
 import { Mail, Phone, MapPin } from "lucide-react";
+import SocialLinks from "./SocialLinks";
 
 const ContactInformation: React.FC = () => {
   return (
@@ -48,6 +49,11 @@ const ContactInformation: React.FC = () => {
             </p>
           </div>
         </div>
+      </div>
+
+      <div>
+        <h4 className="text-lg font-medium text-gray-900 mb-3">Connect With Us</h4>
+        <SocialLinks />
       </div>
     </div>
   );

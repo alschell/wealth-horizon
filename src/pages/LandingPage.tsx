@@ -9,17 +9,12 @@ const LandingPage: React.FC = () => {
   // Add debugging to check component rendering
   useEffect(() => {
     console.log("LandingPage component mounted");
-    console.log("LandingPage DOM element:", document.body.children);
     
     // Scroll to top when component mounts
     window.scrollTo(0, 0);
   }, [location.pathname]);
 
-  return (
-    <div className="w-full h-full" style={{ display: 'block' }}>
-      <LandingLayout />
-    </div>
-  );
+  return <LandingLayout />;
 };
 
 export default LandingPage;

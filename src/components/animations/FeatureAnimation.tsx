@@ -1,12 +1,13 @@
 
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { LineChart, BarChart3, FileText, Shield, Users, Lock } from "lucide-react";
+import { LineChart, BarChart3, FileText, Shield, Users, Lock, LucideIcon } from "lucide-react";
 
 interface FeatureItem {
   title: string;
   description: string;
-  icon: React.ComponentType<{ size?: number }>;
+  // Update the type to accept LucideIcon components
+  icon: LucideIcon;
 }
 
 interface FeatureAnimationProps {

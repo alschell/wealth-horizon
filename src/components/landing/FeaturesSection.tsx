@@ -1,9 +1,10 @@
 
 import React from "react";
 import { FadeIn, ScaleIn, StaggerContainer, StaggerItem } from "@/components/ui/animation";
-import { LineChart, Shield, BarChart3, FileText, Users, Lock } from "lucide-react";
+import { LineChart, Shield, BarChart3, FileText, Users, Lock, LucideIcon } from "lucide-react";
 import FeatureAnimation from "@/components/animations/FeatureAnimation";
 
+// Define the features with the correct icon type
 const features = [
   {
     title: "Comprehensive Dashboard",

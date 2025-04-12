@@ -7,7 +7,7 @@ import { LineChart, Shield, BarChart3, FileText, Users, Lock } from "lucide-reac
 const features = [
   {
     title: "Comprehensive Dashboard",
-    description: "Get a holistic view of your wealth management across all banks and brokers.",
+    description: "Get a holistic view of your wealth across all your banks, brokers and custodians.",
     icon: LineChart
   },
   {
@@ -32,7 +32,7 @@ const features = [
   },
   {
     title: "Secure Collaboration",
-    description: "Share documents and insights securely with team members and stakeholders.",
+    description: "Invite team members and stakeholders to the platform.",
     icon: Users
   }
 ];

@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import PageTemplate from "@/components/shared/PageTemplate";
-import { Code, Shield, Server, Cpu, Users, Key, CheckCircle, AlertTriangle } from "lucide-react";
+import { Code, Shield, Server, Cpu, Users, Key, CheckCircle, AlertTriangle, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";

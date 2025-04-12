@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FadeIn, ScaleIn } from "@/components/ui/animation";
 import { toast } from "sonner";
+import PlatformAnimation from "@/components/animations/login/PlatformAnimation";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -31,7 +32,7 @@ const Login = () => {
   return (
     <div className="min-h-screen flex items-stretch">
       {/* Left column with form */}
-      <div className="w-full md:w-[500px] bg-white flex flex-col justify-center px-8 py-12 md:px-16 relative z-10">
+      <div className="w-full lg:w-1/2 bg-white flex flex-col justify-center px-8 py-12 md:px-16 relative z-10">
         <div className="max-w-md mx-auto w-full">
           <FadeIn>
             {/* Logo and heading */}
@@ -74,9 +75,9 @@ const Login = () => {
                     <Label htmlFor="password" className="text-gray-700 font-medium text-base">
                       Password
                     </Label>
-                    <a href="#" className="text-sm text-indigo-600 hover:text-indigo-500 font-medium transition-colors">
+                    <Link to="/reset-password" className="text-sm text-indigo-600 hover:text-indigo-500 font-medium transition-colors">
                       Forgot password?
-                    </a>
+                    </Link>
                   </div>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
@@ -160,64 +161,9 @@ const Login = () => {
         </div>
       </div>
 
-      {/* Right column with background image/gradient */}
-      <div className="hidden md:block flex-1 bg-gradient-to-br from-indigo-600 to-purple-700 relative overflow-hidden">
-        <div className="absolute inset-0 bg-black/10 backdrop-blur-[1px] z-10"></div>
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1579547944212-c4f4961a8dd8?q=80&w=2070')] bg-cover bg-center opacity-30 mix-blend-overlay"></div>
-        
-        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-indigo-600/40 to-purple-800/40"></div>
-        
-        <div className="absolute top-0 right-0 w-3/4 h-full">
-          <svg className="h-full w-full text-white/5" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse">
-                <path d="M 50 0 L 0 0 0 50" fill="none" stroke="currentColor" strokeWidth="1"/>
-              </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#grid)" />
-          </svg>
-        </div>
-        
-        <div className="relative z-20 h-full flex flex-col items-center justify-center p-12">
-          <ScaleIn delay={0.3}>
-            <div className="max-w-md text-center">
-              <h2 className="text-3xl font-bold text-white mb-6">Wealth Management Simplified</h2>
-              <p className="text-white/90 text-lg mb-10 leading-relaxed">
-                Access your personalized dashboard to manage investments, track performance, and discover new opportunities.
-              </p>
-
-              <div className="space-y-6">
-                <div className="bg-white/10 backdrop-blur-lg rounded-xl p-6 border border-white/20 transition-all hover:bg-white/15">
-                  <div className="flex items-center space-x-4 mb-2">
-                    <div className="h-10 w-10 rounded-full bg-green-500/20 flex items-center justify-center">
-                      <CheckCircle className="h-5 w-5 text-green-400" />
-                    </div>
-                    <div className="text-left">
-                      <h3 className="text-white font-semibold text-lg">Bank-Level Security</h3>
-                    </div>
-                  </div>
-                  <p className="text-white/80 text-left pl-14 text-sm">
-                    State-of-the-art encryption and advanced security protocols to keep your data safe
-                  </p>
-                </div>
-
-                <div className="bg-white/10 backdrop-blur-lg rounded-xl p-6 border border-white/20 transition-all hover:bg-white/15">
-                  <div className="flex items-center space-x-4 mb-2">
-                    <div className="h-10 w-10 rounded-full bg-indigo-500/20 flex items-center justify-center">
-                      <CheckCircle className="h-5 w-5 text-indigo-400" />
-                    </div>
-                    <div className="text-left">
-                      <h3 className="text-white font-semibold text-lg">Personalized Insights</h3>
-                    </div>
-                  </div>
-                  <p className="text-white/80 text-left pl-14 text-sm">
-                    Custom financial recommendations tailored to your investment goals and risk profile
-                  </p>
-                </div>
-              </div>
-            </div>
-          </ScaleIn>
-        </div>
+      {/* Right column with animation */}
+      <div className="hidden lg:block lg:w-1/2 bg-gradient-to-br from-indigo-600 to-purple-700 relative overflow-hidden">
+        <PlatformAnimation />
       </div>
     </div>
   );

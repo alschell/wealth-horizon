@@ -1,3 +1,4 @@
+
 import React from "react";  // Explicitly import React
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -43,6 +44,7 @@ import Contact from "./pages/Contact";
 import LegacyPage from "./pages/LegacyPages";
 import LandingPage from "./pages/LandingPage";
 import Login from "./pages/Login";
+import ResetPassword from "./pages/ResetPassword";
 
 function App() {
   // Create a query client inside the component
@@ -65,6 +67,7 @@ function App() {
             <Routes>
               <Route path="/" element={<LandingPage />} />
               <Route path="/login" element={<Login />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/onboarding/*" element={<Onboarding />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/dashboard/*" element={<Dashboard />} />

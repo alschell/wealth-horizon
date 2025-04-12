@@ -33,7 +33,7 @@ const PageTemplate: React.FC<PageTemplateProps> = ({
               <h1 className="text-3xl font-bold text-gray-900">{title}</h1>
             </div>
             
-            <p className="text-gray-600 max-w-3xl whitespace-normal text-base leading-relaxed">
+            <p className="text-gray-600 max-w-full whitespace-normal text-base leading-relaxed">
               {description}
             </p>
           </div>

@@ -31,21 +31,6 @@ const ContactInformation: React.FC = () => {
           </div>
         </div>
         
-        {/* Partnership Section - New */}
-        <div className="flex items-start">
-          <div className="mt-1 mr-4 flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-gray-50 text-[#4E46DC]">
-            <Handshake size={20} />
-          </div>
-          <div>
-            <h4 className="text-gray-900 font-medium mb-1">Partnerships</h4>
-            <p className="text-gray-600 text-sm">
-              <a href="mailto:partnerships@wealthhorizon.ai" className="text-indigo-600 hover:text-indigo-800">
-                partnerships@wealthhorizon.ai
-              </a>
-            </p>
-          </div>
-        </div>
-        
         {/* Sales Section */}
         <div className="flex items-start">
           <div className="mt-1 mr-4 flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-gray-50 text-[#4E46DC]">
@@ -91,7 +76,22 @@ const ContactInformation: React.FC = () => {
           </div>
         </div>
         
-        {/* Phone - Moved to bottom */}
+        {/* Partnership Section - Moved after Marketing */}
+        <div className="flex items-start">
+          <div className="mt-1 mr-4 flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-gray-50 text-[#4E46DC]">
+            <Handshake size={20} />
+          </div>
+          <div>
+            <h4 className="text-gray-900 font-medium mb-1">Partnerships</h4>
+            <p className="text-gray-600 text-sm">
+              <a href="mailto:partnerships@wealthhorizon.ai" className="text-indigo-600 hover:text-indigo-800">
+                partnerships@wealthhorizon.ai
+              </a>
+            </p>
+          </div>
+        </div>
+        
+        {/* Phone */}
         <div className="flex items-start">
           <div className="mt-1 mr-4 flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-gray-50 text-[#4E46DC]">
             <Phone size={20} />
@@ -103,7 +103,7 @@ const ContactInformation: React.FC = () => {
           </div>
         </div>
         
-        {/* Address - Moved to bottom */}
+        {/* Address */}
         <div className="flex items-start">
           <div className="mt-1 mr-4 flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-gray-50 text-[#4E46DC]">
             <MapPin size={20} />

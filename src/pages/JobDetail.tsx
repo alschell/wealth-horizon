@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import PageTemplate from "@/components/shared/PageTemplate";
@@ -203,7 +202,7 @@ const JobDetail = () => {
           <Button variant="outline" onClick={() => navigate("/careers")}>
             View All Positions
           </Button>
-          <Button variant="outline" onClick={() => window.open('/help-center', '_blank')}>
+          <Button variant="outline" onClick={() => navigate("/careers/faq")}>
             FAQs
           </Button>
         </div>

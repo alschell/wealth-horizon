@@ -134,6 +134,7 @@ function App() {
               <Route path="/portfolio-management" element={<PortfolioManagement />} />
               <Route path="/careers" element={<Careers />} />
               <Route path="/careers/:id" element={<JobDetail />} />
+              <Route path="/careers/faq" element={<CareersFAQ />} />
               <Route path="/blog" element={<Blog />} />
               <Route path="/press" element={<Press />} />
               <Route path="/documentation" element={<Documentation />} />

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { LogOut, Settings, Search } from 'lucide-react';
@@ -16,6 +15,7 @@ const Navigation: React.FC = () => {
   const isHomePage = location.pathname === '/';
   const isLoginPage = location.pathname === '/login';
   const isResetPasswordPage = location.pathname === '/reset-password';
+  const isJobDetailPage = location.pathname.match(/^\/careers\/\d+$/); // Check if on job detail page
   
   // List of footer pages where navigation should be hidden
   const footerPages = [
@@ -25,7 +25,7 @@ const Navigation: React.FC = () => {
   ];
   
   const isFooterPage = footerPages.includes(location.pathname);
-  const isDashboard = !isOnboarding && !isHomePage && !isLoginPage && !isResetPasswordPage && !isFooterPage;
+  const isDashboard = !isOnboarding && !isHomePage && !isLoginPage && !isResetPasswordPage && !isFooterPage && !isJobDetailPage;
 
   useEffect(() => {
     console.log("Navigation mounted. Homepage:", isHomePage);
@@ -41,7 +41,7 @@ const Navigation: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [scrolled, isHomePage]);
 
-  if (isOnboarding || isLoginPage || isResetPasswordPage || isFooterPage) {
+  if (isOnboarding || isLoginPage || isResetPasswordPage || isFooterPage || isJobDetailPage) {
     return null;
   }
 

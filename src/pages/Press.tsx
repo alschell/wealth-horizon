@@ -114,8 +114,8 @@ const Press = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
               { year: "2025", award: "Innovation of the Year", organization: "Wealth Tech Awards" },
-              { year: "2024", award: "Best Platform for Family Offices", organization: "Private Banking Awards" },
-              { year: "2023", award: "Top 10 FinTech Innovators", organization: "Financial Advisor Magazine" }
+              { year: "2025", award: "Best Platform for Family Offices", organization: "Private Banking Awards" },
+              { year: "2025", award: "Top 10 FinTech Innovators", organization: "Financial Advisor Magazine" }
             ].map((item, index) => (
               <div key={index} className="bg-indigo-50 rounded-lg p-6 text-center">
                 <div className="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 mx-auto mb-4">

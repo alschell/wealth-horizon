@@ -40,7 +40,6 @@ import EntityManagement from "./pages/EntityManagement";
 import ComplianceMonitoring from "./pages/ComplianceMonitoring";
 import Logout from "./pages/Logout";
 import Calendar from "./pages/Calendar";
-import Contact from "./pages/Contact";
 import LegacyPage from "./pages/LegacyPages";
 import LandingPage from "./pages/LandingPage";
 import Login from "./pages/Login";
@@ -120,7 +119,6 @@ function App() {
               <Route path="/compliance-monitoring" element={<ComplianceMonitoring />} />
               <Route path="/logout" element={<Logout />} />
               <Route path="/calendar" element={<Calendar />} />
-              <Route path="/contact" element={<Contact />} />
               
               {/* New routes for footer links */}
               <Route path="/about" element={<About />} />

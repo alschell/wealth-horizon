@@ -27,7 +27,7 @@ const About = () => {
         <section>
           <h2 className="text-2xl font-semibold text-gray-800 mb-4">Our Story</h2>
           <p className="text-gray-600 mb-4">
-            Founded in 2022 by a team of financial experts and technology innovators, WealthHorizon
+            Founded in 2025 by a team of financial experts and technology innovators, WealthHorizon
             emerged from a shared vision to address the unique challenges faced by family offices
             and financial institutions in managing complex wealth portfolios.
           </p>

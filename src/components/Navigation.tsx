@@ -16,7 +16,16 @@ const Navigation: React.FC = () => {
   const isHomePage = location.pathname === '/';
   const isLoginPage = location.pathname === '/login';
   const isResetPasswordPage = location.pathname === '/reset-password';
-  const isDashboard = !isOnboarding && !isHomePage && !isLoginPage && !isResetPasswordPage;
+  
+  // List of footer pages where navigation should be hidden
+  const footerPages = [
+    '/about', '/portfolio-management', '/trading', '/analyze-wealth', '/reporting', 
+    '/compliance-monitoring', '/blog', '/press', '/careers', '/documentation', 
+    '/help-center', '/security', '/privacy-policy', '/terms-of-service', '/cookies-policy'
+  ];
+  
+  const isFooterPage = footerPages.includes(location.pathname);
+  const isDashboard = !isOnboarding && !isHomePage && !isLoginPage && !isResetPasswordPage && !isFooterPage;
 
   useEffect(() => {
     console.log("Navigation mounted. Homepage:", isHomePage);
@@ -32,7 +41,7 @@ const Navigation: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [scrolled, isHomePage]);
 
-  if (isOnboarding || isLoginPage || isResetPasswordPage) {
+  if (isOnboarding || isLoginPage || isResetPasswordPage || isFooterPage) {
     return null;
   }
 

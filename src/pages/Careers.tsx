@@ -1,10 +1,13 @@
 
-import React from "react";
+import React, { useState } from "react";
 import PageTemplate from "@/components/shared/PageTemplate";
-import { Briefcase, Users, Heart, Target, Search, MapPin, ChevronRight } from "lucide-react";
+import { Briefcase, Users, Heart, Target, Search, MapPin, ChevronRight, X, Upload } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogClose } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { toast } from "sonner";
 
 const openPositions = [
   {
@@ -45,6 +48,29 @@ const openPositions = [
 ];
 
 const Careers = () => {
+  const [isResumeModalOpen, setIsResumeModalOpen] = useState(false);
+  const [resumeFile, setResumeFile] = useState<File | null>(null);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setResumeFile(e.target.files[0]);
+    }
+  };
+
+  const handleSubmitResume = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // In a real app, this would send the resume file, name, and email to a server
+    // For now, we'll just show a success toast and close the modal
+    toast.success("Your resume has been submitted! We'll be in touch soon.");
+    setIsResumeModalOpen(false);
+    setResumeFile(null);
+    setName("");
+    setEmail("");
+  };
+
   return (
     <PageTemplate
       title="Careers"
@@ -232,15 +258,95 @@ const Careers = () => {
         </section>
         
         <section className="bg-indigo-600 text-white rounded-xl p-8 text-center">
-          <h2 className="text-2xl font-semibold mb-4">Don't see the right position?</h2>
+          <h2 className="text-2xl font-semibold mb-4 text-white">Don't see the right position?</h2>
           <p className="mb-6 max-w-2xl mx-auto">
             We're always looking for talented individuals to join our team. Send us your resume and let us know how you can contribute to WealthHorizon.
           </p>
-          <Button className="bg-white text-indigo-600 hover:bg-gray-100">
+          <Button 
+            className="bg-white text-indigo-600 hover:bg-gray-100"
+            onClick={() => setIsResumeModalOpen(true)}
+          >
             Submit Your Resume
           </Button>
         </section>
       </div>
+
+      {/* Resume Upload Modal */}
+      <Dialog open={isResumeModalOpen} onOpenChange={setIsResumeModalOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Submit Your Resume</DialogTitle>
+            <DialogDescription>
+              Let us know about your skills and experience. We'll reach out if there's a good fit.
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleSubmitResume} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="name">Full Name</Label>
+              <Input 
+                id="name" 
+                value={name} 
+                onChange={(e) => setName(e.target.value)} 
+                placeholder="John Doe" 
+                required 
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="email">Email Address</Label>
+              <Input 
+                id="email" 
+                type="email" 
+                value={email} 
+                onChange={(e) => setEmail(e.target.value)} 
+                placeholder="john@example.com" 
+                required 
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="resume">Resume</Label>
+              <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                {resumeFile ? (
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-gray-600">{resumeFile.name}</span>
+                    <Button 
+                      type="button" 
+                      variant="ghost" 
+                      size="sm"
+                      onClick={() => setResumeFile(null)}
+                    >
+                      <X size={16} />
+                    </Button>
+                  </div>
+                ) : (
+                  <div>
+                    <Upload className="mx-auto h-12 w-12 text-gray-400" />
+                    <div className="mt-2">
+                      <label htmlFor="resume-upload" className="cursor-pointer text-indigo-600 hover:text-indigo-700">
+                        Upload a file
+                      </label>
+                      <input
+                        id="resume-upload"
+                        name="resume"
+                        type="file"
+                        accept=".pdf,.doc,.docx"
+                        className="sr-only"
+                        onChange={handleFileChange}
+                      />
+                      <p className="text-xs text-gray-500 mt-1">PDF, DOC, or DOCX up to 5MB</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+            <div className="flex justify-end gap-2">
+              <DialogClose asChild>
+                <Button type="button" variant="outline">Cancel</Button>
+              </DialogClose>
+              <Button type="submit" disabled={!resumeFile || !name || !email}>Submit</Button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
     </PageTemplate>
   );
 };

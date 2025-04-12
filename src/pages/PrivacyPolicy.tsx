@@ -180,7 +180,7 @@ const PrivacyPolicy = () => {
           </p>
           <div className="bg-white rounded-lg p-6 shadow-sm">
             <ul className="space-y-2 text-gray-600">
-              <li>Email: privacy@wealthhorizon.ai</li>
+              <li>Email: contact@wealthhorizon.ai</li>
               <li>Address: 8 The Green STE B, Dover, DE 19901, United States</li>
               <li>Phone: +1 (831) 273 1336</li>
             </ul>

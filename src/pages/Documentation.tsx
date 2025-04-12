@@ -415,7 +415,7 @@ public class WealthHorizonApi
           <div className="bg-gray-800 text-white rounded-xl p-8">
             <div className="flex items-center mb-4">
               <Link size={24} className="mr-3" />
-              <h2 className="text-xl font-semibold">Developer Resources</h2>
+              <h2 className="text-xl font-semibold text-white">Developer Resources</h2>
             </div>
             <p className="mb-6 text-gray-300">
               Additional resources to help you integrate with the WealthHorizon platform.

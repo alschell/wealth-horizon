@@ -2,31 +2,38 @@
 import React from "react";
 import { FadeIn, ScaleIn, StaggerContainer, StaggerItem } from "@/components/ui/animation";
 import DashboardAnimation from "@/components/animations/DashboardAnimation";
+import { LineChart, Shield, BarChart3, FileText, Users, Lock } from "lucide-react";
 
 const features = [
   {
     title: "Comprehensive Dashboard",
-    description: "Get a holistic view of your wealth management across all banks and brokers."
+    description: "Get a holistic view of your wealth management across all banks and brokers.",
+    icon: LineChart
   },
   {
     title: "Real-time Analytics",
-    description: "Monitor your investments with real-time updates and customizable dashboards."
+    description: "Monitor your investments with real-time updates and customizable dashboards.",
+    icon: BarChart3
   },
   {
     title: "Advanced Reporting",
-    description: "Create custom reports with detailed insights and easy-to-understand visualizations."
+    description: "Create custom reports with detailed insights and easy-to-understand visualizations.",
+    icon: FileText
   },
   {
     title: "Compliance Management",
-    description: "Stay ahead of regulatory requirements with automated compliance monitoring."
+    description: "Stay ahead of regulatory requirements with automated compliance monitoring.",
+    icon: Shield
   },
   {
     title: "Risk Management",
-    description: "Identify and mitigate risks with our sophisticated analysis tools."
+    description: "Identify and mitigate risks with our sophisticated analysis tools.",
+    icon: BarChart3
   },
   {
     title: "Secure Collaboration",
-    description: "Share documents and insights securely with team members and stakeholders."
+    description: "Share documents and insights securely with team members and stakeholders.",
+    icon: Users
   }
 ];
 
@@ -57,7 +64,12 @@ const FeaturesSection: React.FC<{ id?: string }> = ({ id }) => {
             <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 gap-6" delay={0.3}>
               {features.map((feature, index) => (
                 <StaggerItem key={index} className="space-y-2">
-                  <h3 className="text-xl font-semibold text-gray-900">{feature.title}</h3>
+                  <div className="flex items-center gap-2">
+                    <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600">
+                      <feature.icon size={20} />
+                    </div>
+                    <h3 className="text-xl font-semibold text-gray-900">{feature.title}</h3>
+                  </div>
                   <p className="text-gray-600">{feature.description}</p>
                 </StaggerItem>
               ))}

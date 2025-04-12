@@ -20,27 +20,12 @@ export const SupportSection: React.FC = () => {
 
   // Handle support ticket submission
   const submitTicket = () => {
-    navigate("/contact");
+    navigate("/support-ticket");
   };
 
   // Handle downloading a guide
   const downloadGuide = () => {
-    showSuccess(
-      "Download started",
-      "Your guide is being downloaded."
-    );
-    
-    // For demo purposes, let's simulate a download with a timeout
-    setTimeout(() => {
-      // This creates a text file for demo purposes
-      const element = document.createElement("a");
-      const file = new Blob(["This is a sample user guide from WealthHorizon."], { type: 'text/plain' });
-      element.href = URL.createObjectURL(file);
-      element.download = "WealthHorizon-UserGuide.txt";
-      document.body.appendChild(element);
-      element.click();
-      document.body.removeChild(element);
-    }, 500);
+    navigate("/user-guides");
   };
 
   return (
@@ -115,7 +100,7 @@ export const SupportSection: React.FC = () => {
           <Button 
             variant="outline" 
             className="justify-start h-auto py-4 px-5" 
-            onClick={() => navigate("/community")}
+            onClick={() => navigate("/community-forum")}
           >
             <div className="flex items-center cursor-pointer">
               <MessageCircle size={20} className="mr-3 text-indigo-600" />

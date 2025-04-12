@@ -62,6 +62,11 @@ import ApiDocumentation from "./pages/ApiDocumentation";
 import SDKDownload from "./pages/SDKDownload";
 import DeveloperPortal from "./pages/DeveloperPortal";
 
+// Import newly created help center related pages
+import UserGuides from "./pages/UserGuides";
+import SupportTicket from "./pages/SupportTicket";
+import CommunityForum from "./pages/CommunityForum";
+
 function App() {
   // Create a query client inside the component
   const queryClient = new QueryClient({
@@ -142,6 +147,11 @@ function App() {
               <Route path="/sdk/download/:sdkName/:version" element={<SDKDownload />} />
               <Route path="/developer-portal" element={<DeveloperPortal />} />
               <Route path="/developer-portal/:section" element={<DeveloperPortal />} />
+              
+              {/* New help center related pages */}
+              <Route path="/user-guides" element={<UserGuides />} />
+              <Route path="/support-ticket" element={<SupportTicket />} />
+              <Route path="/community-forum" element={<CommunityForum />} />
               
               <Route path="*" element={<NotFound />} />
             </Routes>

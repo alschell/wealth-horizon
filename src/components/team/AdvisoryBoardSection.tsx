@@ -68,6 +68,7 @@ const AdvisoryBoardSection: React.FC<AdvisoryBoardSectionProps> = ({
   const setSortBy = externalOnSortChange || internalSetSortBy;
   
   // Compute filtered advisors when external filtering is used
+  // Fix: Use type assertion to tell TypeScript this ReadonlyArray is compatible
   const filteredAdvisors = externalSearchQuery !== undefined || externalSortBy !== undefined
     ? filterAndSortAdvisors(advisors, searchQuery, sortBy as TeamSortOption)
     : internalFilteredAdvisors;

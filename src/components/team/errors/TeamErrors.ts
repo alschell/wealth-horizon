@@ -10,7 +10,7 @@ export class TeamError extends Error {
   timestamp: string;
   
   constructor(message: string, options?: { code?: string; details?: Record<string, any>; cause?: Error }) {
-    super(message);
+    super(message, { cause: options?.cause });
     this.name = 'TeamError';
     this.code = options?.code || 'TEAM_ERROR';
     this.details = options?.details || {};
@@ -29,7 +29,7 @@ export class TeamError extends Error {
       code: this.code,
       details: this.details,
       timestamp: this.timestamp,
-      cause: this.cause ? (this.cause as Error).message : undefined,
+      cause: this.cause instanceof Error ? (this.cause as Error).message : undefined,
       stack: this.stack
     };
   }

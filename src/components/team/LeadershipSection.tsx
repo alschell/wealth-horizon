@@ -68,6 +68,7 @@ const LeadershipSection: React.FC<LeadershipSectionProps> = ({
   const setSortBy = externalOnSortChange || internalSetSortBy;
   
   // Compute filtered members when external filtering is used
+  // Fix: Use type assertion to tell TypeScript this ReadonlyArray is compatible
   const filteredMembers = externalSearchQuery !== undefined || externalSortBy !== undefined
     ? filterAndSortTeamMembers(teamMembers, searchQuery, sortBy as TeamSortOption)
     : internalFilteredMembers;

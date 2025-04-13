@@ -13,12 +13,18 @@ export type ToastProps = {
  * Custom toast function that wraps Sonner toast with our preferred API
  */
 export function toast(props: ToastProps) {
-  return sonnerToast(props.title || "", {
+  const toastOptions: ExternalToast = {
     description: props.description,
     className: props.className,
     duration: props.duration,
-    intent: props.variant === "destructive" ? "error" : undefined
-  });
+  };
+
+  // Add variant-specific styling
+  if (props.variant === "destructive") {
+    toastOptions.className = `${toastOptions.className || ''} bg-destructive text-destructive-foreground`.trim();
+  }
+
+  return sonnerToast(props.title || "", toastOptions);
 }
 
 /**

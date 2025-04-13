@@ -1,59 +1,48 @@
 
-import { FieldValues, UseFormRegister, Path, RegisterOptions } from 'react-hook-form';
+import { RegisterOptions, UseFormReturn, FieldValues, Path } from 'react-hook-form';
 
 /**
- * Creates a function that registers a field with react-hook-form
- * and provides appropriate ARIA attributes
+ * Helper function to register a field with react-hook-form with improved type safety
+ * 
+ * @param form - The form instance from useForm
+ * @param name - Field name
+ * @param options - Registration options
+ * @returns The field registration properties
  */
 export function registerField<T extends FieldValues>(
-  register: UseFormRegister<T>,
-  errors: Record<string, any>,
+  form: UseFormReturn<T>,
+  name: Path<T>,
+  options?: Omit<RegisterOptions<T, Path<T>>, 'deps'> & {
+    deps?: Path<T>[] | Path<T>;
+  }
+): ReturnType<UseFormReturn<T>['register']> {
+  return form.register(name, options as RegisterOptions<T, Path<T>>);
+}
+
+/**
+ * Helper to create a field error accessor
+ * 
+ * @param form - The form instance from useForm
+ * @returns A function to get field errors
+ */
+export function createErrorAccessor<T extends FieldValues>(
+  form: UseFormReturn<T>
 ) {
-  return <K extends Path<T>>(
-    name: K,
-    options?: RegisterOptions<T, K>,
-    ariaLabel?: string
-  ) => {
-    const hasError = !!errors[name];
-    const errorId = hasError ? `${String(name)}-error` : undefined;
-    
-    return {
-      ...register(name, options),
-      'aria-invalid': hasError,
-      'aria-describedby': errorId,
-      'aria-label': ariaLabel,
-      id: String(name),
-    };
+  return (name: Path<T>): string | undefined => {
+    return form.formState.errors[name]?.message as string | undefined;
   };
 }
 
 /**
- * Helper function to get the error message for a field
+ * Helper to check if a field has an error
+ * 
+ * @param form - The form instance from useForm
+ * @returns A function to check if a field has an error
  */
-export function getFieldError<T extends FieldValues>(
-  errors: Record<string, any>,
-  name: Path<T>
-): string | undefined {
-  const error = errors[name];
-  return error?.message;
-}
-
-/**
- * Helper to create form field IDs and ARIA attributes
- */
-export function getFieldAttrs<T extends FieldValues>(
-  name: Path<T>,
-  errors: Record<string, any>,
-  ariaLabel?: string
+export function createErrorChecker<T extends FieldValues>(
+  form: UseFormReturn<T>
 ) {
-  const hasError = !!errors[name];
-  const errorId = hasError ? `${String(name)}-error` : undefined;
-  
-  return {
-    id: String(name),
-    name,
-    'aria-invalid': hasError,
-    'aria-describedby': errorId,
-    'aria-label': ariaLabel,
+  return (name: Path<T>): boolean => {
+    return !!form.formState.errors[name];
   };
 }

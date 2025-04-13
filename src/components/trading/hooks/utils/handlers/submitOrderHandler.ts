@@ -12,10 +12,13 @@ interface SubmitOrderHandlerProps {
   timeInForce: string;
   order: Partial<TradeOrder>;
   leverage: number;
-  gtdDate?: Date; // Added gtdDate property
+  gtdDate?: Date;
   resetForm: () => void;
 }
 
+/**
+ * Custom hook for handling order submission in trading application
+ */
 export const useSubmitOrderHandler = ({
   selectedInstrument,
   price,
@@ -31,17 +34,32 @@ export const useSubmitOrderHandler = ({
 }: SubmitOrderHandlerProps) => {
   const { toast } = useToast();
 
+  /**
+   * Handles the submission of a trade order
+   */
   const handleSubmitOrder = () => {
+    if (!selectedInstrument) {
+      toast({
+        title: "Error",
+        description: "No instrument selected",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    // Calculate price based on order execution type
     const calculatedPrice = orderExecutionType === "market"
-      ? selectedInstrument?.currentPrice || 0
+      ? selectedInstrument.currentPrice || 0
       : Number(price);
-      
+    
+    // Calculate total amount including leverage
     const totalAmount = Number(quantity) * calculatedPrice * (leverage || 1);
     
+    // Construct the complete order object
     const completeOrder: TradeOrder = {
       ...order as TradeOrder,
       orderType: currentOrderType,
-      instrumentId: selectedInstrument?.id || "",
+      instrumentId: selectedInstrument.id || "",
       quantity: Number(quantity),
       price: calculatedPrice,
       totalAmount,
@@ -51,7 +69,7 @@ export const useSubmitOrderHandler = ({
       leverage: leverage || 1
     };
 
-    // Add gtdDate to the completeOrder if timeInForce is gtd
+    // Add gtdDate to the order if timeInForce is gtd
     if (timeInForce === "gtd" && gtdDate) {
       (completeOrder as any).gtdDate = gtdDate;
     }
@@ -59,9 +77,10 @@ export const useSubmitOrderHandler = ({
     // In a real app, you would submit this order to your backend
     console.log("Submitting order:", completeOrder);
 
+    // Notify the user
     toast({
       title: "Order Submitted",
-      description: `Your ${currentOrderType} order for ${quantity} ${selectedInstrument?.symbol} has been submitted successfully.`,
+      description: `Your ${currentOrderType} order for ${quantity} ${selectedInstrument.symbol} has been submitted successfully.`
     });
 
     // Reset form to initial state

@@ -1,7 +1,18 @@
+
 import { useState, useEffect } from "react";
 import { OrderType, TradeOrder } from "../../../types";
 import { useToast } from "@/hooks/use-toast";
 
+/**
+ * Hook for managing trading allocations
+ * 
+ * @param orderType Type of order (buy/sell)
+ * @param selectedInstrument Selected trading instrument
+ * @param quantity Order quantity
+ * @param price Order price
+ * @param order Current trade order
+ * @param setOrder Function to update the order
+ */
 export const useTradingAllocation = (
   orderType: OrderType,
   selectedInstrument: any,
@@ -23,9 +34,11 @@ export const useTradingAllocation = (
       if (orderType === "buy") {
         updatedOrder.fundingAllocations = updatedOrder.fundingAllocations || [];
         updatedOrder.depositAllocations = updatedOrder.depositAllocations || [];
-      } else {
+      } else if (orderType === "sell") {
         updatedOrder.instrumentAllocations = updatedOrder.instrumentAllocations || [];
         updatedOrder.depositAllocations = updatedOrder.depositAllocations || [];
+      } else {
+        throw new Error(`Unsupported order type: ${orderType}`);
       }
       
       setOrder(updatedOrder);
@@ -38,7 +51,7 @@ export const useTradingAllocation = (
         variant: "destructive"
       });
     }
-  }, []);
+  }, [orderType, setOrder, toast]);
 
   // Calculate total amount from quantity and price
   const totalAmount = typeof quantity === 'number' && (typeof price === 'number' || selectedInstrument?.currentPrice)

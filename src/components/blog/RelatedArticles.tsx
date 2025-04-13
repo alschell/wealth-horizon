@@ -16,8 +16,7 @@ export const RelatedArticles: React.FC<RelatedArticlesProps> = ({
   viewBlogPost,
 }) => {
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
-    const img = e.currentTarget;
-    img.src = '/assets/dashboard-fallback.png';
+    e.currentTarget.src = '/assets/dashboard-fallback.png';
   };
 
   // Filter related posts by category or randomly

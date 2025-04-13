@@ -31,8 +31,7 @@ export const BlogPostView: React.FC<BlogPostViewProps> = ({
   };
 
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
-    const img = e.currentTarget;
-    img.src = '/assets/dashboard-fallback.png';
+    e.currentTarget.src = '/assets/dashboard-fallback.png';
   };
   
   return (

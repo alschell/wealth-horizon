@@ -10,8 +10,7 @@ interface BlogCardProps {
 
 export const BlogCard: React.FC<BlogCardProps> = ({ post, onClick }) => {
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
-    const img = e.currentTarget;
-    img.src = '/assets/dashboard-fallback.png';
+    e.currentTarget.src = '/assets/dashboard-fallback.png';
   };
 
   return (

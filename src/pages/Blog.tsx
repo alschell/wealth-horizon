@@ -1,8 +1,8 @@
 
 import React, { useState } from "react";
 import PageTemplate from "@/components/shared/PageTemplate";
-import { FileText, Separator } from "lucide-react";
-import { Separator as UISeparator } from "@/components/ui/separator";
+import { FileText } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
 import { BlogList } from "@/components/blog/BlogList";
 import { BlogPostView } from "@/components/blog/BlogPost";
 import { PopularTopics } from "@/components/blog/PopularTopics";
@@ -133,7 +133,7 @@ const Blog = () => {
               viewBlogPost={viewBlogPost}
             />
             
-            <UISeparator />
+            <Separator />
             
             <PopularTopics 
               topics={popularTopics}

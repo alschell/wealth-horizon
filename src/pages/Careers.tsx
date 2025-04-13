@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PageTemplate from "@/components/shared/PageTemplate";
@@ -306,7 +307,9 @@ const Careers = () => {
           </DialogHeader>
           <form onSubmit={handleSubmitResume} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="name">Full Name</Label>
+              <Label htmlFor="name" className="flex items-center">
+                Full Name <span className="text-purple-600 ml-1">*</span>
+              </Label>
               <Input 
                 id="name" 
                 value={name} 
@@ -316,7 +319,9 @@ const Careers = () => {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="email">Email Address</Label>
+              <Label htmlFor="email" className="flex items-center">
+                Email Address <span className="text-purple-600 ml-1">*</span>
+              </Label>
               <Input 
                 id="email" 
                 type="email" 
@@ -327,7 +332,21 @@ const Careers = () => {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="resume">Resume</Label>
+              <Label htmlFor="phone" className="flex items-center">
+                Phone Number <span className="text-purple-600 ml-1">*</span>
+              </Label>
+              <Input 
+                id="phone" 
+                value={phone} 
+                onChange={(e) => setPhone(e.target.value)} 
+                placeholder="+1 (555) 123-4567" 
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="resume" className="flex items-center">
+                Resume <span className="text-purple-600 ml-1">*</span>
+              </Label>
               <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
                 {resumeFile ? (
                   <div className="flex items-center justify-between">
@@ -355,6 +374,7 @@ const Careers = () => {
                         accept=".pdf,.doc,.docx"
                         className="sr-only"
                         onChange={handleFileChange}
+                        required
                       />
                       <p className="text-xs text-gray-500 mt-1">PDF, DOC, or DOCX up to 5MB</p>
                     </div>
@@ -366,7 +386,7 @@ const Careers = () => {
               <DialogClose asChild>
                 <Button type="button" variant="outline">Cancel</Button>
               </DialogClose>
-              <Button type="submit" disabled={!resumeFile || !name || !email}>Submit</Button>
+              <Button type="submit" disabled={!resumeFile || !name || !email || !phone}>Submit</Button>
             </div>
           </form>
         </DialogContent>

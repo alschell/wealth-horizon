@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import PageTemplate from "@/components/shared/PageTemplate";
@@ -219,7 +220,9 @@ const JobDetail = () => {
           </DialogHeader>
           <form onSubmit={handleSubmitApplication} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="name">Full Name</Label>
+              <Label htmlFor="name" className="flex items-center">
+                Full Name <span className="text-purple-600 ml-1">*</span>
+              </Label>
               <Input 
                 id="name" 
                 value={name} 
@@ -229,7 +232,9 @@ const JobDetail = () => {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="email">Email Address</Label>
+              <Label htmlFor="email" className="flex items-center">
+                Email Address <span className="text-purple-600 ml-1">*</span>
+              </Label>
               <Input 
                 id="email" 
                 type="email" 
@@ -240,16 +245,21 @@ const JobDetail = () => {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="phone">Phone Number</Label>
+              <Label htmlFor="phone" className="flex items-center">
+                Phone Number <span className="text-purple-600 ml-1">*</span>
+              </Label>
               <Input 
                 id="phone" 
                 value={phone} 
                 onChange={(e) => setPhone(e.target.value)} 
                 placeholder="+1 (555) 123-4567" 
+                required
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="resume">Resume</Label>
+              <Label htmlFor="resume" className="flex items-center">
+                Resume <span className="text-purple-600 ml-1">*</span>
+              </Label>
               <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
                 {resumeFile ? (
                   <div className="flex items-center justify-between">
@@ -286,7 +296,9 @@ const JobDetail = () => {
               </div>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="coverLetter">Cover Letter (Optional)</Label>
+              <Label htmlFor="coverLetter">
+                Cover Letter
+              </Label>
               <Textarea 
                 id="coverLetter" 
                 value={coverLetter}
@@ -299,7 +311,7 @@ const JobDetail = () => {
               <DialogClose asChild>
                 <Button type="button" variant="outline">Cancel</Button>
               </DialogClose>
-              <Button type="submit" disabled={!resumeFile || !name || !email}>Submit Application</Button>
+              <Button type="submit" disabled={!resumeFile || !name || !email || !phone}>Submit Application</Button>
             </div>
           </form>
         </DialogContent>

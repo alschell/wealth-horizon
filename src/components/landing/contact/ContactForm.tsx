@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -162,24 +161,23 @@ const ContactForm: React.FC = () => {
         </div>
       </form>
 
-      {/* Success Modal */}
+      {/* Success Modal - Improved styling */}
       <Dialog open={showSuccessModal} onOpenChange={setShowSuccessModal}>
-        <DialogContent className="sm:max-w-md flex flex-col items-center justify-center py-8" hideCloseButton>
-          <DialogHeader className="text-center w-full">
-            <div className="mx-auto bg-indigo-50 rounded-full w-16 h-16 flex items-center justify-center mb-5">
-              <Check className="h-8 w-8 text-indigo-600" />
-            </div>
-            <DialogTitle className="text-xl font-semibold text-center w-full">
+        <DialogContent className="sm:max-w-md flex flex-col items-center justify-center p-8" hideCloseButton>
+          <div className="flex flex-col items-center justify-center w-full space-y-6 py-4">
+            <Check className="h-10 w-10 text-[#4E46DC]" />
+            
+            <DialogTitle className="text-xl font-semibold text-center">
               Message sent successfully!
             </DialogTitle>
-          </DialogHeader>
-          
-          <div className="text-center space-y-3 py-5 w-full">
-            <p className="text-gray-700">Thank you for your message.</p>
-            <p className="text-gray-600">We will get back to you within 1-2 working days.</p>
+            
+            <div className="text-center space-y-3">
+              <p className="text-gray-700">Thank you for your message.</p>
+              <p className="text-gray-600">We will get back to you within 1-2 working days.</p>
+            </div>
           </div>
           
-          <DialogFooter className="flex justify-center w-full mt-2">
+          <DialogFooter className="flex justify-center w-full mt-4">
             <Button 
               onClick={() => setShowSuccessModal(false)}
               className="bg-black text-white hover:bg-gray-800"

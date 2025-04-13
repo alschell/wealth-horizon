@@ -85,14 +85,18 @@ const ContactInformation: React.FC = () => {
           </div>
         </div>
         
-        {/* Phone */}
+        {/* Phone - Updated with clickable tel: link */}
         <div className="flex items-start">
           <div className="mt-1 mr-4 flex-shrink-0 flex items-center justify-center w-10 h-10 text-[#4E46DC]">
             <Phone size={20} />
           </div>
           <div>
             <h4 className="text-gray-900 font-medium mb-1">Phone</h4>
-            <p className="text-gray-600 text-sm">+1 (831) 273-1336</p>
+            <p className="text-gray-600 text-sm">
+              <a href="tel:+18312731336" className="text-indigo-600 hover:text-indigo-800">
+                +1 (831) 273-1336
+              </a>
+            </p>
             <p className="text-gray-600 text-sm">Monday-Friday, 9am-6pm EST</p>
           </div>
         </div>

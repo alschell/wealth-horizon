@@ -29,7 +29,7 @@ export const SupportSection: React.FC = () => {
   };
 
   // YouTube channel URL
-  const youtubeChannelUrl = "https://www.youtube.com/channel/example";
+  const youtubeChannelUrl = "https://www.youtube.com/@wealthhorizonai";
 
   return (
     <>

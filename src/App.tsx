@@ -59,6 +59,7 @@ import HelpCenter from "./pages/HelpCenter";
 import Security from "./pages/Security";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
+import Team from "./pages/Team";
 
 // Import new documentation and developer portal pages
 import ApiDocumentation from "./pages/ApiDocumentation";

@@ -4,19 +4,39 @@ import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import TeamMemberImage from '../TeamMemberImage';
 
+// Mock the next/image component
+jest.mock('next/image', () => ({
+  __esModule: true,
+  default: (props: any) => {
+    // eslint-disable-next-line @next/next/no-img-element
+    return <img {...props} alt={props.alt} />;
+  },
+}));
+
 describe('TeamMemberImage', () => {
   it('renders with correct alt text', () => {
     render(
       <TeamMemberImage 
         image="/test-image.jpg" 
-        name="Team Member" 
+        name="Test Member" 
         priority={3}
       />
     );
     
-    const image = screen.getByAltText('Team Member profile photo');
+    const image = screen.getByAltText('Test Member profile photo');
     expect(image).toBeInTheDocument();
   });
   
-  // Add more tests as needed
+  it('applies custom className when provided', () => {
+    render(
+      <TeamMemberImage 
+        image="/test-image.jpg" 
+        name="Test Member" 
+        className="custom-class"
+      />
+    );
+    
+    const container = screen.getByAltText('Test Member profile photo').parentElement;
+    expect(container).toHaveClass('custom-class');
+  });
 });

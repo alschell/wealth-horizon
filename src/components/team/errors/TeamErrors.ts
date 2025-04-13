@@ -10,8 +10,7 @@ export class TeamError extends Error {
   timestamp: string;
   
   constructor(message: string, options?: { code?: string; details?: Record<string, any>; cause?: Error }) {
-    // Fix: TypeScript in Node.js 16+ supports the cause option in Error constructor
-    // but older versions might not recognize it as a valid parameter
+    // Pass only the message to the Error constructor
     super(message);
     
     // Manually set the cause property
@@ -35,8 +34,9 @@ export class TeamError extends Error {
   }
   
   toJSON() {
-    // Fix: Safely check for the cause property
-    const cause = 'cause' in this ? (this as any).cause : undefined;
+    // Safely check for the cause property using hasOwnProperty
+    const hasCause = Object.prototype.hasOwnProperty.call(this, 'cause');
+    const causeValue = hasCause ? (this as any).cause : undefined;
     
     return {
       name: this.name,
@@ -44,7 +44,7 @@ export class TeamError extends Error {
       code: this.code,
       details: this.details,
       timestamp: this.timestamp,
-      cause: cause instanceof Error ? cause.message : undefined,
+      cause: causeValue instanceof Error ? causeValue.message : undefined,
       stack: this.stack
     };
   }

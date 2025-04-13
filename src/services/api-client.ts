@@ -8,6 +8,10 @@ interface ApiError extends Error {
   data?: any;
 }
 
+// Simple in-memory cache implementation
+const cache = new Map<string, { data: any, timestamp: number }>();
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutes in milliseconds
+
 // Add CSRF token handling
 const getCsrfToken = (): string => {
   // Get token from meta tag or cookie
@@ -41,6 +45,33 @@ const createHeaders = (contentType = 'application/json'): HeadersInit => {
   return headers;
 };
 
+// Validate and sanitize API request data
+const sanitizeRequestData = (data: any): any => {
+  if (!data) return data;
+  
+  // If data is a string, sanitize it
+  if (typeof data === 'string') {
+    // Replace potentially dangerous characters
+    return data.replace(/[<>]/g, '');
+  }
+  
+  // If data is an array, sanitize each element
+  if (Array.isArray(data)) {
+    return data.map(item => sanitizeRequestData(item));
+  }
+  
+  // If data is an object, sanitize each property
+  if (typeof data === 'object') {
+    const sanitized: Record<string, any> = {};
+    for (const [key, value] of Object.entries(data)) {
+      sanitized[key] = sanitizeRequestData(value);
+    }
+    return sanitized;
+  }
+  
+  return data;
+};
+
 // Sanitize URL path to prevent path traversal
 const sanitizeEndpoint = (endpoint: string): string => {
   // Ensure endpoint starts with / and contains no ../ sequences
@@ -67,6 +98,13 @@ const handleResponse = async <T>(response: Response): Promise<T> => {
       error.data = 'Unable to parse error response';
     }
     
+    // Log structured error information for debugging
+    console.error(`API Error [${response.status}]:`, {
+      endpoint: response.url,
+      statusText: response.statusText,
+      errorData: error.data
+    });
+    
     throw error;
   }
   
@@ -84,12 +122,29 @@ const handleResponse = async <T>(response: Response): Promise<T> => {
   return {} as T;
 };
 
+// Check if the cached data is still valid
+const isCacheValid = (cacheKey: string): boolean => {
+  const cachedItem = cache.get(cacheKey);
+  if (!cachedItem) return false;
+  
+  const now = Date.now();
+  return now - cachedItem.timestamp < CACHE_TTL;
+};
+
 // Generic API client with type safety
 export const apiClient = {
-  get: async <T>(endpoint: string): Promise<T> => {
+  get: async <T>(endpoint: string, skipCache = false): Promise<T> => {
     try {
       const sanitizedEndpoint = sanitizeEndpoint(endpoint);
       const url = `${API_BASE_URL}${sanitizedEndpoint}`;
+      
+      // Check cache first if not explicitly skipped
+      if (!skipCache) {
+        const cacheKey = url;
+        if (isCacheValid(cacheKey)) {
+          return cache.get(cacheKey)!.data as T;
+        }
+      }
       
       const response = await fetch(url, {
         method: 'GET',
@@ -97,7 +152,14 @@ export const apiClient = {
         credentials: 'same-origin'
       });
       
-      return handleResponse<T>(response);
+      const data = await handleResponse<T>(response);
+      
+      // Cache the successful response
+      if (!skipCache) {
+        cache.set(url, { data, timestamp: Date.now() });
+      }
+      
+      return data;
     } catch (error) {
       console.error(`API GET error for ${endpoint}:`, error);
       throw error;
@@ -108,12 +170,13 @@ export const apiClient = {
     try {
       const sanitizedEndpoint = sanitizeEndpoint(endpoint);
       const url = `${API_BASE_URL}${sanitizedEndpoint}`;
+      const sanitizedData = sanitizeRequestData(data);
       
       const response = await fetch(url, {
         method: 'POST',
         headers: createHeaders(),
         credentials: 'same-origin',
-        body: JSON.stringify(data)
+        body: JSON.stringify(sanitizedData)
       });
       
       return handleResponse<T>(response);
@@ -127,12 +190,13 @@ export const apiClient = {
     try {
       const sanitizedEndpoint = sanitizeEndpoint(endpoint);
       const url = `${API_BASE_URL}${sanitizedEndpoint}`;
+      const sanitizedData = sanitizeRequestData(data);
       
       const response = await fetch(url, {
         method: 'PUT',
         headers: createHeaders(),
         credentials: 'same-origin',
-        body: JSON.stringify(data)
+        body: JSON.stringify(sanitizedData)
       });
       
       return handleResponse<T>(response);
@@ -188,6 +252,17 @@ export const apiClient = {
     } catch (error) {
       console.error(`API file upload error for ${endpoint}:`, error);
       throw error;
+    }
+  },
+  
+  // Clear the cache for specific endpoints or all cached data
+  clearCache: (endpoint?: string) => {
+    if (endpoint) {
+      const sanitizedEndpoint = sanitizeEndpoint(endpoint);
+      const url = `${API_BASE_URL}${sanitizedEndpoint}`;
+      cache.delete(url);
+    } else {
+      cache.clear();
     }
   }
 };

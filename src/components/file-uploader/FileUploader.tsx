@@ -37,6 +37,8 @@ const FileUploader = ({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploadProgress, setUploadProgress] = useState<number>(0);
   const [isUploading, setIsUploading] = useState<boolean>(false);
+  const uploadId = `file-upload-${Math.random().toString(36).substring(2, 9)}`;
+  const progressId = `upload-progress-${Math.random().toString(36).substring(2, 9)}`;
   
   const {
     files,
@@ -88,7 +90,7 @@ const FileUploader = ({
   };
 
   return (
-    <div className="w-full space-y-4">
+    <div className="w-full space-y-4" aria-label="File upload area">
       <DropZone
         label={label}
         accept={accept}
@@ -102,6 +104,7 @@ const FileUploader = ({
       />
       
       <input
+        id={uploadId}
         type="file"
         ref={fileInputRef}
         className="hidden"
@@ -113,12 +116,16 @@ const FileUploader = ({
       />
       
       {isUploading && showProgress && (
-        <div className="space-y-2">
+        <div className="space-y-2" aria-live="polite" aria-busy="true">
           <div className="flex justify-between text-xs text-gray-500">
             <span>Uploading...</span>
-            <span>{uploadProgress}%</span>
+            <span id={progressId}>{uploadProgress}%</span>
           </div>
-          <Progress value={uploadProgress} className="h-2" />
+          <Progress 
+            value={uploadProgress} 
+            className="h-2" 
+            aria-labelledby={progressId}
+          />
         </div>
       )}
       

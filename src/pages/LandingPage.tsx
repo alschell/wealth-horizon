@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Helmet } from "react-helmet-async"; // Using react-helmet-async for better React 18 compatibility
+import { Helmet } from "react-helmet-async"; 
 import { LandingLayout } from "@/components/landing";
 
 const LandingPage: React.FC = () => {

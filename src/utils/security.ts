@@ -16,11 +16,14 @@ export const sanitizeHtml = (unsafeString: string): string => {
 // Sanitize file names to prevent XSS and command injection
 export const sanitizeFileName = (fileName: string): string => {
   // More comprehensive sanitization to prevent path traversal and shell injection
-  return fileName
+  const sanitized = fileName
     .replace(/[^\w\s.-]/g, '') // Remove special characters
     .replace(/\.{2,}/g, '.') // Prevent path traversal via multiple dots
     .replace(/^\.+|\.+$/g, '') // Remove leading/trailing dots
     .trim();
+  
+  // Ensure the filename isn't empty after sanitization
+  return sanitized || 'unnamed_file';
 };
 
 // Generate a cryptographically secure random CSRF token
@@ -103,3 +106,36 @@ export const generateCspNonce = (): string => {
   return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
 };
 
+// Validate file content type
+export const validateFileContentType = (file: File, allowedTypes: string[]): boolean => {
+  return allowedTypes.includes(file.type);
+};
+
+// Encrypt sensitive data (client-side only, for transit)
+export const encryptData = (data: string, key: string): string => {
+  // This is a simplified implementation
+  // In a real app, use a proper encryption library
+  const textEncoder = new TextEncoder();
+  const encoded = textEncoder.encode(data);
+  
+  // XOR with key (very basic encryption, not for production use)
+  const keyBytes = textEncoder.encode(key);
+  const encrypted = new Uint8Array(encoded.length);
+  
+  for (let i = 0; i < encoded.length; i++) {
+    encrypted[i] = encoded[i] ^ keyBytes[i % keyBytes.length];
+  }
+  
+  return Array.from(encrypted, byte => byte.toString(16).padStart(2, '0')).join('');
+};
+
+// Check for vulnerable patterns in user input
+export const containsInjectionPatterns = (input: string): boolean => {
+  const dangerousPatterns = [
+    /(\b)(on\S+)(\s*)=|javascript:|(<\s*)(\/*)script/i,
+    /(document\.|window\.|eval\(|setTimeout\(|setInterval\()/i,
+    /(alert\(|confirm\(|prompt\(|console\.)/i
+  ];
+  
+  return dangerousPatterns.some(pattern => pattern.test(input));
+};

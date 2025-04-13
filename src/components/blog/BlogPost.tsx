@@ -7,6 +7,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { BlogPost } from "./types";
 import { RelatedArticles } from "./RelatedArticles";
+import { CommentsSection } from "./comments/CommentsSection";
+import { Separator } from "@/components/ui/separator";
 
 interface BlogPostViewProps {
   post: BlogPost;
@@ -130,6 +132,12 @@ export const BlogPostView: React.FC<BlogPostViewProps> = ({
           </div>
         </CardContent>
       </Card>
+      
+      <Separator className="my-10" />
+      
+      <CommentsSection postId={post.id} />
+      
+      <Separator className="my-10" />
       
       <RelatedArticles 
         currentPost={post} 

@@ -10,3 +10,12 @@ export type BlogPost = {
   content: string;
   image: string;
 };
+
+export type Comment = {
+  id: number;
+  postId: number;
+  author: string;
+  content: string;
+  date: string;
+  email?: string;
+};

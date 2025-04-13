@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -164,14 +165,14 @@ const ContactForm: React.FC = () => {
       {/* Success Modal - Improved styling */}
       <Dialog open={showSuccessModal} onOpenChange={setShowSuccessModal}>
         <DialogContent className="sm:max-w-md flex flex-col items-center justify-center p-8" hideCloseButton>
-          <div className="flex flex-col items-center justify-center w-full space-y-6 py-4">
+          <div className="flex flex-col items-center justify-center w-full space-y-4 py-4">
             <Check className="h-10 w-10 text-[#4E46DC]" />
             
             <DialogTitle className="text-xl font-semibold text-center">
               Message sent successfully!
             </DialogTitle>
             
-            <div className="text-center space-y-3">
+            <div className="text-center">
               <p className="text-gray-700">Thank you for your message.</p>
               <p className="text-gray-600">We will get back to you within 1-2 working days.</p>
             </div>

@@ -2,6 +2,12 @@
 import { useState, useEffect, useCallback } from 'react';
 import { TeamMember, Advisor } from '../teamData';
 import { useToast } from '@/hooks/use-toast';
+import { 
+  TeamDataFetchError,
+  TeamDataValidationError,
+  MissingTeamMemberDataError,
+  MissingAdvisorDataError
+} from '../errors/TeamErrors';
 
 interface UseTeamDataResult {
   /** Leadership team data */
@@ -35,6 +41,24 @@ export function useTeamData(
   const [hasError, setHasError] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   
+  // Function to validate team member data
+  const validateTeamMember = (member: TeamMember): boolean => {
+    if (!member.id || !member.name || !member.title || !member.department) {
+      console.warn('Found invalid leadership team member:', member);
+      throw new MissingTeamMemberDataError(member.id || 'unknown');
+    }
+    return true;
+  };
+  
+  // Function to validate advisor data
+  const validateAdvisor = (advisor: Advisor): boolean => {
+    if (!advisor.id || !advisor.name || !advisor.title || !advisor.company) {
+      console.warn('Found invalid advisor:', advisor);
+      throw new MissingAdvisorDataError(advisor.id || 'unknown');
+    }
+    return true;
+  };
+  
   // Function to refresh team data with proper error handling
   const refreshTeamData = useCallback(async () => {
     setIsLoading(true);
@@ -46,30 +70,16 @@ export function useTeamData(
       // For now, we'll just simulate loading with a timeout
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // Validate incoming data
+      // Validate the data structure
       if (!Array.isArray(initialLeadershipTeam) || !Array.isArray(initialAdvisoryBoard)) {
-        throw new Error('Invalid team data structure');
+        throw new TeamDataValidationError('Invalid team data structure');
       }
       
-      // Validate team members have required fields
-      const invalidLeader = initialLeadershipTeam.find(
-        leader => !leader.id || !leader.name || !leader.title || !leader.department
-      );
+      // Validate each team member
+      initialLeadershipTeam.forEach(validateTeamMember);
       
-      if (invalidLeader) {
-        console.warn('Found invalid leadership team member:', invalidLeader);
-        throw new Error('Some leadership team members have incomplete data');
-      }
-      
-      // Validate advisors have required fields
-      const invalidAdvisor = initialAdvisoryBoard.find(
-        advisor => !advisor.id || !advisor.name || !advisor.title || !advisor.company
-      );
-      
-      if (invalidAdvisor) {
-        console.warn('Found invalid advisor:', invalidAdvisor);
-        throw new Error('Some advisory board members have incomplete data');
-      }
+      // Validate each advisor
+      initialAdvisoryBoard.forEach(validateAdvisor);
       
       // Update state with initial data (or API response)
       setLeadershipTeam(initialLeadershipTeam);
@@ -79,13 +89,20 @@ export function useTeamData(
     } catch (error) {
       setIsLoading(false);
       setHasError(true);
-      setErrorMessage(error instanceof Error ? error.message : 'Unknown error occurred');
       
+      // Use the specific error type and message if available
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+      setErrorMessage(errorMessage);
+      
+      // Set a toast notification with the appropriate error message
       toast({
         title: 'Error loading team data',
-        description: error instanceof Error ? error.message : 'Unknown error occurred',
+        description: errorMessage,
         variant: 'destructive',
       });
+      
+      // Log the error for debugging
+      console.error('Team data error:', error);
       
       // Fall back to empty arrays in case of error
       setLeadershipTeam([]);

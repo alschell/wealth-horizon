@@ -4,7 +4,13 @@ import { Helmet } from "react-helmet-async";
 import { Users } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import PageTemplate from "@/components/shared/PageTemplate";
-import { LeadershipSection, AdvisoryBoardSection, JoinSection } from "@/components/team";
+import { 
+  LeadershipSection, 
+  AdvisoryBoardSection, 
+  JoinSection,
+  leadershipTeam,
+  advisoryBoard
+} from "@/components/team";
 
 const Team: React.FC = () => {
   return (
@@ -21,11 +27,11 @@ const Team: React.FC = () => {
         icon={Users}
       >
         <div className="space-y-12">
-          <LeadershipSection />
+          <LeadershipSection teamMembers={leadershipTeam} />
           
           <Separator />
           
-          <AdvisoryBoardSection />
+          <AdvisoryBoardSection advisors={advisoryBoard} />
           
           <JoinSection />
         </div>

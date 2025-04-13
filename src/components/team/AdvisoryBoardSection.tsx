@@ -1,30 +1,52 @@
 
 import React from "react";
+import { LinkedIn } from "lucide-react";
 import { useImageErrorHandler } from "@/hooks/useImageErrorHandler";
-import { advisoryBoard } from "./mockData";
+import { Advisor } from "./teamData";
 
-const AdvisoryBoardSection: React.FC = () => {
-  const handleImageError = useImageErrorHandler();
+interface AdvisoryBoardSectionProps {
+  advisors: Advisor[];
+}
+
+const AdvisoryBoardSection: React.FC<AdvisoryBoardSectionProps> = ({ advisors }) => {
+  const handleImageError = useImageErrorHandler({
+    fallbackImage: '/assets/team/profile-placeholder.jpg'
+  });
 
   return (
     <section>
       <h2 className="text-2xl font-semibold text-gray-800 mb-6">Advisory Board</h2>
+      
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {advisoryBoard.map((advisor) => (
-          <div key={advisor.id} className="bg-white border border-gray-100 rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow">
-            <div className="h-48 bg-gradient-to-r from-indigo-50 to-blue-50 overflow-hidden">
-              <img 
-                src={advisor.image} 
-                alt={advisor.name}
-                className="w-full h-full object-cover"
-                onError={handleImageError}
-              />
+        {advisors.map((advisor) => (
+          <div key={advisor.id} className="bg-white p-6 rounded-lg border border-gray-100 shadow-sm h-full">
+            <div className="flex flex-col items-center mb-4">
+              <div className="w-32 h-32 rounded-full overflow-hidden bg-gray-100 mb-3">
+                <img 
+                  src={advisor.image} 
+                  alt={advisor.name} 
+                  className="h-full w-full object-cover"
+                  onError={handleImageError}
+                />
+              </div>
+              
+              <h3 className="text-lg font-semibold text-gray-800 text-center">{advisor.name}</h3>
+              <p className="text-gray-600 text-center">{advisor.title}, {advisor.company}</p>
+              
+              {advisor.linkedin && (
+                <a 
+                  href={advisor.linkedin} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="mt-2 text-gray-600 hover:text-indigo-600"
+                >
+                  <LinkedIn size={18} />
+                  <span className="sr-only">LinkedIn profile</span>
+                </a>
+              )}
             </div>
-            <div className="p-6">
-              <h3 className="text-lg font-semibold text-gray-800">{advisor.name}</h3>
-              <p className="text-indigo-600 font-medium mb-3">{advisor.title}</p>
-              <p className="text-gray-600">{advisor.bio}</p>
-            </div>
+            
+            <p className="text-gray-600 text-sm">{advisor.bio}</p>
           </div>
         ))}
       </div>

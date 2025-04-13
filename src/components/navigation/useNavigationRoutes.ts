@@ -1,45 +1,12 @@
 
 import { useCallback, useMemo } from 'react';
 import { Location } from 'react-router-dom';
-
-// Separate constant arrays outside component to prevent recreation on each render
-const FOOTER_PAGES = [
-  '/about', 
-  '/portfolio-management', 
-  '/trading', 
-  '/analyze-wealth', 
-  '/reporting', 
-  '/compliance-monitoring', 
-  '/blog', 
-  '/press', 
-  '/careers', 
-  '/documentation', 
-  '/help-center', 
-  '/security', 
-  '/privacy-policy', 
-  '/terms-of-service', 
-  '/cookies-policy',
-  '/careers/faq',
-  '/api-docs', 
-  '/developer-portal', 
-  '/sdk',
-  '/user-guides', 
-  '/support-ticket', 
-  '/community-forum',
-  '/team'
-];
-
-const HIDDEN_PATH_PREFIXES = [
-  '/api-docs/', 
-  '/developer-portal/', 
-  '/sdk/', 
-  '/help-center/'
-];
+import { ROUTES_CONFIG } from './routesConfig';
 
 export const useNavigationRoutes = (location: Location) => {
   // Check if path starts with any of the hidden prefixes
   const pathStartsWithHidden = useCallback((path: string) => {
-    return HIDDEN_PATH_PREFIXES.some(prefix => path.startsWith(prefix));
+    return ROUTES_CONFIG.HIDDEN_PATH_PREFIXES.some(prefix => path.startsWith(prefix));
   }, []);
 
   // Memoize all route determinations to prevent unnecessary recalculations
@@ -53,7 +20,7 @@ export const useNavigationRoutes = (location: Location) => {
     const isJobDetailPage = !!pathname.match(/^\/careers\/\d+$/);
     const isTeamPage = pathname === '/team';
     
-    const isFooterPage = FOOTER_PAGES.includes(pathname) || pathStartsWithHidden(pathname);
+    const isFooterPage = ROUTES_CONFIG.FOOTER_PAGES.includes(pathname) || pathStartsWithHidden(pathname);
     
     // Determine if navigation should be hidden completely
     const shouldHideNavigation = isOnboarding || isLoginPage || isResetPasswordPage || isFooterPage || isJobDetailPage || isTeamPage;

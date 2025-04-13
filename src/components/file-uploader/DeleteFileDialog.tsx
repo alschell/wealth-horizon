@@ -1,6 +1,6 @@
 
 import React from "react";
-import DeleteConfirmationDialog from "../DeleteConfirmationDialog";
+import { DeleteConfirmationDialog } from "@/components/file-uploader/DeleteConfirmationDialog";
 
 interface DeleteFileDialogProps {
   isOpen: boolean;

@@ -21,7 +21,7 @@ export interface DeleteConfirmationDialogProps {
   cancelLabel?: string;
 }
 
-const DeleteConfirmationDialog: React.FC<DeleteConfirmationDialogProps> = ({
+export const DeleteConfirmationDialog: React.FC<DeleteConfirmationDialogProps> = ({
   isOpen,
   onOpenChange,
   onConfirm,
@@ -52,5 +52,3 @@ const DeleteConfirmationDialog: React.FC<DeleteConfirmationDialogProps> = ({
     </AlertDialog>
   );
 };
-
-export default DeleteConfirmationDialog;

@@ -4,14 +4,6 @@ import { useDocumentHandlers } from './hooks/useDocumentHandlers';
 import { useFormSubmission } from './hooks/useFormSubmission';
 import { DocumentFileWithMetadata } from './types';
 
-export interface DocumentFileWithMetadata {
-  id: string;
-  file: File;
-  documentType: string;
-  issueDate: string;
-  expiryDate?: string;
-}
-
 export const useLegalDocumentsForm = () => {
   const {
     documentType,

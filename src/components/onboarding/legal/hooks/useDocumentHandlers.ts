@@ -1,7 +1,6 @@
-
 import { useState, useCallback, ChangeEvent } from 'react';
 import { toast } from '@/components/ui/use-toast';
-import { Document } from '../types';
+import { Document, DocumentFileWithMetadata } from '../types';
 
 // Define allowed file types and size
 const ALLOWED_DOCUMENT_TYPES = ['.pdf', '.doc', '.docx', '.jpg', '.jpeg', '.png'];
@@ -16,8 +15,8 @@ export const useDocumentHandlers = (
   setExpiryDate: React.Dispatch<React.SetStateAction<string>>,
   selectedFile: File | null,
   setSelectedFile: React.Dispatch<React.SetStateAction<File | null>>,
-  documentFiles: any[],
-  setDocumentFiles: React.Dispatch<React.SetStateAction<any[]>>,
+  documentFiles: DocumentFileWithMetadata[],
+  setDocumentFiles: React.Dispatch<React.SetStateAction<DocumentFileWithMetadata[]>>,
   errors: Record<string, boolean>,
   setErrors: React.Dispatch<React.SetStateAction<Record<string, boolean>>>,
   isEditing: boolean,

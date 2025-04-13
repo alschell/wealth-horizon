@@ -5,6 +5,7 @@ interface ImageErrorHandlerOptions {
   fallbackSrc?: string;
   onError?: (error: Event) => void;
   altText?: string;
+  logErrors?: boolean;
 }
 
 /**
@@ -17,14 +18,17 @@ export const useImageErrorHandler = (options: ImageErrorHandlerOptions = {}) => 
   const {
     fallbackSrc = '/assets/dashboard-fallback.png',
     onError,
-    altText = 'Image'
+    altText = 'Image',
+    logErrors = true
   } = options;
 
   const handleImageError = useCallback((event: React.SyntheticEvent<HTMLImageElement>) => {
     const img = event.currentTarget;
     
-    // Log the error
-    console.warn(`Failed to load image${img.alt ? ` (${img.alt})` : ''}: ${img.src}`);
+    // Log the error if enabled
+    if (logErrors) {
+      console.warn(`Failed to load image${img.alt ? ` (${img.alt})` : ''}: ${img.src}`);
+    }
     
     // Set the fallback image
     img.src = fallbackSrc;
@@ -38,7 +42,7 @@ export const useImageErrorHandler = (options: ImageErrorHandlerOptions = {}) => 
     if (onError) {
       onError(event.nativeEvent);
     }
-  }, [fallbackSrc, onError, altText]);
+  }, [fallbackSrc, onError, altText, logErrors]);
 
   return handleImageError;
 };

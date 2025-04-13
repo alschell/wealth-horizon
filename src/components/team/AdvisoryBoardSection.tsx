@@ -1,4 +1,3 @@
-
 import React, { memo } from "react";
 import { Advisor } from "./teamData";
 import TeamMemberImage from "./TeamMemberImage";
@@ -16,22 +15,12 @@ interface AdvisoryBoardSectionProps {
   onSearchChange?: (value: string) => void;
 }
 
-/**
- * Displays the advisory board section with advisor profiles
- * Includes search filtering and card-based layout
- * 
- * @example
- * ```tsx
- * <AdvisoryBoardSection advisors={advisoryBoard} />
- * ```
- */
 const AdvisoryBoardSection: React.FC<AdvisoryBoardSectionProps> = ({ 
   advisors,
   searchQuery: externalSearchQuery,
   onSearchChange: externalOnSearchChange
 }) => {
   // Use the team filters hook for search and sorting functionality
-  // Only use internal state if external controls aren't provided
   const {
     searchQuery: internalSearchQuery,
     setSearchQuery: internalSetSearchQuery,
@@ -130,8 +119,4 @@ const AdvisoryBoardSection: React.FC<AdvisoryBoardSectionProps> = ({
   );
 };
 
-/**
- * Memoized version of AdvisoryBoardSection component to prevent unnecessary re-renders
- * Only re-renders when props change
- */
 export default memo(AdvisoryBoardSection);

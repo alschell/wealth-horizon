@@ -12,11 +12,7 @@ import {
   advisoryBoard,
   useTeamFilters
 } from "@/components/team";
-import TeamFilter from "@/components/team/TeamFilter";
 
-/**
- * Team page showcasing leadership and advisory board members
- */
 const Team: React.FC = () => {
   // Use our improved filter hooks
   const { 

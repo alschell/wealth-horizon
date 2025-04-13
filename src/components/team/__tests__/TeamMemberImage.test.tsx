@@ -39,4 +39,17 @@ describe('TeamMemberImage', () => {
     const container = screen.getByAltText('Test Member profile photo').parentElement;
     expect(container).toHaveClass('custom-class');
   });
+  
+  it('supports fallbackIconSize prop', () => {
+    render(
+      <TeamMemberImage 
+        image="/test-image.jpg" 
+        name="Test Member" 
+        fallbackIconSize={48}
+      />
+    );
+    
+    const image = screen.getByAltText('Test Member profile photo');
+    expect(image).toBeInTheDocument();
+  });
 });

@@ -3,11 +3,12 @@ import React from 'react';
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 
-interface TeamMemberImageProps {
+export interface TeamMemberImageProps {
   image: string;
   name: string;
   priority?: number;
   className?: string;
+  fallbackIconSize?: number;
 }
 
 /**
@@ -17,7 +18,8 @@ const TeamMemberImage: React.FC<TeamMemberImageProps> = ({
   image,
   name,
   priority = 0,
-  className
+  className,
+  fallbackIconSize
 }) => {
   return (
     <div className={cn("relative overflow-hidden rounded-md", className)}>

@@ -1,7 +1,7 @@
 
 // Initialize React Query client - but don't export it directly
 // It should only be used within React components
-import { validateCorsHeaders, validateNoSniff, isSuccessResponse } from '@/utils/http-validation';
+import { validateCorsHeaders, validateNoSniff, isSuccessResponse, validateHttpResponse } from '@/utils/http-validation';
 
 const API_BASE_URL = "/api";
 
@@ -96,14 +96,14 @@ const sanitizeEndpoint = (endpoint: string): string => {
 
 // Helper to handle API response
 const handleResponse = async <T>(response: Response, endpoint: string): Promise<T> => {
-  // Validate CORS headers for cross-origin requests
-  if (!validateCorsHeaders(response)) {
-    console.warn(`Missing CORS headers in response from ${endpoint}`);
-  }
+  // Comprehensive validation of HTTP responses
+  const validation = validateHttpResponse(response, {
+    requireNoSniff: true,
+    requireCors: true
+  });
   
-  // Validate nosniff header
-  if (!validateNoSniff(response)) {
-    console.warn(`Missing X-Content-Type-Options: nosniff in response from ${endpoint}`);
+  if (!validation.valid) {
+    console.warn(`HTTP validation issues for ${endpoint}:`, validation.issues.join(', '));
   }
   
   if (!isSuccessResponse(response)) {
@@ -123,7 +123,8 @@ const handleResponse = async <T>(response: Response, endpoint: string): Promise<
       endpoint,
       statusText: response.statusText,
       errorData: error.data,
-      timestamp: error.timestamp
+      timestamp: error.timestamp,
+      validationIssues: validation.issues
     });
     
     throw error;

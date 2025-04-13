@@ -13,6 +13,11 @@ interface FormFieldProps {
   placeholder?: string;
   error?: string;
   required?: boolean;
+  disabled?: boolean;
+  maxLength?: number;
+  minLength?: number;
+  autoComplete?: string;
+  "aria-describedby"?: string;
 }
 
 export const FormField: React.FC<FormFieldProps> = ({
@@ -23,7 +28,12 @@ export const FormField: React.FC<FormFieldProps> = ({
   type = "text",
   placeholder,
   error,
-  required = true
+  required = true,
+  disabled = false,
+  maxLength,
+  minLength,
+  autoComplete,
+  ...restProps
 }) => {
   // Generate a unique ID for the error message
   const errorId = `${id}-error`;
@@ -43,8 +53,13 @@ export const FormField: React.FC<FormFieldProps> = ({
         className={cn(error ? "border-red-500" : "")}
         aria-required={required}
         aria-invalid={!!error}
+        disabled={disabled}
+        maxLength={maxLength}
+        minLength={minLength}
+        autoComplete={autoComplete}
         // Only set aria-describedby when there's actually an error
         {...(error ? { "aria-describedby": errorId } : {})}
+        {...restProps}
       />
       {error && (
         <p 

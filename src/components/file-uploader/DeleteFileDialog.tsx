@@ -6,20 +6,24 @@ interface DeleteFileDialogProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
   onConfirm: () => void;
+  title?: string;
+  description?: string;
 }
 
 const DeleteFileDialog: React.FC<DeleteFileDialogProps> = ({
   isOpen,
   onOpenChange,
   onConfirm,
+  title = "Confirm File Deletion",
+  description = "Are you sure you want to delete this file? This action cannot be undone."
 }) => {
   return (
     <DeleteConfirmationDialog
       isOpen={isOpen}
       onOpenChange={onOpenChange}
       onConfirm={onConfirm}
-      title="Confirm File Deletion"
-      description="Are you sure you want to delete this file? This action cannot be undone."
+      title={title}
+      description={description}
       confirmLabel="Delete"
       cancelLabel="Cancel"
     />

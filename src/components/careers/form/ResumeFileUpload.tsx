@@ -22,6 +22,7 @@ export const ResumeFileUpload: React.FC<ResumeFileUploadProps> = ({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const errorId = "resume-file-error";
   const labelId = "resume-file-label";
+  const descriptionId = "resume-file-description";
 
   const handleButtonClick = () => {
     if (fileInputRef.current && !disabled) {
@@ -37,6 +38,13 @@ export const ResumeFileUpload: React.FC<ResumeFileUploadProps> = ({
     announceToScreenReader("Resume file removed", "polite");
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      handleButtonClick();
+    }
+  };
+
   return (
     <div className="space-y-2">
       <div 
@@ -45,6 +53,7 @@ export const ResumeFileUpload: React.FC<ResumeFileUploadProps> = ({
         } ${
           disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
         }`}
+        aria-describedby={`${descriptionId} ${error ? errorId : ''}`}
       >
         <input
           type="file"
@@ -58,7 +67,7 @@ export const ResumeFileUpload: React.FC<ResumeFileUploadProps> = ({
             }
           }}
           aria-labelledby={labelId}
-          aria-describedby={error ? errorId : undefined}
+          aria-describedby={error ? errorId : descriptionId}
           aria-invalid={!!error}
           disabled={disabled}
           data-testid="resume-file-input"
@@ -76,7 +85,7 @@ export const ResumeFileUpload: React.FC<ResumeFileUploadProps> = ({
               size="sm"
               className="h-8 w-8 p-0 text-gray-500 hover:text-red-500"
               onClick={handleRemoveFile}
-              aria-label="Remove resume file"
+              aria-label={`Remove resume file: ${resumeFile.name}`}
               disabled={disabled}
             >
               <XIcon className="h-4 w-4" aria-hidden="true" />
@@ -90,18 +99,13 @@ export const ResumeFileUpload: React.FC<ResumeFileUploadProps> = ({
             role="button"
             tabIndex={disabled ? -1 : 0}
             aria-labelledby={labelId}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                handleButtonClick();
-              }
-            }}
+            onKeyDown={handleKeyDown}
           >
             <UploadIcon className="h-8 w-8 text-gray-400 mb-2" aria-hidden="true" />
             <p id={labelId} className="text-sm text-center font-medium text-gray-700">
               Drag and drop your resume or <span className="text-blue-500">browse files</span>
             </p>
-            <p className="text-xs text-gray-500 mt-1">
+            <p id={descriptionId} className="text-xs text-gray-500 mt-1">
               PDF, DOC, or DOCX files up to 5MB
             </p>
           </div>
@@ -112,7 +116,7 @@ export const ResumeFileUpload: React.FC<ResumeFileUploadProps> = ({
         <p 
           id={errorId}
           className="text-sm font-medium text-red-500"
-          aria-live="polite"
+          aria-live="assertive"
         >
           {error}
         </p>

@@ -22,7 +22,14 @@ const LandingPage: React.FC = () => {
       "telephone": "+1-555-123-4567",
       "contactType": "customer service",
       "availableLanguage": ["English"]
-    }
+    },
+    "founder": {
+      "@type": "Person",
+      "name": "Jane Smith"
+    },
+    "foundingDate": "2018-01-01",
+    "areaServed": ["Global", "United States", "Europe", "Asia"],
+    "keywords": "wealth management, family office, financial planning, investment, portfolio optimization"
   };
 
   return (

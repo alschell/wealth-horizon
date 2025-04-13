@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { 
   Dialog, 
   DialogContent, 
@@ -10,9 +10,12 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { validateEmail, validatePhone, validateFileSize, validateFileType } from "@/utils/validation";
+import { validateEmail, validatePhone, validateRequired } from "@/utils/validation";
 import { FormField } from "./form/FormFields";
 import { ResumeFileUpload } from "./form/ResumeFileUpload";
+import { sanitizeFileName } from "@/utils/security";
+import { useStandardForm } from "@/hooks/useStandardForm";
+import { announceToScreenReader } from "@/utils/a11y";
 
 // Constants for file validation
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
@@ -24,94 +27,117 @@ interface ResumeUploadModalProps {
   onOpenChange: (open: boolean) => void;
 }
 
+interface ResumeFormData {
+  name: string;
+  email: string;
+  phone: string;
+}
+
 export const ResumeUploadModal: React.FC<ResumeUploadModalProps> = ({ 
   open, 
   onOpenChange 
 }) => {
   const [resumeFile, setResumeFile] = useState<File | null>(null);
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [fileError, setFileError] = useState<string | null>(null);
+  
+  // Define validation rules
+  const validationRules = {
+    name: (value: string) => validateRequired(value, 'Name'),
+    email: validateEmail,
+    phone: validatePhone
+  };
+  
+  // Use the standardized form hook
+  const {
+    formData,
+    errors,
+    handleChange,
+    handleSubmit,
+    isSubmitting,
+    isSuccess,
+    resetForm
+  } = useStandardForm<ResumeFormData>({
+    initialValues: {
+      name: "",
+      email: "",
+      phone: ""
+    },
+    validationRules,
+    onSubmit: async (data) => {
+      // Validate file presence
+      if (!resumeFile) {
+        setFileError("Resume file is required");
+        throw new Error("Resume file is required");
+      }
+      
+      // In a real app, this would send the resume file, name, and email to a server
+      // Simulate an API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Success handling is done by the hook
+    },
+    onSuccess: () => {
+      toast.success("Your resume has been submitted! We'll be in touch soon.");
+      onOpenChange(false);
+      resetForm();
+      setResumeFile(null);
+      setFileError(null);
+      announceToScreenReader("Resume submitted successfully", "polite");
+    },
+    onError: (error) => {
+      toast.error(error instanceof Error ? error.message : "An error occurred. Please try again.");
+      announceToScreenReader("Error submitting resume. Please check the form for errors.", "assertive");
+    }
+  });
+  
+  // Reset file error when resumeFile changes
+  useEffect(() => {
+    if (resumeFile) {
+      setFileError(null);
+    }
+  }, [resumeFile]);
   
   // Validate file before accepting it
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       
+      // Sanitize filename
+      const sanitizedName = sanitizeFileName(file.name);
+      console.log(`File name sanitized: ${file.name} → ${sanitizedName}`);
+      
       // Validate file size
-      const sizeError = validateFileSize(file, 5);
-      if (sizeError) {
-        toast.error(sizeError);
+      if (file.size > MAX_FILE_SIZE) {
+        setFileError(`File size exceeds the maximum allowed size of 5MB`);
+        toast.error(`File size exceeds the maximum allowed size of 5MB`);
         return;
       }
       
-      // Validate file type by extension
-      const typeError = validateFileType(file, ALLOWED_FILE_TYPES);
-      if (typeError) {
-        toast.error(typeError);
+      // Validate file extension
+      const fileExtension = `.${file.name.split('.').pop()?.toLowerCase()}`;
+      if (!ALLOWED_FILE_TYPES.includes(fileExtension)) {
+        setFileError(`Invalid file type. Allowed types: ${ALLOWED_FILE_TYPES.join(', ')}`);
+        toast.error(`Invalid file type. Allowed types: PDF, DOC, DOCX`);
         return;
       }
       
-      // Also validate by MIME type for better security
+      // Validate MIME type for better security
       if (!ALLOWED_MIME_TYPES.includes(file.type)) {
-        toast.error("Invalid file format. Please upload a valid document.");
+        setFileError(`Invalid file format. Please upload a valid document.`);
+        toast.error(`Invalid file format. Please upload a valid document.`);
         return;
       }
       
       setResumeFile(file);
-      setErrors(prev => ({ ...prev, file: "" }));
+      setFileError(null);
     }
   };
   
-  const validateForm = () => {
-    const newErrors: Record<string, string> = {};
-    
-    if (!name.trim()) {
-      newErrors.name = "Name is required";
-    }
-    
-    if (!email.trim()) {
-      newErrors.email = "Email is required";
-    } else {
-      const emailError = validateEmail(email);
-      if (emailError) newErrors.email = emailError;
-    }
-    
-    if (!phone.trim()) {
-      newErrors.phone = "Phone number is required";
-    } else {
-      const phoneError = validatePhone(phone);
-      if (phoneError) newErrors.phone = phoneError;
-    }
-    
-    if (!resumeFile) {
-      newErrors.file = "Resume file is required";
-    }
-    
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-  
-  const handleSubmitResume = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!validateForm()) {
-      return;
-    }
-    
-    // In a real app, this would send the resume file, name, and email to a server
-    toast.success("Your resume has been submitted! We'll be in touch soon.");
-    onOpenChange(false);
+  const handleCloseDialog = () => {
     resetForm();
-  };
-  
-  const resetForm = () => {
     setResumeFile(null);
-    setName("");
-    setEmail("");
-    setPhone("");
-    setErrors({});
+    setFileError(null);
+    onOpenChange(false);
   };
   
   return (
@@ -123,33 +149,39 @@ export const ResumeUploadModal: React.FC<ResumeUploadModalProps> = ({
             Let us know about your skills and experience. We'll reach out if there's a good fit.
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleSubmitResume} className="space-y-4" aria-labelledby="resume-form-title">
+        <form onSubmit={handleSubmit} className="space-y-4" aria-labelledby="resume-form-title">
           <FormField
             id="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            value={formData.name}
+            onChange={handleChange}
             label="Full Name"
             placeholder="John Doe"
             error={errors.name}
+            autoComplete="name"
+            required
           />
           
           <FormField
             id="email"
             type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={formData.email}
+            onChange={handleChange}
             label="Email Address"
             placeholder="john@example.com"
             error={errors.email}
+            autoComplete="email"
+            required
           />
           
           <FormField
             id="phone"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
+            value={formData.phone}
+            onChange={handleChange}
             label="Phone Number"
             placeholder="+1 (555) 123-4567"
             error={errors.phone}
+            autoComplete="tel"
+            required
           />
           
           <div className="space-y-2">
@@ -159,21 +191,22 @@ export const ResumeUploadModal: React.FC<ResumeUploadModalProps> = ({
             <ResumeFileUpload 
               resumeFile={resumeFile}
               setResumeFile={setResumeFile}
-              error={errors.file}
+              error={fileError}
               handleFileChange={handleFileChange}
+              disabled={isSubmitting}
             />
           </div>
           
           <div className="flex justify-end gap-2">
             <DialogClose asChild>
-              <Button type="button" variant="outline" onClick={resetForm}>Cancel</Button>
+              <Button type="button" variant="outline" onClick={handleCloseDialog}>Cancel</Button>
             </DialogClose>
             <Button 
               type="submit" 
-              disabled={!name || !email || !phone || !resumeFile}
-              aria-disabled={!name || !email || !phone || !resumeFile}
+              disabled={isSubmitting || !formData.name || !formData.email || !formData.phone || !resumeFile}
+              aria-disabled={isSubmitting || !formData.name || !formData.email || !formData.phone || !resumeFile}
             >
-              Submit
+              {isSubmitting ? 'Submitting...' : 'Submit'}
             </Button>
           </div>
         </form>

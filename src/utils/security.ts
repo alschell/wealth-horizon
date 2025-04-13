@@ -30,6 +30,7 @@ export const sanitizeFileName = (fileName: string): string => {
       .replace(/^\/+|\\+/g, '') // Remove leading slashes or backslashes
       .replace(/\s+/g, '_') // Replace spaces with underscores
       .replace(/^(con|prn|aux|nul|com[0-9]|lpt[0-9])(\..*)?$/i, 'invalid_$1') // Prevent reserved Windows filenames
+      .replace(/[<>:"\/\\|?*\x00-\x1F]/g, '') // Remove characters not allowed in filenames
       .trim();
     
     // Limit length to prevent DoS
@@ -37,7 +38,7 @@ export const sanitizeFileName = (fileName: string): string => {
     const truncated = sanitized.length > maxLength ? sanitized.substring(0, maxLength) : sanitized;
     
     // Ensure the filename isn't empty after sanitization
-    return truncated || 'unnamed_file';
+    return truncated || 'unnamed_file_' + Date.now(); // Fallback with timestamp
   } catch (error) {
     console.error("Error sanitizing filename:", error);
     return 'unnamed_file_' + Date.now(); // Fallback with timestamp

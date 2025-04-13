@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -38,13 +37,24 @@ const ContactForm: React.FC = () => {
     }, 1000);
   };
 
+  // Sort industry options alphabetically, keeping "Other" at the end
+  const industryOptions = [
+    "Advisor",
+    "Aggregator",
+    "Asset Manager",
+    "Broker Dealer",
+    "Family Office",
+    "Institutional",
+    "Other"
+  ];
+
   return (
     <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-200" style={{ minHeight: '840px' }}>
       <h3 className="text-xl font-semibold text-gray-900 mb-6">Send us a message</h3>
       
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="space-y-2">
-          <Label htmlFor="email">Email<span className="text-red-500 ml-1">*</span></Label>
+          <Label htmlFor="email">Email</Label>
           <Input 
             id="email" 
             type="email" 
@@ -56,7 +66,7 @@ const ContactForm: React.FC = () => {
         </div>
         
         <div className="space-y-2">
-          <Label htmlFor="full-name">Full name<span className="text-red-500 ml-1">*</span></Label>
+          <Label htmlFor="full-name">Full name</Label>
           <Input 
             id="full-name" 
             value={fullName}
@@ -67,7 +77,7 @@ const ContactForm: React.FC = () => {
         </div>
         
         <div className="space-y-2">
-          <Label htmlFor="company">Company<span className="text-red-500 ml-1">*</span></Label>
+          <Label htmlFor="company">Company</Label>
           <Input 
             id="company" 
             value={company}
@@ -78,21 +88,13 @@ const ContactForm: React.FC = () => {
         </div>
         
         <div className="space-y-2">
-          <Label htmlFor="industry">Industry<span className="text-red-500 ml-1">*</span></Label>
+          <Label htmlFor="industry">Industry</Label>
           <CustomSearchableSelect 
             id="industry"
             label=""
             value={industry}
             placeholder="Select your industry"
-            options={[
-              "Aggregator",
-              "Asset Manager",
-              "Advisor",
-              "Broker Dealer",
-              "Family Office",
-              "Institutional",
-              "Other"
-            ]}
+            options={industryOptions}
             onChange={(value) => setIndustry(value)}
             required
             allowCustomValue
@@ -100,7 +102,7 @@ const ContactForm: React.FC = () => {
         </div>
         
         <div className="space-y-2">
-          <Label htmlFor="inquiry-type">Type of inquiry<span className="text-red-500 ml-1">*</span></Label>
+          <Label htmlFor="inquiry-type">Type of inquiry</Label>
           <CustomSearchableSelect 
             id="inquiry-type"
             label=""
@@ -119,7 +121,7 @@ const ContactForm: React.FC = () => {
         </div>
         
         <div className="space-y-2">
-          <Label htmlFor="message">Message<span className="text-red-500 ml-1">*</span></Label>
+          <Label htmlFor="message">Message</Label>
           <Textarea 
             id="message" 
             value={message}

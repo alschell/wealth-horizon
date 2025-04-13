@@ -4,7 +4,7 @@ import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { File, Pencil, Trash } from "lucide-react";
 import { format } from "date-fns";
-import { DocumentFileWithMetadata } from "./useLegalDocumentsForm";
+import { DocumentFileWithMetadata } from "./types";
 
 interface DocumentListProps {
   documentFiles: DocumentFileWithMetadata[];

@@ -28,6 +28,9 @@ export const SupportSection: React.FC = () => {
     navigate("/user-guides");
   };
 
+  // YouTube channel URL
+  const youtubeChannelUrl = "https://www.youtube.com/channel/example";
+
   return (
     <>
       <section className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
@@ -90,7 +93,7 @@ export const SupportSection: React.FC = () => {
           <Button 
             variant="outline" 
             className="justify-start h-auto py-4 px-5" 
-            onClick={() => window.open("https://www.youtube.com/channel/example", "_blank")}
+            onClick={() => window.open(youtubeChannelUrl, "_blank")}
           >
             <div className="flex items-center cursor-pointer">
               <ExternalLink size={20} className="mr-3 text-indigo-600" />

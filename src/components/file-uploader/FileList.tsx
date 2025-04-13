@@ -18,7 +18,7 @@ const FileList: React.FC<FileListProps> = ({
 
   // Safely display file name (truncate if too long)
   const safeDisplayFileName = (fileName: string): string => {
-    // Sanitize and truncate file name for display
+    // Sanitize file name to prevent potential XSS
     const sanitized = fileName.replace(/[^\w\s.-]/g, '');
     return sanitized.length > 25 ? sanitized.substring(0, 22) + '...' : sanitized;
   };
@@ -41,11 +41,12 @@ const FileList: React.FC<FileListProps> = ({
   };
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-2" role="list" aria-label="Uploaded files list">
       {files.map((file, index) => (
         <div
           key={index}
           className="flex items-center justify-between p-2 border border-gray-200 rounded-md bg-white"
+          role="listitem"
         >
           <div className="flex items-center space-x-3 overflow-hidden">
             {getFileIcon(file.name)}
@@ -68,7 +69,7 @@ const FileList: React.FC<FileListProps> = ({
               size="sm"
               className="text-gray-500 hover:text-red-500"
               onClick={() => onDeleteClick(index)}
-              aria-label="Delete file"
+              aria-label={`Delete file ${safeDisplayFileName(file.name)}`}
             >
               <Trash2 className="h-4 w-4" />
               <span className="sr-only">Delete file</span>

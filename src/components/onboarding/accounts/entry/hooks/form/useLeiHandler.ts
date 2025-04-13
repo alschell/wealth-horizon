@@ -3,13 +3,22 @@ import { FinancialAccountInfo } from "@/types/onboarding";
 import { LEI_MAPPING } from "../../constants/leiMappings";
 import { LEGAL_ENTITIES } from "../../constants/legalEntities";
 import { toast } from "@/components/ui/use-toast";
+import { useCallback } from "react";
+import { validateLei } from "@/utils/validation";
 
 export const useLeiHandler = (setAccount: React.Dispatch<React.SetStateAction<FinancialAccountInfo>>) => {
   // Handle LEI input change with auto-population and improved error handling
-  const handleLeiInputChange = (value: string) => {
+  const handleLeiInputChange = useCallback((value: string) => {
     try {
       // First update the LEI in the form
       setAccount(prev => ({ ...prev, legalEntityIdentifier: value }));
+      
+      // Validate LEI format
+      const leiError = validateLei(value);
+      if (leiError) {
+        // Don't show toast for validation errors during typing
+        return;
+      }
       
       // Auto-populate institution and legal entity from LEI
       if (value && value.trim().length > 0) {
@@ -51,16 +60,16 @@ export const useLeiHandler = (setAccount: React.Dispatch<React.SetStateAction<Fi
         variant: "destructive"
       });
     }
-  };
+  }, [setAccount]);
 
   // Handle LEI change from input event
-  const handleLeiChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleLeiChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e || !e.target) {
       console.error("Invalid event in handleLeiChange");
       return;
     }
     handleLeiInputChange(e.target.value);
-  };
+  }, [handleLeiInputChange]);
 
   return {
     handleLeiInputChange,

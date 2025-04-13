@@ -6,11 +6,19 @@ import FileUploader from "@/components/file-uploader/FileUploader";
 interface FileUploadSectionProps {
   uploadedFiles: File[];
   handleBulkFilesSelected: (files: File[]) => void;
+  title?: string;
+  allowedFileTypes?: string;
+  maxFileSize?: number;
+  disabled?: boolean;
 }
 
 const FileUploadSection: React.FC<FileUploadSectionProps> = ({
   uploadedFiles,
-  handleBulkFilesSelected
+  handleBulkFilesSelected,
+  title = "Upload Account Statements",
+  allowedFileTypes = "application/pdf,image/*,.doc,.docx",
+  maxFileSize = 10,
+  disabled = false
 }) => {
   return (
     <Card className="border border-gray-200">
@@ -19,8 +27,10 @@ const FileUploadSection: React.FC<FileUploadSectionProps> = ({
           onFilesSelected={handleBulkFilesSelected}
           existingFiles={uploadedFiles}
           multiple={true}
-          accept="application/pdf,image/*,.doc,.docx"
-          label="Upload Account Statements"
+          accept={allowedFileTypes}
+          label={title}
+          maxSize={maxFileSize}
+          disabled={disabled}
         />
       </CardContent>
     </Card>

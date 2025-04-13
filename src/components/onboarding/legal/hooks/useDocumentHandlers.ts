@@ -1,187 +1,110 @@
 
-import { toast } from "@/components/ui/use-toast";
-import { DocumentFileWithMetadata } from "../types";
+import { useState, useCallback } from 'react';
+import { toast } from '@/components/ui/use-toast';
+import { Document } from '../types';
+
+// Define allowed file types and size
+const ALLOWED_DOCUMENT_TYPES = ['.pdf', '.doc', '.docx', '.jpg', '.jpeg', '.png'];
+const MAX_FILE_SIZE_MB = 10;
 
 export const useDocumentHandlers = (
-  documentType: string,
-  setDocumentType: (value: string) => void,
-  issueDate: string,
-  setIssueDate: (value: string) => void,
-  expiryDate: string,
-  setExpiryDate: (value: string) => void,
-  selectedFile: File | null,
-  setSelectedFile: (file: File | null) => void,
-  documentFiles: DocumentFileWithMetadata[],
-  setDocumentFiles: (files: DocumentFileWithMetadata[]) => void,
-  errors: Record<string, boolean>,
-  setErrors: (errors: Record<string, boolean>) => void,
-  isEditing: boolean,
-  setIsEditing: (value: boolean) => void,
-  editingDocumentId: string | null,
-  setEditingDocumentId: (id: string | null) => void
+  documents: Document[],
+  setDocuments: React.Dispatch<React.SetStateAction<Document[]>>
 ) => {
-  const handleDocumentTypeChange = (value: string) => {
-    setDocumentType(value);
-    if (errors.documentType) {
-      const updatedErrors = { ...errors };
-      delete updatedErrors.documentType;
-      setErrors(updatedErrors);
-    }
-  };
+  const [fileError, setFileError] = useState<string | null>(null);
 
-  const handleDateChange = (field: 'issueDate' | 'expiryDate', date?: Date) => {
-    if (date) {
-      if (field === 'issueDate') {
-        setIssueDate(date.toISOString());
-        if (errors.issueDate) {
-          const updatedErrors = { ...errors };
-          delete updatedErrors.issueDate;
-          setErrors(updatedErrors);
-        }
-      } else {
-        setExpiryDate(date.toISOString());
-      }
-    } else if (field === 'expiryDate') {
-      setExpiryDate('');
-    }
-  };
-
-  const handleFileSelected = (files: File[]) => {
-    if (files.length > 0) {
-      setSelectedFile(files[0]);
-      if (errors.selectedFile) {
-        const updatedErrors = { ...errors };
-        delete updatedErrors.selectedFile;
-        setErrors(updatedErrors);
-      }
-    } else {
-      setSelectedFile(null);
-    }
-  };
-  
-  const handleFileClear = () => {
-    setSelectedFile(null);
-  };
-
-  const validateAddDocument = () => {
-    const newErrors: Record<string, boolean> = {};
-    
-    if (!documentType) {
-      newErrors.documentType = true;
-    }
-    
-    if (!issueDate) {
-      newErrors.issueDate = true;
-    }
-    
-    if (!selectedFile) {
-      newErrors.selectedFile = true;
-    }
-    
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-  
-  const handleAddDocument = () => {
-    if (!validateAddDocument()) {
-      toast({
-        title: "Missing information",
-        description: "Please select document type, issue date, and upload a document.",
-        variant: "destructive"
-      });
-      return;
+  // Validate a file meets requirements
+  const validateFile = useCallback((file: File): boolean => {
+    // Check file size
+    const maxSizeBytes = MAX_FILE_SIZE_MB * 1024 * 1024;
+    if (file.size > maxSizeBytes) {
+      setFileError(`File size exceeds the maximum allowed size of ${MAX_FILE_SIZE_MB}MB`);
+      return false;
     }
 
-    if (isEditing && editingDocumentId && selectedFile) {
-      const updatedDocuments = documentFiles.map(doc => {
-        if (doc.id === editingDocumentId) {
-          return {
-            ...doc,
-            file: selectedFile,
-            documentType,
-            issueDate,
-            expiryDate: expiryDate || undefined
-          };
-        }
-        return doc;
-      });
-      
-      setDocumentFiles(updatedDocuments);
-      
-      toast({
-        title: "Document updated",
-        description: "Your document has been updated successfully.",
-      });
-    } else if (selectedFile) {
-      const newDocument: DocumentFileWithMetadata = {
-        id: crypto.randomUUID(),
-        file: selectedFile,
-        documentType,
-        issueDate,
-        expiryDate: expiryDate || undefined
+    // Check file extension
+    const fileExtension = `.${file.name.split('.').pop()?.toLowerCase()}`;
+    if (!ALLOWED_DOCUMENT_TYPES.includes(fileExtension)) {
+      setFileError(`File type not supported. Allowed types: ${ALLOWED_DOCUMENT_TYPES.join(', ')}`);
+      return false;
+    }
+
+    setFileError(null);
+    return true;
+  }, []);
+
+  // Handle file selection
+  const handleFileSelected = useCallback((files: File[]) => {
+    if (files.length === 0) return;
+    
+    const file = files[0]; // Only use the first file since we're not using multiple
+    if (!validateFile(file)) return;
+    
+    setDocuments(prevDocs => {
+      const currentDoc = prevDocs[0] || { 
+        id: Date.now().toString(),
+        type: '',
+        description: '',
+        file: null
       };
       
-      setDocumentFiles([...documentFiles, newDocument]);
-      
-      toast({
-        title: "Document added",
-        description: "Your document has been added successfully.",
-      });
-    }
-    
-    resetForm();
-  };
-
-  const resetForm = () => {
-    setDocumentType("");
-    setIssueDate("");
-    setExpiryDate("");
-    setSelectedFile(null);
-    setIsEditing(false);
-    setEditingDocumentId(null);
-  };
-
-  const handleEditDocument = (id: string) => {
-    const docToEdit = documentFiles.find(doc => doc.id === id);
-    if (!docToEdit) return;
-    
-    setDocumentType(docToEdit.documentType || "");
-    setIssueDate(docToEdit.issueDate || "");
-    setExpiryDate(docToEdit.expiryDate || "");
-    setSelectedFile(docToEdit.file);
-    
-    setIsEditing(true);
-    setEditingDocumentId(id);
-  };
-
-  const handleCancelEdit = () => {
-    resetForm();
-  };
-
-  const handleRemoveDocument = (id: string) => {
-    const updatedFiles = documentFiles.filter(doc => doc.id !== id);
-    setDocumentFiles(updatedFiles);
-    
-    if (isEditing && editingDocumentId === id) {
-      resetForm();
-    }
+      return [{ ...currentDoc, file }];
+    });
     
     toast({
-      title: "Document removed",
-      description: "The document has been removed successfully.",
+      title: "File uploaded",
+      description: "Document has been successfully uploaded.",
     });
-  };
+  }, [validateFile, setDocuments]);
+
+  // Handle clearing the selected file
+  const handleFileClear = useCallback(() => {
+    setDocuments(prevDocs => {
+      if (prevDocs.length === 0) return prevDocs;
+      
+      const currentDoc = prevDocs[0];
+      return [{ ...currentDoc, file: null }];
+    });
+    
+    setFileError(null);
+  }, [setDocuments]);
+
+  // Handle document type change
+  const handleDocumentTypeChange = useCallback((type: string) => {
+    setDocuments(prevDocs => {
+      const currentDoc = prevDocs[0] || { 
+        id: Date.now().toString(),
+        type: '',
+        description: '',
+        file: null
+      };
+      
+      return [{ ...currentDoc, type }];
+    });
+  }, [setDocuments]);
+
+  // Handle document description change
+  const handleDescriptionChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const description = e.target.value;
+    
+    setDocuments(prevDocs => {
+      const currentDoc = prevDocs[0] || { 
+        id: Date.now().toString(),
+        type: '',
+        description: '',
+        file: null
+      };
+      
+      return [{ ...currentDoc, description }];
+    });
+  }, [setDocuments]);
 
   return {
-    handleDocumentTypeChange,
-    handleDateChange,
+    fileError,
+    validateFile,
     handleFileSelected,
     handleFileClear,
-    handleAddDocument,
-    handleEditDocument,
-    handleCancelEdit,
-    handleRemoveDocument,
-    validateAddDocument,
-    resetForm
+    handleDocumentTypeChange,
+    handleDescriptionChange
   };
 };

@@ -8,71 +8,96 @@ interface ApiError extends Error {
   data?: any;
 }
 
+// Add CSRF token handling
+const getCsrfToken = (): string => {
+  // Get token from meta tag or cookie
+  const metaTag = document.querySelector('meta[name="csrf-token"]');
+  if (metaTag) {
+    return metaTag.getAttribute('content') || '';
+  }
+  return '';
+};
+
+// Create default headers with security measures
+const createHeaders = (contentType = 'application/json'): HeadersInit => {
+  const headers: HeadersInit = {
+    'Content-Type': contentType,
+    'X-Requested-With': 'XMLHttpRequest', // Helps protect against CSRF
+  };
+  
+  // Add CSRF token if available
+  const csrfToken = getCsrfToken();
+  if (csrfToken) {
+    headers['X-CSRF-Token'] = csrfToken;
+  }
+  
+  return headers;
+};
+
+// Sanitize URL path to prevent path traversal
+const sanitizeEndpoint = (endpoint: string): string => {
+  // Ensure endpoint starts with / and contains no ../ sequences
+  if (!endpoint.startsWith('/') || endpoint.includes('..')) {
+    throw new Error('Invalid endpoint path');
+  }
+  return endpoint;
+};
+
 // Generic API client with type safety
 export const apiClient = {
   get: async <T>(endpoint: string): Promise<T> => {
     try {
-      // In a real implementation, this would be a fetch call to your API
-      // For now we'll simulate a response
-      console.log(`GET request to ${API_BASE_URL}${endpoint}`);
+      const sanitizedEndpoint = sanitizeEndpoint(endpoint);
       
-      // Prevent path traversal attacks
-      if (endpoint.includes('..') || !endpoint.startsWith('/')) {
-        throw new Error('Invalid endpoint path');
-      }
+      // In a real implementation, this would include the fetch call
+      // For now we'll simulate a response
       
       return {} as T;
     } catch (error) {
       const apiError = error as ApiError;
-      console.error("API error:", apiError);
       throw apiError;
     }
   },
   
   post: async <T>(endpoint: string, data: any): Promise<T> => {
     try {
-      // Prevent path traversal attacks
-      if (endpoint.includes('..') || !endpoint.startsWith('/')) {
-        throw new Error('Invalid endpoint path');
-      }
+      const sanitizedEndpoint = sanitizeEndpoint(endpoint);
       
-      console.log(`POST request to ${API_BASE_URL}${endpoint}`, data);
+      // In a real implementation, this would include the fetch call with:
+      // headers: createHeaders(),
+      // body: JSON.stringify(data),
+      
       return {} as T;
     } catch (error) {
       const apiError = error as ApiError;
-      console.error("API error:", apiError);
       throw apiError;
     }
   },
   
   put: async <T>(endpoint: string, data: any): Promise<T> => {
     try {
-      // Prevent path traversal attacks
-      if (endpoint.includes('..') || !endpoint.startsWith('/')) {
-        throw new Error('Invalid endpoint path');
-      }
+      const sanitizedEndpoint = sanitizeEndpoint(endpoint);
       
-      console.log(`PUT request to ${API_BASE_URL}${endpoint}`, data);
+      // In a real implementation, this would include the fetch call with:
+      // headers: createHeaders(),
+      // body: JSON.stringify(data),
+      
       return {} as T;
     } catch (error) {
       const apiError = error as ApiError;
-      console.error("API error:", apiError);
       throw apiError;
     }
   },
   
   delete: async <T>(endpoint: string): Promise<T> => {
     try {
-      // Prevent path traversal attacks
-      if (endpoint.includes('..') || !endpoint.startsWith('/')) {
-        throw new Error('Invalid endpoint path');
-      }
+      const sanitizedEndpoint = sanitizeEndpoint(endpoint);
       
-      console.log(`DELETE request to ${API_BASE_URL}${endpoint}`);
+      // In a real implementation, this would include the fetch call
+      
       return {} as T;
     } catch (error) {
       const apiError = error as ApiError;
-      console.error("API error:", apiError);
       throw apiError;
     }
   }

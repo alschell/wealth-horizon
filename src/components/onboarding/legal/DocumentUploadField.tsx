@@ -13,6 +13,10 @@ interface DocumentUploadFieldProps {
   error?: boolean;
   documentType?: string;
   onFileDelete?: () => void;
+  disabled?: boolean;
+  accept?: string;
+  maxSize?: number;
+  label?: string;
 }
 
 const DocumentUploadField: React.FC<DocumentUploadFieldProps> = ({ 
@@ -21,7 +25,11 @@ const DocumentUploadField: React.FC<DocumentUploadFieldProps> = ({
   onFileClear,
   error,
   documentType,
-  onFileDelete
+  onFileDelete,
+  disabled = false,
+  accept = ".pdf,.doc,.docx,.jpg,.jpeg,.png",
+  maxSize = 10,
+  label = "Upload Legal Document"
 }) => {
   const existingFiles = file ? [file] : [];
   
@@ -36,7 +44,7 @@ const DocumentUploadField: React.FC<DocumentUploadFieldProps> = ({
   return (
     <div className="space-y-2">
       <Label htmlFor="documentFile">
-        Upload Legal Document<span className="text-red-500 ml-1">*</span>
+        {label}<span className="text-red-500 ml-1" aria-hidden="true">*</span>
       </Label>
       <div 
         className={cn(
@@ -45,12 +53,13 @@ const DocumentUploadField: React.FC<DocumentUploadFieldProps> = ({
         )}
       >
         <FileUploader
-          accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+          accept={accept}
           multiple={false}
-          maxSize={10}
+          maxSize={maxSize}
           onFilesSelected={onFileSelected}
           existingFiles={existingFiles}
-          label="Upload Legal Document"
+          label={label}
+          disabled={disabled}
           customFileDeleteButton={(file) => (
             <Button
               type="button"
@@ -58,6 +67,8 @@ const DocumentUploadField: React.FC<DocumentUploadFieldProps> = ({
               size="sm"
               className="text-gray-500 hover:text-red-500 p-2 h-auto"
               onClick={handleCustomFileDelete}
+              aria-label="Remove document"
+              disabled={disabled}
             >
               <Trash2 className="h-5 w-5" />
               <span className="sr-only">Remove document</span>
@@ -67,7 +78,7 @@ const DocumentUploadField: React.FC<DocumentUploadFieldProps> = ({
       </div>
       
       {error && (
-        <p className="text-sm font-medium text-red-500">
+        <p className="text-sm font-medium text-red-500" aria-live="polite">
           Please upload a document
         </p>
       )}

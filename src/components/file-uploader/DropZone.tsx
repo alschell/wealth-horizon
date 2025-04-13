@@ -11,6 +11,7 @@ interface DropZoneProps {
   onDragOver: (e: React.DragEvent<HTMLDivElement>) => void;
   onDragLeave: () => void;
   onDrop: (e: React.DragEvent<HTMLDivElement>) => void;
+  disabled?: boolean;
 }
 
 const DropZone: React.FC<DropZoneProps> = ({
@@ -22,6 +23,7 @@ const DropZone: React.FC<DropZoneProps> = ({
   onDragOver,
   onDragLeave,
   onDrop,
+  disabled = false,
 }) => {
   // Format the accept string for display
   const formatAcceptString = (acceptString: string) => {
@@ -45,22 +47,34 @@ const DropZone: React.FC<DropZoneProps> = ({
     <div
       className={`
         border-2 border-dashed rounded-xl p-8 transition-all duration-200
-        flex flex-col items-center justify-center cursor-pointer
+        flex flex-col items-center justify-center
+        ${disabled ? 'cursor-not-allowed opacity-60' : 'cursor-pointer'}
         ${isDragging ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-blue-300 hover:bg-blue-50/50'}
       `}
-      onDragOver={onDragOver}
-      onDragLeave={onDragLeave}
-      onDrop={onDrop}
-      onClick={onClick}
+      onDragOver={!disabled ? onDragOver : undefined}
+      onDragLeave={!disabled ? onDragLeave : undefined}
+      onDrop={!disabled ? onDrop : undefined}
+      onClick={!disabled ? onClick : undefined}
+      role="button"
+      tabIndex={disabled ? -1 : 0}
+      aria-disabled={disabled}
+      aria-label={`Drop zone for ${label}`}
     >
       <div className="flex flex-col items-center space-y-3 text-center">
         <div className="p-3 rounded-full bg-blue-100">
-          <Upload className="h-6 w-6 text-blue-600" />
+          <Upload className="h-6 w-6 text-blue-600" aria-hidden="true" />
         </div>
         <div>
           <p className="font-medium">{label}</p>
           <p className="text-sm text-gray-500 mt-1">
-            Drag and drop your files, or <span className="text-blue-600 font-medium">browse</span>
+            {disabled 
+              ? "File upload is currently disabled" 
+              : (
+                <>
+                  Drag and drop your files, or <span className="text-blue-600 font-medium">browse</span>
+                </>
+              )
+            }
           </p>
           <p className="text-xs text-gray-400 mt-2">
             Max {maxSize}MB per file • {acceptDisplay}

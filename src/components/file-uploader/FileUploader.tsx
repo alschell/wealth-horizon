@@ -1,8 +1,23 @@
+
 import { useState, useRef } from "react";
 import { toast } from "@/components/ui/use-toast";
 import DropZone from "./DropZone";
 import FileList from "./FileList";
 import DeleteFileDialog from "./DeleteFileDialog";
+
+// Constants for file validation
+const DEFAULT_MAX_SIZE = 10; // 10MB
+const MIME_TYPE_MAP: Record<string, string[]> = {
+  // Images
+  'image/*': ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'],
+  // Documents
+  'application/pdf': ['application/pdf'],
+  '.doc': ['application/msword'],
+  '.docx': ['application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
+  // Excel
+  'application/vnd.ms-excel': ['application/vnd.ms-excel'],
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'],
+};
 
 interface FileUploaderProps {
   accept?: string;
@@ -13,17 +28,19 @@ interface FileUploaderProps {
   label?: string;
   onFileDelete?: (index: number) => void;
   customFileDeleteButton?: (file: any) => React.ReactNode;
+  disabled?: boolean;
 }
 
 const FileUploader = ({
   accept = "application/pdf,image/*,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
   multiple = true,
-  maxSize = 10, // 10MB default max size
+  maxSize = DEFAULT_MAX_SIZE,
   onFilesSelected,
   existingFiles = [],
   label = "Upload Documents",
   onFileDelete,
-  customFileDeleteButton
+  customFileDeleteButton,
+  disabled = false
 }: FileUploaderProps) => {
   const [files, setFiles] = useState<File[]>(existingFiles);
   const [isDragging, setIsDragging] = useState(false);
@@ -35,15 +52,53 @@ const FileUploader = ({
     return filename.replace(/[^a-zA-Z0-9.-_\s]/g, '');
   };
 
+  const validateFileType = (file: File): boolean => {
+    // Get the file extension
+    const fileExt = file.name.split('.').pop()?.toLowerCase();
+    const fileExtWithDot = fileExt ? `.${fileExt}` : '';
+    
+    // Check if file type is valid
+    const acceptTypes = accept.split(',');
+    
+    // First check by MIME type
+    for (const type of acceptTypes) {
+      // Check for direct MIME type match
+      if (type === file.type) {
+        return true;
+      }
+      
+      // Check for wildcard MIME type match (e.g., image/*)
+      if (type.endsWith('*') && file.type.startsWith(type.split('*')[0])) {
+        return true;
+      }
+      
+      // Check by extension
+      if (type.startsWith('.') && fileExtWithDot === type) {
+        return true;
+      }
+      
+      // Check with MIME type mapping
+      if (MIME_TYPE_MAP[type] && MIME_TYPE_MAP[type].includes(file.type)) {
+        return true;
+      }
+    }
+    
+    return false;
+  };
+
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (disabled) return;
     const selectedFiles = Array.from(event.target.files || []);
     processFiles(selectedFiles);
   };
 
   const processFiles = (selectedFiles: File[]) => {
+    if (disabled) return;
+    
     const validFiles = selectedFiles.filter(file => {
       const sanitizedName = sanitizeFileName(file.name);
       
+      // Validate file size
       const isValidSize = file.size <= maxSize * 1024 * 1024;
       if (!isValidSize) {
         toast({
@@ -54,36 +109,8 @@ const FileUploader = ({
         return false;
       }
       
-      const acceptTypes = accept.split(',').map(type => {
-        if (type.startsWith('.')) {
-          switch (type.toLowerCase()) {
-            case '.pdf': return 'application/pdf';
-            case '.doc': return 'application/msword';
-            case '.docx': return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
-            case '.jpg':
-            case '.jpeg': return 'image/jpeg';
-            case '.png': return 'image/png';
-            default: return type;
-          }
-        }
-        return type;
-      });
-      
-      const fileType = file.type;
-      const fileExt = file.name.split('.').pop()?.toLowerCase();
-      
-      const isValidType = acceptTypes.some(type => {
-        if (type.includes('*')) {
-          return fileType.startsWith(type.split('*')[0]);
-        }
-        if (!fileType && fileExt) {
-          if (accept.includes(`.${fileExt}`)) {
-            return true;
-          }
-        }
-        return type === fileType;
-      });
-      
+      // Validate file type
+      const isValidType = validateFileType(file);
       if (!isValidType) {
         toast({
           title: "Invalid file type",
@@ -111,7 +138,9 @@ const FileUploader = ({
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
-    setIsDragging(true);
+    if (!disabled) {
+      setIsDragging(true);
+    }
   };
 
   const handleDragLeave = () => {
@@ -122,8 +151,10 @@ const FileUploader = ({
     e.preventDefault();
     setIsDragging(false);
     
-    const droppedFiles = Array.from(e.dataTransfer.files);
-    processFiles(droppedFiles);
+    if (!disabled) {
+      const droppedFiles = Array.from(e.dataTransfer.files);
+      processFiles(droppedFiles);
+    }
   };
 
   const handleDeleteClick = (index: number) => {
@@ -147,7 +178,9 @@ const FileUploader = ({
   };
 
   const openFileDialog = () => {
-    fileInputRef.current?.click();
+    if (!disabled && fileInputRef.current) {
+      fileInputRef.current.click();
+    }
   };
 
   return (
@@ -161,6 +194,7 @@ const FileUploader = ({
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
+        disabled={disabled}
       />
       
       <input
@@ -170,6 +204,8 @@ const FileUploader = ({
         multiple={multiple}
         accept={accept}
         onChange={handleFileChange}
+        disabled={disabled}
+        aria-label="File input"
       />
       
       <FileList 

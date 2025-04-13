@@ -17,6 +17,7 @@ const LandingLayout: React.FC = () => {
   const contactRef = useRef<HTMLDivElement>(null);
   const aboutRef = useRef<HTMLDivElement>(null);
 
+  // Handle hash-based navigation
   useEffect(() => {
     if (location.hash) {
       const id = location.hash.substring(1);
@@ -27,7 +28,7 @@ const LandingLayout: React.FC = () => {
         }, 100);
       }
     }
-  }, [location]);
+  }, [location.hash]); // Optimize by only depending on location.hash
 
   const scrollToSection = (sectionRef: React.RefObject<HTMLDivElement>) => {
     if (sectionRef.current) {

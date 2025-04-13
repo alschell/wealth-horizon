@@ -9,6 +9,8 @@ interface ErrorBoundaryProps {
   fallback?: ReactNode;
   onError?: (error: Error, errorInfo: ErrorInfo) => void;
   resetOnPropsChange?: boolean;
+  logErrorToConsole?: boolean;
+  showErrorNotification?: boolean;
 }
 
 interface ErrorBoundaryState {
@@ -31,12 +33,24 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
-    // Log error to an error reporting service
-    console.error('Error caught by ErrorBoundary:', error, errorInfo);
+    const { onError, logErrorToConsole = true, showErrorNotification = true } = this.props;
+    
+    // Log error to console if enabled
+    if (logErrorToConsole) {
+      console.error('Error caught by ErrorBoundary:', error, errorInfo);
+    }
+    
+    // Show toast notification if enabled
+    if (showErrorNotification) {
+      showErrorToast(
+        'Application Error', 
+        error.message || 'An unexpected error occurred'
+      );
+    }
 
     // Call onError callback if provided
-    if (this.props.onError) {
-      this.props.onError(error, errorInfo);
+    if (onError) {
+      onError(error, errorInfo);
     }
   }
 

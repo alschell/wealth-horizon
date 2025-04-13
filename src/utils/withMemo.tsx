@@ -1,8 +1,9 @@
 
-import React, { memo, ComponentType } from 'react';
+import React, { memo, ComponentType, FC } from 'react';
 
 /**
  * Higher-order component for memoizing React components with proper typing
+ * and customizable comparison functions
  * 
  * @param Component - The component to memoize
  * @param propsAreEqual - Optional custom comparison function
@@ -32,5 +33,17 @@ export function createPropsComparator<P extends object>(propNames: (keyof P)[]):
     return propNames.every(propName => {
       return Object.is(prevProps[propName], nextProps[propName]);
     });
+  };
+}
+
+/**
+ * HOC that applies memoization to a component with a specific props comparator
+ * 
+ * @param propNames - Array of prop names to compare
+ * @returns HOC that memoizes a component checking only the specified props
+ */
+export function withSelectiveMemo<P extends object>(propNames: (keyof P)[]) {
+  return (Component: ComponentType<P>): FC<P> => {
+    return withMemo(Component, createPropsComparator<P>(propNames));
   };
 }

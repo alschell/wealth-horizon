@@ -27,7 +27,7 @@ export const showConfirmation = (message: string) => success('Success', message)
 /**
  * Display a simple error toast - useful for catching exceptions
  * 
- * @param error - Error object or message
+ * @param err - Error object or message
  */
 export const showException = (err: unknown) => {
   const message = err instanceof Error 

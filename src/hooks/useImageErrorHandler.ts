@@ -1,48 +1,36 @@
 
 import { useCallback } from 'react';
 
-interface ImageErrorHandlerOptions {
+export interface ImageErrorHandlerOptions {
   fallbackSrc?: string;
-  onError?: (error: Event) => void;
-  altText?: string;
+  onError?: (event: Event) => void;
   logErrors?: boolean;
 }
 
 /**
- * A hook that returns a handler for image loading errors
- * 
- * @param options - Configuration options
- * @returns A callback function to handle image errors
+ * Hook to handle image loading errors with fallback and logging
  */
-export const useImageErrorHandler = (options: ImageErrorHandlerOptions = {}) => {
-  const {
-    fallbackSrc = '/assets/dashboard-fallback.png',
-    onError,
-    altText = 'Image',
-    logErrors = true
-  } = options;
-
-  const handleImageError = useCallback((event: React.SyntheticEvent<HTMLImageElement>) => {
-    const img = event.currentTarget;
+export function useImageErrorHandler({
+  fallbackSrc,
+  onError,
+  logErrors = false
+}: ImageErrorHandlerOptions = {}) {
+  return useCallback((e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    const imgElement = e.currentTarget;
     
-    // Log the error if enabled
+    // Log error if enabled
     if (logErrors) {
-      console.warn(`Failed to load image${img.alt ? ` (${img.alt})` : ''}: ${img.src}`);
+      console.error('Image failed to load:', imgElement.src);
     }
     
-    // Set the fallback image
-    img.src = fallbackSrc;
-    
-    // If no alt text is set, add a descriptive one
-    if (!img.alt) {
-      img.alt = altText;
-    }
-    
-    // Call the custom error handler if provided
+    // Call custom error handler if provided
     if (onError) {
-      onError(event.nativeEvent);
+      onError(e.nativeEvent);
     }
-  }, [fallbackSrc, onError, altText, logErrors]);
-
-  return handleImageError;
-};
+    
+    // Use fallback image if provided
+    if (fallbackSrc && imgElement.src !== fallbackSrc) {
+      imgElement.src = fallbackSrc;
+    }
+  }, [fallbackSrc, onError, logErrors]);
+}

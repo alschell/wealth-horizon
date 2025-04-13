@@ -47,3 +47,5 @@ export const LoadingOverlay: React.FC<LoadingOverlayProps> = ({
     </div>
   );
 };
+
+export default LoadingOverlay;

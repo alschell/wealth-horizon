@@ -1,82 +1,50 @@
 
-import { toast } from "@/components/ui/use-toast";
-
 /**
- * Display a success toast message
- * 
- * @param title - Toast title
- * @param message - Toast message
+ * Toast utility implementation with consistent styling and behavior
  */
-export const showSuccess = (title: string, message: string) => {
-  toast({
-    title,
+import { toast } from "sonner";
+
+// Toast duration defaults
+const DEFAULT_DURATION = 5000;
+const ERROR_DURATION = 7000;
+
+// Toast types with consistent styling and behavior
+export const showSuccess = (title: string, message: string, duration = DEFAULT_DURATION) => {
+  toast.success(title, {
     description: message,
-    variant: "default"
+    duration,
   });
 };
 
-/**
- * Display an error toast message
- * 
- * @param title - Toast title
- * @param message - Toast message
- */
-export const showError = (title: string, message: string) => {
-  toast({
-    title,
+export const showError = (title: string, message: string, duration = ERROR_DURATION) => {
+  toast.error(title, {
     description: message,
-    variant: "destructive"
+    duration,
   });
 };
 
-/**
- * Display a warning toast message
- * 
- * @param title - Toast title
- * @param message - Toast message
- */
-export const showWarning = (title: string, message: string) => {
-  toast({
-    title,
+export const showWarning = (title: string, message: string, duration = DEFAULT_DURATION) => {
+  toast.warning(title, {
     description: message,
-    variant: "destructive",
-    className: "bg-amber-50 border-amber-200 text-amber-800"
+    duration,
   });
 };
 
-/**
- * Display an info toast message
- * 
- * @param title - Toast title
- * @param message - Toast message
- */
-export const showInfo = (title: string, message: string) => {
-  toast({
-    title,
+export const showInfo = (title: string, message: string, duration = DEFAULT_DURATION) => {
+  toast.info(title, {
     description: message,
-    variant: "default"
+    duration,
   });
 };
 
-/**
- * Display a toast notification for action results
- * 
- * @param success - Whether action was successful
- * @param successTitle - Success toast title
- * @param successMessage - Success toast message
- * @param errorTitle - Error toast title (optional)
- * @param errorMessage - Error toast message (optional)
- */
 export const showActionResult = (
   success: boolean,
-  successTitle: string,
   successMessage: string,
-  errorTitle = "Error",
-  errorMessage = "An error occurred. Please try again."
+  errorMessage: string
 ) => {
   if (success) {
-    showSuccess(successTitle, successMessage);
+    showSuccess('Success', successMessage);
   } else {
-    showError(errorTitle, errorMessage);
+    showError('Error', errorMessage);
   }
 };

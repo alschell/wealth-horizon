@@ -1,98 +1,67 @@
 
 import React from 'react';
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { LoadingSpinner } from '@/components/common/LoadingSpinner';
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
 
 interface ConfirmationDialogProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
+  isOpen: boolean;
+  onClose: () => void;
+  onConfirm: () => void;
   title: string;
-  description?: string;
+  description: string;
   confirmText?: string;
   cancelText?: string;
-  onConfirm: () => void | Promise<void>;
-  onCancel?: () => void;
-  confirmVariant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link';
+  confirmVariant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link";
   isLoading?: boolean;
-  children?: React.ReactNode;
 }
 
 /**
- * Reusable confirmation dialog component
- * Handles common confirmation patterns with loading state
+ * Reusable confirmation dialog component with loading state support
  */
 export const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
-  open,
-  onOpenChange,
+  isOpen,
+  onClose,
+  onConfirm,
   title,
   description,
-  confirmText = 'Confirm',
-  cancelText = 'Cancel',
-  onConfirm,
-  onCancel,
-  confirmVariant = 'default',
+  confirmText = "Confirm",
+  cancelText = "Cancel",
+  confirmVariant = "default",
   isLoading = false,
-  children,
 }) => {
-  const handleCancel = () => {
-    onOpenChange(false);
-    if (onCancel) {
-      onCancel();
-    }
-  };
-
-  const handleConfirm = async () => {
-    await onConfirm();
-    if (!isLoading) {
-      onOpenChange(false);
-    }
-  };
-
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>{title}</DialogTitle>
-          {description && <DialogDescription>{description}</DialogDescription>}
-        </DialogHeader>
-        
-        {children}
-        
-        <DialogFooter className="gap-2 sm:gap-0">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={handleCancel}
-            disabled={isLoading}
-          >
-            {cancelText}
-          </Button>
-          
-          <Button
-            type="button"
-            variant={confirmVariant}
-            onClick={handleConfirm}
-            disabled={isLoading}
-          >
-            {isLoading ? (
-              <>
-                <LoadingSpinner size="sm" className="mr-2" />
-                <span>Processing...</span>
-              </>
-            ) : (
-              confirmText
-            )}
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+    <AlertDialog open={isOpen} onOpenChange={onClose}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>{title}</AlertDialogTitle>
+          <AlertDialogDescription>{description}</AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel asChild>
+            <Button variant="outline" disabled={isLoading}>{cancelText}</Button>
+          </AlertDialogCancel>
+          <AlertDialogAction asChild>
+            <Button 
+              variant={confirmVariant} 
+              onClick={onConfirm}
+              disabled={isLoading}
+            >
+              {isLoading ? "Loading..." : confirmText}
+            </Button>
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 };
+
+export default ConfirmationDialog;

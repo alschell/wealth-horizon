@@ -14,8 +14,8 @@ interface AccountFormFieldsProps {
   onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onSelectionChange: (field: keyof FinancialAccountInfo, value: string) => void;
   onStatementsSelected: (files: File[]) => void;
-  onLegalEntityChange: (value: string) => void; // Added the missing prop
-  onLeiChange: (e: React.ChangeEvent<HTMLInputElement>) => void; // Added the missing prop
+  onLegalEntityChange: (value: string) => void;
+  onLeiChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const AccountFormFields = ({
@@ -54,18 +54,21 @@ const AccountFormFields = ({
         onSelectionChange={onSelectionChange}
         handleLegalEntityChange={handleEntityChange}
         handleLeiChange={handleLeiInputChange}
+        errors={errors}
       />
       
       <BasicInfoSection
         account={account}
         onInputChange={onInputChange}
         onSelectionChange={onSelectionChange}
+        errors={errors}
       />
       
       <AccountDetailsSection
         account={account}
         onInputChange={onInputChange}
         onSelectionChange={onSelectionChange}
+        errors={errors}
       />
     </div>
   );

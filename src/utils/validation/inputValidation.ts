@@ -1,153 +1,131 @@
 
 /**
- * Input validation utilities for form fields
- * Contains validators for common input types like email, phone, password, etc.
+ * Input validation utilities
  */
 
-// Type definitions for validation results
-export type ValidationResult = {
-  valid: boolean;
-  message: string | null;
-};
-
 /**
- * Validates email format with proper pattern and error handling
+ * Validates an email address
  * 
- * @param email - Email string to validate
- * @returns Null if valid, error message if invalid
+ * @param email - Email to validate
+ * @returns Error message or null if valid
  */
 export const validateEmail = (email: string): string | null => {
-  try {
-    if (!email.trim()) return "Email is required";
-    
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    if (!emailRegex.test(email)) {
-      return "Please enter a valid email address";
-    }
-    
-    return null;
-  } catch (error) {
-    console.error("Email validation error:", error);
-    return "Email validation failed";
+  if (!email) return null; // Empty check should be done separately
+  
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    return "Please enter a valid email address";
   }
+  return null;
 };
 
 /**
- * Validates phone number format with international format support
+ * Validates a phone number
  * 
- * @param phone - Phone number string to validate
- * @returns Null if valid, error message if invalid
+ * @param phone - Phone number to validate
+ * @returns Error message or null if valid
  */
 export const validatePhone = (phone: string): string | null => {
-  try {
-    if (!phone.trim()) return "Phone number is required";
-    
-    // Allow for different international formats
-    const phoneRegex = /^[+]?[(]?[0-9]{1,4}[)]?[-\s.]?[0-9]{1,4}[-\s.]?[0-9]{1,9}$/;
-    if (!phoneRegex.test(phone)) {
-      return "Please enter a valid phone number";
-    }
-    
-    return null;
-  } catch (error) {
-    console.error("Phone validation error:", error);
-    return "Phone validation failed";
+  if (!phone) return null; // Empty check should be done separately
+  
+  // Allow formats like +1 123-456-7890, (123) 456-7890, 123.456.7890, etc.
+  const phoneRegex = /^(\+\d{1,3} ?)?(\(?\d{3}\)?[\s.-]?)?\d{3}[\s.-]?\d{4}$/;
+  if (!phoneRegex.test(phone)) {
+    return "Please enter a valid phone number";
   }
+  return null;
 };
 
 /**
- * Validates password strength with security requirements
+ * Validates a URL
  * 
- * @param password - Password string to validate
- * @returns Null if valid, error message if invalid
- */
-export const validatePassword = (password: string): string | null => {
-  try {
-    if (!password) return "Password is required";
-    if (password.length < 8) return "Password must be at least 8 characters";
-    
-    // Check for complexity requirements
-    const hasUppercase = /[A-Z]/.test(password);
-    const hasLowercase = /[a-z]/.test(password);
-    const hasNumber = /[0-9]/.test(password);
-    const hasSpecial = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password);
-    
-    if (!(hasUppercase && hasLowercase && (hasNumber || hasSpecial))) {
-      return "Password must include uppercase, lowercase, and either numbers or special characters";
-    }
-    
-    return null;
-  } catch (error) {
-    console.error("Password validation error:", error);
-    return "Password validation failed";
-  }
-};
-
-/**
- * Validates URL format
- * 
- * @param url - URL string to validate
- * @returns Null if valid, error message if invalid
+ * @param url - URL to validate
+ * @returns Error message or null if valid
  */
 export const validateUrl = (url: string): string | null => {
+  if (!url) return null; // Empty check should be done separately
+  
   try {
-    if (!url.trim()) return "URL is required";
-    
-    try {
-      new URL(url);
-      return null;
-    } catch {
-      return "Please enter a valid URL";
-    }
-  } catch (error) {
-    console.error("URL validation error:", error);
-    return "URL validation failed";
-  }
-};
-
-/**
- * Validates required field
- * 
- * @param value - Field value to validate
- * @param fieldName - Name of the field for error message
- * @returns Null if valid, error message if invalid
- */
-export const validateRequired = (value: string, fieldName: string): string | null => {
-  try {
-    return !value.trim() ? `${fieldName} is required` : null;
-  } catch (error) {
-    console.error(`Required field validation error for ${fieldName}:`, error);
-    return `${fieldName} validation failed`;
-  }
-};
-
-/**
- * Validates text length
- * 
- * @param value - Text value to validate
- * @param fieldName - Name of the field for error message
- * @param min - Minimum length (optional)
- * @param max - Maximum length (optional)
- * @returns Null if valid, error message if invalid
- */
-export const validateLength = (
-  value: string, 
-  fieldName: string, 
-  min?: number, 
-  max?: number
-): string | null => {
-  try {
-    if (min !== undefined && value.length < min) {
-      return `${fieldName} must be at least ${min} characters`;
-    }
-    
-    if (max !== undefined && value.length > max) {
-      return `${fieldName} cannot exceed ${max} characters`;
-    }
-    
+    new URL(url);
     return null;
-  } catch (error) {
-    console.error(`Length validation error for ${fieldName}:`, error);
-    return `${fieldName} validation failed`;
+  } catch {
+    return "Please enter a valid URL";
   }
+};
+
+/**
+ * Validates a password meets minimum requirements
+ * 
+ * @param password - Password to validate
+ * @returns Error message or null if valid
+ */
+export const validatePassword = (password: string): string | null => {
+  if (!password) return null; // Empty check should be done separately
+  
+  if (password.length < 8) {
+    return "Password must be at least 8 characters";
+  }
+  
+  // Check if it has at least one lowercase, one uppercase, one digit, and one special character
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$/;
+  if (!passwordRegex.test(password)) {
+    return "Password must include uppercase, lowercase, number, and special character";
+  }
+  
+  return null;
+};
+
+/**
+ * Validates a ZIP/postal code
+ * 
+ * @param zipCode - ZIP/postal code to validate
+ * @param countryCode - Optional country code for format validation
+ * @returns Error message or null if valid
+ */
+export const validateZipCode = (zipCode: string, countryCode = 'US'): string | null => {
+  if (!zipCode) return null; // Empty check should be done separately
+  
+  // US zip code format (5 digits, or 5+4)
+  if (countryCode === 'US') {
+    const zipRegex = /^\d{5}(-\d{4})?$/;
+    if (!zipRegex.test(zipCode)) {
+      return "Please enter a valid ZIP code (e.g., 12345 or 12345-6789)";
+    }
+  }
+  
+  // Canadian postal code format (A1A 1A1)
+  else if (countryCode === 'CA') {
+    const postalRegex = /^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$/;
+    if (!postalRegex.test(zipCode)) {
+      return "Please enter a valid postal code (e.g., A1A 1A1)";
+    }
+  }
+  
+  // UK postcode format
+  else if (countryCode === 'UK' || countryCode === 'GB') {
+    const postcodeRegex = /^[A-Z]{1,2}\d[A-Z\d]? ?\d[A-Z]{2}$/i;
+    if (!postcodeRegex.test(zipCode)) {
+      return "Please enter a valid postcode";
+    }
+  }
+  
+  return null;
+};
+
+/**
+ * Validates a name (prevents numbers and most special characters)
+ * 
+ * @param name - Name to validate
+ * @returns Error message or null if valid
+ */
+export const validateName = (name: string): string | null => {
+  if (!name) return null; // Empty check should be done separately
+  
+  // Allow letters, spaces, hyphens, and apostrophes
+  const nameRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ \-']+$/;
+  if (!nameRegex.test(name)) {
+    return "Please enter a valid name (no numbers or special characters)";
+  }
+  
+  return null;
 };

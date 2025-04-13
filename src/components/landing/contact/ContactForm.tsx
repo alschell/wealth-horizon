@@ -162,7 +162,7 @@ const ContactForm: React.FC = () => {
         </div>
       </form>
 
-      {/* Success Modal - Improved styling */}
+      {/* Success Modal - Fixed spacing and centered button */}
       <Dialog open={showSuccessModal} onOpenChange={setShowSuccessModal}>
         <DialogContent className="sm:max-w-md flex flex-col items-center justify-center p-8" hideCloseButton>
           <div className="flex flex-col items-center justify-center w-full space-y-4 py-6">
@@ -172,8 +172,9 @@ const ContactForm: React.FC = () => {
               Message sent successfully!
             </DialogTitle>
             
-            <div className="text-center">
-              <p className="text-gray-700">Thank you for your message. We will get back to you within 1-2 working days.</p>
+            <div className="text-center space-y-1">
+              <p className="text-gray-700">Thank you for your message.</p>
+              <p className="text-gray-700">We will get back to you within 1-2 working days.</p>
             </div>
           </div>
           

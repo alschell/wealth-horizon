@@ -3,6 +3,7 @@ import React, { useState, useEffect, memo, useCallback } from 'react';
 import { User } from 'lucide-react';
 import { announceToScreenReader } from '@/utils/a11y';
 import { useToast } from '@/hooks/use-toast';
+import { useOptimizedImageLoading } from './hooks/useOptimizedImageLoading';
 
 interface TeamMemberImageProps {
   /** Image path or URL */
@@ -17,12 +18,13 @@ interface TeamMemberImageProps {
   onLoad?: () => void;
   /** Optional handler for image load error */
   onError?: () => void;
+  /** Optional priority level for loading (1 highest, 5 lowest) */
+  priority?: 1 | 2 | 3 | 4 | 5;
 }
 
 /**
  * Component for displaying team member profile images with fallback
- * Handles image loading errors gracefully by showing a placeholder
- * Includes accessibility features for screen readers
+ * Enhanced with optimized image loading, error handling and accessibility
  * 
  * @example
  * ```tsx
@@ -30,6 +32,7 @@ interface TeamMemberImageProps {
  *   image="/path/to/profile.jpg" 
  *   name="John Doe" 
  *   className="rounded-full"
+ *   priority={2}
  * />
  * ```
  */
@@ -39,56 +42,31 @@ const TeamMemberImage: React.FC<TeamMemberImageProps> = ({
   className = "",
   fallbackIconSize = 40,
   onLoad: externalOnLoad,
-  onError: externalOnError
+  onError: externalOnError,
+  priority = 3
 }) => {
-  const [hasError, setHasError] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-  const { toast } = useToast();
-  
-  // Handle image loading errors
-  const handleError = useCallback(() => {
-    setHasError(true);
-    setIsLoading(false);
-    
-    // Announce to screen reader
-    announceToScreenReader(`Image for ${name} failed to load, showing placeholder instead`);
-    
-    // Call external handler if provided
-    if (externalOnError) {
-      externalOnError();
+  // Use our optimized image loading hook
+  const { 
+    isLoading, 
+    hasError, 
+    imageProps 
+  } = useOptimizedImageLoading(image, `${name} profile photo`, {
+    lazy: true,
+    priority,
+    onSuccess: externalOnLoad,
+    onError: () => {
+      // Announce to screen reader
+      announceToScreenReader(`Image for ${name} failed to load, showing placeholder instead`);
+      
+      // Call external handler if provided
+      if (externalOnError) {
+        externalOnError();
+      }
+      
+      // Log error
+      console.error(`Failed to load image for ${name}: ${image}`);
     }
-    
-    // Log error
-    console.error(`Failed to load image for ${name}: ${image}`);
-  }, [name, image, externalOnError]);
-  
-  // Handle image load success
-  const handleLoad = useCallback(() => {
-    setIsLoading(false);
-    
-    // Call external handler if provided
-    if (externalOnLoad) {
-      externalOnLoad();
-    }
-  }, [externalOnLoad]);
-
-  // Effect to reset loading state when image URL changes
-  useEffect(() => {
-    setIsLoading(true);
-    setHasError(false);
-    
-    // Preload image
-    const img = new Image();
-    img.src = image;
-    
-    img.onload = handleLoad;
-    img.onerror = handleError;
-    
-    return () => {
-      img.onload = null;
-      img.onerror = null;
-    };
-  }, [image, handleLoad, handleError]);
+  });
   
   return (
     <div 
@@ -100,10 +78,7 @@ const TeamMemberImage: React.FC<TeamMemberImageProps> = ({
         <img
           src={image}
           alt={`${name} profile photo`}
-          className={`w-full h-full object-cover transition-opacity duration-300 ${isLoading ? 'opacity-0' : 'opacity-100'}`}
-          onError={handleError}
-          onLoad={handleLoad}
-          loading="lazy"
+          {...imageProps}
         />
       ) : (
         <div 

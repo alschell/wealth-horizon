@@ -51,94 +51,99 @@ const ContactForm: React.FC = () => {
     "Other"
   ];
 
+  // Explicitly define the inquiry options in the exact order specified
+  const inquiryOptions = [
+    "Speak with a sales representative",
+    "Request a demo",
+    "Get information on our partnership program",
+    "Other"
+  ];
+
   return (
     <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-200" style={{ height: '840px', overflowY: 'auto' }}>
       <h3 className="text-xl font-semibold text-gray-900 mb-6">Send us a message</h3>
       
       {/* Add a container with fixed height for the form to prevent layout shifts */}
       <div className="flex flex-col" style={{ minHeight: '720px' }}>
-        <form onSubmit={handleSubmit} className="space-y-6 flex-grow">
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <Input 
-              id="email" 
-              type="email" 
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="john@example.com" 
-              required 
-            />
+        <form onSubmit={handleSubmit} className="space-y-6 flex-grow flex flex-col">
+          <div className="space-y-6 flex-grow">
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input 
+                id="email" 
+                type="email" 
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="john@example.com" 
+                required 
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="full-name">Full name</Label>
+              <Input 
+                id="full-name" 
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                placeholder="John Doe" 
+                required 
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="company">Company</Label>
+              <Input 
+                id="company" 
+                value={company}
+                onChange={(e) => setCompany(e.target.value)}
+                placeholder="Your company" 
+                required 
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="industry">Industry</Label>
+              <CustomSearchableSelect 
+                id="industry"
+                label=""
+                value={industry}
+                placeholder="Select your industry"
+                options={industryOptions}
+                onChange={(value) => setIndustry(value)}
+                required={false}
+                allowCustomValue
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="inquiry-type">Type of inquiry</Label>
+              <CustomSearchableSelect 
+                id="inquiry-type"
+                label=""
+                value={inquiry}
+                placeholder="Select inquiry type"
+                options={inquiryOptions}
+                onChange={(value) => setInquiry(value)}
+                required={false}
+                allowCustomValue
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="message">Message</Label>
+              <Textarea 
+                id="message" 
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                placeholder="How can we help you?"
+                rows={6}
+                required
+                className="focus-visible:outline-none focus-visible:ring-0 focus-visible:border-black"
+              />
+            </div>
           </div>
           
-          <div className="space-y-2">
-            <Label htmlFor="full-name">Full name</Label>
-            <Input 
-              id="full-name" 
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-              placeholder="John Doe" 
-              required 
-            />
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="company">Company</Label>
-            <Input 
-              id="company" 
-              value={company}
-              onChange={(e) => setCompany(e.target.value)}
-              placeholder="Your company" 
-              required 
-            />
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="industry">Industry</Label>
-            <CustomSearchableSelect 
-              id="industry"
-              label=""
-              value={industry}
-              placeholder="Select your industry"
-              options={industryOptions}
-              onChange={(value) => setIndustry(value)}
-              required={false}
-              allowCustomValue
-            />
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="inquiry-type">Type of inquiry</Label>
-            <CustomSearchableSelect 
-              id="inquiry-type"
-              label=""
-              value={inquiry}
-              placeholder="Select inquiry type"
-              options={[
-                "Speak with a sales representative",
-                "Request a demo",
-                "Get information on our partnership program",
-                "Other"
-              ]}
-              onChange={(value) => setInquiry(value)}
-              required={false}
-              allowCustomValue
-            />
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="message">Message</Label>
-            <Textarea 
-              id="message" 
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              placeholder="How can we help you?"
-              rows={6}
-              required
-              className="focus-visible:outline-none focus-visible:ring-0 focus-visible:border-black"
-            />
-          </div>
-          
-          <div className="mt-auto">
+          <div className="mt-4">
             <Button type="submit" className="w-full md:w-auto" disabled={isSubmitting}>
               {isSubmitting ? "Sending..." : "Send Message"}
             </Button>

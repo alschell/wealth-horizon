@@ -24,7 +24,7 @@ const SocialLinks: React.FC = () => {
         <Twitter size={18} />
       </a>
       <a 
-        href="https://youtube.com" 
+        href="https://youtube.com/@wealthhorizonai" 
         target="_blank" 
         rel="noopener noreferrer"
         className="w-10 h-10 flex items-center justify-center rounded-full bg-gray-800 text-gray-300 hover:bg-indigo-600 hover:text-white transition-colors"

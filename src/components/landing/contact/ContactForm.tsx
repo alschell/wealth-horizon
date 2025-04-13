@@ -164,18 +164,22 @@ const ContactForm: React.FC = () => {
 
       {/* Success Modal */}
       <Dialog open={showSuccessModal} onOpenChange={setShowSuccessModal}>
-        <DialogContent className="sm:max-w-md" hideCloseButton>
-          <DialogHeader className="text-center">
-            <div className="mx-auto bg-indigo-50 rounded-full w-16 h-16 flex items-center justify-center mb-4">
+        <DialogContent className="sm:max-w-md flex flex-col items-center justify-center py-8" hideCloseButton>
+          <DialogHeader className="text-center w-full">
+            <div className="mx-auto bg-indigo-50 rounded-full w-16 h-16 flex items-center justify-center mb-5">
               <Check className="h-8 w-8 text-indigo-600" />
             </div>
-            <DialogTitle className="text-xl font-semibold">Message sent successfully!</DialogTitle>
+            <DialogTitle className="text-xl font-semibold text-center w-full">
+              Message sent successfully!
+            </DialogTitle>
           </DialogHeader>
-          <div className="text-center space-y-2 py-4">
+          
+          <div className="text-center space-y-3 py-5 w-full">
             <p className="text-gray-700">Thank you for your message.</p>
             <p className="text-gray-600">We will get back to you within 1-2 working days.</p>
           </div>
-          <DialogFooter className="flex justify-center pt-2">
+          
+          <DialogFooter className="flex justify-center w-full mt-2">
             <Button 
               onClick={() => setShowSuccessModal(false)}
               className="bg-black text-white hover:bg-gray-800"

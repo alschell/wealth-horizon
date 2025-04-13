@@ -1,81 +1,65 @@
 
-import { useState } from "react";
-import { toast } from "@/components/ui/use-toast";
+import { useState, useCallback } from "react";
 import { FinancialAccountInfo } from "@/types/onboarding";
-import { LEGAL_ENTITIES } from "../constants/legalEntities";
-
-// Import our refactored hooks and types
-import { 
-  DEFAULT_ACCOUNT, 
-  UseAccountFormStateProps, 
-  UseAccountFormStateReturn, 
-  createPlaceholderAccount 
-} from "./form/types";
-import { useLeiHandler } from "./form/useLeiHandler";
 import { useFormValidation } from "./form/useFormValidation";
 import { useLegalEntityHandler } from "./form/useLegalEntityHandler";
-import { useInputHandlers } from "./form/useInputHandlers";
+import { AccountFormErrors, UseAccountFormStateProps, DEFAULT_ACCOUNT } from "./form/types";
 
-export const useAccountFormState = ({ onAddAccount, initialAccount }: UseAccountFormStateProps): UseAccountFormStateReturn => {
-  // Initialize account state with default values or provided values
+export const useAccountFormState = ({
+  onAddAccount,
+  initialAccount
+}: UseAccountFormStateProps) => {
+  // Initialize account state with initial account or default values
   const [newAccount, setNewAccount] = useState<FinancialAccountInfo>(
-    initialAccount || createPlaceholderAccount()
+    initialAccount || { ...DEFAULT_ACCOUNT }
   );
-
-  // Get validation utilities
-  const { errors, validateForm, clearError, setError } = useFormValidation();
-
-  // Get LEI handler
-  const { handleLeiInputChange, handleLeiChange } = useLeiHandler(setNewAccount);
-
-  // Get legal entity handler
+  
+  // Use form validation hook
+  const { errors, validateForm, setError, clearError } = useFormValidation();
+  
+  // Use legal entity handler
   const { handleLegalEntityChange } = useLegalEntityHandler(setNewAccount, clearError);
-
-  // Get input handlers
-  const { handleInputChange, handleSelectionChange, handleFilesSelected } = useInputHandlers(
-    setNewAccount,
-    handleLeiInputChange,
-    clearError
-  );
-
-  // Use the legal entities data
-  const legalEntities = LEGAL_ENTITIES;
-
-  // Check if form is valid
+  
+  // Account form handlers
+  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setNewAccount(prev => ({ ...prev, [name]: value }));
+    clearError(name);
+  }, [clearError]);
+  
+  const handleSelectionChange = useCallback((field: keyof FinancialAccountInfo, value: string) => {
+    setNewAccount(prev => ({ ...prev, [field]: value }));
+    clearError(field as string);
+  }, [clearError]);
+  
+  const handleLeiChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setNewAccount(prev => ({ ...prev, legalEntityIdentifier: value }));
+    clearError('legalEntityIdentifier');
+  }, [clearError]);
+  
+  const handleFilesSelected = useCallback((files: File[]) => {
+    setNewAccount(prev => ({ ...prev, statements: files }));
+  }, []);
+  
+  // Add account handler
+  const handleAddAccount = useCallback(() => {
+    if (validateForm(newAccount)) {
+      onAddAccount(newAccount);
+      setNewAccount({ ...DEFAULT_ACCOUNT });
+    }
+  }, [newAccount, onAddAccount, validateForm]);
+  
+  // Get all legal entities for mapping
+  const legalEntities: Record<string, string[]> = {};
+  
+  // Check if form is valid (required fields filled)
   const isFormValid = Boolean(
     newAccount.institution && 
     newAccount.legalEntity && 
-    newAccount.accountName && 
-    newAccount.accountType
+    newAccount.accountName
   );
-
-  // Handle form submission with improved error handling
-  const handleAddAccount = () => {
-    try {
-      if (isFormValid) {
-        onAddAccount(newAccount);
-        setNewAccount(createPlaceholderAccount());
-        toast({
-          title: "Account added",
-          description: `${newAccount.accountName} has been added successfully.`,
-        });
-      } else {
-        toast({
-          title: "Incomplete Form",
-          description: "Please fill in all required fields.",
-          variant: "destructive"
-        });
-      }
-    } catch (error) {
-      console.error("Error in handleAddAccount:", error);
-      toast({
-        title: "Error",
-        description: "Failed to add account. Please try again.",
-        variant: "destructive"
-      });
-    }
-  };
-
+  
   return {
     newAccount,
     errors,

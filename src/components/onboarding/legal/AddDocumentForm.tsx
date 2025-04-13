@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { FilePlus, Plus } from "lucide-react";
+import { FilePlus, Plus, Save, X } from "lucide-react";
 import DocumentTypeField from "./DocumentTypeField";
 import DocumentDetailsFields from "./DocumentDetailsFields";
 import DocumentUploadField from "./DocumentUploadField";
@@ -12,6 +12,7 @@ interface AddDocumentFormProps {
   expiryDate: string;
   file: File | null;
   errors: Record<string, boolean>;
+  fileError?: string | null;
   onDocumentTypeChange: (value: string) => void;
   onDateChange: (field: 'issueDate' | 'expiryDate', date?: Date) => void;
   onFileSelected: (files: File[]) => void;
@@ -19,6 +20,7 @@ interface AddDocumentFormProps {
   onAddDocument: () => void;
   isEditing: boolean;
   onCancelEdit: () => void;
+  onUpdateDocument?: () => void;
 }
 
 const AddDocumentForm: React.FC<AddDocumentFormProps> = ({
@@ -27,16 +29,27 @@ const AddDocumentForm: React.FC<AddDocumentFormProps> = ({
   expiryDate,
   file,
   errors,
+  fileError,
   onDocumentTypeChange,
   onDateChange,
   onFileSelected,
   onFileClear,
   onAddDocument,
   isEditing,
-  onCancelEdit
+  onCancelEdit,
+  onUpdateDocument
 }) => {
   // Determine if all required fields are filled
   const isDisabled = !documentType || !issueDate || !file;
+  
+  // Action button handler
+  const handleAction = () => {
+    if (isEditing && onUpdateDocument) {
+      onUpdateDocument();
+    } else {
+      onAddDocument();
+    }
+  };
   
   return (
     <div className="space-y-6">
@@ -60,6 +73,7 @@ const AddDocumentForm: React.FC<AddDocumentFormProps> = ({
         onFileSelected={onFileSelected}
         onFileClear={onFileClear}
         error={errors.selectedFile}
+        errorMessage={fileError}
       />
       
       <div className="flex justify-end space-x-2">
@@ -69,17 +83,27 @@ const AddDocumentForm: React.FC<AddDocumentFormProps> = ({
             variant="outline"
             onClick={onCancelEdit}
           >
+            <X className="mr-2 h-4 w-4" />
             Cancel
           </Button>
         )}
         <Button
           type="button"
-          onClick={onAddDocument}
+          onClick={handleAction}
           className={`transition-shadow ${isDisabled ? 'bg-gray-300 text-gray-500' : 'bg-black hover:bg-gray-800 text-white hover:shadow-md'}`}
           disabled={isDisabled}
         >
-          <Plus className="mr-2 h-4 w-4" />
-          {isEditing ? "Update Document" : "Add Document"}
+          {isEditing ? (
+            <>
+              <Save className="mr-2 h-4 w-4" />
+              Update Document
+            </>
+          ) : (
+            <>
+              <Plus className="mr-2 h-4 w-4" />
+              Add Document
+            </>
+          )}
         </Button>
       </div>
     </div>

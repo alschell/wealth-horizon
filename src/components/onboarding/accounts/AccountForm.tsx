@@ -2,29 +2,29 @@
 import React from "react";
 import { FinancialAccountInfo } from "@/context/OnboardingContext";
 import { motion } from "framer-motion";
-import { useAccountForm } from "./hooks/useAccountForm";
+import { Button } from "@/components/ui/button";
+import { PlusCircle } from "lucide-react";
 import AccountFormFields from "./AccountFormFields";
-import { AccountFormHeader, AccountFormButton } from "./form";
+import { AccountFormHeader } from "./form";
 
 interface AccountFormProps {
   onAddAccount: (account: FinancialAccountInfo) => void;
 }
 
 const AccountForm = ({ onAddAccount }: AccountFormProps) => {
+  const { useAccountForm } = require('./hooks/useAccountForm');
+  
   const {
     newAccount,
+    errors,
     handleNewAccountChange,
     handleAccountSelectionChange,
+    handleLegalEntityChange,
+    handleLeiChange,
     handleStatementsSelected,
-    handleAddAccount
+    handleAddAccount,
+    isFormValid
   } = useAccountForm(onAddAccount);
-
-  // Check if form is valid (required fields are filled)
-  const isFormValid = Boolean(
-    newAccount.institution && 
-    newAccount.legalEntity && 
-    newAccount.accountName
-  );
 
   return (
     <motion.div
@@ -37,12 +37,26 @@ const AccountForm = ({ onAddAccount }: AccountFormProps) => {
       
       <AccountFormFields
         account={newAccount}
+        errors={errors}
         onInputChange={handleNewAccountChange}
         onSelectionChange={handleAccountSelectionChange}
+        onLegalEntityChange={handleLegalEntityChange}
+        onLeiChange={handleLeiChange}
         onStatementsSelected={handleStatementsSelected}
       />
       
-      <AccountFormButton onClick={handleAddAccount} disabled={!isFormValid} />
+      <div className="flex justify-end">
+        <Button
+          type="button"
+          variant="default"
+          onClick={handleAddAccount}
+          disabled={!isFormValid}
+          className={`mt-2 ${!isFormValid ? 'bg-gray-300 text-gray-500' : 'bg-black hover:bg-gray-800 text-white'}`}
+        >
+          <PlusCircle className="h-4 w-4 mr-2" />
+          Add Account
+        </Button>
+      </div>
     </motion.div>
   );
 };

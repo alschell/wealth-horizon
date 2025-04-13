@@ -1,15 +1,15 @@
 
 import { useState } from "react";
-import { useOnboarding, LegalDocuments } from "@/context/OnboardingContext";
+import { useOnboarding } from "@/context/OnboardingContext";
 import { toast } from "@/components/ui/use-toast";
-import { DocumentFileWithMetadata } from "../types";
+import { FormSubmissionProps } from "../types";
 
 export const useFormSubmission = ({ 
   documentFiles, 
   documentType, 
   issueDate, 
   expiryDate 
-}) => {
+}: FormSubmissionProps) => {
   const { updateLegalDocuments, setCurrentStep } = useOnboarding();
   const [isSubmitting, setIsSubmitting] = useState(false);
 

@@ -1,120 +1,123 @@
 
-import { useState, useMemo } from "react";
+import { useState, useCallback } from "react";
 import { FinancialAccountInfo } from "@/context/OnboardingContext";
 import { toast } from "@/components/ui/use-toast";
 
-export function useAccountForm(onAddAccount: (account: FinancialAccountInfo) => void) {
-  const [newAccount, setNewAccount] = useState<FinancialAccountInfo>({
+export const useAccountForm = (onAddAccount: (account: FinancialAccountInfo) => void) => {
+  const defaultAccount: FinancialAccountInfo = {
     accountName: "",
     institution: "",
-    accountType: "other", // Using "other" as default to satisfy TypeScript requirements
+    accountType: "",
+    legalEntity: "",
+    legalEntityIdentifier: "",
     accountSubtype: "",
     currency: "",
     approximateValue: "",
     statements: [],
-    legalEntity: "",
-    legalEntityIdentifier: "",
-    accountNumber: "",
-    swiftCode: ""
-  });
+  };
+  
+  const [newAccount, setNewAccount] = useState<FinancialAccountInfo>(defaultAccount);
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
-  // Track if accountType has been explicitly set by the user
-  const [isAccountTypeSelected, setIsAccountTypeSelected] = useState(false);
-
-  // Handle new account input
-  const handleNewAccountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // Handle input changes
+  const handleNewAccountChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setNewAccount({
-      ...newAccount,
-      [name]: value
-    });
-  };
+    setNewAccount(prev => ({ ...prev, [name]: value }));
+    // Clear error for this field if exists
+    if (errors[name]) {
+      setErrors(prev => {
+        const updated = { ...prev };
+        delete updated[name];
+        return updated;
+      });
+    }
+  }, [errors]);
 
-  // Handle account selection changes
-  const handleAccountSelectionChange = (field: keyof FinancialAccountInfo, value: string) => {
-    if (field === 'accountType') {
-      setIsAccountTypeSelected(true);
+  // Handle selection changes
+  const handleAccountSelectionChange = useCallback((field: keyof FinancialAccountInfo, value: string) => {
+    setNewAccount(prev => ({ ...prev, [field]: value }));
+    // Clear error for this field if exists
+    if (errors[field as string]) {
+      setErrors(prev => {
+        const updated = { ...prev };
+        delete updated[field as string];
+        return updated;
+      });
+    }
+  }, [errors]);
+
+  // Handle legal entity changes
+  const handleLegalEntityChange = useCallback((value: string) => {
+    setNewAccount(prev => ({ ...prev, legalEntity: value }));
+    // Clear error for this field if exists
+    if (errors.legalEntity) {
+      setErrors(prev => {
+        const updated = { ...prev };
+        delete updated.legalEntity;
+        return updated;
+      });
+    }
+  }, [errors]);
+
+  // Handle LEI changes
+  const handleLeiChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setNewAccount(prev => ({ ...prev, legalEntityIdentifier: value }));
+  }, []);
+
+  // Handle file selection
+  const handleStatementsSelected = useCallback((files: File[]) => {
+    setNewAccount(prev => ({ ...prev, statements: files }));
+  }, []);
+
+  // Validate the account
+  const validateAccount = useCallback(() => {
+    const newErrors: Record<string, string> = {};
+    
+    if (!newAccount.accountName) {
+      newErrors.accountName = "Account name is required";
     }
     
-    setNewAccount({
-      ...newAccount,
-      [field]: value
-    });
-  };
-
-  // Handle account statements
-  const handleStatementsSelected = (files: File[]) => {
-    setNewAccount({
-      ...newAccount,
-      statements: files
-    });
-  };
-
-  // Check if form is valid (required fields filled)
-  const isFormValid = useMemo(() => {
-    return Boolean(
-      newAccount.institution && 
-      newAccount.legalEntity && 
-      newAccount.accountNumber
-    );
-  }, [newAccount.institution, newAccount.legalEntity, newAccount.accountNumber]);
-
-  // Add new account
-  const handleAddAccount = () => {
-    // Validation - checking for institution, legalEntity and accountNumber
-    if (!isFormValid) {
-      toast({
-        title: "Missing information",
-        description: "Please fill in all required account fields.",
-        variant: "destructive"
-      });
-      return;
+    if (!newAccount.institution) {
+      newErrors.institution = "Institution is required";
     }
-
-    // Special validation for "Other" institution
-    if (newAccount.institution === "Other" && newAccount.legalEntity === "Other Legal Entity") {
-      toast({
-        title: "Missing information",
-        description: "Please enter a valid institution name.",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    // Add account
-    onAddAccount(newAccount);
-
-    // Reset form with default values
-    setNewAccount({
-      accountName: "",
-      institution: "",
-      accountType: "other", // Reset to "other" to satisfy TypeScript
-      accountSubtype: "",
-      currency: "",
-      approximateValue: "",
-      statements: [],
-      legalEntity: "",
-      legalEntityIdentifier: "",
-      accountNumber: "",
-      swiftCode: ""
-    });
     
-    // Reset selection state
-    setIsAccountTypeSelected(false);
+    if (!newAccount.legalEntity) {
+      newErrors.legalEntity = "Legal entity is required";
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  }, [newAccount]);
 
-    toast({
-      title: "Account added",
-      description: "Financial account has been added successfully."
-    });
-  };
+  // Add account handler
+  const handleAddAccount = useCallback(() => {
+    if (validateAccount()) {
+      onAddAccount(newAccount);
+      setNewAccount(defaultAccount);
+      toast({
+        title: "Account added",
+        description: "Financial account has been added successfully.",
+      });
+    }
+  }, [newAccount, onAddAccount, validateAccount, defaultAccount]);
+
+  // Check if form is valid
+  const isFormValid = Boolean(
+    newAccount.accountName && 
+    newAccount.institution && 
+    newAccount.legalEntity
+  );
 
   return {
     newAccount,
-    isFormValid,
-    isAccountTypeSelected,
+    errors,
     handleNewAccountChange,
     handleAccountSelectionChange,
+    handleLegalEntityChange,
+    handleLeiChange,
     handleStatementsSelected,
-    handleAddAccount
+    handleAddAccount,
+    isFormValid
   };
-}
+};

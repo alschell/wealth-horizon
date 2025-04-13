@@ -3,7 +3,7 @@ import React from "react";
 import { Label } from "@/components/ui/label";
 import FileUploader from "@/components/file-uploader";
 import { Button } from "@/components/ui/button";
-import { Trash2 } from "lucide-react";
+import { Trash2, AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface DocumentUploadFieldProps {
@@ -11,6 +11,7 @@ interface DocumentUploadFieldProps {
   onFileSelected: (files: File[]) => void;
   onFileClear?: () => void;
   error?: boolean;
+  errorMessage?: string | null;
   documentType?: string;
   onFileDelete?: () => void;
   disabled?: boolean;
@@ -24,6 +25,7 @@ const DocumentUploadField: React.FC<DocumentUploadFieldProps> = ({
   onFileSelected,
   onFileClear,
   error,
+  errorMessage,
   documentType,
   onFileDelete,
   disabled = false,
@@ -49,7 +51,8 @@ const DocumentUploadField: React.FC<DocumentUploadFieldProps> = ({
       <div 
         className={cn(
           "border rounded-md p-4",
-          error && "border-red-500"
+          error ? "border-red-500" : "",
+          errorMessage ? "border-red-500" : ""
         )}
       >
         <FileUploader
@@ -78,8 +81,16 @@ const DocumentUploadField: React.FC<DocumentUploadFieldProps> = ({
       </div>
       
       {error && (
-        <p className="text-sm font-medium text-red-500" aria-live="polite">
+        <p className="text-sm font-medium text-red-500 flex items-center gap-1" aria-live="polite">
+          <AlertCircle className="h-4 w-4" />
           Please upload a document
+        </p>
+      )}
+      
+      {errorMessage && (
+        <p className="text-sm font-medium text-red-500 flex items-center gap-1" aria-live="polite">
+          <AlertCircle className="h-4 w-4" />
+          {errorMessage}
         </p>
       )}
     </div>

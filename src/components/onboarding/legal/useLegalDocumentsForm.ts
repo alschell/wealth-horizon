@@ -2,7 +2,7 @@
 import { useDocumentState } from './hooks/useDocumentState';
 import { useDocumentHandlers } from './hooks/useDocumentHandlers';
 import { useFormSubmission } from './hooks/useFormSubmission';
-import { DocumentFileWithMetadata } from './types';
+import { FormSubmissionProps } from './types';
 
 export const useLegalDocumentsForm = () => {
   const {
@@ -27,15 +27,17 @@ export const useLegalDocumentsForm = () => {
   } = useDocumentState();
 
   const {
-    handleDocumentTypeChange,
-    handleDateChange,
+    fileError,
     handleFileSelected,
     handleFileClear,
+    handleDateChange,
+    handleDocumentTypeChange,
     handleAddDocument,
     handleEditDocument,
+    handleUpdateDocument,
     handleCancelEdit,
     handleRemoveDocument
-  } = useDocumentHandlers(
+  } = useDocumentHandlers({
     documentType,
     setDocumentType,
     issueDate,
@@ -52,17 +54,19 @@ export const useLegalDocumentsForm = () => {
     setIsEditing,
     editingDocumentId,
     setEditingDocumentId
-  );
+  });
 
-  const {
-    handleSubmit,
-    handleBack
-  } = useFormSubmission({
+  const submissionProps: FormSubmissionProps = {
     documentFiles,
     documentType,
     issueDate,
     expiryDate
-  });
+  };
+
+  const {
+    handleSubmit,
+    handleBack
+  } = useFormSubmission(submissionProps);
 
   return {
     // State
@@ -72,6 +76,7 @@ export const useLegalDocumentsForm = () => {
     selectedFile,
     documentFiles,
     errors,
+    fileError,
     isSubmitting,
     isEditing,
     
@@ -85,6 +90,7 @@ export const useLegalDocumentsForm = () => {
     handleBack,
     handleRemoveDocument,
     handleEditDocument,
+    handleUpdateDocument,
     handleCancelEdit
   };
 };

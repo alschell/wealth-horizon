@@ -1,54 +1,109 @@
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { TeamMember, Advisor } from '../teamData';
+import { TeamSortOption } from '../TeamFilter';
+
+/**
+ * Result interface for the useTeamFilters hook
+ */
+interface TeamFilterResult<T> {
+  /** Current search query string */
+  searchQuery: string;
+  /** Function to update search query */
+  setSearchQuery: (query: string) => void;
+  /** Current sort criteria */
+  sortBy: TeamSortOption;
+  /** Function to update sort criteria */
+  setSortBy: (sortBy: TeamSortOption) => void;
+  /** Array of filtered and sorted items */
+  filteredItems: T[];
+}
 
 /**
  * Custom hook for filtering and sorting team members or advisors
+ * Provides memoized state and filtered results
  * 
  * @param items - Array of team members or advisors to filter
  * @returns Filter state and filtered items
+ * 
+ * @example
+ * ```tsx
+ * const { 
+ *   searchQuery, 
+ *   setSearchQuery, 
+ *   sortBy, 
+ *   setSortBy, 
+ *   filteredItems 
+ * } = useTeamFilters(leadershipTeam);
+ * ```
  */
-export function useTeamFilters<T extends TeamMember | Advisor>(items: T[]) {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [sortBy, setSortBy] = useState<'name' | 'title' | 'department'>('name');
+export function useTeamFilters<T extends TeamMember | Advisor>(items: T[]): TeamFilterResult<T> {
+  // State for search query and sort criteria
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [sortBy, setSortBy] = useState<TeamSortOption>('name');
   
+  // Memoized callback for setting search query to prevent unnecessary rerenders
+  const handleSetSearchQuery = useCallback((query: string) => {
+    setSearchQuery(query);
+  }, []);
+  
+  // Memoized callback for setting sort criteria to prevent unnecessary rerenders
+  const handleSetSortBy = useCallback((sort: TeamSortOption) => {
+    setSortBy(sort);
+  }, []);
+  
+  // Memoized filtered and sorted items
   const filteredItems = useMemo(() => {
-    // First filter by search query
+    // Filter items by search query
     const filtered = searchQuery 
       ? items.filter(item => {
-          const nameMatch = item.name.toLowerCase().includes(searchQuery.toLowerCase());
-          const titleMatch = item.title.toLowerCase().includes(searchQuery.toLowerCase());
+          const lowercaseQuery = searchQuery.toLowerCase();
+          const nameMatch = item.name.toLowerCase().includes(lowercaseQuery);
+          const titleMatch = item.title.toLowerCase().includes(lowercaseQuery);
           
           // Safely check for department property (only exists on TeamMember)
           const departmentMatch = 'department' in item && 
-            typeof item.department === 'string' && 
-            item.department.toLowerCase().includes(searchQuery.toLowerCase());
+            item.department.toLowerCase().includes(lowercaseQuery);
           
-          return nameMatch || titleMatch || departmentMatch;
+          // For advisors, also check company name
+          const companyMatch = 'company' in item &&
+            item.company.toLowerCase().includes(lowercaseQuery);
+          
+          return nameMatch || titleMatch || departmentMatch || companyMatch;
         })
       : items;
     
-    // Then sort by the selected field
+    // Sort filtered items
     return [...filtered].sort((a, b) => {
       if (sortBy === 'name') {
         return a.name.localeCompare(b.name);
-      } else if (sortBy === 'title') {
+      } 
+      
+      if (sortBy === 'title') {
         return a.title.localeCompare(b.title);
-      } else if (sortBy === 'department') {
-        // Handle department property safely - check if properties exist first
-        const deptA = 'department' in a && typeof a.department === 'string' ? a.department : '';
-        const deptB = 'department' in b && typeof b.department === 'string' ? b.department : '';
-        return deptA.localeCompare(deptB);
+      } 
+      
+      if (sortBy === 'department') {
+        // Handle department property safely for TeamMember type
+        if ('department' in a && 'department' in b) {
+          return a.department.localeCompare(b.department);
+        }
+        
+        // Handle company property for Advisor type as fallback
+        if ('company' in a && 'company' in b) {
+          return a.company.localeCompare(b.company);
+        }
       }
+      
       return 0;
     });
   }, [items, searchQuery, sortBy]);
   
   return {
     searchQuery,
-    setSearchQuery,
+    setSearchQuery: handleSetSearchQuery,
     sortBy,
-    setSortBy,
+    setSortBy: handleSetSortBy,
     filteredItems
   };
 }

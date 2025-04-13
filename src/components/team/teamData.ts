@@ -1,97 +1,170 @@
 
+import { StaticImageData } from "next/image";
+
 /**
- * Team members data definitions and data
+ * Social media links interface for team members
  */
-
 export interface SocialLinks {
+  /** LinkedIn profile URL */
   linkedin?: string;
+  /** Twitter/X profile URL */
   twitter?: string;
-  github?: string; // Explicitly defined github property
+  /** GitHub profile URL */
+  github?: string;
 }
 
-export interface TeamMember extends SocialLinks {
-  id: number;
+/**
+ * Base interface for team members with common properties
+ */
+interface BaseTeamMember {
+  /** Unique identifier for the team member */
+  id: string;
+  /** Full name of the team member */
   name: string;
+  /** Job title or position of the team member */
   title: string;
+  /** Short biography or description */
   bio: string;
-  image: string;
-  department?: string; // Explicitly marked as optional
+  /** Profile image path or StaticImageData object */
+  image: string | StaticImageData;
+  /** Social media links for the team member */
+  linkedin?: string;
+  /** Twitter/X profile handle */
+  twitter?: string;
+  /** GitHub profile handle */
+  github?: string;
 }
 
-export interface Advisor extends SocialLinks {
-  id: number;
-  name: string;
-  title: string;
+/**
+ * Leadership team member with department information
+ */
+export interface TeamMember extends BaseTeamMember {
+  /** Department or team the member belongs to */
+  department: string;
+}
+
+/**
+ * Advisory board member with company affiliation
+ */
+export interface Advisor extends BaseTeamMember {
+  /** Company or organization the advisor is affiliated with */
   company: string;
-  bio: string;
-  image: string;
 }
 
-// Leadership team data
+/**
+ * Leadership team members data
+ */
 export const leadershipTeam: TeamMember[] = [
   {
-    id: 1,
+    id: "1",
     name: "Sarah Johnson",
     title: "Chief Executive Officer",
-    bio: "Sarah has over 20 years of experience in wealth management and financial technology. Previously, she was the COO at FinTech Innovations and led product strategy at Global Wealth Partners.",
+    department: "Executive",
+    bio: "Sarah has over 20 years of experience in financial technology and wealth management.",
     image: "/assets/team/sarah-johnson.jpg",
-    linkedin: "https://linkedin.com/in/sarah-johnson"
+    linkedin: "https://linkedin.com/in/sarah-johnson",
+    twitter: "https://twitter.com/sarahjohnson"
   },
   {
-    id: 2,
+    id: "2",
     name: "Michael Chen",
     title: "Chief Technology Officer",
-    bio: "Michael brings 15 years of engineering leadership from top technology companies. He previously built scalable financial systems at PayTech and led engineering teams at DataSystems Inc.",
+    department: "Technology",
+    bio: "Michael leads our engineering team and oversees all technology strategy and implementation.",
     image: "/assets/team/michael-chen.jpg",
     linkedin: "https://linkedin.com/in/michael-chen",
-    twitter: "https://twitter.com/michaelchentech"
+    github: "https://github.com/michaelchen"
   },
   {
-    id: 3,
-    name: "David Rodriguez",
+    id: "3",
+    name: "Jessica Rodriguez",
     title: "Chief Investment Officer",
-    bio: "David has spent 18 years managing investments for ultra-high-net-worth individuals and family offices. He previously served as Managing Director at Global Capital Partners.",
-    image: "/assets/team/david-rodriguez.jpg",
-    linkedin: "https://linkedin.com/in/david-rodriguez"
+    department: "Investment",
+    bio: "Jessica brings 15 years of experience in portfolio management and investment strategy.",
+    image: "/assets/team/jessica-rodriguez.jpg",
+    linkedin: "https://linkedin.com/in/jessica-rodriguez"
   },
   {
-    id: 4,
-    name: "Emily Takahashi",
-    title: "Chief Product Officer",
-    bio: "Emily has led product development for financial platforms for over 12 years. She previously headed product at WealthFront Solutions and was a product strategist at BlackRock.",
-    image: "/assets/team/emily-takahashi.jpg",
-    linkedin: "https://linkedin.com/in/emily-takahashi",
-    twitter: "https://twitter.com/emilytakahashi"
+    id: "4",
+    name: "David Thompson",
+    title: "Chief Financial Officer",
+    department: "Finance",
+    bio: "David oversees all financial operations and strategy for the company.",
+    image: "/assets/team/david-thompson.jpg",
+    linkedin: "https://linkedin.com/in/david-thompson",
+    twitter: "https://twitter.com/davidthompson"
+  },
+  {
+    id: "5",
+    name: "Lisa Wang",
+    title: "Head of Client Relations",
+    department: "Client Services",
+    bio: "Lisa leads our client success team ensuring excellent service delivery.",
+    image: "/assets/team/lisa-wang.jpg",
+    linkedin: "https://linkedin.com/in/lisa-wang"
+  },
+  {
+    id: "6",
+    name: "Robert Patel",
+    title: "Head of Product",
+    department: "Product",
+    bio: "Robert drives our product vision and roadmap to deliver exceptional user experiences.",
+    image: "/assets/team/robert-patel.jpg",
+    linkedin: "https://linkedin.com/in/robert-patel",
+    github: "https://github.com/robertpatel"
   }
 ];
 
-// Advisory board data
+/**
+ * Advisory board members data
+ */
 export const advisoryBoard: Advisor[] = [
   {
-    id: 1,
-    name: "Dr. Robert Freeman",
+    id: "a1",
+    name: "Dr. Emily Baker",
     title: "Financial Technology Advisor",
-    company: "MIT FinTech Lab",
-    bio: "Dr. Freeman is a leading researcher in financial technology and algorithmic trading systems. He advises multiple fintech startups and has published extensively on digital transformation in finance.",
-    image: "/assets/team/robert-freeman.jpg",
-    linkedin: "https://linkedin.com/in/dr-robert-freeman"
+    company: "Stanford University",
+    bio: "Dr. Baker is a leading researcher in financial technology and blockchain applications.",
+    image: "/assets/team/emily-baker.jpg",
+    linkedin: "https://linkedin.com/in/emily-baker",
+    twitter: "https://twitter.com/emilybaker"
   },
   {
-    id: 2,
-    name: "Jane Martinez",
-    title: "Former Commissioner",
-    company: "SEC",
-    bio: "Jane served as a Commissioner at the SEC for 8 years, where she specialized in regulatory frameworks for emerging financial technologies and investor protection initiatives.",
-    image: "/assets/team/jane-martinez.jpg",
-    linkedin: "https://linkedin.com/in/jane-martinez"
+    id: "a2",
+    name: "James Wilson",
+    title: "Investment Strategist",
+    company: "Global Wealth Partners",
+    bio: "James brings decades of experience in wealth management for high-net-worth individuals.",
+    image: "/assets/team/james-wilson.jpg",
+    linkedin: "https://linkedin.com/in/james-wilson"
   },
   {
-    id: 3,
-    name: "Thomas Wu",
-    title: "Managing Partner",
-    company: "Global Ventures",
-    bio: "Thomas has invested in over 40 financial technology companies, with 7 successful exits. He specializes in wealth management technologies and financial infrastructure investments.",
-    image: "/assets/team/thomas-wu.jpg",
-    linkedin: "https://linkedin.com/in/thomas-wu"
+    id: "a3",
+    name: "Angela Martinez",
+    title: "Regulatory Expert",
+    company: "Financial Compliance Associates",
+    bio: "Angela specializes in regulatory compliance for financial technology platforms.",
+    image: "/assets/team/angela-martinez.jpg",
+    linkedin: "https://linkedin.com/in/angela-martinez",
+    twitter: "https://twitter.com/angelamartinez"
+  },
+  {
+    id: "a4",
+    name: "Thomas Lee",
+    title: "Technology Innovator",
+    company: "Future Tech Ventures",
+    bio: "Thomas is a serial entrepreneur who has founded multiple successful fintech startups.",
+    image: "/assets/team/thomas-lee.jpg",
+    linkedin: "https://linkedin.com/in/thomas-lee",
+    github: "https://github.com/thomaslee"
+  },
+  {
+    id: "a5",
+    name: "Patricia Okonkwo",
+    title: "Client Experience Strategist",
+    company: "Elite Services Group",
+    bio: "Patricia specializes in creating exceptional digital experiences for financial services clients.",
+    image: "/assets/team/patricia-okonkwo.jpg",
+    linkedin: "https://linkedin.com/in/patricia-okonkwo"
   }
 ];

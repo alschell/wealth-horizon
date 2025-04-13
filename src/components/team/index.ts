@@ -11,7 +11,12 @@ export { default as TeamFilter } from "./TeamFilter";
 export { leadershipTeam, advisoryBoard } from "./teamData";
 
 // Types
-export type { TeamMember, Advisor, SocialLinks as SocialLinksType } from "./teamData";
+export type { 
+  TeamMember, 
+  Advisor, 
+  SocialLinks as SocialLinksType 
+} from "./teamData";
+export type { TeamSortOption } from "./TeamFilter";
 
 // Hooks
 export { useTeamFilters } from "./hooks/useTeamFilters";

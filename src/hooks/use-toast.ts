@@ -1,10 +1,11 @@
 
-import { toast as sonnerToast, type Toast, type ToasterToast } from "sonner";
+import { toast as sonnerToast, type ToastT } from "sonner";
 
-export type ToastProps = Omit<ToasterToast, "id">;
+export type ToastProps = Omit<Parameters<typeof sonnerToast>[0], "id">;
 
 export function toast(props: ToastProps) {
   return sonnerToast(props);
 }
 
-export { useToast } from "sonner";
+// Re-export the useToast hook from the Toaster component
+export { toast as useToast } from "sonner";

@@ -3,7 +3,7 @@ import React, { useState, useCallback } from 'react';
 import { cn } from "@/lib/utils";
 import { useImageErrorHandler } from '@/hooks/useImageErrorHandler';
 
-export interface ImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
+export interface ImageProps extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, 'onError'> {
   src: string;
   alt: string;
   width?: number;
@@ -48,8 +48,12 @@ export const Image = ({
   
   const handleError = useCallback((e: React.SyntheticEvent<HTMLImageElement, Event>) => {
     setHasError(true);
+    if (onError) {
+      // Convert the synthetic event to a native event for compatibility
+      onError(e.nativeEvent);
+    }
     handleImageError(e);
-  }, [handleImageError]);
+  }, [handleImageError, onError]);
   
   return (
     <img

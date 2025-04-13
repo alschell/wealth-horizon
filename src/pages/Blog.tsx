@@ -81,16 +81,18 @@ const blogPosts = [
 
 const allCategories = ["All Topics", "Investment Strategy", "Market Analysis", "Wealth Planning", "Regulatory Updates", "Family Governance", "Technology", "ESG", "Private Markets", "Compliance"];
 
+type BlogPost = typeof blogPosts[0];
+
 const Blog = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All Topics");
   const [subscriberEmail, setSubscriberEmail] = useState("");
   const [showBlogPost, setShowBlogPost] = useState(false);
-  const [selectedPost, setSelectedPost] = useState(null);
+  const [selectedPost, setSelectedPost] = useState<BlogPost | null>(null);
   const { toast } = useToast();
   
   // Handle search input change
-  const handleSearchChange = (e) => {
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
   };
   
@@ -112,12 +114,12 @@ const Blog = () => {
   });
   
   // Handle category selection
-  const handleCategorySelect = (category) => {
+  const handleCategorySelect = (category: string) => {
     setSelectedCategory(category);
   };
   
   // Handle newsletter subscription
-  const handleSubscribe = (e) => {
+  const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();
     if (subscriberEmail) {
       toast({
@@ -135,7 +137,7 @@ const Blog = () => {
   };
   
   // View blog post
-  const viewBlogPost = (post) => {
+  const viewBlogPost = (post: BlogPost) => {
     setSelectedPost(post);
     setShowBlogPost(true);
     window.scrollTo(0, 0);
@@ -145,6 +147,12 @@ const Blog = () => {
   const backToBlogList = () => {
     setShowBlogPost(false);
     setSelectedPost(null);
+  };
+
+  // Handle image error
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    const img = e.currentTarget;
+    img.src = '/assets/dashboard-fallback.png';
   };
 
   return (
@@ -225,10 +233,7 @@ const Blog = () => {
                         src={post.image} 
                         alt={post.title}
                         className="w-full h-full object-cover"
-                        onError={(e) => {
-                          e.target.onerror = null;
-                          e.target.src = '/assets/dashboard-fallback.png';
-                        }}
+                        onError={handleImageError}
                       />
                     </div>
                     <div className="p-6">
@@ -327,14 +332,25 @@ const Blog = () => {
 };
 
 // Blog post view component
-const BlogPostView = ({ post, goBack }) => {
+interface BlogPostViewProps {
+  post: BlogPost;
+  goBack: () => void;
+}
+
+const BlogPostView: React.FC<BlogPostViewProps> = ({ post, goBack }) => {
   const { toast } = useToast();
   
-  const handleShare = (platform) => {
+  const handleShare = (platform: string) => {
     toast({
       title: "Shared!",
       description: `Article shared on ${platform}`,
     });
+  };
+
+  // Handle image error
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    const img = e.currentTarget;
+    img.src = '/assets/dashboard-fallback.png';
   };
   
   return (
@@ -367,10 +383,7 @@ const BlogPostView = ({ post, goBack }) => {
           src={post.image} 
           alt={post.title}
           className="w-full h-full object-cover"
-          onError={(e) => {
-            e.target.onerror = null;
-            e.target.src = '/assets/dashboard-fallback.png';
-          }}
+          onError={handleImageError}
         />
       </div>
       
@@ -449,7 +462,11 @@ const BlogPostView = ({ post, goBack }) => {
                 className="bg-white border border-gray-100 rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow cursor-pointer"
                 onClick={() => {
                   goBack();
-                  setTimeout(() => viewBlogPost(relatedPost), 0);
+                  setTimeout(() => {
+                    setSelectedPost(relatedPost);
+                    setShowBlogPost(true);
+                    window.scrollTo(0, 0);
+                  }, 0);
                 }}
               >
                 <div className="h-40 bg-gradient-to-r from-indigo-50 to-blue-50 overflow-hidden">
@@ -457,10 +474,7 @@ const BlogPostView = ({ post, goBack }) => {
                     src={relatedPost.image} 
                     alt={relatedPost.title}
                     className="w-full h-full object-cover"
-                    onError={(e) => {
-                      e.target.onerror = null;
-                      e.target.src = '/assets/dashboard-fallback.png';
-                    }}
+                    onError={handleImageError}
                   />
                 </div>
                 <div className="p-4">

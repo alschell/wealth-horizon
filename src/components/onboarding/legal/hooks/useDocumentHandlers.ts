@@ -1,10 +1,7 @@
-import { useState, useCallback, ChangeEvent } from 'react';
-import { toast } from '@/components/ui/use-toast';
-import { DocumentFileWithMetadata } from '../types';
 
-// Define allowed file types and size
-const ALLOWED_DOCUMENT_TYPES = ['.pdf', '.doc', '.docx', '.jpg', '.jpeg', '.png'];
-const MAX_FILE_SIZE_MB = 10;
+import { useState, useCallback } from 'react';
+import { DocumentFileWithMetadata } from '../types';
+import { validateFile, showToast } from './documentHandlerUtils';
 
 export const useDocumentHandlers = (
   documentType: string,
@@ -26,41 +23,18 @@ export const useDocumentHandlers = (
 ) => {
   const [fileError, setFileError] = useState<string | null>(null);
 
-  // Validate a file meets requirements
-  const validateFile = useCallback((file: File): boolean => {
-    // Check file size
-    const maxSizeBytes = MAX_FILE_SIZE_MB * 1024 * 1024;
-    if (file.size > maxSizeBytes) {
-      setFileError(`File size exceeds the maximum allowed size of ${MAX_FILE_SIZE_MB}MB`);
-      return false;
-    }
-
-    // Check file extension
-    const fileExtension = `.${file.name.split('.').pop()?.toLowerCase()}`;
-    if (!ALLOWED_DOCUMENT_TYPES.includes(fileExtension)) {
-      setFileError(`File type not supported. Allowed types: ${ALLOWED_DOCUMENT_TYPES.join(', ')}`);
-      return false;
-    }
-
-    setFileError(null);
-    return true;
-  }, []);
-
   // Handle file selection
   const handleFileSelected = useCallback((files: File[]) => {
     if (files.length === 0) return;
     
     const file = files[0]; // Only use the first file since we're not using multiple
-    if (!validateFile(file)) return;
+    if (!validateFile(file, setFileError)) return;
     
     setSelectedFile(file);
     setErrors(prev => ({ ...prev, selectedFile: false }));
     
-    toast({
-      title: "File uploaded",
-      description: "Document has been successfully uploaded.",
-    });
-  }, [validateFile, setSelectedFile, setErrors]);
+    showToast("File uploaded", "Document has been successfully uploaded.");
+  }, [setSelectedFile, setErrors]);
 
   // Handle clearing the selected file
   const handleFileClear = useCallback(() => {
@@ -115,17 +89,11 @@ export const useDocumentHandlers = (
         prev.map(doc => doc.id === editingDocumentId ? newDocument : doc)
       );
       
-      toast({
-        title: "Document updated",
-        description: "The document has been successfully updated.",
-      });
+      showToast("Document updated", "The document has been successfully updated.");
     } else {
       setDocumentFiles(prev => [...prev, newDocument]);
       
-      toast({
-        title: "Document added",
-        description: "The document has been successfully added.",
-      });
+      showToast("Document added", "The document has been successfully added.");
     }
     
     // Reset form
@@ -181,10 +149,7 @@ export const useDocumentHandlers = (
   const handleRemoveDocument = useCallback((id: string) => {
     setDocumentFiles(prev => prev.filter(doc => doc.id !== id));
     
-    toast({
-      title: "Document removed",
-      description: "The document has been successfully removed.",
-    });
+    showToast("Document removed", "The document has been successfully removed.");
     
     // If the document being removed is also being edited, reset the form
     if (isEditing && editingDocumentId === id) {
@@ -194,7 +159,6 @@ export const useDocumentHandlers = (
 
   return {
     fileError,
-    validateFile,
     handleFileSelected,
     handleFileClear,
     handleDocumentTypeChange,

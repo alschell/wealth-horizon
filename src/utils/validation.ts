@@ -123,3 +123,22 @@ export const validateFileType = (file: File, allowedTypes: string[]): string | n
   }
   return null;
 };
+
+// Validate form data against multiple rules
+export const validateForm = <T extends Record<string, any>>(
+  data: T,
+  rules: Record<keyof T, (value: any) => string | null>
+): Record<string, string> => {
+  const errors: Record<string, string> = {};
+  
+  for (const field in rules) {
+    if (Object.prototype.hasOwnProperty.call(rules, field)) {
+      const errorMessage = rules[field](data[field]);
+      if (errorMessage) {
+        errors[field as string] = errorMessage;
+      }
+    }
+  }
+  
+  return errors;
+};

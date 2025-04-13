@@ -44,9 +44,14 @@ const createHeaders = (contentType = 'application/json'): HeadersInit => {
 // Sanitize URL path to prevent path traversal
 const sanitizeEndpoint = (endpoint: string): string => {
   // Ensure endpoint starts with / and contains no ../ sequences
-  if (!endpoint.startsWith('/') || endpoint.includes('..')) {
-    throw new Error('Invalid endpoint path');
+  if (!endpoint.startsWith('/')) {
+    endpoint = '/' + endpoint;
   }
+  
+  if (endpoint.includes('..')) {
+    throw new Error('Invalid endpoint path: Path traversal attempt detected');
+  }
+  
   return endpoint;
 };
 
@@ -94,8 +99,8 @@ export const apiClient = {
       
       return handleResponse<T>(response);
     } catch (error) {
-      const apiError = error as ApiError;
-      throw apiError;
+      console.error(`API GET error for ${endpoint}:`, error);
+      throw error;
     }
   },
   
@@ -113,8 +118,8 @@ export const apiClient = {
       
       return handleResponse<T>(response);
     } catch (error) {
-      const apiError = error as ApiError;
-      throw apiError;
+      console.error(`API POST error for ${endpoint}:`, error);
+      throw error;
     }
   },
   
@@ -132,8 +137,8 @@ export const apiClient = {
       
       return handleResponse<T>(response);
     } catch (error) {
-      const apiError = error as ApiError;
-      throw apiError;
+      console.error(`API PUT error for ${endpoint}:`, error);
+      throw error;
     }
   },
   
@@ -150,8 +155,8 @@ export const apiClient = {
       
       return handleResponse<T>(response);
     } catch (error) {
-      const apiError = error as ApiError;
-      throw apiError;
+      console.error(`API DELETE error for ${endpoint}:`, error);
+      throw error;
     }
   },
   
@@ -181,8 +186,8 @@ export const apiClient = {
       
       return handleResponse<T>(response);
     } catch (error) {
-      const apiError = error as ApiError;
-      throw apiError;
+      console.error(`API file upload error for ${endpoint}:`, error);
+      throw error;
     }
   }
 };

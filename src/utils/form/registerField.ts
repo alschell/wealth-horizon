@@ -11,7 +11,7 @@ export function registerField<T extends FieldValues>(
 ) {
   return <K extends Path<T>>(
     name: K,
-    options?: RegisterOptions,
+    options?: RegisterOptions<T, K>,
     ariaLabel?: string
   ) => {
     const hasError = !!errors[name];

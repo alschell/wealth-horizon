@@ -43,7 +43,7 @@ export function createPropsComparator<P extends object>(propNames: (keyof P)[]):
  * @returns HOC that memoizes a component checking only the specified props
  */
 export function withSelectiveMemo<P extends object>(propNames: (keyof P)[]) {
-  return (Component: ComponentType<P>): FC<P> => {
+  return (Component: ComponentType<P>): React.MemoExoticComponent<ComponentType<P>> => {
     return withMemo(Component, createPropsComparator<P>(propNames));
   };
 }

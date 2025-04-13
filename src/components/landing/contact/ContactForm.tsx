@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import CustomSearchableSelect from "@/components/ui/custom-searchable-select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { Check } from "lucide-react";
+import { Check, Asterisk } from "lucide-react";
 
 const ContactForm: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -51,7 +51,7 @@ const ContactForm: React.FC = () => {
     "Other"
   ];
 
-  // Explicitly define the inquiry options in the exact order specified
+  // Define the inquiry options in the EXACT order specified
   const inquiryOptions = [
     "Speak with a sales representative",
     "Request a demo",
@@ -68,7 +68,9 @@ const ContactForm: React.FC = () => {
         <form onSubmit={handleSubmit} className="space-y-6 flex-grow flex flex-col">
           <div className="space-y-6 flex-grow">
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">
+                Email<span className="text-indigo-600 ml-1">*</span>
+              </Label>
               <Input 
                 id="email" 
                 type="email" 
@@ -80,7 +82,9 @@ const ContactForm: React.FC = () => {
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="full-name">Full name</Label>
+              <Label htmlFor="full-name">
+                Full name<span className="text-indigo-600 ml-1">*</span>
+              </Label>
               <Input 
                 id="full-name" 
                 value={fullName}
@@ -91,7 +95,9 @@ const ContactForm: React.FC = () => {
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="company">Company</Label>
+              <Label htmlFor="company">
+                Company<span className="text-indigo-600 ml-1">*</span>
+              </Label>
               <Input 
                 id="company" 
                 value={company}
@@ -102,7 +108,9 @@ const ContactForm: React.FC = () => {
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="industry">Industry</Label>
+              <Label htmlFor="industry">
+                Industry<span className="text-indigo-600 ml-1">*</span>
+              </Label>
               <CustomSearchableSelect 
                 id="industry"
                 label=""
@@ -110,13 +118,15 @@ const ContactForm: React.FC = () => {
                 placeholder="Select your industry"
                 options={industryOptions}
                 onChange={(value) => setIndustry(value)}
-                required={false}
+                required={true}
                 allowCustomValue
               />
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="inquiry-type">Type of inquiry</Label>
+              <Label htmlFor="inquiry-type">
+                Type of inquiry<span className="text-indigo-600 ml-1">*</span>
+              </Label>
               <CustomSearchableSelect 
                 id="inquiry-type"
                 label=""
@@ -124,13 +134,15 @@ const ContactForm: React.FC = () => {
                 placeholder="Select inquiry type"
                 options={inquiryOptions}
                 onChange={(value) => setInquiry(value)}
-                required={false}
+                required={true}
                 allowCustomValue
               />
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="message">Message</Label>
+              <Label htmlFor="message">
+                Message<span className="text-indigo-600 ml-1">*</span>
+              </Label>
               <Textarea 
                 id="message" 
                 value={message}
@@ -143,7 +155,7 @@ const ContactForm: React.FC = () => {
             </div>
           </div>
           
-          <div className="mt-4">
+          <div className="mt-4 flex-shrink-0">
             <Button type="submit" className="w-full md:w-auto" disabled={isSubmitting}>
               {isSubmitting ? "Sending..." : "Send Message"}
             </Button>

@@ -5,6 +5,7 @@ import TeamMemberImage from "./TeamMemberImage";
 import SocialLinks from "./SocialLinks";
 import { useToast } from "@/hooks/use-toast";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTeamFilters } from "./hooks/useTeamFilters";
 
 interface AdvisoryBoardSectionProps {
   /** Array of advisor data objects */

@@ -13,28 +13,28 @@ const pressReleases = [
     title: "WealthHorizon Announces Strategic Partnership with Blackrock to Enhance Investment Solutions",
     date: "April 10, 2025",
     excerpt: "This collaboration will integrate Blackrock's Aladdin® platform with WealthHorizon's wealth management suite, providing family offices with unparalleled portfolio analytics and risk assessment capabilities.",
-    link: "/press/partnership-blackrock"
+    link: "#partnership-blackrock"
   },
   {
     id: 2,
     title: "WealthHorizon Platform Wins 'Wealth Tech Platform of the Year' at 2025 Private Banking Awards",
     date: "March 15, 2025",
     excerpt: "Our wealth management platform was recognized for its innovative approach to portfolio analytics, ESG integration, and client engagement tools for family offices and ultra-high-net-worth individuals.",
-    link: "/press/private-banking-award-2025"
+    link: "#private-banking-award-2025"
   },
   {
     id: 3,
     title: "WealthHorizon Expands European Presence with New Office in Zurich",
     date: "February 22, 2025",
     excerpt: "This expansion strengthens our commitment to serving family offices and financial institutions across Europe with local expertise while providing enhanced support for our growing Swiss client base.",
-    link: "/press/zurich-office-opening"
+    link: "#zurich-office-opening"
   },
   {
     id: 4,
     title: "WealthHorizon Secures $75 Million in Series C Funding to Accelerate Global Expansion",
     date: "January 18, 2025",
     excerpt: "The funding round, led by Sequoia Capital with participation from existing investors, will support our international growth strategy and accelerate our product development roadmap.",
-    link: "/press/series-c-funding"
+    link: "#series-c-funding"
   }
 ];
 
@@ -45,7 +45,7 @@ const mediaFeatures = [
     title: "How WealthHorizon is Revolutionizing Family Office Management",
     publication: "Financial Times",
     date: "March 28, 2025",
-    link: "https://www.ft.com/content/wealth-management-revolution",
+    link: "#ft-article",
     image: "/assets/dashboard-preview.png"
   },
   {
@@ -53,7 +53,7 @@ const mediaFeatures = [
     title: "The Technology Transforming Wealth Management for Ultra-High-Net-Worth Families",
     publication: "Bloomberg",
     date: "March 5, 2025",
-    link: "https://www.bloomberg.com/news/articles/wealth-tech-transformation",
+    link: "#bloomberg-article",
     image: "/assets/dashboard-fallback.png"
   },
   {
@@ -61,7 +61,7 @@ const mediaFeatures = [
     title: "WealthHorizon CEO Discusses the Future of Wealth Tech on Bloomberg Markets",
     publication: "Bloomberg TV",
     date: "February 12, 2025",
-    link: "https://www.bloomberg.com/news/videos/wealth-horizon-ceo-interview",
+    link: "#bloomberg-tv-interview",
     image: "/assets/dashboard-preview.png"
   },
   {
@@ -69,7 +69,7 @@ const mediaFeatures = [
     title: "Family Offices Embrace Digital Transformation with WealthHorizon",
     publication: "Wall Street Journal",
     date: "January 20, 2025",
-    link: "https://www.wsj.com/articles/family-offices-digital-transformation",
+    link: "#wsj-article",
     image: "/assets/dashboard-fallback.png"
   }
 ];
@@ -97,6 +97,11 @@ const awards = [
 ];
 
 const Press = () => {
+  // Function to handle image loading errors
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    e.currentTarget.src = '/assets/dashboard-fallback.png';
+  };
+
   return (
     <>
       <Helmet>
@@ -144,6 +149,7 @@ const Press = () => {
                       src={feature.image} 
                       alt={`${feature.publication} article`} 
                       className="w-full h-full object-cover"
+                      onError={handleImageError}
                     />
                   </div>
                   <div className="p-6">
@@ -152,7 +158,7 @@ const Press = () => {
                       <span className="text-sm text-gray-500">{feature.date}</span>
                     </div>
                     <h3 className="text-lg font-semibold text-gray-800 mb-4">{feature.title}</h3>
-                    <a href={feature.link} className="text-indigo-600 hover:text-indigo-800 flex items-center" target="_blank" rel="noopener noreferrer">
+                    <a href={feature.link} className="text-indigo-600 hover:text-indigo-800 flex items-center">
                       Read Article <ExternalLink size={14} className="ml-1" />
                     </a>
                   </div>
@@ -170,7 +176,8 @@ const Press = () => {
                     <img 
                       src={item.logo} 
                       alt={item.organization}
-                      className="w-12 h-12 object-contain" 
+                      className="w-12 h-12 object-contain"
+                      onError={handleImageError}
                     />
                   </div>
                   <h3 className="text-lg font-semibold text-gray-800 mb-1">{item.award}</h3>
@@ -190,8 +197,10 @@ const Press = () => {
               <Button className="flex items-center gap-2">
                 <Download size={16} /> Download Press Kit
               </Button>
-              <Button variant="outline" className="flex items-center gap-2">
-                <Mail size={16} /> Contact Media Relations
+              <Button variant="outline" className="flex items-center gap-2" asChild>
+                <a href="mailto:press@wealthhorizon.com">
+                  <Mail size={16} /> Contact Media Relations
+                </a>
               </Button>
             </div>
           </section>
@@ -205,7 +214,7 @@ const Press = () => {
                   WealthHorizon is a leading wealth management technology provider for family offices and ultra-high-net-worth individuals. Founded in 2018, we now serve over 200 family offices across 15 countries with our comprehensive wealth management platform.
                 </p>
                 <Button variant="outline" size="sm" asChild>
-                  <a href="/about">Learn More</a>
+                  <a href="#about">Learn More</a>
                 </Button>
               </div>
               <div className="bg-white border border-gray-100 rounded-lg shadow-sm p-6">
@@ -214,7 +223,7 @@ const Press = () => {
                   Our leadership team brings together expertise from wealth management, financial services, and technology to build solutions that address the unique needs of family offices and high-net-worth individuals.
                 </p>
                 <Button variant="outline" size="sm" asChild>
-                  <a href="/about#leadership">Meet the Team</a>
+                  <a href="#leadership">Meet the Team</a>
                 </Button>
               </div>
             </div>

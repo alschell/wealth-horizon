@@ -26,17 +26,17 @@ export function useStandardForm<T extends Record<string, any>>({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
-  // Handle input change
+  // Handle input change without validation (except for password fields)
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
+    const { name, value, type } = e.target;
     
     setFormData(prev => ({
       ...prev,
       [name]: value
     }));
     
-    // Validate field if there's a validation rule
-    if (validationRules[name]) {
+    // Only validate password fields while typing
+    if (type === 'password' && validationRules[name]) {
       const validationFunc = validationRules[name];
       const error = validationFunc ? validationFunc(value) : null;
       

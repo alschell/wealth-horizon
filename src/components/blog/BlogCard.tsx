@@ -39,7 +39,16 @@ export const BlogCard: React.FC<BlogCardProps> = ({ post, onClick }) => {
         <div className="flex items-center justify-between">
           <div className="flex items-center">
             <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 mr-2">
-              <User size={16} />
+              {post.authorAvatar ? (
+                <img 
+                  src={post.authorAvatar} 
+                  alt={post.author}
+                  className="w-full h-full rounded-full object-cover"
+                  onError={handleImageError}
+                />
+              ) : (
+                <User size={16} />
+              )}
             </div>
             <span className="text-sm text-gray-600">{post.author}</span>
           </div>

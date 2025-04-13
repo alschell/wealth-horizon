@@ -23,10 +23,18 @@ const Navigation: React.FC = () => {
     '/about', '/portfolio-management', '/trading', '/analyze-wealth', '/reporting', 
     '/compliance-monitoring', '/blog', '/press', '/careers', '/documentation', 
     '/help-center', '/security', '/privacy-policy', '/terms-of-service', '/cookies-policy',
-    '/careers/faq' // Add the careers/faq route to hide navigation
+    '/careers/faq', // Add the careers/faq route to hide navigation
+    '/api-docs', '/developer-portal', '/sdk', // Add documentation related pages
+    '/user-guides', '/support-ticket', '/community-forum' // Add help center related pages
   ];
   
-  const isFooterPage = footerPages.includes(location.pathname);
+  // Hide navbar for any route that starts with certain paths
+  const pathStartsWithHidden = (path: string) => {
+    const hiddenPrefixes = ['/api-docs/', '/developer-portal/', '/sdk/', '/help-center/'];
+    return hiddenPrefixes.some(prefix => path.startsWith(prefix));
+  };
+  
+  const isFooterPage = footerPages.includes(location.pathname) || pathStartsWithHidden(location.pathname);
   const isDashboard = !isOnboarding && !isHomePage && !isLoginPage && !isResetPasswordPage && !isFooterPage && !isJobDetailPage;
 
   useEffect(() => {

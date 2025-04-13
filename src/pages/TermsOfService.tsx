@@ -118,9 +118,9 @@ const TermsOfService = () => {
           </p>
           <div className="bg-white rounded-lg p-6 shadow-sm">
             <ul className="space-y-2 text-gray-600">
-              <li>Email: contact@wealthhorizon.ai</li>
+              <li>Email: <a href="mailto:contact@wealthhorizon.ai" className="text-indigo-600 hover:text-indigo-800">contact@wealthhorizon.ai</a></li>
               <li>Address: 8 The Green STE B, Dover, DE 19901, United States</li>
-              <li>Phone: +1 (831) 273 1336</li>
+              <li>Phone: <a href="tel:+18312731336" className="text-indigo-600 hover:text-indigo-800">+1 (831) 273 1336</a></li>
             </ul>
           </div>
         </section>

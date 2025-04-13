@@ -71,7 +71,7 @@ export const useDocumentHandlers = (
    */
   const handleAddDocument = useCallback(() => {
     // Validate required fields
-    const newErrors = {};
+    const newErrors: Record<string, boolean> = {};
     
     if (!documentType) newErrors.documentType = true;
     if (!issueDate) newErrors.issueDate = true;
@@ -123,7 +123,7 @@ export const useDocumentHandlers = (
     if (!editingDocumentId) return;
     
     // Validate required fields
-    const newErrors = {};
+    const newErrors: Record<string, boolean> = {};
     
     if (!documentType) newErrors.documentType = true;
     if (!issueDate) newErrors.issueDate = true;

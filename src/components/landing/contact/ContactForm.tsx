@@ -5,6 +5,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import CustomSearchableSelect from "@/components/ui/custom-searchable-select";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Check } from "lucide-react";
 
 const ContactForm: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -14,6 +16,7 @@ const ContactForm: React.FC = () => {
   const [industry, setIndustry] = useState("");
   const [inquiry, setInquiry] = useState("");
   const [message, setMessage] = useState("");
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,8 +25,8 @@ const ContactForm: React.FC = () => {
     
     // Simulate API call with a timeout
     setTimeout(() => {
-      // Show success message
-      toast.success("Your message has been sent! We'll be in touch shortly.");
+      // Show success modal instead of toast
+      setShowSuccessModal(true);
       
       // Reset form fields
       setEmail("");
@@ -137,6 +140,30 @@ const ContactForm: React.FC = () => {
           {isSubmitting ? "Sending..." : "Send Message"}
         </Button>
       </form>
+
+      {/* Success Modal */}
+      <Dialog open={showSuccessModal} onOpenChange={setShowSuccessModal}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader className="text-center">
+            <div className="mx-auto bg-green-100 rounded-full w-16 h-16 flex items-center justify-center mb-4">
+              <Check className="h-8 w-8 text-green-600" />
+            </div>
+            <DialogTitle className="text-xl font-semibold">Message sent successfully</DialogTitle>
+          </DialogHeader>
+          <div className="text-center space-y-2 py-4">
+            <p className="text-gray-700">Your message has been sent.</p>
+            <p className="text-gray-600">We will get back to you within 1-2 working days.</p>
+          </div>
+          <DialogFooter className="flex justify-center">
+            <Button 
+              onClick={() => setShowSuccessModal(false)}
+              className="bg-black text-white hover:bg-gray-800"
+            >
+              Close
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

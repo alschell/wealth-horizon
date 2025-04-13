@@ -10,17 +10,22 @@ import { useLegalEntityMapping } from "./hooks/useLegalEntityMapping";
 
 interface AccountFormFieldsProps {
   account: FinancialAccountInfo;
-  errors: Record<string, string>; // Added the errors prop
+  errors: Record<string, string>; 
   onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onSelectionChange: (field: keyof FinancialAccountInfo, value: string) => void;
   onStatementsSelected: (files: File[]) => void;
+  onLegalEntityChange: (value: string) => void; // Added the missing prop
+  onLeiChange: (e: React.ChangeEvent<HTMLInputElement>) => void; // Added the missing prop
 }
 
 const AccountFormFields = ({
   account,
   errors,
   onInputChange,
-  onSelectionChange
+  onSelectionChange,
+  onLegalEntityChange,
+  onLeiChange,
+  onStatementsSelected
 }: AccountFormFieldsProps) => {
   const { 
     getLegalEntities, 
@@ -31,6 +36,13 @@ const AccountFormFields = ({
   // Create an adapter function to convert event to string parameter
   const handleLeiInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     handleLeiChange(e.target.value);
+    onLeiChange(e); // Pass the event to parent component's handler
+  };
+
+  // Create adapter for legal entity change
+  const handleEntityChange = (value: string) => {
+    handleLegalEntityChange(value);
+    onLegalEntityChange(value); // Pass the value to parent component's handler
   };
 
   return (
@@ -40,7 +52,7 @@ const AccountFormFields = ({
         legalEntities={getLegalEntities()}
         onInputChange={onInputChange}
         onSelectionChange={onSelectionChange}
-        handleLegalEntityChange={handleLegalEntityChange}
+        handleLegalEntityChange={handleEntityChange}
         handleLeiChange={handleLeiInputChange}
       />
       

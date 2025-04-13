@@ -1,19 +1,21 @@
 
 import { useState, useCallback } from "react";
-import { FinancialAccountInfo } from "@/context/OnboardingContext";
+import { FinancialAccountInfo } from "@/types/onboarding";
 import { toast } from "@/components/ui/use-toast";
 
 export const useAccountForm = (onAddAccount: (account: FinancialAccountInfo) => void) => {
   const defaultAccount: FinancialAccountInfo = {
     accountName: "",
     institution: "",
-    accountType: "other", // Changed from empty string to "other" as default
+    accountType: "other", // Default is "other"
     legalEntity: "",
     legalEntityIdentifier: "",
     accountSubtype: "",
     currency: "",
     approximateValue: "",
     statements: [],
+    accountNumber: "", // Added missing property
+    swiftCode: ""      // Added missing property
   };
   
   const [newAccount, setNewAccount] = useState<FinancialAccountInfo>(defaultAccount);

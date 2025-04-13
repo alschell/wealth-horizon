@@ -1,7 +1,6 @@
 
 /**
- * Press and Media data
- * Centralized data for press releases and media coverage
+ * Press related data definitions and data
  */
 
 export interface PressRelease {
@@ -21,61 +20,63 @@ export interface MediaFeature {
   image: string;
 }
 
+// Press releases data
 export const pressReleases: PressRelease[] = [
   {
     id: 1,
-    title: "WealthHorizon Launches Advanced Portfolio Management Platform",
-    date: "June 15, 2023",
-    summary: "WealthHorizon today announced the launch of its advanced portfolio management platform designed specifically for family offices and high-net-worth individuals.",
-    link: "/press/wealthhorizon-launches-advanced-portfolio-management-platform"
+    title: "WealthHorizon Announces Series B Funding Round of $50 Million",
+    date: "March 15, 2025",
+    summary: "Funding to accelerate product development and international expansion to serve family offices globally.",
+    link: "/press/announcements/series-b-funding"
   },
   {
     id: 2,
-    title: "WealthHorizon Secures $50M in Series B Funding",
-    date: "March 8, 2023",
-    summary: "WealthHorizon announced today that it has secured $50 million in Series B funding to accelerate growth and expand its wealth management technology offerings.",
-    link: "/press/wealthhorizon-secures-50m-in-series-b-funding"
+    title: "WealthHorizon Launches AI-Powered Portfolio Analytics",
+    date: "February 10, 2025",
+    summary: "New features include predictive analytics and scenario planning tools for complex multi-asset portfolios.",
+    link: "/press/product/ai-analytics-launch"
   },
   {
     id: 3,
-    title: "WealthHorizon Partners with Leading Financial Institutions",
-    date: "January 22, 2023",
-    summary: "WealthHorizon is pleased to announce strategic partnerships with five leading financial institutions to enhance its wealth management ecosystem.",
-    link: "/press/wealthhorizon-partners-with-leading-financial-institutions"
+    title: "WealthHorizon Partners with Leading Global Banks",
+    date: "January 22, 2025",
+    summary: "Strategic partnerships will enable seamless integration with major financial institutions worldwide.",
+    link: "/press/partnerships/global-banks"
   }
 ];
 
+// Media coverage data
 export const mediaFeatures: MediaFeature[] = [
   {
     id: 1,
-    title: "How WealthHorizon is Transforming Wealth Management Technology",
-    publication: "FinTech Insider",
-    date: "July 10, 2023",
-    link: "https://fintechinsider.com/wealthhorizon-transforming-wealth-management",
-    image: "/assets/media/fintech-insider.jpg"
+    title: "How WealthHorizon is Transforming Family Office Management",
+    publication: "Financial Times",
+    date: "March 20, 2025",
+    link: "https://ft.com/articles/wealthhorizon-family-office",
+    image: "/assets/press/financial-times.jpg"
   },
   {
     id: 2,
-    title: "The Future of Family Office Technology: An Interview with WealthHorizon CEO",
-    publication: "Wealth Management Today",
-    date: "May 18, 2023",
-    link: "https://wealthmanagementtoday.com/wealthhorizon-ceo-interview",
-    image: "/assets/media/wealth-management-today.jpg"
+    title: "The Future of Wealth Tech: WealthHorizon's Innovative Approach",
+    publication: "Forbes",
+    date: "February 15, 2025",
+    link: "https://forbes.com/wealth-tech-wealthhorizon",
+    image: "/assets/press/forbes.jpg"
   },
   {
     id: 3,
-    title: "WealthHorizon Named in Top 10 WealthTech Companies to Watch",
-    publication: "Forbes",
-    date: "April 5, 2023",
-    link: "https://forbes.com/top-wealthtech-companies-to-watch-2023",
-    image: "/assets/media/forbes-feature.jpg"
+    title: "WealthHorizon Named Among Top 10 FinTech Startups to Watch",
+    publication: "TechCrunch",
+    date: "January 28, 2025",
+    link: "https://techcrunch.com/2025/01/28/top-fintech-startups",
+    image: "/assets/press/techcrunch.jpg"
   },
   {
     id: 4,
     title: "How AI is Reshaping Wealth Management: WealthHorizon Case Study",
-    publication: "The Financial Times",
-    date: "February 12, 2023",
-    link: "https://ft.com/content/wealthhorizon-ai-wealth-management",
-    image: "/assets/media/financial-times.jpg"
+    publication: "Bloomberg",
+    date: "January 10, 2025",
+    link: "https://bloomberg.com/wealth-ai-wealthhorizon",
+    image: "/assets/press/bloomberg.jpg"
   }
 ];

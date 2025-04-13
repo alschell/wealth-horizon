@@ -1,17 +1,17 @@
+
 import React from "react";
 import { Linkedin } from "lucide-react";
-import { useImageErrorHandler } from "@/hooks/useImageErrorHandler";
+import TeamMemberImage from "./TeamMemberImage";
 import { Advisor } from "./teamData";
 
 interface AdvisoryBoardSectionProps {
   advisors: Advisor[];
 }
 
+/**
+ * Displays the advisory board section with advisor profiles
+ */
 const AdvisoryBoardSection: React.FC<AdvisoryBoardSectionProps> = ({ advisors }) => {
-  const handleImageError = useImageErrorHandler({
-    fallbackImage: '/assets/team/profile-placeholder.jpg'
-  });
-
   return (
     <section>
       <h2 className="text-2xl font-semibold text-gray-800 mb-6">Advisory Board</h2>
@@ -21,11 +21,9 @@ const AdvisoryBoardSection: React.FC<AdvisoryBoardSectionProps> = ({ advisors })
           <div key={advisor.id} className="bg-white p-6 rounded-lg border border-gray-100 shadow-sm h-full">
             <div className="flex flex-col items-center mb-4">
               <div className="w-32 h-32 rounded-full overflow-hidden bg-gray-100 mb-3">
-                <img 
-                  src={advisor.image} 
-                  alt={advisor.name} 
-                  className="h-full w-full object-cover"
-                  onError={handleImageError}
+                <TeamMemberImage 
+                  image={advisor.image} 
+                  name={advisor.name} 
                 />
               </div>
               
@@ -38,6 +36,7 @@ const AdvisoryBoardSection: React.FC<AdvisoryBoardSectionProps> = ({ advisors })
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="mt-2 text-gray-600 hover:text-indigo-600"
+                  aria-label={`${advisor.name}'s LinkedIn profile`}
                 >
                   <Linkedin size={18} />
                   <span className="sr-only">LinkedIn profile</span>

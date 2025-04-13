@@ -3,8 +3,13 @@ import { useCallback, useMemo } from 'react';
 import { Location } from 'react-router-dom';
 import { ROUTES_CONFIG } from './routesConfig';
 
+/**
+ * Hook for determining route-based UI behaviors
+ * @param location Current router location
+ * @returns Object containing route state flags
+ */
 export const useNavigationRoutes = (location: Location) => {
-  // Check if path starts with any of the hidden prefixes
+  // Memoize the function to check if path starts with any hidden prefix
   const pathStartsWithHidden = useCallback((path: string) => {
     return ROUTES_CONFIG.HIDDEN_PATH_PREFIXES.some(prefix => path.startsWith(prefix));
   }, []);
@@ -17,7 +22,7 @@ export const useNavigationRoutes = (location: Location) => {
     const isHomePage = pathname === '/';
     const isLoginPage = pathname === '/login';
     const isResetPasswordPage = pathname === '/reset-password';
-    const isJobDetailPage = !!pathname.match(/^\/careers\/\d+$/);
+    const isJobDetailPage = Boolean(pathname.match(/^\/careers\/\d+$/));
     const isTeamPage = pathname === '/team';
     
     const isFooterPage = ROUTES_CONFIG.FOOTER_PAGES.includes(pathname) || pathStartsWithHidden(pathname);

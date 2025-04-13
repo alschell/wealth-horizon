@@ -1,17 +1,17 @@
+
 import React from "react";
 import { Linkedin, Twitter } from "lucide-react";
-import { useImageErrorHandler } from "@/hooks/useImageErrorHandler";
+import TeamMemberImage from "./TeamMemberImage";
 import { TeamMember } from "./teamData";
 
 interface LeadershipSectionProps {
   teamMembers: TeamMember[];
 }
 
+/**
+ * Displays the leadership team section with member profiles
+ */
 const LeadershipSection: React.FC<LeadershipSectionProps> = ({ teamMembers }) => {
-  const handleImageError = useImageErrorHandler({
-    fallbackImage: '/assets/team/profile-placeholder.jpg'
-  });
-
   return (
     <section>
       <h2 className="text-2xl font-semibold text-gray-800 mb-6">Leadership Team</h2>
@@ -21,11 +21,9 @@ const LeadershipSection: React.FC<LeadershipSectionProps> = ({ teamMembers }) =>
           <div key={member.id} className="flex flex-col md:flex-row bg-white p-6 rounded-lg border border-gray-100 shadow-sm">
             <div className="md:w-1/3 mb-4 md:mb-0 md:mr-6">
               <div className="h-48 w-48 mx-auto md:mx-0 rounded-lg overflow-hidden bg-gray-100">
-                <img 
-                  src={member.image} 
-                  alt={member.name} 
-                  className="h-full w-full object-cover"
-                  onError={handleImageError} 
+                <TeamMemberImage 
+                  image={member.image} 
+                  name={member.name}
                 />
               </div>
               
@@ -36,6 +34,7 @@ const LeadershipSection: React.FC<LeadershipSectionProps> = ({ teamMembers }) =>
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="text-gray-600 hover:text-indigo-600"
+                    aria-label={`${member.name}'s LinkedIn profile`}
                   >
                     <Linkedin size={18} />
                     <span className="sr-only">LinkedIn profile</span>
@@ -48,6 +47,7 @@ const LeadershipSection: React.FC<LeadershipSectionProps> = ({ teamMembers }) =>
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="text-gray-600 hover:text-blue-400"
+                    aria-label={`${member.name}'s Twitter profile`}
                   >
                     <Twitter size={18} />
                     <span className="sr-only">Twitter profile</span>

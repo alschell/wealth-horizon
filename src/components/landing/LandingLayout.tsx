@@ -42,7 +42,7 @@ const LandingLayout: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white w-full" style={{ display: 'block' }}>
+    <div className="min-h-screen bg-white w-full">
       <HeroSection onScrollToFeatures={() => scrollToSection(featuresRef)} />
       <div ref={featuresRef} id="features">
         <FeaturesSection id="features" />

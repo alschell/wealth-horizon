@@ -43,7 +43,8 @@ export const showWarningToast = (title: string, description: string) => {
   toast({
     title,
     description,
-    variant: "warning"
+    variant: "destructive", // Change from "warning" to "destructive" to match the allowed variants
+    className: "bg-amber-50 border-amber-200 text-amber-800" // Add className to style it as a warning
   });
 };
 

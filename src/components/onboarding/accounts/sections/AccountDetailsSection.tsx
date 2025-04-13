@@ -11,12 +11,14 @@ interface AccountDetailsSectionProps {
   account: FinancialAccountInfo;
   onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onSelectionChange: (field: keyof FinancialAccountInfo, value: string) => void;
+  errors?: Record<string, string>; // Add the errors prop with optional flag
 }
 
 const AccountDetailsSection = ({
   account,
   onInputChange,
-  onSelectionChange
+  onSelectionChange,
+  errors = {} // Default to empty object if not provided
 }: AccountDetailsSectionProps) => {
   return (
     <div className="space-y-4">
@@ -29,6 +31,7 @@ const AccountDetailsSection = ({
           onChange={onInputChange}
           placeholder="e.g., Managed Account, Private Equity"
           required={false}
+          error={errors.accountSubtype}
         />
         
         <SearchableSelectField
@@ -39,6 +42,7 @@ const AccountDetailsSection = ({
           options={CURRENCIES}
           onChange={(value) => onSelectionChange("currency", extractCurrencyCode(value))}
           required={false}
+          error={errors.currency}
         />
       </div>
     </div>

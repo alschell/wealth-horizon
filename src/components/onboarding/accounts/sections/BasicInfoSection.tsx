@@ -12,12 +12,14 @@ interface BasicInfoSectionProps {
   account: FinancialAccountInfo;
   onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onSelectionChange: (field: keyof FinancialAccountInfo, value: string) => void;
+  errors?: Record<string, string>; // Add the errors prop with optional flag
 }
 
 const BasicInfoSection = ({
   account,
   onInputChange,
-  onSelectionChange
+  onSelectionChange,
+  errors = {} // Default to empty object if not provided
 }: BasicInfoSectionProps) => {
   return (
     <div className="space-y-4">
@@ -30,6 +32,7 @@ const BasicInfoSection = ({
           onChange={onInputChange}
           placeholder="e.g., Main Investment Portfolio at UBS"
           required={false}
+          error={errors.accountName}
         />
         
         <SelectField
@@ -40,6 +43,7 @@ const BasicInfoSection = ({
           options={ACCOUNT_TYPES}
           onChange={(value) => onSelectionChange("accountType", value)}
           required={false}
+          error={errors.accountType}
         />
       </div>
     </div>

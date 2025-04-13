@@ -78,10 +78,9 @@ const ContactForm: React.FC = () => {
         </div>
         
         <div className="space-y-2">
-          <Label htmlFor="industry">Industry<span className="text-red-500 ml-1">*</span></Label>
           <CustomSearchableSelect 
             id="industry"
-            label="Industry"
+            label=""
             value={industry}
             placeholder="Select your industry"
             options={[
@@ -100,10 +99,9 @@ const ContactForm: React.FC = () => {
         </div>
         
         <div className="space-y-2">
-          <Label htmlFor="inquiry-type">Type of inquiry<span className="text-red-500 ml-1">*</span></Label>
           <CustomSearchableSelect 
             id="inquiry-type"
-            label="Type of inquiry"
+            label=""
             value={inquiry}
             placeholder="Select inquiry type"
             options={[

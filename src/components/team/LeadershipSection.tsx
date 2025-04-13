@@ -1,20 +1,41 @@
 
 import React from "react";
-import { Linkedin, Twitter } from "lucide-react";
+import { Linkedin, Twitter, Github } from "lucide-react";
 import TeamMemberImage from "./TeamMemberImage";
 import { TeamMember } from "./teamData";
+import SocialLinks from "./SocialLinks";
+import { Input } from "@/components/ui/input";
+import { Search } from "lucide-react";
 
 interface LeadershipSectionProps {
   teamMembers: TeamMember[];
+  searchQuery?: string;
+  onSearchChange?: (value: string) => void;
 }
 
 /**
  * Displays the leadership team section with member profiles
  */
-const LeadershipSection: React.FC<LeadershipSectionProps> = ({ teamMembers }) => {
+const LeadershipSection: React.FC<LeadershipSectionProps> = ({ 
+  teamMembers, 
+  searchQuery = "", 
+  onSearchChange 
+}) => {
   return (
     <section>
       <h2 className="text-2xl font-semibold text-gray-800 mb-6">Leadership Team</h2>
+      
+      {onSearchChange && (
+        <div className="relative mb-6">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <Input
+            className="pl-9"
+            placeholder="Search leadership team..."
+            value={searchQuery}
+            onChange={(e) => onSearchChange(e.target.value)}
+          />
+        </div>
+      )}
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {teamMembers.map((member) => (
@@ -27,38 +48,23 @@ const LeadershipSection: React.FC<LeadershipSectionProps> = ({ teamMembers }) =>
                 />
               </div>
               
-              <div className="flex justify-center md:justify-start space-x-2 mt-3">
-                {member.linkedin && (
-                  <a 
-                    href={member.linkedin} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="text-gray-600 hover:text-indigo-600"
-                    aria-label={`${member.name}'s LinkedIn profile`}
-                  >
-                    <Linkedin size={18} />
-                    <span className="sr-only">LinkedIn profile</span>
-                  </a>
-                )}
-                
-                {member.twitter && (
-                  <a 
-                    href={member.twitter} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="text-gray-600 hover:text-blue-400"
-                    aria-label={`${member.name}'s Twitter profile`}
-                  >
-                    <Twitter size={18} />
-                    <span className="sr-only">Twitter profile</span>
-                  </a>
-                )}
+              <div className="flex justify-center md:justify-start mt-3">
+                <SocialLinks 
+                  links={{
+                    linkedin: member.linkedin,
+                    twitter: member.twitter,
+                    github: member.github
+                  }}
+                />
               </div>
             </div>
             
             <div className="md:w-2/3">
               <h3 className="text-xl font-semibold text-gray-800">{member.name}</h3>
               <p className="text-indigo-600 mb-3">{member.title}</p>
+              {member.department && (
+                <p className="text-gray-500 mb-3">Department: {member.department}</p>
+              )}
               <p className="text-gray-600">{member.bio}</p>
             </div>
           </div>

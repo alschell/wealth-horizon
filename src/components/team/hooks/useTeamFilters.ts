@@ -18,8 +18,8 @@ export function useTeamFilters<T extends TeamMember | Advisor>(items: T[]) {
       ? items.filter(item => 
           item.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
           item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          (('department' in item) ? 
-            (item as TeamMember).department?.toLowerCase().includes(searchQuery.toLowerCase()) : 
+          (('department' in item && item.department) ? 
+            item.department.toLowerCase().includes(searchQuery.toLowerCase()) : 
             false)
         )
       : items;
@@ -30,8 +30,11 @@ export function useTeamFilters<T extends TeamMember | Advisor>(items: T[]) {
         return a.name.localeCompare(b.name);
       } else if (sortBy === 'title') {
         return a.title.localeCompare(b.title);
-      } else if (sortBy === 'department' && 'department' in a && 'department' in b) {
-        return (a as TeamMember).department?.localeCompare((b as TeamMember).department || '') || 0;
+      } else if (sortBy === 'department') {
+        // Handle department property safely for TeamMember
+        const deptA = 'department' in a && a.department ? a.department : '';
+        const deptB = 'department' in b && b.department ? b.department : '';
+        return deptA.localeCompare(deptB);
       }
       return 0;
     });

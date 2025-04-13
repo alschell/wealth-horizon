@@ -1,7 +1,8 @@
 
 import React from 'react';
-import Image from "next/image";
 import { cn } from "@/lib/utils";
+import { Image } from "@/components/ui/image";
+import { User } from "lucide-react";
 
 export interface TeamMemberImageProps {
   image: string;
@@ -19,7 +20,7 @@ const TeamMemberImage: React.FC<TeamMemberImageProps> = ({
   name,
   priority = 0,
   className,
-  fallbackIconSize
+  fallbackIconSize = 40
 }) => {
   return (
     <div className={cn("relative overflow-hidden rounded-md", className)}>
@@ -30,7 +31,9 @@ const TeamMemberImage: React.FC<TeamMemberImageProps> = ({
         height={300}
         className="object-cover w-full h-full"
         priority={priority < 4} // Only prioritize the first few images
-        loading={priority < 4 ? "eager" : "lazy"}
+        onError={() => {
+          console.warn(`Failed to load image for ${name}`);
+        }}
       />
     </div>
   );

@@ -59,7 +59,7 @@ export const ResumeUploadModal: React.FC<ResumeUploadModalProps> = ({
         <form onSubmit={handleSubmitResume} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="name" className="flex items-center">
-              Full Name <span className="text-purple-600 ml-1">*</span>
+              Full Name <span className="text-indigo-600 ml-1">*</span>
             </Label>
             <Input 
               id="name" 
@@ -71,7 +71,7 @@ export const ResumeUploadModal: React.FC<ResumeUploadModalProps> = ({
           </div>
           <div className="space-y-2">
             <Label htmlFor="email" className="flex items-center">
-              Email Address <span className="text-purple-600 ml-1">*</span>
+              Email Address <span className="text-indigo-600 ml-1">*</span>
             </Label>
             <Input 
               id="email" 
@@ -84,7 +84,7 @@ export const ResumeUploadModal: React.FC<ResumeUploadModalProps> = ({
           </div>
           <div className="space-y-2">
             <Label htmlFor="phone" className="flex items-center">
-              Phone Number <span className="text-purple-600 ml-1">*</span>
+              Phone Number <span className="text-indigo-600 ml-1">*</span>
             </Label>
             <Input 
               id="phone" 
@@ -96,7 +96,7 @@ export const ResumeUploadModal: React.FC<ResumeUploadModalProps> = ({
           </div>
           <div className="space-y-2">
             <Label htmlFor="resume" className="flex items-center">
-              Resume <span className="text-purple-600 ml-1">*</span>
+              Resume <span className="text-indigo-600 ml-1">*</span>
             </Label>
             <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
               {resumeFile ? (

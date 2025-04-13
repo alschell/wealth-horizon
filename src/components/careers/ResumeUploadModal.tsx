@@ -152,6 +152,7 @@ export const ResumeUploadModal: React.FC<ResumeUploadModalProps> = ({
         <form onSubmit={handleSubmit} className="space-y-4" aria-labelledby="resume-form-title">
           <FormField
             id="name"
+            name="name"
             value={formData.name}
             onChange={handleChange}
             label="Full Name"
@@ -163,6 +164,7 @@ export const ResumeUploadModal: React.FC<ResumeUploadModalProps> = ({
           
           <FormField
             id="email"
+            name="email"
             type="email"
             value={formData.email}
             onChange={handleChange}
@@ -175,6 +177,7 @@ export const ResumeUploadModal: React.FC<ResumeUploadModalProps> = ({
           
           <FormField
             id="phone"
+            name="phone"
             value={formData.phone}
             onChange={handleChange}
             label="Phone Number"

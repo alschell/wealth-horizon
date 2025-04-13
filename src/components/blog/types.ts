@@ -1,21 +1,22 @@
 
-export type BlogPost = {
+export interface BlogPost {
   id: number;
   title: string;
   excerpt: string;
   author: string;
+  authorAvatar?: string;
   date: string;
   category: string;
   readTime: string;
   content: string;
   image: string;
-};
+}
 
-export type Comment = {
+export interface BlogComment {
   id: number;
-  postId: number;
   author: string;
-  content: string;
+  authorAvatar?: string;
   date: string;
-  email?: string;
-};
+  content: string;
+  replies?: BlogComment[];
+}

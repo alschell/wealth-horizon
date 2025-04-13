@@ -1,252 +1,169 @@
+/**
+ * Accessibility utilities for the application
+ * Helps improve screen reader support and keyboard navigation
+ */
+
+// Cache for announcement container
+let announcementContainer: HTMLElement | null = null;
 
 /**
- * Announces a message to screen readers using an ARIA live region
- * @param message - The message to announce
- * @param priority - The priority level of the announcement (polite or assertive)
+ * Announces a message to screen readers
+ * Creates a visually hidden live region for screen reader announcements
+ * 
+ * @param message - Message to announce to screen readers
+ * @param politeness - ARIA live politeness setting
  */
-export function announceToScreenReader(message: string, priority: 'polite' | 'assertive' = 'polite'): void {
-  // Check if we're in a browser environment
-  if (typeof document === 'undefined') return;
-  
-  // Look for existing announcement element or create a new one
-  let announcer = document.getElementById('screen-reader-announcer');
-  
-  if (!announcer) {
-    announcer = document.createElement('div');
-    announcer.id = 'screen-reader-announcer';
-    announcer.className = 'sr-only';
-    announcer.setAttribute('aria-live', priority);
-    announcer.setAttribute('aria-atomic', 'true');
-    document.body.appendChild(announcer);
-  }
-  
-  // Set the priority level
-  announcer.setAttribute('aria-live', priority);
-  
-  // Announce the message by updating the content
-  // We briefly clear it first to ensure announcement even if the text hasn't changed
-  announcer.textContent = '';
-  
-  // Use setTimeout to ensure the clearing has time to process
-  setTimeout(() => {
-    announcer.textContent = message;
-  }, 50);
-}
-
-/**
- * Creates a unique ID for use in ARIA attributes
- * @param prefix - Optional prefix for the ID
- * @returns A unique string ID
- */
-export function generateAriaId(prefix: string = 'aria'): string {
-  return `${prefix}-${Math.random().toString(36).substring(2, 9)}`;
-}
-
-/**
- * Focuses an element and announces it to screen readers
- * @param elementId - ID of the element to focus
- * @param announcement - Optional message to announce
- */
-export function focusElement(elementId: string, announcement?: string): void {
-  // Check if we're in a browser environment
-  if (typeof document === 'undefined') return;
-  
-  const element = document.getElementById(elementId);
-  
-  if (element) {
-    element.focus();
-    
-    if (announcement) {
-      announceToScreenReader(announcement);
+export function announceToScreenReader(
+  message: string,
+  politeness: 'assertive' | 'polite' = 'polite'
+): void {
+  try {
+    if (!announcementContainer) {
+      // Create the container if it doesn't exist
+      announcementContainer = document.createElement('div');
+      announcementContainer.setAttribute('aria-live', politeness);
+      announcementContainer.setAttribute('role', 'status');
+      announcementContainer.setAttribute('aria-atomic', 'true');
+      
+      // Hide it visually but keep it accessible to screen readers
+      Object.assign(announcementContainer.style, {
+        position: 'absolute',
+        width: '1px',
+        height: '1px',
+        padding: '0',
+        overflow: 'hidden',
+        clip: 'rect(0, 0, 0, 0)',
+        whiteSpace: 'nowrap',
+        border: '0'
+      });
+      
+      document.body.appendChild(announcementContainer);
     }
+    
+    // Update the politeness setting if different from current
+    if (announcementContainer.getAttribute('aria-live') !== politeness) {
+      announcementContainer.setAttribute('aria-live', politeness);
+    }
+    
+    // Announce the message
+    announcementContainer.textContent = '';
+    
+    // Use setTimeout to ensure the change is registered by screen readers
+    setTimeout(() => {
+      if (announcementContainer) {
+        announcementContainer.textContent = message;
+      }
+    }, 50);
+  } catch (error) {
+    console.error('Error announcing to screen reader:', error);
   }
 }
 
 /**
- * Creates a trap focus within a container
- * @param containerId - ID of the container element
- * @returns Object with methods to activate and deactivate the focus trap
+ * Ensures an element has appropriate ARIA labels
+ * 
+ * @param element - DOM element to enhance
+ * @param label - Accessible label for the element
+ * @param description - Optional description for more context
  */
-export function createFocusTrap(containerId: string) {
-  // Check if we're in a browser environment
-  if (typeof document === 'undefined') {
-    return {
-      activate: () => {},
-      deactivate: () => {},
-    };
+export function ensureAccessibleLabels(
+  element: HTMLElement,
+  label: string,
+  description?: string
+): void {
+  if (!element.getAttribute('aria-label') && !element.hasAttribute('aria-labelledby')) {
+    element.setAttribute('aria-label', label);
   }
   
-  let active = false;
-  let previousActiveElement: Element | null = null;
-  
-  // Function to get all focusable elements in the container
-  const getFocusableElements = (): HTMLElement[] => {
-    const container = document.getElementById(containerId);
-    if (!container) return [];
+  if (description && !element.getAttribute('aria-describedby')) {
+    const descId = `desc-${Math.random().toString(36).substring(2, 9)}`;
+    const descElement = document.createElement('span');
+    descElement.id = descId;
+    descElement.classList.add('sr-only');
+    descElement.textContent = description;
     
-    const focusableSelectors = [
-      'a[href]:not([disabled])',
-      'button:not([disabled])',
-      'textarea:not([disabled])',
-      'input:not([disabled])',
-      'select:not([disabled])',
-      '[tabindex]:not([tabindex="-1"])',
-    ];
-    
-    const elements = container.querySelectorAll(focusableSelectors.join(','));
-    return Array.from(elements) as HTMLElement[];
-  };
-  
-  // Event handler for tab key
-  const handleTabKey = (event: KeyboardEvent) => {
-    if (!active) return;
-    
-    const focusableElements = getFocusableElements();
-    if (focusableElements.length === 0) return;
-    
-    const firstElement = focusableElements[0];
-    const lastElement = focusableElements[focusableElements.length - 1];
-    
-    // If shift+tab on first element, move to last element
-    if (event.shiftKey && document.activeElement === firstElement) {
-      event.preventDefault();
-      lastElement.focus();
-    }
-    // If tab on last element, move to first element
-    else if (!event.shiftKey && document.activeElement === lastElement) {
-      event.preventDefault();
-      firstElement.focus();
-    }
-  };
-  
-  // Event handler for escape key
-  const handleEscapeKey = (event: KeyboardEvent) => {
-    if (!active) return;
-    
-    if (event.key === 'Escape') {
-      deactivate();
-    }
-  };
-  
-  // Function to activate the focus trap
-  const activate = () => {
-    if (active) return;
-    
-    previousActiveElement = document.activeElement;
-    active = true;
-    
-    document.addEventListener('keydown', handleTabKey);
-    document.addEventListener('keydown', handleEscapeKey);
-    
-    // Focus the first focusable element
-    const focusableElements = getFocusableElements();
-    if (focusableElements.length > 0) {
-      focusableElements[0].focus();
-    }
-  };
-  
-  // Function to deactivate the focus trap
-  const deactivate = () => {
-    if (!active) return;
-    
-    active = false;
-    
-    document.removeEventListener('keydown', handleTabKey);
-    document.removeEventListener('keydown', handleEscapeKey);
-    
-    // Restore focus to the previously active element
-    if (previousActiveElement && 'focus' in previousActiveElement) {
-      (previousActiveElement as HTMLElement).focus();
-    }
-  };
-  
-  return {
-    activate,
-    deactivate,
-  };
+    element.parentNode?.appendChild(descElement);
+    element.setAttribute('aria-describedby', descId);
+  }
 }
 
 /**
- * Enhances an element with ARIA keyboard navigation
- * @param elementId - ID of the element to enhance
- * @param options - Options for keyboard navigation
+ * Add keyboard navigation to a group of elements
+ * 
+ * @param containerSelector - CSS selector for the container element
+ * @param itemSelector - CSS selector for the focusable items
+ * @param options - Additional options
  */
-export function enhanceWithKeyboardNavigation(
-  elementId: string,
+export function setupKeyboardNavigation(
+  containerSelector: string,
+  itemSelector: string,
   options: {
-    arrowKeys?: boolean;
-    homeEnd?: boolean;
-    onSelection?: (element: HTMLElement) => void;
+    wrap?: boolean;
+    orientation?: 'horizontal' | 'vertical' | 'both';
+    onFocusChange?: (newElement: Element) => void;
   } = {}
-) {
-  // Check if we're in a browser environment
-  if (typeof document === 'undefined') return () => {};
+): () => void {
+  const { wrap = true, orientation = 'both', onFocusChange } = options;
   
-  const { arrowKeys = true, homeEnd = true, onSelection } = options;
-  
-  // Event handler for keyboard navigation
   const handleKeyDown = (event: KeyboardEvent) => {
-    const element = document.getElementById(elementId);
-    if (!element) return;
+    if (!['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) {
+      return;
+    }
     
-    // Get all focusable items
-    const items = Array.from(
-      element.querySelectorAll('[role="menuitem"], [role="option"], [role="tab"], [role="listitem"]')
-    ) as HTMLElement[];
+    const container = document.querySelector(containerSelector);
+    if (!container) return;
     
-    if (items.length === 0) return;
+    const items = Array.from(container.querySelectorAll(itemSelector));
+    if (!items.length) return;
     
-    const currentIndex = items.indexOf(document.activeElement as HTMLElement);
-    let nextIndex = -1;
+    // Find the currently focused item
+    const currentIndex = items.findIndex(item => item === document.activeElement);
+    let nextIndex = currentIndex;
     
-    // Handle different key presses
     switch (event.key) {
-      case 'ArrowDown':
-      case 'ArrowRight':
-        if (arrowKeys) {
-          event.preventDefault();
-          nextIndex = currentIndex < items.length - 1 ? currentIndex + 1 : 0;
-        }
-        break;
       case 'ArrowUp':
+        if (orientation === 'horizontal') return;
+        event.preventDefault();
+        nextIndex = currentIndex > 0 ? currentIndex - 1 : (wrap ? items.length - 1 : 0);
+        break;
+      case 'ArrowDown':
+        if (orientation === 'horizontal') return;
+        event.preventDefault();
+        nextIndex = currentIndex < items.length - 1 ? currentIndex + 1 : (wrap ? 0 : items.length - 1);
+        break;
       case 'ArrowLeft':
-        if (arrowKeys) {
-          event.preventDefault();
-          nextIndex = currentIndex > 0 ? currentIndex - 1 : items.length - 1;
-        }
+        if (orientation === 'vertical') return;
+        event.preventDefault();
+        nextIndex = currentIndex > 0 ? currentIndex - 1 : (wrap ? items.length - 1 : 0);
+        break;
+      case 'ArrowRight':
+        if (orientation === 'vertical') return;
+        event.preventDefault();
+        nextIndex = currentIndex < items.length - 1 ? currentIndex + 1 : (wrap ? 0 : items.length - 1);
         break;
       case 'Home':
-        if (homeEnd) {
-          event.preventDefault();
-          nextIndex = 0;
-        }
+        event.preventDefault();
+        nextIndex = 0;
         break;
       case 'End':
-        if (homeEnd) {
-          event.preventDefault();
-          nextIndex = items.length - 1;
-        }
-        break;
-      case 'Enter':
-      case ' ':
-        if (onSelection && currentIndex >= 0) {
-          event.preventDefault();
-          onSelection(items[currentIndex]);
-        }
+        event.preventDefault();
+        nextIndex = items.length - 1;
         break;
     }
     
-    // Focus the next item if needed
-    if (nextIndex >= 0) {
-      items[nextIndex].focus();
+    if (nextIndex !== currentIndex && items[nextIndex]) {
+      (items[nextIndex] as HTMLElement).focus();
+      
+      if (onFocusChange) {
+        onFocusChange(items[nextIndex]);
+      }
     }
   };
   
-  // Add event listener
-  document.getElementById(elementId)?.addEventListener('keydown', handleKeyDown);
+  document.addEventListener('keydown', handleKeyDown);
   
-  // Return a cleanup function
+  // Return cleanup function
   return () => {
-    document.getElementById(elementId)?.removeEventListener('keydown', handleKeyDown);
+    document.removeEventListener('keydown', handleKeyDown);
   };
 }

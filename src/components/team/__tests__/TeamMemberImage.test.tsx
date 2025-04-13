@@ -1,91 +1,192 @@
 
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, fireEvent } from '@testing-library/react';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import TeamMemberImage from '../TeamMemberImage';
 
-// Mock the a11y utility
-jest.mock('@/utils/a11y', () => ({
-  announceToScreenReader: jest.fn(),
+// Create a mock for the announceToScreenReader function
+vi.mock('@/utils/a11y', () => ({
+  announceToScreenReader: vi.fn()
+}));
+
+// Create a mock for the useToast hook
+vi.mock('@/hooks/use-toast', () => ({
+  useToast: () => ({
+    toast: vi.fn()
+  })
+}));
+
+// Mock the performance tracking utility
+vi.mock('../utils/performanceTracking', () => ({
+  trackImagePerformance: vi.fn()
 }));
 
 describe('TeamMemberImage Component', () => {
-  const mockProps = {
-    image: 'https://example.com/image.jpg',
-    name: 'John Doe',
-    onLoad: jest.fn(),
-    onError: jest.fn(),
-  };
-  
   beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
-  test('renders correctly with valid image', async () => {
-    render(<TeamMemberImage {...mockProps} />);
+    // Reset mocks before each test
+    vi.clearAllMocks();
     
-    // Check if the image is rendered
-    const image = screen.getByRole('img', { hidden: true });
-    expect(image).toBeInTheDocument();
-    expect(image).toHaveAttribute('alt', 'John Doe profile photo');
-    expect(image).toHaveAttribute('src', 'https://example.com/image.jpg');
-    
-    // Simulate successful image load
-    fireEvent.load(image);
-    
-    await waitFor(() => {
-      expect(mockProps.onLoad).toHaveBeenCalledTimes(1);
-    });
-  });
-  
-  test('shows fallback when image fails to load', async () => {
-    render(<TeamMemberImage {...mockProps} />);
-    
-    // Simulate image load error
-    const image = screen.getByRole('img', { hidden: true });
-    fireEvent.error(image);
-    
-    // Check if fallback is shown
-    await waitFor(() => {
-      expect(mockProps.onError).toHaveBeenCalledTimes(1);
-      expect(screen.getByLabelText('Placeholder for John Doe')).toBeInTheDocument();
-    });
+    // Mock the global Image constructor
+    global.Image = class {
+      onload: (() => void) | null = null;
+      onerror: ((err: ErrorEvent) => void) | null = null;
+      src: string = '';
+      
+      constructor() {
+        setTimeout(() => {
+          if (this.src.includes('error') || this.src.includes('fail')) {
+            this.onerror && this.onerror(new ErrorEvent('error'));
+          } else {
+            this.onload && this.onload();
+          }
+        }, 10);
+      }
+    } as unknown as typeof Image;
   });
   
-  test('applies custom classNames and fallbackIconSize', () => {
+  it('renders correctly with valid image', async () => {
     render(
-      <TeamMemberImage
-        {...mockProps}
-        className="custom-class"
-        fallbackIconSize={60}
+      <TeamMemberImage 
+        image="https://example.com/avatar.jpg" 
+        name="John Doe" 
+        className="test-class"
       />
     );
     
+    // Initially it should show loading state
+    expect(screen.getByRole('status')).toBeInTheDocument();
+    
+    // Wait for image to load
+    await waitFor(() => {
+      expect(screen.queryByRole('status')).not.toBeInTheDocument();
+    });
+    
+    // Image should be displayed
+    expect(screen.getByAltText('John Doe profile photo')).toBeInTheDocument();
+    
+    // Container should have the custom class
     const container = screen.getByTestId('team-member-image');
-    expect(container).toHaveClass('custom-class');
+    expect(container).toHaveClass('test-class');
   });
   
-  test('resets loading state when image prop changes', async () => {
-    const { rerender } = render(<TeamMemberImage {...mockProps} />);
-    
-    // Simulate successful image load
-    fireEvent.load(screen.getByRole('img', { hidden: true }));
-    
-    // Re-render with different image
-    rerender(
-      <TeamMemberImage
-        {...mockProps}
-        image="https://example.com/different-image.jpg"
+  it('shows fallback when image fails to load', async () => {
+    render(
+      <TeamMemberImage 
+        image="https://example.com/error.jpg" 
+        name="Jane Doe" 
       />
     );
     
-    // Check if loading state is reset
-    expect(screen.getByTestId('team-member-image')).toHaveAttribute('aria-busy', 'true');
-    
-    // Simulate successful image load again
-    fireEvent.load(screen.getByRole('img', { hidden: true }));
-    
+    // Wait for error state
     await waitFor(() => {
-      expect(screen.getByTestId('team-member-image')).toHaveAttribute('aria-busy', 'false');
+      expect(screen.queryByAltText('Jane Doe profile photo')).not.toBeInTheDocument();
+    });
+    
+    // Fallback should be shown
+    expect(screen.getByRole('img', { name: 'Placeholder for Jane Doe' })).toBeInTheDocument();
+    
+    // Retry button should be available
+    expect(screen.getByRole('button', { name: 'Retry loading image for Jane Doe' })).toBeInTheDocument();
+  });
+  
+  it('shows custom placeholder when provided', async () => {
+    const CustomPlaceholder = () => <div data-testid="custom-placeholder">Custom Loading...</div>;
+    
+    render(
+      <TeamMemberImage 
+        image="https://example.com/avatar.jpg" 
+        name="Custom User" 
+        placeholder={<CustomPlaceholder />}
+      />
+    );
+    
+    // Custom placeholder should be shown during loading
+    expect(screen.getByTestId('custom-placeholder')).toBeInTheDocument();
+    
+    // Wait for image to load
+    await waitFor(() => {
+      expect(screen.queryByTestId('custom-placeholder')).not.toBeInTheDocument();
+    });
+  });
+  
+  it('calls onLoad callback when image loads successfully', async () => {
+    const onLoadMock = vi.fn();
+    
+    render(
+      <TeamMemberImage 
+        image="https://example.com/success.jpg" 
+        name="Success User" 
+        onLoad={onLoadMock}
+      />
+    );
+    
+    // Wait for image to load
+    await waitFor(() => {
+      expect(onLoadMock).toHaveBeenCalledTimes(1);
+    });
+  });
+  
+  it('calls onError callback when image fails to load', async () => {
+    const onErrorMock = vi.fn();
+    
+    render(
+      <TeamMemberImage 
+        image="https://example.com/fail.jpg" 
+        name="Error User" 
+        onError={onErrorMock}
+      />
+    );
+    
+    // Wait for error callback
+    await waitFor(() => {
+      expect(onErrorMock).toHaveBeenCalledTimes(1);
+    });
+  });
+  
+  it('handles retry logic correctly', async () => {
+    // Mock console.error to suppress expected error logs
+    const originalConsoleError = console.error;
+    console.error = vi.fn();
+    
+    render(
+      <TeamMemberImage 
+        image="https://example.com/fail.jpg" 
+        name="Retry User" 
+      />
+    );
+    
+    // Wait for error state
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: 'Retry loading image for Retry User' })).toBeInTheDocument();
+    });
+    
+    // Click retry button
+    fireEvent.click(screen.getByRole('button', { name: 'Retry loading image for Retry User' }));
+    
+    // Should go back to loading state
+    expect(screen.getByText('Loading image for Retry User')).toBeInTheDocument();
+    
+    // Restore console.error
+    console.error = originalConsoleError;
+  });
+  
+  it('applies correct priority classes', async () => {
+    render(
+      <TeamMemberImage 
+        image="https://example.com/avatar.jpg" 
+        name="Priority User" 
+        priority={1}
+      />
+    );
+    
+    // Container should have priority data attribute
+    const container = screen.getByTestId('team-member-image');
+    expect(container).toHaveAttribute('data-priority', '1');
+    
+    // Wait for image to load
+    await waitFor(() => {
+      const img = screen.getByAltText('Priority User profile photo');
+      expect(img).toHaveClass('priority-1');
     });
   });
 });

@@ -10,7 +10,7 @@ interface UseOptimizedImageLoadingOptions {
   /** Callback to run when the image loads successfully */
   onSuccess?: () => void;
   /** Callback to run when the image fails to load */
-  onError?: () => void;
+  onError?: (error?: Error) => void;
 }
 
 interface UseOptimizedImageLoadingResult {
@@ -20,6 +20,8 @@ interface UseOptimizedImageLoadingResult {
   hasError: boolean;
   /** Function to manually trigger image load */
   loadImage: () => void;
+  /** Error details, if any */
+  errorDetails?: Error;
   /** Props to spread onto an img element */
   imageProps: {
     onLoad: () => void;
@@ -32,6 +34,11 @@ interface UseOptimizedImageLoadingResult {
 /**
  * Custom hook for optimized image loading with performance enhancements
  * Provides loading states, error handling, and lazy loading capabilities
+ * 
+ * @param src - Image source URL
+ * @param alt - Alt text for the image
+ * @param options - Configuration options
+ * @returns Loading states and image props
  */
 export function useOptimizedImageLoading(
   src: string,
@@ -41,6 +48,7 @@ export function useOptimizedImageLoading(
   const { lazy = true, priority = 3, onSuccess, onError } = options;
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
+  const [errorDetails, setErrorDetails] = useState<Error | undefined>(undefined);
   const { toast } = useToast();
   
   // Generate CSS classes based on priority
@@ -55,12 +63,13 @@ export function useOptimizedImageLoading(
   const handleLoad = useCallback(() => {
     setIsLoading(false);
     setHasError(false);
+    setErrorDetails(undefined);
     
     if (onSuccess) {
       onSuccess();
     }
     
-    // Performance tracking for large images
+    // Performance tracking for high priority images
     if (priority <= 2) {
       console.debug(`High priority image loaded: ${src}`);
       performance.mark(`image-loaded-${src.substring(0, 20)}`);
@@ -72,11 +81,16 @@ export function useOptimizedImageLoading(
     setIsLoading(false);
     setHasError(true);
     
+    // Create detailed error
+    const error = new Error(`Failed to load image: ${src}`);
+    error.name = 'ImageLoadError';
+    setErrorDetails(error);
+    
     // Log error details
     console.error(`Failed to load image: ${src}`);
     
     if (onError) {
-      onError();
+      onError(error);
     }
     
     // Show toast for high priority images only
@@ -94,6 +108,7 @@ export function useOptimizedImageLoading(
     // Reset states
     setIsLoading(true);
     setHasError(false);
+    setErrorDetails(undefined);
     
     // Create image object
     const img = new Image();
@@ -121,6 +136,7 @@ export function useOptimizedImageLoading(
     isLoading,
     hasError,
     loadImage,
+    errorDetails,
     imageProps: {
       onLoad: handleLoad,
       onError: handleError,

@@ -1,65 +1,89 @@
 
 /**
- * Custom error types for team-related operations
- * Provides more specific error information for better error handling
+ * Custom error classes for team-related operations
+ * Provides structured error handling and better debugging
  */
 
-// Base error class for all team-related errors
 export class TeamError extends Error {
-  constructor(message: string) {
-    super(message);
+  code: string;
+  details: Record<string, any>;
+  timestamp: string;
+  
+  constructor(message: string, options?: { code?: string; details?: Record<string, any>; cause?: Error }) {
+    super(message, { cause: options?.cause });
     this.name = 'TeamError';
-    // Maintains proper stack trace in modern JavaScript engines
+    this.code = options?.code || 'TEAM_ERROR';
+    this.details = options?.details || {};
+    this.timestamp = new Date().toISOString();
+    
+    // Capture stack trace
     if (Error.captureStackTrace) {
       Error.captureStackTrace(this, TeamError);
     }
   }
-}
-
-// Specific error for data fetching issues
-export class TeamDataFetchError extends TeamError {
-  constructor(message: string = 'Failed to fetch team data') {
-    super(message);
-    this.name = 'TeamDataFetchError';
+  
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      details: this.details,
+      timestamp: this.timestamp,
+      cause: this.cause ? (this.cause as Error).message : undefined,
+      stack: this.stack
+    };
   }
 }
 
-// Specific error for invalid data structure
-export class TeamDataValidationError extends TeamError {
-  constructor(message: string = 'Invalid team data structure') {
-    super(message);
-    this.name = 'TeamDataValidationError';
+export class TeamDataError extends TeamError {
+  constructor(message: string, options?: { details?: Record<string, any>; cause?: Error }) {
+    super(message, { 
+      code: 'TEAM_DATA_ERROR',
+      details: options?.details,
+      cause: options?.cause
+    });
+    this.name = 'TeamDataError';
   }
 }
 
-// Specific error for filter operations
 export class TeamFilterError extends TeamError {
-  constructor(message: string = 'Error filtering team data') {
-    super(message);
+  constructor(message: string, options?: { details?: Record<string, any>; cause?: Error }) {
+    super(message, { 
+      code: 'TEAM_FILTER_ERROR',
+      details: options?.details,
+      cause: options?.cause
+    });
     this.name = 'TeamFilterError';
   }
 }
 
-// Specific error for sort operations
-export class TeamSortError extends TeamError {
-  constructor(message: string = 'Error sorting team data') {
-    super(message);
-    this.name = 'TeamSortError';
+export class TeamImageError extends TeamError {
+  constructor(message: string, options?: { name?: string; url?: string; cause?: Error }) {
+    super(message, { 
+      code: 'TEAM_IMAGE_ERROR',
+      details: {
+        name: options?.name,
+        url: options?.url,
+        statusCode: options?.cause instanceof Error && 'status' in options.cause 
+          ? (options.cause as any).status 
+          : undefined
+      },
+      cause: options?.cause
+    });
+    this.name = 'TeamImageError';
   }
 }
 
-// Error for missing team member information
-export class MissingTeamMemberDataError extends TeamDataValidationError {
-  constructor(memberId: string) {
-    super(`Missing required data for team member: ${memberId}`);
-    this.name = 'MissingTeamMemberDataError';
-  }
-}
-
-// Error for missing advisor information
-export class MissingAdvisorDataError extends TeamDataValidationError {
-  constructor(advisorId: string) {
-    super(`Missing required data for advisor: ${advisorId}`);
-    this.name = 'MissingAdvisorDataError';
+export class TeamAccessibilityError extends TeamError {
+  constructor(message: string, options?: { element?: string; issue?: string; cause?: Error }) {
+    super(message, { 
+      code: 'TEAM_ACCESSIBILITY_ERROR',
+      details: {
+        element: options?.element,
+        issue: options?.issue
+      },
+      cause: options?.cause
+    });
+    this.name = 'TeamAccessibilityError';
   }
 }

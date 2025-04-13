@@ -1,132 +1,187 @@
+import { useState, useCallback, useMemo, useEffect, useRef } from 'react';
+import { TeamFilterError } from '../errors/TeamErrors';
 
-import { useState, useCallback, useMemo } from 'react';
-import { useToast } from '@/hooks/use-toast';
-import { TeamSortOption } from '../TeamFilter';
-import { TeamFilterState, TeamFilterResult, TeamAccessibilityProps } from '../types/teamTypes';
-
-/**
- * Hook options for team filtering
- */
-interface UseTeamFilterOptions<T> {
-  initialItems: ReadonlyArray<T>;
+export interface UseTeamFilterOptions<T> {
+  initialItems: T[];
   initialSearchQuery?: string;
-  initialSortBy?: TeamSortOption;
-  filterFunction: (items: ReadonlyArray<T>, searchQuery: string) => ReadonlyArray<T>;
-  sortFunction: (items: ReadonlyArray<T>, sortBy: TeamSortOption) => ReadonlyArray<T>;
+  initialSortBy?: string;
+  filterFunction: (items: T[], query: string) => T[];
+  sortFunction: (items: T[], sortBy: string) => T[];
+  debounceMs?: number;
 }
 
-/**
- * Hook result for team filtering
- */
-interface UseTeamFilterResult<T> {
-  items: ReadonlyArray<T>;
-  filteredItems: ReadonlyArray<T>;
-  filterState: TeamFilterState;
+export interface UseTeamFilterResult<T> {
+  filteredItems: T[];
+  filterState: {
+    searchQuery: string;
+    sortBy: string;
+  };
   setSearchQuery: (query: string) => void;
-  setSortBy: (option: TeamSortOption) => void;
+  setSortBy: (sortBy: string) => void;
   resetFilters: () => void;
   isFiltering: boolean;
-  totalCount: number;
-  filteredCount: number;
 }
 
 /**
- * Custom hook for managing team filtering and sorting
- * Provides state management, error handling, and memoized results
+ * Custom hook for filtering and sorting team data
+ * Provides search, sorting, and filtering capabilities
+ * 
+ * @param options - Configuration options
+ * @returns Filtered items and filter control functions
  */
-export function useTeamFilter<T>({
-  initialItems,
-  initialSearchQuery = '',
-  initialSortBy = 'name',
-  filterFunction,
-  sortFunction
-}: UseTeamFilterOptions<T>): UseTeamFilterResult<T> {
-  const { toast } = useToast();
+export function useTeamFilter<T>(options: UseTeamFilterOptions<T>): UseTeamFilterResult<T> {
+  const {
+    initialItems,
+    initialSearchQuery = '',
+    initialSortBy = '',
+    filterFunction,
+    sortFunction,
+    debounceMs = 300
+  } = options;
   
-  // State for filter criteria
-  const [searchQuery, setSearchQuery] = useState<string>(initialSearchQuery);
-  const [sortBy, setSortBy] = useState<TeamSortOption>(initialSortBy);
+  // State for filtering
+  const [searchQuery, setSearchQueryInternal] = useState(initialSearchQuery);
+  const [sortBy, setSortBy] = useState(initialSortBy);
+  const [isFiltering, setIsFiltering] = useState(false);
   
-  // Calculate whether filtering is active
-  const isFiltering = useMemo(() => 
-    searchQuery.trim().length > 0, 
-    [searchQuery]
-  );
+  // Debounce search query changes
+  const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState(initialSearchQuery);
   
-  // Memoized filtered and sorted items
-  const filteredItems = useMemo(() => {
-    try {
-      // First filter, then sort
-      const filtered = filterFunction(initialItems, searchQuery);
-      return sortFunction(filtered, sortBy);
-    } catch (error) {
-      console.error('Error filtering or sorting items:', error);
-      toast({
-        title: 'Filter Error',
-        description: 'An error occurred while filtering items',
-        variant: 'destructive',
-      });
-      return [];
+  // Cache the last result
+  const cachedResultRef = useRef<{
+    items: T[];
+    searchQuery: string;
+    sortBy: string;
+    result: T[];
+  } | null>(null);
+  
+  // Handle search query changes with debounce
+  const setSearchQuery = useCallback((query: string) => {
+    setSearchQueryInternal(query);
+    setIsFiltering(true);
+    
+    if (debounceTimeout.current) {
+      clearTimeout(debounceTimeout.current);
     }
-  }, [initialItems, searchQuery, sortBy, filterFunction, sortFunction, toast]);
+    
+    debounceTimeout.current = setTimeout(() => {
+      setDebouncedSearchQuery(query);
+      setIsFiltering(false);
+    }, debounceMs);
+  }, [debounceMs]);
   
-  // Wrap the search setter with error handling
-  const handleSetSearchQuery = useCallback((query: string) => {
-    try {
-      setSearchQuery(query);
-    } catch (error) {
-      console.error('Error setting search query:', error);
-      toast({
-        title: 'Search Error',
-        description: 'Failed to update search query',
-        variant: 'destructive',
-      });
-    }
-  }, [toast]);
+  // Clean up timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (debounceTimeout.current) {
+        clearTimeout(debounceTimeout.current);
+      }
+    };
+  }, []);
   
-  // Wrap the sort setter with error handling
-  const handleSetSortBy = useCallback((option: TeamSortOption) => {
-    try {
-      setSortBy(option);
-    } catch (error) {
-      console.error('Error setting sort option:', error);
-      toast({
-        title: 'Sort Error',
-        description: 'Failed to update sort criteria',
-        variant: 'destructive',
-      });
-    }
-  }, [toast]);
-  
-  // Reset filters to initial state
+  // Reset filters to initial values
   const resetFilters = useCallback(() => {
-    setSearchQuery(initialSearchQuery);
+    setSearchQueryInternal(initialSearchQuery);
+    setDebouncedSearchQuery(initialSearchQuery);
     setSortBy(initialSortBy);
+    setIsFiltering(false);
   }, [initialSearchQuery, initialSortBy]);
   
+  // Calculate filtered and sorted items with caching
+  const filteredItems = useMemo(() => {
+    try {
+      // If we have a cached result for the same inputs, use it
+      if (
+        cachedResultRef.current &&
+        cachedResultRef.current.searchQuery === debouncedSearchQuery &&
+        cachedResultRef.current.sortBy === sortBy &&
+        cachedResultRef.current.items === initialItems
+      ) {
+        return cachedResultRef.current.result;
+      }
+      
+      // Otherwise, compute the new result
+      const filtered = filterFunction(initialItems, debouncedSearchQuery);
+      const sorted = sortFunction(filtered, sortBy);
+      
+      // Cache the result
+      cachedResultRef.current = {
+        items: initialItems,
+        searchQuery: debouncedSearchQuery,
+        sortBy,
+        result: sorted
+      };
+      
+      return sorted;
+    } catch (error) {
+      console.error('Error in team filter:', error);
+      
+      // Wrap in our custom error
+      throw new TeamFilterError('Failed to filter team items', {
+        details: {
+          itemCount: initialItems.length,
+          searchQuery: debouncedSearchQuery,
+          sortBy
+        },
+        cause: error instanceof Error ? error : new Error(String(error))
+      });
+    }
+  }, [initialItems, debouncedSearchQuery, sortBy, filterFunction, sortFunction]);
+  
   return {
-    items: initialItems,
     filteredItems,
     filterState: {
       searchQuery,
       sortBy
     },
-    setSearchQuery: handleSetSearchQuery,
-    setSortBy: handleSetSortBy,
+    setSearchQuery,
+    setSortBy,
     resetFilters,
-    isFiltering,
-    totalCount: initialItems.length,
-    filteredCount: filteredItems.length
+    isFiltering
   };
 }
 
 /**
- * Hook for creating accessibility props for team sections
+ * Hook for enhancing team components with accessibility attributes
+ * 
+ * @param sectionId - ID of the section (used for aria-labelledby)
+ * @param sectionName - Display name of the section
+ * @returns Accessibility props to spread onto components
  */
-export function useTeamAccessibility(sectionId: string, sectionName: string): TeamAccessibilityProps {
-  return useMemo(() => ({
-    ariaLabelledBy: `${sectionId}-heading`,
-    ariaLabel: `${sectionName} section`,
-    role: 'region'
-  }), [sectionId, sectionName]);
+export function useTeamAccessibility(
+  sectionId: string,
+  sectionName: string
+): {
+  role: string;
+  ariaLabelledBy?: string;
+  'aria-label'?: string;
+  tabIndex?: number;
+} {
+  // Check if the section heading exists
+  const headingExists = useCallback(() => {
+    if (typeof document === 'undefined') return false;
+    return !!document.getElementById(`${sectionId}-heading`);
+  }, [sectionId]);
+  
+  // Determine which accessibility pattern to use
+  const accessibilityProps = useMemo(() => {
+    const hasHeading = typeof document !== 'undefined' && headingExists();
+    
+    if (hasHeading) {
+      return {
+        role: 'region',
+        ariaLabelledBy: `${sectionId}-heading`,
+        tabIndex: -1
+      };
+    } else {
+      return {
+        role: 'region',
+        'aria-label': sectionName,
+        tabIndex: -1
+      };
+    }
+  }, [sectionId, sectionName, headingExists]);
+  
+  return accessibilityProps;
 }

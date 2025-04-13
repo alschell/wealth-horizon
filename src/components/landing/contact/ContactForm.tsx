@@ -1,10 +1,8 @@
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { toast } from "sonner";
 import CustomSearchableSelect from "@/components/ui/custom-searchable-select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Check } from "lucide-react";
@@ -53,7 +51,7 @@ const ContactForm: React.FC = () => {
   ];
 
   return (
-    <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-200" style={{ minHeight: '840px' }}>
+    <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-200" style={{ height: '840px', overflowY: 'auto' }}>
       <h3 className="text-xl font-semibold text-gray-900 mb-6">Send us a message</h3>
       
       <form onSubmit={handleSubmit} className="space-y-6">

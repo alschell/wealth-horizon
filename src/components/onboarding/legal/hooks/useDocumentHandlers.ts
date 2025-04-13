@@ -3,29 +3,7 @@ import { useState, useCallback } from 'react';
 import { DocumentFileWithMetadata } from '../types';
 import { validateFile, showToast } from './documentHandlerUtils';
 
-export interface DocumentHandlersProps {
-  documentType: string;
-  setDocumentType: React.Dispatch<React.SetStateAction<string>>;
-  issueDate: string;
-  setIssueDate: React.Dispatch<React.SetStateAction<string>>;
-  expiryDate: string;
-  setExpiryDate: React.Dispatch<React.SetStateAction<string>>;
-  selectedFile: File | null;
-  setSelectedFile: React.Dispatch<React.SetStateAction<File | null>>;
-  documentFiles: DocumentFileWithMetadata[];
-  setDocumentFiles: React.Dispatch<React.SetStateAction<DocumentFileWithMetadata[]>>;
-  errors: Record<string, boolean>;
-  setErrors: React.Dispatch<React.SetStateAction<Record<string, boolean>>>;
-  isEditing: boolean;
-  setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
-  editingDocumentId: string | null;
-  setEditingDocumentId: React.Dispatch<React.SetStateAction<string | null>>;
-}
-
-/**
- * Custom hook for handling document-related actions
- */
-export const useDocumentHandlers = ({
+export const useDocumentHandlers = (
   documentType,
   setDocumentType,
   issueDate,
@@ -42,13 +20,13 @@ export const useDocumentHandlers = ({
   setIsEditing,
   editingDocumentId,
   setEditingDocumentId
-}: DocumentHandlersProps) => {
-  const [fileError, setFileError] = useState<string | null>(null);
+) => {
+  const [fileError, setFileError] = useState(null);
 
   /**
    * Handles file selection for document upload
    */
-  const handleFileSelected = useCallback((files: File[]) => {
+  const handleFileSelected = useCallback((files) => {
     if (files.length === 0) return;
     
     const file = files[0]; // Only use the first file since we're not using multiple
@@ -71,7 +49,7 @@ export const useDocumentHandlers = ({
   /**
    * Handles date changes for document dates
    */
-  const handleDateChange = useCallback((field: 'issueDate' | 'expiryDate', date?: Date) => {
+  const handleDateChange = useCallback((field, date) => {
     if (field === 'issueDate') {
       setIssueDate(date ? date.toISOString().split('T')[0] : '');
       setErrors(prev => ({ ...prev, issueDate: false }));
@@ -83,7 +61,7 @@ export const useDocumentHandlers = ({
   /**
    * Handles document type selection
    */
-  const handleDocumentTypeChange = useCallback((type: string) => {
+  const handleDocumentTypeChange = useCallback((type) => {
     setDocumentType(type);
     setErrors(prev => ({ ...prev, documentType: false }));
   }, [setDocumentType, setErrors]);
@@ -93,7 +71,7 @@ export const useDocumentHandlers = ({
    */
   const handleAddDocument = useCallback(() => {
     // Validate required fields
-    const newErrors: Record<string, boolean> = {};
+    const newErrors = {};
     
     if (!documentType) newErrors.documentType = true;
     if (!issueDate) newErrors.issueDate = true;
@@ -105,17 +83,12 @@ export const useDocumentHandlers = ({
     }
     
     // Create new document with metadata
-    const newDocument: DocumentFileWithMetadata = {
+    const newDocument = {
       id: `doc-${Date.now()}`,
-      file: selectedFile!,
-      fileName: selectedFile!.name,
-      fileSize: selectedFile!.size,
-      fileType: selectedFile!.type,
-      uploadDate: new Date().toISOString(),
+      file: selectedFile,
       documentType,
       issueDate,
-      expiryDate,
-      status: 'pending',
+      expiryDate
     };
     
     // Add to list
@@ -130,7 +103,7 @@ export const useDocumentHandlers = ({
   /**
    * Starts editing an existing document
    */
-  const handleEditDocument = useCallback((documentId: string) => {
+  const handleEditDocument = useCallback((documentId) => {
     const documentToEdit = documentFiles.find(doc => doc.id === documentId);
     
     if (documentToEdit) {
@@ -150,7 +123,7 @@ export const useDocumentHandlers = ({
     if (!editingDocumentId) return;
     
     // Validate required fields
-    const newErrors: Record<string, boolean> = {};
+    const newErrors = {};
     
     if (!documentType) newErrors.documentType = true;
     if (!issueDate) newErrors.issueDate = true;
@@ -166,14 +139,10 @@ export const useDocumentHandlers = ({
       if (doc.id === editingDocumentId) {
         return {
           ...doc,
-          file: selectedFile!,
-          fileName: selectedFile!.name,
-          fileSize: selectedFile!.size,
-          fileType: selectedFile!.type,
+          file: selectedFile,
           documentType,
           issueDate,
-          expiryDate,
-          status: 'pending', // Reset status when updated
+          expiryDate
         };
       }
       return doc;
@@ -199,7 +168,7 @@ export const useDocumentHandlers = ({
   /**
    * Removes a document from the list
    */
-  const handleRemoveDocument = useCallback((documentId: string) => {
+  const handleRemoveDocument = useCallback((documentId) => {
     setDocumentFiles(prev => prev.filter(doc => doc.id !== documentId));
     showToast("Document removed", "The document has been removed successfully.");
   }, [setDocumentFiles]);

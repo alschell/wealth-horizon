@@ -57,7 +57,12 @@ export const useLegalDocumentsForm = () => {
   const {
     handleSubmit,
     handleBack
-  } = useFormSubmission(documentFiles, documentType, issueDate, expiryDate);
+  } = useFormSubmission({
+    documentFiles,
+    documentType,
+    issueDate,
+    expiryDate
+  });
 
   return {
     // State

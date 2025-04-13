@@ -4,7 +4,12 @@ import { useOnboarding, LegalDocuments } from "@/context/OnboardingContext";
 import { toast } from "@/components/ui/use-toast";
 import { DocumentFileWithMetadata } from "../types";
 
-export const useFormSubmission = (documentFiles: DocumentFileWithMetadata[], documentType: string, issueDate: string, expiryDate: string) => {
+export const useFormSubmission = ({ 
+  documentFiles, 
+  documentType, 
+  issueDate, 
+  expiryDate 
+}) => {
   const { updateLegalDocuments, setCurrentStep } = useOnboarding();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -30,7 +35,7 @@ export const useFormSubmission = (documentFiles: DocumentFileWithMetadata[], doc
         return;
       }
       
-      const legalDocumentsData: LegalDocuments = {
+      const legalDocumentsData = {
         documentType: documentType || "",
         documentNumber: "",
         issueDate: issueDate || "",

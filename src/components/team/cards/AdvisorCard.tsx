@@ -5,6 +5,7 @@ import SocialLinks from '../SocialLinks';
 import { motion } from 'framer-motion';
 import { Advisor } from '../teamData';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { generateAccessibilityProps } from '../utils/accessibilityUtils';
 
 interface AdvisorCardProps {
   advisor: Advisor;
@@ -34,6 +35,11 @@ const AdvisorCard: React.FC<AdvisorCardProps> = ({
     }
   };
   
+  // Generate accessibility props
+  const a11yProps = generateAccessibilityProps('card', {
+    label: `Advisor: ${advisor.name}, ${advisor.title} at ${advisor.company}`
+  });
+  
   return (
     <motion.div
       variants={cardVariants}
@@ -43,6 +49,7 @@ const AdvisorCard: React.FC<AdvisorCardProps> = ({
       layout
       className={className}
       data-testid="advisor-card"
+      {...a11yProps}
     >
       <Card className="h-full flex flex-col overflow-hidden">
         <CardHeader className="flex flex-col items-center p-4 pb-2">
@@ -51,6 +58,7 @@ const AdvisorCard: React.FC<AdvisorCardProps> = ({
               image={advisor.image} 
               name={advisor.name} 
               fallbackIconSize={48}
+              priority={index < 3 ? 2 : 4} // Higher priority for first three
             />
           </div>
           

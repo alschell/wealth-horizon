@@ -13,6 +13,11 @@ jest.mock('@/components/ui/image', () => ({
   },
 }));
 
+// Mock performance tracking
+jest.mock('../utils/performanceTracking', () => ({
+  trackImagePerformance: jest.fn(),
+}));
+
 describe('TeamMemberImage', () => {
   it('renders with correct alt text', () => {
     render(
@@ -51,5 +56,30 @@ describe('TeamMemberImage', () => {
     
     const image = screen.getByAltText('Test Member profile photo');
     expect(image).toBeInTheDocument();
+  });
+  
+  it('uses correct priority for loading', () => {
+    render(
+      <TeamMemberImage 
+        image="/test-image.jpg" 
+        name="Test Member" 
+        priority={2}
+      />
+    );
+    
+    const image = screen.getByAltText('Test Member profile photo');
+    expect(image).toHaveAttribute('loading', 'eager');
+  });
+  
+  it('includes proper accessibility attributes', () => {
+    render(
+      <TeamMemberImage 
+        image="/test-image.jpg" 
+        name="Test Member"
+      />
+    );
+    
+    const container = screen.getByAltText('Test Member profile photo').parentElement;
+    expect(container).toHaveAttribute('aria-label', 'Test Member profile image');
   });
 });

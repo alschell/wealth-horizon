@@ -1,6 +1,13 @@
 
-import React from "react";
-import { Linkedin, Twitter, Github } from "lucide-react";
+import React, { memo } from 'react';
+import { Linkedin, Twitter, Github } from 'lucide-react';
+import { cn } from '@/lib/utils';
+
+interface SocialLink {
+  url: string;
+  icon: React.ElementType;
+  label: string;
+}
 
 interface SocialLinksProps {
   links: {
@@ -9,80 +16,50 @@ interface SocialLinksProps {
     github?: string;
     [key: string]: string | undefined;
   };
-  size?: number;
   className?: string;
-  "aria-label"?: string;
+  iconSize?: number;
+  'aria-label'?: string;
 }
 
 /**
- * A component to display social media links for team members
- * Features improved accessibility and hover effects
+ * Component to render social media links with proper accessibility
  */
-const SocialLinks: React.FC<SocialLinksProps> = ({ 
-  links, 
-  size = 18,
-  className = "",
-  "aria-label": ariaLabel
+const SocialLinks: React.FC<SocialLinksProps> = ({
+  links,
+  className,
+  iconSize = 18,
+  'aria-label': ariaLabel = 'Social media profiles'
 }) => {
-  // Filter out undefined links
-  const availableLinks = Object.entries(links).filter(
-    ([_, url]) => url && url.trim() !== ""
-  );
-  
-  // If no links are available, don't render anything
-  if (availableLinks.length === 0) {
-    return null;
-  }
-  
+  // Filter out undefined links and create the link objects
+  const socialLinks: SocialLink[] = [
+    links.linkedin && { url: links.linkedin, icon: Linkedin, label: 'LinkedIn profile' },
+    links.twitter && { url: links.twitter, icon: Twitter, label: 'Twitter profile' },
+    links.github && { url: links.github, icon: Github, label: 'GitHub profile' }
+  ].filter(Boolean) as SocialLink[];
+
+  // If no links, don't render anything
+  if (socialLinks.length === 0) return null;
+
   return (
     <div 
-      className={`flex items-center gap-3 ${className}`}
-      role="list"
-      aria-label={ariaLabel || "Social media links"}
+      className={cn('flex space-x-3', className)}
+      aria-label={ariaLabel}
     >
-      {links.linkedin && (
+      {socialLinks.map((link) => (
         <a 
-          href={links.linkedin}
+          key={link.url}
+          href={link.url}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-gray-500 hover:text-blue-600 transition-colors"
-          aria-label="LinkedIn profile"
-          role="listitem"
+          className="text-gray-600 hover:text-gray-900 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 rounded-full"
+          aria-label={link.label}
         >
-          <Linkedin size={size} />
-          <span className="sr-only">LinkedIn</span>
+          <link.icon size={iconSize} aria-hidden="true" />
         </a>
-      )}
-      
-      {links.twitter && (
-        <a 
-          href={links.twitter}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-gray-500 hover:text-sky-500 transition-colors"
-          aria-label="Twitter profile"
-          role="listitem"
-        >
-          <Twitter size={size} />
-          <span className="sr-only">Twitter</span>
-        </a>
-      )}
-      
-      {links.github && (
-        <a 
-          href={links.github}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-gray-500 hover:text-gray-800 transition-colors"
-          aria-label="GitHub profile"
-          role="listitem"
-        >
-          <Github size={size} />
-          <span className="sr-only">GitHub</span>
-        </a>
-      )}
+      ))}
     </div>
   );
 };
 
-export default React.memo(SocialLinks);
+// Memoize component to prevent unnecessary re-renders
+export default memo(SocialLinks);

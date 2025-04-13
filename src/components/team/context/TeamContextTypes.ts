@@ -1,3 +1,4 @@
+
 import { TeamMember, Advisor } from '../teamData';
 import { TeamSortOption } from '../TeamFilter';
 
@@ -6,8 +7,8 @@ import { TeamSortOption } from '../TeamFilter';
  */
 export interface TeamContextValue {
   // Data states
-  leadershipTeam: TeamMember[];
-  advisoryBoard: Advisor[];
+  leadershipTeam: ReadonlyArray<TeamMember>;
+  advisoryBoard: ReadonlyArray<Advisor>;
   isLoading: boolean;
   hasError: boolean;
   errorMessage: string | null;
@@ -17,7 +18,7 @@ export interface TeamContextValue {
   setLeadershipSearch: (query: string) => void;
   leadershipSortBy: TeamSortOption;
   setLeadershipSortBy: (option: TeamSortOption) => void;
-  filteredLeadership: TeamMember[];
+  filteredLeadership: ReadonlyArray<TeamMember>;
   leadershipLoading: boolean;  // Add this
 
   // Advisory board filters
@@ -25,7 +26,7 @@ export interface TeamContextValue {
   setAdvisorsSearch: (query: string) => void;
   advisorsSortBy: TeamSortOption;
   setAdvisorsSortBy: (option: TeamSortOption) => void;
-  filteredAdvisors: Advisor[];
+  filteredAdvisors: ReadonlyArray<Advisor>;
   advisorsLoading: boolean;  // Add this
   
   // Actions
@@ -37,6 +38,6 @@ export interface TeamContextValue {
  */
 export interface TeamProviderProps {
   children: React.ReactNode;
-  initialLeadershipTeam?: TeamMember[];
-  initialAdvisoryBoard?: Advisor[];
+  initialLeadershipTeam?: ReadonlyArray<TeamMember>;
+  initialAdvisoryBoard?: ReadonlyArray<Advisor>;
 }

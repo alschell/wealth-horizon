@@ -10,7 +10,7 @@ import { useToast } from '@/hooks/use-toast';
  */
 interface LeadershipContextValue {
   // Data states
-  leadershipTeam: TeamMember[];
+  leadershipTeam: ReadonlyArray<TeamMember>;
   isLoading: boolean;
   hasError: boolean;
   errorMessage: string | null;
@@ -20,7 +20,7 @@ interface LeadershipContextValue {
   setLeadershipSearch: (query: string) => void;
   leadershipSortBy: TeamSortOption;
   setLeadershipSortBy: (option: TeamSortOption) => void;
-  filteredLeadership: TeamMember[];
+  filteredLeadership: ReadonlyArray<TeamMember>;
   
   // Actions
   refreshLeadershipData: () => Promise<void>;
@@ -31,8 +31,8 @@ interface LeadershipContextValue {
  */
 interface LeadershipProviderProps {
   children: React.ReactNode;
-  initialLeadershipTeam?: TeamMember[];
-  leadershipTeam?: TeamMember[];
+  initialLeadershipTeam?: ReadonlyArray<TeamMember>;
+  leadershipTeam?: ReadonlyArray<TeamMember>;
   isLoading?: boolean;
   hasError?: boolean;
   errorMessage?: string | null;

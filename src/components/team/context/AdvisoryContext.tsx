@@ -10,7 +10,7 @@ import { useToast } from '@/hooks/use-toast';
  */
 interface AdvisoryContextValue {
   // Data states
-  advisoryBoard: Advisor[];
+  advisoryBoard: ReadonlyArray<Advisor>;
   isLoading: boolean;
   hasError: boolean;
   errorMessage: string | null;
@@ -20,7 +20,7 @@ interface AdvisoryContextValue {
   setAdvisorsSearch: (query: string) => void;
   advisorsSortBy: TeamSortOption;
   setAdvisorsSortBy: (option: TeamSortOption) => void;
-  filteredAdvisors: Advisor[];
+  filteredAdvisors: ReadonlyArray<Advisor>;
   
   // Actions
   refreshAdvisoryData: () => Promise<void>;
@@ -31,8 +31,8 @@ interface AdvisoryContextValue {
  */
 interface AdvisoryProviderProps {
   children: React.ReactNode;
-  initialAdvisoryBoard?: Advisor[];
-  advisoryBoard?: Advisor[];
+  initialAdvisoryBoard?: ReadonlyArray<Advisor>;
+  advisoryBoard?: ReadonlyArray<Advisor>;
   isLoading?: boolean;
   hasError?: boolean;
   errorMessage?: string | null;

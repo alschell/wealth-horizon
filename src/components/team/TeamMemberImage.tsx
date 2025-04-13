@@ -1,7 +1,8 @@
 
-import React, { useState, useEffect, memo } from 'react';
+import React, { useState, useEffect, memo, useCallback } from 'react';
 import { User } from 'lucide-react';
 import { announceToScreenReader } from '@/utils/a11y';
+import { useToast } from '@/hooks/use-toast';
 
 interface TeamMemberImageProps {
   /** Image path or URL */
@@ -12,6 +13,10 @@ interface TeamMemberImageProps {
   className?: string;
   /** Optional size for fallback icon */
   fallbackIconSize?: number;
+  /** Optional handler for image load success */
+  onLoad?: () => void;
+  /** Optional handler for image load error */
+  onError?: () => void;
 }
 
 /**
@@ -32,33 +37,64 @@ const TeamMemberImage: React.FC<TeamMemberImageProps> = ({
   image, 
   name, 
   className = "",
-  fallbackIconSize = 40
+  fallbackIconSize = 40,
+  onLoad: externalOnLoad,
+  onError: externalOnError
 }) => {
   const [hasError, setHasError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const { toast } = useToast();
   
   // Handle image loading errors
-  const handleError = () => {
+  const handleError = useCallback(() => {
     setHasError(true);
     setIsLoading(false);
+    
+    // Announce to screen reader
     announceToScreenReader(`Image for ${name} failed to load, showing placeholder instead`);
-  };
+    
+    // Call external handler if provided
+    if (externalOnError) {
+      externalOnError();
+    }
+    
+    // Log error
+    console.error(`Failed to load image for ${name}: ${image}`);
+  }, [name, image, externalOnError]);
   
   // Handle image load success
-  const handleLoad = () => {
+  const handleLoad = useCallback(() => {
     setIsLoading(false);
-  };
+    
+    // Call external handler if provided
+    if (externalOnLoad) {
+      externalOnLoad();
+    }
+  }, [externalOnLoad]);
 
   // Effect to reset loading state when image URL changes
   useEffect(() => {
     setIsLoading(true);
     setHasError(false);
-  }, [image]);
+    
+    // Preload image
+    const img = new Image();
+    img.src = image;
+    
+    img.onload = handleLoad;
+    img.onerror = handleError;
+    
+    return () => {
+      img.onload = null;
+      img.onerror = null;
+    };
+  }, [image, handleLoad, handleError]);
   
   return (
     <div 
       className={`w-full h-full flex items-center justify-center overflow-hidden ${className}`}
       aria-busy={isLoading}
+      data-testid="team-member-image"
     >
       {!hasError ? (
         <img

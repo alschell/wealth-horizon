@@ -1,11 +1,12 @@
 
-import React, { memo, useEffect } from "react";
+import React, { memo, useEffect, useCallback } from "react";
 import { Advisor } from "./teamData";
 import TeamMemberImage from "./TeamMemberImage";
 import SocialLinks from "./SocialLinks";
 import { useToast } from "@/hooks/use-toast";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTeamFilters } from "./hooks/useTeamFilters";
+import TeamLoadingSkeleton from "./TeamLoadingSkeleton";
 
 interface AdvisoryBoardSectionProps {
   /** Array of advisor data objects */
@@ -34,12 +35,23 @@ const AdvisoryBoardSection: React.FC<AdvisoryBoardSectionProps> = ({
     setSearchQuery: internalSetSearchQuery,
     sortBy,
     setSortBy,
-    filteredItems
+    filteredItems,
+    isLoading,
+    error
   } = useTeamFilters<Advisor>(advisors);
   
   // Determine whether to use external or internal state
   const searchQuery = externalSearchQuery !== undefined ? externalSearchQuery : internalSearchQuery;
   const setSearchQuery = externalOnSearchChange || internalSetSearchQuery;
+  
+  // Memoized error notification
+  const notifyError = useCallback((error: Error) => {
+    toast({
+      title: "Data Warning",
+      description: error.message,
+      variant: "destructive",
+    });
+  }, [toast]);
   
   // Error handling and monitoring for data issues
   useEffect(() => {
@@ -50,13 +62,14 @@ const AdvisoryBoardSection: React.FC<AdvisoryBoardSectionProps> = ({
     
     if (invalidAdvisors.length > 0) {
       console.error("Advisory board data contains invalid entries:", invalidAdvisors);
-      toast({
-        title: "Data Warning",
-        description: "Some advisory board members have incomplete information.",
-        variant: "destructive",
-      });
+      notifyError(new Error("Some advisory board members have incomplete information."));
     }
-  }, [advisors, toast]);
+    
+    // Handle filter errors
+    if (error) {
+      notifyError(error);
+    }
+  }, [advisors, error, notifyError]);
   
   // Animation variants for staggered card appearance
   const containerVariants = {
@@ -80,19 +93,32 @@ const AdvisoryBoardSection: React.FC<AdvisoryBoardSectionProps> = ({
     }
   };
   
+  if (isLoading) {
+    return <TeamLoadingSkeleton count={3} />;
+  }
+  
   return (
     <section aria-labelledby="advisory-board-heading">
-      <h2 id="advisory-board-heading" className="text-2xl font-semibold text-gray-800 mb-6">Advisory Board</h2>
+      <h2 
+        id="advisory-board-heading" 
+        className="text-2xl font-semibold text-gray-800 mb-6"
+      >
+        Advisory Board
+      </h2>
       
       {/* No results message when filter returns empty array */}
       {filteredItems.length === 0 && (
-        <div className="py-8 text-center" aria-live="polite">
+        <div 
+          className="py-8 text-center" 
+          aria-live="polite"
+          role="status"
+        >
           <p className="text-gray-500">No advisors found matching your search criteria.</p>
         </div>
       )}
       
       {/* Advisors grid with animation */}
-      <AnimatePresence>
+      <AnimatePresence mode="wait">
         <motion.div 
           className="grid grid-cols-1 md:grid-cols-3 gap-6"
           variants={containerVariants}
@@ -111,15 +137,24 @@ const AdvisoryBoardSection: React.FC<AdvisoryBoardSectionProps> = ({
               aria-label={`${advisor.name}, ${advisor.title}`}
             >
               <div className="flex flex-col items-center mb-4">
-                <div className="w-32 h-32 rounded-full overflow-hidden bg-gray-100 mb-3">
+                <div 
+                  className="w-32 h-32 rounded-full overflow-hidden bg-gray-100 mb-3"
+                  aria-hidden={!advisor.image}
+                >
                   <TeamMemberImage 
                     image={advisor.image} 
                     name={advisor.name} 
+                    fallbackIconSize={48}
                   />
                 </div>
                 
-                <h3 className="text-lg font-semibold text-gray-800 text-center">{advisor.name}</h3>
-                <p className="text-gray-600 text-center">{advisor.title}, {advisor.company}</p>
+                <h3 className="text-lg font-semibold text-gray-800 text-center">
+                  {advisor.name}
+                </h3>
+                
+                <p className="text-gray-600 text-center">
+                  {advisor.title}, {advisor.company}
+                </p>
                 
                 <div className="mt-2">
                   <SocialLinks 
@@ -128,11 +163,14 @@ const AdvisoryBoardSection: React.FC<AdvisoryBoardSectionProps> = ({
                       twitter: advisor.twitter,
                       github: advisor.github
                     }}
+                    aria-label={`${advisor.name}'s social profiles`}
                   />
                 </div>
               </div>
               
-              <p className="text-gray-600 text-sm mt-auto">{advisor.bio}</p>
+              <p className="text-gray-600 text-sm mt-auto">
+                {advisor.bio}
+              </p>
             </motion.div>
           ))}
         </motion.div>

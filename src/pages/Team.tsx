@@ -1,10 +1,11 @@
 
-import React from "react";
+import React, { Suspense } from "react";
 import { Helmet } from "react-helmet-async";
 import { Users } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import PageTemplate from "@/components/shared/PageTemplate";
 import ErrorBoundary from "@/components/shared/ErrorBoundary";
+import TeamLoadingSkeleton from "@/components/team/TeamLoadingSkeleton";
 import { 
   LeadershipSection, 
   AdvisoryBoardSection, 
@@ -40,11 +41,18 @@ const TeamContent: React.FC = () => {
   // Show loading state
   if (isLoading) {
     return (
-      <div className="space-y-8 animate-pulse">
-        <div className="h-10 bg-gray-200 rounded w-1/4"></div>
-        <div className="h-64 bg-gray-200 rounded"></div>
-        <div className="h-10 bg-gray-200 rounded w-1/4"></div>
-        <div className="h-64 bg-gray-200 rounded"></div>
+      <div className="space-y-12" aria-busy="true">
+        <section>
+          <h2 className="text-2xl font-semibold text-gray-800 mb-6">Leadership Team</h2>
+          <TeamLoadingSkeleton count={4} isLeadership={true} />
+        </section>
+        
+        <Separator />
+        
+        <section>
+          <h2 className="text-2xl font-semibold text-gray-800 mb-6">Advisory Board</h2>
+          <TeamLoadingSkeleton count={3} isLeadership={false} />
+        </section>
       </div>
     );
   }
@@ -52,12 +60,13 @@ const TeamContent: React.FC = () => {
   // Show error state with retry button
   if (hasError) {
     return (
-      <div className="text-center py-12">
+      <div className="text-center py-12" role="alert" aria-live="assertive">
         <h2 className="text-xl font-semibold text-red-600 mb-4">Failed to load team data</h2>
         <p className="text-gray-600 mb-6">There was a problem retrieving team information.</p>
         <button 
           onClick={refreshTeamData}
           className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+          aria-label="Retry loading team data"
         >
           Try Again
         </button>
@@ -77,11 +86,13 @@ const TeamContent: React.FC = () => {
           showDepartmentSort={true}
         />
         
-        <LeadershipSection 
-          teamMembers={filteredLeadership} 
-          searchQuery={leadershipSearch}
-          onSearchChange={setLeadershipSearch}
-        />
+        <ErrorBoundary componentName="LeadershipSection">
+          <LeadershipSection 
+            teamMembers={filteredLeadership} 
+            searchQuery={leadershipSearch}
+            onSearchChange={setLeadershipSearch}
+          />
+        </ErrorBoundary>
       </section>
       
       <Separator />
@@ -96,14 +107,18 @@ const TeamContent: React.FC = () => {
           showDepartmentSort={false}
         />
         
-        <AdvisoryBoardSection 
-          advisors={filteredAdvisors}
-          searchQuery={advisorsSearch}
-          onSearchChange={setAdvisorsSearch}
-        />
+        <ErrorBoundary componentName="AdvisoryBoardSection">
+          <AdvisoryBoardSection 
+            advisors={filteredAdvisors}
+            searchQuery={advisorsSearch}
+            onSearchChange={setAdvisorsSearch}
+          />
+        </ErrorBoundary>
       </section>
       
-      <JoinSection />
+      <ErrorBoundary componentName="JoinSection">
+        <JoinSection />
+      </ErrorBoundary>
     </div>
   );
 };
@@ -130,7 +145,9 @@ const Team: React.FC = () => {
             initialLeadershipTeam={leadershipTeam}
             initialAdvisoryBoard={advisoryBoard}
           >
-            <TeamContent />
+            <Suspense fallback={<div className="py-12"><TeamLoadingSkeleton count={2} isLeadership={true} /></div>}>
+              <TeamContent />
+            </Suspense>
           </TeamProvider>
         </ErrorBoundary>
       </PageTemplate>

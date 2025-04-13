@@ -1,6 +1,3 @@
-
-import { StaticImageData } from "next/image";
-
 /**
  * Social media links interface for team members
  */
@@ -25,8 +22,8 @@ interface BaseTeamMember {
   title: string;
   /** Short biography or description */
   bio: string;
-  /** Profile image path or StaticImageData object */
-  image: string | StaticImageData;
+  /** Profile image path or URL */
+  image: string;
   /** Social media links for the team member */
   linkedin?: string;
   /** Twitter/X profile handle */

@@ -10,6 +10,10 @@ import { motion } from "framer-motion";
 interface AdvisoryBoardSectionProps {
   /** Array of advisor data objects */
   advisors: Advisor[];
+  /** Optional search query string */
+  searchQuery?: string;
+  /** Optional handler function for search query changes */
+  onSearchChange?: (value: string) => void;
 }
 
 /**
@@ -22,16 +26,23 @@ interface AdvisoryBoardSectionProps {
  * ```
  */
 const AdvisoryBoardSection: React.FC<AdvisoryBoardSectionProps> = ({ 
-  advisors 
+  advisors,
+  searchQuery: externalSearchQuery,
+  onSearchChange: externalOnSearchChange
 }) => {
   // Use the team filters hook for search and sorting functionality
+  // Only use internal state if external controls aren't provided
   const {
-    searchQuery,
-    setSearchQuery,
+    searchQuery: internalSearchQuery,
+    setSearchQuery: internalSetSearchQuery,
     sortBy,
     setSortBy,
     filteredItems
   } = useTeamFilters<Advisor>(advisors);
+  
+  // Determine whether to use external or internal state
+  const searchQuery = externalSearchQuery !== undefined ? externalSearchQuery : internalSearchQuery;
+  const setSearchQuery = externalOnSearchChange || internalSetSearchQuery;
   
   // Animation variants for staggered card appearance
   const containerVariants = {

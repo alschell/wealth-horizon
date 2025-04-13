@@ -2,6 +2,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
+import { sanitizeFileName } from "@/utils/security";
 
 interface FileListProps {
   files: File[];
@@ -16,10 +17,10 @@ const FileList: React.FC<FileListProps> = ({
 }) => {
   if (!files.length) return null;
 
-  // Safely display file name (truncate if too long)
+  // Safely display file name using our security utility
   const safeDisplayFileName = (fileName: string): string => {
-    // Sanitize file name to prevent potential XSS
-    const sanitized = fileName.replace(/[^\w\s.-]/g, '');
+    // Use the sanitizeFileName utility from security.ts
+    const sanitized = sanitizeFileName(fileName);
     return sanitized.length > 25 ? sanitized.substring(0, 22) + '...' : sanitized;
   };
 

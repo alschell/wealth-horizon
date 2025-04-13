@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Upload, X } from "lucide-react";
 import { toast } from "sonner";
+import { sanitizeFileName } from "@/utils/security";
 
 // Constants for file validation
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
@@ -74,10 +75,10 @@ export const ResumeUploadModal: React.FC<ResumeUploadModalProps> = ({
     setPhone("");
   };
   
-  // Safely display the file name with escaping
+  // Safely display the file name with proper sanitization using our security utility
   const safeDisplayFileName = (fileName: string): string => {
-    // Sanitize the file name to prevent XSS
-    const sanitized = fileName.replace(/[^\w\s.-]/g, '');
+    // Use our sanitizeFileName utility from security.ts
+    const sanitized = sanitizeFileName(fileName);
     return sanitized.length > 30 ? sanitized.substring(0, 27) + '...' : sanitized;
   };
   

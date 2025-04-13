@@ -9,12 +9,11 @@ import CustomSearchableSelect from "@/components/ui/custom-searchable-select";
 
 const ContactForm: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [inquiry, setInquiry] = useState("");
+  const [fullName, setFullName] = useState("");
   const [company, setCompany] = useState("");
   const [industry, setIndustry] = useState("");
+  const [inquiry, setInquiry] = useState("");
   const [message, setMessage] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -28,12 +27,11 @@ const ContactForm: React.FC = () => {
       toast.success("Your message has been sent! We'll be in touch shortly.");
       
       // Reset form fields
-      setFullName("");
       setEmail("");
-      setPhone("");
-      setInquiry("");
+      setFullName("");
       setCompany("");
       setIndustry("");
+      setInquiry("");
       setMessage("");
       
       setIsSubmitting(false);
@@ -45,6 +43,18 @@ const ContactForm: React.FC = () => {
       <h3 className="text-xl font-semibold text-gray-900 mb-6">Send us a message</h3>
       
       <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="space-y-2">
+          <Label htmlFor="email">Email<span className="text-red-500 ml-1">*</span></Label>
+          <Input 
+            id="email" 
+            type="email" 
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="john@example.com" 
+            required 
+          />
+        </div>
+        
         <div className="space-y-2">
           <Label htmlFor="full-name">Full name<span className="text-red-500 ml-1">*</span></Label>
           <Input 
@@ -75,15 +85,12 @@ const ContactForm: React.FC = () => {
             value={industry}
             placeholder="Select your industry"
             options={[
-              "Banking & Financial Services",
+              "Aggregator",
+              "Asset Manager",
+              "Advisor",
+              "Broker Dealer",
               "Family Office",
-              "Wealth Management",
-              "Private Equity",
-              "Hedge Fund",
-              "Insurance",
-              "Real Estate",
-              "Technology",
-              "Legal Services",
+              "Institutional",
               "Other"
             ]}
             onChange={(value) => setIndustry(value)}
@@ -109,30 +116,6 @@ const ContactForm: React.FC = () => {
             required
             allowCustomValue
           />
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-2">
-            <Label htmlFor="email">Email<span className="text-red-500 ml-1">*</span></Label>
-            <Input 
-              id="email" 
-              type="email" 
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="john@example.com" 
-              required 
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="phone">Phone<span className="text-red-500 ml-1">*</span></Label>
-            <Input 
-              id="phone" 
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              placeholder="+1 (555) 000-0000" 
-              required
-            />
-          </div>
         </div>
         
         <div className="space-y-2">

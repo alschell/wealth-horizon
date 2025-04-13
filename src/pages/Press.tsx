@@ -9,7 +9,9 @@ import {
   MediaCoverageSection, 
   AwardsSection, 
   MediaInquirySection, 
-  CompanyInfoSection 
+  CompanyInfoSection,
+  pressReleases,
+  mediaFeatures
 } from "@/components/press";
 
 const Press: React.FC = () => {
@@ -27,11 +29,11 @@ const Press: React.FC = () => {
         icon={Newspaper}
       >
         <div className="space-y-12">
-          <PressReleaseSection />
+          <PressReleaseSection pressReleases={pressReleases} />
           
           <Separator />
           
-          <MediaCoverageSection />
+          <MediaCoverageSection mediaFeatures={mediaFeatures} />
           
           <Separator />
           

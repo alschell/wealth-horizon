@@ -163,7 +163,11 @@ const Blog = () => {
     >
       <div className="space-y-12">
         {showBlogPost && selectedPost ? (
-          <BlogPostView post={selectedPost} goBack={backToBlogList} />
+          <BlogPostView 
+            post={selectedPost} 
+            goBack={backToBlogList} 
+            viewBlogPost={viewBlogPost}
+          />
         ) : (
           <>
             <section className="space-y-6">
@@ -335,9 +339,10 @@ const Blog = () => {
 interface BlogPostViewProps {
   post: BlogPost;
   goBack: () => void;
+  viewBlogPost: (post: BlogPost) => void;
 }
 
-const BlogPostView: React.FC<BlogPostViewProps> = ({ post, goBack }) => {
+const BlogPostView: React.FC<BlogPostViewProps> = ({ post, goBack, viewBlogPost }) => {
   const { toast } = useToast();
   
   const handleShare = (platform: string) => {
@@ -462,11 +467,7 @@ const BlogPostView: React.FC<BlogPostViewProps> = ({ post, goBack }) => {
                 className="bg-white border border-gray-100 rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow cursor-pointer"
                 onClick={() => {
                   goBack();
-                  setTimeout(() => {
-                    setSelectedPost(relatedPost);
-                    setShowBlogPost(true);
-                    window.scrollTo(0, 0);
-                  }, 0);
+                  setTimeout(() => viewBlogPost(relatedPost), 0);
                 }}
               >
                 <div className="h-40 bg-gradient-to-r from-indigo-50 to-blue-50 overflow-hidden">

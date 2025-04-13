@@ -10,7 +10,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { TeamSortOption } from "./TeamFilter";
 
 interface AdvisoryBoardSectionProps {
-  advisors: Advisor[];
+  advisors: ReadonlyArray<Advisor>;
   searchQuery?: string;
   onSearchChange?: (value: string) => void;
   sortBy?: TeamSortOption;

@@ -1,3 +1,4 @@
+
 /**
  * Social media links interface for team members
  */
@@ -51,7 +52,7 @@ export interface Advisor extends BaseTeamMember {
 /**
  * Leadership team members data
  */
-export const leadershipTeam: TeamMember[] = [
+export const leadershipTeam: ReadonlyArray<TeamMember> = [
   {
     id: "1",
     name: "Sarah Johnson",
@@ -115,7 +116,7 @@ export const leadershipTeam: TeamMember[] = [
 /**
  * Advisory board members data
  */
-export const advisoryBoard: Advisor[] = [
+export const advisoryBoard: ReadonlyArray<Advisor> = [
   {
     id: "a1",
     name: "Dr. Emily Baker",

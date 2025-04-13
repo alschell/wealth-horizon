@@ -5,9 +5,9 @@ import { useToast } from '@/hooks/use-toast';
 
 interface UseTeamDataResult {
   /** Leadership team data */
-  leadershipTeam: TeamMember[];
+  leadershipTeam: ReadonlyArray<TeamMember>;
   /** Advisory board data */
-  advisoryBoard: Advisor[];
+  advisoryBoard: ReadonlyArray<Advisor>;
   /** Loading state */
   isLoading: boolean;
   /** Error state */
@@ -23,14 +23,14 @@ interface UseTeamDataResult {
  * Provides data fetching, error handling, and state management
  */
 export function useTeamData(
-  initialLeadershipTeam: TeamMember[] = [],
-  initialAdvisoryBoard: Advisor[] = []
+  initialLeadershipTeam: ReadonlyArray<TeamMember> = [],
+  initialAdvisoryBoard: ReadonlyArray<Advisor> = []
 ): UseTeamDataResult {
   const { toast } = useToast();
   
   // Data state
-  const [leadershipTeam, setLeadershipTeam] = useState<TeamMember[]>(initialLeadershipTeam);
-  const [advisoryBoard, setAdvisoryBoard] = useState<Advisor[]>(initialAdvisoryBoard);
+  const [leadershipTeam, setLeadershipTeam] = useState<ReadonlyArray<TeamMember>>(initialLeadershipTeam);
+  const [advisoryBoard, setAdvisoryBoard] = useState<ReadonlyArray<Advisor>>(initialAdvisoryBoard);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);

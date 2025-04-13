@@ -10,7 +10,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { TeamSortOption } from "./TeamFilter";
 
 interface LeadershipSectionProps {
-  teamMembers: TeamMember[];
+  teamMembers: ReadonlyArray<TeamMember>;
   searchQuery?: string;
   onSearchChange?: (value: string) => void;
   sortBy?: TeamSortOption;

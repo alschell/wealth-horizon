@@ -34,7 +34,7 @@ export const Image = ({
   const [hasError, setHasError] = useState(false);
   
   const handleImageError = useImageErrorHandler({
-    fallbackSrc,  // Note the correct prop name
+    fallbackSrc,  // Using the correct prop name
     onError,
     logErrors: true
   });

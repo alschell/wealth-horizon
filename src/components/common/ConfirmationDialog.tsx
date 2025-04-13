@@ -6,25 +6,28 @@ import {
   DialogDescription,
   DialogFooter,
   DialogHeader,
-  DialogTitle
+  DialogTitle,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import { LoadingSpinner } from '@/components/common/LoadingSpinner';
 
 interface ConfirmationDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   title: string;
-  description: string;
+  description?: string;
   confirmText?: string;
   cancelText?: string;
-  onConfirm: () => void;
+  onConfirm: () => void | Promise<void>;
+  onCancel?: () => void;
+  confirmVariant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link';
   isLoading?: boolean;
-  variant?: 'default' | 'destructive';
-  icon?: React.ReactNode;
+  children?: React.ReactNode;
 }
 
 /**
  * Reusable confirmation dialog component
+ * Handles common confirmation patterns with loading state
  */
 export const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
   open,
@@ -34,39 +37,55 @@ export const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
   confirmText = 'Confirm',
   cancelText = 'Cancel',
   onConfirm,
+  onCancel,
+  confirmVariant = 'default',
   isLoading = false,
-  variant = 'default',
-  icon
+  children,
 }) => {
+  const handleCancel = () => {
+    onOpenChange(false);
+    if (onCancel) {
+      onCancel();
+    }
+  };
+
+  const handleConfirm = async () => {
+    await onConfirm();
+    if (!isLoading) {
+      onOpenChange(false);
+    }
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            {icon && <span>{icon}</span>}
-            {title}
-          </DialogTitle>
-          <DialogDescription>{description}</DialogDescription>
+          <DialogTitle>{title}</DialogTitle>
+          {description && <DialogDescription>{description}</DialogDescription>}
         </DialogHeader>
+        
+        {children}
         
         <DialogFooter className="gap-2 sm:gap-0">
           <Button
+            type="button"
             variant="outline"
-            onClick={() => onOpenChange(false)}
+            onClick={handleCancel}
             disabled={isLoading}
           >
             {cancelText}
           </Button>
           
           <Button
-            variant={variant === 'destructive' ? 'destructive' : 'default'}
-            onClick={onConfirm}
+            type="button"
+            variant={confirmVariant}
+            onClick={handleConfirm}
             disabled={isLoading}
           >
             {isLoading ? (
               <>
-                <span className="animate-spin mr-2">⊚</span>
-                Processing...
+                <LoadingSpinner size="sm" className="mr-2" />
+                <span>Processing...</span>
               </>
             ) : (
               confirmText

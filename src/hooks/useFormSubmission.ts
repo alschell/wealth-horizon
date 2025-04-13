@@ -1,16 +1,14 @@
+
 /**
  * useFormSubmission hook
  * 
  * A custom hook that handles form submission with loading states,
- * error handling, and success handling. Works with useStandardForm
- * to provide a complete form management solution.
- * 
- * @module hooks/useFormSubmission
+ * error handling, and success handling.
  */
 
 import { useState, useCallback } from 'react';
-import { useToast } from '@/hooks/use-toast';
-import { announceToScreenReader } from '@/utils/a11y';
+import { toast } from "@/components/ui/use-toast";
+import { useIsComponentMounted } from './useIsComponentMounted';
 
 interface UseFormSubmissionProps<T> {
   /** Form submission handler function */
@@ -25,6 +23,8 @@ interface UseFormSubmissionProps<T> {
   errorMessage?: string;
   /** Form validation function */
   validateForm?: () => boolean;
+  /** Should automatically dismiss toasts */
+  autoDismiss?: boolean;
 }
 
 /**
@@ -38,8 +38,9 @@ export function useFormSubmission<T>({
   successMessage = 'Successfully submitted',
   errorMessage = 'An error occurred. Please try again.',
   validateForm,
+  autoDismiss = true,
 }: UseFormSubmissionProps<T>) {
-  const { toast } = useToast();
+  const isMounted = useIsComponentMounted();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submissionError, setSubmissionError] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -65,41 +66,52 @@ export function useFormSubmission<T>({
         // Execute the submit function (could be async or sync)
         await onSubmit(data);
 
-        // Handle success
-        setIsSuccess(true);
-        
-        toast({
-          title: 'Success',
-          description: successMessage,
-          variant: 'default',
-        });
-        
-        announceToScreenReader(successMessage, 'polite');
+        // Only update state if component is still mounted
+        if (isMounted()) {
+          setIsSuccess(true);
+          
+          toast({
+            title: 'Success',
+            description: successMessage,
+            variant: 'default',
+          });
 
-        if (onSuccess) {
-          onSuccess();
+          if (onSuccess) {
+            onSuccess();
+          }
         }
       } catch (error) {
-        // Handle error
-        const errorMsg = error instanceof Error ? error.message : errorMessage;
-        setSubmissionError(errorMsg);
-        
-        toast({
-          title: 'Error',
-          description: errorMsg,
-          variant: 'destructive',
-        });
-        
-        announceToScreenReader(`Error: ${errorMsg}`, 'assertive');
+        // Only update state if component is still mounted
+        if (isMounted()) {
+          const errorMsg = error instanceof Error ? error.message : errorMessage;
+          setSubmissionError(errorMsg);
+          
+          toast({
+            title: 'Error',
+            description: errorMsg,
+            variant: 'destructive',
+          });
 
-        if (onError) {
-          onError(error);
+          if (onError) {
+            onError(error);
+          }
         }
       } finally {
-        setIsSubmitting(false);
+        // Only update state if component is still mounted
+        if (isMounted()) {
+          setIsSubmitting(false);
+        }
       }
     },
-    [onSubmit, onSuccess, onError, validateForm, successMessage, errorMessage, toast]
+    [
+      onSubmit, 
+      onSuccess, 
+      onError, 
+      validateForm, 
+      successMessage, 
+      errorMessage, 
+      isMounted
+    ]
   );
 
   /**

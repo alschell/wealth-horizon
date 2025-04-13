@@ -1,77 +1,78 @@
 
-import React, { memo, useEffect, useCallback } from "react";
+import React, { useCallback } from "react";
 import { Advisor } from "./teamData";
-import TeamMemberImage from "./TeamMemberImage";
-import SocialLinks from "./SocialLinks";
-import { useToast } from "@/hooks/use-toast";
-import { motion, AnimatePresence } from "framer-motion";
-import { useTeamFilters } from "./hooks/useTeamFilters";
+import { useTeamFilter, useTeamAccessibility } from "./hooks/useTeamFilter";
+import { filterAndSortAdvisors } from "./context/teamFilterUtils";
+import AdvisorCard from "./cards/AdvisorCard";
 import TeamLoadingSkeleton from "./TeamLoadingSkeleton";
+import TeamEmptyState from "./states/TeamEmptyState";
+import { motion, AnimatePresence } from "framer-motion";
+import { TeamSortOption } from "./TeamFilter";
 
 interface AdvisoryBoardSectionProps {
-  /** Array of advisor data objects */
   advisors: Advisor[];
-  /** Optional search query string */
   searchQuery?: string;
-  /** Optional handler function for search query changes */
   onSearchChange?: (value: string) => void;
+  sortBy?: TeamSortOption;
+  onSortChange?: (option: TeamSortOption) => void;
+  isLoading?: boolean;
+  showTitle?: boolean;
 }
 
 /**
  * Displays the advisory board section with advisor profiles
- * Includes search filtering and animated card-based layout
- * Features error handling and accessibility improvements
+ * Features animations, accessibility improvements, and performance optimizations
  */
 const AdvisoryBoardSection: React.FC<AdvisoryBoardSectionProps> = ({ 
-  advisors,
-  searchQuery: externalSearchQuery,
-  onSearchChange: externalOnSearchChange
+  advisors, 
+  searchQuery: externalSearchQuery, 
+  onSearchChange: externalOnSearchChange,
+  sortBy: externalSortBy,
+  onSortChange: externalOnSortChange,
+  isLoading = false,
+  showTitle = true
 }) => {
-  const { toast } = useToast();
-  
-  // Use the team filters hook for search and sorting functionality
+  // Use accessibility props for better screen reader support
+  const accessibilityProps = useTeamAccessibility('advisory-board', 'Advisory Board');
+
+  // Use our custom team filter hook when external filters aren't provided
   const {
-    searchQuery: internalSearchQuery,
+    filteredItems: internalFilteredAdvisors,
+    filterState: { searchQuery: internalSearchQuery, sortBy: internalSortBy },
     setSearchQuery: internalSetSearchQuery,
-    sortBy,
-    setSortBy,
-    filteredItems,
-    isLoading,
-    error
-  } = useTeamFilters<Advisor>(advisors);
+    setSortBy: internalSetSortBy,
+  } = useTeamFilter<Advisor>({
+    initialItems: advisors,
+    initialSearchQuery: '',
+    initialSortBy: 'name',
+    filterFunction: (items, query) => items.filter(advisor => {
+      const lowercaseQuery = query.toLowerCase();
+      return (
+        advisor.name.toLowerCase().includes(lowercaseQuery) ||
+        advisor.title.toLowerCase().includes(lowercaseQuery) ||
+        advisor.company.toLowerCase().includes(lowercaseQuery)
+      );
+    }),
+    sortFunction: (items, sortOption) => [...items].sort((a, b) => {
+      if (sortOption === 'name') return a.name.localeCompare(b.name);
+      if (sortOption === 'title') return a.title.localeCompare(b.title);
+      if (sortOption === 'department') return a.company.localeCompare(b.company);
+      return 0;
+    })
+  });
   
-  // Determine whether to use external or internal state
+  // Determine whether to use external or internal filtering
   const searchQuery = externalSearchQuery !== undefined ? externalSearchQuery : internalSearchQuery;
   const setSearchQuery = externalOnSearchChange || internalSetSearchQuery;
+  const sortBy = externalSortBy !== undefined ? externalSortBy : internalSortBy;
+  const setSortBy = externalOnSortChange || internalSetSortBy;
   
-  // Memoized error notification
-  const notifyError = useCallback((error: Error) => {
-    toast({
-      title: "Data Warning",
-      description: error.message,
-      variant: "destructive",
-    });
-  }, [toast]);
+  // Compute filtered advisors when external filtering is used
+  const filteredAdvisors = externalSearchQuery !== undefined || externalSortBy !== undefined
+    ? filterAndSortAdvisors(advisors, searchQuery, sortBy as TeamSortOption)
+    : internalFilteredAdvisors;
   
-  // Error handling and monitoring for data issues
-  useEffect(() => {
-    // Check if any advisors are missing required data
-    const invalidAdvisors = advisors.filter(
-      advisor => !advisor.name || !advisor.title || !advisor.company
-    );
-    
-    if (invalidAdvisors.length > 0) {
-      console.error("Advisory board data contains invalid entries:", invalidAdvisors);
-      notifyError(new Error("Some advisory board members have incomplete information."));
-    }
-    
-    // Handle filter errors
-    if (error) {
-      notifyError(error);
-    }
-  }, [advisors, error, notifyError]);
-  
-  // Animation variants for staggered card appearance
+  // Animation variants for container
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -82,42 +83,48 @@ const AdvisoryBoardSection: React.FC<AdvisoryBoardSectionProps> = ({
     }
   };
   
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { 
-      opacity: 1, 
-      y: 0,
-      transition: {
-        duration: 0.4
-      }
-    }
-  };
-  
   if (isLoading) {
-    return <TeamLoadingSkeleton count={3} />;
+    return (
+      <section 
+        aria-busy="true" 
+        aria-label="Loading advisory board"
+        {...accessibilityProps}
+      >
+        {showTitle && (
+          <h2 
+            id="advisory-board-heading" 
+            className="text-2xl font-semibold text-gray-800 mb-6"
+          >
+            Advisory Board
+          </h2>
+        )}
+        <TeamLoadingSkeleton count={3} isLeadership={false} />
+      </section>
+    );
   }
   
   return (
-    <section aria-labelledby="advisory-board-heading">
-      <h2 
-        id="advisory-board-heading" 
-        className="text-2xl font-semibold text-gray-800 mb-6"
-      >
-        Advisory Board
-      </h2>
-      
-      {/* No results message when filter returns empty array */}
-      {filteredItems.length === 0 && (
-        <div 
-          className="py-8 text-center" 
-          aria-live="polite"
-          role="status"
+    <section 
+      aria-labelledby={accessibilityProps.ariaLabelledBy}
+      {...accessibilityProps}
+    >
+      {showTitle && (
+        <h2 
+          id="advisory-board-heading" 
+          className="text-2xl font-semibold text-gray-800 mb-6"
         >
-          <p className="text-gray-500">No advisors found matching your search criteria.</p>
-        </div>
+          Advisory Board
+        </h2>
       )}
       
-      {/* Advisors grid with animation */}
+      {filteredAdvisors.length === 0 && (
+        <TeamEmptyState 
+          searchTerm={searchQuery}
+          entityName="advisors"
+          onResetFilter={() => setSearchQuery('')}
+        />
+      )}
+      
       <AnimatePresence mode="wait">
         <motion.div 
           className="grid grid-cols-1 md:grid-cols-3 gap-6"
@@ -128,50 +135,12 @@ const AdvisoryBoardSection: React.FC<AdvisoryBoardSectionProps> = ({
           role="list"
           aria-label="Advisory board members"
         >
-          {filteredItems.map((advisor) => (
-            <motion.div 
+          {filteredAdvisors.map((advisor, index) => (
+            <AdvisorCard 
               key={advisor.id} 
-              className="bg-white p-6 rounded-lg border border-gray-100 shadow-sm h-full flex flex-col"
-              variants={itemVariants}
-              role="listitem"
-              aria-label={`${advisor.name}, ${advisor.title}`}
-            >
-              <div className="flex flex-col items-center mb-4">
-                <div 
-                  className="w-32 h-32 rounded-full overflow-hidden bg-gray-100 mb-3"
-                  aria-hidden={!advisor.image}
-                >
-                  <TeamMemberImage 
-                    image={advisor.image} 
-                    name={advisor.name} 
-                    fallbackIconSize={48}
-                  />
-                </div>
-                
-                <h3 className="text-lg font-semibold text-gray-800 text-center">
-                  {advisor.name}
-                </h3>
-                
-                <p className="text-gray-600 text-center">
-                  {advisor.title}, {advisor.company}
-                </p>
-                
-                <div className="mt-2">
-                  <SocialLinks 
-                    links={{
-                      linkedin: advisor.linkedin,
-                      twitter: advisor.twitter,
-                      github: advisor.github
-                    }}
-                    aria-label={`${advisor.name}'s social profiles`}
-                  />
-                </div>
-              </div>
-              
-              <p className="text-gray-600 text-sm mt-auto">
-                {advisor.bio}
-              </p>
-            </motion.div>
+              advisor={advisor}
+              index={index}
+            />
           ))}
         </motion.div>
       </AnimatePresence>
@@ -179,4 +148,7 @@ const AdvisoryBoardSection: React.FC<AdvisoryBoardSectionProps> = ({
   );
 };
 
-export default memo(AdvisoryBoardSection);
+/**
+ * Default export of the AdvisoryBoardSection
+ */
+export default React.memo(AdvisoryBoardSection);

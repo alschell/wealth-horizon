@@ -1,15 +1,16 @@
 
-import React, { createContext, useContext, useState, useMemo } from 'react';
+import React, { createContext, useContext } from 'react';
 import { TeamContextValue, TeamProviderProps } from './TeamContextTypes';
 import { useTeamData } from './useTeamData';
-import { filterAndSortTeamMembers, filterAndSortAdvisors } from './teamFilterUtils';
-import { TeamSortOption } from '../TeamFilter';
+import { LeadershipProvider, useLeadershipContext } from './LeadershipContext';
+import { AdvisoryProvider, useAdvisoryContext } from './AdvisoryContext';
 
 // Create the context with a default value
 const TeamContext = createContext<TeamContextValue | undefined>(undefined);
 
 /**
  * Provider component for team data and filtering state
+ * Acts as a facade over Leadership and Advisory contexts
  */
 export const TeamProvider: React.FC<TeamProviderProps> = ({ 
   children,
@@ -26,56 +27,75 @@ export const TeamProvider: React.FC<TeamProviderProps> = ({
     refreshTeamData,
   } = useTeamData(initialLeadershipTeam, initialAdvisoryBoard);
   
-  // Filter state for leadership team
-  const [leadershipSearch, setLeadershipSearch] = useState('');
-  const [leadershipSortBy, setLeadershipSortBy] = useState<TeamSortOption>('name');
-  
-  // Filter state for advisory board
-  const [advisorsSearch, setAdvisorsSearch] = useState('');
-  const [advisorsSortBy, setAdvisorsSortBy] = useState<TeamSortOption>('name');
-  
-  // Memoized filtered leadership team members
-  const filteredLeadership = useMemo(() => 
-    filterAndSortTeamMembers(leadershipTeam, leadershipSearch, leadershipSortBy),
-    [leadershipTeam, leadershipSearch, leadershipSortBy]
+  return (
+    <LeadershipProvider 
+      initialLeadershipTeam={initialLeadershipTeam}
+      leadershipTeam={leadershipTeam}
+      isLoading={isLoading}
+      hasError={hasError}
+      errorMessage={errorMessage}
+      refreshTeamData={refreshTeamData}
+    >
+      <AdvisoryProvider
+        initialAdvisoryBoard={initialAdvisoryBoard}
+        advisoryBoard={advisoryBoard}
+        isLoading={isLoading}
+        hasError={hasError}
+        errorMessage={errorMessage}
+        refreshTeamData={refreshTeamData}
+      >
+        <TeamContextConsumer>
+          {(contextValue) => (
+            <TeamContext.Provider value={contextValue}>
+              {children}
+            </TeamContext.Provider>
+          )}
+        </TeamContextConsumer>
+      </AdvisoryProvider>
+    </LeadershipProvider>
   );
+};
+
+/**
+ * Internal component to consume both contexts and combine them
+ */
+const TeamContextConsumer: React.FC<{
+  children: (contextValue: TeamContextValue) => React.ReactNode;
+}> = ({ children }) => {
+  const leadership = useLeadershipContext();
+  const advisory = useAdvisoryContext();
   
-  // Memoized filtered advisory board members
-  const filteredAdvisors = useMemo(() => 
-    filterAndSortAdvisors(advisoryBoard, advisorsSearch, advisorsSortBy),
-    [advisoryBoard, advisorsSearch, advisorsSortBy]
-  );
-  
-  // Context value
+  // Combined context value
   const value: TeamContextValue = {
-    leadershipTeam,
-    advisoryBoard,
-    isLoading,
-    hasError,
-    errorMessage,
+    leadershipTeam: leadership.leadershipTeam,
+    advisoryBoard: advisory.advisoryBoard,
+    isLoading: leadership.isLoading || advisory.isLoading,
+    hasError: leadership.hasError || advisory.hasError,
+    errorMessage: leadership.errorMessage || advisory.errorMessage,
     
-    leadershipSearch,
-    setLeadershipSearch,
-    leadershipSortBy,
-    setLeadershipSortBy,
-    filteredLeadership,
-    leadershipLoading: isLoading,
+    leadershipSearch: leadership.leadershipSearch,
+    setLeadershipSearch: leadership.setLeadershipSearch,
+    leadershipSortBy: leadership.leadershipSortBy,
+    setLeadershipSortBy: leadership.setLeadershipSortBy,
+    filteredLeadership: leadership.filteredLeadership,
+    leadershipLoading: leadership.isLoading,
     
-    advisorsSearch,
-    setAdvisorsSearch,
-    advisorsSortBy,
-    setAdvisorsSortBy,
-    filteredAdvisors,
-    advisorsLoading: isLoading,
+    advisorsSearch: advisory.advisorsSearch,
+    setAdvisorsSearch: advisory.setAdvisorsSearch,
+    advisorsSortBy: advisory.advisorsSortBy,
+    setAdvisorsSortBy: advisory.setAdvisorsSortBy,
+    filteredAdvisors: advisory.filteredAdvisors,
+    advisorsLoading: advisory.isLoading,
     
-    refreshTeamData,
+    refreshTeamData: async () => {
+      await Promise.all([
+        leadership.refreshLeadershipData(),
+        advisory.refreshAdvisoryData()
+      ]);
+    },
   };
   
-  return (
-    <TeamContext.Provider value={value}>
-      {children}
-    </TeamContext.Provider>
-  );
+  return <>{children(value)}</>;
 };
 
 /**

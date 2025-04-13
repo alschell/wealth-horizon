@@ -1,5 +1,5 @@
 
-import React, { Suspense } from "react";
+import React, { Suspense, useCallback } from "react";
 import { Helmet } from "react-helmet-async";
 import { Users } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
@@ -15,28 +15,49 @@ import {
   advisoryBoard
 } from "@/components/team";
 import { TeamProvider, useTeamContext } from "@/components/team/context/TeamContext";
+import { useLeadershipContext } from "@/components/team/context/LeadershipContext";
+import { useAdvisoryContext } from "@/components/team/context/AdvisoryContext";
 
 /**
- * Team page content that uses the TeamContext
+ * Enhanced Team page content that uses the context
+ * Features improved error handling, accessibility, and performance
  */
 const TeamContent: React.FC = () => {
   const { 
-    filteredLeadership,
     leadershipSearch,
     setLeadershipSearch,
     leadershipSortBy,
     setLeadershipSortBy,
+    filteredLeadership,
     
-    filteredAdvisors,
     advisorsSearch,
     setAdvisorsSearch,
     advisorsSortBy,
     setAdvisorsSortBy,
+    filteredAdvisors,
     
     isLoading,
     hasError,
     refreshTeamData
   } = useTeamContext();
+  
+  // Leadership context for more detailed leadership data
+  const leadership = useLeadershipContext();
+  
+  // Advisory context for more detailed advisory data
+  const advisory = useAdvisoryContext();
+  
+  // Clear all leadership filters
+  const clearLeadershipFilters = useCallback(() => {
+    setLeadershipSearch('');
+    setLeadershipSortBy('name');
+  }, [setLeadershipSearch, setLeadershipSortBy]);
+  
+  // Clear all advisory filters
+  const clearAdvisoryFilters = useCallback(() => {
+    setAdvisorsSearch('');
+    setAdvisorsSortBy('name');
+  }, [setAdvisorsSearch, setAdvisorsSortBy]);
   
   // Show loading state
   if (isLoading) {
@@ -64,7 +85,7 @@ const TeamContent: React.FC = () => {
         <h2 className="text-xl font-semibold text-red-600 mb-4">Failed to load team data</h2>
         <p className="text-gray-600 mb-6">There was a problem retrieving team information.</p>
         <button 
-          onClick={refreshTeamData}
+          onClick={() => refreshTeamData()}
           className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
           aria-label="Retry loading team data"
         >
@@ -84,6 +105,9 @@ const TeamContent: React.FC = () => {
           onSortChange={setLeadershipSortBy}
           placeholder="Search leadership team..."
           showDepartmentSort={true}
+          totalCount={leadership.leadershipTeam.length}
+          filteredCount={filteredLeadership.length}
+          onClearFilters={clearLeadershipFilters}
         />
         
         <ErrorBoundary componentName="LeadershipSection">
@@ -91,6 +115,9 @@ const TeamContent: React.FC = () => {
             teamMembers={filteredLeadership} 
             searchQuery={leadershipSearch}
             onSearchChange={setLeadershipSearch}
+            sortBy={leadershipSortBy}
+            onSortChange={setLeadershipSortBy}
+            showTitle={true}
           />
         </ErrorBoundary>
       </section>
@@ -105,6 +132,9 @@ const TeamContent: React.FC = () => {
           onSortChange={setAdvisorsSortBy}
           placeholder="Search advisory board..."
           showDepartmentSort={false}
+          totalCount={advisory.advisoryBoard.length}
+          filteredCount={filteredAdvisors.length}
+          onClearFilters={clearAdvisoryFilters}
         />
         
         <ErrorBoundary componentName="AdvisoryBoardSection">
@@ -112,6 +142,9 @@ const TeamContent: React.FC = () => {
             advisors={filteredAdvisors}
             searchQuery={advisorsSearch}
             onSearchChange={setAdvisorsSearch}
+            sortBy={advisorsSortBy}
+            onSortChange={setAdvisorsSortBy}
+            showTitle={true}
           />
         </ErrorBoundary>
       </section>
@@ -124,7 +157,8 @@ const TeamContent: React.FC = () => {
 };
 
 /**
- * Team page with context provider and error boundary
+ * Team page with context providers and error boundary
+ * Features improved document metadata and error handling
  */
 const Team: React.FC = () => {
   return (

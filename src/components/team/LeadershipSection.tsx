@@ -1,18 +1,22 @@
 
-import React, { useCallback, memo } from "react";
+import React, { useCallback } from "react";
 import { TeamMember } from "./teamData";
-import TeamMemberImage from "./TeamMemberImage";
-import SocialLinks from "./SocialLinks";
-import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useTeamFilter, useTeamAccessibility } from "./hooks/useTeamFilter";
+import { filterAndSortTeamMembers } from "./context/teamFilterUtils";
+import TeamMemberCard from "./cards/TeamMemberCard";
 import TeamLoadingSkeleton from "./TeamLoadingSkeleton";
+import TeamEmptyState from "./states/TeamEmptyState";
+import { motion, AnimatePresence } from "framer-motion";
+import { TeamSortOption } from "./TeamFilter";
 
 interface LeadershipSectionProps {
   teamMembers: TeamMember[];
   searchQuery?: string;
   onSearchChange?: (value: string) => void;
+  sortBy?: TeamSortOption;
+  onSortChange?: (option: TeamSortOption) => void;
   isLoading?: boolean;
+  showTitle?: boolean;
 }
 
 /**
@@ -21,27 +25,54 @@ interface LeadershipSectionProps {
  */
 const LeadershipSection: React.FC<LeadershipSectionProps> = ({ 
   teamMembers, 
-  searchQuery = "", 
-  onSearchChange,
-  isLoading = false
+  searchQuery: externalSearchQuery, 
+  onSearchChange: externalOnSearchChange,
+  sortBy: externalSortBy,
+  onSortChange: externalOnSortChange,
+  isLoading = false,
+  showTitle = true
 }) => {
-  // Memoized search handler
-  const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    if (onSearchChange) {
-      onSearchChange(e.target.value);
-    }
-  }, [onSearchChange]);
+  // Use accessibility props for better screen reader support
+  const accessibilityProps = useTeamAccessibility('leadership-team', 'Leadership Team');
+
+  // Use our custom team filter hook when external filters aren't provided
+  const {
+    filteredItems: internalFilteredMembers,
+    filterState: { searchQuery: internalSearchQuery, sortBy: internalSortBy },
+    setSearchQuery: internalSetSearchQuery,
+    setSortBy: internalSetSortBy,
+  } = useTeamFilter<TeamMember>({
+    initialItems: teamMembers,
+    initialSearchQuery: '',
+    initialSortBy: 'name',
+    filterFunction: (items, query) => items.filter(member => {
+      const lowercaseQuery = query.toLowerCase();
+      return (
+        member.name.toLowerCase().includes(lowercaseQuery) ||
+        member.title.toLowerCase().includes(lowercaseQuery) ||
+        member.department.toLowerCase().includes(lowercaseQuery)
+      );
+    }),
+    sortFunction: (items, sortOption) => [...items].sort((a, b) => {
+      if (sortOption === 'name') return a.name.localeCompare(b.name);
+      if (sortOption === 'title') return a.title.localeCompare(b.title);
+      if (sortOption === 'department') return a.department.localeCompare(b.department);
+      return 0;
+    })
+  });
   
-  if (isLoading) {
-    return (
-      <section aria-busy="true" aria-label="Loading leadership team">
-        <h2 className="text-2xl font-semibold text-gray-800 mb-6">Leadership Team</h2>
-        <TeamLoadingSkeleton count={4} isLeadership={true} />
-      </section>
-    );
-  }
+  // Determine whether to use external or internal filtering
+  const searchQuery = externalSearchQuery !== undefined ? externalSearchQuery : internalSearchQuery;
+  const setSearchQuery = externalOnSearchChange || internalSetSearchQuery;
+  const sortBy = externalSortBy !== undefined ? externalSortBy : internalSortBy;
+  const setSortBy = externalOnSortChange || internalSetSortBy;
   
-  // Animation variants
+  // Compute filtered members when external filtering is used
+  const filteredMembers = externalSearchQuery !== undefined || externalSortBy !== undefined
+    ? filterAndSortTeamMembers(teamMembers, searchQuery, sortBy as TeamSortOption)
+    : internalFilteredMembers;
+  
+  // Animation variants for container
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -52,51 +83,46 @@ const LeadershipSection: React.FC<LeadershipSectionProps> = ({
     }
   };
   
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { 
-      opacity: 1, 
-      y: 0,
-      transition: {
-        duration: 0.4
-      }
-    }
-  };
+  if (isLoading) {
+    return (
+      <section 
+        aria-busy="true" 
+        aria-label="Loading leadership team"
+        {...accessibilityProps}
+      >
+        {showTitle && (
+          <h2 
+            id="leadership-team-heading" 
+            className="text-2xl font-semibold text-gray-800 mb-6"
+          >
+            Leadership Team
+          </h2>
+        )}
+        <TeamLoadingSkeleton count={4} isLeadership={true} />
+      </section>
+    );
+  }
   
   return (
-    <section aria-labelledby="leadership-team-heading">
-      <h2 
-        id="leadership-team-heading" 
-        className="text-2xl font-semibold text-gray-800 mb-6"
-      >
-        Leadership Team
-      </h2>
-      
-      {onSearchChange && (
-        <div className="relative mb-6">
-          <Search 
-            className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" 
-            aria-hidden="true"
-          />
-          <Input
-            className="pl-9"
-            placeholder="Search leadership team..."
-            value={searchQuery}
-            onChange={handleSearchChange}
-            aria-label="Search leadership team"
-            role="searchbox"
-          />
-        </div>
+    <section 
+      aria-labelledby={accessibilityProps.ariaLabelledBy}
+      {...accessibilityProps}
+    >
+      {showTitle && (
+        <h2 
+          id="leadership-team-heading" 
+          className="text-2xl font-semibold text-gray-800 mb-6"
+        >
+          Leadership Team
+        </h2>
       )}
       
-      {teamMembers.length === 0 && (
-        <div 
-          className="py-8 text-center" 
-          aria-live="polite"
-          role="status"
-        >
-          <p className="text-gray-500">No team members found matching your search criteria.</p>
-        </div>
+      {filteredMembers.length === 0 && (
+        <TeamEmptyState 
+          searchTerm={searchQuery}
+          entityName="team members"
+          onResetFilter={() => setSearchQuery('')}
+        />
       )}
       
       <AnimatePresence mode="wait">
@@ -105,47 +131,16 @@ const LeadershipSection: React.FC<LeadershipSectionProps> = ({
           variants={containerVariants}
           initial="hidden"
           animate="visible"
+          key="leadership-grid"
           role="list"
           aria-label="Leadership team members"
         >
-          {teamMembers.map((member) => (
-            <motion.div 
+          {filteredMembers.map((member, index) => (
+            <TeamMemberCard 
               key={member.id} 
-              className="flex flex-col md:flex-row bg-white p-6 rounded-lg border border-gray-100 shadow-sm"
-              variants={itemVariants}
-              role="listitem"
-              aria-label={`${member.name}, ${member.title}`}
-            >
-              <div className="md:w-1/3 mb-4 md:mb-0 md:mr-6">
-                <div className="h-48 w-48 mx-auto md:mx-0 rounded-lg overflow-hidden bg-gray-100">
-                  <TeamMemberImage 
-                    image={member.image} 
-                    name={member.name}
-                    fallbackIconSize={60}
-                  />
-                </div>
-                
-                <div className="flex justify-center md:justify-start mt-3">
-                  <SocialLinks 
-                    links={{
-                      linkedin: member.linkedin,
-                      twitter: member.twitter,
-                      github: member.github
-                    }}
-                    aria-label={`${member.name}'s social profiles`}
-                  />
-                </div>
-              </div>
-              
-              <div className="md:w-2/3">
-                <h3 className="text-xl font-semibold text-gray-800">{member.name}</h3>
-                <p className="text-indigo-600 mb-3">{member.title}</p>
-                {member.department && (
-                  <p className="text-gray-500 mb-3">Department: {member.department}</p>
-                )}
-                <p className="text-gray-600">{member.bio}</p>
-              </div>
-            </motion.div>
+              member={member}
+              index={index}
+            />
           ))}
         </motion.div>
       </AnimatePresence>
@@ -154,6 +149,6 @@ const LeadershipSection: React.FC<LeadershipSectionProps> = ({
 };
 
 /**
- * Memoized version of LeadershipSection to prevent unnecessary re-renders
+ * Default export of the LeadershipSection
  */
-export default memo(LeadershipSection);
+export default React.memo(LeadershipSection);

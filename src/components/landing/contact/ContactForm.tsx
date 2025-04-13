@@ -148,7 +148,7 @@ const ContactForm: React.FC = () => {
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 placeholder="How can we help you?"
-                className="h-full w-full resize-none focus-visible:outline-none focus-visible:ring-0 focus-visible:border-black"
+                className="h-full w-full resize-none focus-visible:outline-none focus-visible:ring-0 focus-visible:border-black focus-visible:border-2"
                 required
               />
             </div>

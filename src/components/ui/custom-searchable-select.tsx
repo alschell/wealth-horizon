@@ -70,7 +70,7 @@ const CustomSearchableSelect = ({
       {label && (
         <Label htmlFor={id} className="text-black">
           {label}
-          {required && <span className="text-red-500 ml-1">*</span>}
+          {required && <span className="text-indigo-600 ml-1">*</span>}
         </Label>
       )}
       <Popover open={open} onOpenChange={setOpen}>
@@ -82,7 +82,7 @@ const CustomSearchableSelect = ({
             aria-expanded={open}
             className={cn(
               "h-11 w-full justify-between rounded-md border border-input bg-background px-3 py-2 text-sm text-left",
-              open && "border-black",
+              open ? "border-black border-2" : "border",
               !value && "text-muted-foreground"
             )}
           >

@@ -9,13 +9,17 @@ interface ResumeFileUploadProps {
   setResumeFile: (file: File | null) => void;
   error?: string;
   handleFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  allowedFileTypes?: string[];
+  maxFileSizeMB?: number;
 }
 
 export const ResumeFileUpload: React.FC<ResumeFileUploadProps> = ({
   resumeFile,
   setResumeFile,
   error,
-  handleFileChange
+  handleFileChange,
+  allowedFileTypes = [".pdf", ".doc", ".docx"],
+  maxFileSizeMB = 5
 }) => {
   // Safely display the file name with proper sanitization
   const safeDisplayFileName = (fileName: string): string => {
@@ -23,12 +27,30 @@ export const ResumeFileUpload: React.FC<ResumeFileUploadProps> = ({
     return sanitized.length > 30 ? sanitized.substring(0, 27) + '...' : sanitized;
   };
 
+  // Format file size for display
+  const formatFileSize = (bytes: number): string => {
+    if (bytes < 1024) return bytes + ' B';
+    else if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+    else return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+  };
+
   return (
     <div className="space-y-2">
-      <div className={`border-2 border-dashed ${error ? 'border-red-500' : 'border-gray-300'} rounded-lg p-6 text-center`}>
+      <div 
+        className={`border-2 border-dashed ${error ? 'border-red-500' : 'border-gray-300'} rounded-lg p-6 text-center`}
+        role="region"
+        aria-label="Resume file upload"
+      >
         {resumeFile ? (
           <div className="flex items-center justify-between">
-            <span className="text-sm text-gray-600">{safeDisplayFileName(resumeFile.name)}</span>
+            <div className="flex items-center space-x-2 overflow-hidden">
+              <span className="text-sm text-gray-600 truncate max-w-[80%]" title={resumeFile.name}>
+                {safeDisplayFileName(resumeFile.name)}
+              </span>
+              <span className="text-xs text-gray-500">
+                ({formatFileSize(resumeFile.size)})
+              </span>
+            </div>
             <Button 
               type="button" 
               variant="ghost" 
@@ -50,20 +72,22 @@ export const ResumeFileUpload: React.FC<ResumeFileUploadProps> = ({
                 id="resume-upload"
                 name="resume"
                 type="file"
-                accept=".pdf,.doc,.docx"
+                accept={allowedFileTypes.join(',')}
                 className="sr-only"
                 onChange={handleFileChange}
                 required
                 aria-required="true"
                 aria-describedby="file-format-help"
               />
-              <p id="file-format-help" className="text-xs text-gray-500 mt-1">PDF, DOC, or DOCX up to 5MB</p>
+              <p id="file-format-help" className="text-xs text-gray-500 mt-1">
+                {allowedFileTypes.join(', ')} up to {maxFileSizeMB}MB
+              </p>
             </div>
           </div>
         )}
       </div>
       {error && (
-        <p className="text-sm text-red-500 mt-1">
+        <p className="text-sm text-red-500 mt-1" role="alert">
           {error}
         </p>
       )}

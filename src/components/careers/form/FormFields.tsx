@@ -11,6 +11,11 @@ interface FormFieldProps {
   placeholder: string;
   type?: string;
   error?: string;
+  autoComplete?: string;
+  required?: boolean;
+  maxLength?: number;
+  pattern?: string;
+  disabled?: boolean;
 }
 
 export const FormField: React.FC<FormFieldProps> = ({
@@ -20,26 +25,47 @@ export const FormField: React.FC<FormFieldProps> = ({
   label,
   placeholder,
   type = "text",
-  error
+  error,
+  autoComplete,
+  required = true,
+  maxLength,
+  pattern,
+  disabled = false
 }) => {
+  const inputId = `field-${id}`;
+  const errorId = error ? `${inputId}-error` : undefined;
+  
   return (
     <div className="space-y-2">
-      <Label htmlFor={id} className="flex items-center">
-        {label} <span className="text-indigo-600 ml-1" aria-hidden="true">*</span>
+      <Label 
+        htmlFor={inputId} 
+        className="flex items-center"
+      >
+        {label}
+        {required && <span className="text-indigo-600 ml-1" aria-hidden="true">*</span>}
       </Label>
       <Input 
-        id={id} 
+        id={inputId} 
         type={type}
         value={value} 
         onChange={onChange} 
         placeholder={placeholder} 
-        required 
-        aria-required="true"
+        required={required}
+        aria-required={required}
         aria-invalid={!!error}
-        aria-describedby={error ? `${id}-error` : undefined}
+        aria-describedby={errorId}
+        autoComplete={autoComplete}
+        maxLength={maxLength}
+        pattern={pattern}
+        disabled={disabled}
+        className={error ? "border-red-300 focus-visible:ring-red-200" : ""}
       />
       {error && (
-        <p id={`${id}-error`} className="text-sm text-red-500 mt-1">
+        <p 
+          id={errorId}
+          className="text-sm text-red-500 mt-1" 
+          role="alert"
+        >
           {error}
         </p>
       )}

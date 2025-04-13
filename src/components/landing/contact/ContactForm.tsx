@@ -78,6 +78,7 @@ const ContactForm: React.FC = () => {
         </div>
         
         <div className="space-y-2">
+          <Label htmlFor="industry">Industry<span className="text-red-500 ml-1">*</span></Label>
           <CustomSearchableSelect 
             id="industry"
             label=""
@@ -99,6 +100,7 @@ const ContactForm: React.FC = () => {
         </div>
         
         <div className="space-y-2">
+          <Label htmlFor="inquiry-type">Type of inquiry<span className="text-red-500 ml-1">*</span></Label>
           <CustomSearchableSelect 
             id="inquiry-type"
             label=""

@@ -1,6 +1,6 @@
 import { useState, useCallback, ChangeEvent } from 'react';
 import { toast } from '@/components/ui/use-toast';
-import { Document, DocumentFileWithMetadata } from '../types';
+import { DocumentFileWithMetadata } from '../types';
 
 // Define allowed file types and size
 const ALLOWED_DOCUMENT_TYPES = ['.pdf', '.doc', '.docx', '.jpg', '.jpeg', '.png'];

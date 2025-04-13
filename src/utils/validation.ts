@@ -10,6 +10,10 @@ export const VALIDATION_PATTERNS = {
   POSTCODE: /^[a-zA-Z0-9\s]{3,10}$/,
   // Legal Entity Identifier (LEI) is a 20-character alphanumeric code
   LEI: /^[A-Z0-9]{20}$/,
+  // Credit card number validation (Luhn algorithm check is performed separately)
+  CREDIT_CARD: /^\d{13,19}$/,
+  // Date validation in YYYY-MM-DD format
+  DATE: /^\d{4}-\d{2}-\d{2}$/,
 };
 
 // Validation functions that return error messages or null if valid
@@ -124,6 +128,88 @@ export const validateFileType = (file: File, allowedTypes: string[]): string | n
   return null;
 };
 
+// Credit card validation with Luhn algorithm
+export const validateCreditCard = (value: string): string | null => {
+  if (!value) return null;
+  
+  // Remove any non-digit characters
+  const sanitized = value.replace(/\D/g, '');
+  
+  // Check length and pattern
+  if (!VALIDATION_PATTERNS.CREDIT_CARD.test(sanitized)) {
+    return 'Please enter a valid credit card number';
+  }
+  
+  // Luhn algorithm validation
+  let sum = 0;
+  let shouldDouble = false;
+  
+  // Loop from right to left
+  for (let i = sanitized.length - 1; i >= 0; i--) {
+    let digit = parseInt(sanitized.charAt(i));
+    
+    if (shouldDouble) {
+      digit *= 2;
+      if (digit > 9) digit -= 9;
+    }
+    
+    sum += digit;
+    shouldDouble = !shouldDouble;
+  }
+  
+  if (sum % 10 !== 0) {
+    return 'Please enter a valid credit card number';
+  }
+  
+  return null;
+};
+
+// Date validation
+export const validateDate = (value: string, options?: { 
+  minDate?: Date, 
+  maxDate?: Date, 
+  format?: 'yyyy-mm-dd' | 'mm/dd/yyyy' | 'dd/mm/yyyy' 
+}): string | null => {
+  if (!value) return null;
+  
+  let date: Date;
+  const format = options?.format || 'yyyy-mm-dd';
+  
+  try {
+    if (format === 'yyyy-mm-dd') {
+      if (!VALIDATION_PATTERNS.DATE.test(value)) {
+        return 'Please enter a valid date in YYYY-MM-DD format';
+      }
+      date = new Date(value);
+    } else if (format === 'mm/dd/yyyy') {
+      const parts = value.split('/');
+      date = new Date(`${parts[2]}-${parts[0]}-${parts[1]}`);
+    } else { // dd/mm/yyyy
+      const parts = value.split('/');
+      date = new Date(`${parts[2]}-${parts[1]}-${parts[0]}`);
+    }
+    
+    if (isNaN(date.getTime())) {
+      return 'Please enter a valid date';
+    }
+    
+    // Check min date
+    if (options?.minDate && date < options.minDate) {
+      return `Date must be on or after ${options.minDate.toLocaleDateString()}`;
+    }
+    
+    // Check max date
+    if (options?.maxDate && date > options.maxDate) {
+      return `Date must be on or before ${options.maxDate.toLocaleDateString()}`;
+    }
+    
+  } catch (error) {
+    return 'Please enter a valid date';
+  }
+  
+  return null;
+};
+
 // Validate form data against multiple rules
 export const validateForm = <T extends Record<string, any>>(
   data: T,
@@ -142,3 +228,13 @@ export const validateForm = <T extends Record<string, any>>(
   
   return errors;
 };
+
+// Helper function to compose multiple validation rules
+export const composeValidators = (...validators: ((value: any) => string | null)[]) => 
+  (value: any): string | null => {
+    for (const validator of validators) {
+      const error = validator(value);
+      if (error) return error;
+    }
+    return null;
+  };

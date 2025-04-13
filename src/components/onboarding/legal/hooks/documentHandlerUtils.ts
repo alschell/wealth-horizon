@@ -31,8 +31,32 @@ const isValidMimeType = (file: File): boolean => {
   return validMimeTypes.includes(file.type);
 };
 
+// Additional security check for file content
+const performSecurityScan = async (file: File): Promise<boolean> => {
+  // In a real application, this would integrate with a virus scanning service
+  // or content verification API. For now, we'll implement basic checks.
+  
+  // Check if file is empty
+  if (file.size === 0) {
+    return false;
+  }
+  
+  // For images, we could check dimensions or verify they're valid images
+  if (file.type.startsWith('image/')) {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => resolve(true);
+      img.onerror = () => resolve(false);
+      img.src = URL.createObjectURL(file);
+    });
+  }
+  
+  // For simplicity, we'll assume other file types pass this check
+  return true;
+};
+
 // Comprehensive file validation
-export const validateFile = (file: File, setFileError: React.Dispatch<React.SetStateAction<string | null>>): boolean => {
+export const validateFile = async (file: File, setFileError: React.Dispatch<React.SetStateAction<string | null>>): Promise<boolean> => {
   // Check file size
   if (!isValidFileSize(file.size)) {
     setFileError(`File size exceeds the maximum allowed size of ${MAX_FILE_SIZE_MB}MB`);
@@ -48,6 +72,19 @@ export const validateFile = (file: File, setFileError: React.Dispatch<React.SetS
   // Check MIME type for additional security
   if (!isValidMimeType(file)) {
     setFileError(`Invalid file format. Please upload a valid document.`);
+    return false;
+  }
+  
+  // Perform content security validation 
+  try {
+    const isSecure = await performSecurityScan(file);
+    if (!isSecure) {
+      setFileError(`The file could not be validated for security reasons.`);
+      return false;
+    }
+  } catch (error) {
+    console.error('Error during file security validation:', error);
+    setFileError(`Error validating file security. Please try again.`);
     return false;
   }
 
@@ -70,4 +107,29 @@ export const showToast = (title: string, description: string, variant?: "default
       alert(`Error: ${title}\n${description}`);
     }
   }
+};
+
+// Helper function to validate document metadata
+export const validateDocumentMetadata = (
+  document: Partial<DocumentFileWithMetadata>
+): string | null => {
+  if (!document.documentType?.trim()) {
+    return "Document type is required";
+  }
+  
+  if (!document.issueDate?.trim()) {
+    return "Issue date is required";
+  }
+  
+  if (document.documentType === "passport" && !document.expiryDate?.trim()) {
+    return "Expiry date is required for passports";
+  }
+  
+  // Validate document number if required for specific document types
+  if (["passport", "drivingLicense", "nationalID"].includes(document.documentType) && 
+      !document.documentNumber?.trim()) {
+    return "Document number is required";
+  }
+  
+  return null;
 };

@@ -15,12 +15,18 @@ export const sanitizeHtml = (unsafeString: string): string => {
 
 // Sanitize file names to prevent XSS and command injection
 export const sanitizeFileName = (fileName: string): string => {
-  return fileName.replace(/[^\w\s.-]/g, '');
+  // More comprehensive sanitization to prevent path traversal and shell injection
+  return fileName
+    .replace(/[^\w\s.-]/g, '') // Remove special characters
+    .replace(/\.{2,}/g, '.') // Prevent path traversal via multiple dots
+    .replace(/^\.+|\.+$/g, '') // Remove leading/trailing dots
+    .trim();
 };
 
-// Generate a random CSRF token for forms
+// Generate a cryptographically secure random CSRF token
 export const generateCsrfToken = (): string => {
-  const array = new Uint8Array(16);
+  // Use crypto.getRandomValues for better randomness
+  const array = new Uint8Array(32); // 256 bits for stronger security
   window.crypto.getRandomValues(array);
   return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
 };
@@ -28,7 +34,7 @@ export const generateCsrfToken = (): string => {
 // Set CSRF token in a cookie or localStorage
 export const storeCsrfToken = (token: string): void => {
   // Store in cookie (preferred method)
-  document.cookie = `csrf_token=${token}; path=/; SameSite=Strict; secure`;
+  document.cookie = `csrf_token=${token}; path=/; SameSite=Strict; secure; max-age=3600`;
   
   // Fallback to localStorage if cookies are disabled
   try {
@@ -60,6 +66,40 @@ export const getCsrfToken = (): string => {
 
 // Validate path to prevent path traversal
 export const validatePath = (path: string): boolean => {
-  // Check if path contains directory traversal patterns
-  return !path.includes('../') && !path.includes('..\\');
+  // More comprehensive path validation
+  return (
+    !path.includes('../') && 
+    !path.includes('..\\') && 
+    !path.includes('//') &&
+    !path.startsWith('/') &&
+    !path.startsWith('\\')
+  );
 };
+
+// Validate URL to prevent open redirect vulnerabilities
+export const validateUrl = (url: string): boolean => {
+  // Ensure URL is relative or points to trusted domains
+  if (url.startsWith('/') && !url.startsWith('//')) {
+    return true; // Relative URL is safe
+  }
+  
+  try {
+    const urlObj = new URL(url);
+    const trustedDomains = [
+      'wealthhorizon.com',
+      'api.wealthhorizon.com',
+      'cdn.wealthhorizon.com'
+    ];
+    return trustedDomains.some(domain => urlObj.hostname === domain || urlObj.hostname.endsWith(`.${domain}`));
+  } catch {
+    return false; // Invalid URL
+  }
+};
+
+// Content Security Policy nonce generator
+export const generateCspNonce = (): string => {
+  const array = new Uint8Array(16);
+  window.crypto.getRandomValues(array);
+  return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
+};
+

@@ -1,15 +1,6 @@
 
 import React from "react";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+import DeleteConfirmationDialog from "../DeleteConfirmationDialog";
 
 interface DeleteFileDialogProps {
   isOpen: boolean;
@@ -23,25 +14,15 @@ const DeleteFileDialog: React.FC<DeleteFileDialogProps> = ({
   onConfirm,
 }) => {
   return (
-    <AlertDialog open={isOpen} onOpenChange={onOpenChange}>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Confirm File Deletion</AlertDialogTitle>
-          <AlertDialogDescription>
-            Are you sure you want to delete this file? This action cannot be undone.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction 
-            onClick={onConfirm} 
-            className="bg-red-500 hover:bg-red-600"
-          >
-            Delete
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+    <DeleteConfirmationDialog
+      isOpen={isOpen}
+      onOpenChange={onOpenChange}
+      onConfirm={onConfirm}
+      title="Confirm File Deletion"
+      description="Are you sure you want to delete this file? This action cannot be undone."
+      confirmLabel="Delete"
+      cancelLabel="Cancel"
+    />
   );
 };
 

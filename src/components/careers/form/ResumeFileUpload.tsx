@@ -1,8 +1,9 @@
 
 import React from "react";
-import { Upload, X } from "lucide-react";
+import { Upload, X, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { sanitizeFileName } from "@/utils/security";
+import { toast } from "sonner";
 
 interface ResumeFileUploadProps {
   resumeFile: File | null;
@@ -34,6 +35,12 @@ export const ResumeFileUpload: React.FC<ResumeFileUploadProps> = ({
     else return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
   };
 
+  // Get readable file type display
+  const getFileTypeDisplay = (fileName: string): string => {
+    const extension = fileName.split('.').pop()?.toUpperCase() || "";
+    return extension;
+  };
+
   return (
     <div className="space-y-2">
       <div 
@@ -44,28 +51,41 @@ export const ResumeFileUpload: React.FC<ResumeFileUploadProps> = ({
         {resumeFile ? (
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2 overflow-hidden">
-              <span className="text-sm text-gray-600 truncate max-w-[80%]" title={resumeFile.name}>
-                {safeDisplayFileName(resumeFile.name)}
-              </span>
-              <span className="text-xs text-gray-500">
-                ({formatFileSize(resumeFile.size)})
-              </span>
+              <div className="bg-indigo-100 p-2 rounded-md">
+                <FileText size={16} className="text-indigo-600" />
+              </div>
+              <div className="flex flex-col items-start">
+                <span 
+                  className="text-sm text-gray-600 truncate max-w-[80%]" 
+                  title={resumeFile.name}
+                >
+                  {safeDisplayFileName(resumeFile.name)}
+                </span>
+                <div className="flex items-center text-xs text-gray-500">
+                  <span className="font-medium mr-2">{getFileTypeDisplay(resumeFile.name)}</span>
+                  <span>({formatFileSize(resumeFile.size)})</span>
+                </div>
+              </div>
             </div>
             <Button 
               type="button" 
               variant="ghost" 
               size="sm"
               onClick={() => setResumeFile(null)}
-              aria-label="Remove file"
+              aria-label={`Remove file ${resumeFile.name}`}
             >
               <X size={16} />
+              <span className="sr-only">Remove file</span>
             </Button>
           </div>
         ) : (
           <div>
             <Upload className="mx-auto h-12 w-12 text-gray-400" aria-hidden="true" />
             <div className="mt-2">
-              <label htmlFor="resume-upload" className="cursor-pointer text-indigo-600 hover:text-indigo-700">
+              <label 
+                htmlFor="resume-upload" 
+                className="cursor-pointer text-indigo-600 hover:text-indigo-700"
+              >
                 Upload a file
               </label>
               <input
@@ -78,6 +98,7 @@ export const ResumeFileUpload: React.FC<ResumeFileUploadProps> = ({
                 required
                 aria-required="true"
                 aria-describedby="file-format-help"
+                aria-invalid={!!error}
               />
               <p id="file-format-help" className="text-xs text-gray-500 mt-1">
                 {allowedFileTypes.join(', ')} up to {maxFileSizeMB}MB

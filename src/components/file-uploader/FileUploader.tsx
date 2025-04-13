@@ -1,9 +1,10 @@
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import DropZone from "./DropZone";
 import FileList from "./FileList";
 import DeleteFileDialog from "./DeleteFileDialog";
 import { useFileUploader } from "./useFileUploader";
+import { Progress } from "@/components/ui/progress";
 
 // Default max size in MB
 const DEFAULT_MAX_SIZE = 10;
@@ -18,6 +19,7 @@ interface FileUploaderProps {
   onFileDelete?: (index: number) => void;
   customFileDeleteButton?: (file: any) => React.ReactNode;
   disabled?: boolean;
+  showProgress?: boolean;
 }
 
 const FileUploader = ({
@@ -29,9 +31,12 @@ const FileUploader = ({
   label = "Upload Documents",
   onFileDelete,
   customFileDeleteButton,
-  disabled = false
+  disabled = false,
+  showProgress = false
 }: FileUploaderProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [uploadProgress, setUploadProgress] = useState<number>(0);
+  const [isUploading, setIsUploading] = useState<boolean>(false);
   
   const {
     files,
@@ -48,7 +53,29 @@ const FileUploader = ({
     accept,
     multiple,
     maxSize,
-    onFilesSelected,
+    onFilesSelected: (selectedFiles) => {
+      if (showProgress && selectedFiles.length > 0) {
+        // Simulate file upload progress - in a real app this would be based on actual upload progress
+        setIsUploading(true);
+        setUploadProgress(0);
+        
+        const interval = setInterval(() => {
+          setUploadProgress(prev => {
+            if (prev >= 100) {
+              clearInterval(interval);
+              setTimeout(() => {
+                setIsUploading(false);
+                onFilesSelected(selectedFiles);
+              }, 500);
+              return 100;
+            }
+            return prev + 5;
+          });
+        }, 100);
+      } else {
+        onFilesSelected(selectedFiles);
+      }
+    },
     existingFiles,
     onFileDelete,
     disabled
@@ -71,7 +98,7 @@ const FileUploader = ({
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
-        disabled={disabled}
+        disabled={disabled || isUploading}
       />
       
       <input
@@ -81,9 +108,19 @@ const FileUploader = ({
         multiple={multiple}
         accept={accept}
         onChange={handleFileChange}
-        disabled={disabled}
+        disabled={disabled || isUploading}
         aria-label="File input"
       />
+      
+      {isUploading && showProgress && (
+        <div className="space-y-2">
+          <div className="flex justify-between text-xs text-gray-500">
+            <span>Uploading...</span>
+            <span>{uploadProgress}%</span>
+          </div>
+          <Progress value={uploadProgress} className="h-2" />
+        </div>
+      )}
       
       <FileList 
         files={files} 

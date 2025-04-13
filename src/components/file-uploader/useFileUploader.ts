@@ -1,7 +1,7 @@
 
 import { useState, useCallback } from "react";
+import { toast } from "sonner";
 import { validateFileSize, validateFileType } from "@/utils/validation";
-import { toast } from "@/components/ui/use-toast";
 
 interface UseFileUploaderProps {
   accept: string;
@@ -20,131 +20,152 @@ export const useFileUploader = ({
   onFilesSelected,
   existingFiles = [],
   onFileDelete,
-  disabled = false
+  disabled = false,
 }: UseFileUploaderProps) => {
   const [files, setFiles] = useState<File[]>(existingFiles);
   const [isDragging, setIsDragging] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [fileToDelete, setFileToDelete] = useState<number | null>(null);
+  const [fileToDeleteIndex, setFileToDeleteIndex] = useState<number | null>(null);
 
-  // Convert accept string to array of file extensions for validation
-  const acceptedTypes = accept.split(',').map(type => type.trim());
-
-  // Validate selected files
-  const validateFiles = useCallback((selectedFiles: File[]): File[] => {
-    const validFiles: File[] = [];
-    const maxSizeBytes = maxSize * 1024 * 1024;
-
-    for (let i = 0; i < selectedFiles.length; i++) {
-      const file = selectedFiles[i];
-      
+  // Validates a single file
+  const validateFile = useCallback(
+    (file: File): string | null => {
       // Check file size
       const sizeError = validateFileSize(file, maxSize);
-      if (sizeError) {
-        toast({
-          title: "File too large",
-          description: sizeError,
-          variant: "destructive"
-        });
-        continue;
-      }
-      
+      if (sizeError) return sizeError;
+
+      // Convert accept string to an array of file extensions
+      const acceptedTypes = accept
+        .split(",")
+        .map((type) => {
+          if (type.startsWith(".")) return type;
+          if (type.includes("/*")) return `.${type.split("/")[0]}`;
+          return `.${type.split("/").pop()}`;
+        })
+        .filter(Boolean);
+
       // Check file type
-      const typeError = validateFileType(file, acceptedTypes);
-      if (typeError) {
-        toast({
-          title: "Invalid file type",
-          description: typeError,
-          variant: "destructive"
-        });
-        continue;
+      return validateFileType(file, acceptedTypes);
+    },
+    [accept, maxSize]
+  );
+
+  // Handles file input change
+  const handleFileChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (disabled) return;
+      
+      const selectedFiles = Array.from(e.target.files || []);
+      let validFiles: File[] = [];
+      let hasErrors = false;
+
+      selectedFiles.forEach((file) => {
+        const error = validateFile(file);
+        if (error) {
+          toast.error(error);
+          hasErrors = true;
+        } else {
+          validFiles.push(file);
+        }
+      });
+
+      if (validFiles.length > 0) {
+        const newFiles = multiple ? [...files, ...validFiles] : validFiles;
+        setFiles(newFiles);
+        onFilesSelected(newFiles);
+        
+        // Clear the input value to allow uploading the same file again
+        e.target.value = '';
+      } else if (!hasErrors && selectedFiles.length > 0) {
+        toast.error("No valid files were selected");
       }
-      
-      validFiles.push(file);
-    }
+    },
+    [files, multiple, onFilesSelected, validateFile, disabled]
+  );
 
-    return validFiles;
-  }, [maxSize, acceptedTypes]);
-
-  // Handle file input change event
-  const handleFileChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    if (disabled || !e.target.files || e.target.files.length === 0) return;
-    
-    const selectedFiles = Array.from(e.target.files);
-    const validFiles = validateFiles(selectedFiles);
-    
-    if (validFiles.length > 0) {
-      const newFiles = multiple ? [...files, ...validFiles] : validFiles;
-      setFiles(newFiles);
-      onFilesSelected(newFiles);
+  // Handles drag over event
+  const handleDragOver = useCallback(
+    (e: React.DragEvent<HTMLDivElement>) => {
+      if (disabled) return;
       
-      toast({
-        title: `${validFiles.length} file${validFiles.length > 1 ? 's' : ''} added`,
-        description: "Files have been successfully added."
+      e.preventDefault();
+      setIsDragging(true);
+    },
+    [disabled]
+  );
+
+  // Handles drag leave event
+  const handleDragLeave = useCallback(
+    () => {
+      if (disabled) return;
+      
+      setIsDragging(false);
+    },
+    [disabled]
+  );
+
+  // Handles drop event
+  const handleDrop = useCallback(
+    (e: React.DragEvent<HTMLDivElement>) => {
+      if (disabled) return;
+      
+      e.preventDefault();
+      setIsDragging(false);
+
+      const droppedFiles = Array.from(e.dataTransfer.files);
+      let validFiles: File[] = [];
+      let hasErrors = false;
+
+      droppedFiles.forEach((file) => {
+        const error = validateFile(file);
+        if (error) {
+          toast.error(error);
+          hasErrors = true;
+        } else {
+          validFiles.push(file);
+        }
       });
-    }
-  }, [files, multiple, onFilesSelected, validateFiles, disabled]);
 
-  // Handle drag events
-  const handleDragOver = useCallback((e: React.DragEvent<HTMLDivElement>) => {
-    if (disabled) return;
-    e.preventDefault();
-    setIsDragging(true);
-  }, [disabled]);
+      if (validFiles.length > 0) {
+        const newFiles = multiple ? [...files, ...validFiles] : validFiles;
+        setFiles(newFiles);
+        onFilesSelected(newFiles);
+      } else if (!hasErrors && droppedFiles.length > 0) {
+        toast.error("No valid files were dropped");
+      }
+    },
+    [files, multiple, onFilesSelected, validateFile, disabled]
+  );
 
-  const handleDragLeave = useCallback(() => {
-    if (disabled) return;
-    setIsDragging(false);
-  }, [disabled]);
-
-  const handleDrop = useCallback((e: React.DragEvent<HTMLDivElement>) => {
-    if (disabled) return;
-    e.preventDefault();
-    setIsDragging(false);
-    
-    if (!e.dataTransfer.files || e.dataTransfer.files.length === 0) return;
-    
-    const droppedFiles = Array.from(e.dataTransfer.files);
-    const validFiles = validateFiles(droppedFiles);
-    
-    if (validFiles.length > 0) {
-      const newFiles = multiple ? [...files, ...validFiles] : validFiles;
-      setFiles(newFiles);
-      onFilesSelected(newFiles);
+  // Handles delete button click
+  const handleDeleteClick = useCallback(
+    (index: number) => {
+      if (disabled) return;
       
-      toast({
-        title: `${validFiles.length} file${validFiles.length > 1 ? 's' : ''} added`,
-        description: "Files have been successfully added."
-      });
-    }
-  }, [files, multiple, onFilesSelected, validateFiles, disabled]);
+      setFileToDeleteIndex(index);
+      setIsDeleteDialogOpen(true);
+    },
+    [disabled]
+  );
 
-  // Handle delete operations
-  const handleDeleteClick = useCallback((index: number) => {
-    setFileToDelete(index);
-    setIsDeleteDialogOpen(true);
-  }, []);
-
+  // Confirms file deletion
   const confirmDelete = useCallback(() => {
-    if (fileToDelete === null) return;
-    
-    const newFiles = [...files];
-    newFiles.splice(fileToDelete, 1);
-    setFiles(newFiles);
-    
+    if (fileToDeleteIndex === null) return;
+
     if (onFileDelete) {
-      onFileDelete(fileToDelete);
+      onFileDelete(fileToDeleteIndex);
+    } else {
+      const newFiles = [...files];
+      newFiles.splice(fileToDeleteIndex, 1);
+      setFiles(newFiles);
+      onFilesSelected(newFiles);
     }
-    
-    onFilesSelected(newFiles);
+
     setIsDeleteDialogOpen(false);
-    setFileToDelete(null);
-    
-    toast({
-      title: "File removed",
-      description: "The file has been successfully removed."
-    });
-  }, [fileToDelete, files, onFileDelete, onFilesSelected]);
+    setFileToDeleteIndex(null);
+
+    toast.success("File removed successfully");
+  }, [fileToDeleteIndex, files, onFileDelete, onFilesSelected]);
 
   return {
     files,
@@ -156,6 +177,6 @@ export const useFileUploader = ({
     handleDrop,
     handleDeleteClick,
     confirmDelete,
-    setIsDeleteDialogOpen
+    setIsDeleteDialogOpen,
   };
 };

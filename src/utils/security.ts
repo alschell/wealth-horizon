@@ -1,4 +1,3 @@
-
 /**
  * Enhanced security utility functions to help protect against common web vulnerabilities
  */
@@ -18,24 +17,31 @@ export const sanitizeHtml = (unsafeString: string): string => {
     .replace(/data:/gi, 'removed:'); // Prevent data: URLs which can be used for XSS
 };
 
-// More secure file name sanitization
+// More secure file name sanitization with enhanced protection
 export const sanitizeFileName = (fileName: string): string => {
-  if (!fileName) return 'unnamed_file';
-  
-  // More comprehensive sanitization to prevent path traversal and shell injection
-  const sanitized = fileName
-    .replace(/[^\w\s.-]/g, '') // Remove special characters
-    .replace(/\.{2,}/g, '.') // Prevent path traversal via multiple dots
-    .replace(/^\.+|\.+$/g, '') // Remove leading/trailing dots
-    .replace(/^\/+|\\+/g, '') // Remove leading slashes or backslashes
-    .trim();
-  
-  // Limit length to prevent DoS
-  const maxLength = 255;
-  const truncated = sanitized.length > maxLength ? sanitized.substring(0, maxLength) : sanitized;
-  
-  // Ensure the filename isn't empty after sanitization
-  return truncated || 'unnamed_file';
+  try {
+    if (!fileName) return 'unnamed_file';
+    
+    // More comprehensive sanitization to prevent path traversal and shell injection
+    const sanitized = fileName
+      .replace(/[^\w\s.-]/g, '') // Remove special characters
+      .replace(/\.{2,}/g, '.') // Prevent path traversal via multiple dots
+      .replace(/^\.+|\.+$/g, '') // Remove leading/trailing dots
+      .replace(/^\/+|\\+/g, '') // Remove leading slashes or backslashes
+      .replace(/\s+/g, '_') // Replace spaces with underscores
+      .replace(/^(con|prn|aux|nul|com[0-9]|lpt[0-9])(\..*)?$/i, 'invalid_$1') // Prevent reserved Windows filenames
+      .trim();
+    
+    // Limit length to prevent DoS
+    const maxLength = 255;
+    const truncated = sanitized.length > maxLength ? sanitized.substring(0, maxLength) : sanitized;
+    
+    // Ensure the filename isn't empty after sanitization
+    return truncated || 'unnamed_file';
+  } catch (error) {
+    console.error("Error sanitizing filename:", error);
+    return 'unnamed_file_' + Date.now(); // Fallback with timestamp
+  }
 };
 
 // Generate a cryptographically secure random string with specified length and encoding

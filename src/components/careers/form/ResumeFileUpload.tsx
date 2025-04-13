@@ -1,17 +1,15 @@
 
-import React from "react";
-import { Upload, X, FileText } from "lucide-react";
+import React, { useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { sanitizeFileName } from "@/utils/security";
-import { toast } from "sonner";
+import { FileIcon, UploadIcon, XIcon } from "lucide-react";
+import { announceToScreenReader } from "@/utils/a11y";
 
 interface ResumeFileUploadProps {
   resumeFile: File | null;
   setResumeFile: (file: File | null) => void;
   error?: string;
   handleFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  allowedFileTypes?: string[];
-  maxFileSizeMB?: number;
+  disabled?: boolean;
 }
 
 export const ResumeFileUpload: React.FC<ResumeFileUploadProps> = ({
@@ -19,96 +17,103 @@ export const ResumeFileUpload: React.FC<ResumeFileUploadProps> = ({
   setResumeFile,
   error,
   handleFileChange,
-  allowedFileTypes = [".pdf", ".doc", ".docx"],
-  maxFileSizeMB = 5
+  disabled = false
 }) => {
-  // Safely display the file name with proper sanitization
-  const safeDisplayFileName = (fileName: string): string => {
-    const sanitized = sanitizeFileName(fileName);
-    return sanitized.length > 30 ? sanitized.substring(0, 27) + '...' : sanitized;
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const errorId = "resume-file-error";
+  const labelId = "resume-file-label";
+
+  const handleButtonClick = () => {
+    if (fileInputRef.current && !disabled) {
+      fileInputRef.current.click();
+    }
   };
 
-  // Format file size for display
-  const formatFileSize = (bytes: number): string => {
-    if (bytes < 1024) return bytes + ' B';
-    else if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
-    else return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
-  };
-
-  // Get readable file type display
-  const getFileTypeDisplay = (fileName: string): string => {
-    const extension = fileName.split('.').pop()?.toUpperCase() || "";
-    return extension;
+  const handleRemoveFile = () => {
+    setResumeFile(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+    announceToScreenReader("Resume file removed", "polite");
   };
 
   return (
     <div className="space-y-2">
       <div 
-        className={`border-2 border-dashed ${error ? 'border-red-500' : 'border-gray-300'} rounded-lg p-6 text-center`}
-        role="region"
-        aria-label="Resume file upload"
+        className={`border-2 border-dashed rounded-md p-4 ${
+          error ? "border-red-500" : "border-gray-300"
+        } ${
+          disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
+        }`}
       >
+        <input
+          type="file"
+          ref={fileInputRef}
+          className="hidden"
+          accept=".pdf,.doc,.docx"
+          onChange={(e) => {
+            handleFileChange(e);
+            if (e.target.files && e.target.files[0]) {
+              announceToScreenReader(`File ${e.target.files[0].name} selected`, "polite");
+            }
+          }}
+          aria-labelledby={labelId}
+          aria-describedby={error ? errorId : undefined}
+          aria-invalid={!!error}
+          disabled={disabled}
+          data-testid="resume-file-input"
+        />
+
         {resumeFile ? (
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2 overflow-hidden">
-              <div className="bg-indigo-100 p-2 rounded-md">
-                <FileText size={16} className="text-indigo-600" />
-              </div>
-              <div className="flex flex-col items-start">
-                <span 
-                  className="text-sm text-gray-600 truncate max-w-[80%]" 
-                  title={resumeFile.name}
-                >
-                  {safeDisplayFileName(resumeFile.name)}
-                </span>
-                <div className="flex items-center text-xs text-gray-500">
-                  <span className="font-medium mr-2">{getFileTypeDisplay(resumeFile.name)}</span>
-                  <span>({formatFileSize(resumeFile.size)})</span>
-                </div>
-              </div>
+            <div className="flex items-center space-x-2">
+              <FileIcon className="h-5 w-5 text-blue-500" aria-hidden="true" />
+              <span id={labelId} className="text-sm font-medium">{resumeFile.name}</span>
             </div>
-            <Button 
-              type="button" 
-              variant="ghost" 
+            <Button
+              type="button"
+              variant="ghost"
               size="sm"
-              onClick={() => setResumeFile(null)}
-              aria-label={`Remove file ${resumeFile.name}`}
+              className="h-8 w-8 p-0 text-gray-500 hover:text-red-500"
+              onClick={handleRemoveFile}
+              aria-label="Remove resume file"
+              disabled={disabled}
             >
-              <X size={16} />
+              <XIcon className="h-4 w-4" aria-hidden="true" />
               <span className="sr-only">Remove file</span>
             </Button>
           </div>
         ) : (
-          <div>
-            <Upload className="mx-auto h-12 w-12 text-gray-400" aria-hidden="true" />
-            <div className="mt-2">
-              <label 
-                htmlFor="resume-upload" 
-                className="cursor-pointer text-indigo-600 hover:text-indigo-700"
-              >
-                Upload a file
-              </label>
-              <input
-                id="resume-upload"
-                name="resume"
-                type="file"
-                accept={allowedFileTypes.join(',')}
-                className="sr-only"
-                onChange={handleFileChange}
-                required
-                aria-required="true"
-                aria-describedby="file-format-help"
-                aria-invalid={!!error}
-              />
-              <p id="file-format-help" className="text-xs text-gray-500 mt-1">
-                {allowedFileTypes.join(', ')} up to {maxFileSizeMB}MB
-              </p>
-            </div>
+          <div 
+            className="flex flex-col items-center justify-center py-4"
+            onClick={handleButtonClick}
+            role="button"
+            tabIndex={disabled ? -1 : 0}
+            aria-labelledby={labelId}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                handleButtonClick();
+              }
+            }}
+          >
+            <UploadIcon className="h-8 w-8 text-gray-400 mb-2" aria-hidden="true" />
+            <p id={labelId} className="text-sm text-center font-medium text-gray-700">
+              Drag and drop your resume or <span className="text-blue-500">browse files</span>
+            </p>
+            <p className="text-xs text-gray-500 mt-1">
+              PDF, DOC, or DOCX files up to 5MB
+            </p>
           </div>
         )}
       </div>
+      
       {error && (
-        <p className="text-sm text-red-500 mt-1" role="alert">
+        <p 
+          id={errorId}
+          className="text-sm font-medium text-red-500"
+          aria-live="polite"
+        >
           {error}
         </p>
       )}

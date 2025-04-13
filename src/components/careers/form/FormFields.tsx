@@ -1,70 +1,56 @@
 
 import React from "react";
-import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { cn } from "@/lib/utils";
 
 interface FormFieldProps {
   id: string;
+  label: string;
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  label: string;
-  placeholder: string;
   type?: string;
+  placeholder?: string;
   error?: string;
-  autoComplete?: string;
   required?: boolean;
-  maxLength?: number;
-  pattern?: string;
-  disabled?: boolean;
 }
 
 export const FormField: React.FC<FormFieldProps> = ({
   id,
+  label,
   value,
   onChange,
-  label,
-  placeholder,
   type = "text",
+  placeholder,
   error,
-  autoComplete,
-  required = true,
-  maxLength,
-  pattern,
-  disabled = false
+  required = true
 }) => {
-  const inputId = `field-${id}`;
-  const errorId = error ? `${inputId}-error` : undefined;
+  // Generate a unique ID for the error message
+  const errorId = `${id}-error`;
   
   return (
     <div className="space-y-2">
-      <Label 
-        htmlFor={inputId} 
-        className="flex items-center"
-      >
+      <Label htmlFor={id} className="flex items-center">
         {label}
         {required && <span className="text-indigo-600 ml-1" aria-hidden="true">*</span>}
       </Label>
-      <Input 
-        id={inputId} 
+      <Input
+        id={id}
         type={type}
-        value={value} 
-        onChange={onChange} 
-        placeholder={placeholder} 
-        required={required}
+        value={value}
+        onChange={onChange}
+        placeholder={placeholder}
+        className={cn(error ? "border-red-500" : "")}
         aria-required={required}
         aria-invalid={!!error}
-        aria-describedby={errorId}
-        autoComplete={autoComplete}
-        maxLength={maxLength}
-        pattern={pattern}
-        disabled={disabled}
-        className={error ? "border-red-300 focus-visible:ring-red-200" : ""}
+        // Only set aria-describedby when there's actually an error
+        {...(error ? { "aria-describedby": errorId } : {})}
       />
       {error && (
         <p 
           id={errorId}
-          className="text-sm text-red-500 mt-1" 
-          role="alert"
+          className="text-sm font-medium text-red-500"
+          aria-live="polite"
         >
           {error}
         </p>

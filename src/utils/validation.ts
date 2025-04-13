@@ -1,104 +1,144 @@
-
 /**
  * Centralized validation utilities for consistent form validation across the app
  */
 
-// Email validation with proper pattern
+// Type definitions for validation results
+export type ValidationResult = {
+  valid: boolean;
+  message: string | null;
+};
+
+// Email validation with proper pattern and error handling
 export const validateEmail = (email: string): string | null => {
-  if (!email.trim()) return "Email is required";
-  
-  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  if (!emailRegex.test(email)) {
-    return "Please enter a valid email address";
-  }
-  
-  return null;
-};
-
-// Phone validation with international format support
-export const validatePhone = (phone: string): string | null => {
-  if (!phone.trim()) return "Phone number is required";
-  
-  // Allow for different international formats
-  const phoneRegex = /^[+]?[(]?[0-9]{1,4}[)]?[-\s.]?[0-9]{1,4}[-\s.]?[0-9]{1,9}$/;
-  if (!phoneRegex.test(phone)) {
-    return "Please enter a valid phone number";
-  }
-  
-  return null;
-};
-
-// Password validation with security requirements
-export const validatePassword = (password: string): string | null => {
-  if (!password) return "Password is required";
-  if (password.length < 8) return "Password must be at least 8 characters";
-  
-  // Check for complexity requirements
-  const hasUppercase = /[A-Z]/.test(password);
-  const hasLowercase = /[a-z]/.test(password);
-  const hasNumber = /[0-9]/.test(password);
-  const hasSpecial = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password);
-  
-  if (!(hasUppercase && hasLowercase && (hasNumber || hasSpecial))) {
-    return "Password must include uppercase, lowercase, and either numbers or special characters";
-  }
-  
-  return null;
-};
-
-// URL validation
-export const validateUrl = (url: string): string | null => {
-  if (!url.trim()) return "URL is required";
-  
   try {
-    new URL(url);
+    if (!email.trim()) return "Email is required";
+    
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(email)) {
+      return "Please enter a valid email address";
+    }
+    
     return null;
-  } catch {
-    return "Please enter a valid URL";
+  } catch (error) {
+    console.error("Email validation error:", error);
+    return "Email validation failed";
   }
 };
 
-// Legal Entity Identifier (LEI) validation
+// Phone validation with international format support and error handling
+export const validatePhone = (phone: string): string | null => {
+  try {
+    if (!phone.trim()) return "Phone number is required";
+    
+    // Allow for different international formats
+    const phoneRegex = /^[+]?[(]?[0-9]{1,4}[)]?[-\s.]?[0-9]{1,4}[-\s.]?[0-9]{1,9}$/;
+    if (!phoneRegex.test(phone)) {
+      return "Please enter a valid phone number";
+    }
+    
+    return null;
+  } catch (error) {
+    console.error("Phone validation error:", error);
+    return "Phone validation failed";
+  }
+};
+
+// Password validation with security requirements and error handling
+export const validatePassword = (password: string): string | null => {
+  try {
+    if (!password) return "Password is required";
+    if (password.length < 8) return "Password must be at least 8 characters";
+    
+    // Check for complexity requirements
+    const hasUppercase = /[A-Z]/.test(password);
+    const hasLowercase = /[a-z]/.test(password);
+    const hasNumber = /[0-9]/.test(password);
+    const hasSpecial = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password);
+    
+    if (!(hasUppercase && hasLowercase && (hasNumber || hasSpecial))) {
+      return "Password must include uppercase, lowercase, and either numbers or special characters";
+    }
+    
+    return null;
+  } catch (error) {
+    console.error("Password validation error:", error);
+    return "Password validation failed";
+  }
+};
+
+// URL validation with error handling
+export const validateUrl = (url: string): string | null => {
+  try {
+    if (!url.trim()) return "URL is required";
+    
+    try {
+      new URL(url);
+      return null;
+    } catch {
+      return "Please enter a valid URL";
+    }
+  } catch (error) {
+    console.error("URL validation error:", error);
+    return "URL validation failed";
+  }
+};
+
+// Legal Entity Identifier (LEI) validation with improved error handling
 export const validateLei = (lei: string): string | null => {
-  if (!lei.trim()) return null; // LEI might be optional
+  try {
+    if (!lei.trim()) return null; // LEI might be optional
 
-  // LEI is a 20-character alphanumeric string
-  const leiRegex = /^[A-Z0-9]{18}[0-9]{2}$/;
-  if (!leiRegex.test(lei)) {
-    return "Please enter a valid LEI (20 characters, alphanumeric)";
+    // LEI is a 20-character alphanumeric string
+    const leiRegex = /^[A-Z0-9]{18}[0-9]{2}$/;
+    if (!leiRegex.test(lei)) {
+      return "Please enter a valid LEI (20 characters, alphanumeric)";
+    }
+    
+    return null;
+  } catch (error) {
+    console.error("LEI validation error:", error);
+    return "LEI validation failed";
   }
-  
-  return null;
 };
 
-// File size validation
+// File size validation with error handling
 export const validateFileSize = (file: File, maxSizeMB: number): string | null => {
-  const maxSizeBytes = maxSizeMB * 1024 * 1024;
-  if (file.size > maxSizeBytes) {
-    return `File size exceeds the maximum allowed size of ${maxSizeMB}MB`;
+  try {
+    const maxSizeBytes = maxSizeMB * 1024 * 1024;
+    if (file.size > maxSizeBytes) {
+      return `File size exceeds the maximum allowed size of ${maxSizeMB}MB`;
+    }
+    return null;
+  } catch (error) {
+    console.error("File size validation error:", error);
+    return "File size validation failed";
   }
-  return null;
 };
 
-// File type validation
+// File type validation with error handling
 export const validateFileType = (file: File, allowedTypes: string[]): string | null => {
-  // Check file extension
-  const fileName = file.name.toLowerCase();
-  const fileExtension = `.${fileName.split('.').pop()}`;
-  
-  // If allowedTypes contains MIME types (with '/'), check against file.type
-  // Otherwise, check against the file extension
-  const isValidType = allowedTypes.some(type => 
-    type.includes('/') 
-      ? file.type === type
-      : fileExtension === type.toLowerCase()
-  );
-  
-  if (!isValidType) {
-    return `Invalid file type. Allowed types: ${allowedTypes.join(', ')}`;
+  try {
+    // Check file extension
+    const fileName = file.name.toLowerCase();
+    const fileExtension = `.${fileName.split('.').pop()}`;
+    
+    // If allowedTypes contains MIME types (with '/'), check against file.type
+    // Otherwise, check against the file extension
+    const isValidType = allowedTypes.some(type => 
+      type.includes('/') 
+        ? file.type === type
+        : fileExtension === type.toLowerCase()
+    );
+    
+    if (!isValidType) {
+      return `Invalid file type. Allowed types: ${allowedTypes.join(', ')}`;
+    }
+    
+    return null;
+  } catch (error) {
+    console.error("File type validation error:", error);
+    return "File type validation failed";
   }
-  
-  return null;
 };
 
 // Required field validation

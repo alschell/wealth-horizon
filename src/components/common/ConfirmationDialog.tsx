@@ -1,66 +1,86 @@
 
 import React from 'react';
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { AlertTriangle, Check, X } from 'lucide-react';
 
-interface ConfirmationDialogProps {
-  isOpen: boolean;
+export interface ConfirmationDialogProps {
+  open: boolean;
   onClose: () => void;
   onConfirm: () => void;
   title: string;
-  description: string;
-  confirmText?: string;
-  cancelText?: string;
-  confirmVariant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link";
+  description?: string;
+  confirmLabel?: string;
+  cancelLabel?: string;
+  isDestructive?: boolean;
   isLoading?: boolean;
 }
 
 /**
- * Reusable confirmation dialog component with loading state support
+ * Reusable confirmation dialog component with consistent styling
  */
-export const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
-  isOpen,
+const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
+  open,
   onClose,
   onConfirm,
   title,
   description,
-  confirmText = "Confirm",
-  cancelText = "Cancel",
-  confirmVariant = "default",
+  confirmLabel = 'Confirm',
+  cancelLabel = 'Cancel',
+  isDestructive = false,
   isLoading = false,
 }) => {
   return (
-    <AlertDialog open={isOpen} onOpenChange={onClose}>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>{title}</AlertDialogTitle>
-          <AlertDialogDescription>{description}</AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel asChild>
-            <Button variant="outline" disabled={isLoading}>{cancelText}</Button>
-          </AlertDialogCancel>
-          <AlertDialogAction asChild>
-            <Button 
-              variant={confirmVariant} 
-              onClick={onConfirm}
-              disabled={isLoading}
-            >
-              {isLoading ? "Loading..." : confirmText}
-            </Button>
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+    <Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            {isDestructive ? (
+              <AlertTriangle className="h-5 w-5 text-destructive" />
+            ) : (
+              <Check className="h-5 w-5 text-primary" />
+            )}
+            {title}
+          </DialogTitle>
+          {description && (
+            <DialogDescription>{description}</DialogDescription>
+          )}
+        </DialogHeader>
+        
+        <DialogFooter className="flex gap-2 sm:justify-end">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={onClose}
+            disabled={isLoading}
+          >
+            <X className="h-4 w-4 mr-1" />
+            {cancelLabel}
+          </Button>
+          <Button
+            type="button"
+            variant={isDestructive ? "destructive" : "default"}
+            onClick={onConfirm}
+            disabled={isLoading}
+            className={isLoading ? "opacity-70 cursor-not-allowed" : ""}
+          >
+            {isDestructive ? (
+              <AlertTriangle className="h-4 w-4 mr-1" />
+            ) : (
+              <Check className="h-4 w-4 mr-1" />
+            )}
+            {isLoading ? "Processing..." : confirmLabel}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 };
 

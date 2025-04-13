@@ -1,96 +1,57 @@
 
 import React, { Component, ErrorInfo, ReactNode } from 'react';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Button } from '@/components/ui/button';
 import { showErrorToast } from '@/utils/toast';
 
 interface ErrorBoundaryProps {
   children: ReactNode;
   fallback?: ReactNode;
   onError?: (error: Error, errorInfo: ErrorInfo) => void;
-  resetOnPropsChange?: boolean;
-  logErrorToConsole?: boolean;
-  showErrorNotification?: boolean;
 }
 
 interface ErrorBoundaryState {
   hasError: boolean;
-  error: Error | null;
 }
 
 /**
- * Error Boundary component to catch JavaScript errors anywhere in child component tree
- * Logs errors and displays a fallback UI instead of crashing the whole app
+ * Error Boundary component to catch JavaScript errors in child component tree
+ * and display a fallback UI instead of crashing the whole app
  */
-export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   constructor(props: ErrorBoundaryProps) {
     super(props);
-    this.state = { hasError: false, error: null };
+    this.state = { hasError: false };
   }
 
-  static getDerivedStateFromError(error: Error): ErrorBoundaryState {
-    return { hasError: true, error };
+  static getDerivedStateFromError(_: Error): ErrorBoundaryState {
+    return { hasError: true };
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
-    const { onError, logErrorToConsole = true, showErrorNotification = true } = this.props;
+    console.error('Error caught by ErrorBoundary:', error, errorInfo);
     
-    // Log error to console if enabled
-    if (logErrorToConsole) {
-      console.error('Error caught by ErrorBoundary:', error, errorInfo);
+    // Call custom error handler if provided
+    if (this.props.onError) {
+      this.props.onError(error, errorInfo);
     }
     
-    // Show toast notification if enabled
-    if (showErrorNotification) {
-      showErrorToast(
-        'Application Error', 
-        error.message || 'An unexpected error occurred'
-      );
-    }
-
-    // Call onError callback if provided
-    if (onError) {
-      onError(error, errorInfo);
-    }
+    // Show toast notification
+    showErrorToast('An error occurred', 'The application encountered an unexpected error');
   }
-
-  componentDidUpdate(prevProps: ErrorBoundaryProps): void {
-    // Reset the error state if specified by props and props have changed
-    if (
-      this.state.hasError &&
-      this.props.resetOnPropsChange &&
-      prevProps.children !== this.props.children
-    ) {
-      this.resetErrorBoundary();
-    }
-  }
-
-  resetErrorBoundary = (): void => {
-    this.setState({ hasError: false, error: null });
-  };
 
   render(): ReactNode {
     if (this.state.hasError) {
-      // Custom fallback UI
-      if (this.props.fallback) {
-        return this.props.fallback;
-      }
-
-      // Default fallback UI
-      return (
-        <Alert variant="destructive" className="mb-6">
-          <AlertTitle>Something went wrong</AlertTitle>
-          <AlertDescription>
-            <div className="space-y-4">
-              <p>
-                {this.state.error?.message || 'An unexpected error occurred'}
-              </p>
-              <Button onClick={this.resetErrorBoundary} variant="outline">
-                Try again
-              </Button>
-            </div>
-          </AlertDescription>
-        </Alert>
+      // Render fallback UI if provided, otherwise render default error message
+      return this.props.fallback || (
+        <div className="p-6 text-center">
+          <h2 className="text-xl font-semibold text-red-600 mb-2">Something went wrong</h2>
+          <p className="text-gray-600 mb-4">The application encountered an unexpected error</p>
+          <button
+            className="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90"
+            onClick={() => this.setState({ hasError: false })}
+          >
+            Try again
+          </button>
+        </div>
       );
     }
 
@@ -98,22 +59,4 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
   }
 }
 
-/**
- * HOC to wrap components with an ErrorBoundary
- */
-export function withErrorBoundary<P extends object>(
-  Component: React.ComponentType<P>,
-  errorBoundaryProps: Omit<ErrorBoundaryProps, 'children'> = {}
-): React.FC<P> {
-  const displayName = Component.displayName || Component.name || 'Component';
-  
-  const WrappedComponent: React.FC<P> = (props) => (
-    <ErrorBoundary {...errorBoundaryProps}>
-      <Component {...props} />
-    </ErrorBoundary>
-  );
-  
-  WrappedComponent.displayName = `withErrorBoundary(${displayName})`;
-  
-  return WrappedComponent;
-}
+export default ErrorBoundary;

@@ -10,7 +10,7 @@ import {
   showActionResult as actionResult
 } from './toastUtils';
 
-// Re-export the toast utility functions
+// Re-export the toast utility functions with explicit names to avoid conflicts
 export const showSuccessToast = success;
 export const showErrorToast = error;
 export const showWarningToast = warning;
@@ -34,16 +34,17 @@ export const showException = (err: unknown) => {
     ? err.message 
     : 'An unexpected error occurred';
   
-  error('Error', message);
+  // Fix: Use the imported showErrorToast instead of error (renamed from previous code)
+  showErrorToast('Error', message);
 };
 
 // Default export for object-style usage
 export default {
-  success,
-  error,
-  warning,
-  info,
-  actionResult,
+  success: showSuccessToast,
+  error: showErrorToast,
+  warning: showWarningToast,
+  info: showInfoToast,
+  actionResult: showActionResultToast,
   showConfirmation,
   showException
 };

@@ -12,22 +12,27 @@ import {
   advisoryBoard,
   useTeamFilters
 } from "@/components/team";
+import TeamFilter from "@/components/team/TeamFilter";
 
 /**
  * Team page showcasing leadership and advisory board members
  */
 const Team: React.FC = () => {
-  // Use our new filter hooks
+  // Use our improved filter hooks
   const { 
     filteredItems: filteredLeadership,
     searchQuery: leadershipSearch,
-    setSearchQuery: setLeadershipSearch
+    setSearchQuery: setLeadershipSearch,
+    sortBy: leadershipSortBy,
+    setSortBy: setLeadershipSortBy
   } = useTeamFilters(leadershipTeam);
   
   const { 
     filteredItems: filteredAdvisors,
     searchQuery: advisorsSearch,
-    setSearchQuery: setAdvisorsSearch
+    setSearchQuery: setAdvisorsSearch,
+    sortBy: advisorsSortBy,
+    setSortBy: setAdvisorsSortBy
   } = useTeamFilters(advisoryBoard);
 
   return (
@@ -44,19 +49,41 @@ const Team: React.FC = () => {
         icon={Users}
       >
         <div className="space-y-12">
-          <LeadershipSection 
-            teamMembers={filteredLeadership} 
-            searchQuery={leadershipSearch}
-            onSearchChange={setLeadershipSearch}
-          />
+          <section>
+            <TeamFilter 
+              searchQuery={leadershipSearch}
+              onSearchChange={setLeadershipSearch}
+              sortBy={leadershipSortBy}
+              onSortChange={setLeadershipSortBy}
+              placeholder="Search leadership team..."
+              showDepartmentSort={true}
+            />
+            
+            <LeadershipSection 
+              teamMembers={filteredLeadership} 
+              searchQuery={leadershipSearch}
+              onSearchChange={setLeadershipSearch}
+            />
+          </section>
           
           <Separator />
           
-          <AdvisoryBoardSection 
-            advisors={filteredAdvisors}
-            searchQuery={advisorsSearch}
-            onSearchChange={setAdvisorsSearch}
-          />
+          <section>
+            <TeamFilter 
+              searchQuery={advisorsSearch}
+              onSearchChange={setAdvisorsSearch}
+              sortBy={advisorsSortBy}
+              onSortChange={setAdvisorsSortBy}
+              placeholder="Search advisory board..."
+              showDepartmentSort={false}
+            />
+            
+            <AdvisoryBoardSection 
+              advisors={filteredAdvisors}
+              searchQuery={advisorsSearch}
+              onSearchChange={setAdvisorsSearch}
+            />
+          </section>
           
           <JoinSection />
         </div>

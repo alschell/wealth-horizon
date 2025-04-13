@@ -1,6 +1,6 @@
 
-import React from 'react';
-import { Twitter, Github, Linkedin } from 'lucide-react'; // Note: correct case for Linkedin
+import React, { memo } from 'react';
+import { Twitter, Github, Linkedin } from 'lucide-react';
 import { SocialLinks as SocialLinksType } from './teamData';
 
 interface SocialLinksProps {
@@ -10,6 +10,7 @@ interface SocialLinksProps {
 
 /**
  * A reusable component for rendering social media links
+ * Memoized to prevent unnecessary re-renders
  */
 const SocialLinks: React.FC<SocialLinksProps> = ({ links, className = "" }) => {
   const iconSize = 16;
@@ -55,4 +56,5 @@ const SocialLinks: React.FC<SocialLinksProps> = ({ links, className = "" }) => {
   );
 };
 
-export default SocialLinks;
+// Memoize the component to prevent unnecessary re-renders
+export default memo(SocialLinks);

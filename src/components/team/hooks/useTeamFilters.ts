@@ -15,13 +15,17 @@ export function useTeamFilters<T extends TeamMember | Advisor>(items: T[]) {
   const filteredItems = useMemo(() => {
     // First filter by search query
     const filtered = searchQuery 
-      ? items.filter(item => 
-          item.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-          item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          (('department' in item && item.department) ? 
-            item.department.toLowerCase().includes(searchQuery.toLowerCase()) : 
-            false)
-        )
+      ? items.filter(item => {
+          const nameMatch = item.name.toLowerCase().includes(searchQuery.toLowerCase());
+          const titleMatch = item.title.toLowerCase().includes(searchQuery.toLowerCase());
+          
+          // Safely check for department property (only exists on TeamMember)
+          const departmentMatch = 'department' in item && 
+            typeof item.department === 'string' && 
+            item.department.toLowerCase().includes(searchQuery.toLowerCase());
+          
+          return nameMatch || titleMatch || departmentMatch;
+        })
       : items;
     
     // Then sort by the selected field
@@ -31,9 +35,9 @@ export function useTeamFilters<T extends TeamMember | Advisor>(items: T[]) {
       } else if (sortBy === 'title') {
         return a.title.localeCompare(b.title);
       } else if (sortBy === 'department') {
-        // Handle department property safely for TeamMember
-        const deptA = 'department' in a && a.department ? a.department : '';
-        const deptB = 'department' in b && b.department ? b.department : '';
+        // Handle department property safely - check if properties exist first
+        const deptA = 'department' in a && typeof a.department === 'string' ? a.department : '';
+        const deptB = 'department' in b && typeof b.department === 'string' ? b.department : '';
         return deptA.localeCompare(deptB);
       }
       return 0;

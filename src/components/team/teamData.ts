@@ -6,7 +6,7 @@
 export interface SocialLinks {
   linkedin?: string;
   twitter?: string;
-  github?: string; // Added github property
+  github?: string; // Explicitly defined github property
 }
 
 export interface TeamMember extends SocialLinks {
@@ -15,7 +15,7 @@ export interface TeamMember extends SocialLinks {
   title: string;
   bio: string;
   image: string;
-  department?: string; // Added optional department property
+  department?: string; // Explicitly marked as optional
 }
 
 export interface Advisor extends SocialLinks {

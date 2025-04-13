@@ -1,8 +1,7 @@
 
 import React from "react";
-import { Linkedin } from "lucide-react";
-import TeamMemberImage from "./TeamMemberImage";
 import { Advisor } from "./teamData";
+import TeamMemberImage from "./TeamMemberImage";
 import SocialLinks from "./SocialLinks";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";

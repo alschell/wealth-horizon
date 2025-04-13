@@ -29,9 +29,9 @@ export const showConfirmation = (message: string) => success('Success', message)
  * 
  * @param error - Error object or message
  */
-export const showException = (error: unknown) => {
-  const message = error instanceof Error 
-    ? error.message 
+export const showException = (err: unknown) => {
+  const message = err instanceof Error 
+    ? err.message 
     : 'An unexpected error occurred';
   
   error('Error', message);

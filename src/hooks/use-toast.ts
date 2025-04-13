@@ -1,6 +1,6 @@
 
 import { toast as sonnerToast } from "sonner";
-import { type Toast } from "sonner";
+import type { ExternalToast } from "sonner";
 
 export type ToastProps = {
   title?: string;
@@ -15,8 +15,8 @@ export function toast(props: ToastProps) {
     description: props.description,
     className: props.className,
     duration: props.duration,
-    // Map variant to Sonner's toast types
-    type: props.variant === "destructive" ? "error" : "default"
+    // Map variant to Sonner's toast types using the correct property
+    ...(props.variant === "destructive" ? { intent: "error" } : {})
   });
 }
 

@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -5,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import CustomSearchableSelect from "@/components/ui/custom-searchable-select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { CheckCircle } from "lucide-react";
+import { CheckCheck } from "lucide-react";
 
 const ContactForm: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -165,7 +166,7 @@ const ContactForm: React.FC = () => {
       <Dialog open={showSuccessModal} onOpenChange={setShowSuccessModal}>
         <DialogContent className="sm:max-w-md flex flex-col items-center justify-center p-8" hideCloseButton>
           <div className="flex flex-col items-center justify-center w-full space-y-4 py-6">
-            <CheckCircle className="h-12 w-12 text-[#4E46DC]" />
+            <CheckCheck className="h-12 w-12 text-[#4E46DC]" />
             
             <DialogTitle className="text-xl font-semibold text-center mt-2">
               Message sent successfully!
@@ -176,7 +177,7 @@ const ContactForm: React.FC = () => {
             </div>
           </div>
           
-          <DialogFooter className="flex justify-center w-full mt-4">
+          <DialogFooter className="w-full flex justify-center mt-4">
             <Button 
               onClick={() => setShowSuccessModal(false)}
               className="bg-black text-white hover:bg-gray-800"

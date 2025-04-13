@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -6,7 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import CustomSearchableSelect from "@/components/ui/custom-searchable-select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { Check } from "lucide-react";
+import { CheckCircle } from "lucide-react";
 
 const ContactForm: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -165,16 +164,15 @@ const ContactForm: React.FC = () => {
       {/* Success Modal - Improved styling */}
       <Dialog open={showSuccessModal} onOpenChange={setShowSuccessModal}>
         <DialogContent className="sm:max-w-md flex flex-col items-center justify-center p-8" hideCloseButton>
-          <div className="flex flex-col items-center justify-center w-full space-y-4 py-4">
-            <Check className="h-10 w-10 text-[#4E46DC]" />
+          <div className="flex flex-col items-center justify-center w-full space-y-4 py-6">
+            <CheckCircle className="h-12 w-12 text-[#4E46DC]" />
             
-            <DialogTitle className="text-xl font-semibold text-center">
+            <DialogTitle className="text-xl font-semibold text-center mt-2">
               Message sent successfully!
             </DialogTitle>
             
             <div className="text-center">
-              <p className="text-gray-700">Thank you for your message.</p>
-              <p className="text-gray-600">We will get back to you within 1-2 working days.</p>
+              <p className="text-gray-700">Thank you for your message. We will get back to you within 1-2 working days.</p>
             </div>
           </div>
           

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from "react";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -50,19 +49,9 @@ const CustomSearchableSelect = ({
   // Ensure options is always an array
   const safeOptions = Array.isArray(options) ? options : [];
 
-  // Sort options alphabetically, but ensure "Other" is at the end
-  let sortedOptions = [...safeOptions];
-  if (sortedOptions.includes("Other")) {
-    sortedOptions = sortedOptions
-      .filter(option => option !== "Other")
-      .sort((a, b) => a.localeCompare(b));
-    sortedOptions.push("Other");
-  } else {
-    sortedOptions.sort((a, b) => a.localeCompare(b));
-  }
-
-  const filteredOptions = React.useMemo(() => {
-    let filtered = sortedOptions.filter((option) =>
+  // This function keeps options in original order, no sorting
+  const getFilteredOptions = () => {
+    let filtered = safeOptions.filter((option) =>
       option.toLowerCase().includes(query.toLowerCase())
     );
     
@@ -71,7 +60,9 @@ const CustomSearchableSelect = ({
     }
 
     return filtered;
-  }, [query, safeOptions, allowCustomValue, sortedOptions]);
+  };
+
+  const filteredOptions = getFilteredOptions();
 
   return (
     <div className={cn("relative", className)}>

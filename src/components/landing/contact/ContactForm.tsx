@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -5,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import CustomSearchableSelect from "@/components/ui/custom-searchable-select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { Check, Asterisk } from "lucide-react";
+import { Check } from "lucide-react";
 
 const ContactForm: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -51,6 +52,7 @@ const ContactForm: React.FC = () => {
   ];
 
   // Define the inquiry options in the EXACT order specified - preserving this order exactly
+  // These must be in this specific, non-alphabetical order
   const inquiryOptions = [
     "Speak with a sales representative",
     "Request a demo",
@@ -62,7 +64,7 @@ const ContactForm: React.FC = () => {
     <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-200">
       <h3 className="text-xl font-semibold text-gray-900 mb-6">Send us a message</h3>
       
-      <form onSubmit={handleSubmit} className="space-y-6 flex flex-col">
+      <form onSubmit={handleSubmit} className="flex flex-col h-full">
         <div className="space-y-6 flex-grow">
           <div className="space-y-2">
             <Label htmlFor="email">
@@ -140,19 +142,20 @@ const ContactForm: React.FC = () => {
             <Label htmlFor="message">
               Message<span className="text-indigo-600 ml-1">*</span>
             </Label>
-            <Textarea 
-              id="message" 
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              placeholder="How can we help you?"
-              rows={6}
-              required
-              className="focus-visible:outline-none focus-visible:ring-0 focus-visible:border-black"
-            />
+            <div className="h-[144px]">
+              <Textarea 
+                id="message" 
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                placeholder="How can we help you?"
+                className="h-full w-full resize-none focus-visible:outline-none focus-visible:ring-0 focus-visible:border-black"
+                required
+              />
+            </div>
           </div>
         </div>
         
-        <div className="mt-4 flex-shrink-0">
+        <div className="mt-6 flex-shrink-0">
           <Button type="submit" className="w-full md:w-auto" disabled={isSubmitting}>
             {isSubmitting ? "Sending..." : "Send Message"}
           </Button>

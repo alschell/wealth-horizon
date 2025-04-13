@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -99,7 +100,7 @@ const ContactForm: React.FC = () => {
             placeholder="Select your industry"
             options={industryOptions}
             onChange={(value) => setIndustry(value)}
-            required
+            required={false}
             allowCustomValue
           />
         </div>
@@ -118,7 +119,7 @@ const ContactForm: React.FC = () => {
               "Other"
             ]}
             onChange={(value) => setInquiry(value)}
-            required
+            required={false}
             allowCustomValue
           />
         </div>

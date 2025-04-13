@@ -15,6 +15,13 @@ const getCsrfToken = (): string => {
   if (metaTag) {
     return metaTag.getAttribute('content') || '';
   }
+  
+  // Try to get from cookie
+  const match = document.cookie.match(/csrf-token=([^;]+)/);
+  if (match) {
+    return match[1];
+  }
+  
   return '';
 };
 
@@ -43,16 +50,49 @@ const sanitizeEndpoint = (endpoint: string): string => {
   return endpoint;
 };
 
+// Helper to handle API response
+const handleResponse = async <T>(response: Response): Promise<T> => {
+  if (!response.ok) {
+    const error: ApiError = new Error(`API error: ${response.status}`);
+    error.status = response.status;
+    
+    try {
+      error.data = await response.json();
+    } catch (e) {
+      error.data = 'Unable to parse error response';
+    }
+    
+    throw error;
+  }
+  
+  // For non-JSON responses or empty responses
+  if (response.status === 204 || response.headers.get('Content-Length') === '0') {
+    return {} as T;
+  }
+  
+  // Check content type to determine how to parse the response
+  const contentType = response.headers.get('Content-Type');
+  if (contentType && contentType.includes('application/json')) {
+    return await response.json();
+  }
+  
+  return {} as T;
+};
+
 // Generic API client with type safety
 export const apiClient = {
   get: async <T>(endpoint: string): Promise<T> => {
     try {
       const sanitizedEndpoint = sanitizeEndpoint(endpoint);
+      const url = `${API_BASE_URL}${sanitizedEndpoint}`;
       
-      // In a real implementation, this would include the fetch call
-      // For now we'll simulate a response
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: createHeaders(),
+        credentials: 'same-origin'
+      });
       
-      return {} as T;
+      return handleResponse<T>(response);
     } catch (error) {
       const apiError = error as ApiError;
       throw apiError;
@@ -62,12 +102,16 @@ export const apiClient = {
   post: async <T>(endpoint: string, data: any): Promise<T> => {
     try {
       const sanitizedEndpoint = sanitizeEndpoint(endpoint);
+      const url = `${API_BASE_URL}${sanitizedEndpoint}`;
       
-      // In a real implementation, this would include the fetch call with:
-      // headers: createHeaders(),
-      // body: JSON.stringify(data),
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: createHeaders(),
+        credentials: 'same-origin',
+        body: JSON.stringify(data)
+      });
       
-      return {} as T;
+      return handleResponse<T>(response);
     } catch (error) {
       const apiError = error as ApiError;
       throw apiError;
@@ -77,12 +121,16 @@ export const apiClient = {
   put: async <T>(endpoint: string, data: any): Promise<T> => {
     try {
       const sanitizedEndpoint = sanitizeEndpoint(endpoint);
+      const url = `${API_BASE_URL}${sanitizedEndpoint}`;
       
-      // In a real implementation, this would include the fetch call with:
-      // headers: createHeaders(),
-      // body: JSON.stringify(data),
+      const response = await fetch(url, {
+        method: 'PUT',
+        headers: createHeaders(),
+        credentials: 'same-origin',
+        body: JSON.stringify(data)
+      });
       
-      return {} as T;
+      return handleResponse<T>(response);
     } catch (error) {
       const apiError = error as ApiError;
       throw apiError;
@@ -92,10 +140,46 @@ export const apiClient = {
   delete: async <T>(endpoint: string): Promise<T> => {
     try {
       const sanitizedEndpoint = sanitizeEndpoint(endpoint);
+      const url = `${API_BASE_URL}${sanitizedEndpoint}`;
       
-      // In a real implementation, this would include the fetch call
+      const response = await fetch(url, {
+        method: 'DELETE',
+        headers: createHeaders(),
+        credentials: 'same-origin'
+      });
       
-      return {} as T;
+      return handleResponse<T>(response);
+    } catch (error) {
+      const apiError = error as ApiError;
+      throw apiError;
+    }
+  },
+  
+  uploadFile: async <T>(endpoint: string, file: File, additionalData?: Record<string, any>): Promise<T> => {
+    try {
+      const sanitizedEndpoint = sanitizeEndpoint(endpoint);
+      const url = `${API_BASE_URL}${sanitizedEndpoint}`;
+      
+      const formData = new FormData();
+      formData.append('file', file);
+      
+      if (additionalData) {
+        Object.entries(additionalData).forEach(([key, value]) => {
+          formData.append(key, String(value));
+        });
+      }
+      
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest',
+          'X-CSRF-Token': getCsrfToken()
+        },
+        credentials: 'same-origin',
+        body: formData
+      });
+      
+      return handleResponse<T>(response);
     } catch (error) {
       const apiError = error as ApiError;
       throw apiError;

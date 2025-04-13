@@ -28,7 +28,7 @@ const LandingLayout: React.FC = () => {
         }, 100);
       }
     }
-  }, [location.hash]); // Optimize by only depending on location.hash
+  }, [location.hash]);
 
   const scrollToSection = (sectionRef: React.RefObject<HTMLDivElement>) => {
     if (sectionRef.current) {

@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Upload, X } from "lucide-react";
 import { toast } from "sonner";
 import { sanitizeFileName } from "@/utils/security";
+import { validateEmail, validatePhone } from "@/utils/validation";
 
 // Constants for file validation
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
@@ -33,6 +34,7 @@ export const ResumeUploadModal: React.FC<ResumeUploadModalProps> = ({
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [errors, setErrors] = useState<Record<string, string>>({});
   
   // Validate file before accepting it
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -59,20 +61,57 @@ export const ResumeUploadModal: React.FC<ResumeUploadModalProps> = ({
       }
       
       setResumeFile(file);
+      setErrors(prev => ({ ...prev, file: "" }));
     }
+  };
+  
+  const validateForm = () => {
+    const newErrors: Record<string, string> = {};
+    
+    if (!name.trim()) {
+      newErrors.name = "Name is required";
+    }
+    
+    if (!email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!validateEmail(email)) {
+      newErrors.email = "Please enter a valid email address";
+    }
+    
+    if (!phone.trim()) {
+      newErrors.phone = "Phone number is required";
+    } else if (!validatePhone(phone)) {
+      newErrors.phone = "Please enter a valid phone number";
+    }
+    
+    if (!resumeFile) {
+      newErrors.file = "Resume file is required";
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
   
   const handleSubmitResume = (e: React.FormEvent) => {
     e.preventDefault();
     
+    if (!validateForm()) {
+      return;
+    }
+    
     // In a real app, this would send the resume file, name, and email to a server
     // For now, we'll just show a success toast and close the modal
     toast.success("Your resume has been submitted! We'll be in touch soon.");
     onOpenChange(false);
+    resetForm();
+  };
+  
+  const resetForm = () => {
     setResumeFile(null);
     setName("");
     setEmail("");
     setPhone("");
+    setErrors({});
   };
   
   // Safely display the file name with proper sanitization using our security utility
@@ -103,7 +142,14 @@ export const ResumeUploadModal: React.FC<ResumeUploadModalProps> = ({
               placeholder="John Doe" 
               required 
               aria-required="true"
+              aria-invalid={!!errors.name}
+              aria-describedby={errors.name ? "name-error" : undefined}
             />
+            {errors.name && (
+              <p id="name-error" className="text-sm text-red-500 mt-1">
+                {errors.name}
+              </p>
+            )}
           </div>
           <div className="space-y-2">
             <Label htmlFor="email" className="flex items-center">
@@ -117,7 +163,14 @@ export const ResumeUploadModal: React.FC<ResumeUploadModalProps> = ({
               placeholder="john@example.com" 
               required 
               aria-required="true"
+              aria-invalid={!!errors.email}
+              aria-describedby={errors.email ? "email-error" : undefined}
             />
+            {errors.email && (
+              <p id="email-error" className="text-sm text-red-500 mt-1">
+                {errors.email}
+              </p>
+            )}
           </div>
           <div className="space-y-2">
             <Label htmlFor="phone" className="flex items-center">
@@ -130,13 +183,20 @@ export const ResumeUploadModal: React.FC<ResumeUploadModalProps> = ({
               placeholder="+1 (555) 123-4567" 
               required
               aria-required="true"
+              aria-invalid={!!errors.phone}
+              aria-describedby={errors.phone ? "phone-error" : undefined}
             />
+            {errors.phone && (
+              <p id="phone-error" className="text-sm text-red-500 mt-1">
+                {errors.phone}
+              </p>
+            )}
           </div>
           <div className="space-y-2">
             <Label htmlFor="resume" className="flex items-center">
               Resume <span className="text-indigo-600 ml-1" aria-hidden="true">*</span>
             </Label>
-            <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+            <div className={`border-2 border-dashed ${errors.file ? 'border-red-500' : 'border-gray-300'} rounded-lg p-6 text-center`}>
               {resumeFile ? (
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600">{safeDisplayFileName(resumeFile.name)}</span>
@@ -173,15 +233,20 @@ export const ResumeUploadModal: React.FC<ResumeUploadModalProps> = ({
                 </div>
               )}
             </div>
+            {errors.file && (
+              <p className="text-sm text-red-500 mt-1">
+                {errors.file}
+              </p>
+            )}
           </div>
           <div className="flex justify-end gap-2">
             <DialogClose asChild>
-              <Button type="button" variant="outline">Cancel</Button>
+              <Button type="button" variant="outline" onClick={resetForm}>Cancel</Button>
             </DialogClose>
             <Button 
               type="submit" 
-              disabled={!resumeFile || !name || !email || !phone}
-              aria-disabled={!resumeFile || !name || !email || !phone}
+              disabled={!name || !email || !phone || !resumeFile}
+              aria-disabled={!name || !email || !phone || !resumeFile}
             >
               Submit
             </Button>

@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useMemo } from 'react';
 import { TeamContextValue, TeamProviderProps } from './TeamContextTypes';
 import { useTeamData } from './useTeamData';
@@ -28,11 +27,11 @@ export const TeamProvider: React.FC<TeamProviderProps> = ({
   
   // Filter state for leadership team
   const [leadershipSearch, setLeadershipSearch] = useState('');
-  const [leadershipSortBy, setLeadershipSortBy] = useState<TeamSortOption>('name');
+  const [leadershipSortBy, setLeadershipSortBy = useState<TeamSortOption>('name');
   
   // Filter state for advisory board
   const [advisorsSearch, setAdvisorsSearch] = useState('');
-  const [advisorsSortBy, setAdvisorsSortBy] = useState<TeamSortOption>('name');
+  const [advisorsSortBy, setAdvisorsSortBy = useState<TeamSortOption>('name');
   
   // Memoized filtered leadership team members
   const filteredLeadership = useMemo(() => 
@@ -59,12 +58,14 @@ export const TeamProvider: React.FC<TeamProviderProps> = ({
     leadershipSortBy,
     setLeadershipSortBy,
     filteredLeadership,
+    leadershipLoading: isLoading,  // Add this
     
     advisorsSearch,
     setAdvisorsSearch,
     advisorsSortBy,
     setAdvisorsSortBy,
     filteredAdvisors,
+    advisorsLoading: isLoading,  // Add this
     
     refreshTeamData,
   };

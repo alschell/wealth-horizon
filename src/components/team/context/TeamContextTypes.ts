@@ -1,4 +1,3 @@
-
 import { TeamMember, Advisor } from '../teamData';
 import { TeamSortOption } from '../TeamFilter';
 
@@ -19,13 +18,15 @@ export interface TeamContextValue {
   leadershipSortBy: TeamSortOption;
   setLeadershipSortBy: (option: TeamSortOption) => void;
   filteredLeadership: TeamMember[];
-  
+  leadershipLoading: boolean;  // Add this
+
   // Advisory board filters
   advisorsSearch: string;
   setAdvisorsSearch: (query: string) => void;
   advisorsSortBy: TeamSortOption;
   setAdvisorsSortBy: (option: TeamSortOption) => void;
   filteredAdvisors: Advisor[];
+  advisorsLoading: boolean;  // Add this
   
   // Actions
   refreshTeamData: () => void;

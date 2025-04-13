@@ -1,17 +1,49 @@
 
+/**
+ * ResumeFileUpload component
+ * 
+ * An accessible file upload component specifically designed for resume/CV uploads.
+ * Features:
+ * - Drag and drop support
+ * - File preview
+ * - Accessible error handling
+ * - Screen reader announcements
+ * 
+ * @component
+ */
+
 import React, { useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { FileIcon, UploadIcon, XIcon } from "lucide-react";
 import { announceToScreenReader } from "@/utils/a11y";
 
 interface ResumeFileUploadProps {
+  /** Currently selected resume file (or null if none) */
   resumeFile: File | null;
+  /** Function to set the selected resume file */
   setResumeFile: (file: File | null) => void;
+  /** Error message to display (if any) */
   error?: string;
+  /** Handler for file input change events */
   handleFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  /** Whether the component is disabled */
   disabled?: boolean;
 }
 
+/**
+ * A fully accessible file upload component for resumes
+ * 
+ * @example
+ * ```tsx
+ * <ResumeFileUpload
+ *   resumeFile={resumeFile}
+ *   setResumeFile={setResumeFile}
+ *   handleFileChange={handleFileChange}
+ *   error={errors.resume}
+ *   disabled={isSubmitting}
+ * />
+ * ```
+ */
 export const ResumeFileUpload: React.FC<ResumeFileUploadProps> = ({
   resumeFile,
   setResumeFile,
@@ -24,12 +56,18 @@ export const ResumeFileUpload: React.FC<ResumeFileUploadProps> = ({
   const labelId = "resume-file-label";
   const descriptionId = "resume-file-description";
 
+  /**
+   * Handle click on the upload area - opens file dialog
+   */
   const handleButtonClick = () => {
     if (fileInputRef.current && !disabled) {
       fileInputRef.current.click();
     }
   };
 
+  /**
+   * Remove the currently selected file
+   */
   const handleRemoveFile = () => {
     setResumeFile(null);
     if (fileInputRef.current) {
@@ -38,6 +76,9 @@ export const ResumeFileUpload: React.FC<ResumeFileUploadProps> = ({
     announceToScreenReader("Resume file removed", "polite");
   };
 
+  /**
+   * Handle keyboard navigation for the upload area
+   */
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();

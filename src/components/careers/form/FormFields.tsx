@@ -1,25 +1,67 @@
 
+/**
+ * FormField component
+ * 
+ * A reusable, accessible form field component that handles:
+ * - Labels with required indicators
+ * - Input validation with error display
+ * - Proper ARIA attributes for accessibility
+ * 
+ * @component
+ */
+
 import React from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 
 interface FormFieldProps {
+  /** Unique identifier for the form field */
   id: string;
+  /** Label text to display */
   label: string;
+  /** Current input value */
   value: string;
+  /** Change handler function */
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  /** Input type (text, email, password, etc.) */
   type?: string;
+  /** Placeholder text */
   placeholder?: string;
+  /** Error message to display (if any) */
   error?: string;
+  /** Whether the field is required */
   required?: boolean;
+  /** Whether the field is disabled */
   disabled?: boolean;
+  /** Maximum input length */
   maxLength?: number;
+  /** Minimum input length */
   minLength?: number;
+  /** HTML autocomplete attribute */
   autoComplete?: string;
+  /** ID of element that describes this field (for ARIA) */
   "aria-describedby"?: string;
 }
 
+/**
+ * A fully accessible form field component with error handling
+ * 
+ * @example
+ * ```tsx
+ * <FormField
+ *   id="email"
+ *   label="Email Address"
+ *   value={email}
+ *   onChange={handleEmailChange}
+ *   type="email"
+ *   error={errors.email}
+ *   required={true}
+ *   placeholder="Enter your email"
+ *   autoComplete="email"
+ * />
+ * ```
+ */
 export const FormField: React.FC<FormFieldProps> = ({
   id,
   label,

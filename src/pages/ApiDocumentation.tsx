@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import PageTemplate from "@/components/shared/PageTemplate";
@@ -6,7 +5,7 @@ import { FileText, ChevronRight, Search, Copy, Check, ExternalLink } from "lucid
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { Separator } from "@/components/ui/separator";
 
 const ApiDocumentation = () => {
@@ -67,7 +66,6 @@ const ApiDocumentation = () => {
       icon={FileText}
     >
       <div className="flex flex-col lg:flex-row gap-8">
-        {/* Sidebar navigation */}
         <div className="lg:w-64 flex-shrink-0">
           <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-4 sticky top-24">
             <div className="mb-4">
@@ -139,7 +137,6 @@ const ApiDocumentation = () => {
           </div>
         </div>
         
-        {/* Main content */}
         <div className="flex-1">
           <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
             {renderContent()}

@@ -1,25 +1,12 @@
 
 import React from "react";
 import { ExternalLink } from "lucide-react";
+import { useImageErrorHandler } from "@/hooks/useImageErrorHandler";
+import { mediaFeatures } from "./mockData";
 
-interface MediaFeature {
-  id: number;
-  title: string;
-  publication: string;
-  date: string;
-  link: string;
-  image: string;
-}
+const MediaCoverageSection: React.FC = () => {
+  const handleImageError = useImageErrorHandler();
 
-interface MediaCoverageSectionProps {
-  mediaFeatures: MediaFeature[];
-  handleImageError: (e: React.SyntheticEvent<HTMLImageElement>) => void;
-}
-
-const MediaCoverageSection: React.FC<MediaCoverageSectionProps> = ({ 
-  mediaFeatures, 
-  handleImageError 
-}) => {
   return (
     <section>
       <h2 className="text-2xl font-semibold text-gray-800 mb-6">Media Coverage</h2>

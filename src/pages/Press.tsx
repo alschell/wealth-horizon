@@ -1,52 +1,43 @@
 
 import React from "react";
-import PageTemplate from "@/components/shared/PageTemplate";
+import { Helmet } from "react-helmet-async";
 import { Newspaper } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
-import { Helmet } from "react-helmet-async";
+import PageTemplate from "@/components/shared/PageTemplate";
 import { 
   PressReleaseSection, 
   MediaCoverageSection, 
   AwardsSection, 
   MediaInquirySection, 
-  CompanyInfoSection,
-  pressReleases,
-  mediaFeatures,
-  awards
+  CompanyInfoSection 
 } from "@/components/press";
 
-const Press = () => {
-  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
-    e.currentTarget.src = '/assets/dashboard-fallback.png';
-  };
-
+const Press: React.FC = () => {
   return (
     <>
       <Helmet>
         <title>Press & Media | WealthHorizon</title>
-        <meta name="description" content="Latest news, press releases, media coverage, and awards about WealthHorizon's wealth management platform for family offices." />
-        <meta name="keywords" content="wealth management, press releases, fintech news, family office technology, wealth tech" />
+        <meta name="description" content="Latest news, media coverage, press releases, and contact information for WealthHorizon's media relations." />
+        <meta name="keywords" content="wealth management, press releases, media coverage, fintech news, wealth tech" />
       </Helmet>
       
       <PageTemplate
         title="Press & Media"
-        description="News, announcements, and media resources about WealthHorizon."
+        description="Discover the latest news, updates, and media coverage of WealthHorizon."
         icon={Newspaper}
       >
         <div className="space-y-12">
-          <PressReleaseSection pressReleases={pressReleases} />
+          <PressReleaseSection />
           
           <Separator />
           
-          <MediaCoverageSection 
-            mediaFeatures={mediaFeatures} 
-            handleImageError={handleImageError} 
-          />
+          <MediaCoverageSection />
           
-          <AwardsSection 
-            awards={awards} 
-            handleImageError={handleImageError} 
-          />
+          <Separator />
+          
+          <AwardsSection />
+          
+          <Separator />
           
           <MediaInquirySection />
           

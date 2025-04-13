@@ -1,5 +1,7 @@
 
 import React from "react";
+import { useImageErrorHandler } from "@/hooks/useImageErrorHandler";
+import { awards } from "./mockData";
 
 interface Award {
   year: string;
@@ -8,12 +10,9 @@ interface Award {
   logo: string;
 }
 
-interface AwardsSectionProps {
-  awards: Award[];
-  handleImageError: (e: React.SyntheticEvent<HTMLImageElement>) => void;
-}
+const AwardsSection: React.FC = () => {
+  const handleImageError = useImageErrorHandler();
 
-const AwardsSection: React.FC<AwardsSectionProps> = ({ awards, handleImageError }) => {
   return (
     <section>
       <h2 className="text-2xl font-semibold text-gray-800 mb-6">Awards & Recognition</h2>

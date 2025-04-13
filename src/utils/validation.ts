@@ -1,3 +1,4 @@
+
 /**
  * Centralized validation utilities for consistent form validation across the app
  */
@@ -55,6 +56,19 @@ export const validateUrl = (url: string): string | null => {
   } catch {
     return "Please enter a valid URL";
   }
+};
+
+// Legal Entity Identifier (LEI) validation
+export const validateLei = (lei: string): string | null => {
+  if (!lei.trim()) return null; // LEI might be optional
+
+  // LEI is a 20-character alphanumeric string
+  const leiRegex = /^[A-Z0-9]{18}[0-9]{2}$/;
+  if (!leiRegex.test(lei)) {
+    return "Please enter a valid LEI (20 characters, alphanumeric)";
+  }
+  
+  return null;
 };
 
 // File size validation

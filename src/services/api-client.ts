@@ -1,5 +1,8 @@
+
 // Initialize React Query client - but don't export it directly
 // It should only be used within React components
+import { validateCorsHeaders, validateNoSniff, isSuccessResponse } from '@/utils/http-validation';
+
 const API_BASE_URL = "/api";
 
 interface ApiError extends Error {
@@ -93,8 +96,6 @@ const sanitizeEndpoint = (endpoint: string): string => {
 
 // Helper to handle API response
 const handleResponse = async <T>(response: Response, endpoint: string): Promise<T> => {
-  import { validateCorsHeaders, validateNoSniff, isSuccessResponse } from '@/utils/http-validation';
-  
   // Validate CORS headers for cross-origin requests
   if (!validateCorsHeaders(response)) {
     console.warn(`Missing CORS headers in response from ${endpoint}`);

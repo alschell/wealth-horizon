@@ -44,7 +44,7 @@ export const makeKeyboardAccessible = (element: HTMLElement): void => {
   
   // Add keyboard listener if it doesn't have one
   if (!element.hasAttribute('data-keyboard-accessible')) {
-    element.addEventListener('keydown', (e) => {
+    element.addEventListener('keydown', (e: KeyboardEvent) => {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
         element.click();
@@ -320,7 +320,7 @@ export const initializeAccessibility = (): void => {
     // Make all dialogs accessible
     const dialogs = document.querySelectorAll('[role="dialog"]');
     dialogs.forEach(dialog => {
-      dialog.addEventListener('keydown', (e) => {
+      dialog.addEventListener('keydown', (e: KeyboardEvent) => {
         if (e.key === 'Escape') {
           const closeButton = dialog.querySelector('button[aria-label="Close"]');
           if (closeButton) (closeButton as HTMLElement).click();

@@ -10,6 +10,7 @@ import { useLegalEntityMapping } from "./hooks/useLegalEntityMapping";
 
 interface AccountFormFieldsProps {
   account: FinancialAccountInfo;
+  errors: Record<string, string>; // Added the errors prop
   onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onSelectionChange: (field: keyof FinancialAccountInfo, value: string) => void;
   onStatementsSelected: (files: File[]) => void;
@@ -17,6 +18,7 @@ interface AccountFormFieldsProps {
 
 const AccountFormFields = ({
   account,
+  errors,
   onInputChange,
   onSelectionChange
 }: AccountFormFieldsProps) => {

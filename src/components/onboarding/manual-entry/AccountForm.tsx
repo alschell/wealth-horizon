@@ -20,7 +20,6 @@ const AccountForm: React.FC<AccountFormProps> = ({ onAddAccount }) => {
     handleNewAccountChange,
     handleAccountSelectionChange,
     handleAddAccount,
-    isAccountTypeSelected
   } = useAccountForm(onAddAccount);
 
   const {
@@ -137,7 +136,7 @@ const AccountForm: React.FC<AccountFormProps> = ({ onAddAccount }) => {
           <SelectField
             id="accountType"
             label="Account Type"
-            value={isAccountTypeSelected ? newAccount.accountType : ""}
+            value={newAccount.accountType || ""}
             placeholder="Select account type"
             options={ACCOUNT_TYPES}
             onChange={(value) => handleAccountSelectionChange("accountType", value)}

@@ -7,7 +7,7 @@ export const useAccountForm = (onAddAccount: (account: FinancialAccountInfo) => 
   const defaultAccount: FinancialAccountInfo = {
     accountName: "",
     institution: "",
-    accountType: "",
+    accountType: "other", // Changed from empty string to "other" as default
     legalEntity: "",
     legalEntityIdentifier: "",
     accountSubtype: "",

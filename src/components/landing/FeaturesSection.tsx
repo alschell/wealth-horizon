@@ -66,7 +66,7 @@ const FeaturesSection: React.FC<{ id?: string }> = ({ id }) => {
               {features.map((feature, index) => (
                 <StaggerItem key={index} className="space-y-2">
                   <div className="flex items-center gap-2">
-                    <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600">
+                    <div className="w-10 h-10 flex items-center justify-center text-indigo-600">
                       <feature.icon size={20} />
                     </div>
                     <h3 className="text-xl font-semibold text-gray-900">{feature.title}</h3>

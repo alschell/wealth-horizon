@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Mail, Phone, MapPin, HeadphonesIcon, BriefcaseIcon, NewspaperIcon, UsersIcon, HandshakeIcon } from "lucide-react";
+import { Mail, Phone, MapPin, HelpCircle, BriefcaseIcon, NewspaperIcon, UsersIcon, HandshakeIcon } from "lucide-react";
 
 const ContactInformation: React.FC = () => {
   return (
@@ -8,11 +8,11 @@ const ContactInformation: React.FC = () => {
       <h3 className="text-xl font-semibold text-gray-900 mb-6">Contact Information</h3>
       
       <div className="space-y-8">
-        {/* Client Support Section */}
+        {/* Client Support Section - Changed icon from HeadphonesIcon to HelpCircle */}
         <div className="space-y-4">
           <div className="flex items-start">
-            <div className="mt-1 mr-4 flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-gray-50 text-[#4E46DC]">
-              <HeadphonesIcon size={20} />
+            <div className="mt-1 mr-4 flex-shrink-0 flex items-center justify-center w-10 h-10 text-[#4E46DC]">
+              <HelpCircle size={20} />
             </div>
             <div>
               <h4 className="text-gray-900 font-medium mb-1">Client Support</h4>
@@ -27,7 +27,7 @@ const ContactInformation: React.FC = () => {
         
         {/* Sales Section */}
         <div className="flex items-start">
-          <div className="mt-1 mr-4 flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-gray-50 text-[#4E46DC]">
+          <div className="mt-1 mr-4 flex-shrink-0 flex items-center justify-center w-10 h-10 text-[#4E46DC]">
             <BriefcaseIcon size={20} />
           </div>
           <div>
@@ -42,7 +42,7 @@ const ContactInformation: React.FC = () => {
         
         {/* Press Inquiries */}
         <div className="flex items-start">
-          <div className="mt-1 mr-4 flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-gray-50 text-[#4E46DC]">
+          <div className="mt-1 mr-4 flex-shrink-0 flex items-center justify-center w-10 h-10 text-[#4E46DC]">
             <NewspaperIcon size={20} />
           </div>
           <div>
@@ -57,7 +57,7 @@ const ContactInformation: React.FC = () => {
         
         {/* Marketing Inquiries */}
         <div className="flex items-start">
-          <div className="mt-1 mr-4 flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-gray-50 text-[#4E46DC]">
+          <div className="mt-1 mr-4 flex-shrink-0 flex items-center justify-center w-10 h-10 text-[#4E46DC]">
             <UsersIcon size={20} />
           </div>
           <div>
@@ -72,7 +72,7 @@ const ContactInformation: React.FC = () => {
         
         {/* Partnership Section - After Marketing per request */}
         <div className="flex items-start">
-          <div className="mt-1 mr-4 flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-gray-50 text-[#4E46DC]">
+          <div className="mt-1 mr-4 flex-shrink-0 flex items-center justify-center w-10 h-10 text-[#4E46DC]">
             <HandshakeIcon size={20} />
           </div>
           <div>
@@ -87,7 +87,7 @@ const ContactInformation: React.FC = () => {
         
         {/* Phone */}
         <div className="flex items-start">
-          <div className="mt-1 mr-4 flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-gray-50 text-[#4E46DC]">
+          <div className="mt-1 mr-4 flex-shrink-0 flex items-center justify-center w-10 h-10 text-[#4E46DC]">
             <Phone size={20} />
           </div>
           <div>
@@ -99,7 +99,7 @@ const ContactInformation: React.FC = () => {
         
         {/* Address */}
         <div className="flex items-start">
-          <div className="mt-1 mr-4 flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-gray-50 text-[#4E46DC]">
+          <div className="mt-1 mr-4 flex-shrink-0 flex items-center justify-center w-10 h-10 text-[#4E46DC]">
             <MapPin size={20} />
           </div>
           <div>

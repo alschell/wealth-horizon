@@ -18,6 +18,8 @@ import { cn } from "@/lib/utils";
 interface FormFieldProps {
   /** Unique identifier for the form field */
   id: string;
+  /** Name attribute for the form field (defaults to id if not provided) */
+  name?: string;
   /** Label text to display */
   label: string;
   /** Current input value */
@@ -64,6 +66,7 @@ interface FormFieldProps {
  */
 export const FormField: React.FC<FormFieldProps> = ({
   id,
+  name,
   label,
   value,
   onChange,
@@ -88,6 +91,7 @@ export const FormField: React.FC<FormFieldProps> = ({
       </Label>
       <Input
         id={id}
+        name={name || id} // Use name if provided, otherwise fall back to id
         type={type}
         value={value}
         onChange={onChange}

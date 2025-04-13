@@ -17,12 +17,6 @@ const LandingLayout: React.FC = () => {
   const contactRef = useRef<HTMLDivElement>(null);
   const aboutRef = useRef<HTMLDivElement>(null);
 
-  // Add debugging
-  useEffect(() => {
-    console.log("LandingLayout component mounted");
-    console.log("LandingLayout element:", document.querySelector('.min-h-screen'));
-  }, []);
-
   useEffect(() => {
     if (location.hash) {
       const id = location.hash.substring(1);

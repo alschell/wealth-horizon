@@ -32,12 +32,33 @@ const JobDetail = () => {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setResumeFile(e.target.files[0]);
+      const file = e.target.files[0];
+      
+      // Validate file size (5MB limit)
+      if (file.size > 5 * 1024 * 1024) {
+        toast.error("File is too large. Maximum size is 5MB.");
+        return;
+      }
+      
+      // Validate file type
+      const allowedTypes = ['.pdf', '.doc', '.docx'];
+      const fileExtension = file.name.substring(file.name.lastIndexOf('.')).toLowerCase();
+      if (!allowedTypes.includes(fileExtension)) {
+        toast.error("Invalid file type. Only PDF, DOC, or DOCX files are allowed.");
+        return;
+      }
+      
+      setResumeFile(file);
     }
   };
 
   const handleApply = () => {
     setIsApplyModalOpen(true);
+  };
+  
+  // Safely display the file name
+  const safeDisplayFileName = (fileName: string): string => {
+    return fileName.length > 30 ? fileName.substring(0, 27) + '...' : fileName;
   };
   
   const handleSubmitApplication = (e: React.FormEvent) => {
@@ -228,6 +249,7 @@ const JobDetail = () => {
                 onChange={(e) => setName(e.target.value)} 
                 placeholder="John Doe" 
                 required 
+                aria-required="true"
               />
             </div>
             <div className="space-y-2">
@@ -240,7 +262,8 @@ const JobDetail = () => {
                 value={email} 
                 onChange={(e) => setEmail(e.target.value)} 
                 placeholder="john@example.com" 
-                required 
+                required
+                aria-required="true" 
               />
             </div>
             <div className="space-y-2">
@@ -253,6 +276,7 @@ const JobDetail = () => {
                 onChange={(e) => setPhone(e.target.value)} 
                 placeholder="+1 (555) 123-4567" 
                 required
+                aria-required="true"
               />
             </div>
             <div className="space-y-2">
@@ -262,12 +286,13 @@ const JobDetail = () => {
               <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
                 {resumeFile ? (
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600">{resumeFile.name}</span>
+                    <span className="text-sm text-gray-600">{safeDisplayFileName(resumeFile.name)}</span>
                     <Button 
                       type="button" 
                       variant="ghost" 
                       size="sm"
                       onClick={() => setResumeFile(null)}
+                      aria-label="Remove file"
                     >
                       <X size={16} />
                     </Button>
@@ -287,6 +312,7 @@ const JobDetail = () => {
                         className="sr-only"
                         onChange={handleFileChange}
                         required
+                        aria-required="true"
                       />
                       <p className="text-xs text-gray-500 mt-1">PDF, DOC, or DOCX up to 5MB</p>
                     </div>

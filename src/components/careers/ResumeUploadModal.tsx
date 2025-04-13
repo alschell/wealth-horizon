@@ -30,7 +30,23 @@ export const ResumeUploadModal: React.FC<ResumeUploadModalProps> = ({
   
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setResumeFile(e.target.files[0]);
+      const file = e.target.files[0];
+      
+      // Validate file size (5MB limit)
+      if (file.size > 5 * 1024 * 1024) {
+        toast.error("File is too large. Maximum size is 5MB.");
+        return;
+      }
+      
+      // Validate file type
+      const allowedTypes = ['.pdf', '.doc', '.docx'];
+      const fileExtension = file.name.substring(file.name.lastIndexOf('.')).toLowerCase();
+      if (!allowedTypes.includes(fileExtension)) {
+        toast.error("Invalid file type. Only PDF, DOC, or DOCX files are allowed.");
+        return;
+      }
+      
+      setResumeFile(file);
     }
   };
   
@@ -45,6 +61,11 @@ export const ResumeUploadModal: React.FC<ResumeUploadModalProps> = ({
     setName("");
     setEmail("");
     setPhone("");
+  };
+  
+  // Safely display the file name
+  const safeDisplayFileName = (fileName: string): string => {
+    return fileName.length > 30 ? fileName.substring(0, 27) + '...' : fileName;
   };
   
   return (
@@ -101,7 +122,7 @@ export const ResumeUploadModal: React.FC<ResumeUploadModalProps> = ({
             <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
               {resumeFile ? (
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">{resumeFile.name}</span>
+                  <span className="text-sm text-gray-600">{safeDisplayFileName(resumeFile.name)}</span>
                   <Button 
                     type="button" 
                     variant="ghost" 

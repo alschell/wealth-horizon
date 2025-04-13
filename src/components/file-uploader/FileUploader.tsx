@@ -1,4 +1,3 @@
-
 import { useState, useRef } from "react";
 import { toast } from "@/components/ui/use-toast";
 import DropZone from "./DropZone";
@@ -32,6 +31,10 @@ const FileUploader = ({
   const [fileToDeleteIndex, setFileToDeleteIndex] = useState<number | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const sanitizeFileName = (filename: string): string => {
+    return filename.replace(/[^a-zA-Z0-9.-_\s]/g, '');
+  };
+
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = Array.from(event.target.files || []);
     processFiles(selectedFiles);
@@ -39,20 +42,19 @@ const FileUploader = ({
 
   const processFiles = (selectedFiles: File[]) => {
     const validFiles = selectedFiles.filter(file => {
-      // Check file size
+      const sanitizedName = sanitizeFileName(file.name);
+      
       const isValidSize = file.size <= maxSize * 1024 * 1024;
       if (!isValidSize) {
         toast({
           title: "File too large",
-          description: `${file.name} exceeds the ${maxSize}MB limit.`,
+          description: `${sanitizedName} exceeds the ${maxSize}MB limit.`,
           variant: "destructive"
         });
         return false;
       }
       
-      // Parse the accept string to proper format for validation
       const acceptTypes = accept.split(',').map(type => {
-        // Convert file extensions to MIME types
         if (type.startsWith('.')) {
           switch (type.toLowerCase()) {
             case '.pdf': return 'application/pdf';
@@ -67,16 +69,13 @@ const FileUploader = ({
         return type;
       });
       
-      // Check if file type is acceptable
       const fileType = file.type;
       const fileExt = file.name.split('.').pop()?.toLowerCase();
       
       const isValidType = acceptTypes.some(type => {
-        // Handle file extensions for cases where browser doesn't provide MIME type
         if (type.includes('*')) {
           return fileType.startsWith(type.split('*')[0]);
         }
-        // Check for extension match if no MIME type is available
         if (!fileType && fileExt) {
           if (accept.includes(`.${fileExt}`)) {
             return true;
@@ -88,7 +87,7 @@ const FileUploader = ({
       if (!isValidType) {
         toast({
           title: "Invalid file type",
-          description: `${file.name} is not a supported file type.`,
+          description: `${sanitizedName} is not a supported file type.`,
           variant: "destructive"
         });
         return false;
@@ -102,9 +101,10 @@ const FileUploader = ({
       setFiles(newFiles);
       onFilesSelected(newFiles);
       
+      const fileCount = validFiles.length;
       toast({
         title: "Files uploaded",
-        description: `${validFiles.length} ${validFiles.length === 1 ? 'file' : 'files'} successfully added.`,
+        description: `${fileCount} ${fileCount === 1 ? 'file' : 'files'} successfully added.`,
       });
     }
   };
@@ -138,7 +138,6 @@ const FileUploader = ({
       setFiles(newFiles);
       onFilesSelected(newFiles);
       
-      // If a custom delete handler was provided, call it as well
       if (onFileDelete) {
         onFileDelete(fileToDeleteIndex);
       }

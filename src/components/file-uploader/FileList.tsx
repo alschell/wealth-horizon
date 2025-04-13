@@ -16,6 +16,20 @@ const FileList: React.FC<FileListProps> = ({
 }) => {
   if (!files.length) return null;
 
+  // Safely display file name (truncate if too long)
+  const safeDisplayFileName = (fileName: string): string => {
+    // Sanitize and truncate file name for display
+    const sanitized = fileName.replace(/[^\w\s.-]/g, '');
+    return sanitized.length > 25 ? sanitized.substring(0, 22) + '...' : sanitized;
+  };
+
+  // Format file size for display
+  const formatFileSize = (bytes: number): string => {
+    if (bytes < 1024) return bytes + ' B';
+    else if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+    else return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+  };
+
   const getFileIcon = (fileName: string) => {
     const extension = fileName.split('.').pop()?.toLowerCase();
     
@@ -36,11 +50,11 @@ const FileList: React.FC<FileListProps> = ({
           <div className="flex items-center space-x-3 overflow-hidden">
             {getFileIcon(file.name)}
             <div className="overflow-hidden">
-              <p className="text-sm font-medium truncate max-w-[200px] sm:max-w-[300px]">
-                {file.name}
+              <p className="text-sm font-medium truncate max-w-[200px] sm:max-w-[300px]" title={file.name}>
+                {safeDisplayFileName(file.name)}
               </p>
               <p className="text-xs text-gray-500">
-                {(file.size / 1024 / 1024).toFixed(2)} MB
+                {formatFileSize(file.size)}
               </p>
             </div>
           </div>
@@ -54,6 +68,7 @@ const FileList: React.FC<FileListProps> = ({
               size="sm"
               className="text-gray-500 hover:text-red-500"
               onClick={() => onDeleteClick(index)}
+              aria-label="Delete file"
             >
               <Trash2 className="h-4 w-4" />
               <span className="sr-only">Delete file</span>

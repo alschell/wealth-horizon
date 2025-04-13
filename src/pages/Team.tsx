@@ -1,4 +1,3 @@
-
 import React from "react";
 import PageTemplate from "@/components/shared/PageTemplate";
 import { Users, Linkedin, Mail, ExternalLink } from "lucide-react";
@@ -10,19 +9,19 @@ import { Helmet } from "react-helmet-async";
 const leadershipTeam = [
   {
     id: 1,
-    name: "Emily Johnson",
+    name: "Alexander Schell",
     title: "Chief Executive Officer",
-    bio: "Emily has over 20 years of experience in wealth management and fintech. Prior to founding WealthHorizon, she was a Managing Director at Goldman Sachs, where she led digital transformation initiatives for the private wealth division.",
+    bio: "Alexander has over a decade of experience in wealth managment and fintech. Prior to founding WealthHorizon, he was an Executive Director at UBS, where he led product development for Global Family Offices & Institutional Clients.",
     image: "/assets/dashboard-preview.png",
-    linkedin: "#emily-johnson"
+    linkedin: "#alexander-schell"
   },
   {
     id: 2,
-    name: "Michael Chen",
+    name: "Hilal Ram",
     title: "Chief Technology Officer",
     bio: "Michael brings 15 years of expertise in building scalable financial technology platforms. Before WealthHorizon, he was the Head of Technology at a leading financial data analytics company and previously held engineering leadership roles at Bloomberg.",
     image: "/assets/dashboard-fallback.png",
-    linkedin: "#michael-chen"
+    linkedin: "#hilal-ram"
   },
   {
     id: 3,

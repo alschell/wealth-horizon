@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { LogOut, Settings, Search } from 'lucide-react';
@@ -17,6 +16,7 @@ const Navigation: React.FC = () => {
   const isLoginPage = location.pathname === '/login';
   const isResetPasswordPage = location.pathname === '/reset-password';
   const isJobDetailPage = location.pathname.match(/^\/careers\/\d+$/); // Check if on job detail page
+  const isTeamPage = location.pathname === '/team'; // Add check for team page
   
   // List of footer pages where navigation should be hidden
   const footerPages = [
@@ -25,7 +25,8 @@ const Navigation: React.FC = () => {
     '/help-center', '/security', '/privacy-policy', '/terms-of-service', '/cookies-policy',
     '/careers/faq', // Add the careers/faq route to hide navigation
     '/api-docs', '/developer-portal', '/sdk', // Add documentation related pages
-    '/user-guides', '/support-ticket', '/community-forum' // Add help center related pages
+    '/user-guides', '/support-ticket', '/community-forum', // Add help center related pages
+    '/team' // Add team page to footer pages list
   ];
   
   // Hide navbar for any route that starts with certain paths
@@ -35,7 +36,7 @@ const Navigation: React.FC = () => {
   };
   
   const isFooterPage = footerPages.includes(location.pathname) || pathStartsWithHidden(location.pathname);
-  const isDashboard = !isOnboarding && !isHomePage && !isLoginPage && !isResetPasswordPage && !isFooterPage && !isJobDetailPage;
+  const isDashboard = !isOnboarding && !isHomePage && !isLoginPage && !isResetPasswordPage && !isFooterPage && !isJobDetailPage && !isTeamPage;
 
   useEffect(() => {
     console.log("Navigation mounted. Homepage:", isHomePage);
@@ -51,7 +52,7 @@ const Navigation: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [scrolled, isHomePage]);
 
-  if (isOnboarding || isLoginPage || isResetPasswordPage || isFooterPage || isJobDetailPage) {
+  if (isOnboarding || isLoginPage || isResetPasswordPage || isFooterPage || isJobDetailPage || isTeamPage) {
     return null;
   }
 

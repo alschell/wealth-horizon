@@ -54,6 +54,7 @@ const Careers = () => {
   const [resumeFile, setResumeFile] = useState<File | null>(null);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState(""); // Added missing phone state
   const [searchTerm, setSearchTerm] = useState("");
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -72,6 +73,7 @@ const Careers = () => {
     setResumeFile(null);
     setName("");
     setEmail("");
+    setPhone("");
   };
 
   const filteredPositions = openPositions.filter(position => 

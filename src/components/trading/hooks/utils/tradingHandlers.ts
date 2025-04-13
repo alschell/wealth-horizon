@@ -7,7 +7,7 @@ import {
   usePreviousStepHandler, 
   useSubmitOrderHandler 
 } from "./handlers";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 
 interface TradingHandlersProps {
   state: TradingFormState;
@@ -17,6 +17,9 @@ interface TradingHandlersProps {
   gtdDate?: Date;
 }
 
+/**
+ * Custom hook for handling trading form actions like navigation and submission
+ */
 export const useTradingHandlers = ({
   state,
   setCurrentStep,
@@ -76,7 +79,9 @@ export const useTradingHandlers = ({
     resetForm
   });
   
-  // Wrap the submit handler to ensure we validate everything before submitting
+  /**
+   * Validates and submits the trading order
+   */
   const handleSubmitOrder = useCallback(() => {
     console.log("Submitting order");
     
@@ -92,14 +97,24 @@ export const useTradingHandlers = ({
     
     // Final validation before submission in a try/catch to prevent crashes
     try {
-      if (
-        !validateInstrumentSelection(state.selectedInstrument) ||
-        !validateOrderExecution(state.orderExecutionType) ||
-        !validateQuantityPrice(state.quantity, state.price, state.orderExecutionType) ||
-        !validateBrokerSelection(state.selectedBroker) ||
-        !validateAllocations(state.currentOrderType, state.order)
-      ) {
-        return;
+      // Run all validations sequentially and exit early if any fail
+      const validations = [
+        { fn: () => validateInstrumentSelection(state.selectedInstrument), message: "Please select a valid instrument" },
+        { fn: () => validateOrderExecution(state.orderExecutionType), message: "Please select a valid order execution type" },
+        { fn: () => validateQuantityPrice(state.quantity, state.price, state.orderExecutionType), message: "Please enter valid quantity and price" },
+        { fn: () => validateBrokerSelection(state.selectedBroker), message: "Please select a broker" },
+        { fn: () => validateAllocations(state.currentOrderType, state.order), message: "Please ensure allocations are valid" }
+      ];
+      
+      for (const validation of validations) {
+        if (!validation.fn()) {
+          toast({
+            title: "Validation Error",
+            description: validation.message,
+            variant: "destructive"
+          });
+          return;
+        }
       }
       
       setIsSubmitting(true);
@@ -109,6 +124,10 @@ export const useTradingHandlers = ({
       setTimeout(() => {
         try {
           submitHandler();
+          toast({
+            title: "Order Submitted",
+            description: "Your order has been submitted successfully",
+          });
         } catch (error) {
           console.error("Error submitting order:", error);
           toast({

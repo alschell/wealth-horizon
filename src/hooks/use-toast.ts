@@ -11,6 +11,8 @@ export type ToastProps = {
 
 /**
  * Custom toast function that wraps Sonner toast with our preferred API
+ * @param props - Toast configuration options
+ * @returns The toast instance
  */
 export function toast(props: ToastProps) {
   const toastOptions: ExternalToast = {
@@ -29,6 +31,7 @@ export function toast(props: ToastProps) {
 
 /**
  * Toast hook that returns the toast function for use in components
+ * @returns Object containing the toast function
  */
 export function useToast() {
   return { toast };

@@ -1,28 +1,8 @@
-
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
-import { History, ArrowLeft, TrendingUp, DollarSign, CreditCard, Clock, FileText, Lock } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import PageHeaderCard from "@/components/dashboard/PageHeaderCard";
-
-interface Activity {
-  id: string;
-  title: string;
-  description: string;
-  timestamp: string;
-  date: string;
-  type: "trade" | "deposit" | "withdrawal" | "login" | "document" | "credit" | "other";
-}
+import { ActivityHeader } from "@/components/activity/ActivityHeader";
+import { ActivityFilters } from "@/components/activity/ActivityFilters";
+import { ActivityList, Activity } from "@/components/activity/ActivityList";
 
 const mockActivities: Activity[] = [
   {
@@ -123,56 +103,36 @@ const mockActivities: Activity[] = [
   },
 ];
 
-const Activity = () => {
+const ActivityPage = () => {
   const [timeFilter, setTimeFilter] = useState<string>("all");
   const [typeFilter, setTypeFilter] = useState<string>("all");
   const [filteredActivities, setFilteredActivities] = useState<Activity[]>(mockActivities);
 
-  const getIcon = (type: string) => {
-    switch (type) {
-      case "trade":
-        return <TrendingUp className="h-5 w-5 text-gray-500" />;
-      case "deposit":
-        return <DollarSign className="h-5 w-5 text-gray-500" />;
-      case "withdrawal":
-        return <DollarSign className="h-5 w-5 text-gray-500" />;
-      case "login":
-        return <Lock className="h-5 w-5 text-gray-500" />;
-      case "document":
-        return <FileText className="h-5 w-5 text-gray-500" />;
-      case "credit":
-        return <CreditCard className="h-5 w-5 text-gray-500" />;
-      default:
-        return <Clock className="h-5 w-5 text-gray-500" />;
-    }
+  const activityCounts = {
+    all: mockActivities.length,
+    trade: mockActivities.filter(a => a.type === "trade").length,
+    funding: mockActivities.filter(a => a.type === "deposit" || a.type === "withdrawal").length,
+    security: mockActivities.filter(a => a.type === "login").length,
   };
 
-  React.useEffect(() => {
-    filterActivities();
-  }, [timeFilter, typeFilter]);
-
-  const filterActivities = () => {
+  useEffect(() => {
     let filtered = [...mockActivities];
     
-    // Filter by type
     if (typeFilter !== "all") {
       filtered = filtered.filter(activity => activity.type === typeFilter);
     }
     
-    // Filter by time
     if (timeFilter === "today") {
       filtered = filtered.filter(activity => activity.timestamp.includes("Today"));
     } else if (timeFilter === "yesterday") {
       filtered = filtered.filter(activity => activity.timestamp.includes("Yesterday"));
     } else if (timeFilter === "week") {
-      // This is simplified - in a real app you'd use date objects to check if within the last 7 days
       filtered = filtered.filter(activity => 
         activity.timestamp.includes("Today") || 
         activity.timestamp.includes("Yesterday") || 
         activity.timestamp.includes("April")
       );
     } else if (timeFilter === "month") {
-      // Simplified for demo - would use proper date filtering in production
       filtered = filtered.filter(activity => 
         !activity.timestamp.includes("March") || 
         parseInt(activity.timestamp.split("March ")[1]) > 5
@@ -180,156 +140,26 @@ const Activity = () => {
     }
     
     setFilteredActivities(filtered);
-  };
+  }, [timeFilter, typeFilter]);
 
   return (
     <DashboardLayout>
       <div className="space-y-6">
-        <div className="flex items-center gap-2 mb-4">
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            onClick={() => window.history.back()}
-            className="flex items-center gap-1"
-          >
-            <ArrowLeft className="h-4 w-4" /> Back to Dashboard
-          </Button>
-        </div>
-        
-        <PageHeaderCard
-          icon={History}
-          title="Activity History"
-          description="View your complete activity history across all accounts and services"
-          iconColor="text-gray-700"
-          iconBgColor="bg-gray-100"
-        />
+        <ActivityHeader />
         
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-          <div className="lg:col-span-1 space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-base">Filters</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Time Period</label>
-                  <Select 
-                    value={timeFilter} 
-                    onValueChange={setTimeFilter}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select time period" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All Time</SelectItem>
-                      <SelectItem value="today">Today</SelectItem>
-                      <SelectItem value="yesterday">Yesterday</SelectItem>
-                      <SelectItem value="week">This Week</SelectItem>
-                      <SelectItem value="month">This Month</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Activity Type</label>
-                  <Select 
-                    value={typeFilter} 
-                    onValueChange={setTypeFilter}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select type" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All Activity</SelectItem>
-                      <SelectItem value="trade">Trades</SelectItem>
-                      <SelectItem value="deposit">Deposits</SelectItem>
-                      <SelectItem value="withdrawal">Withdrawals</SelectItem>
-                      <SelectItem value="login">Security</SelectItem>
-                      <SelectItem value="document">Documents</SelectItem>
-                      <SelectItem value="credit">Credit</SelectItem>
-                      <SelectItem value="other">Other</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                
-                <Button 
-                  variant="outline" 
-                  className="w-full mt-2"
-                  onClick={() => {
-                    setTimeFilter("all");
-                    setTypeFilter("all");
-                  }}
-                >
-                  Clear Filters
-                </Button>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-base">Summary</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm">All Activities</span>
-                    <Badge variant="outline">{mockActivities.length}</Badge>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm">Trading Activities</span>
-                    <Badge variant="outline">{mockActivities.filter(a => a.type === "trade").length}</Badge>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm">Account Funding</span>
-                    <Badge variant="outline">{mockActivities.filter(a => a.type === "deposit" || a.type === "withdrawal").length}</Badge>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm">Security Events</span>
-                    <Badge variant="outline">{mockActivities.filter(a => a.type === "login").length}</Badge>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+          <div className="lg:col-span-1">
+            <ActivityFilters
+              timeFilter={timeFilter}
+              typeFilter={typeFilter}
+              setTimeFilter={setTimeFilter}
+              setTypeFilter={setTypeFilter}
+              activityCounts={activityCounts}
+            />
           </div>
           
           <div className="lg:col-span-3">
-            <Card>
-              <CardHeader className="pb-2">
-                <div className="flex justify-between items-center">
-                  <CardTitle className="text-xl">Activity History</CardTitle>
-                  <Badge className="bg-gray-800">{filteredActivities.length} Activities</Badge>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <ScrollArea className="h-[calc(100vh-240px)]">
-                  {filteredActivities.length > 0 ? (
-                    <div className="space-y-4">
-                      {filteredActivities.map((activity) => (
-                        <div 
-                          key={activity.id}
-                          className="flex items-start p-4 rounded-md bg-white border hover:bg-gray-50 transition-colors"
-                        >
-                          <div className="h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center mr-4">
-                            {getIcon(activity.type)}
-                          </div>
-                          <div className="flex-1">
-                            <div className="flex justify-between">
-                              <h3 className="font-medium">{activity.title}</h3>
-                              <span className="text-sm text-gray-500">{activity.timestamp}</span>
-                            </div>
-                            <p className="text-sm text-gray-500 mt-1">{activity.description}</p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="text-center py-8">
-                      <p className="text-gray-500">No activities match the selected filters</p>
-                    </div>
-                  )}
-                </ScrollArea>
-              </CardContent>
-            </Card>
+            <ActivityList activities={filteredActivities} />
           </div>
         </div>
       </div>
@@ -337,4 +167,4 @@ const Activity = () => {
   );
 };
 
-export default Activity;
+export default ActivityPage;

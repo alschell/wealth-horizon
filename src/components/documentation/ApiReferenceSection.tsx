@@ -4,14 +4,51 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Code } from "lucide-react";
 
+interface ApiSection {
+  title: string;
+  endpoints: number;
+  category: "Core" | "Administrative" | "Integration" | "Security";
+  description?: string;
+}
+
 export const ApiReferenceSection: React.FC = () => {
-  const apiSections = [
-    { title: "Portfolio Management", endpoints: 12, category: "Core" },
-    { title: "Transaction API", endpoints: 8, category: "Core" },
-    { title: "Reporting & Analytics", endpoints: 15, category: "Core" },
-    { title: "User Management", endpoints: 7, category: "Administrative" },
-    { title: "Data Integration", endpoints: 10, category: "Integration" },
-    { title: "Authentication", endpoints: 5, category: "Security" }
+  const apiSections: ApiSection[] = [
+    { 
+      title: "Portfolio Management", 
+      endpoints: 12, 
+      category: "Core",
+      description: "Manage portfolio assets, allocations, and performance tracking"
+    },
+    { 
+      title: "Transaction API", 
+      endpoints: 8, 
+      category: "Core",
+      description: "Execute and monitor financial transactions"
+    },
+    { 
+      title: "Reporting & Analytics", 
+      endpoints: 15, 
+      category: "Core",
+      description: "Generate reports and analyze financial data"
+    },
+    { 
+      title: "User Management", 
+      endpoints: 7, 
+      category: "Administrative",
+      description: "Manage users, roles, and permissions"
+    },
+    { 
+      title: "Data Integration", 
+      endpoints: 10, 
+      category: "Integration",
+      description: "Connect with external data sources and systems"
+    },
+    { 
+      title: "Authentication", 
+      endpoints: 5, 
+      category: "Security",
+      description: "Secure access to API endpoints"
+    }
   ];
 
   return (
@@ -29,7 +66,9 @@ export const ApiReferenceSection: React.FC = () => {
                 {api.category}
               </span>
             </div>
-            <p className="text-gray-500 text-sm mb-4">{api.endpoints} endpoints</p>
+            <p className="text-gray-500 text-sm mb-4">
+              {api.description || `${api.endpoints} endpoints available`}
+            </p>
             <Button 
               variant="outline" 
               size="sm" 

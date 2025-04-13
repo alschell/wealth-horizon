@@ -108,7 +108,7 @@ const AdvisoryBoardSection: React.FC<AdvisoryBoardSectionProps> = ({
       aria-labelledby={accessibilityProps.ariaLabelledBy}
       {...accessibilityProps}
     >
-      {showTitle && (
+      {showTitle && ( 
         <h2 
           id="advisory-board-heading" 
           className="text-2xl font-semibold text-gray-800 mb-6"

@@ -10,7 +10,7 @@ export class TeamError extends Error {
   timestamp: string;
   
   constructor(message: string, options?: { code?: string; details?: Record<string, any>; cause?: Error }) {
-    super(message, { cause: options?.cause });
+    super(message);
     this.name = 'TeamError';
     this.code = options?.code || 'TEAM_ERROR';
     this.details = options?.details || {};
@@ -46,14 +46,62 @@ export class TeamDataError extends TeamError {
   }
 }
 
+// Adding additional error types that were referenced in tests and other files
+export class TeamDataFetchError extends TeamError {
+  constructor(message: string = 'Failed to fetch team data', options?: { details?: Record<string, any>; cause?: Error }) {
+    super(message, { 
+      code: 'TEAM_DATA_FETCH_ERROR',
+      details: options?.details,
+      cause: options?.cause
+    });
+    this.name = 'TeamDataFetchError';
+  }
+}
+
+export class TeamDataValidationError extends TeamError {
+  constructor(message: string = 'Invalid team data structure', options?: { details?: Record<string, any>; cause?: Error }) {
+    super(message, { 
+      code: 'TEAM_DATA_VALIDATION_ERROR',
+      details: options?.details,
+      cause: options?.cause
+    });
+    this.name = 'TeamDataValidationError';
+  }
+}
+
+export class MissingTeamMemberDataError extends TeamDataValidationError {
+  constructor(memberId: string, options?: { details?: Record<string, any>; cause?: Error }) {
+    super(`Missing required data for team member: ${memberId}`, options);
+    this.name = 'MissingTeamMemberDataError';
+  }
+}
+
+export class MissingAdvisorDataError extends TeamDataValidationError {
+  constructor(advisorId: string, options?: { details?: Record<string, any>; cause?: Error }) {
+    super(`Missing required data for advisor: ${advisorId}`, options);
+    this.name = 'MissingAdvisorDataError';
+  }
+}
+
 export class TeamFilterError extends TeamError {
-  constructor(message: string, options?: { details?: Record<string, any>; cause?: Error }) {
+  constructor(message: string = 'Error filtering team data', options?: { details?: Record<string, any>; cause?: Error }) {
     super(message, { 
       code: 'TEAM_FILTER_ERROR',
       details: options?.details,
       cause: options?.cause
     });
     this.name = 'TeamFilterError';
+  }
+}
+
+export class TeamSortError extends TeamError {
+  constructor(message: string = 'Error sorting team data', options?: { details?: Record<string, any>; cause?: Error }) {
+    super(message, { 
+      code: 'TEAM_SORT_ERROR',
+      details: options?.details,
+      cause: options?.cause
+    });
+    this.name = 'TeamSortError';
   }
 }
 

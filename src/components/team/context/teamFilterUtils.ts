@@ -1,4 +1,3 @@
-
 import { TeamMember, Advisor } from '../teamData';
 import { TeamSortOption } from '../TeamFilter';
 import { 

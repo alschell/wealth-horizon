@@ -1,8 +1,9 @@
 
 import { useState, useCallback } from 'react';
 
+// Define validation rules type differently to avoid mapped type syntax issue
 interface FormValidationRules<T> {
-  [K in keyof T]?: (value: T[K]) => string | null;
+  [key: string]: ((value: any) => string | null) | undefined;
 }
 
 interface UseStandardFormProps<T extends Record<string, any>> {
@@ -35,9 +36,9 @@ export function useStandardForm<T extends Record<string, any>>({
     }));
     
     // Validate field if there's a validation rule
-    if (validationRules[name as keyof T]) {
-      const validationFunc = validationRules[name as keyof T];
-      const error = validationFunc ? validationFunc(value as any) : null;
+    if (validationRules[name]) {
+      const validationFunc = validationRules[name];
+      const error = validationFunc ? validationFunc(value) : null;
       
       setErrors(prev => ({
         ...prev,
@@ -61,8 +62,8 @@ export function useStandardForm<T extends Record<string, any>>({
 
     // Check each field with a validation rule
     Object.entries(validationRules).forEach(([field, validateFunc]) => {
-      if (validateFunc) {
-        const error = validateFunc(formData[field as keyof T]);
+      if (validateFunc && field in formData) {
+        const error = validateFunc(formData[field]);
         if (error) {
           newErrors[field] = error;
           isValid = false;

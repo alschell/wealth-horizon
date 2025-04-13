@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { memo } from "react";
 import { useImageErrorHandler } from "@/hooks/useImageErrorHandler";
 
 interface TeamMemberImageProps {
@@ -11,6 +11,7 @@ interface TeamMemberImageProps {
 
 /**
  * Reusable component for team member images with fallback handling
+ * Memoized to prevent unnecessary re-renders
  */
 const TeamMemberImage: React.FC<TeamMemberImageProps> = ({ 
   image, 
@@ -19,17 +20,20 @@ const TeamMemberImage: React.FC<TeamMemberImageProps> = ({
   fallbackImage = '/assets/team/profile-placeholder.jpg'
 }) => {
   const handleImageError = useImageErrorHandler({
-    fallbackImage
+    fallbackImage,
+    logErrors: true
   });
 
   return (
     <img 
       src={image} 
-      alt={name} 
+      alt={`${name} - Team Member`}
       className={className}
       onError={handleImageError}
+      loading="lazy"
     />
   );
 };
 
-export default TeamMemberImage;
+// Memoize the component to prevent unnecessary re-renders
+export default memo(TeamMemberImage);

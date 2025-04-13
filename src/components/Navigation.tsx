@@ -4,6 +4,10 @@ import { useLocation } from 'react-router-dom';
 import { useNavigationRoutes } from './navigation/useNavigationRoutes';
 import { HomeNavigation, DashboardNavigation } from './navigation';
 
+/**
+ * Main navigation component that conditionally renders the appropriate
+ * navigation variant based on the current route
+ */
 const Navigation: React.FC = () => {
   const location = useLocation();
   const { isHomePage, shouldHideNavigation } = useNavigationRoutes(location);

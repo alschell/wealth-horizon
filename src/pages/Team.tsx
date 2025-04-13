@@ -9,10 +9,27 @@ import {
   AdvisoryBoardSection, 
   JoinSection,
   leadershipTeam,
-  advisoryBoard
+  advisoryBoard,
+  useTeamFilters
 } from "@/components/team";
 
+/**
+ * Team page showcasing leadership and advisory board members
+ */
 const Team: React.FC = () => {
+  // Use our new filter hooks
+  const { 
+    filteredItems: filteredLeadership,
+    searchQuery: leadershipSearch,
+    setSearchQuery: setLeadershipSearch
+  } = useTeamFilters(leadershipTeam);
+  
+  const { 
+    filteredItems: filteredAdvisors,
+    searchQuery: advisorsSearch,
+    setSearchQuery: setAdvisorsSearch
+  } = useTeamFilters(advisoryBoard);
+
   return (
     <>
       <Helmet>
@@ -27,11 +44,19 @@ const Team: React.FC = () => {
         icon={Users}
       >
         <div className="space-y-12">
-          <LeadershipSection teamMembers={leadershipTeam} />
+          <LeadershipSection 
+            teamMembers={filteredLeadership} 
+            searchQuery={leadershipSearch}
+            onSearchChange={setLeadershipSearch}
+          />
           
           <Separator />
           
-          <AdvisoryBoardSection advisors={advisoryBoard} />
+          <AdvisoryBoardSection 
+            advisors={filteredAdvisors}
+            searchQuery={advisorsSearch}
+            onSearchChange={setAdvisorsSearch}
+          />
           
           <JoinSection />
         </div>

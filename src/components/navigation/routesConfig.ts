@@ -44,5 +44,25 @@ export const ROUTES_CONFIG = {
   HOME: '/',
   LOGIN: '/login',
   RESET_PASSWORD: '/reset-password',
-  ONBOARDING: '/onboarding'
+  ONBOARDING: '/onboarding',
+
+  // Dashboard routes
+  DASHBOARD: '/dashboard',
+  TRADING: '/trading',
+  ADVICE: '/advice',
+  MARKET_DATA: '/market-data',
+  ANALYZE_WEALTH: '/analyze-wealth',
+  CASHFLOW: '/cashflow-management',
+  SETTINGS: '/settings',
+  
+  // Helper methods
+  isDashboardRoute: (pathname: string): boolean => {
+    return pathname.startsWith('/dashboard') || 
+           pathname === '/trading' ||
+           pathname === '/advice' ||
+           pathname === '/market-data' ||
+           pathname === '/analyze-wealth' ||
+           pathname === '/cashflow-management' ||
+           pathname === '/settings';
+  }
 };

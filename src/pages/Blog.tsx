@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import PageTemplate from "@/components/shared/PageTemplate";
 import { FileText } from "lucide-react";
@@ -84,15 +83,8 @@ const allCategories = ["All Topics", "Investment Strategy", "Market Analysis", "
 const popularTopics = ["Investment Strategy", "Market Analysis", "Wealth Planning", "Regulatory Updates", "Family Governance", "Technology", "ESG", "Private Markets"];
 
 const Blog = () => {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("All Topics");
   const [showBlogPost, setShowBlogPost] = useState(false);
   const [selectedPost, setSelectedPost] = useState<BlogPost | null>(null);
-  
-  // Handle category selection
-  const handleCategorySelect = (category: string) => {
-    setSelectedCategory(category);
-  };
   
   // View blog post
   const viewBlogPost = (post: BlogPost) => {
@@ -125,10 +117,6 @@ const Blog = () => {
           <>
             <BlogList
               posts={blogPosts}
-              searchQuery={searchQuery}
-              setSearchQuery={setSearchQuery}
-              selectedCategory={selectedCategory}
-              handleCategorySelect={handleCategorySelect}
               allCategories={allCategories}
               viewBlogPost={viewBlogPost}
             />
@@ -137,7 +125,11 @@ const Blog = () => {
             
             <PopularTopics 
               topics={popularTopics}
-              handleCategorySelect={handleCategorySelect}
+              handleCategorySelect={() => {
+                setShowBlogPost(false);
+                // Note: We don't directly call handleCategorySelect here anymore
+                // as that's handled within the BlogList component via the hook
+              }}
             />
             
             <NewsletterSubscription />

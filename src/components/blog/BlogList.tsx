@@ -4,41 +4,27 @@ import { Button } from "@/components/ui/button";
 import { BlogCard } from "./BlogCard";
 import { BlogPost } from "./types";
 import { BlogSearch } from "./BlogSearch";
+import { useBlogSearch } from "./hooks/useBlogSearch";
 
 interface BlogListProps {
   posts: BlogPost[];
-  searchQuery: string;
-  setSearchQuery: (query: string) => void;
-  selectedCategory: string;
-  handleCategorySelect: (category: string) => void;
   allCategories: string[];
   viewBlogPost: (post: BlogPost) => void;
 }
 
 export const BlogList: React.FC<BlogListProps> = ({
   posts,
-  searchQuery,
-  setSearchQuery,
-  selectedCategory,
-  handleCategorySelect,
   allCategories,
   viewBlogPost,
 }) => {
-  const filteredPosts = posts.filter(post => {
-    const matchesSearch = post.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                          post.excerpt.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          post.author.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          post.category.toLowerCase().includes(searchQuery.toLowerCase());
-                          
-    const matchesCategory = selectedCategory === "All Topics" || post.category === selectedCategory;
-    
-    return matchesSearch && matchesCategory;
-  });
-
-  const resetFilters = () => {
-    setSearchQuery("");
-    handleCategorySelect("All Topics");
-  };
+  const {
+    searchQuery,
+    setSearchQuery,
+    selectedCategory,
+    handleCategorySelect,
+    filteredPosts,
+    resetFilters
+  } = useBlogSearch({ posts });
 
   return (
     <section className="space-y-6">

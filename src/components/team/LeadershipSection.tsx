@@ -1,6 +1,5 @@
-
 import React from "react";
-import { LinkedIn, Twitter } from "lucide-react";
+import { Linkedin, Twitter } from "lucide-react";
 import { useImageErrorHandler } from "@/hooks/useImageErrorHandler";
 import { TeamMember } from "./teamData";
 
@@ -38,7 +37,7 @@ const LeadershipSection: React.FC<LeadershipSectionProps> = ({ teamMembers }) =>
                     rel="noopener noreferrer"
                     className="text-gray-600 hover:text-indigo-600"
                   >
-                    <LinkedIn size={18} />
+                    <Linkedin size={18} />
                     <span className="sr-only">LinkedIn profile</span>
                   </a>
                 )}

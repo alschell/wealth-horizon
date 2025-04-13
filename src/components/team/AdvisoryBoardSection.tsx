@@ -1,6 +1,5 @@
-
 import React from "react";
-import { LinkedIn } from "lucide-react";
+import { Linkedin } from "lucide-react";
 import { useImageErrorHandler } from "@/hooks/useImageErrorHandler";
 import { Advisor } from "./teamData";
 
@@ -40,7 +39,7 @@ const AdvisoryBoardSection: React.FC<AdvisoryBoardSectionProps> = ({ advisors })
                   rel="noopener noreferrer"
                   className="mt-2 text-gray-600 hover:text-indigo-600"
                 >
-                  <LinkedIn size={18} />
+                  <Linkedin size={18} />
                   <span className="sr-only">LinkedIn profile</span>
                 </a>
               )}

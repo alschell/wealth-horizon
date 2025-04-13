@@ -1,3 +1,4 @@
+
 import React from "react";
 import { HelmetProvider } from "react-helmet-async";
 import { Toaster } from "@/components/ui/toaster";
@@ -138,6 +139,7 @@ function App() {
             <Route path="/careers/faq" element={<CareersFAQ />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/press" element={<Press />} />
+            <Route path="/team" element={<Team />} />
             <Route path="/documentation" element={<Documentation />} />
             <Route path="/help-center" element={<HelpCenter />} />
             <Route path="/security" element={<Security />} />

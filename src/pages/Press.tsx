@@ -1,12 +1,11 @@
-
 import React from "react";
 import PageTemplate from "@/components/shared/PageTemplate";
 import { Newspaper, Award, Calendar, ExternalLink, Download, Mail } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Helmet } from "react-helmet-async";
+import { Link } from "react-router-dom";
 
-// Updated press releases with more realistic content
 const pressReleases = [
   {
     id: 1,
@@ -38,7 +37,6 @@ const pressReleases = [
   }
 ];
 
-// Enhanced media features with more realistic content
 const mediaFeatures = [
   {
     id: 1,
@@ -74,7 +72,6 @@ const mediaFeatures = [
   }
 ];
 
-// Enhanced awards data
 const awards = [
   { 
     year: "2025", 
@@ -97,7 +94,6 @@ const awards = [
 ];
 
 const Press = () => {
-  // Function to handle image loading errors
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
     e.currentTarget.src = '/assets/dashboard-fallback.png';
   };
@@ -191,14 +187,14 @@ const Press = () => {
           <section className="bg-gray-50 rounded-xl p-8">
             <h2 className="text-2xl font-semibold text-gray-800 mb-4">Media Inquiries</h2>
             <p className="text-gray-600 mb-6">
-              For press inquiries, interview requests, or media resources, please contact our communications team at <a href="mailto:press@wealthhorizon.com" className="text-indigo-600 hover:underline">press@wealthhorizon.com</a>.
+              For press inquiries, interview requests, or media resources, please contact our communications team at <a href="mailto:media@wealthhorizon.ai" className="text-indigo-600 hover:underline">media@wealthhorizon.ai</a>.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Button className="flex items-center gap-2">
                 <Download size={16} /> Download Press Kit
               </Button>
               <Button variant="outline" className="flex items-center gap-2" asChild>
-                <a href="mailto:press@wealthhorizon.com">
+                <a href="mailto:media@wealthhorizon.ai">
                   <Mail size={16} /> Contact Media Relations
                 </a>
               </Button>
@@ -211,10 +207,10 @@ const Press = () => {
               <div className="bg-white border border-gray-100 rounded-lg shadow-sm p-6">
                 <h3 className="text-lg font-semibold text-gray-800 mb-3">About WealthHorizon</h3>
                 <p className="text-gray-600 mb-4">
-                  WealthHorizon is a leading wealth management technology provider for family offices and ultra-high-net-worth individuals. Founded in 2018, we now serve over 200 family offices across 15 countries with our comprehensive wealth management platform.
+                  WealthHorizon is a leading wealth management technology provider for family offices and ultra-high-net-worth individuals. Founded in 2025, we now serve over 50 family offices across 15 countries with our comprehensive wealth management platform.
                 </p>
                 <Button variant="outline" size="sm" asChild>
-                  <a href="#about">Learn More</a>
+                  <Link to="/about">Learn More</Link>
                 </Button>
               </div>
               <div className="bg-white border border-gray-100 rounded-lg shadow-sm p-6">
@@ -223,7 +219,7 @@ const Press = () => {
                   Our leadership team brings together expertise from wealth management, financial services, and technology to build solutions that address the unique needs of family offices and high-net-worth individuals.
                 </p>
                 <Button variant="outline" size="sm" asChild>
-                  <a href="#leadership">Meet the Team</a>
+                  <Link to="/team">Meet the Team</Link>
                 </Button>
               </div>
             </div>

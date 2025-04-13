@@ -5,6 +5,7 @@ import FileList from "./FileList";
 import DeleteFileDialog from "./DeleteFileDialog";
 import { useFileUploader } from "./useFileUploader";
 import { Progress } from "@/components/ui/progress";
+import { announceToScreenReader } from "@/utils/a11y";
 
 // Default max size in MB
 const DEFAULT_MAX_SIZE = 10;
@@ -68,6 +69,7 @@ const FileUploader = ({
               setTimeout(() => {
                 setIsUploading(false);
                 onFilesSelected(selectedFiles);
+                announceToScreenReader("File upload complete", "polite");
               }, 500);
               return 100;
             }

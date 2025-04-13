@@ -4,6 +4,27 @@ import { Helmet } from "react-helmet-async";
 import { LandingLayout } from "@/components/landing";
 
 const LandingPage: React.FC = () => {
+  // Structured data for rich search results
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Wealth Horizon",
+    "url": "https://wealthhorizon.com",
+    "logo": "https://wealthhorizon.com/logo.png",
+    "description": "Wealth Horizon provides comprehensive wealth management solutions for family offices and high-net-worth individuals.",
+    "sameAs": [
+      "https://twitter.com/wealthhorizon",
+      "https://www.linkedin.com/company/wealth-horizon",
+      "https://www.facebook.com/wealthhorizon"
+    ],
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "telephone": "+1-555-123-4567",
+      "contactType": "customer service",
+      "availableLanguage": ["English"]
+    }
+  };
+
   return (
     <>
       <Helmet>
@@ -13,10 +34,21 @@ const LandingPage: React.FC = () => {
         <meta property="og:title" content="Wealth Horizon | Intelligent Wealth Management" />
         <meta property="og:description" content="Comprehensive wealth management solutions for family offices and high-net-worth individuals." />
         <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://wealthhorizon.com/" />
+        <meta property="og:image" content="https://wealthhorizon.com/og-image.jpg" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Wealth Horizon | Intelligent Wealth Management" />
         <meta name="twitter:description" content="Comprehensive wealth management solutions for family offices." />
+        <meta name="twitter:image" content="https://wealthhorizon.com/twitter-image.jpg" />
         <link rel="canonical" href="https://wealthhorizon.com/" />
+        
+        {/* Add language and direction */}
+        <html lang="en" dir="ltr" />
+        
+        {/* Add structured data for rich search results */}
+        <script type="application/ld+json">
+          {JSON.stringify(structuredData)}
+        </script>
       </Helmet>
       <LandingLayout />
     </>

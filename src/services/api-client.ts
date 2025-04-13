@@ -1,4 +1,3 @@
-
 // Initialize React Query client - but don't export it directly
 // It should only be used within React components
 const API_BASE_URL = "/api";
@@ -6,11 +5,17 @@ const API_BASE_URL = "/api";
 interface ApiError extends Error {
   status?: number;
   data?: any;
+  endpoint?: string;
+  timestamp?: string;
 }
 
-// Simple in-memory cache implementation
-const cache = new Map<string, { data: any, timestamp: number }>();
+// Enhanced cache implementation with TTL and cache invalidation strategies
+const cache = new Map<string, { data: any, timestamp: number, etag?: string }>();
 const CACHE_TTL = 5 * 60 * 1000; // 5 minutes in milliseconds
+const CACHE_STALE_WHILE_REVALIDATE = 30 * 60 * 1000; // 30 minutes in milliseconds
+
+// Track cache tags for more granular cache invalidation
+const cacheTagsMap = new Map<string, Set<string>>();
 
 // Add CSRF token handling
 const getCsrfToken = (): string => {
@@ -87,10 +92,24 @@ const sanitizeEndpoint = (endpoint: string): string => {
 };
 
 // Helper to handle API response
-const handleResponse = async <T>(response: Response): Promise<T> => {
-  if (!response.ok) {
+const handleResponse = async <T>(response: Response, endpoint: string): Promise<T> => {
+  import { validateCorsHeaders, validateNoSniff, isSuccessResponse } from '@/utils/http-validation';
+  
+  // Validate CORS headers for cross-origin requests
+  if (!validateCorsHeaders(response)) {
+    console.warn(`Missing CORS headers in response from ${endpoint}`);
+  }
+  
+  // Validate nosniff header
+  if (!validateNoSniff(response)) {
+    console.warn(`Missing X-Content-Type-Options: nosniff in response from ${endpoint}`);
+  }
+  
+  if (!isSuccessResponse(response)) {
     const error: ApiError = new Error(`API error: ${response.status}`);
     error.status = response.status;
+    error.endpoint = endpoint;
+    error.timestamp = new Date().toISOString();
     
     try {
       error.data = await response.json();
@@ -100,13 +119,17 @@ const handleResponse = async <T>(response: Response): Promise<T> => {
     
     // Log structured error information for debugging
     console.error(`API Error [${response.status}]:`, {
-      endpoint: response.url,
+      endpoint,
       statusText: response.statusText,
-      errorData: error.data
+      errorData: error.data,
+      timestamp: error.timestamp
     });
     
     throw error;
   }
+  
+  // Store ETag for conditional requests if available
+  const etag = response.headers.get('ETag');
   
   // For non-JSON responses or empty responses
   if (response.status === 204 || response.headers.get('Content-Length') === '0') {
@@ -116,7 +139,8 @@ const handleResponse = async <T>(response: Response): Promise<T> => {
   // Check content type to determine how to parse the response
   const contentType = response.headers.get('Content-Type');
   if (contentType && contentType.includes('application/json')) {
-    return await response.json();
+    const data = await response.json();
+    return { data, etag } as T;
   }
   
   return {} as T;
@@ -131,42 +155,108 @@ const isCacheValid = (cacheKey: string): boolean => {
   return now - cachedItem.timestamp < CACHE_TTL;
 };
 
+// Check if the cached data is stale but still usable
+const isCacheStale = (cacheKey: string): boolean => {
+  const cachedItem = cache.get(cacheKey);
+  if (!cachedItem) return false;
+  
+  const now = Date.now();
+  const age = now - cachedItem.timestamp;
+  return age >= CACHE_TTL && age < CACHE_STALE_WHILE_REVALIDATE;
+};
+
+// Associate a cache key with tags for invalidation
+const tagCacheItem = (cacheKey: string, tags: string[] = []): void => {
+  tags.forEach(tag => {
+    if (!cacheTagsMap.has(tag)) {
+      cacheTagsMap.set(tag, new Set());
+    }
+    cacheTagsMap.get(tag)?.add(cacheKey);
+  });
+};
+
 // Generic API client with type safety
 export const apiClient = {
-  get: async <T>(endpoint: string, skipCache = false): Promise<T> => {
+  get: async <T>(endpoint: string, options: {
+    skipCache?: boolean,
+    cacheTags?: string[],
+    signal?: AbortSignal,
+    headers?: HeadersInit
+  } = {}): Promise<T> => {
+    const { skipCache = false, cacheTags = [], signal, headers = {} } = options;
+    
     try {
       const sanitizedEndpoint = sanitizeEndpoint(endpoint);
       const url = `${API_BASE_URL}${sanitizedEndpoint}`;
+      const cacheKey = url;
       
       // Check cache first if not explicitly skipped
       if (!skipCache) {
-        const cacheKey = url;
+        // If cache is valid, use it
         if (isCacheValid(cacheKey)) {
           return cache.get(cacheKey)!.data as T;
         }
+        
+        // If cache is stale but still usable, use it and fetch in background
+        if (isCacheStale(cacheKey)) {
+          const staleData = cache.get(cacheKey)!.data as T;
+          
+          // Background fetch to update cache
+          setTimeout(() => {
+            apiClient.get<T>(endpoint, { skipCache: true, cacheTags });
+          }, 0);
+          
+          return staleData;
+        }
+      }
+      
+      // Prepare for conditional request if we have an ETag
+      const cachedItem = cache.get(cacheKey);
+      const conditionalHeaders: HeadersInit = { ...createHeaders(), ...headers };
+      
+      if (cachedItem?.etag) {
+        conditionalHeaders['If-None-Match'] = cachedItem.etag;
       }
       
       const response = await fetch(url, {
         method: 'GET',
-        headers: createHeaders(),
-        credentials: 'same-origin'
+        headers: conditionalHeaders,
+        credentials: 'same-origin',
+        signal
       });
       
-      const data = await handleResponse<T>(response);
+      // Handle 304 Not Modified
+      if (response.status === 304 && cachedItem) {
+        cachedItem.timestamp = Date.now(); // Refresh timestamp
+        return cachedItem.data as T;
+      }
+      
+      const { data, etag } = await handleResponse<any>(response, endpoint);
       
       // Cache the successful response
       if (!skipCache) {
-        cache.set(url, { data, timestamp: Date.now() });
+        cache.set(cacheKey, { data, timestamp: Date.now(), etag });
+        tagCacheItem(cacheKey, cacheTags);
       }
       
-      return data;
+      return data as T;
     } catch (error) {
-      console.error(`API GET error for ${endpoint}:`, error);
+      if (error instanceof DOMException && error.name === 'AbortError') {
+        console.log(`Request to ${endpoint} was aborted`);
+      } else {
+        console.error(`API GET error for ${endpoint}:`, error);
+      }
       throw error;
     }
   },
   
-  post: async <T>(endpoint: string, data: any): Promise<T> => {
+  post: async <T>(endpoint: string, data: any, options: {
+    signal?: AbortSignal,
+    headers?: HeadersInit,
+    invalidateTags?: string[]
+  } = {}): Promise<T> => {
+    const { signal, headers = {}, invalidateTags = [] } = options;
+    
     try {
       const sanitizedEndpoint = sanitizeEndpoint(endpoint);
       const url = `${API_BASE_URL}${sanitizedEndpoint}`;
@@ -174,19 +264,37 @@ export const apiClient = {
       
       const response = await fetch(url, {
         method: 'POST',
-        headers: createHeaders(),
+        headers: { ...createHeaders(), ...headers },
         credentials: 'same-origin',
-        body: JSON.stringify(sanitizedData)
+        body: JSON.stringify(sanitizedData),
+        signal
       });
       
-      return handleResponse<T>(response);
+      const result = await handleResponse<T>(response, endpoint);
+      
+      // Invalidate relevant cache entries
+      if (invalidateTags.length > 0) {
+        apiClient.invalidateTags(invalidateTags);
+      }
+      
+      return result;
     } catch (error) {
-      console.error(`API POST error for ${endpoint}:`, error);
+      if (error instanceof DOMException && error.name === 'AbortError') {
+        console.log(`Request to ${endpoint} was aborted`);
+      } else {
+        console.error(`API POST error for ${endpoint}:`, error);
+      }
       throw error;
     }
   },
   
-  put: async <T>(endpoint: string, data: any): Promise<T> => {
+  put: async <T>(endpoint: string, data: any, options: {
+    signal?: AbortSignal,
+    headers?: HeadersInit,
+    invalidateTags?: string[]
+  } = {}): Promise<T> => {
+    const { signal, headers = {}, invalidateTags = [] } = options;
+    
     try {
       const sanitizedEndpoint = sanitizeEndpoint(endpoint);
       const url = `${API_BASE_URL}${sanitizedEndpoint}`;
@@ -194,37 +302,78 @@ export const apiClient = {
       
       const response = await fetch(url, {
         method: 'PUT',
-        headers: createHeaders(),
+        headers: { ...createHeaders(), ...headers },
         credentials: 'same-origin',
-        body: JSON.stringify(sanitizedData)
+        body: JSON.stringify(sanitizedData),
+        signal
       });
       
-      return handleResponse<T>(response);
+      const result = await handleResponse<T>(response, endpoint);
+      
+      // Invalidate relevant cache entries
+      if (invalidateTags.length > 0) {
+        apiClient.invalidateTags(invalidateTags);
+      }
+      
+      return result;
     } catch (error) {
-      console.error(`API PUT error for ${endpoint}:`, error);
+      if (error instanceof DOMException && error.name === 'AbortError') {
+        console.log(`Request to ${endpoint} was aborted`);
+      } else {
+        console.error(`API PUT error for ${endpoint}:`, error);
+      }
       throw error;
     }
   },
   
-  delete: async <T>(endpoint: string): Promise<T> => {
+  delete: async <T>(endpoint: string, options: {
+    signal?: AbortSignal,
+    headers?: HeadersInit,
+    invalidateTags?: string[]
+  } = {}): Promise<T> => {
+    const { signal, headers = {}, invalidateTags = [] } = options;
+    
     try {
       const sanitizedEndpoint = sanitizeEndpoint(endpoint);
       const url = `${API_BASE_URL}${sanitizedEndpoint}`;
       
       const response = await fetch(url, {
         method: 'DELETE',
-        headers: createHeaders(),
-        credentials: 'same-origin'
+        headers: { ...createHeaders(), ...headers },
+        credentials: 'same-origin',
+        signal
       });
       
-      return handleResponse<T>(response);
+      const result = await handleResponse<T>(response, endpoint);
+      
+      // Invalidate relevant cache entries
+      if (invalidateTags.length > 0) {
+        apiClient.invalidateTags(invalidateTags);
+      }
+      
+      return result;
     } catch (error) {
-      console.error(`API DELETE error for ${endpoint}:`, error);
+      if (error instanceof DOMException && error.name === 'AbortError') {
+        console.log(`Request to ${endpoint} was aborted`);
+      } else {
+        console.error(`API DELETE error for ${endpoint}:`, error);
+      }
       throw error;
     }
   },
   
-  uploadFile: async <T>(endpoint: string, file: File, additionalData?: Record<string, any>): Promise<T> => {
+  uploadFile: async <T>(
+    endpoint: string, 
+    file: File, 
+    options: {
+      additionalData?: Record<string, any>,
+      onProgress?: (progress: number) => void,
+      signal?: AbortSignal,
+      invalidateTags?: string[]
+    } = {}
+  ): Promise<T> => {
+    const { additionalData, onProgress, signal, invalidateTags = [] } = options;
+    
     try {
       const sanitizedEndpoint = sanitizeEndpoint(endpoint);
       const url = `${API_BASE_URL}${sanitizedEndpoint}`;
@@ -238,6 +387,77 @@ export const apiClient = {
         });
       }
       
+      // Use XMLHttpRequest for progress monitoring
+      if (onProgress) {
+        return new Promise((resolve, reject) => {
+          const xhr = new XMLHttpRequest();
+          
+          xhr.open('POST', url, true);
+          
+          // Add headers
+          xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+          const csrfToken = getCsrfToken();
+          if (csrfToken) {
+            xhr.setRequestHeader('X-CSRF-Token', csrfToken);
+          }
+          
+          // Set up progress handler
+          xhr.upload.onprogress = (event) => {
+            if (event.lengthComputable) {
+              const percentComplete = Math.round((event.loaded / event.total) * 100);
+              onProgress(percentComplete);
+            }
+          };
+          
+          // Set up completion handlers
+          xhr.onload = function() {
+            if (xhr.status >= 200 && xhr.status < 300) {
+              try {
+                const response = JSON.parse(xhr.responseText);
+                
+                // Invalidate relevant cache entries
+                if (invalidateTags.length > 0) {
+                  apiClient.invalidateTags(invalidateTags);
+                }
+                
+                resolve(response as T);
+              } catch (e) {
+                reject(new Error('Invalid JSON response'));
+              }
+            } else {
+              const error: ApiError = new Error(`Upload failed: ${xhr.status}`);
+              error.status = xhr.status;
+              error.endpoint = endpoint;
+              
+              try {
+                error.data = JSON.parse(xhr.responseText);
+              } catch {
+                error.data = xhr.responseText || 'Unknown error';
+              }
+              
+              reject(error);
+            }
+          };
+          
+          xhr.onerror = function() {
+            reject(new Error('Network error during upload'));
+          };
+          
+          xhr.onabort = function() {
+            reject(new Error('Upload aborted'));
+          };
+          
+          // Send the request
+          xhr.send(formData);
+          
+          // Attach abort signal if provided
+          if (signal) {
+            signal.onabort = () => xhr.abort();
+          }
+        });
+      }
+      
+      // Fallback to fetch for simple uploads without progress
       const response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -245,15 +465,29 @@ export const apiClient = {
           'X-CSRF-Token': getCsrfToken()
         },
         credentials: 'same-origin',
-        body: formData
+        body: formData,
+        signal
       });
       
-      return handleResponse<T>(response);
+      const result = await handleResponse<T>(response, endpoint);
+      
+      // Invalidate relevant cache entries
+      if (invalidateTags.length > 0) {
+        apiClient.invalidateTags(invalidateTags);
+      }
+      
+      return result;
     } catch (error) {
-      console.error(`API file upload error for ${endpoint}:`, error);
+      if (error instanceof DOMException && error.name === 'AbortError') {
+        console.log(`Upload to ${endpoint} was aborted`);
+      } else {
+        console.error(`API file upload error for ${endpoint}:`, error);
+      }
       throw error;
     }
   },
+  
+  // Improved cache management functions
   
   // Clear the cache for specific endpoints or all cached data
   clearCache: (endpoint?: string) => {
@@ -263,6 +497,30 @@ export const apiClient = {
       cache.delete(url);
     } else {
       cache.clear();
+      cacheTagsMap.clear();
+    }
+  },
+  
+  // Invalidate cache entries by tags
+  invalidateTags: (tags: string[]) => {
+    tags.forEach(tag => {
+      const cacheKeys = cacheTagsMap.get(tag);
+      if (cacheKeys) {
+        cacheKeys.forEach(key => {
+          cache.delete(key);
+        });
+        cacheTagsMap.delete(tag);
+      }
+    });
+  },
+  
+  // Prefetch and cache data
+  prefetch: async <T>(endpoint: string, cacheTags: string[] = []): Promise<void> => {
+    try {
+      await apiClient.get<T>(endpoint, { cacheTags });
+      console.log(`Prefetched: ${endpoint}`);
+    } catch (error) {
+      console.error(`Prefetch error for ${endpoint}:`, error);
     }
   }
 };

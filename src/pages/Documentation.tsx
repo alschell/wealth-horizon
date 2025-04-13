@@ -4,7 +4,7 @@ import { BookOpen, FileText, Code, Link, Download, Copy, ExternalLink, CheckCirc
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
 
 const API_DOCS_URL = "/api-docs";

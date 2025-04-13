@@ -1,4 +1,3 @@
-
 /**
  * useFormSubmission hook
  * 
@@ -10,7 +9,7 @@
  */
 
 import { useState, useCallback } from 'react';
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/hooks/use-toast';
 import { announceToScreenReader } from '@/utils/a11y';
 
 interface UseFormSubmissionProps<T> {
@@ -31,23 +30,6 @@ interface UseFormSubmissionProps<T> {
 /**
  * Hook for handling form submission logic including validation,
  * loading states, and success/error handling.
- * 
- * @example
- * ```tsx
- * const {
- *   isSubmitting,
- *   submissionError,
- *   isSuccess,
- *   handleSubmit,
- *   resetFormState
- * } = useFormSubmission({
- *   onSubmit: async (data) => await api.submitForm(data),
- *   onSuccess: () => router.push('/success'),
- *   validateForm: () => !Object.keys(errors).length,
- *   successMessage: 'Form submitted successfully',
- *   errorMessage: 'Error submitting form'
- * });
- * ```
  */
 export function useFormSubmission<T>({
   onSubmit,

@@ -6,3 +6,10 @@ export interface DocumentFileWithMetadata {
   issueDate: string;
   expiryDate?: string;
 }
+
+export interface Document {
+  id: string;
+  type: string;
+  description: string;
+  file: File | null;
+}

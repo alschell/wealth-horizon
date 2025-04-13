@@ -2,6 +2,7 @@
 import { useDocumentState } from './hooks/useDocumentState';
 import { useDocumentHandlers } from './hooks/useDocumentHandlers';
 import { useFormSubmission } from './hooks/useFormSubmission';
+import { DocumentFileWithMetadata } from './types';
 
 export interface DocumentFileWithMetadata {
   id: string;

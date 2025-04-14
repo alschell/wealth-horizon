@@ -1,6 +1,5 @@
 
 import { toast as sonnerToast } from "sonner";
-import { ToastProps as UIToastProps } from "@/components/ui/toast";
 
 // Export types from toast component
 export * from "@/components/ui/toast";
@@ -32,28 +31,6 @@ export function toast(props: Toast) {
     description: description as string,
     duration: duration,
     className: className
-  });
-}
-
-// Named toast functions for different types of notifications
-export function showSuccessToast(title: string, message: string, duration?: number) {
-  sonnerToast.success(title, {
-    description: message,
-    duration: duration
-  });
-}
-
-export function showErrorToast(title: string, message: string, duration?: number) {
-  sonnerToast.error(title, {
-    description: message,
-    duration: duration
-  });
-}
-
-export function showInfoToast(title: string, message: string, duration?: number) {
-  sonnerToast.info(title, {
-    description: message,
-    duration: duration
   });
 }
 

@@ -3,7 +3,7 @@ import { useForm, UseFormProps, FieldValues, UseFormReturn } from 'react-hook-fo
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useCallback } from 'react';
-import { showError, showSuccess } from '@/utils/toast/toastUtils';
+import { showError, showSuccess } from '@/utils/toast';
 
 interface UseFormWithValidationProps<T extends FieldValues> extends UseFormProps<T> {
   schema: z.ZodType<T>;

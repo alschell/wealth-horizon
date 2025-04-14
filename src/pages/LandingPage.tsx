@@ -11,11 +11,20 @@
 import React from "react";
 import { Helmet } from "react-helmet-async"; 
 import { LandingLayout } from "@/components/landing";
+import { useLanguage } from "@/context/LanguageContext";
 
 /**
  * Main landing page with SEO optimization and structured data
  */
 const LandingPage: React.FC = () => {
+  // Try to access language context to verify it's available
+  try {
+    useLanguage();
+    console.log("Language context is available in LandingPage");
+  } catch (error) {
+    console.error("Language context is NOT available in LandingPage:", error);
+  }
+  
   // Structured data for rich search results
   const structuredData = {
     "@context": "https://schema.org",

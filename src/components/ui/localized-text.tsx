@@ -16,22 +16,51 @@ export const LocalizedText: React.FC<LocalizedTextProps> = ({
   html = false
 }) => {
   const [displayText, setDisplayText] = useState<string>(fallback || textKey);
+  const [languageContextAvailable, setLanguageContextAvailable] = useState<boolean>(false);
+  const [currentLanguage, setCurrentLanguage] = useState<string>('en');
   
-  try {
-    // Direct dependency on language to force re-renders
-    const { getLocalizedText, language } = useLanguage();
-    
-    // Make sure component re-renders when language changes
-    useEffect(() => {
-      console.log(`LocalizedText updating for key: ${textKey}, language: ${language}`);
+  // Safely try to access the language context
+  useEffect(() => {
+    try {
+      const { language, getLocalizedText } = useLanguage();
+      setLanguageContextAvailable(true);
+      setCurrentLanguage(language);
+      
+      console.log(`LocalizedText context available for key: ${textKey}, language: ${language}`);
       const localizedText = getLocalizedText(textKey);
       // If we don't have a translation, use the fallback or the key itself
       setDisplayText(localizedText === textKey ? (fallback || textKey) : localizedText);
-    }, [textKey, fallback, language, getLocalizedText]);
-  } catch (error) {
-    // If language context is not available, use fallback or key
-    console.warn('Language context not available, using fallback text');
-  }
+    } catch (error) {
+      // If language context is not available, use fallback or key
+      console.warn(`Language context not available in LocalizedText for key: ${textKey}`, error);
+      setLanguageContextAvailable(false);
+      setDisplayText(fallback || textKey);
+    }
+  }, [textKey, fallback]);
+  
+  // Update the text when language changes, but only if context is available
+  useEffect(() => {
+    if (!languageContextAvailable) return;
+    
+    try {
+      // Direct dependency on language to force re-renders
+      const { getLocalizedText, language } = useLanguage();
+      
+      if (language !== currentLanguage) {
+        console.log(`LocalizedText detected language change from ${currentLanguage} to ${language} for key: ${textKey}`);
+        setCurrentLanguage(language);
+      }
+      
+      // Make sure component re-renders when language changes
+      const localizedText = getLocalizedText(textKey);
+      // If we don't have a translation, use the fallback or the key itself
+      setDisplayText(localizedText === textKey ? (fallback || textKey) : localizedText);
+    } catch (error) {
+      // If language context is lost, use fallback or key
+      console.warn(`Language context lost in LocalizedText for key: ${textKey}`, error);
+      setLanguageContextAvailable(false);
+    }
+  }, [textKey, fallback, languageContextAvailable, currentLanguage]);
   
   if (html) {
     return <span className={className} dangerouslySetInnerHTML={{ __html: displayText }} />;
@@ -42,28 +71,55 @@ export const LocalizedText: React.FC<LocalizedTextProps> = ({
 
 // Helper for localized buttons, headings, etc.
 export const useLocalizedText = () => {
-  const [language, setLanguage] = useState<string>('');
+  const [language, setLanguage] = useState<string>('en');
+  const [languageContextAvailable, setLanguageContextAvailable] = useState<boolean>(false);
   
-  try {
-    const context = useLanguage();
-    
-    // Update local state when language changes to force re-renders
-    useEffect(() => {
+  // Safely try to access the language context
+  useEffect(() => {
+    try {
+      const context = useLanguage();
+      setLanguageContextAvailable(true);
       setLanguage(context.language);
-    }, [context.language]);
+      console.log(`useLocalizedText has access to language context, language: ${context.language}`);
+    } catch (error) {
+      console.warn('Language context not available in useLocalizedText', error);
+      setLanguageContextAvailable(false);
+    }
+  }, []);
+  
+  // Update local state when language changes to force re-renders
+  useEffect(() => {
+    if (!languageContextAvailable) return;
     
-    const t = useCallback((key: string, fallback?: string) => {
+    try {
+      const context = useLanguage();
+      if (language !== context.language) {
+        console.log(`useLocalizedText detected language change from ${language} to ${context.language}`);
+        setLanguage(context.language);
+      }
+    } catch (error) {
+      console.warn('Language context lost in useLocalizedText', error);
+      setLanguageContextAvailable(false);
+    }
+  }, [languageContextAvailable, language]);
+  
+  const t = useCallback((key: string, fallback?: string) => {
+    if (!languageContextAvailable) {
+      return fallback || key;
+    }
+    
+    try {
+      const context = useLanguage();
       const localizedText = context.getLocalizedText(key);
       return localizedText === key ? (fallback || key) : localizedText;
-    }, [context.language, context.getLocalizedText]);
-    
-    return { t, language: context.language };
-  } catch (error) {
-    // If language context is not available, provide a fallback function
-    console.warn('Language context not available in useLocalizedText');
-    return {
-      t: (key: string, fallback?: string) => fallback || key,
-      language: 'en'
-    };
-  }
+    } catch (error) {
+      console.warn(`Error getting translation for key: ${key}`, error);
+      return fallback || key;
+    }
+  }, [languageContextAvailable, language]);
+  
+  return {
+    t,
+    language: languageContextAvailable ? language : 'en'
+  };
 };

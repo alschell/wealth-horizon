@@ -18,21 +18,42 @@ const LandingLayout: React.FC = () => {
   const contactRef = useRef<HTMLDivElement>(null);
   const aboutRef = useRef<HTMLDivElement>(null);
   
-  // Force re-render when language changes
-  const { language } = useLanguage();
-  const [, forceUpdate] = useState({});
+  // Safe access to language context with fallback
+  const [language, setLanguage] = useState<string>('en');
+  const [languageContextAvailable, setLanguageContextAvailable] = useState<boolean>(false);
   
-  // Re-render when language changes
+  // Try to safely access the language context
   useEffect(() => {
-    console.log(`LandingLayout detected language change to: ${language}`);
-    // More aggressive re-rendering strategy
-    forceUpdate({});
-    // Let's try to trigger re-renders in child components too
-    const timer = setTimeout(() => {
-      forceUpdate({});
-    }, 100);
-    return () => clearTimeout(timer);
-  }, [language]);
+    try {
+      const { language: contextLanguage } = useLanguage();
+      console.log(`LandingLayout detected language: ${contextLanguage}`);
+      setLanguage(contextLanguage);
+      setLanguageContextAvailable(true);
+    } catch (error) {
+      console.error("LandingLayout: Language context not available", error);
+      setLanguageContextAvailable(false);
+    }
+  }, []);
+  
+  // Force re-render when language changes if context is available
+  useEffect(() => {
+    if (!languageContextAvailable) return;
+    
+    try {
+      const { language: contextLanguage } = useLanguage();
+      console.log(`LandingLayout detected language change to: ${contextLanguage}`);
+      setLanguage(contextLanguage);
+      
+      // More aggressive re-rendering strategy
+      const timer = setTimeout(() => {
+        console.log("Forcing re-render of LandingLayout");
+        setLanguage(prev => prev); // Force state update to trigger re-render
+      }, 100);
+      return () => clearTimeout(timer);
+    } catch (error) {
+      console.error("LandingLayout: Error accessing language context after initial mount", error);
+    }
+  }, [languageContextAvailable]);
 
   // Handle hash-based navigation
   useEffect(() => {

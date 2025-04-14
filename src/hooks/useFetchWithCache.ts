@@ -1,6 +1,6 @@
 
 import { useQuery, QueryKey, UseQueryOptions } from '@tanstack/react-query';
-import { tryCatch } from '@/utils/errorHandling';
+import { handleError } from '@/utils/errorHandling';
 
 /**
  * Options for the useFetchWithCache hook
@@ -45,17 +45,20 @@ export function useFetchWithCache<TData, TError = unknown>(
   return useQuery({
     queryKey,
     queryFn: async () => {
-      const result = await tryCatch(fetchFn, {
-        fallbackMessage: errorMessage,
-        showToast: showErrorToast,
-        onError: onError as (error: unknown) => void
-      });
-      
-      if (result === undefined) {
-        throw new Error(errorMessage);
+      try {
+        const result = await fetchFn();
+        if (result === undefined) {
+          throw new Error(errorMessage);
+        }
+        return result;
+      } catch (error) {
+        handleError(error, {
+          fallbackMessage: errorMessage,
+          showToast: showErrorToast,
+          onError: onError as (error: unknown) => void
+        });
+        throw error; // Let React Query handle the error state
       }
-      
-      return result;
     },
     ...queryOptions
   });

@@ -1,10 +1,5 @@
 
-/**
- * Core error handling utilities for standardized error management
- */
-
 import { toast } from '@/hooks/use-toast';
-import { z } from 'zod';
 
 /**
  * Standard error response format
@@ -13,22 +8,20 @@ export interface ErrorResponse {
   message: string;
   code?: string;
   details?: Record<string, any>;
-  cause?: Error;
 }
 
 /**
- * Options for error handler
+ * Options for error handling
  */
 export interface ErrorHandlerOptions {
   fallbackMessage?: string;
   logError?: boolean;
   showToast?: boolean;
   silent?: boolean;
-  context?: string;
-  captureException?: boolean;
   actionText?: string;
   action?: () => void;
   onError?: (error: unknown) => void;
+  componentName?: string; // Add this property to fix the error
 }
 
 /**
@@ -43,16 +36,8 @@ export function getErrorMessage(error: unknown, fallbackMessage = "An unexpected
     return error;
   }
   
-  if (error && typeof error === "object") {
-    if ('message' in error) {
-      return String((error as ErrorResponse).message);
-    }
-    
-    // Handle Zod validation errors
-    if (error instanceof z.ZodError) {
-      const firstError = error.errors[0];
-      return firstError ? `Validation error: ${firstError.message}` : 'Validation failed';
-    }
+  if (error && typeof error === "object" && "message" in error) {
+    return String((error as ErrorResponse).message);
   }
   
   return fallbackMessage;
@@ -65,8 +50,7 @@ export function parseError(error: unknown): ErrorResponse {
   if (error instanceof Error) {
     return {
       message: error.message,
-      code: error.name,
-      cause: error
+      code: error.name
     };
   }
   
@@ -78,24 +62,11 @@ export function parseError(error: unknown): ErrorResponse {
   }
   
   if (error && typeof error === "object") {
-    if (error instanceof z.ZodError) {
-      return {
-        message: "Validation failed",
-        code: "VALIDATION_ERROR",
-        details: error.errors.reduce((acc, curr) => {
-          const path = curr.path.join('.');
-          acc[path] = curr.message;
-          return acc;
-        }, {} as Record<string, string>)
-      };
-    }
-    
     if ("message" in error) {
       return {
         message: String((error as ErrorResponse).message),
         code: (error as ErrorResponse).code || "ERROR_OBJECT",
-        details: (error as ErrorResponse).details,
-        cause: (error as ErrorResponse).cause
+        details: (error as ErrorResponse).details
       };
     }
   }
@@ -107,36 +78,6 @@ export function parseError(error: unknown): ErrorResponse {
 }
 
 /**
- * Logs error details to the console
- */
-export function logError(error: unknown, componentName?: string): void {
-  const errorDetails = parseError(error);
-  
-  console.error(
-    `Error${componentName ? ` in ${componentName}` : ''}:`, 
-    {
-      message: errorDetails.message,
-      code: errorDetails.code,
-      details: errorDetails.details
-    }
-  );
-  
-  if (errorDetails.cause && errorDetails.cause.stack) {
-    console.error('Stack trace:', errorDetails.cause.stack);
-  } else if (error instanceof Error && error.stack) {
-    console.error('Stack trace:', error.stack);
-  }
-}
-
-/**
- * Creates a contextual error with component context
- */
-export function createContextualError(message: string, componentName: string): Error {
-  const error = new Error(`[${componentName}] ${message}`);
-  return error;
-}
-
-/**
  * Unified error handling function
  */
 export function handleError(
@@ -145,39 +86,44 @@ export function handleError(
 ): ErrorResponse {
   const { 
     fallbackMessage = "An unexpected error occurred",
-    logError: shouldLogError = true,
-    showToast: shouldShowToast = true,
+    logError = true,
+    showToast = true,
     silent = false,
-    context,
     actionText,
     action,
-    onError
+    onError,
+    componentName
   } = options;
+  
+  // Get error message
+  const errorMessage = getErrorMessage(error, fallbackMessage);
   
   // Parse error details
   const errorDetails = parseError(error);
-  const errorMessage = errorDetails.message || fallbackMessage;
   
-  // Add context to error if provided
-  if (context && !errorDetails.message.includes(`[${context}]`)) {
-    errorDetails.message = `[${context}] ${errorDetails.message}`;
+  // Add component context to error message if provided
+  if (componentName && !silent) {
+    console.error(`Error in ${componentName}:`, {
+      message: errorMessage,
+      code: errorDetails.code,
+      details: errorDetails.details,
+      original: error
+    });
   }
-  
   // Log error to console if enabled
-  if (shouldLogError && !silent) {
+  else if (logError && !silent) {
     console.error("Error:", {
       message: errorMessage,
       code: errorDetails.code,
       details: errorDetails.details,
-      context,
       original: error
     });
   }
   
   // Show toast notification if enabled and not silent
-  if (shouldShowToast && !silent) {
+  if (showToast && !silent) {
     toast({
-      title: context ? `Error in ${context}` : "Error",
+      title: "Error",
       description: errorMessage,
       variant: "destructive",
       action: actionText && action ? {
@@ -196,7 +142,7 @@ export function handleError(
 }
 
 /**
- * Higher-order function to wrap components with error handling
+ * Creates a try-catch wrapper for async functions
  */
 export function withErrorHandling<T extends (...args: any[]) => Promise<any>>(
   fn: T,
@@ -213,16 +159,16 @@ export function withErrorHandling<T extends (...args: any[]) => Promise<any>>(
 }
 
 /**
- * Try-catch utility for async functions
+ * Utility to safely await promises with error handling
  */
-export function tryCatch<T>(
-  promise: Promise<T>,
+export async function tryCatch<T>(
+  fn: () => Promise<T> | T,
   options: ErrorHandlerOptions = {}
-): Promise<[T, null] | [null, ErrorResponse]> {
-  return promise
-    .then((data) => [data, null] as [T, null])
-    .catch((error) => {
-      const errorResponse = handleError(error, options);
-      return [null, errorResponse] as [null, ErrorResponse];
-    });
+): Promise<T | undefined> {
+  try {
+    return await fn();
+  } catch (error) {
+    handleError(error, options);
+    return undefined;
+  }
 }

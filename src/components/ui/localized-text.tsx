@@ -15,15 +15,21 @@ export const LocalizedText: React.FC<LocalizedTextProps> = ({
   className,
   html = false
 }) => {
-  const { getLocalizedText, language } = useLanguage();
-  const [displayText, setDisplayText] = useState<string>('');
+  const [displayText, setDisplayText] = useState<string>(fallback || textKey);
   
-  // Make sure component re-renders when language changes
-  useEffect(() => {
-    const localizedText = getLocalizedText(textKey);
-    // If we don't have a translation, use the fallback or the key itself
-    setDisplayText(localizedText === textKey ? (fallback || textKey) : localizedText);
-  }, [textKey, fallback, language, getLocalizedText]);
+  try {
+    const { getLocalizedText, language } = useLanguage();
+    
+    // Make sure component re-renders when language changes
+    useEffect(() => {
+      const localizedText = getLocalizedText(textKey);
+      // If we don't have a translation, use the fallback or the key itself
+      setDisplayText(localizedText === textKey ? (fallback || textKey) : localizedText);
+    }, [textKey, fallback, language, getLocalizedText]);
+  } catch (error) {
+    // If language context is not available, use fallback or key
+    console.warn('Language context not available, using fallback text');
+  }
   
   if (html) {
     return <span className={className} dangerouslySetInnerHTML={{ __html: displayText }} />;
@@ -34,12 +40,20 @@ export const LocalizedText: React.FC<LocalizedTextProps> = ({
 
 // Helper for localized buttons, headings, etc.
 export const useLocalizedText = () => {
-  const { getLocalizedText, language } = useLanguage();
-  
-  const t = React.useCallback((key: string, fallback?: string) => {
-    const localizedText = getLocalizedText(key);
-    return localizedText === key ? (fallback || key) : localizedText;
-  }, [language, getLocalizedText]);
-  
-  return { t };
+  try {
+    const { getLocalizedText, language } = useLanguage();
+    
+    const t = React.useCallback((key: string, fallback?: string) => {
+      const localizedText = getLocalizedText(key);
+      return localizedText === key ? (fallback || key) : localizedText;
+    }, [language, getLocalizedText]);
+    
+    return { t };
+  } catch (error) {
+    // If language context is not available, provide a fallback function
+    console.warn('Language context not available in useLocalizedText');
+    return {
+      t: (key: string, fallback?: string) => fallback || key
+    };
+  }
 };

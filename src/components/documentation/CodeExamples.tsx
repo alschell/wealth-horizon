@@ -1,341 +1,119 @@
-import React, { useState } from "react";
-import { Check, Copy } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import React from "react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Code } from "lucide-react";
 import { showCopySuccessToast } from "@/utils/toast/documentationToasts";
 
-export const CodeExamples: React.FC = () => {
-  const [copiedCode, setCopiedCode] = useState<string | null>(null);
+interface CodeExamplesProps {}
 
-  const handleCopyClick = (text: string, id: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedCode(id);
+export const CodeExamples: React.FC<CodeExamplesProps> = () => {
+  const handleCopyCode = (code: string) => {
+    navigator.clipboard.writeText(code);
     showCopySuccessToast();
-    
-    setTimeout(() => {
-      setCopiedCode(null);
-    }, 2000);
   };
 
   return (
     <section>
-      <h2 className="text-2xl font-semibold text-gray-800 mb-6">Code Examples</h2>
-      <Tabs defaultValue="javascript" className="w-full">
-        <TabsList className="mb-6">
-          <TabsTrigger value="javascript">JavaScript</TabsTrigger>
-          <TabsTrigger value="python">Python</TabsTrigger>
-          <TabsTrigger value="java">Java</TabsTrigger>
-          <TabsTrigger value="csharp">C#</TabsTrigger>
-        </TabsList>
-        
-        <TabsContent value="javascript" className="space-y-6">
-          <div className="bg-white border border-gray-100 rounded-lg shadow-sm overflow-hidden">
-            <div className="bg-gray-100 px-4 py-2 flex items-center justify-between">
-              <span className="font-medium text-gray-700">Fetch Portfolio Data</span>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                className="h-8 text-gray-500 hover:text-gray-700"
-                onClick={() => handleCopyClick(`
-const fetchPortfolioData = async (apiKey, portfolioId) => {
-  const response = await fetch(
-    \`https://api.wealthhorizon.ai/v1/portfolios/\${portfolioId}\`,
-    {
-      headers: {
-        Authorization: \`Bearer \${apiKey}\`,
-        'Content-Type': 'application/json'
-      }
-    }
-  );
-  
-  if (!response.ok) {
-    throw new Error(\`API error: \${response.status}\`);
-  }
-  
-  return await response.json();
-};`, 'js-fetch')}
-              >
-                {copiedCode === 'js-fetch' ? <Check size={16} className="text-green-500" /> : <Copy size={16} />}
-              </Button>
-            </div>
-            <div className="p-4 bg-gray-900">
-              <pre className="text-sm text-gray-200 overflow-x-auto">
-                <code>{`const fetchPortfolioData = async (apiKey, portfolioId) => {
-  const response = await fetch(
-    \`https://api.wealthhorizon.ai/v1/portfolios/\${portfolioId}\`,
-    {
-      headers: {
-        Authorization: \`Bearer \${apiKey}\`,
-        'Content-Type': 'application/json'
-      }
-    }
-  );
-  
-  if (!response.ok) {
-    throw new Error(\`API error: \${response.status}\`);
-  }
-  
-  return await response.json();
-};`}</code>
-              </pre>
-            </div>
+      <Card>
+        <CardHeader>
+          <div className="flex items-center gap-2">
+            <Code className="h-5 w-5 text-indigo-500" />
+            <CardTitle>Code Examples</CardTitle>
           </div>
-          
-          <div className="bg-white border border-gray-100 rounded-lg shadow-sm overflow-hidden">
-            <div className="bg-gray-100 px-4 py-2 flex items-center justify-between">
-              <span className="font-medium text-gray-700">Create a Transaction</span>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                className="h-8 text-gray-500 hover:text-gray-700"
-                onClick={() => handleCopyClick(`const createTransaction = async (apiKey, transactionData) => {
-  const response = await fetch(
-    'https://api.wealthhorizon.ai/v1/transactions',
-    {
-      method: 'POST',
-      headers: {
-        Authorization: \`Bearer \${apiKey}\`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(transactionData)
-    }
-  );
-  
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.message || \`API error: \${response.status}\`);
-  }
-  
-  return await response.json();
-};`, 'js-create')}
-              >
-                {copiedCode === 'js-create' ? <Check size={16} className="text-green-500" /> : <Copy size={16} />}
-              </Button>
-            </div>
-            <div className="p-4 bg-gray-900">
-              <pre className="text-sm text-gray-200 overflow-x-auto">
-                <code>{`const createTransaction = async (apiKey, transactionData) => {
-  const response = await fetch(
-    'https://api.wealthhorizon.ai/v1/transactions',
-    {
-      method: 'POST',
-      headers: {
-        Authorization: \`Bearer \${apiKey}\`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(transactionData)
-    }
-  );
-  
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.message || \`API error: \${response.status}\`);
-  }
-  
-  return await response.json();
-};`}</code>
-              </pre>
-            </div>
-          </div>
-        </TabsContent>
-        
-        <TabsContent value="python" className="space-y-6">
-          <div className="bg-white border border-gray-100 rounded-lg shadow-sm overflow-hidden">
-            <div className="bg-gray-100 px-4 py-2 flex items-center justify-between">
-              <span className="font-medium text-gray-700">Fetch Portfolio Data</span>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                className="h-8 text-gray-500 hover:text-gray-700"
-                onClick={() => handleCopyClick(`import requests
-
-def fetch_portfolio_data(api_key, portfolio_id):
-    headers = {
-        'Authorization': f'Bearer {api_key}',
-        'Content-Type': 'application/json'
-    }
-    
-    response = requests.get(
-        f'https://api.wealthhorizon.ai/v1/portfolios/{portfolio_id}',
-        headers=headers
-    )
-    
-    response.raise_for_status()
-    return response.json()`, 'py-fetch')}
-              >
-                {copiedCode === 'py-fetch' ? <Check size={16} className="text-green-500" /> : <Copy size={16} />}
-              </Button>
-            </div>
-            <div className="p-4 bg-gray-900">
-              <pre className="text-sm text-gray-200 overflow-x-auto">
-                <code>{`import requests
-
-def fetch_portfolio_data(api_key, portfolio_id):
-    headers = {
-        'Authorization': f'Bearer {api_key}',
-        'Content-Type': 'application/json'
-    }
-    
-    response = requests.get(
-        f'https://api.wealthhorizon.ai/v1/portfolios/{portfolio_id}',
-        headers=headers
-    )
-    
-    response.raise_for_status()
-    return response.json()`}</code>
-              </pre>
-            </div>
-          </div>
-        </TabsContent>
-        
-        <TabsContent value="java" className="space-y-6">
-          <div className="bg-white border border-gray-100 rounded-lg shadow-sm overflow-hidden">
-            <div className="bg-gray-100 px-4 py-2 flex items-center justify-between">
-              <span className="font-medium text-gray-700">Fetch Portfolio Data</span>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                className="h-8 text-gray-500 hover:text-gray-700"
-                onClick={() => handleCopyClick(`import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-
-public class WealthHorizonApi {
-    private final HttpClient httpClient = HttpClient.newBuilder().build();
-    private final String apiKey;
-    
-    public WealthHorizonApi(String apiKey) {
-        this.apiKey = apiKey;
-    }
-    
-    public String fetchPortfolioData(String portfolioId) throws Exception {
-        HttpRequest request = HttpRequest.newBuilder()
-            .uri(URI.create("https://api.wealthhorizon.ai/v1/portfolios/" + portfolioId))
-            .header("Authorization", "Bearer " + apiKey)
-            .header("Content-Type", "application/json")
-            .GET()
-            .build();
+          <CardDescription>
+            Ready-to-use code examples for common integration scenarios.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Tabs defaultValue="javascript">
+            <TabsList className="mb-4">
+              <TabsTrigger value="javascript">JavaScript</TabsTrigger>
+              <TabsTrigger value="python">Python</TabsTrigger>
+              <TabsTrigger value="java">Java</TabsTrigger>
+              <TabsTrigger value="csharp">C#</TabsTrigger>
+            </TabsList>
             
-        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-        
-        if (response.statusCode() != 200) {
-            throw new RuntimeException("API error: " + response.statusCode());
-        }
-        
-        return response.body();
-    }
-}`, 'java-fetch')}
-              >
-                {copiedCode === 'java-fetch' ? <Check size={16} className="text-green-500" /> : <Copy size={16} />}
-              </Button>
-            </div>
-            <div className="p-4 bg-gray-900">
-              <pre className="text-sm text-gray-200 overflow-x-auto">
-                <code>{`import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
+            {/* JavaScript Example */}
+            <TabsContent value="javascript" className="relative">
+              <pre className="rounded-md bg-gray-900 p-4 text-sm text-white overflow-x-auto">
+                <code>{`
+import { WealthHorizonSDK } from '@wealthhorizon/sdk';
 
-public class WealthHorizonApi {
-    private final HttpClient httpClient = HttpClient.newBuilder().build();
-    private final String apiKey;
+// Initialize the SDK with your API key
+const wh = new WealthHorizonSDK({
+  apiKey: 'your-api-key',
+  environment: 'production' // or 'sandbox' for testing
+});
+
+// Fetch portfolio data
+async function getPortfolioData() {
+  try {
+    const portfolios = await wh.portfolios.list();
+    console.log('Portfolios:', portfolios);
     
-    public WealthHorizonApi(String apiKey) {
-        this.apiKey = apiKey;
+    // Get performance metrics
+    if (portfolios.length > 0) {
+      const metrics = await wh.portfolios.getMetrics(portfolios[0].id);
+      console.log('Performance metrics:', metrics);
     }
+  } catch (error) {
+    console.error('Error fetching portfolio data:', error);
+  }
+}
+
+getPortfolioData();
+                `}</code>
+              </pre>
+              <button 
+                onClick={() => handleCopyCode(`import { WealthHorizonSDK } from '@wealthhorizon/sdk';
+
+// Initialize the SDK with your API key
+const wh = new WealthHorizonSDK({
+  apiKey: 'your-api-key',
+  environment: 'production' // or 'sandbox' for testing
+});
+
+// Fetch portfolio data
+async function getPortfolioData() {
+  try {
+    const portfolios = await wh.portfolios.list();
+    console.log('Portfolios:', portfolios);
     
-    public String fetchPortfolioData(String portfolioId) throws Exception {
-        HttpRequest request = HttpRequest.newBuilder()
-            .uri(URI.create("https://api.wealthhorizon.ai/v1/portfolios/" + portfolioId))
-            .header("Authorization", "Bearer " + apiKey)
-            .header("Content-Type", "application/json")
-            .GET()
-            .build();
+    // Get performance metrics
+    if (portfolios.length > 0) {
+      const metrics = await wh.portfolios.getMetrics(portfolios[0].id);
+      console.log('Performance metrics:', metrics);
+    }
+  } catch (error) {
+    console.error('Error fetching portfolio data:', error);
+  }
+}
+
+getPortfolioData();`)}
+                className="absolute top-2 right-2 bg-indigo-500 text-white text-xs rounded px-2 py-1 hover:bg-indigo-600"
+              >
+                Copy
+              </button>
+            </TabsContent>
             
-        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-        
-        if (response.statusCode() != 200) {
-            throw new RuntimeException("API error: " + response.statusCode());
-        }
-        
-        return response.body();
-    }
-}`}</code>
-              </pre>
-            </div>
-          </div>
-        </TabsContent>
-        
-        <TabsContent value="csharp" className="space-y-6">
-          <div className="bg-white border border-gray-100 rounded-lg shadow-sm overflow-hidden">
-            <div className="bg-gray-100 px-4 py-2 flex items-center justify-between">
-              <span className="font-medium text-gray-700">Fetch Portfolio Data</span>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                className="h-8 text-gray-500 hover:text-gray-700"
-                onClick={() => handleCopyClick(`using System;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Threading.Tasks;
-
-public class WealthHorizonApi
-{
-    private readonly HttpClient _httpClient;
-    private readonly string _apiKey;
-    
-    public WealthHorizonApi(string apiKey)
-    {
-        _httpClient = new HttpClient();
-        _apiKey = apiKey;
-        _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
-    }
-    
-    public async Task<string> FetchPortfolioDataAsync(string portfolioId)
-    {
-        var response = await _httpClient.GetAsync($"https://api.wealthhorizon.ai/v1/portfolios/{portfolioId}");
-        
-        response.EnsureSuccessStatusCode();
-        return await response.Content.ReadAsStringAsync();
-    }
-}`, 'csharp-fetch')}
-              >
-                {copiedCode === 'csharp-fetch' ? <Check size={16} className="text-green-500" /> : <Copy size={16} />}
-              </Button>
-            </div>
-            <div className="p-4 bg-gray-900">
-              <pre className="text-sm text-gray-200 overflow-x-auto">
-                <code>{`using System;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Threading.Tasks;
-
-public class WealthHorizonApi
-{
-    private readonly HttpClient _httpClient;
-    private readonly string _apiKey;
-    
-    public WealthHorizonApi(string apiKey)
-    {
-        _httpClient = new HttpClient();
-        _apiKey = apiKey;
-        _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
-    }
-    
-    public async Task<string> FetchPortfolioDataAsync(string portfolioId)
-    {
-        var response = await _httpClient.GetAsync($"https://api.wealthhorizon.ai/v1/portfolios/{portfolioId}");
-        
-        response.EnsureSuccessStatusCode();
-        return await response.Content.ReadAsStringAsync();
-    }
-}`}</code>
-              </pre>
-            </div>
-          </div>
-        </TabsContent>
-      </Tabs>
+            {/* Other language examples would go here */}
+            <TabsContent value="python">
+              {/* Python example code */}
+              <p className="text-center text-gray-500 py-4">Python example coming soon...</p>
+            </TabsContent>
+            
+            <TabsContent value="java">
+              {/* Java example code */}
+              <p className="text-center text-gray-500 py-4">Java example coming soon...</p>
+            </TabsContent>
+            
+            <TabsContent value="csharp">
+              {/* C# example code */}
+              <p className="text-center text-gray-500 py-4">C# example coming soon...</p>
+            </TabsContent>
+          </Tabs>
+        </CardContent>
+      </Card>
     </section>
   );
 };

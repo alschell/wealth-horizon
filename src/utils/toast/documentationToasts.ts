@@ -24,7 +24,7 @@ export function showCopySuccessToast(description = "You can now paste it in your
 }
 
 /**
- * Show a success toast notification for download actions
+ * Show a toast notification for download actions
  */
 export function showDownloadToast(sdkName: string, version: string) {
   // Initial toast for download start

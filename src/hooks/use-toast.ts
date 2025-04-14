@@ -2,27 +2,10 @@
 import { toast as sonnerToast } from "sonner";
 import type { ToastActionElement, ToastProps } from "@/components/ui/toast";
 
-// Re-export the types
+// Export types from toast component
 export * from "@/components/ui/toast";
 
-export function showSuccessToast(title: string, message: string) {
-  sonnerToast.success(message, {
-    description: title
-  });
-}
-
-export function showErrorToast(title: string, message: string) {
-  sonnerToast.error(message, {
-    description: title
-  });
-}
-
-export function showInfoToast(title: string, message: string) {
-  sonnerToast.info(message, {
-    description: title
-  });
-}
-
+// Define the Toast interface with all required properties
 export interface Toast {
   id?: string;
   title?: React.ReactNode;
@@ -33,8 +16,9 @@ export interface Toast {
   className?: string;
 }
 
+// Main toast function that accepts our Toast interface
 export function toast(props: Toast) {
-  const { title, description, variant, action, duration, className } = props;
+  const { title, description, variant, duration, className } = props;
   
   if (variant === "destructive") {
     return sonnerToast.error(title as string, {
@@ -51,6 +35,28 @@ export function toast(props: Toast) {
   });
 }
 
+// Named toast functions for different types of notifications
+export function showSuccessToast(title: string, message: string, duration?: number) {
+  sonnerToast.success(title, {
+    description: message,
+    duration: duration
+  });
+}
+
+export function showErrorToast(title: string, message: string, duration?: number) {
+  sonnerToast.error(title, {
+    description: message,
+    duration: duration
+  });
+}
+
+export function showInfoToast(title: string, message: string, duration?: number) {
+  sonnerToast.info(title, {
+    description: message,
+    duration: duration
+  });
+}
+
 // Stub implementation for useToast that returns the toast function
 export function useToast() {
   return {
@@ -58,11 +64,3 @@ export function useToast() {
     dismiss: sonnerToast.dismiss
   };
 }
-
-// Alternative toast using sonner
-export const sonner = {
-  success: (message: string, options?: any) => sonnerToast.success(message, options),
-  error: (message: string, options?: any) => sonnerToast.error(message, options),
-  info: (message: string, options?: any) => sonnerToast.info(message, options),
-  warning: (message: string, options?: any) => sonnerToast.warning(message, options),
-};

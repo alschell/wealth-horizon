@@ -1,156 +1,166 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+
+import React from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Download, Link as LinkIcon, ExternalLink, Check } from "lucide-react";
-import { showDownloadToast } from "@/utils/toast/documentationToasts";
-import { showDocumentationToast } from "@/utils/toast/documentationToasts";
+import { ArrowRight, BookOpen, Download, FileText, Github, Youtube } from "lucide-react";
+import { showDocumentationToast, showDownloadToast } from "@/utils/toast/documentationToasts";
 
-export const ResourcesSection: React.FC = () => {
-  const [downloadingSDK, setDownloadingSDK] = useState<string | null>(null);
-  const [joiningProgram, setJoiningProgram] = useState(false);
+interface ResourcesSectionProps {}
 
-  const handleDownloadSDK = (sdkName: string, version: string) => {
-    setDownloadingSDK(sdkName);
-    showDownloadToast(sdkName, version);
-    
-    setTimeout(() => {
-      setDownloadingSDK(null);
-    }, 1500);
+export const ResourcesSection: React.FC<ResourcesSectionProps> = () => {
+  const handleResourceClick = (resourceName: string) => {
+    showDocumentationToast(`Accessing ${resourceName}`, "Loading resource");
   };
 
-  const joinDeveloperProgram = () => {
-    setJoiningProgram(true);
-    showDocumentationToast("Joining Developer Program", "Redirecting to developer registration portal");
-    
-    setTimeout(() => {
-      setJoiningProgram(false);
-    }, 1500);
+  const handleDownloadSDK = (sdkName: string, version: string) => {
+    showDownloadToast(sdkName, version);
   };
 
   return (
-    <section className="grid grid-cols-1 md:grid-cols-2 gap-8">
-      <div className="bg-indigo-50 rounded-xl p-8">
-        <div className="flex items-center mb-4">
-          <Download size={24} className="mr-3 text-indigo-600" />
-          <h2 className="text-xl font-semibold text-gray-800">SDKs & Libraries</h2>
-        </div>
-        <p className="text-gray-600 mb-6">
-          Download our official client libraries to simplify integration with your applications.
-        </p>
-        <div className="space-y-3">
-          <Button 
-            variant="outline" 
-            className="w-full justify-start" 
-            onClick={() => handleDownloadSDK("JavaScript", "2.1.0")}
-            disabled={!!downloadingSDK}
-          >
-            <span className="bg-indigo-100 w-8 h-8 rounded-full flex items-center justify-center text-indigo-600 mr-3">
-              JS
-            </span>
-            {downloadingSDK === "JavaScript" ? (
-              <span className="flex items-center">
-                Downloading... <span className="animate-spin ml-2">⟳</span>
-              </span>
-            ) : (
-              "JavaScript SDK v2.1.0"
-            )}
-          </Button>
-          <Button 
-            variant="outline" 
-            className="w-full justify-start"
-            onClick={() => handleDownloadSDK("Python", "1.8.2")}
-            disabled={!!downloadingSDK}
-          >
-            <span className="bg-indigo-100 w-8 h-8 rounded-full flex items-center justify-center text-indigo-600 mr-3">
-              PY
-            </span>
-            {downloadingSDK === "Python" ? (
-              <span className="flex items-center">
-                Downloading... <span className="animate-spin ml-2">⟳</span>
-              </span>
-            ) : (
-              "Python SDK v1.8.2"
-            )}
-          </Button>
-          <Button 
-            variant="outline" 
-            className="w-full justify-start"
-            onClick={() => handleDownloadSDK("Java", "1.5.0")}
-            disabled={!!downloadingSDK}
-          >
-            <span className="bg-indigo-100 w-8 h-8 rounded-full flex items-center justify-center text-indigo-600 mr-3">
-              JV
-            </span>
-            {downloadingSDK === "Java" ? (
-              <span className="flex items-center">
-                Downloading... <span className="animate-spin ml-2">⟳</span>
-              </span>
-            ) : (
-              "Java SDK v1.5.0"
-            )}
-          </Button>
-          <Button 
-            variant="outline" 
-            className="w-full justify-start"
-            onClick={() => handleDownloadSDK(".NET", "1.4.1")}
-            disabled={!!downloadingSDK}
-          >
-            <span className="bg-indigo-100 w-8 h-8 rounded-full flex items-center justify-center text-indigo-600 mr-3">
-              C#
-            </span>
-            {downloadingSDK === ".NET" ? (
-              <span className="flex items-center">
-                Downloading... <span className="animate-spin ml-2">⟳</span>
-              </span>
-            ) : (
-              ".NET SDK v1.4.1"
-            )}
-          </Button>
-        </div>
-      </div>
+    <section>
+      <h2 className="text-2xl font-semibold text-gray-800 mb-6">Additional Resources</h2>
       
-      <div className="bg-gray-800 text-white rounded-xl p-8">
-        <div className="flex items-center mb-4">
-          <LinkIcon size={24} className="mr-3" />
-          <h2 className="text-xl font-semibold text-white">Developer Resources</h2>
-        </div>
-        <p className="mb-6 text-gray-300">
-          Additional resources to help you integrate with the WealthHorizon platform.
-        </p>
-        <ul className="space-y-4 mb-6">
-          <li className="flex items-center">
-            <Check size={16} className="mr-2 text-green-400" />
-            <span>Developer Community Forum</span>
-          </li>
-          <li className="flex items-center">
-            <Check size={16} className="mr-2 text-green-400" />
-            <span>API Changelog & Release Notes</span>
-          </li>
-          <li className="flex items-center">
-            <Check size={16} className="mr-2 text-green-400" />
-            <span>Sample Applications & Repositories</span>
-          </li>
-          <li className="flex items-center">
-            <Check size={16} className="mr-2 text-green-400" />
-            <span>Webhook Integration Guide</span>
-          </li>
-        </ul>
-        <Button 
-          className="flex items-center gap-2 bg-white text-gray-800 hover:bg-gray-100"
-          onClick={joinDeveloperProgram}
-          disabled={joiningProgram}
-          asChild
-        >
-          <Link to="/developer-portal/join">
-            {joiningProgram ? (
-              <span className="flex items-center">
-                Joining Program... <span className="animate-spin ml-2">⟳</span>
-              </span>
-            ) : (
-              <>Join Developer Program <ExternalLink size={16} /></>
-            )}
-          </Link>
-        </Button>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Reference Materials */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <FileText className="h-5 w-5 text-indigo-500" />
+              Reference Materials
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <h3 className="font-medium text-gray-800 mb-1">API Reference</h3>
+              <p className="text-sm text-gray-600 mb-2">Complete API endpoint documentation.</p>
+              <Button 
+                variant="link" 
+                className="p-0 h-auto text-indigo-600 hover:text-indigo-800 font-medium"
+                onClick={() => handleResourceClick("API Reference")}
+              >
+                View API Reference <ArrowRight className="ml-1 h-4 w-4" />
+              </Button>
+            </div>
+            
+            <div>
+              <h3 className="font-medium text-gray-800 mb-1">Data Models</h3>
+              <p className="text-sm text-gray-600 mb-2">Detailed data model documentation.</p>
+              <Button 
+                variant="link" 
+                className="p-0 h-auto text-indigo-600 hover:text-indigo-800 font-medium"
+                onClick={() => handleResourceClick("Data Models")}
+              >
+                View Data Models <ArrowRight className="ml-1 h-4 w-4" />
+              </Button>
+            </div>
+            
+            <div>
+              <h3 className="font-medium text-gray-800 mb-1">Error Codes</h3>
+              <p className="text-sm text-gray-600 mb-2">Error code reference and troubleshooting.</p>
+              <Button 
+                variant="link" 
+                className="p-0 h-auto text-indigo-600 hover:text-indigo-800 font-medium"
+                onClick={() => handleResourceClick("Error Codes")}
+              >
+                View Error Codes <ArrowRight className="ml-1 h-4 w-4" />
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+        
+        {/* SDKs & Libraries */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Download className="h-5 w-5 text-indigo-500" />
+              SDKs & Libraries
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <h3 className="font-medium text-gray-800 mb-1">JavaScript SDK</h3>
+              <p className="text-sm text-gray-600 mb-2">For browser and Node.js applications.</p>
+              <Button 
+                variant="link" 
+                className="p-0 h-auto text-indigo-600 hover:text-indigo-800 font-medium"
+                onClick={() => handleDownloadSDK("JavaScript", "2.1.0")}
+              >
+                Download v2.1.0 <ArrowRight className="ml-1 h-4 w-4" />
+              </Button>
+            </div>
+            
+            <div>
+              <h3 className="font-medium text-gray-800 mb-1">Python SDK</h3>
+              <p className="text-sm text-gray-600 mb-2">For Python applications and scripts.</p>
+              <Button 
+                variant="link" 
+                className="p-0 h-auto text-indigo-600 hover:text-indigo-800 font-medium"
+                onClick={() => handleDownloadSDK("Python", "1.8.2")}
+              >
+                Download v1.8.2 <ArrowRight className="ml-1 h-4 w-4" />
+              </Button>
+            </div>
+            
+            <div>
+              <h3 className="font-medium text-gray-800 mb-1">Java SDK</h3>
+              <p className="text-sm text-gray-600 mb-2">For Java and Android applications.</p>
+              <Button 
+                variant="link" 
+                className="p-0 h-auto text-indigo-600 hover:text-indigo-800 font-medium"
+                onClick={() => handleDownloadSDK("Java", "1.5.0")}
+              >
+                Download v1.5.0 <ArrowRight className="ml-1 h-4 w-4" />
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+        
+        {/* Learning Resources */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <BookOpen className="h-5 w-5 text-indigo-500" />
+              Learning Resources
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <h3 className="font-medium text-gray-800 mb-1">Tutorial Videos</h3>
+              <p className="text-sm text-gray-600 mb-2">Step-by-step integration tutorials.</p>
+              <Button 
+                variant="link" 
+                className="p-0 h-auto text-indigo-600 hover:text-indigo-800 font-medium"
+                onClick={() => handleResourceClick("Tutorial Videos")}
+              >
+                <Youtube className="mr-1 h-4 w-4" /> Watch Tutorials
+              </Button>
+            </div>
+            
+            <div>
+              <h3 className="font-medium text-gray-800 mb-1">Sample Projects</h3>
+              <p className="text-sm text-gray-600 mb-2">Example applications and integrations.</p>
+              <Button 
+                variant="link" 
+                className="p-0 h-auto text-indigo-600 hover:text-indigo-800 font-medium"
+                onClick={() => handleResourceClick("Sample Projects")}
+              >
+                <Github className="mr-1 h-4 w-4" /> Browse Examples
+              </Button>
+            </div>
+            
+            <div>
+              <h3 className="font-medium text-gray-800 mb-1">Developer Blog</h3>
+              <p className="text-sm text-gray-600 mb-2">Latest updates and best practices.</p>
+              <Button 
+                variant="link" 
+                className="p-0 h-auto text-indigo-600 hover:text-indigo-800 font-medium"
+                onClick={() => handleResourceClick("Developer Blog")}
+              >
+                Read Articles <ArrowRight className="ml-1 h-4 w-4" />
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </section>
   );

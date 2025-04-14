@@ -1,17 +1,21 @@
-import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Check, Copy, Info } from "lucide-react";
+
+import React from "react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Steps, Step } from "@/components/ui/steps";
+import { LightbulbIcon } from "lucide-react";
 import { showCopySuccessToast } from "@/utils/toast/documentationToasts";
 
 interface QuickStartGuideProps {
   copiedCode: string | null;
-  setCopiedCode: (id: string | null) => void;
+  setCopiedCode: (value: string | null) => void;
 }
 
-export const QuickStartGuide: React.FC<QuickStartGuideProps> = ({ copiedCode, setCopiedCode }) => {
-
-  const handleCopyClick = (text: string, id: string) => {
-    navigator.clipboard.writeText(text);
+export const QuickStartGuide: React.FC<QuickStartGuideProps> = ({
+  copiedCode,
+  setCopiedCode
+}) => {
+  const handleCopyCode = (code: string, id: string) => {
+    navigator.clipboard.writeText(code);
     setCopiedCode(id);
     showCopySuccessToast();
     
@@ -21,92 +25,135 @@ export const QuickStartGuide: React.FC<QuickStartGuideProps> = ({ copiedCode, se
   };
 
   return (
-    <section>
-      <h2 className="text-2xl font-semibold text-gray-800 mb-6">Quick Start Guide</h2>
-      <div className="bg-white border border-gray-100 rounded-lg shadow-sm p-6 mb-6">
-        <h3 className="text-lg font-semibold text-gray-800 mb-4">Authentication</h3>
-        <p className="text-gray-600 mb-4">
-          All API requests to WealthHorizon require authentication. We support OAuth 2.0 and API key authentication methods.
-        </p>
-        <div className="bg-gray-50 rounded-md p-4 mb-4">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-medium text-gray-600">API Key Authentication</span>
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              className="h-8 text-gray-500 hover:text-gray-700"
-              onClick={() => handleCopyClick('curl -X GET "https://api.wealthhorizon.ai/v1/portfolios" -H "Authorization: Bearer YOUR_API_KEY"', 'auth-example')}
-            >
-              {copiedCode === 'auth-example' ? <Check size={16} className="text-green-500" /> : <Copy size={16} />}
-            </Button>
-          </div>
-          <pre className="text-sm overflow-x-auto p-2 bg-gray-800 text-gray-200 rounded">
-            <code>curl -X GET "https://api.wealthhorizon.ai/v1/portfolios" -H "Authorization: Bearer YOUR_API_KEY"</code>
-          </pre>
+    <Card>
+      <CardHeader>
+        <div className="flex items-center gap-2">
+          <LightbulbIcon className="h-5 w-5 text-indigo-500" />
+          <CardTitle>Quick Start Guide</CardTitle>
         </div>
-        <div className="flex items-center text-sm text-gray-600 bg-blue-50 p-3 rounded-md">
-          <Info size={16} className="text-blue-500 mr-2 flex-shrink-0" />
-          <span>API keys should be kept secure and never exposed in client-side code.</span>
-        </div>
-      </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="bg-white border border-gray-100 rounded-lg shadow-sm p-6">
-          <h3 className="text-lg font-semibold text-gray-800 mb-4">Data Integration</h3>
-          <p className="text-gray-600 mb-4">
-            Connect your existing data sources using our integration API endpoints.
-          </p>
-          <ul className="space-y-3 mb-4">
-            <li className="flex items-start">
-              <Check size={18} className="text-green-500 mr-2 mt-0.5 flex-shrink-0" />
-              <span className="text-gray-600">Support for financial data aggregators</span>
-            </li>
-            <li className="flex items-start">
-              <Check size={18} className="text-green-500 mr-2 mt-0.5 flex-shrink-0" />
-              <span className="text-gray-600">Direct custodian integrations</span>
-            </li>
-            <li className="flex items-start">
-              <Check size={18} className="text-green-500 mr-2 mt-0.5 flex-shrink-0" />
-              <span className="text-gray-600">Automated data synchronization</span>
-            </li>
-          </ul>
-          <Button 
-            variant="outline" 
-            className="w-full flex items-center justify-center gap-2"
-            onClick={() => window.location.href = "/api-docs/integration-guide"}
-          >
-            View Integration Guide
-          </Button>
-        </div>
+        <CardDescription>
+          Follow these steps to quickly integrate with the WealthHorizon API.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Steps>
+          <Step number={1} title="Get API Keys">
+            <div className="mt-2 text-sm text-gray-600">
+              <p>Sign up for a developer account and obtain your API keys from the developer portal.</p>
+              <a 
+                href="/developer-portal" 
+                className="inline-block mt-2 text-indigo-600 hover:text-indigo-800 font-medium"
+              >
+                Go to Developer Portal →
+              </a>
+            </div>
+          </Step>
+          
+          <Step number={2} title="Install the SDK">
+            <div className="mt-2 text-sm text-gray-600">
+              <p>Install the WealthHorizon SDK using npm or yarn:</p>
+              <div className="relative mt-2">
+                <pre className="bg-gray-900 p-3 rounded-md text-white text-sm overflow-x-auto">
+                  <code>npm install @wealthhorizon/sdk</code>
+                </pre>
+                <button 
+                  onClick={() => handleCopyCode("npm install @wealthhorizon/sdk", "install-npm")}
+                  className="absolute top-2 right-2 bg-indigo-500 text-white text-xs rounded px-2 py-1 hover:bg-indigo-600"
+                >
+                  {copiedCode === "install-npm" ? "Copied!" : "Copy"}
+                </button>
+              </div>
+              <div className="relative mt-2">
+                <pre className="bg-gray-900 p-3 rounded-md text-white text-sm overflow-x-auto">
+                  <code>yarn add @wealthhorizon/sdk</code>
+                </pre>
+                <button 
+                  onClick={() => handleCopyCode("yarn add @wealthhorizon/sdk", "install-yarn")}
+                  className="absolute top-2 right-2 bg-indigo-500 text-white text-xs rounded px-2 py-1 hover:bg-indigo-600"
+                >
+                  {copiedCode === "install-yarn" ? "Copied!" : "Copy"}
+                </button>
+              </div>
+            </div>
+          </Step>
+          
+          <Step number={3} title="Initialize the SDK">
+            <div className="mt-2 text-sm text-gray-600">
+              <p>Import and initialize the SDK with your API key:</p>
+              <div className="relative mt-2">
+                <pre className="bg-gray-900 p-3 rounded-md text-white text-sm overflow-x-auto">
+                  <code>{`
+const { WealthHorizonSDK } = require('@wealthhorizon/sdk');
+
+const wh = new WealthHorizonSDK({
+  apiKey: 'your-api-key',
+  environment: 'sandbox'
+});`}
+                  </code>
+                </pre>
+                <button 
+                  onClick={() => handleCopyCode(`const { WealthHorizonSDK } = require('@wealthhorizon/sdk');
+
+const wh = new WealthHorizonSDK({
+  apiKey: 'your-api-key',
+  environment: 'sandbox'
+});`, "init-sdk")}
+                  className="absolute top-2 right-2 bg-indigo-500 text-white text-xs rounded px-2 py-1 hover:bg-indigo-600"
+                >
+                  {copiedCode === "init-sdk" ? "Copied!" : "Copy"}
+                </button>
+              </div>
+            </div>
+          </Step>
+          
+          <Step number={4} title="Make Your First API Call">
+            <div className="mt-2 text-sm text-gray-600">
+              <p>Try making a simple API call to test your integration:</p>
+              <div className="relative mt-2">
+                <pre className="bg-gray-900 p-3 rounded-md text-white text-sm overflow-x-auto">
+                  <code>{`
+// Get user profile information
+async function getUserProfile() {
+  try {
+    const profile = await wh.users.getProfile();
+    console.log('User profile:', profile);
+  } catch (error) {
+    console.error('Error fetching profile:', error);
+  }
+}
+
+getUserProfile();`}
+                  </code>
+                </pre>
+                <button 
+                  onClick={() => handleCopyCode(`// Get user profile information
+async function getUserProfile() {
+  try {
+    const profile = await wh.users.getProfile();
+    console.log('User profile:', profile);
+  } catch (error) {
+    console.error('Error fetching profile:', error);
+  }
+}
+
+getUserProfile();`, "first-call")}
+                  className="absolute top-2 right-2 bg-indigo-500 text-white text-xs rounded px-2 py-1 hover:bg-indigo-600"
+                >
+                  {copiedCode === "first-call" ? "Copied!" : "Copy"}
+                </button>
+              </div>
+            </div>
+          </Step>
+        </Steps>
         
-        <div className="bg-white border border-gray-100 rounded-lg shadow-sm p-6">
-          <h3 className="text-lg font-semibold text-gray-800 mb-4">Reporting API</h3>
-          <p className="text-gray-600 mb-4">
-            Generate customized reports programmatically using our reporting endpoints.
+        <div className="mt-6 bg-blue-50 p-4 rounded-md border border-blue-100">
+          <h4 className="text-sm font-medium text-blue-800">Need more help?</h4>
+          <p className="mt-1 text-sm text-blue-700">
+            Check out our <a href="/api-docs/api-reference" className="underline">API Reference</a> or 
+            contact our <a href="/support" className="underline">Support Team</a> for assistance.
           </p>
-          <ul className="space-y-3 mb-4">
-            <li className="flex items-start">
-              <Check size={18} className="text-green-500 mr-2 mt-0.5 flex-shrink-0" />
-              <span className="text-gray-600">Custom report templates</span>
-            </li>
-            <li className="flex items-start">
-              <Check size={18} className="text-green-500 mr-2 mt-0.5 flex-shrink-0" />
-              <span className="text-gray-600">Multiple export formats (PDF, XLSX, CSV)</span>
-            </li>
-            <li className="flex items-start">
-              <Check size={18} className="text-green-500 mr-2 mt-0.5 flex-shrink-0" />
-              <span className="text-gray-600">Scheduled report generation</span>
-            </li>
-          </ul>
-          <Button 
-            variant="outline" 
-            className="w-full flex items-center justify-center gap-2"
-            onClick={() => window.location.href = "/api-docs/reporting-guide"}
-          >
-            View Reporting Guide
-          </Button>
         </div>
-      </div>
-    </section>
+      </CardContent>
+    </Card>
   );
 };

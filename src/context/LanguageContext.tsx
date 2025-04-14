@@ -26,6 +26,18 @@ const translations: Record<Language, Record<string, string>> = {
     getInTouch: 'Get in touch with our team.',
     whyWealthHorizon: 'Why WH',
     
+    // Hero Section
+    holisticWealthManagement: 'Holistic wealth management for',
+    familyOffices: 'family offices',
+    and: 'and',
+    institutions: 'institutions',
+    actionableWealth: 'All your wealth made actionable on one platform',
+    acrossAllBanks: 'across all your banks, brokers and custodians',
+    learnMore: 'Learn More',
+    aiNativePlatform: 'AI-native platform',
+    realTimeAnalytics: 'Real-time analytics',
+    soc2Certified: 'SOC 2 certified',
+    
     // Languages
     english: 'English',
     chinese: 'Chinese',
@@ -90,6 +102,18 @@ const translations: Record<Language, Record<string, string>> = {
     contactUsSubtitle: '对<span class="text-indigo-600">财富</span>视界如何改变您的财富管理有疑问吗？',
     getInTouch: '与我们的团队联系。',
     whyWealthHorizon: '为何选择财富视界',
+    
+    // Hero Section
+    holisticWealthManagement: '为以下对象提供全面的财富管理',
+    familyOffices: '家族办公室',
+    and: '和',
+    institutions: '机构',
+    actionableWealth: '让您的所有财富在一个平台上实现可行动性',
+    acrossAllBanks: '跨越您所有的银行、经纪商和托管人',
+    learnMore: '了解更多',
+    aiNativePlatform: 'AI原生平台',
+    realTimeAnalytics: '实时分析',
+    soc2Certified: 'SOC 2认证',
     
     // Languages
     english: '英语',
@@ -156,6 +180,18 @@ const translations: Record<Language, Record<string, string>> = {
     getInTouch: 'Póngase en contacto con nuestro equipo.',
     whyWealthHorizon: '¿Por qué WH?',
     
+    // Hero Section
+    holisticWealthManagement: 'Gestión integral de patrimonio para',
+    familyOffices: 'family offices',
+    and: 'y',
+    institutions: 'instituciones',
+    actionableWealth: 'Toda su riqueza accionable en una sola plataforma',
+    acrossAllBanks: 'a través de todos sus bancos, corredores y custodios',
+    learnMore: 'Más información',
+    aiNativePlatform: 'Plataforma nativa de IA',
+    realTimeAnalytics: 'Análisis en tiempo real',
+    soc2Certified: 'Certificado SOC 2',
+    
     // Languages
     english: 'Inglés',
     chinese: 'Chinês',
@@ -214,6 +250,18 @@ const translations: Record<Language, Record<string, string>> = {
     contactUsSubtitle: 'هل لديك أسئلة حول كيفية تحويل <span class="text-indigo-600">ويلث</span>هورايزن لإدارة ثروتك؟',
     getInTouch: 'تواصل مع فريقنا.',
     whyWealthHorizon: 'لماذا WH',
+    
+    // Hero Section
+    holisticWealthManagement: 'إدارة شاملة للثروات لـ',
+    familyOffices: 'مكاتب العائلة',
+    and: 'و',
+    institutions: 'المؤسسات',
+    actionableWealth: 'كل ثروتك قابلة للتنفيذ على منصة واحدة',
+    acrossAllBanks: 'عبر جميع البنوك والوسطاء وأمناء الحفظ',
+    learnMore: 'اعرف المزيد',
+    aiNativePlatform: 'منصة أصلية للذكاء الاصطناعي',
+    realTimeAnalytics: 'تحليلات في الوقت الفعلي',
+    soc2Certified: 'معتمدة من SOC 2',
     
     // Languages
     english: 'الإنجليزية',
@@ -274,6 +322,18 @@ const translations: Record<Language, Record<string, string>> = {
     getInTouch: 'Entre em contato com nossa equipe.',
     whyWealthHorizon: 'Por que WH',
     
+    // Hero Section
+    holisticWealthManagement: 'Gestão holística de patrimônio para',
+    familyOffices: 'family offices',
+    and: 'e',
+    institutions: 'instituições',
+    actionableWealth: 'Todo o seu patrimônio acionável em uma plataforma',
+    acrossAllBanks: 'em todos os seus bancos, corretoras e custodiantes',
+    learnMore: 'Saiba mais',
+    aiNativePlatform: 'Plataforma nativa de IA',
+    realTimeAnalytics: 'Análises em tempo real',
+    soc2Certified: 'Certificado SOC 2',
+    
     // Languages
     english: 'Inglês',
     chinese: 'Chinês',
@@ -332,6 +392,18 @@ const translations: Record<Language, Record<string, string>> = {
     contactUsSubtitle: 'У вас есть вопросы о том, как <span class="text-indigo-600">Wealth</span>Horizon может преобразить управление вашим капиталом?',
     getInTouch: 'Свяжитесь с нашей командой.',
     whyWealthHorizon: 'Почему WH',
+    
+    // Hero Section
+    holisticWealthManagement: 'Комплексное управление благосостоянием для',
+    familyOffices: 'семейных офисов',
+    and: 'и',
+    institutions: 'учреждений',
+    actionableWealth: 'Все ваше благосостояние действует на одной платформе',
+    acrossAllBanks: 'по всем вашим банкам, брокерам и хранителям',
+    learnMore: 'Узнать больше',
+    aiNativePlatform: 'Нативная платформа ИИ',
+    realTimeAnalytics: 'Аналитика в реальном времени',
+    soc2Certified: 'Сертификат SOC 2',
     
     // Languages
     english: 'Английский',
@@ -392,6 +464,18 @@ const translations: Record<Language, Record<string, string>> = {
     getInTouch: '私たちのチームにお問い合わせください。',
     whyWealthHorizon: 'なぜWH',
     
+    // Hero Section
+    holisticWealthManagement: '総合的な資産管理',
+    familyOffices: 'ファミリーオフィス',
+    and: 'および',
+    institutions: '機関',
+    actionableWealth: 'すべての資産を一つのプラットフォームで実行可能に',
+    acrossAllBanks: 'すべての銀行、ブローカー、カストディアンにわたって',
+    learnMore: '詳細を見る',
+    aiNativePlatform: 'AIネイティブプラットフォーム',
+    realTimeAnalytics: 'リアルタイム分析',
+    soc2Certified: 'SOC 2認証',
+    
     // Languages
     english: '英語',
     chinese: '中国語',
@@ -450,6 +534,18 @@ const translations: Record<Language, Record<string, string>> = {
     contactUsSubtitle: 'Vous avez des questions sur la façon dont <span class="text-indigo-600">Wealth</span>Horizon peut transformer votre gestion de patrimoine ?',
     getInTouch: 'Contactez notre équipe.',
     whyWealthHorizon: 'Pourquoi WH',
+    
+    // Hero Section
+    holisticWealthManagement: 'Gestion de patrimoine holistique pour',
+    familyOffices: 'family offices',
+    and: 'et',
+    institutions: 'institutions',
+    actionableWealth: 'Toute votre richesse exploitable sur une seule plateforme',
+    acrossAllBanks: 'à travers toutes vos banques, courtiers et dépositaires',
+    learnMore: 'En savoir plus',
+    aiNativePlatform: 'Plateforme native IA',
+    realTimeAnalytics: 'Analytique en temps réel',
+    soc2Certified: 'Certifié SOC 2',
     
     // Languages
     english: 'Anglais',
@@ -510,6 +606,18 @@ const translations: Record<Language, Record<string, string>> = {
     getInTouch: 'Kontaktieren Sie unser Team.',
     whyWealthHorizon: 'Warum WH',
     
+    // Hero Section
+    holisticWealthManagement: 'Ganzheitliche Vermögensverwaltung für',
+    familyOffices: 'Family Offices',
+    and: 'und',
+    institutions: 'Institutionen',
+    actionableWealth: 'Ihr gesamtes Vermögen auf einer Plattform nutzbar gemacht',
+    acrossAllBanks: 'über alle Ihre Banken, Broker und Verwahrer hinweg',
+    learnMore: 'Mehr erfahren',
+    aiNativePlatform: 'KI-native Plattform',
+    realTimeAnalytics: 'Echtzeit-Analytik',
+    soc2Certified: 'SOC 2 zertifiziert',
+    
     // Languages
     english: 'Englisch',
     chinese: 'Chinesisch',
@@ -568,6 +676,18 @@ const translations: Record<Language, Record<string, string>> = {
     contactUsSubtitle: '<span class="text-indigo-600">웰스</span>호라이즌이 귀하의 자산 관리를 어떻게 변화시킬 수 있는지에 대한 질문이 있으신가요?',
     getInTouch: '저희 팀에게 연락하세요.',
     whyWealthHorizon: 'WH를 선택하는 이유',
+    
+    // Hero Section
+    holisticWealthManagement: '다음을 위한 종합적 자산 관리',
+    familyOffices: '패밀리 오피스',
+    and: '및',
+    institutions: '기관',
+    actionableWealth: '모든 자산을 하나의 플랫폼에서 실행 가능하게',
+    acrossAllBanks: '모든 은행, 브로커 및 커스터디언 전반에 걸쳐',
+    learnMore: '더 알아보기',
+    aiNativePlatform: 'AI 네이티브 플랫폼',
+    realTimeAnalytics: '실시간 분석',
+    soc2Certified: 'SOC 2 인증',
     
     // Languages
     english: '영어',

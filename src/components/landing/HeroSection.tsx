@@ -1,20 +1,32 @@
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { ChevronDown, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FadeIn, ScaleIn } from "@/components/ui/animation";
 import DashboardAnimation from "@/components/animations/DashboardAnimation";
+import { LocalizedText, useLocalizedText } from "@/components/ui/localized-text";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface HeroSectionProps {
   onScrollToFeatures: () => void;
 }
 
 const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToFeatures }) => {
+  const { t } = useLocalizedText();
+  const { language } = useLanguage();
+  const [, forceUpdate] = useState({});
+  
   // Add debugging
   useEffect(() => {
     console.log("HeroSection component mounted");
     console.log("HeroSection container:", document.querySelector('section.relative'));
   }, []);
+
+  // Force re-render when language changes
+  useEffect(() => {
+    console.log(`HeroSection detected language change to: ${language}`);
+    forceUpdate({});
+  }, [language]);
 
   const scrollToContact = () => {
     const contactSection = document.getElementById('contact');
@@ -30,17 +42,32 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToFeatures }) => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <FadeIn delay={0.2}>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-gray-900 leading-tight">
-              Holistic wealth management for{" "}
-              <span className="text-indigo-600">family offices</span> and{" "}
-              <span className="text-indigo-600">institutions</span>
+              <LocalizedText 
+                textKey="holisticWealthManagement" 
+                fallback="Holistic wealth management for" 
+              />{" "}
+              <span className="text-indigo-600">
+                <LocalizedText textKey="familyOffices" fallback="family offices" />
+              </span>{" "}
+              <LocalizedText textKey="and" fallback="and" />{" "}
+              <span className="text-indigo-600">
+                <LocalizedText textKey="institutions" fallback="institutions" />
+              </span>
             </h1>
             <p className="mt-6 text-xl text-gray-600 max-w-2xl">
-              All your wealth made actionable on one platform<br />
-              across all your banks, brokers and custodians
+              <LocalizedText 
+                textKey="actionableWealth" 
+                fallback="All your wealth made actionable on one platform" 
+              />
+              <br />
+              <LocalizedText 
+                textKey="acrossAllBanks" 
+                fallback="across all your banks, brokers and custodians" 
+              />
             </p>
             <div className="mt-10 flex flex-col sm:flex-row gap-4">
               <Button size="lg" className="text-md px-8" onClick={scrollToContact}>
-                Contact Us
+                <LocalizedText textKey="contactUs" fallback="Contact Us" />
               </Button>
               <Button
                 variant="outline"
@@ -48,14 +75,18 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToFeatures }) => {
                 className="text-md px-8"
                 onClick={onScrollToFeatures}
               >
-                Learn More
+                <LocalizedText textKey="learnMore" fallback="Learn More" />
               </Button>
             </div>
             <div className="mt-10 flex flex-wrap gap-x-8 gap-y-4 items-center text-sm text-gray-600">
-              {["AI-native platform", "Real-time analytics", "SOC 2 certified"].map((item, index) => (
+              {[
+                { key: "aiNativePlatform", fallback: "AI-native platform" },
+                { key: "realTimeAnalytics", fallback: "Real-time analytics" },
+                { key: "soc2Certified", fallback: "SOC 2 certified" }
+              ].map((item, index) => (
                 <div key={index} className="flex items-center gap-2">
                   <CheckCircle size={16} className="text-indigo-600" />
-                  <span>{item}</span>
+                  <span><LocalizedText textKey={item.key} fallback={item.fallback} /></span>
                 </div>
               ))}
             </div>

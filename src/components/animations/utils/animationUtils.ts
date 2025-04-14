@@ -100,19 +100,30 @@ export const optimizeAnimations = {
    */
   getOptimizedVariants: (variants: Variants): Variants => {
     if (optimizeAnimations.shouldSimplifyAnimations()) {
-      // Return simplified variants with shorter durations
-      return {
-        ...variants,
-        visible: {
-          ...variants.visible,
-          transition: {
-            ...variants.visible?.transition,
-            duration: (variants.visible?.transition as any)?.duration 
-              ? (variants.visible?.transition as any).duration * 0.7 
-              : 0.3
-          }
+      // Create a clone of the variants to avoid mutating the original
+      const optimizedVariants = { ...variants };
+      
+      // Check if visible exists and has a transition
+      if (optimizedVariants.visible && typeof optimizedVariants.visible === 'object') {
+        const visibleVariant = optimizedVariants.visible as Record<string, any>;
+        
+        // If transition exists in the visible variant
+        if (visibleVariant.transition) {
+          // Modify the transition duration
+          optimizedVariants.visible = {
+            ...visibleVariant,
+            transition: {
+              ...visibleVariant.transition,
+              duration: 
+                typeof visibleVariant.transition.duration === 'number'
+                  ? visibleVariant.transition.duration * 0.7
+                  : 0.3
+            }
+          };
         }
-      };
+      }
+      
+      return optimizedVariants;
     }
     return variants;
   }

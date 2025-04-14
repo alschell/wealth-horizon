@@ -1,4 +1,6 @@
 
+import React from 'react';
+
 /**
  * Utility for monitoring component render performance
  */
@@ -93,7 +95,7 @@ export const trackRender = (componentName: string): RenderMetric => {
 export function withRenderTracking<P>(
   Component: React.ComponentType<P>, 
   componentName?: string
-): React.FC<P> {
+): React.ComponentType<P> {
   // Skip in production to avoid overhead
   if (process.env.NODE_ENV === 'production') {
     return Component;
@@ -103,7 +105,6 @@ export function withRenderTracking<P>(
   
   const WrappedComponent: React.FC<P> = (props) => {
     trackRender(displayName);
-    // Fix: Use JSX with proper syntax
     return React.createElement(Component, props);
   };
   

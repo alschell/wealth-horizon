@@ -1,9 +1,13 @@
-
 /**
  * Security auditing utility for identifying potential security issues
  * 
  * @module securityAuditor
  */
+
+// Import validation utilities directly from their source modules
+import * as validation from './validation';
+import * as sanitize from './sanitization';
+import * as authentication from './authentication';
 
 type SeverityLevel = 'low' | 'medium' | 'high' | 'critical';
 
@@ -79,9 +83,6 @@ export interface SecurityAuditResult {
   /** Timestamp of audit */
   timestamp: number;
 }
-
-// Import required security utilities
-import { validation, sanitize, authentication } from '../security';
 
 /**
  * Performs security audits on input data, authentication, and other aspects

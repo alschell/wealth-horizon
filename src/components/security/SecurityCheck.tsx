@@ -1,4 +1,3 @@
-
 /**
  * Security checking component that demonstrates the use of security audit utilities
  */

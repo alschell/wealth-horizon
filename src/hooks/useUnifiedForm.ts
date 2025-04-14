@@ -1,6 +1,6 @@
 
 import { useState, useCallback } from 'react';
-import { showSuccessToast, showErrorToast } from '@/utils/toast';
+import { showSuccess, showError } from '@/utils/toast';
 
 export interface FormValidationErrors<T> {
   [key: string]: string;
@@ -114,7 +114,7 @@ export function useUnifiedForm<T extends Record<string, any>>({
     setTouched(allTouched);
     
     if (!validateForm()) {
-      showErrorToast('Validation Error', errorMessage);
+      showError('Validation Error', errorMessage);
       return false;
     }
     
@@ -128,15 +128,15 @@ export function useUnifiedForm<T extends Record<string, any>>({
       setIsSuccess(result);
       
       if (result) {
-        showSuccessToast('Success', successMessage);
+        showSuccess('Success', successMessage);
       } else {
-        showErrorToast('Error', 'Form submission failed');
+        showError('Error', 'Form submission failed');
       }
       
       return result;
     } catch (error) {
       console.error('Form submission error:', error);
-      showErrorToast('Error', error instanceof Error ? error.message : 'Form submission failed');
+      showError('Error', error instanceof Error ? error.message : 'Form submission failed');
       return false;
     } finally {
       setIsSubmitting(false);

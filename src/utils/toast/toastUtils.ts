@@ -47,3 +47,9 @@ export function showWarning(title: string, description?: string, duration = 4000
     duration
   });
 }
+
+// Add these aliases for backward compatibility
+export const showSuccessToast = showSuccess;
+export const showErrorToast = showError;
+export const showInfoToast = showInfo;
+export const showWarningToast = showWarning;

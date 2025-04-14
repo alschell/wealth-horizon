@@ -1,6 +1,6 @@
 
 import { useState, useCallback } from 'react';
-import { showErrorToast } from '@/utils/toast';
+import { showError } from '@/utils/toast';
 
 interface UseFormStateOptions<T> {
   initialValues: T;
@@ -126,7 +126,7 @@ export function useFormState<T extends Record<string, any>>({
     setTouched(allTouched);
     
     if (!validateForm()) {
-      showErrorToast("Validation Error", "Please correct the errors in the form");
+      showError("Validation Error", "Please correct the errors in the form");
       return false;
     }
     

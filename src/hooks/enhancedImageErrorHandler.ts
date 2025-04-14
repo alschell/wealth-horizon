@@ -1,6 +1,6 @@
 
 import { useCallback } from 'react';
-import { showErrorToast } from '@/utils/toast';
+import { showError } from '@/utils/toast';
 
 export interface EnhancedImageErrorHandlerOptions {
   fallbackSrc?: string;
@@ -41,7 +41,7 @@ export function enhancedImageErrorHandler({
     
     // Show toast notification if enabled
     if (showToast) {
-      showErrorToast('Image Error', toastMessage);
+      showError('Image Error', toastMessage);
     }
     
     // Try to retry loading the image if attempts left

@@ -1,6 +1,6 @@
 
 import { useState, useCallback } from "react";
-import { showErrorToast, showSuccessToast } from "@/utils/toast";
+import { showSuccess, showError } from "@/utils/toast";
 import { useIsComponentMounted } from "@/hooks/useIsComponentMounted";
 
 interface UseFormControlsProps<T> {
@@ -89,13 +89,13 @@ export function useFormControls<T extends Record<string, any>>({
       // Only update state if component is still mounted
       if (isMounted()) {
         resetForm();
-        showSuccessToast("Success", successMessage);
+        showSuccess("Success", successMessage);
       }
     } catch (error) {
       // Only update state if component is still mounted
       if (isMounted()) {
         const message = error instanceof Error ? error.message : errorMessage;
-        showErrorToast("Error", message);
+        showError("Error", message);
       }
     } finally {
       // Only update state if component is still mounted

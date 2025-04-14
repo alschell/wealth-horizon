@@ -1,6 +1,6 @@
 
 import { toast as sonnerToast } from "sonner";
-import type { ToastProps } from "@/components/ui/toast";
+import { ToastProps as UIToastProps } from "@/components/ui/toast";
 
 // Export types from toast component
 export * from "@/components/ui/toast";
@@ -10,7 +10,7 @@ export interface Toast {
   id?: string;
   title?: React.ReactNode;
   description?: React.ReactNode;
-  action?: ToastProps["action"];
+  action?: React.ReactNode;
   variant?: "default" | "destructive";
   duration?: number;
   className?: string;

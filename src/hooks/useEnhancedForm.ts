@@ -1,7 +1,7 @@
 
 import { useState, useCallback } from 'react';
 import { useIsComponentMounted } from './useIsComponentMounted';
-import { showSuccessToast, showErrorToast } from '@/utils/toast';
+import { showSuccess, showError } from '@/utils/toast';
 import { 
   useForm, 
   UseFormProps, 
@@ -77,7 +77,7 @@ export function useEnhancedForm<T extends FieldValues>({
       // Only update state if component is still mounted
       if (isMounted()) {
         setIsSuccess(true);
-        showSuccessToast("Success", successMessage);
+        showSuccess("Success", successMessage);
         
         if (onSuccess) {
           onSuccess();
@@ -93,7 +93,7 @@ export function useEnhancedForm<T extends FieldValues>({
         console.error("Form submission error:", error);
         const errorMsg = error instanceof Error ? error.message : errorMessage;
         setLastError(errorMsg);
-        showErrorToast("Error", errorMsg);
+        showError("Error", errorMsg);
         
         if (onError) {
           onError(error);
@@ -162,7 +162,7 @@ export function useEnhancedFormSubmission<T>({
         // Only update state if component is still mounted
         if (isMounted()) {
           setIsSuccess(true);
-          showSuccessToast("Success", successMessage);
+          showSuccess("Success", successMessage);
 
           if (onSuccess) {
             onSuccess();
@@ -174,7 +174,7 @@ export function useEnhancedFormSubmission<T>({
           console.error("Form submission error:", error);
           const errorMsg = error instanceof Error ? error.message : errorMessage;
           setLastError(errorMsg);
-          showErrorToast("Error", errorMsg);
+          showError("Error", errorMsg);
 
           if (onError) {
             onError(error);

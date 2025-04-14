@@ -1,6 +1,6 @@
 
 import React, { Component, ErrorInfo, ReactNode } from 'react';
-import { showErrorToast } from '@/utils/toast';
+import { showError } from '@/utils/toast';
 
 interface ErrorBoundaryProps {
   children: ReactNode;
@@ -35,7 +35,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
     }
     
     // Show toast notification
-    showErrorToast('An error occurred', 'The application encountered an unexpected error');
+    showError('An error occurred', 'The application encountered an unexpected error');
   }
 
   render(): ReactNode {

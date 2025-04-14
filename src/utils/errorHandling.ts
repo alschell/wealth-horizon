@@ -1,5 +1,5 @@
 
-import { showErrorToast } from './toast';
+import { showError } from './toast';
 
 /**
  * Standard error response format
@@ -72,7 +72,7 @@ export function handleError(
   
   // Show toast
   if (showToast) {
-    showErrorToast("Error", errorMessage);
+    showError("Error", errorMessage);
   }
   
   // Call error callback

@@ -10,7 +10,12 @@ export {
   showSuccess,
   showError,
   showInfo,
-  showWarning
+  showWarning,
+  // Add these aliases for backward compatibility
+  showSuccessToast,
+  showErrorToast,
+  showInfoToast,
+  showWarningToast
 } from './toastUtils';
 
 export {

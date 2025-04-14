@@ -1,7 +1,7 @@
 
 import { useState, useCallback } from 'react';
 import { useIsComponentMounted } from './useIsComponentMounted';
-import { showSuccessToast, showErrorToast } from '@/utils/toast';
+import { showSuccess, showError } from '@/utils/toast';
 
 /**
  * Options for form submission handler creation
@@ -67,7 +67,7 @@ export function useFormControls<T>() {
           // Only update state if component is still mounted
           if (isMounted()) {
             setIsSuccess(true);
-            showSuccessToast("Success", successMessage);
+            showSuccess("Success", successMessage);
 
             if (onSuccess) {
               onSuccess();
@@ -87,7 +87,7 @@ export function useFormControls<T>() {
             console.error("Form submission error:", error);
             const errorMsg = error instanceof Error ? error.message : errorMessage;
             setLastError(errorMsg);
-            showErrorToast("Error", errorMsg);
+            showError("Error", errorMsg);
 
             if (onError) {
               onError(error);

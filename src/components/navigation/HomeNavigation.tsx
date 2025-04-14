@@ -2,10 +2,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import LanguageSelector from './LanguageSelector';
+import { useLanguage } from '@/context/LanguageContext';
 
 const HomeNavigation: React.FC = () => {
   const navigate = useNavigate();
   const [scrolled, setScrolled] = useState(false);
+  const { getLocalizedText } = useLanguage();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -46,35 +49,36 @@ const HomeNavigation: React.FC = () => {
               onClick={() => scrollToSection('features')} 
               className="text-gray-700 hover:text-indigo-600 transition-colors"
             >
-              Features
+              {getLocalizedText('features')}
             </button>
             <button 
               onClick={() => scrollToSection('benefits')} 
               className="text-gray-700 hover:text-indigo-600 transition-colors"
             >
-              Benefits
+              {getLocalizedText('benefits')}
             </button>
             <button 
               onClick={() => scrollToSection('testimonials')} 
               className="text-gray-700 hover:text-indigo-600 transition-colors"
             >
-              Testimonials
+              {getLocalizedText('testimonials')}
             </button>
             <button 
               onClick={() => scrollToSection('contact')} 
               className="text-gray-700 hover:text-indigo-600 transition-colors"
             >
-              Contact
+              {getLocalizedText('contact')}
             </button>
           </div>
         </div>
         
         <div className="flex items-center gap-3">
+          <LanguageSelector />
           <Button variant="ghost" onClick={() => navigate('/login')}>
-            Log In
+            {getLocalizedText('login')}
           </Button>
           <Button onClick={() => scrollToSection('contact')}>
-            Contact Us
+            {getLocalizedText('contactUs')}
           </Button>
         </div>
       </nav>

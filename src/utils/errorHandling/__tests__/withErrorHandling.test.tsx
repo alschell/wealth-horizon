@@ -1,8 +1,8 @@
 
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { withErrorBoundary } from '@/components/shared/ErrorBoundary';
-import { withCustomErrorFallback } from '@/components/shared/ErrorBoundary';
+import { withErrorBoundary } from '@/components/common/ErrorBoundary';
+import { withCustomErrorFallback } from '@/components/common/ErrorBoundary';
 import { withErrorHandling } from '@/hooks/useErrorBoundary';
 
 // Mock components for testing

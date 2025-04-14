@@ -1,7 +1,7 @@
 
 import React, { useState, useCallback } from 'react';
-import ErrorBoundary from '@/components/shared/ErrorBoundary';
-import ErrorFallback from '@/components/shared/ErrorFallback';
+import ErrorBoundary from '@/components/common/ErrorBoundary';
+import ErrorFallback from '@/components/common/ErrorFallback';
 import { useErrorHandler } from './useErrorHandler';
 
 interface ErrorBoundaryConfig {

@@ -14,16 +14,7 @@ import { Button } from '@/components/ui/button';
 type Language = 'en' | 'zh' | 'es' | 'ar' | 'pt' | 'ru' | 'ja' | 'fr' | 'de' | 'ko';
 
 const LanguageSelector: React.FC = () => {
-  let { language, setLanguage } = { language: 'en' as Language, setLanguage: (lang: Language) => {} };
-  
-  try {
-    const languageContext = useLanguage();
-    language = languageContext.language;
-    setLanguage = languageContext.setLanguage;
-  } catch (error) {
-    console.error('Language context not available in LanguageSelector:', error);
-  }
-  
+  let { language, setLanguage } = useLanguage();
   const [open, setOpen] = React.useState(false);
 
   const languages = [
@@ -51,15 +42,22 @@ const LanguageSelector: React.FC = () => {
     
     // Only set language if the code is a valid Language type
     if (languages.find(lang => lang.code === langCode)) {
-      setLanguage(langCode as Language);
+      // Add more logging to debug the language change flow
+      console.log(`Changing language from ${language} to ${langCode}`);
       
       // Store the selection in localStorage for persistence
       localStorage.setItem('preferredLanguage', langCode);
       
-      // Dispatch a custom event for other components to listen for
+      // Dispatch a custom event before setting the language
       window.dispatchEvent(new CustomEvent('languageChange', { 
         detail: { language: langCode } 
       }));
+      
+      // Set the language in the context
+      setLanguage(langCode as Language);
+      
+      // Force reload the page to ensure all components update
+      window.location.reload();
     }
     
     setOpen(false); // Explicitly close the dropdown

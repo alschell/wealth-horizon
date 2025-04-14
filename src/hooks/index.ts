@@ -9,11 +9,16 @@ export { enhancedUseForm } from './enhancedUseForm';
 export { useFormWithValidation } from './useFormWithValidation';
 export { useIsComponentMounted } from './useIsComponentMounted';
 export { useNotifications } from './use-notifications';
-export { useErrorHandler } from '@/utils/errorHandling/useErrorHandler';
-export { useErrorBoundary } from '@/utils/errorHandling/useErrorBoundary';
-export { withErrorHandling } from '@/utils/errorHandling/withErrorHandling';
+export { useErrorHandler } from './useErrorHandler';
+export { useErrorBoundary, withErrorHandling } from './useErrorBoundary';
 export { useDocumentManager } from '@/context/DocumentContext';
 
-// Export error utilities
-export { getErrorMessage, parseError, logError, createContextualError } from '@/utils/errorHandling/errorUtils';
-export { handleError, withErrorHandling as withErrorHandlingFn } from '@/utils/errorHandling/withErrorHandling';
+// Export error utilities for convenience
+export {
+  getErrorMessage,
+  parseError,
+  logError,
+  handleError,
+  withErrorHandling as withAsyncErrorHandling,
+  tryCatch
+} from '@/utils/errorHandling/errorHandlingCore';

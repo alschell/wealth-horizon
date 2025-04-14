@@ -1,7 +1,9 @@
 
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { withErrorBoundary, withCustomErrorFallback } from '@/components/shared/ErrorBoundary';
+import { withErrorBoundary } from '@/components/shared/ErrorBoundary';
+import { withCustomErrorFallback } from '@/components/shared/ErrorBoundary';
+import { withErrorHandling } from '@/hooks/useErrorBoundary';
 
 // Mock components for testing
 const WorkingComponent = () => <div>Working Component</div>;
@@ -98,5 +100,21 @@ describe('withCustomErrorFallback', () => {
     render(<WrappedComponent />);
     
     expect(screen.getByText(/Custom Error: Test error/i)).toBeInTheDocument();
+  });
+});
+
+describe('useErrorBoundary', () => {
+  it('should render the component normally when using the hook HOC', () => {
+    const WrappedComponent = withErrorHandling(WorkingComponent);
+    render(<WrappedComponent />);
+    
+    expect(screen.getByText('Working Component')).toBeInTheDocument();
+  });
+  
+  it('should render the default fallback when component throws using hook HOC', () => {
+    const WrappedComponent = withErrorHandling(ErrorComponent);
+    render(<WrappedComponent />);
+    
+    expect(screen.getByText(/Something went wrong/i)).toBeInTheDocument();
   });
 });

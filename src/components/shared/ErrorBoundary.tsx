@@ -1,9 +1,11 @@
+
 import React, { Component, ErrorInfo, ReactNode } from "react";
 import { AlertTriangle, RefreshCw } from "lucide-react";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
+import { handleError } from "@/utils/errorHandling/errorHandlingCore";
 
 interface Props {
   children: ReactNode;
@@ -46,12 +48,12 @@ class ErrorBoundary extends Component<Props, State> {
    * Log the error to an error reporting service
    */
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    // Log to console
-    console.error(
-      `ErrorBoundary caught an error in ${this.props.componentName || "component"}:`,
-      error,
-      errorInfo
-    );
+    // Use unified error handling
+    handleError(error, {
+      componentName: this.props.componentName || "ErrorBoundary",
+      logError: true,
+      showToast: false
+    });
     
     // Store error info in state for display
     this.setState({ errorInfo });
@@ -60,8 +62,6 @@ class ErrorBoundary extends Component<Props, State> {
     if (this.props.onError) {
       this.props.onError(error, errorInfo);
     }
-    
-    // Here you could send the error to an analytics service like Sentry
   }
 
   /**
@@ -175,10 +175,6 @@ export const withErrorBoundary = <P extends object>(
 
 /**
  * Creates a component wrapped with error boundary and custom fallback
- * 
- * @param Component - Component to wrap
- * @param FallbackComponent - Custom fallback component
- * @returns Component wrapped with error boundary and custom fallback
  */
 export function withCustomErrorFallback<P extends object, FallbackProps extends {error?: Error}>(
   Component: React.ComponentType<P>,
@@ -195,7 +191,11 @@ export function withCustomErrorFallback<P extends object, FallbackProps extends 
     }
 
     componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-      console.error("Error caught by withCustomErrorFallback:", error, errorInfo);
+      handleError(error, {
+        componentName: Component.displayName || Component.name || 'Component', 
+        logError: true,
+        showToast: false
+      });
     }
 
     render() {

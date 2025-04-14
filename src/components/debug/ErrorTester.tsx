@@ -5,8 +5,8 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
-import { useErrorBoundary } from '@/utils/errorHandling/useErrorBoundary';
-import ErrorFallback from '@/components/common/ErrorFallback';
+import { useErrorBoundary } from '@/hooks/useErrorBoundary';
+import ErrorFallback from '@/components/shared/ErrorFallback';
 
 // Error types that can be triggered
 const ERROR_TYPES = {
@@ -147,14 +147,14 @@ const ErrorTesterComponent: React.FC<ErrorTesterProps> = ({ componentName = 'Err
   );
 };
 
-// Use the useErrorBoundary hook directly instead of withErrorHandling HOC
+// Use the useErrorBoundary hook to provide error boundary functionality
 const ErrorTester: React.FC<ErrorTesterProps> = (props) => {
   const { ErrorBoundaryWrapper } = useErrorBoundary({
     componentName: 'ErrorTester',
     message: 'The error tester component crashed',
     showReset: true,
     logError: true,
-    notifyUser: true
+    showToast: true
   });
 
   return (

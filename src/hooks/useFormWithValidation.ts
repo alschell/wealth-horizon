@@ -1,79 +1,136 @@
 
-import { useForm, UseFormProps, FieldValues, UseFormReturn } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { useCallback } from 'react';
-import { showError, showSuccess } from '@/utils/toast';
+import { useState, useCallback } from "react";
+import { showSuccess, showError } from "@/utils/toast";
+import { useIsComponentMounted } from "./useIsComponentMounted";
 
-interface UseFormWithValidationProps<T extends FieldValues> extends UseFormProps<T> {
-  schema: z.ZodType<T>;
-  onSubmitSuccess?: (data: T) => void | Promise<void>;
-  successMessage?: {
-    title: string;
-    description: string;
-  };
-  errorMessage?: {
-    title: string;
-    description: string;
-  };
+interface UseFormWithValidationProps<T> {
+  initialValues: T;
+  onSubmit: (values: T) => Promise<void> | void;
+  validate?: (values: T) => Record<string, string>;
+  successMessage?: string;
+  errorMessage?: string;
+  resetOnSuccess?: boolean;
 }
 
 /**
- * Enhanced useForm hook with Zod validation and toast notifications
- * 
- * @param props - Form configuration
- * @returns Extended useForm return value with additional methods
+ * A comprehensive hook for managing form state, validation, and submission
+ * with integrated error handling
  */
-export function useFormWithValidation<T extends FieldValues>({
-  schema,
-  onSubmitSuccess,
-  successMessage = { title: 'Success', description: 'Form submitted successfully' },
-  errorMessage = { title: 'Error', description: 'Failed to submit form' },
-  ...formProps
-}: UseFormWithValidationProps<T>): UseFormReturn<T> & {
-  handleSubmitWithValidation: (e?: React.BaseSyntheticEvent) => Promise<void>;
-} {
-  // Initialize react-hook-form with zod resolver
-  const methods = useForm<T>({
-    ...formProps,
-    resolver: zodResolver(schema),
-  });
+export function useFormWithValidation<T extends Record<string, any>>({
+  initialValues,
+  onSubmit,
+  validate,
+  successMessage = "Form submitted successfully",
+  errorMessage = "There was an error submitting the form",
+  resetOnSuccess = true
+}: UseFormWithValidationProps<T>) {
+  const [values, setValues] = useState<T>(initialValues);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDirty, setIsDirty] = useState(false);
+  const isMounted = useIsComponentMounted();
 
-  // Custom submit handler with validation and notifications
-  const handleSubmitWithValidation = useCallback(
-    async (e?: React.BaseSyntheticEvent) => {
-      e?.preventDefault();
-      
-      try {
-        // Validate the form
-        const isValid = await methods.trigger();
-        if (!isValid) return;
-        
-        // Get form data
-        const data = methods.getValues();
-        
-        // Call the success handler if provided
-        if (onSubmitSuccess) {
-          await onSubmitSuccess(data);
-        }
-        
-        // Show success toast
-        showSuccess(successMessage.title, successMessage.description);
-      } catch (error) {
-        console.error('Form submission error:', error);
-        
-        // Show error toast
-        showError(
-          errorMessage.title,
-          error instanceof Error ? error.message : errorMessage.description
-        );
+  // Handle input changes for any form field
+  const handleChange = useCallback((
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = event.target;
+    setValues(prev => ({ ...prev, [name]: value }));
+    setIsDirty(true);
+    
+    // Clear error for the field being changed
+    if (errors[name]) {
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors[name];
+        return newErrors;
+      });
+    }
+  }, [errors]);
+
+  // Handle selection changes (for custom selects)
+  const handleSelect = useCallback((name: string, value: any) => {
+    setValues(prev => ({ ...prev, [name]: value }));
+    setIsDirty(true);
+    
+    // Clear error for the field being changed
+    if (errors[name]) {
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors[name];
+        return newErrors;
+      });
+    }
+  }, [errors]);
+
+  // Reset the form to initial values
+  const resetForm = useCallback(() => {
+    setValues(initialValues);
+    setErrors({});
+    setIsDirty(false);
+  }, [initialValues]);
+
+  // Submit the form with validation
+  const handleSubmit = useCallback(async (event?: React.FormEvent) => {
+    if (event) {
+      event.preventDefault();
+    }
+
+    // Validate the form if a validation function is provided
+    if (validate) {
+      const validationErrors = validate(values);
+      if (Object.keys(validationErrors).length > 0) {
+        setErrors(validationErrors);
+        return;
       }
-    },
-    [methods, onSubmitSuccess, successMessage, errorMessage]
-  );
+    }
+
+    try {
+      setIsSubmitting(true);
+      await onSubmit(values);
+      
+      // Only update state if component is still mounted
+      if (isMounted()) {
+        if (resetOnSuccess) {
+          resetForm();
+        }
+        showSuccess("Success", successMessage);
+      }
+    } catch (error) {
+      // Only update state if component is still mounted
+      if (isMounted()) {
+        const message = error instanceof Error ? error.message : errorMessage;
+        showError("Error", message);
+      }
+    } finally {
+      // Only update state if component is still mounted
+      if (isMounted()) {
+        setIsSubmitting(false);
+      }
+    }
+  }, [values, validate, onSubmit, resetForm, isMounted, successMessage, errorMessage, resetOnSuccess]);
 
   return {
-    ...methods,
-    handleSubmitWithValidation,
+    values,
+    errors,
+    isSubmitting,
+    isDirty,
+    handleChange,
+    handleSelect,
+    handleSubmit,
+    resetForm,
+    setValues,
+    setErrors,
+    setValue: useCallback((name: string, value: any) => {
+      setValues(prev => ({ ...prev, [name]: value }));
+      // Clear error for the field being changed
+      if (errors[name]) {
+        setErrors(prev => {
+          const newErrors = { ...prev };
+          delete newErrors[name];
+          return newErrors;
+        });
+      }
+    }, [errors])
   };
 }

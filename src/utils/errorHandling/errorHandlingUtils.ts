@@ -115,6 +115,10 @@ export function handleError(
       title: "Error",
       description: errorMessage,
       variant: "destructive",
+      action: actionText && action ? {
+        label: actionText,
+        onClick: action
+      } : undefined
     });
   }
   

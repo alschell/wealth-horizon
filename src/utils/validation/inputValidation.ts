@@ -89,31 +89,32 @@ export const validateZipCode = (zipCode: string, countryCode = 'US'): string | n
   if (countryCode === 'US') {
     const zipRegex = /^\d{5}(-\d{4})?$/;
     if (!zipRegex.test(zipCode)) {
-      return "Please enter a valid ZIP code (e.g., 12345 or 12345-6789)";
+      return "Please enter a valid US ZIP code (e.g., 12345 or 12345-6789)";
+    }
+  } else if (countryCode === 'CA') {
+    // Canadian postal code format (A1A 1A1)
+    const zipRegex = /^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$/;
+    if (!zipRegex.test(zipCode)) {
+      return "Please enter a valid Canadian postal code (e.g., A1A 1A1)";
+    }
+  } else if (countryCode === 'UK' || countryCode === 'GB') {
+    // UK postcode format (complex)
+    const zipRegex = /^[A-Z]{1,2}\d[A-Z\d]? ?\d[A-Z]{2}$/i;
+    if (!zipRegex.test(zipCode)) {
+      return "Please enter a valid UK postcode";
     }
   }
   
-  // Canadian postal code format (A1A 1A1)
-  else if (countryCode === 'CA') {
-    const postalRegex = /^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$/;
-    if (!postalRegex.test(zipCode)) {
-      return "Please enter a valid postal code (e.g., A1A 1A1)";
-    }
-  }
-  
-  // UK postcode format
-  else if (countryCode === 'UK' || countryCode === 'GB') {
-    const postcodeRegex = /^[A-Z]{1,2}\d[A-Z\d]? ?\d[A-Z]{2}$/i;
-    if (!postcodeRegex.test(zipCode)) {
-      return "Please enter a valid postcode";
-    }
+  // Generic fallback validation (allow alphanumeric with spaces and hyphens)
+  if (!/^[a-zA-Z0-9 -]+$/.test(zipCode)) {
+    return "Please enter a valid postal/ZIP code";
   }
   
   return null;
 };
 
 /**
- * Validates a name (prevents numbers and most special characters)
+ * Validates a name (prevents numbers and special characters)
  * 
  * @param name - Name to validate
  * @returns Error message or null if valid
@@ -121,10 +122,10 @@ export const validateZipCode = (zipCode: string, countryCode = 'US'): string | n
 export const validateName = (name: string): string | null => {
   if (!name) return null; // Empty check should be done separately
   
-  // Allow letters, spaces, hyphens, and apostrophes
-  const nameRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ \-']+$/;
+  // Allow letters, spaces, hyphens, and apostrophes (common in names)
+  const nameRegex = /^[a-zA-Z\s'-]+$/;
   if (!nameRegex.test(name)) {
-    return "Please enter a valid name (no numbers or special characters)";
+    return "Please enter a valid name (letters, spaces, hyphens, and apostrophes only)";
   }
   
   return null;

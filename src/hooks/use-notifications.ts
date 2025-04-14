@@ -8,7 +8,7 @@ export const useNotifications = () => {
     toast({
       title: message,
       description: description,
-      variant: "default",
+      variant: "default"
     });
   }, []);
 
@@ -16,14 +16,14 @@ export const useNotifications = () => {
     toast({
       title: message,
       description: description || "Please try again",
-      variant: "destructive",
+      variant: "destructive"
     });
   }, []);
 
   const showInfo = useCallback((message: string, description?: string) => {
     toast({
       title: message,
-      description: description,
+      description: description
     });
   }, []);
 
@@ -31,7 +31,7 @@ export const useNotifications = () => {
     toast({
       title: message,
       description: description,
-      variant: "destructive",
+      variant: "destructive"
     });
   }, []);
 
@@ -39,6 +39,6 @@ export const useNotifications = () => {
     showSuccess,
     showError,
     showInfo,
-    showWarning,
+    showWarning
   };
 };

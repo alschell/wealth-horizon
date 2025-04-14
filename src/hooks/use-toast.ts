@@ -9,7 +9,10 @@ export interface Toast {
   id?: string;
   title?: React.ReactNode;
   description?: React.ReactNode;
-  action?: React.ReactNode;
+  action?: {
+    label: string;
+    onClick: () => void;
+  };
   variant?: "default" | "destructive";
   duration?: number;
   className?: string;
@@ -17,20 +20,28 @@ export interface Toast {
 
 // Main toast function that accepts our Toast interface
 export function toast(props: Toast) {
-  const { title, description, variant, duration, className } = props;
+  const { title, description, variant, duration, className, action } = props;
   
   if (variant === "destructive") {
     return sonnerToast.error(title as string, {
       description: description as string,
       duration: duration,
-      className: className
+      className: className,
+      action: action ? {
+        label: action.label,
+        onClick: action.onClick
+      } : undefined
     });
   }
   
   return sonnerToast(title as string, {
     description: description as string,
     duration: duration,
-    className: className
+    className: className,
+    action: action ? {
+      label: action.label,
+      onClick: action.onClick
+    } : undefined
   });
 }
 

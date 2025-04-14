@@ -49,14 +49,14 @@ export function parseError(error: unknown): ErrorResponse {
   if (error instanceof Error) {
     return {
       message: error.message,
-      code: "ERROR"
+      code: error.name
     };
   }
   
   if (typeof error === "string") {
     return {
       message: error,
-      code: "ERROR"
+      code: "ERROR_STRING"
     };
   }
   
@@ -64,7 +64,7 @@ export function parseError(error: unknown): ErrorResponse {
     if ("message" in error) {
       return {
         message: String((error as ErrorResponse).message),
-        code: (error as ErrorResponse).code || "ERROR",
+        code: (error as ErrorResponse).code || "ERROR_OBJECT",
         details: (error as ErrorResponse).details
       };
     }
@@ -93,19 +93,24 @@ export function handleError(
     onError
   } = options;
   
-  // Skip if silent mode
-  if (silent) return;
-  
   // Get error message
   const errorMessage = getErrorMessage(error, fallbackMessage);
   
-  // Log error
-  if (logError) {
-    console.error("Error:", error);
+  // Parse error details
+  const errorDetails = parseError(error);
+  
+  // Log error to console if enabled
+  if (logError && !silent) {
+    console.error("Error:", {
+      message: errorMessage,
+      code: errorDetails.code,
+      details: errorDetails.details,
+      original: error
+    });
   }
   
-  // Show toast
-  if (showToast) {
+  // Show toast notification if enabled and not silent
+  if (showToast && !silent) {
     toast({
       title: "Error",
       description: errorMessage,
@@ -113,7 +118,7 @@ export function handleError(
     });
   }
   
-  // Call error callback
+  // Call error callback if provided
   if (onError) {
     onError(error);
   }

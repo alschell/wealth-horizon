@@ -7,6 +7,7 @@ export {
 
 // Re-export all utility toast functions from utility files
 export {
+  showToast,
   showSuccess,
   showError,
   showInfo,
@@ -15,7 +16,8 @@ export {
   showSuccessToast,
   showErrorToast,
   showInfoToast,
-  showWarningToast
+  showWarningToast,
+  type ToastVariant
 } from './toastUtils';
 
 export {

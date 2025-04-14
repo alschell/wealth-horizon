@@ -1,172 +1,162 @@
 
 import { useState, useCallback } from 'react';
-import { showSuccess, showError } from '@/utils/toast';
+import { handleError } from '@/utils/errorHandling';
+import { showSuccess } from '@/utils/toast';
 
-export interface FormValidationErrors<T> {
-  [key: string]: string;
-}
-
-export interface UseUnifiedFormProps<T extends Record<string, any>> {
-  initialValues: T;
-  onSubmit?: (values: T) => Promise<boolean> | boolean;
-  validate?: (values: T) => FormValidationErrors<T>;
-  requiredFields?: (keyof T)[];
+export interface FormSubmissionOptions<T> {
+  onSuccess?: (data: T) => void;
+  onError?: (error: unknown) => void;
   successMessage?: string;
   errorMessage?: string;
+  validateForm?: (data: T) => boolean;
+  resetAfterSubmit?: boolean;
+  logErrors?: boolean;
 }
 
 /**
- * A unified form hook that combines the best aspects of multiple form hooks
- * Provides form state management, validation, and submission handling
+ * Unified form hook for handling form state, validation, and submission
  */
-export function useUnifiedForm<T extends Record<string, any>>({
-  initialValues,
-  onSubmit,
-  validate,
-  requiredFields = [],
-  successMessage = 'Form submitted successfully',
-  errorMessage = 'Please fix the errors in the form'
-}: UseUnifiedFormProps<T>) {
-  const [values, setValues] = useState<T>(initialValues);
-  const [errors, setErrors] = useState<FormValidationErrors<T>>({});
-  const [touched, setTouched] = useState<Record<string, boolean>>({});
+export function useUnifiedForm<T extends Record<string, any>>(initialData: T) {
+  const [formData, setFormData] = useState<T>(initialData);
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [lastError, setLastError] = useState<string | null>(null);
 
-  // Validate required fields
-  const validateRequiredFields = useCallback((data: T): FormValidationErrors<T> => {
-    const fieldErrors: FormValidationErrors<T> = {};
-    
-    requiredFields.forEach(field => {
-      const value = data[field];
-      if (value === undefined || value === null || value === '') {
-        fieldErrors[field as string] = `${String(field)} is required`;
-      }
+  /**
+   * Update form field
+   */
+  const updateField = useCallback((field: keyof T, value: any) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+    // Clear error for this field if it exists
+    if (errors[field as string]) {
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors[field as string];
+        return newErrors;
+      });
+    }
+  }, [errors]);
+
+  /**
+   * Handle input change event
+   */
+  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value, type } = e.target as HTMLInputElement;
+    const fieldValue = type === 'checkbox' ? (e.target as HTMLInputElement).checked : value;
+    updateField(name as keyof T, fieldValue);
+  }, [updateField]);
+
+  /**
+   * Set field value directly
+   */
+  const setFieldValue = useCallback((field: keyof T, value: any) => {
+    updateField(field, value);
+  }, [updateField]);
+
+  /**
+   * Set field error
+   */
+  const setFieldError = useCallback((field: keyof T, message: string) => {
+    setErrors(prev => ({ ...prev, [field]: message }));
+  }, []);
+
+  /**
+   * Clear field error
+   */
+  const clearFieldError = useCallback((field: keyof T) => {
+    setErrors(prev => {
+      const newErrors = { ...prev };
+      delete newErrors[field as string];
+      return newErrors;
     });
-    
-    return fieldErrors;
-  }, [requiredFields]);
+  }, []);
 
-  // Handle input changes
-  const handleChange = useCallback((
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+  /**
+   * Reset form to initial state
+   */
+  const resetForm = useCallback(() => {
+    setFormData(initialData);
+    setErrors({});
+    setIsSuccess(false);
+    setLastError(null);
+  }, [initialData]);
+
+  /**
+   * Submit form
+   */
+  const submitForm = useCallback(async (
+    submitFn: (data: T) => Promise<void>,
+    options: FormSubmissionOptions<T> = {}
   ) => {
-    const { name, value, type } = e.target;
-    const newValue = type === 'checkbox' 
-      ? (e.target as HTMLInputElement).checked 
-      : value;
-    
-    setValues(prev => ({ ...prev, [name]: newValue }));
-    setTouched(prev => ({ ...prev, [name]: true }));
-    
-    // Clear error for this field
-    if (errors[name]) {
-      setErrors(prev => {
-        const newErrors = { ...prev };
-        delete newErrors[name];
-        return newErrors;
-      });
-    }
-  }, [errors]);
+    const {
+      onSuccess,
+      onError,
+      successMessage = 'Form submitted successfully',
+      errorMessage = 'Error submitting form',
+      validateForm,
+      resetAfterSubmit = false,
+      logErrors = true
+    } = options;
 
-  // Handle field value changes directly (for custom inputs)
-  const setFieldValue = useCallback((field: string, value: any) => {
-    setValues(prev => ({ ...prev, [field]: value }));
-    setTouched(prev => ({ ...prev, [field]: true }));
-    
-    // Clear error for this field
-    if (errors[field]) {
-      setErrors(prev => {
-        const newErrors = { ...prev };
-        delete newErrors[field];
-        return newErrors;
-      });
-    }
-  }, [errors]);
-
-  // Validate form
-  const validateForm = useCallback((): boolean => {
-    // Start with required field validation
-    const requiredErrors = validateRequiredFields(values);
-    
-    // Add custom validation if provided
-    const customErrors = validate ? validate(values) : {};
-    
-    // Combine errors
-    const allErrors = { ...requiredErrors, ...customErrors };
-    setErrors(allErrors);
-    
-    return Object.keys(allErrors).length === 0;
-  }, [values, validate, validateRequiredFields]);
-
-  // Handle form submission
-  const handleSubmit = useCallback(async (e?: React.FormEvent) => {
-    if (e) {
-      e.preventDefault();
-    }
-    
-    // Mark all fields as touched
-    const allTouched = Object.keys(values).reduce((acc, key) => {
-      acc[key] = true;
-      return acc;
-    }, {} as Record<string, boolean>);
-    
-    setTouched(allTouched);
-    
-    if (!validateForm()) {
-      showError('Validation Error', errorMessage);
+    // Validate form if validation function is provided
+    if (validateForm && !validateForm(formData)) {
       return false;
     }
-    
-    if (!onSubmit) return true;
-    
+
     setIsSubmitting(true);
-    setIsSuccess(false);
-    
+    setLastError(null);
+
     try {
-      const result = await onSubmit(values);
-      setIsSuccess(result);
+      await submitFn(formData);
       
-      if (result) {
+      if (successMessage) {
         showSuccess('Success', successMessage);
-      } else {
-        showError('Error', 'Form submission failed');
       }
       
-      return result;
+      setIsSuccess(true);
+      
+      if (resetAfterSubmit) {
+        resetForm();
+      }
+      
+      if (onSuccess) {
+        onSuccess(formData);
+      }
+      
+      return true;
     } catch (error) {
-      console.error('Form submission error:', error);
-      showError('Error', error instanceof Error ? error.message : 'Form submission failed');
+      setIsSuccess(false);
+      
+      const errorMsg = error instanceof Error ? error.message : errorMessage;
+      setLastError(errorMsg);
+      
+      handleError(error, {
+        fallbackMessage: errorMessage,
+        onError,
+        logError: logErrors
+      });
+      
       return false;
     } finally {
       setIsSubmitting(false);
     }
-  }, [values, validateForm, onSubmit, successMessage, errorMessage]);
-
-  // Reset form
-  const resetForm = useCallback(() => {
-    setValues(initialValues);
-    setErrors({});
-    setTouched({});
-    setIsSubmitting(false);
-    setIsSuccess(false);
-  }, [initialValues]);
+  }, [formData, resetForm]);
 
   return {
-    values,
+    formData,
+    setFormData,
     errors,
-    touched,
+    setErrors,
     isSubmitting,
     isSuccess,
-    handleChange,
+    lastError,
+    updateField,
+    handleInputChange,
     setFieldValue,
-    handleSubmit,
+    setFieldError,
+    clearFieldError,
     resetForm,
-    setValues,
-    validateForm,
-    // Helper for checking if a field has been touched and has an error
-    hasError: useCallback((field: string) => touched[field] && Boolean(errors[field]), [touched, errors]),
-    // Helper for getting error message
-    getErrorMessage: useCallback((field: string) => errors[field] || '', [errors])
+    submitForm
   };
 }

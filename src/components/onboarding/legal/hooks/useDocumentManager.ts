@@ -2,8 +2,8 @@
 import { useState, useCallback } from 'react';
 import { DocumentFileWithMetadata } from '../types';
 import { showSuccess, showError } from '@/utils/toast';
-import { validateFile, validateDocumentFields } from './utils/documentValidation';
-import { createDocument, updateDocumentInList, removeDocumentFromList } from './utils/documentFactory';
+import { useDocumentValidation } from './document/useDocumentValidation';
+import { useDocumentFactory } from './document/useDocumentFactory';
 
 export interface UseDocumentManagerProps {
   onSave?: (documents: DocumentFileWithMetadata[]) => void | Promise<void>;
@@ -37,6 +37,12 @@ export function useDocumentManager({
   // Submission state
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   
+  // Get validation functions
+  const { validateFile, validateDocumentFields } = useDocumentValidation();
+  
+  // Get document factory functions
+  const { createDocument, updateDocumentInList, removeDocumentFromList } = useDocumentFactory();
+
   /**
    * Handle file selection
    */
@@ -56,7 +62,7 @@ export function useDocumentManager({
     setErrors(prev => ({ ...prev, selectedFile: false }));
     
     showSuccess("File uploaded", "Document has been successfully uploaded.");
-  }, []);
+  }, [validateFile]);
   
   /**
    * Clear selected file
@@ -113,7 +119,7 @@ export function useDocumentManager({
     resetForm();
     
     showSuccess("Document added", "The document has been added successfully.");
-  }, [documentType, issueDate, expiryDate, selectedFile]);
+  }, [documentType, issueDate, expiryDate, selectedFile, createDocument, validateDocumentFields]);
   
   /**
    * Edit an existing document
@@ -163,7 +169,7 @@ export function useDocumentManager({
     setEditingDocumentId(null);
     
     showSuccess("Document updated", "The document has been updated successfully.");
-  }, [editingDocumentId, documentType, issueDate, expiryDate, selectedFile]);
+  }, [editingDocumentId, documentType, issueDate, expiryDate, selectedFile, updateDocumentInList, validateDocumentFields]);
   
   /**
    * Cancel edit operation
@@ -180,7 +186,7 @@ export function useDocumentManager({
   const handleRemoveDocument = useCallback((documentId: string) => {
     setDocumentFiles(prev => removeDocumentFromList(prev, documentId));
     showSuccess("Document removed", "The document has been removed successfully.");
-  }, []);
+  }, [removeDocumentFromList]);
   
   /**
    * Submit all documents

@@ -3,50 +3,49 @@
  * Central export point for all validation utilities
  */
 
-// Import validation functions from respective modules with specific names
-import { 
-  validateRequired as validateRequiredField,
+// Re-export validation functions with specific namespaces to avoid conflicts
+import {
+  validateRequired,
   validatePattern,
   validateLei,
-  validateDate as validateDateFormat,
-  validateMinLength as validateMinLengthField
+  validateDate,
+  validateMinLength
 } from './fieldValidation';
 
 import {
-  validateEmail as validateEmailFormat,
-  validatePhone as validatePhoneFormat,
-  validateUrl as validateUrlFormat,
+  validateEmail,
+  validatePhone,
+  validateUrl,
   validatePassword,
   validateZipCode,
   validateName
 } from './inputValidation';
 
-// Export renamed functions to avoid conflicts
-export {
-  validateRequiredField,
-  validatePattern,
-  validateLei,
-  validateDateFormat,
-  validateMinLengthField,
-  validateEmailFormat,
-  validatePhoneFormat,
-  validateUrlFormat,
-  validatePassword,
-  validateZipCode,
-  validateName
+// Create namespaced exports to resolve conflicts
+export const field = {
+  required: validateRequired,
+  pattern: validatePattern,
+  lei: validateLei,
+  date: validateDate,
+  minLength: validateMinLength
 };
 
-// Export other validation functions that don't have naming conflicts
+export const input = {
+  email: validateEmail,
+  phone: validatePhone,
+  url: validateUrl,
+  password: validatePassword,
+  zipCode: validateZipCode,
+  name: validateName
+};
+
+// Export numeric validation and file validation directly
 export * from './numericValidation';
 export * from './fileValidation';
 export * from './formValidationCore';
 
 /**
  * Combines multiple validation rules for a single field
- * 
- * @param value - Field value to validate
- * @param validations - Array of validation functions
- * @returns Null if valid, first error message if invalid
  */
 export const validateComposite = (
   value: string,
@@ -66,10 +65,6 @@ export const validateComposite = (
 
 /**
  * Validate a form object against a set of validation rules
- * 
- * @param formData - Form data object
- * @param validationRules - Object mapping field names to validation functions
- * @returns Object with validation errors or empty object if valid
  */
 export const validateForm = <T extends Record<string, any>>(
   formData: T,

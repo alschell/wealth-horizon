@@ -1,45 +1,33 @@
 
-import { toast } from "@/hooks/use-toast";
+import { toast } from '@/hooks/use-toast';
 
 /**
- * Show a toast notification for documentation actions
+ * Show a toast notification for documentation
  */
-export function showDocumentationToast(title: string, description?: string, duration = 3000) {
+export function showDocumentationToast(title: string, description?: string): void {
   toast({
     title,
     description,
-    duration
+    variant: "default",
   });
 }
 
 /**
- * Show a success toast notification for copy actions
+ * Show a toast notification for successful copy operation
  */
-export function showCopySuccessToast(description = "You can now paste it in your application") {
+export function showCopySuccessToast(message: string = "Copied to clipboard"): void {
   toast({
-    title: "Code copied to clipboard",
-    description,
-    duration: 3000
+    title: "Success",
+    description: message,
   });
 }
 
 /**
- * Show a toast notification for download actions
+ * Show a toast notification for download operation
  */
-export function showDownloadToast(sdkName: string, version: string) {
-  // Initial toast for download start
+export function showDownloadToast(title: string, description?: string): void {
   toast({
-    title: `Downloading ${sdkName} SDK v${version}`,
-    description: "Your download will begin shortly",
-    duration: 3000
+    title,
+    description: description || "Your download has started",
   });
-  
-  // Delayed toast for download completion
-  setTimeout(() => {
-    toast({
-      title: "Download complete",
-      description: `${sdkName} SDK v${version} has been downloaded`,
-      duration: 3000,
-    });
-  }, 1500);
 }

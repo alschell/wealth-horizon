@@ -1,133 +1,70 @@
 
-/**
- * useFormSubmission hook
- * 
- * A custom hook that handles form submission with loading states,
- * error handling, and success handling.
- */
-
 import { useState, useCallback } from 'react';
-import { toast } from "@/components/ui/use-toast";
-import { useIsComponentMounted } from './useIsComponentMounted';
+import { handleError } from '@/utils/errorHandling';
+import { showSuccess } from '@/utils/toast';
 
-interface UseFormSubmissionProps<T> {
-  /** Form submission handler function */
-  onSubmit: (data: T) => Promise<void> | void;
-  /** Optional callback function on successful submission */
-  onSuccess?: () => void;
-  /** Optional callback function on submission error */
-  onError?: (error: any) => void;
-  /** Success message to show to user */
+export interface FormSubmissionOptions<T> {
+  onSuccess?: (data: T) => void;
+  onError?: (error: unknown) => void;
   successMessage?: string;
-  /** Error message to show to user */
   errorMessage?: string;
-  /** Form validation function */
-  validateForm?: () => boolean;
-  /** Should automatically dismiss toasts */
-  autoDismiss?: boolean;
+  validateForm?: (data: T) => boolean;
+  resetAfterSubmit?: boolean;
 }
 
 /**
- * Hook for handling form submission logic including validation,
- * loading states, and success/error handling.
+ * Hook for managing form submission
  */
-export function useFormSubmission<T>({
-  onSubmit,
-  onSuccess,
-  onError,
-  successMessage = 'Successfully submitted',
-  errorMessage = 'An error occurred. Please try again.',
-  validateForm,
-  autoDismiss = true,
-}: UseFormSubmissionProps<T>) {
-  const isMounted = useIsComponentMounted();
+export function useFormSubmission<T>() {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submissionError, setSubmissionError] = useState<string | null>(null);
-  const [isSuccess, setIsSuccess] = useState(false);
 
-  /**
-   * Handle form submission
-   * @param data Form data to submit
-   */
-  const handleSubmit = useCallback(
-    async (data: T) => {
-      // Reset states
-      setSubmissionError(null);
-      setIsSuccess(false);
+  const submitForm = useCallback(async <D extends T>(
+    submitFn: (data: D) => Promise<void>,
+    data: D,
+    options: FormSubmissionOptions<D> = {}
+  ) => {
+    const {
+      onSuccess,
+      onError,
+      successMessage = 'Form submitted successfully',
+      errorMessage = 'Error submitting form',
+      validateForm,
+      resetAfterSubmit
+    } = options;
 
-      // Validate form if validation function is provided
-      if (validateForm && !validateForm()) {
-        return;
+    // Validate form if validation function is provided
+    if (validateForm && !validateForm(data)) {
+      return false;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      await submitFn(data);
+      
+      if (successMessage) {
+        showSuccess('Success', successMessage);
       }
-
-      setIsSubmitting(true);
-
-      try {
-        // Execute the submit function (could be async or sync)
-        await onSubmit(data);
-
-        // Only update state if component is still mounted
-        if (isMounted()) {
-          setIsSuccess(true);
-          
-          toast({
-            title: 'Success',
-            description: successMessage,
-            variant: 'default',
-          });
-
-          if (onSuccess) {
-            onSuccess();
-          }
-        }
-      } catch (error) {
-        // Only update state if component is still mounted
-        if (isMounted()) {
-          const errorMsg = error instanceof Error ? error.message : errorMessage;
-          setSubmissionError(errorMsg);
-          
-          toast({
-            title: 'Error',
-            description: errorMsg,
-            variant: 'destructive',
-          });
-
-          if (onError) {
-            onError(error);
-          }
-        }
-      } finally {
-        // Only update state if component is still mounted
-        if (isMounted()) {
-          setIsSubmitting(false);
-        }
+      
+      if (onSuccess) {
+        onSuccess(data);
       }
-    },
-    [
-      onSubmit, 
-      onSuccess, 
-      onError, 
-      validateForm, 
-      successMessage, 
-      errorMessage, 
-      isMounted
-    ]
-  );
-
-  /**
-   * Reset the form submission state
-   */
-  const resetFormState = useCallback(() => {
-    setIsSubmitting(false);
-    setSubmissionError(null);
-    setIsSuccess(false);
+      
+      return true;
+    } catch (error) {
+      handleError(error, {
+        fallbackMessage: errorMessage,
+        onError
+      });
+      
+      return false;
+    } finally {
+      setIsSubmitting(false);
+    }
   }, []);
 
   return {
     isSubmitting,
-    submissionError,
-    isSuccess,
-    handleSubmit,
-    resetFormState,
+    submitForm
   };
 }

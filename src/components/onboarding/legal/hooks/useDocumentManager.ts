@@ -2,60 +2,8 @@
 import { useState, useCallback } from 'react';
 import { DocumentFileWithMetadata } from '../types';
 import { showSuccess, showError } from '@/utils/toast';
-
-/**
- * Validates a file for document upload
- */
-const validateFile = (file: File): string | null => {
-  // Check file size (max 5MB)
-  const maxSize = 5 * 1024 * 1024; // 5MB
-  if (file.size > maxSize) {
-    return `File size exceeds 5MB limit (${(file.size / (1024 * 1024)).toFixed(2)}MB)`;
-  }
-
-  // Check file type
-  const allowedTypes = ['application/pdf', 'image/jpeg', 'image/png', 'image/gif'];
-  if (!allowedTypes.includes(file.type)) {
-    return `File type ${file.type} is not supported. Please upload PDF or image files.`;
-  }
-
-  return null;
-};
-
-/**
- * Validates required document fields and returns errors
- */
-const validateDocumentFields = (
-  documentType: string,
-  issueDate: string,
-  selectedFile: File | null
-): Record<string, boolean> => {
-  const errors: Record<string, boolean> = {};
-  
-  if (!documentType) errors.documentType = true;
-  if (!issueDate) errors.issueDate = true;
-  if (!selectedFile) errors.selectedFile = true;
-  
-  return errors;
-};
-
-/**
- * Creates a new document with metadata
- */
-const createDocument = (
-  documentType: string,
-  issueDate: string,
-  expiryDate: string,
-  selectedFile: File
-): DocumentFileWithMetadata => {
-  return {
-    id: `doc-${Date.now()}`,
-    file: selectedFile,
-    documentType,
-    issueDate,
-    expiryDate
-  };
-};
+import { validateFile, validateDocumentFields } from './utils/documentValidation';
+import { createDocument, updateDocumentInList, removeDocumentFromList } from './utils/documentFactory';
 
 export interface UseDocumentManagerProps {
   onSave?: (documents: DocumentFileWithMetadata[]) => void | Promise<void>;
@@ -198,18 +146,16 @@ export function useDocumentManager({
     }
     
     // Update document
-    setDocumentFiles(prev => prev.map(doc => {
-      if (doc.id === editingDocumentId) {
-        return {
-          ...doc,
-          file: selectedFile as File,
-          documentType,
-          issueDate,
-          expiryDate
-        };
-      }
-      return doc;
-    }));
+    setDocumentFiles(prev => 
+      updateDocumentInList(
+        prev,
+        editingDocumentId,
+        documentType,
+        issueDate,
+        expiryDate,
+        selectedFile as File
+      )
+    );
     
     // Reset form and editing state
     resetForm();
@@ -232,7 +178,7 @@ export function useDocumentManager({
    * Remove a document
    */
   const handleRemoveDocument = useCallback((documentId: string) => {
-    setDocumentFiles(prev => prev.filter(doc => doc.id !== documentId));
+    setDocumentFiles(prev => removeDocumentFromList(prev, documentId));
     showSuccess("Document removed", "The document has been removed successfully.");
   }, []);
   

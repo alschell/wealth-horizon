@@ -36,7 +36,7 @@ export const useDocumentHandlers = ({
         setSelectedFile(files[0]);
         setErrors(prev => ({ ...prev, selectedFile: false }));
       }
-    }, [documentManager.handleFileSelected, setSelectedFile, setErrors]),
+    }, [documentManager, setSelectedFile, setErrors]),
     handleFileClear: useCallback(() => {
       setSelectedFile(null);
       setErrors(prev => ({ ...prev, selectedFile: false }));

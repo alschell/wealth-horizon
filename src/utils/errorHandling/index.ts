@@ -1,14 +1,10 @@
 
-// Re-export functions from errorUtils
-export { 
+// Re-export all functions and types from errorHandlingUtils
+export {
   getErrorMessage,
   parseError,
-  type ErrorResponse
-} from './errorUtils';
-
-// Re-export functions and types from withErrorHandling
-export {
   handleError,
   withErrorHandling,
+  type ErrorResponse,
   type ErrorHandlerOptions
-} from './withErrorHandling';
+} from './errorHandlingUtils';

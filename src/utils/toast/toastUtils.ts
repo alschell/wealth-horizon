@@ -1,54 +1,50 @@
 
-import { toast } from "@/hooks/use-toast";
+import { toast } from '@/hooks/use-toast';
 
 /**
  * Show a success toast notification
  */
-export function showSuccess(title: string, description?: string, duration = 3000) {
+export function showSuccess(title: string, description?: string): void {
   toast({
     title,
     description,
     variant: "default",
-    duration
   });
 }
 
 /**
  * Show an error toast notification
  */
-export function showError(title: string, description?: string, duration = 5000) {
+export function showError(title: string, description?: string): void {
   toast({
     title,
-    description: description || "An error occurred. Please try again.",
+    description: description || "Please try again",
     variant: "destructive",
-    duration
   });
 }
 
 /**
  * Show an info toast notification
  */
-export function showInfo(title: string, description?: string, duration = 3000) {
+export function showInfo(title: string, description?: string): void {
   toast({
     title,
     description,
-    duration
   });
 }
 
 /**
  * Show a warning toast notification
  */
-export function showWarning(title: string, description?: string, duration = 4000) {
+export function showWarning(title: string, description?: string): void {
   toast({
     title,
     description,
     variant: "destructive",
-    duration
   });
 }
 
-// Add these for backward compatibility
+// Add aliases for backward compatibility
 export const showSuccessToast = showSuccess;
 export const showErrorToast = showError;
 export const showInfoToast = showInfo;

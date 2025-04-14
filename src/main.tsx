@@ -18,7 +18,7 @@ console.log("Root element found:", rootElement);
 
 const root = createRoot(rootElement);
 
-// Make sure the entire app is wrapped in React and BrowserRouter
+// Wrap the App component with BrowserRouter
 root.render(
   <React.StrictMode>
     <BrowserRouter>

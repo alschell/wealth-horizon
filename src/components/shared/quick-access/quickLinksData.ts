@@ -1,155 +1,144 @@
 
 import React from "react";
 import {
-  Home,
   FileText,
-  Users,
   BarChart3,
-  Settings,
-  Calendar,
-  Wallet,
+  Landmark,
+  Leaf,
+  Shield,
+  Calculator,
+  Building2,
+  Scroll,
+  Users,
+  TrendingUp,
   PieChart,
-  Globe,
-  Book,
-  MessageSquare,
-  Download,
-  Upload,
-  Lock,
-  CreditCard,
-  ShieldCheck,
-  HelpCircle,
-  Activity
+  LineChart,
+  DollarSign,
+  Lightbulb,
+  Briefcase,
+  Gift,
+  LucideIcon
 } from "lucide-react";
 import { QuickLinkItem } from "./types";
 
-/**
- * All available quick link items
- */
+// Function to create consistent icon elements with proper sizing
+const createIcon = (Icon: LucideIcon): React.ReactNode => {
+  return <Icon className="h-4 w-4" />;
+};
+
 export const allQuickLinks: QuickLinkItem[] = [
   {
-    id: "dashboard",
-    title: "Dashboard",
-    href: "/dashboard",
-    icon: <Home size={20} />,
-    category: "main"
+    id: "analyze-wealth",
+    title: "Analyze wealth",
+    description: "Portfolio analysis tools",
+    icon: createIcon(PieChart),
+    href: "/analyze-wealth"
   },
   {
-    id: "portfolio",
-    title: "Portfolio",
-    href: "/portfolio",
-    icon: <PieChart size={20} />,
-    category: "main"
+    id: "market-data",
+    title: "Access market data & news",
+    description: "Access market information",
+    icon: createIcon(LineChart),
+    href: "/market-data"
   },
   {
-    id: "reporting",
-    title: "Reports",
-    href: "/reports",
-    icon: <BarChart3 size={20} />,
-    category: "main"
+    id: "trade",
+    title: "Trade",
+    description: "Execute investment trades",
+    icon: createIcon(TrendingUp),
+    href: "/trading"
+  },
+  {
+    id: "credit-facilities",
+    title: "Manage credit facilities",
+    description: "Manage credit facilities",
+    icon: createIcon(Briefcase),
+    href: "/credit-facilities"
+  },
+  {
+    id: "advice",
+    title: "Get advice",
+    description: "Get personalized advice",
+    icon: createIcon(Lightbulb),
+    href: "/advice"
+  },
+  {
+    id: "cashflow",
+    title: "Manage cashflow & liquidity",
+    description: "Manage liquidity and deposits",
+    icon: createIcon(DollarSign),
+    href: "/cashflow-management"
+  },
+  {
+    id: "reports",
+    title: "Generate reports",
+    description: "Generate financial reports",
+    icon: createIcon(BarChart3),
+    href: "/reporting"
+  },
+  {
+    id: "users",
+    title: "Manage users & permissions",
+    description: "Manage user accounts",
+    icon: createIcon(Users),
+    href: "/user-management"
+  },
+  {
+    id: "integrations",
+    title: "Manage integrations",
+    description: "Manage connected services",
+    icon: createIcon(Landmark),
+    href: "/integrations"
+  },
+  {
+    id: "esg",
+    title: "ESG Investing",
+    description: "Sustainable investing metrics",
+    icon: createIcon(Leaf),
+    href: "/esg"
+  },
+  {
+    id: "compliance",
+    title: "Monitor Compliance",
+    description: "Track regulatory activities",
+    icon: createIcon(Shield),
+    href: "/compliance-monitoring"
+  },
+  {
+    id: "tax",
+    title: "Tax Optimization",
+    description: "Tax planning & efficiency",
+    icon: createIcon(Calculator),
+    href: "/tax-optimization"
+  },
+  {
+    id: "entity",
+    title: "Entity Management",
+    description: "Manage legal structures",
+    icon: createIcon(Building2),
+    href: "/entity-management"
+  },
+  {
+    id: "legacy",
+    title: "Legacy Planning",
+    description: "Succession & estate planning",
+    icon: createIcon(Scroll),
+    href: "/legacy-planning"
+  },
+  {
+    id: "client-portal",
+    title: "Client Portal",
+    description: "Manage client access",
+    icon: createIcon(Gift),
+    href: "/client-portal"
   },
   {
     id: "documents",
     title: "Documents",
-    href: "/documents",
-    icon: <FileText size={20} />,
-    category: "main"
-  },
-  {
-    id: "calendar",
-    title: "Calendar",
-    href: "/calendar",
-    icon: <Calendar size={20} />,
-    category: "main"
-  },
-  {
-    id: "accounts",
-    title: "Accounts",
-    href: "/accounts",
-    icon: <Wallet size={20} />,
-    category: "main"
-  },
-  {
-    id: "market",
-    title: "Market Data",
-    href: "/market",
-    icon: <Globe size={20} />,
-    category: "tools"
-  },
-  {
-    id: "contacts",
-    title: "Contacts",
-    href: "/contacts",
-    icon: <Users size={20} />,
-    category: "tools"
-  },
-  {
-    id: "help",
-    title: "Help Center",
-    href: "/help",
-    icon: <HelpCircle size={20} />,
-    category: "support"
-  },
-  {
-    id: "knowledge",
-    title: "Knowledge Base",
-    href: "/knowledge",
-    icon: <Book size={20} />,
-    category: "support"
-  },
-  {
-    id: "chat",
-    title: "Live Chat",
-    href: "/chat",
-    icon: <MessageSquare size={20} />,
-    category: "support"
-  },
-  {
-    id: "downloads",
-    title: "Downloads",
-    href: "/downloads",
-    icon: <Download size={20} />,
-    category: "tools"
-  },
-  {
-    id: "uploads",
-    title: "Upload Files",
-    href: "/uploads",
-    icon: <Upload size={20} />,
-    category: "tools"
-  },
-  {
-    id: "security",
-    title: "Security",
-    href: "/security",
-    icon: <Lock size={20} />,
-    category: "settings"
-  },
-  {
-    id: "payments",
-    title: "Payments",
-    href: "/payments",
-    icon: <CreditCard size={20} />,
-    category: "settings"
-  },
-  {
-    id: "compliance",
-    title: "Compliance",
-    href: "/compliance",
-    icon: <ShieldCheck size={20} />,
-    category: "tools"
-  },
-  {
-    id: "settings",
-    title: "Settings",
-    href: "/settings",
-    icon: <Settings size={20} />,
-    category: "settings"
-  },
-  {
-    id: "activity",
-    title: "Activity Log",
-    href: "/activity",
-    icon: <Activity size={20} />,
-    category: "tools"
+    description: "Document management",
+    icon: createIcon(FileText),
+    href: "/documents"
   }
 ];
+
+export const defaultQuickLinks = allQuickLinks.slice(0, 8);

@@ -1,192 +1,83 @@
 
-import React, { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import React from "react";
+import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Badge } from "@/components/ui/badge";
-import { Terminal, Search, Clock, BarChart3, DollarSign, TrendingUp, ArrowRight, Brain } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { Separator } from "@/components/ui/separator";
+import { Circle, TrendingUp, ChevronRight, ArrowRight, DollarSign, AlertTriangle } from "@/utils/icons";
 
-type Command = {
-  id: string;
-  category: "trade" | "analysis" | "market" | "portfolio" | "recent";
-  command: string;
-  description: string;
-};
+interface CommandPanelProps {
+  onActionClick: (action: string) => void;
+}
 
-const CommandPanel = () => {
-  const { toast } = useToast();
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  
-  const categories = [
-    { id: "trade", name: "Trading", icon: <TrendingUp className="h-4 w-4" /> },
-    { id: "analysis", name: "Analysis", icon: <BarChart3 className="h-4 w-4" /> },
-    { id: "market", name: "Market", icon: <BarChart3 className="h-4 w-4" /> },
-    { id: "portfolio", name: "Portfolio", icon: <DollarSign className="h-4 w-4" /> },
-    { id: "recent", name: "Recent", icon: <Clock className="h-4 w-4" /> },
+const CommandPanel: React.FC<CommandPanelProps> = ({ onActionClick }) => {
+  const commands = [
+    {
+      title: "Analyze Portfolio",
+      description: "Get a detailed analysis of your current portfolio allocation",
+      icon: <TrendingUp className="h-4 w-4 text-gray-600" />,
+      action: "analyze_portfolio"
+    },
+    {
+      title: "Optimize Cash",
+      description: "Review and optimize your cash positions across currencies",
+      icon: <DollarSign className="h-4 w-4 text-gray-600" />,
+      action: "optimize_cash"
+    },
+    {
+      title: "Risk Assessment",
+      description: "Identify potential risks in your current investment strategy",
+      icon: <AlertTriangle className="h-4 w-4 text-gray-600" />,
+      action: "risk_assessment"
+    }
   ];
-  
-  const commands: Command[] = [
-    {
-      id: "cmd-1",
-      category: "trade",
-      command: "Buy 1000 shares of Apple at market price",
-      description: "Execute a market order to purchase 1000 shares of Apple Inc."
-    },
-    {
-      id: "cmd-2",
-      category: "trade",
-      command: "Sell 500 shares of Microsoft at limit price $350",
-      description: "Place a limit order to sell 500 shares of Microsoft at $350 per share"
-    },
-    {
-      id: "cmd-3",
-      category: "analysis",
-      command: "Compare performance of tech stocks in my portfolio",
-      description: "Analyze and compare the performance of all technology stocks you own"
-    },
-    {
-      id: "cmd-4",
-      category: "market",
-      command: "Show market summary for European markets",
-      description: "Display a summary of the current state of European markets"
-    },
-    {
-      id: "cmd-5",
-      category: "portfolio",
-      command: "Show portfolio allocation by sector",
-      description: "Display your portfolio's allocation across different sectors"
-    },
-    {
-      id: "cmd-6",
-      category: "portfolio",
-      command: "Calculate portfolio risk metrics",
-      description: "Analyze risk metrics including volatility, beta, and Sharpe ratio"
-    },
-    {
-      id: "cmd-7",
-      category: "market",
-      command: "What are the biggest market movers today?",
-      description: "Show the biggest percentage gainers and losers in the market today"
-    },
-    {
-      id: "cmd-8",
-      category: "analysis",
-      command: "Who gave the best performing advice out of all my mandates?",
-      description: "Compare the performance of different advisory mandates"
-    },
-    {
-      id: "cmd-9",
-      category: "recent",
-      command: "What are the biggest risks for my portfolio?",
-      description: "Identify key risk factors that could impact your portfolio"
-    },
-    {
-      id: "cmd-10",
-      category: "recent",
-      command: "How should I use my excess cash?",
-      description: "Get recommendations for optimizing uninvested cash"
-    },
-  ];
-  
-  const filteredCommands = commands.filter(cmd => {
-    const matchesSearch = searchTerm === "" || 
-      cmd.command.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      cmd.description.toLowerCase().includes(searchTerm.toLowerCase());
-      
-    const matchesCategory = selectedCategory === null || cmd.category === selectedCategory;
-    
-    return matchesSearch && matchesCategory;
-  });
-  
-  const handleCommandClick = (command: Command) => {
-    toast({
-      title: "Executing Command",
-      description: `Processing: ${command.command}`,
-    });
-    
-    // In a real app, this would actually execute the command
-  };
   
   return (
-    <Card className="h-[calc(100vh-12rem)] flex flex-col">
-      <CardHeader className="px-4 py-3 border-b">
-        <div className="flex items-center">
-          <div className="bg-gray-100 p-2 rounded-full mr-3">
-            <Terminal className="h-5 w-5 text-gray-600" />
-          </div>
-          <CardTitle className="text-base">Financial Commands</CardTitle>
-        </div>
-      </CardHeader>
-      
-      <div className="p-4 border-b">
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-          <Input
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Search commands..."
-            className="pl-10"
-          />
-        </div>
-        
-        <div className="flex flex-wrap gap-2 mt-3">
-          <Badge 
-            variant={selectedCategory === null ? "default" : "outline"}
-            className="cursor-pointer"
-            onClick={() => setSelectedCategory(null)}
+    <Card className="p-4">
+      <h3 className="font-medium mb-3">Quick Actions</h3>
+      <div className="space-y-2">
+        {commands.map((command, index) => (
+          <Button
+            key={index}
+            variant="outline"
+            className="flex items-start justify-between w-full p-3 h-auto font-normal"
+            onClick={() => onActionClick(command.action)}
           >
-            All
-          </Badge>
-          
-          {categories.map(category => (
-            <Badge
-              key={category.id}
-              variant={selectedCategory === category.id ? "default" : "outline"}
-              className="cursor-pointer flex items-center gap-1"
-              onClick={() => setSelectedCategory(
-                selectedCategory === category.id ? null : category.id
-              )}
-            >
-              {category.icon}
-              {category.name}
-            </Badge>
-          ))}
+            <div className="flex items-start">
+              <div className="mr-3 mt-0.5">{command.icon}</div>
+              <div className="text-left">
+                <p className="font-medium text-sm">{command.title}</p>
+                <p className="text-xs text-gray-500 mt-1">{command.description}</p>
+              </div>
+            </div>
+            <ChevronRight className="h-4 w-4 text-gray-400 mt-1 ml-2" />
+          </Button>
+        ))}
+      </div>
+      
+      <Separator className="my-4" />
+      
+      <div className="space-y-2">
+        <p className="text-xs text-gray-500 mb-2">Try asking</p>
+        <div className="grid gap-2">
+          <Button variant="ghost" className="justify-start h-8 px-2 text-xs text-gray-600" onClick={() => onActionClick("prompt_performance")}>
+            <Circle className="h-1.5 w-1.5 mr-2" />
+            <span>How has my portfolio performed this month?</span>
+          </Button>
+          <Button variant="ghost" className="justify-start h-8 px-2 text-xs text-gray-600" onClick={() => onActionClick("prompt_allocation")}>
+            <Circle className="h-1.5 w-1.5 mr-2" />
+            <span>Suggest an optimal asset allocation</span>
+          </Button>
+          <Button variant="ghost" className="justify-start h-8 px-2 text-xs text-gray-600" onClick={() => onActionClick("prompt_cash")}>
+            <Circle className="h-1.5 w-1.5 mr-2" />
+            <span>What should I do with excess cash?</span>
+          </Button>
         </div>
       </div>
       
-      <CardContent className="flex-1 p-0">
-        <ScrollArea className="h-full">
-          <div className="divide-y">
-            {filteredCommands.length > 0 ? (
-              filteredCommands.map(command => (
-                <div 
-                  key={command.id}
-                  className="p-4 hover:bg-gray-50 cursor-pointer transition-colors"
-                  onClick={() => handleCommandClick(command)}
-                >
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <p className="font-medium text-sm">{command.command}</p>
-                      <p className="text-xs text-gray-500 mt-1">{command.description}</p>
-                    </div>
-                    <Button size="icon" variant="ghost" className="h-6 w-6 shrink-0">
-                      <ArrowRight className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <div className="p-8 text-center">
-                <Brain className="h-8 w-8 text-gray-300 mx-auto mb-2" />
-                <p className="text-gray-500">No commands found. Try a different search.</p>
-              </div>
-            )}
-          </div>
-        </ScrollArea>
-      </CardContent>
+      <Button variant="link" className="w-full mt-2 text-xs" onClick={() => onActionClick("more_examples")}>
+        <span>More examples</span>
+        <ArrowRight className="h-3 w-3 ml-1" />
+      </Button>
     </Card>
   );
 };

@@ -1,6 +1,6 @@
 
 import React from "react";
-import { ArrowUp, ArrowDown } from "lucide-react";
+import { ArrowUp, ArrowDown } from "@/utils/icons";
 
 type AssetItemProps = {
   asset: {

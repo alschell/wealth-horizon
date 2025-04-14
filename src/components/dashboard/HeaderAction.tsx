@@ -8,7 +8,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { LucideIcon } from "lucide-react";
+import { LucideIcon } from "@/utils/icons";
 
 interface HeaderActionProps {
   icon: LucideIcon;

@@ -76,3 +76,10 @@ We've already fixed several files as examples:
 - src/components/cashflow/components/CashflowHeader.tsx
 - src/components/ai-assistant/AIAssistant.tsx
 - src/components/ai-assistant/MinifiedAssistant.tsx
+- src/components/api-documentation/DocumentationLink.tsx
+- src/components/dashboard/HeaderAction.tsx
+- src/components/dashboard/DashboardHeader.tsx
+- src/components/performance/components/assets/AssetItem.tsx
+
+## Important Note
+Due to the large number of files requiring updates, we've taken a progressive approach. The central icons utility file has been expanded with more icons, and we'll continue to add more as needed.

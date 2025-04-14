@@ -102,6 +102,24 @@ export const {
   CheckCheck,
   CircleCheck,
   
+  // Additional icons from error reports
+  Sliders,
+  BellRing,
+  CheckCircle,
+  Coins,
+  BadgePercent,
+  Wallet,
+  ChartBar,
+  Sun,
+  Moon,
+  Cloud,
+  ExternalLink as ExternalLinkIcon,
+  FileSpreadsheet,
+  Ship,
+  ShoppingCart,
+  TrendingDown as TrendingDownIcon,
+  TrendingUp as TrendingUpIcon,
+  
   // All other icons (available through the LucideIcons object)
   ...LucideIcons
 } = LucideIcons;
@@ -116,4 +134,4 @@ export const getIconByName = (name: string): LucideIcon => {
 };
 
 // For compatibility with existing code using CheckCircle
-export const CheckCircle = CheckCircle2;
+export { CheckCircle2 as CheckCircle };

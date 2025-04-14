@@ -1,6 +1,6 @@
 
 import React from "react";
-import { LayoutDashboard, Sliders } from "lucide-react";
+import { LayoutDashboard, Sliders } from "@/utils/icons";
 import { Button } from "@/components/ui/button";
 import PageHeaderCard from "@/components/dashboard/PageHeaderCard";
 import { LocalizedText } from "@/components/ui/localized-text";

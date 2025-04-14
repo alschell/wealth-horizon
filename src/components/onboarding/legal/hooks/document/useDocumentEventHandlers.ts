@@ -15,9 +15,9 @@ interface UseDocumentEventHandlersProps {
   selectedFile: File | null;
   setSelectedFile: (file: File | null) => void;
   documentFiles: DocumentFileWithMetadata[];
-  setDocumentFiles: (files: DocumentFileWithMetadata[]) => void;
+  setDocumentFiles: (files: DocumentFileWithMetadata[] | ((prev: DocumentFileWithMetadata[]) => DocumentFileWithMetadata[])) => void;
   errors: Record<string, boolean>;
-  setErrors: (errors: Record<string, boolean>) => void;
+  setErrors: (errors: Record<string, boolean> | ((prev: Record<string, boolean>) => Record<string, boolean>)) => void;
   fileError: string | null;
   setFileError: (error: string | null) => void;
   isEditing: boolean;
@@ -75,7 +75,7 @@ export function useDocumentEventHandlers({
     
     setSelectedFile(file);
     setFileError(null);
-    setErrors(prev => ({ ...prev, selectedFile: false }));
+    setErrors((prev: Record<string, boolean>) => ({ ...prev, selectedFile: false }));
     
     showSuccess("File uploaded", "Document has been successfully uploaded.");
   }, [validateFile, setSelectedFile, setFileError, setErrors]);
@@ -94,7 +94,7 @@ export function useDocumentEventHandlers({
   const handleDateChange = useCallback((field: 'issueDate' | 'expiryDate', date?: Date) => {
     if (field === 'issueDate') {
       setIssueDate(date ? date.toISOString().split('T')[0] : '');
-      setErrors(prev => ({ ...prev, issueDate: false }));
+      setErrors((prev: Record<string, boolean>) => ({ ...prev, issueDate: false }));
     } else {
       setExpiryDate(date ? date.toISOString().split('T')[0] : '');
     }
@@ -105,7 +105,7 @@ export function useDocumentEventHandlers({
    */
   const handleDocumentTypeChange = useCallback((type: string) => {
     setDocumentType(type);
-    setErrors(prev => ({ ...prev, documentType: false }));
+    setErrors((prev: Record<string, boolean>) => ({ ...prev, documentType: false }));
   }, [setDocumentType, setErrors]);
   
   /**
@@ -129,7 +129,7 @@ export function useDocumentEventHandlers({
     );
     
     // Add to list
-    setDocumentFiles(prev => [...prev, newDocument]);
+    setDocumentFiles((prev: DocumentFileWithMetadata[]) => [...prev, newDocument]);
     
     // Reset form
     resetForm();
@@ -168,7 +168,7 @@ export function useDocumentEventHandlers({
     }
     
     // Update document
-    setDocumentFiles(prev => 
+    setDocumentFiles((prev: DocumentFileWithMetadata[]) => 
       updateDocumentInList(
         prev,
         editingDocumentId,
@@ -200,7 +200,7 @@ export function useDocumentEventHandlers({
    * Remove a document
    */
   const handleRemoveDocument = useCallback((documentId: string) => {
-    setDocumentFiles(prev => removeDocumentFromList(prev, documentId));
+    setDocumentFiles((prev: DocumentFileWithMetadata[]) => removeDocumentFromList(prev, documentId));
     showSuccess("Document removed", "The document has been removed successfully.");
   }, [removeDocumentFromList, setDocumentFiles]);
   

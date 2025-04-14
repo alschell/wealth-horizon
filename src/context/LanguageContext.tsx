@@ -24,7 +24,7 @@ const translations: Record<Language, Record<string, string>> = {
     contactUs: 'Contact Us',
     contactUsSubtitle: 'Have questions about how <span class="text-indigo-600">Wealth</span>Horizon can transform your wealth management?',
     getInTouch: 'Get in touch with our team.',
-    whyWealthHorizon: 'Why WH',
+    whyWealthHorizon: 'Why WealthHorizon',
     
     // Hero Section
     holisticWealthManagement: 'Holistic wealth management for',
@@ -91,6 +91,44 @@ const translations: Record<Language, Record<string, string>> = {
     trustedByLeading: 'Trusted by Leading Institutions',
     seeWhatFamilyOffices: 'See what family offices and institutional investors say about',
     
+    // Why Section
+    comprehensiveSolution: 'Comprehensive Solution',
+    comprehensiveSolutionDesc: 'Our platform unifies all your financial data across institutions, providing a single source of truth for your wealth.',
+    enterpriseSecurity: 'Enterprise Security',
+    enterpriseSecurityDesc: 'Bank-level security and encryption protect your sensitive financial data with rigorous access controls.',
+    clientCenteredApproach: 'Client-Centered Approach',
+    clientCenteredApproachDesc: 'Built specifically for family offices and institutions with the flexibility to adapt to your unique needs.',
+    aiPoweredInsights: 'AI-Powered Insights',
+    aiPoweredInsightsDesc: 'Leverage advanced analytics and AI to uncover opportunities and optimize your wealth management strategy.',
+    
+    // Key Features
+    keyFeatures: 'Key Features',
+    keyFeaturesSubtitle: 'Our AI-native platform simplifies managing all your wealth with intuitive tools designed for the most sophisticated family offices and institutions',
+    complianceManagement: 'Compliance Management',
+    complianceManagementDesc: 'Stay ahead of regulatory requirements with automated compliance monitoring.',
+    comprehensiveDashboard: 'Comprehensive Dashboard',
+    comprehensiveDashboardDesc: 'Get a holistic view of your wealth across all your banks, brokers and custodians.',
+    realTimeAnalytics: 'Real-time Analytics',
+    realTimeAnalyticsDesc: 'Monitor your investments with real-time updates and customizable dashboards.',
+    riskManagement: 'Risk Management',
+    riskManagementDesc: 'Identify and mitigate risks with our sophisticated analysis tools.',
+    secureCollaboration: 'Secure Collaboration',
+    secureCollaborationDesc: 'Invite team members and stakeholders to the platform.',
+    advancedReporting: 'Advanced Reporting',
+    advancedReportingDesc: 'Create custom reports with detailed insights and easy-to-understand visualizations.',
+    
+    // Benefits
+    transformYourWealth: 'Transform Your Wealth Management',
+    transformYourWealthDesc: 'Experience a new level of efficiency, insight, and control with',
+    centralizedAssetManagement: 'Centralized Asset Management',
+    centralizedAssetManagementDesc: 'Eliminate data silos and manage all assets, investments, and operations in one unified platform.',
+    dataDrivenDecisionMaking: 'Data-Driven Decision Making',
+    dataDrivenDecisionMakingDesc: 'Leverage advanced analytics and AI-powered insights to make more informed investment decisions.',
+    enterpriseGradeSecurity: 'Enterprise-Grade Security',
+    enterpriseGradeSecurityDesc: 'Safeguard sensitive financial data with bank-level security, encryption, and access controls.',
+    operationalEfficiency: 'Operational Efficiency',
+    operationalEfficiencyDesc: 'Streamline workflows, automate routine tasks, and reduce manual work to focus on high-value activities.',
+    
     // Testimonials
     testimonial1: "WealthHorizon has transformed how our family office operates. We've eliminated multiple tools and streamlined the way we facilitate our business.",
     testimonial1Name: "Alexandra Chen",
@@ -101,6 +139,41 @@ const translations: Record<Language, Record<string, string>> = {
     testimonial3: "We were not aware that this degree of automation and efficiency is possible using artificial intelligence.",
     testimonial3Name: "Sarah Rodriguez",
     testimonial3Position: "Head of Compliance, Legacy Capital",
+    
+    // Contact
+    contactInformation: 'Contact Information',
+    ourAddress: 'Our Address',
+    companyAddress: '123 Financial District, Suite 1500, New York, NY 10005',
+    phoneNumber: 'Phone Number',
+    contactPhone: '+1 (555) 123-4567',
+    emailAddress: 'Email Address',
+    contactEmail: 'contact@wealthhorizon.com',
+    officeHours: 'Office Hours',
+    weekdayHours: 'Monday-Friday: 9:00 AM - 6:00 PM EST',
+    weekendClosed: 'Saturday-Sunday: Closed',
+    sendUsAMessage: 'Send us a message',
+    firstName: 'First Name',
+    lastName: 'Last Name',
+    email: 'Email',
+    message: 'Message',
+    sendMessage: 'Send Message',
+    
+    // Footer
+    solutions: 'Solutions',
+    portfolioManagement: 'Portfolio Management',
+    trading: 'Trading',
+    wealthAnalysis: 'Wealth Analysis',
+    reporting: 'Reporting',
+    compliance: 'Compliance',
+    company: 'Company',
+    aboutUs: 'About Us',
+    careers: 'Careers',
+    blog: 'Blog',
+    press: 'Press',
+    resources: 'Resources',
+    documentation: 'Documentation',
+    helpCenter: 'Help Center',
+    security: 'Security'
   },
   zh: {
     // Navigation
@@ -179,16 +252,78 @@ const translations: Record<Language, Record<string, string>> = {
     trustedByLeading: '受到领先机构的信任',
     seeWhatFamilyOffices: '看看家族办公室和机构投资者对以下方面的评价',
     
-    // Testimonials
-    testimonial1: "财富视界改变了我们家族办公室的运营方式。我们淘汰了多种工具，简化了业务流程。",
-    testimonial1Name: "陈亚历山大",
-    testimonial1Position: "陈氏家族办公室，首席执行官",
-    testimonial2: "分析能力非常出色。我们能够看到以前从未有过的投资组合洞察，这直接改善了我们的回报。",
-    testimonial2Name: "迈克尔·汤普森",
-    testimonial2Position: "花岗岩投资，首席投资官",
-    testimonial3: "我们没有意识到使用人工智能可以达到这种程度的自动化和效率。",
-    testimonial3Name: "莎拉·罗德里格斯",
-    testimonial3Position: "传承资本，合规主管",
+    // Why Section
+    comprehensiveSolution: '全面解决方案',
+    comprehensiveSolutionDesc: '我们的平台统一了您在各机构的所有财务数据，为您的财富提供单一真实来源。',
+    enterpriseSecurity: '企业级安全',
+    enterpriseSecurityDesc: '银行级别的安全性和加密保护您的敏感财务数据，并有严格的访问控制。',
+    clientCenteredApproach: '以客户为中心的方法',
+    clientCenteredApproachDesc: '专为家族办公室和机构打造，具有适应您独特需求的灵活性。',
+    aiPoweredInsights: 'AI驱动的见解',
+    aiPoweredInsightsDesc: '利用高级分析和AI发现机会并优化您的财富管理策略。',
+    
+    // Key Features
+    keyFeatures: '主要功能',
+    keyFeaturesSubtitle: '我们的AI原生平台简化了所有财富的管理，为最复杂的家族办公室和机构设计了直观的工具',
+    complianceManagement: '合规管理',
+    complianceManagementDesc: '通过自动化合规监控，走在监管要求的前面。',
+    comprehensiveDashboard: '综合仪表板',
+    comprehensiveDashboardDesc: '全面了解您在所有银行、经纪商和托管人的财富。',
+    realTimeAnalytics: '实时分析',
+    realTimeAnalyticsDesc: '通过实时更新和可自定义的仪表板监控您的投资。',
+    riskManagement: '风险管理',
+    riskManagementDesc: '使用我们复杂的分析工具识别并减轻风险。',
+    secureCollaboration: '安全协作',
+    secureCollaborationDesc: '邀请团队成员和利益相关者参与平台。',
+    advancedReporting: '高级报告',
+    advancedReportingDesc: '创建具有详细见解和易于理解的可视化的自定义报告。',
+    
+    // Benefits
+    transformYourWealth: '改变您的财富管理',
+    transformYourWealthDesc: '体验全新水平的效率、洞察力和控制力',
+    centralizedAssetManagement: '集中资产管理',
+    centralizedAssetManagementDesc: '消除数据孤岛，在统一平台上管理所有资产、投资和运营。',
+    dataDrivenDecisionMaking: '数据驱动决策',
+    dataDrivenDecisionMakingDesc: '利用高级分析和AI驱动的见解做出更明智的投资决策。',
+    enterpriseGradeSecurity: '企业级安全',
+    enterpriseGradeSecurityDesc: '通过银行级安全性、加密和访问控制保护敏感的财务数据。',
+    operationalEfficiency: '运营效率',
+    operationalEfficiencyDesc: '简化工作流程，自动化常规任务，减少手动工作，专注于高价值活动。',
+    
+    // Contact
+    contactInformation: '联系信息',
+    ourAddress: '我们的地址',
+    companyAddress: '纽约金融区123号，1500室，纽约州10005',
+    phoneNumber: '电话号码',
+    contactPhone: '+1 (555) 123-4567',
+    emailAddress: '电子邮件地址',
+    contactEmail: 'contact@wealthhorizon.com',
+    officeHours: '办公时间',
+    weekdayHours: '周一至周五：上午9:00 - 下午6:00 东部标准时间',
+    weekendClosed: '周六日：休息',
+    sendUsAMessage: '给我们发消息',
+    firstName: '名字',
+    lastName: '姓氏',
+    email: '电子邮件',
+    message: '消息',
+    sendMessage: '发送消息',
+    
+    // Footer
+    solutions: '解决方案',
+    portfolioManagement: '投资组合管理',
+    trading: '交易',
+    wealthAnalysis: '财富分析',
+    reporting: '报告',
+    compliance: '合规',
+    company: '公司',
+    aboutUs: '关于我们',
+    careers: '职业机会',
+    blog: '博客',
+    press: '新闻',
+    resources: '资源',
+    documentation: '文档',
+    helpCenter: '帮助中心',
+    security: '安全'
   },
   es: {
     // Navigation
@@ -260,6 +395,67 @@ const translations: Record<Language, Record<string, string>> = {
     termsOfService: 'Términos de Servicio',
     privacyPolicy: 'Política de Privacidad',
     copyright: '© 2025 WealthHorizon. Todos los derechos reservados.',
+    
+    // Why Section
+    comprehensiveSolution: 'Solución Integral',
+    comprehensiveSolutionDesc: 'Nuestra plataforma unifica todos sus datos financieros en todas las instituciones, proporcionando una única fuente de verdad para su riqueza.',
+    enterpriseSecurity: 'Seguridad Empresarial',
+    enterpriseSecurityDesc: 'La seguridad y cifrado a nivel bancario protegen sus datos financieros sensibles con rigurosos controles de acceso.',
+    clientCenteredApproach: 'Enfoque Centrado en el Cliente',
+    clientCenteredApproachDesc: 'Construido específicamente para family offices e instituciones con la flexibilidad de adaptarse a sus necesidades únicas.',
+    aiPoweredInsights: 'Insights Impulsados por IA',
+    aiPoweredInsightsDesc: 'Aproveche el análisis avanzado y la IA para descubrir oportunidades y optimizar su estrategia de gestión de patrimonio.',
+    
+    // Key Features
+    keyFeatures: 'Características Clave',
+    keyFeaturesSubtitle: 'Nuestra plataforma nativa de IA simplifica la gestión de todo su patrimonio con herramientas intuitivas diseñadas para los family offices e instituciones más sofisticados',
+    complianceManagement: 'Gestión de Cumplimiento',
+    complianceManagementDesc: 'Manténgase al día con los requisitos reglamentarios con monitoreo automatizado de cumplimiento.',
+    comprehensiveDashboard: 'Panel de Control Integral',
+    comprehensiveDashboardDesc: 'Obtenga una visión holística de su riqueza en todos sus bancos, corredores y custodios.',
+    realTimeAnalytics: 'Análisis en Tiempo Real',
+    realTimeAnalyticsDesc: 'Monitoree sus inversiones con actualizaciones en tiempo real y paneles personalizables.',
+    riskManagement: 'Gestión de Riesgos',
+    riskManagementDesc: 'Identifique y mitigue riesgos con nuestras sofisticadas herramientas de análisis.',
+    secureCollaboration: 'Colaboración Segura',
+    secureCollaborationDesc: 'Invite a miembros del equipo y partes interesadas a la plataforma.',
+    advancedReporting: 'Informes Avanzados',
+    advancedReportingDesc: 'Cree informes personalizados con insights detallados y visualizaciones fáciles de entender.',
+    
+    // Contact
+    contactInformation: 'Información de Contacto',
+    ourAddress: 'Nuestra Dirección',
+    companyAddress: '123 Distrito Financiero, Suite 1500, Nueva York, NY 10005',
+    phoneNumber: 'Número de Teléfono',
+    contactPhone: '+1 (555) 123-4567',
+    emailAddress: 'Dirección de Correo Electrónico',
+    contactEmail: 'contact@wealthhorizon.com',
+    officeHours: 'Horario de Oficina',
+    weekdayHours: 'Lunes-Viernes: 9:00 AM - 6:00 PM EST',
+    weekendClosed: 'Sábado-Domingo: Cerrado',
+    sendUsAMessage: 'Envíenos un mensaje',
+    firstName: 'Nombre',
+    lastName: 'Apellido',
+    email: 'Correo electrónico',
+    message: 'Mensaje',
+    sendMessage: 'Enviar Mensaje',
+    
+    // Footer
+    solutions: 'Soluciones',
+    portfolioManagement: 'Gestión de Cartera',
+    trading: 'Trading',
+    wealthAnalysis: 'Análisis de Patrimonio',
+    reporting: 'Informes',
+    compliance: 'Cumplimiento',
+    company: 'Empresa',
+    aboutUs: 'Sobre Nosotros',
+    careers: 'Carreras',
+    blog: 'Blog',
+    press: 'Prensa',
+    resources: 'Recursos',
+    documentation: 'Documentación',
+    helpCenter: 'Centro de Ayuda',
+    security: 'Seguridad'
   },
   ar: {
     // Navigation
@@ -270,7 +466,7 @@ const translations: Record<Language, Record<string, string>> = {
     login: 'تسجيل الدخول',
     contactUs: 'اتصل بنا',
     contactUsSubtitle: 'هل لديك أسئلة حول كيفية تحويل <span class="text-indigo-600">ويلث</span>هورايزن لإدارة ثروتك؟',
-    getInTouch: 'تواصل مع فر��قنا.',
+    getInTouch: 'تواصل مع فريقنا.',
     whyWealthHorizon: 'لماذا WH',
     
     // Hero Section
@@ -494,7 +690,7 @@ const translations: Record<Language, Record<string, string>> = {
     actionableWealth: 'すべての資産を一つのプラットフォームで実行可能に',
     acrossAllBanks: 'すべての銀行、ブローカー、カストディアンにわたって',
     learnMore: '詳細を見る',
-    aiNativePlatform: 'AIネイティ���プラットフォーム',
+    aiNativePlatform: 'AIネイティブプラットフォーム',
     realTimeAnalytics: 'リアルタイム分析',
     soc2Certified: 'SOC 2認証',
     
@@ -641,201 +837,4 @@ const translations: Record<Language, Record<string, string>> = {
     soc2Certified: 'SOC 2 zertifiziert',
     
     // Languages
-    english: 'Englisch',
-    chinese: 'Chinesisch',
-    spanish: 'Spanisch',
-    arabic: 'Arabisch',
-    portuguese: 'Portugiesisch',
-    russian: 'Russisch',
-    japanese: 'Japanisch',
-    french: 'Französisch',
-    german: 'Deutsch',
-    korean: 'Koreanisch',
-    
-    // Dashboard
-    dashboard: 'Dashboard',
-    overview: 'Übersicht',
-    performance: 'Leistung',
-    portfolio: 'Portfolio',
-    assets: 'Vermögenswerte',
-    
-    // Common actions
-    search: 'Suchen',
-    filter: 'Filtern',
-    save: 'Speichern',
-    cancel: 'Abbrechen',
-    edit: 'Bearbeiten',
-    delete: 'Löschen',
-    create: 'Erstellen',
-    view: 'Ansehen',
-    submit: 'Absenden',
-    
-    // Common sections
-    settings: 'Einstellungen',
-    notifications: 'Benachrichtigungen',
-    profile: 'Profil',
-    security: 'Sicherheit',
-    help: 'Hilfe',
-    
-    // Messaging
-    welcomeMessage: 'Willkommen bei WealthHorizon',
-    loadingMessage: 'Wird geladen...',
-    errorMessage: 'Ein Fehler ist aufgetreten',
-    
-    // Footer
-    termsOfService: 'Nutzungsbedingungen',
-    privacyPolicy: 'Datenschutzrichtlinie',
-    copyright: '© 2025 WealthHorizon. Alle Rechte vorbehalten.',
-  },
-  ko: {
-    // Navigation
-    features: '기능',
-    benefits: '이점',
-    testimonials: '추천사',
-    contact: '연락처',
-    login: '로그인',
-    contactUs: '문의하기',
-    contactUsSubtitle: '<span class="text-indigo-600">웰스</span>호라이즌이 귀하의 자산 관리를 어떻게 변화시킬 수 있는지에 대한 질문이 있으신가요?',
-    getInTouch: '저희 팀에게 연락하세요.',
-    whyWealthHorizon: 'WH를 선택하는 이유',
-    
-    // Hero Section
-    holisticWealthManagement: '다음을 위한 종합적 자산 관리',
-    familyOffices: '패밀리 오피스',
-    and: '및',
-    institutions: '기관',
-    actionableWealth: '모든 자산을 하나의 플랫폼에서 실행 가능하게',
-    acrossAllBanks: '모든 은행, 브로커 및 커스터디언 전반에 걸쳐',
-    learnMore: '더 알아보기',
-    aiNativePlatform: 'AI 네이티브 플랫폼',
-    realTimeAnalytics: '실시간 분석',
-    soc2Certified: 'SOC 2 인증',
-    
-    // Languages
-    english: '영어',
-    chinese: '중국어',
-    spanish: '스페인어',
-    arabic: '아랍어',
-    portuguese: '포르투갈어',
-    russian: '러시아어',
-    japanese: '일본어',
-    french: '프랑스어',
-    german: '독일어',
-    korean: '한국어',
-    
-    // Dashboard
-    dashboard: '대시보드',
-    overview: '개요',
-    performance: '성과',
-    portfolio: '포트폴리오',
-    assets: '자산',
-    
-    // Common actions
-    search: '검색',
-    filter: '필터',
-    save: '저장',
-    cancel: '취소',
-    edit: '편집',
-    delete: '삭제',
-    create: '생성',
-    view: '보기',
-    submit: '제출',
-    
-    // Common sections
-    settings: '설정',
-    notifications: '알림',
-    profile: '프로필',
-    security: '보안',
-    help: '도움말',
-    
-    // Messaging
-    welcomeMessage: 'WealthHorizon에 오신 것을 환영합니다',
-    loadingMessage: '로딩 중...',
-    errorMessage: '오류가 발생했습니다',
-    
-    // Footer
-    termsOfService: '서비스 약관',
-    privacyPolicy: '개인정보 보호정책',
-    copyright: '© 2025 WealthHorizon. 모든 권리 보유.',
-  }
-};
-
-const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
-
-export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) => {
-  const [language, setLanguage] = useState<Language>('en');
-  const [, forceUpdate] = useState({});
-
-  // Force a complete re-render when language changes
-  useEffect(() => {
-    console.log(`Language changed to: ${language}`);
-    // Force update to trigger re-renders of components using the context
-    forceUpdate({});
-    
-    // Apply language change to document for accessibility
-    document.documentElement.lang = language;
-    
-    // Force a more aggressive re-render by updating the DOM directly
-    document.body.style.opacity = '0.99';
-    setTimeout(() => {
-      document.body.style.opacity = '1';
-    }, 50);
-    
-    // Dispatch a custom event that components can listen for
-    window.dispatchEvent(new CustomEvent('languageChange', { detail: { language } }));
-  }, [language]);
-
-  // Create a wrapper for setLanguage that also logs
-  const handleSetLanguage = useCallback((newLanguage: Language) => {
-    console.log(`Setting language from ${language} to ${newLanguage}`);
-    setLanguage(newLanguage);
-    
-    // Store language preference in localStorage
-    localStorage.setItem('preferredLanguage', newLanguage);
-    
-    // Dispatch a global event for all components to listen to
-    window.dispatchEvent(new CustomEvent('languageChange', { 
-      detail: { language: newLanguage } 
-    }));
-  }, [language]);
-
-  // Use useCallback to ensure getLocalizedText doesn't change identity on rerenders
-  const getLocalizedText = useCallback((key: string): string => {
-    if (!translations[language]) {
-      console.warn(`Language ${language} not supported, falling back to English`);
-      return translations.en[key] || key;
-    }
-    return translations[language][key] || translations[language][key] === '' ? translations[language][key] : (translations.en[key] || key);
-  }, [language]);
-
-  // Load saved language preference on initial load
-  useEffect(() => {
-    const savedLanguage = localStorage.getItem('preferredLanguage') as Language | null;
-    if (savedLanguage && Object.keys(translations).includes(savedLanguage)) {
-      console.log(`Loading saved language preference: ${savedLanguage}`);
-      setLanguage(savedLanguage);
-    } else {
-      // Set default language as English
-      console.log('No saved language preference, defaulting to English');
-      setLanguage('en');
-    }
-  }, []);
-
-  return (
-    <LanguageContext.Provider value={{
-      language,
-      setLanguage: handleSetLanguage,
-      getLocalizedText
-    }}>
-      {children}
-    </LanguageContext.Provider>
-  );
-};
-
-export const useLanguage = (): LanguageContextType => {
-  const context = useContext(LanguageContext);
-  if (context === undefined) {
-    throw new Error('useLanguage must be used within a LanguageProvider');
-  }
-  return context;
-};
+    english: 'Englisch

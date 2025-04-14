@@ -7,11 +7,12 @@ import { useLanguage } from "@/context/LanguageContext";
 const ContactInformation: React.FC = () => {
   const { t } = useLocalizedText();
   const { language } = useLanguage();
-  const [, React.useState] = React.useState({});
+  const [, forceUpdate] = React.useState({}); // Fixed: Added comma and correct destructuring
   
   // Force re-render when language changes
   React.useEffect(() => {
     console.log(`ContactInformation detected language change to: ${language}`);
+    forceUpdate({});
   }, [language]);
   
   return (

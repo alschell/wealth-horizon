@@ -13,6 +13,7 @@ import * as auth from './authentication';
 import * as store from './storage';
 import * as validate from './validation';
 import * as encrypt from './encryption';
+import * as audit from './securityAuditor';
 
 // Re-export with namespaces to avoid duplication and collisions
 export const sanitize = sanitation;
@@ -20,19 +21,24 @@ export const authentication = auth;
 export const storage = store;
 export const validation = validate;
 export const encryption = encrypt;
+export const securityAudit = audit;
 
 // Direct exports for commonly used functions to maintain backward compatibility
 export const {
   sanitizeHtml,
   sanitizeFileName,
-  obfuscateData
+  obfuscateData,
+  sanitizeHtmlAttribute,
+  sanitizeSqlInput
 } = sanitation;
 
 export const {
   generateSecureToken,
   generateCsrfToken,
   generateCspNonce,
-  validatePasswordStrength
+  validatePasswordStrength,
+  encryptData,
+  decryptData
 } = auth;
 
 export const {
@@ -47,3 +53,15 @@ export const {
   validateFileContentType,
   containsInjectionPatterns
 } = validate;
+
+export const {
+  encryptDataWithMetadata,
+  decryptDataWithMetadata
+} = encrypt;
+
+// Export security audit utilities
+export const {
+  SecurityAuditor,
+  auditSecurity,
+  auditUserInput
+} = audit;

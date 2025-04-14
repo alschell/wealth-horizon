@@ -1,138 +1,179 @@
 
 /**
- * Numeric validation utilities
+ * Numeric validation utilities with enhanced error handling
+ * 
+ * @module numericValidation
  */
 
 /**
- * Validates if a value is a valid number
- * 
- * @param value - Value to validate
- * @param allowEmpty - Whether to allow empty values
- * @returns Error message or null if valid
+ * Validation options for numeric input
  */
-export const validateNumber = (value: string, allowEmpty = true): string | null => {
-  if (!value && allowEmpty) return null;
-  
-  if (isNaN(Number(value))) {
-    return "Please enter a valid number";
-  }
-  
-  return null;
-};
+export interface NumericValidationOptions {
+  /** Minimum allowed value */
+  min?: number;
+  /** Maximum allowed value */
+  max?: number;
+  /** Whether value must be an integer */
+  requireInteger?: boolean;
+  /** Whether to allow negative values */
+  allowNegative?: boolean;
+  /** Maximum decimal places allowed */
+  maxDecimalPlaces?: number;
+}
 
 /**
- * Validates if a value is a positive number
+ * Validates numeric values with comprehensive options
  * 
- * @param value - Value to validate
- * @param allowZero - Whether to allow zero
- * @param allowEmpty - Whether to allow empty values
+ * @param value - Value to validate, can be number or string
+ * @param options - Validation options
  * @returns Error message or null if valid
  */
-export const validatePositiveNumber = (
-  value: string, 
-  allowZero = true,
-  allowEmpty = true
+export const validateNumber = (
+  value: number | string,
+  options?: NumericValidationOptions
 ): string | null => {
-  if (!value && allowEmpty) return null;
-  
-  const numberError = validateNumber(value, false);
-  if (numberError) return numberError;
-  
-  const num = Number(value);
-  
-  if (allowZero) {
-    if (num < 0) {
-      return "Please enter a positive number";
+  try {
+    const { 
+      min, 
+      max, 
+      requireInteger = false,
+      allowNegative = true,
+      maxDecimalPlaces
+    } = options || {};
+    
+    // Convert string to number if needed
+    const numValue = typeof value === 'string' ? parseFloat(value) : value;
+    
+    // Check if value is a valid number
+    if (isNaN(numValue)) {
+      return "Please enter a valid number";
     }
-  } else {
-    if (num <= 0) {
-      return "Please enter a number greater than zero";
+    
+    // Integer check
+    if (requireInteger && !Number.isInteger(numValue)) {
+      return "Please enter a whole number";
     }
+    
+    // Negative value check
+    if (!allowNegative && numValue < 0) {
+      return "Negative values are not allowed";
+    }
+    
+    // Min/max range validation
+    if (min !== undefined && numValue < min) {
+      return `Value must be at least ${min}`;
+    }
+    
+    if (max !== undefined && numValue > max) {
+      return `Value cannot exceed ${max}`;
+    }
+    
+    // Decimal places check
+    if (maxDecimalPlaces !== undefined) {
+      const decimalString = numValue.toString();
+      if (decimalString.includes('.')) {
+        const decimalPlaces = decimalString.split('.')[1].length;
+        if (decimalPlaces > maxDecimalPlaces) {
+          return `Value cannot have more than ${maxDecimalPlaces} decimal place${maxDecimalPlaces !== 1 ? 's' : ''}`;
+        }
+      }
+    }
+    
+    return null;
+  } catch (error) {
+    console.error("Number validation error:", error);
+    return "Number validation failed";
   }
-  
-  return null;
 };
 
 /**
- * Validates if a value is a number within range
+ * Validates percentage values (0-100)
  * 
- * @param value - Value to validate
- * @param min - Minimum allowed value
- * @param max - Maximum allowed value
- * @param allowEmpty - Whether to allow empty values
+ * @param value - Percentage value to validate
+ * @param allowExceeding - Whether to allow values outside 0-100 range
  * @returns Error message or null if valid
  */
-export const validateNumberInRange = (
-  value: string, 
-  min: number, 
-  max: number,
-  allowEmpty = true
+export const validatePercentage = (
+  value: number | string,
+  allowExceeding = false
 ): string | null => {
-  if (!value && allowEmpty) return null;
-  
-  const numberError = validateNumber(value, false);
-  if (numberError) return numberError;
-  
-  const num = Number(value);
-  
-  if (num < min || num > max) {
-    return `Please enter a number between ${min} and ${max}`;
+  try {
+    const numValue = typeof value === 'string' ? parseFloat(value) : value;
+    
+    if (isNaN(numValue)) {
+      return "Please enter a valid percentage";
+    }
+    
+    if (!allowExceeding && (numValue < 0 || numValue > 100)) {
+      return "Percentage must be between 0 and 100";
+    }
+    
+    return null;
+  } catch (error) {
+    console.error("Percentage validation error:", error);
+    return "Percentage validation failed";
   }
-  
-  return null;
 };
 
 /**
- * Validates if a value is a valid percentage (0-100)
+ * Validates currency values with formatting options
  * 
- * @param value - Value to validate
- * @param allowEmpty - Whether to allow empty values
+ * @param value - Currency value to validate
+ * @param options - Validation options
  * @returns Error message or null if valid
  */
-export const validatePercentage = (value: string, allowEmpty = true): string | null => {
-  return validateNumberInRange(value, 0, 100, allowEmpty);
+export const validateCurrency = (
+  value: number | string,
+  options?: {
+    min?: number;
+    max?: number;
+    currency?: string;
+    allowNegative?: boolean;
+  }
+): string | null => {
+  try {
+    const { 
+      min = 0, 
+      max, 
+      currency = 'USD',
+      allowNegative = false 
+    } = options || {};
+    
+    const numValue = typeof value === 'string' ? parseFloat(value) : value;
+    
+    if (isNaN(numValue)) {
+      return "Please enter a valid amount";
+    }
+    
+    if (!allowNegative && numValue < 0) {
+      return "Negative amounts are not allowed";
+    }
+    
+    if (numValue < min) {
+      return `Amount must be at least ${formatCurrency(min, currency)}`;
+    }
+    
+    if (max !== undefined && numValue > max) {
+      return `Amount cannot exceed ${formatCurrency(max, currency)}`;
+    }
+    
+    return null;
+  } catch (error) {
+    console.error("Currency validation error:", error);
+    return "Currency validation failed";
+  }
 };
 
 /**
- * Validates if a value is an integer
- * 
- * @param value - Value to validate
- * @param allowEmpty - Whether to allow empty values
- * @returns Error message or null if valid
+ * Helper to format currency values
  */
-export const validateInteger = (value: string, allowEmpty = true): string | null => {
-  if (!value && allowEmpty) return null;
-  
-  const numberError = validateNumber(value, false);
-  if (numberError) return numberError;
-  
-  if (!Number.isInteger(Number(value))) {
-    return "Please enter a whole number";
+function formatCurrency(value: number, currency: string): string {
+  try {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency
+    }).format(value);
+  } catch {
+    return `${currency} ${value}`;
   }
-  
-  return null;
-};
-
-/**
- * Validates if a value is a valid currency amount
- * 
- * @param value - Value to validate
- * @param allowEmpty - Whether to allow empty values
- * @returns Error message or null if valid
- */
-export const validateCurrencyAmount = (value: string, allowEmpty = true): string | null => {
-  if (!value && allowEmpty) return null;
-  
-  // Remove currency symbols and commas
-  const cleanValue = value.replace(/[$£€,]/g, '');
-  
-  const numberError = validateNumber(cleanValue, false);
-  if (numberError) return numberError;
-  
-  // Check format (allow up to 2 decimal places)
-  if (!/^\d+(\.\d{1,2})?$/.test(cleanValue)) {
-    return "Please enter a valid currency amount";
-  }
-  
-  return null;
-};
+}

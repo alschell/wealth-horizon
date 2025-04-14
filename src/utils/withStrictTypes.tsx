@@ -1,47 +1,59 @@
 
+/**
+ * Higher-order component that enforces strict typing for components
+ * 
+ * @module withStrictTypes
+ */
+
 import React from 'react';
 
 /**
- * Higher-order function to enforce stricter component type checking
+ * A higher-order component that wraps a component to ensure proper type checking
+ * without changing its functionality.
  * 
+ * @template P - The props type of the wrapped component
  * @param Component - The component to wrap
- * @returns The typed component
+ * @returns The same component with enhanced type safety
  */
 export function withStrictTypes<P extends object>(
   Component: React.ComponentType<P>
 ): React.FC<P> {
-  const StrictComponent: React.FC<P> = (props) => <Component {...props} />;
+  // Create a properly named wrapped component
+  const displayName = Component.displayName || Component.name || 'Component';
   
-  // Preserve the display name
-  StrictComponent.displayName = `WithStrictTypes(${Component.displayName || Component.name || 'Component'})`;
+  const WrappedComponent: React.FC<P> = (props: P) => {
+    return <Component {...props} />;
+  };
   
-  return StrictComponent;
+  // Set proper display name for debugging
+  WrappedComponent.displayName = `withStrictTypes(${displayName})`;
+  
+  return WrappedComponent;
 }
 
 /**
- * Higher-order function to add default props to a component
+ * Function to create a strictly typed component with predefined props
  * 
- * @param Component - The component to wrap
- * @param defaultProps - Default props object
- * @returns The component with default props
+ * @template P - The props type of the component
+ * @param Component - The component to enhance
+ * @param defaultProps - Default props to apply
+ * @returns Enhanced component with default props
  */
-export function withDefaultProps<
-  P extends object,
-  DP extends Partial<P>
->(
+export function createTypeSafeComponent<P extends object>(
   Component: React.ComponentType<P>,
-  defaultProps: DP
-): React.FC<Omit<P, keyof DP> & Partial<Pick<P, Extract<keyof P, keyof DP>>>> {
-  type ResultProps = Omit<P, keyof DP> & Partial<Pick<P, Extract<keyof P, keyof DP>>>;
+  defaultProps: Partial<P>
+): React.FC<Partial<P>> {
+  const StrictComponent = withStrictTypes(Component);
   
-  const ComponentWithDefaults: React.FC<ResultProps> = (props) => {
-    // Use explicit type casting to address the type conversion issue
-    const combinedProps = { ...defaultProps, ...props } as unknown as P;
-    return <Component {...combinedProps} />;
+  // Create a component with merged default props
+  const EnhancedComponent: React.FC<Partial<P>> = (props) => {
+    const mergedProps = { ...defaultProps, ...props } as P;
+    return <StrictComponent {...mergedProps} />;
   };
   
-  // Preserve the display name
-  ComponentWithDefaults.displayName = `WithDefaultProps(${Component.displayName || Component.name || 'Component'})`;
+  EnhancedComponent.displayName = `TypeSafe(${Component.displayName || Component.name || 'Component'})`;
   
-  return ComponentWithDefaults;
+  return EnhancedComponent;
 }
+
+export default withStrictTypes;

@@ -1,12 +1,35 @@
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { FadeIn } from "@/components/ui/animation";
 import ContactForm from "./ContactForm";
 import ContactInformation from "./ContactInformation";
 import { LocalizedText, useLocalizedText } from "@/components/ui/localized-text";
+import { useLanguage } from "@/context/LanguageContext";
 
 const ContactFormSection: React.FC = () => {
   const { t } = useLocalizedText();
+  const { language } = useLanguage();
+  const [, forceUpdate] = useState({});
+  
+  // Force re-render when language changes
+  useEffect(() => {
+    const handleLanguageChange = (event: Event) => {
+      const customEvent = event as CustomEvent;
+      console.log('ContactFormSection detected language change:', customEvent.detail?.language);
+      forceUpdate({});
+    };
+    
+    window.addEventListener('languageChange', handleLanguageChange);
+    return () => {
+      window.removeEventListener('languageChange', handleLanguageChange);
+    };
+  }, []);
+  
+  // Also force re-render when language context changes directly
+  useEffect(() => {
+    console.log(`ContactFormSection detected language context change: ${language}`);
+    forceUpdate({});
+  }, [language]);
   
   return (
     <section className="py-24 bg-white" id="contact">

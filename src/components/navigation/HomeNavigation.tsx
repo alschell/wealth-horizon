@@ -4,12 +4,16 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import LanguageSelector from './LanguageSelector';
 import { useLocalizedText } from '@/components/ui/localized-text';
+import { useLanguage } from '@/context/LanguageContext';
 
 const HomeNavigation: React.FC = () => {
   // Safe access to translations
   const [scrolled, setScrolled] = useState(false);
   const { t } = useLocalizedText();
   const [forceUpdate, setForceUpdate] = useState(0);
+  
+  // Direct dependence on language context to force re-renders
+  const { language } = useLanguage();
   
   // Add scroll event listener to detect when to show shadow
   useEffect(() => {
@@ -31,8 +35,9 @@ const HomeNavigation: React.FC = () => {
 
   // Force re-render when language changes
   useEffect(() => {
-    const handleLanguageChange = () => {
-      console.log('HomeNavigation detected language change');
+    const handleLanguageChange = (event: Event) => {
+      const customEvent = event as CustomEvent;
+      console.log('HomeNavigation detected language change:', customEvent.detail?.language);
       setForceUpdate(prev => prev + 1);
     };
     
@@ -41,6 +46,12 @@ const HomeNavigation: React.FC = () => {
       window.removeEventListener('languageChange', handleLanguageChange);
     };
   }, []);
+  
+  // Also force re-render when language context changes directly
+  useEffect(() => {
+    console.log(`HomeNavigation detected language context change: ${language}`);
+    setForceUpdate(prev => prev + 1);
+  }, [language]);
   
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);

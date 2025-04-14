@@ -43,6 +43,9 @@ const HomeNavigation: React.FC = () => {
             
             {/* Navigation Links */}
             <nav className="hidden md:flex items-center space-x-8">
+              <Link to="/#why" className="text-gray-500 hover:text-gray-900">
+                {t('whyWealthHorizon', 'Why WealthHorizon')}
+              </Link>
               <Link to="/#features" className="text-gray-500 hover:text-gray-900">
                 {t('features', 'Features')}
               </Link>
@@ -51,9 +54,6 @@ const HomeNavigation: React.FC = () => {
               </Link>
               <Link to="/#testimonials" className="text-gray-500 hover:text-gray-900">
                 {t('testimonials', 'Testimonials')}
-              </Link>
-              <Link to="/#contact" className="text-gray-500 hover:text-gray-900">
-                {t('contact', 'Contact')}
               </Link>
             </nav>
           </div>

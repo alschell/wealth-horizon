@@ -69,7 +69,6 @@ const LanguageSelector: React.FC = () => {
           className="h-9 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-none"
         >
           <Globe className="h-4 w-4" />
-          <span className="ml-2 hidden sm:inline">{language?.toUpperCase() || 'EN'}</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-48 bg-white">

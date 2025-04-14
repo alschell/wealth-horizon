@@ -3,6 +3,7 @@ import React, { useRef, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useLanguage } from "@/context/LanguageContext";
 import HeroSection from "./HeroSection";
+import WhySection from "./WhySection";
 import FeaturesSection from "./FeaturesSection";
 import BenefitsSection from "./BenefitsSection";
 import TestimonialsSection from "./TestimonialsSection";
@@ -12,6 +13,7 @@ import { ContactFormSection } from "./contact";
 
 const LandingLayout: React.FC = () => {
   const location = useLocation();
+  const whyRef = useRef<HTMLDivElement>(null);
   const featuresRef = useRef<HTMLDivElement>(null);
   const benefitsRef = useRef<HTMLDivElement>(null);
   const testimonialsRef = useRef<HTMLDivElement>(null);
@@ -78,6 +80,9 @@ const LandingLayout: React.FC = () => {
   return (
     <div key={`landing-layout-${language}`} className="min-h-screen bg-white w-full">
       <HeroSection onScrollToFeatures={() => scrollToSection(featuresRef)} />
+      <div ref={whyRef} id="why">
+        <WhySection />
+      </div>
       <div ref={featuresRef} id="features">
         <FeaturesSection id="features" />
       </div>

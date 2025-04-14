@@ -1,26 +1,77 @@
 
 /**
  * Security utilities for sanitizing user input
+ * 
+ * These utilities help prevent XSS attacks, HTML injection, and other
+ * security vulnerabilities related to user input.
  */
 
 /**
- * Sanitize strings to prevent XSS attacks
+ * Type of sensitive data for specialized obfuscation
+ */
+export type SensitiveDataType = 'email' | 'phone' | 'creditCard' | 'ssn' | 'custom';
+
+/**
+ * Options for HTML sanitization
+ */
+export interface SanitizeHtmlOptions {
+  /** Allow specific HTML tags (all others will be removed) */
+  allowedTags?: string[];
+  /** Strip all HTML (convert to plain text) */
+  stripAllTags?: boolean;
+  /** Whether to encode all entities */
+  encodeEntities?: boolean;
+  /** Remove all URLs starting with these protocols */
+  stripProtocols?: string[];
+}
+
+/**
+ * Sanitize strings to prevent XSS attacks with enhanced options
  * 
  * @param unsafeString - String to sanitize
+ * @param options - Sanitization options
  * @returns Sanitized string safe for rendering
  */
-export const sanitizeHtml = (unsafeString: string): string => {
+export const sanitizeHtml = (
+  unsafeString: string, 
+  options: SanitizeHtmlOptions = {}
+): string => {
   if (!unsafeString) return '';
   
-  return unsafeString
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;')
-    .replace(/javascript:/gi, 'removed:')
-    .replace(/on\w+=/gi, 'data-removed=')
-    .replace(/data:/gi, 'removed:'); // Prevent data: URLs which can be used for XSS
+  const {
+    stripAllTags = true,
+    encodeEntities = true,
+    stripProtocols = ['javascript:', 'data:', 'vbscript:']
+  } = options;
+  
+  let result = unsafeString;
+  
+  // Convert HTML entities if requested
+  if (encodeEntities) {
+    result = result
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+  
+  // Strip dangerous protocols
+  stripProtocols.forEach(protocol => {
+    const protocolRegex = new RegExp(protocol, 'gi');
+    result = result.replace(protocolRegex, 'removed:');
+  });
+  
+  // Remove event handlers
+  result = result.replace(/on\w+=/gi, 'data-removed=');
+  
+  // If stripping all tags, remove anything that looks like a tag
+  if (stripAllTags) {
+    // This regex matches HTML tags and replaces them with nothing
+    result = result.replace(/<[^>]*>/g, '');
+  }
+  
+  return result;
 };
 
 /**
@@ -66,7 +117,7 @@ export const sanitizeFileName = (fileName: string): string => {
  */
 export const obfuscateData = (
   data: string,
-  type: 'email' | 'phone' | 'creditCard' | 'ssn' | 'custom' = 'custom',
+  type: SensitiveDataType = 'custom',
   customPattern?: RegExp
 ): string => {
   if (!data) return '';
@@ -100,3 +151,41 @@ export const obfuscateData = (
   }
 };
 
+/**
+ * Sanitize HTML attributes to prevent injection attacks
+ * 
+ * @param attributeValue - Attribute value to sanitize
+ * @returns Sanitized attribute value
+ */
+export const sanitizeHtmlAttribute = (attributeValue: string): string => {
+  if (!attributeValue) return '';
+  
+  return attributeValue
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#x27;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/`/g, '&#x60;')
+    .replace(/javascript:/gi, 'removed:')
+    .replace(/data:/gi, 'removed:')
+    .replace(/vbscript:/gi, 'removed:');
+};
+
+/**
+ * Sanitize user input for use in SQL queries to prevent SQL injection
+ * Note: This is a basic implementation - always use parameterized queries
+ * 
+ * @param input - User input to sanitize
+ * @returns Sanitized input safe for SQL
+ */
+export const sanitizeSqlInput = (input: string): string => {
+  if (!input) return '';
+  
+  return input
+    .replace(/'/g, "''") // Escape single quotes
+    .replace(/\\/g, '\\\\') // Escape backslashes
+    .replace(/\0/g, '') // Remove null bytes
+    .replace(/\b(EXEC|EXECUTE|INSERT|DROP|ALTER|CREATE|SELECT|DELETE|UPDATE|UNION|JOIN)\b/gi, '') // Remove SQL keywords
+    .replace(/--/g, '') // Remove SQL comments
+    .replace(/;/g, ''); // Remove semicolons
+};

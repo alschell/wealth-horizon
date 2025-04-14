@@ -71,6 +71,12 @@ const translations: Record<Language, Record<string, string>> = {
     termsOfService: 'Terms of Service',
     privacyPolicy: 'Privacy Policy',
     copyright: '© 2025 WealthHorizon. All rights reserved.',
+    
+    // Landing page sections
+    readyToOptimize: 'Ready to Optimize Your Wealth Management?',
+    joinLeading: 'Join leading family offices and institutions that have transformed their operations with',
+    trustedByLeading: 'Trusted by Leading Institutions',
+    seeWhatFamilyOffices: 'See what family offices and institutional investors say about',
   },
   zh: {
     // Navigation
@@ -129,6 +135,12 @@ const translations: Record<Language, Record<string, string>> = {
     termsOfService: '服务条款',
     privacyPolicy: '隐私政策',
     copyright: '© 2025 财富视界。保留所有权利。',
+    
+    // Landing page sections
+    readyToOptimize: '准备优化您的财富管理？',
+    joinLeading: '加入已使用我们的平台转变运营方式的领先家族办公室和机构',
+    trustedByLeading: '受到领先机构的信任',
+    seeWhatFamilyOffices: '看看家族办公室和机构投资者对以下方面的评价',
   },
   es: {
     // Navigation
@@ -607,7 +619,16 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
     console.log(`Language changed to: ${language}`);
     // Force update to trigger re-renders of components using the context
     forceUpdate({});
+    
+    // Apply language change to document for accessibility
+    document.documentElement.lang = language;
   }, [language]);
+
+  // Create a wrapper for setLanguage that also logs
+  const handleSetLanguage = (newLanguage: Language) => {
+    console.log(`Setting language from ${language} to ${newLanguage}`);
+    setLanguage(newLanguage);
+  };
 
   // Use useCallback to ensure getLocalizedText doesn't change identity on rerenders
   const getLocalizedText = useCallback((key: string): string => {
@@ -621,7 +642,7 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
   return (
     <LanguageContext.Provider value={{
       language,
-      setLanguage,
+      setLanguage: handleSetLanguage,
       getLocalizedText
     }}>
       {children}

@@ -1,6 +1,7 @@
 
 import React, { useRef, useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import { useLanguage } from "@/context/LanguageContext";
 import HeroSection from "./HeroSection";
 import FeaturesSection from "./FeaturesSection";
 import BenefitsSection from "./BenefitsSection";
@@ -16,6 +17,16 @@ const LandingLayout: React.FC = () => {
   const testimonialsRef = useRef<HTMLDivElement>(null);
   const contactRef = useRef<HTMLDivElement>(null);
   const aboutRef = useRef<HTMLDivElement>(null);
+  
+  // Force re-render when language changes
+  const { language } = useLanguage();
+  const [, forceUpdate] = React.useState({});
+  
+  // Re-render when language changes
+  useEffect(() => {
+    console.log(`LandingLayout detected language change to: ${language}`);
+    forceUpdate({});
+  }, [language]);
 
   // Handle hash-based navigation
   useEffect(() => {

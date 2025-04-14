@@ -1,6 +1,7 @@
 
 import React from "react";
 import { FadeIn } from "@/components/ui/animation";
+import { LocalizedText, useLocalizedText } from "@/components/ui/localized-text";
 
 const testimonials = [
   {
@@ -21,14 +22,24 @@ const testimonials = [
 ];
 
 const TestimonialsSection: React.FC = () => {
+  const { t } = useLocalizedText();
+  
   return (
     <section className="py-24 bg-white" id="testimonials">
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-16">
           <FadeIn>
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Trusted by Leading Institutions</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
+              <LocalizedText textKey="trustedByLeading" fallback="Trusted by Leading Institutions" />
+            </h2>
             <p className="mt-4 text-xl text-gray-600 max-w-3xl mx-auto">
-              See what family offices and institutional investors say about <span className="text-indigo-600">Wealth</span><span>Horizon</span>.
+              <LocalizedText 
+                textKey="seeWhatFamilyOffices" 
+                fallback="See what family offices and institutional investors say about" 
+              />
+              {" "}
+              <span className="text-indigo-600">Wealth</span>
+              <span>Horizon</span>.
             </p>
           </FadeIn>
         </div>

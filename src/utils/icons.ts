@@ -113,12 +113,12 @@ export const {
   Sun,
   Moon,
   Cloud,
-  ExternalLink as ExternalLinkIcon,
+  ExternalLinkIcon,
   FileSpreadsheet,
   Ship,
   ShoppingCart,
-  TrendingDown as TrendingDownIcon,
-  TrendingUp as TrendingUpIcon,
+  TrendingDownIcon,
+  TrendingUpIcon,
   
   // All other icons (available through the LucideIcons object)
   ...LucideIcons

@@ -1,6 +1,6 @@
 
 /**
- * Secure storage utilities for client-side data
+ * Security utilities for secure data storage in local storage and cookies
  */
 
 /**
@@ -8,11 +8,10 @@
  */
 export const secureStore = {
   /**
-   * Set a value in secure storage
-   * 
+   * Store data securely with expiration
    * @param key - Storage key
    * @param value - Value to store
-   * @param options - Storage options
+   * @param options - Storage options including expiration
    */
   set: (
     key: string, 
@@ -58,10 +57,9 @@ export const secureStore = {
   },
   
   /**
-   * Get a value from secure storage
-   * 
+   * Get stored data
    * @param key - Storage key
-   * @returns Stored value or null if not found/expired
+   * @returns Retrieved data or null if not found/expired
    */
   get: (key: string): string | null => {
     // Try to get from cookie first
@@ -89,10 +87,9 @@ export const secureStore = {
   },
   
   /**
-   * Remove a value from secure storage
-   * 
+   * Remove stored data
    * @param key - Storage key
-   * @param path - Cookie path (if applicable)
+   * @param path - Cookie path
    */
   remove: (key: string, path: string = '/'): void => {
     // Remove from cookies
@@ -109,8 +106,7 @@ export const secureStore = {
 
 /**
  * Set CSRF token using secure storage
- * 
- * @param token - CSRF token string
+ * @param token - CSRF token
  */
 export const storeCsrfToken = (token: string): void => {
   secureStore.set('csrf_token', token, {
@@ -121,32 +117,19 @@ export const storeCsrfToken = (token: string): void => {
 };
 
 /**
- * Get stored CSRF token
- * 
- * @returns CSRF token string or newly generated one
+ * Get stored CSRF token or generate a new one
+ * @returns CSRF token
  */
 export const getCsrfToken = (): string => {
   const token = secureStore.get('csrf_token');
   
   if (token) return token;
   
-  // Import and use the generateCsrfToken function
-  // This avoids circular dependencies
-  import('./authentication').then(({ generateCsrfToken }) => {
-    const newToken = generateCsrfToken();
-    storeCsrfToken(newToken);
-    return newToken;
-  });
+  // Import needed to avoid circular dependency
+  const { generateCsrfToken } = require('./authentication');
   
-  // Fallback synchronous implementation if import fails
-  try {
-    const array = new Uint8Array(32);
-    window.crypto.getRandomValues(array);
-    const newToken = Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
-    storeCsrfToken(newToken);
-    return newToken;
-  } catch (error) {
-    console.error('Failed to generate CSRF token:', error);
-    return 'fallback-csrf-token';
-  }
+  // Generate a new token if none exists
+  const newToken = generateCsrfToken();
+  storeCsrfToken(newToken);
+  return newToken;
 };

@@ -1,14 +1,12 @@
 
 /**
- * Security utilities for sanitizing user input
- * Prevents XSS attacks and other injection vulnerabilities
+ * Security utilities for sanitizing user input and preventing XSS attacks
  */
 
 /**
- * Sanitizes strings to prevent XSS attacks - enhanced version
- * 
- * @param unsafeString - String to sanitize
- * @returns Sanitized string
+ * Sanitize HTML strings to prevent XSS attacks
+ * @param unsafeString - The string to sanitize
+ * @returns Sanitized string with potentially harmful characters escaped
  */
 export const sanitizeHtml = (unsafeString: string): string => {
   if (!unsafeString) return '';
@@ -26,9 +24,8 @@ export const sanitizeHtml = (unsafeString: string): string => {
 
 /**
  * More secure file name sanitization with enhanced protection
- * 
- * @param fileName - File name to sanitize
- * @returns Sanitized file name
+ * @param fileName - The file name to sanitize
+ * @returns Sanitized file name that prevents path traversal and shell injection
  */
 export const sanitizeFileName = (fileName: string): string => {
   try {
@@ -58,10 +55,9 @@ export const sanitizeFileName = (fileName: string): string => {
 };
 
 /**
- * Checks for vulnerable patterns in user input
- * 
- * @param input - String to check
- * @returns Boolean indicating if dangerous patterns were found
+ * Check for vulnerable patterns in user input
+ * @param input - The user input to check
+ * @returns Boolean indicating if input contains suspicious patterns
  */
 export const containsInjectionPatterns = (input: string): boolean => {
   if (!input) return false;
@@ -80,9 +76,8 @@ export const containsInjectionPatterns = (input: string): boolean => {
 };
 
 /**
- * Validate path to prevent path traversal 
- * 
- * @param path - Path to validate
+ * Validate path to prevent path traversal attacks
+ * @param path - The path to validate
  * @returns Boolean indicating if path is safe
  */
 export const validatePath = (path: string): boolean => {
@@ -105,10 +100,9 @@ export const validatePath = (path: string): boolean => {
 
 /**
  * Obfuscate sensitive data for logging or display
- * 
- * @param data - Data to obfuscate
- * @param type - Type of data for appropriate obfuscation
- * @param customPattern - Custom regex pattern for obfuscation
+ * @param data - The sensitive data to obfuscate
+ * @param type - The type of data being obfuscated
+ * @param customPattern - Optional custom pattern for obfuscation
  * @returns Obfuscated string
  */
 export const obfuscateData = (

@@ -1,28 +1,14 @@
 
 import { ReactNode } from "react";
 
+/**
+ * Quick link item type
+ */
 export interface QuickLinkItem {
   id: string;
   title: string;
-  description: string;
+  href: string;
   icon: ReactNode;
-  link: string;
-}
-
-export interface QuickAccessItemProps extends QuickLinkItem {
-  color?: string;
-  onClick?: () => void;
-}
-
-export interface QuickAccessGridProps {
-  items: QuickLinkItem[];
-}
-
-export interface CustomizeDialogProps {
-  isOpen: boolean;
-  onOpenChange: (open: boolean) => void;
-  items: QuickLinkItem[];
-  selectedItems: string[];
-  onItemToggle: (id: string) => void;
-  onSave: (orderedItems?: string[]) => void;
+  description?: string;
+  category?: string;
 }

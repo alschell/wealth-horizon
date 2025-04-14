@@ -59,10 +59,11 @@ const LanguageSelector: React.FC = () => {
       });
       window.dispatchEvent(event);
       
-      // If on landing page, reload for full refresh of all components
-      if (location.pathname === "/" || location.pathname === "") {
+      // ALWAYS reload the page when language changes for complete refresh
+      // This is the most reliable way to ensure all components are re-rendered with the new language
+      setTimeout(() => {
         window.location.reload();
-      }
+      }, 100);
     }
     
     setOpen(false); // Explicitly close the dropdown

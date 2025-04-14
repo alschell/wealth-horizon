@@ -1,12 +1,13 @@
 
 /**
- * Security utilities for sanitizing user input and preventing XSS attacks
+ * Security utilities for sanitizing user input
  */
 
 /**
- * Sanitize HTML strings to prevent XSS attacks
- * @param unsafeString - The string to sanitize
- * @returns Sanitized string with potentially harmful characters escaped
+ * Sanitize strings to prevent XSS attacks
+ * 
+ * @param unsafeString - String to sanitize
+ * @returns Sanitized string safe for rendering
  */
 export const sanitizeHtml = (unsafeString: string): string => {
   if (!unsafeString) return '';
@@ -24,8 +25,9 @@ export const sanitizeHtml = (unsafeString: string): string => {
 
 /**
  * More secure file name sanitization with enhanced protection
- * @param fileName - The file name to sanitize
- * @returns Sanitized file name that prevents path traversal and shell injection
+ * 
+ * @param fileName - File name to sanitize
+ * @returns Sanitized file name safe for storage
  */
 export const sanitizeFileName = (fileName: string): string => {
   try {
@@ -55,54 +57,11 @@ export const sanitizeFileName = (fileName: string): string => {
 };
 
 /**
- * Check for vulnerable patterns in user input
- * @param input - The user input to check
- * @returns Boolean indicating if input contains suspicious patterns
- */
-export const containsInjectionPatterns = (input: string): boolean => {
-  if (!input) return false;
-  
-  const dangerousPatterns = [
-    /(\b)(on\S+)(\s*)=|javascript:|(<\s*)(\/*)script/i,
-    /(document\.|window\.|eval\(|setTimeout\(|setInterval\()/i,
-    /(alert\(|confirm\(|prompt\(|console\.)/i,
-    /<iframe|<object|<embed|<img[^>]+src=["']?data:/i,
-    /[<>'"=].*=[<>'"=]|data:/i,
-    /\s+style\s*=\s*["']?\s*\w+\s*:\s*url/i,
-    /url\(\s*["']?\s*data:/i
-  ];
-  
-  return dangerousPatterns.some(pattern => pattern.test(input));
-};
-
-/**
- * Validate path to prevent path traversal attacks
- * @param path - The path to validate
- * @returns Boolean indicating if path is safe
- */
-export const validatePath = (path: string): boolean => {
-  if (!path) return false;
-  
-  // Normalize path to handle different path separators
-  const normalizedPath = path.replace(/\\/g, '/');
-  
-  // More comprehensive path validation
-  return (
-    !normalizedPath.includes('../') && 
-    !normalizedPath.includes('..\\') && 
-    !normalizedPath.includes('//') &&
-    !normalizedPath.startsWith('/') &&
-    !normalizedPath.includes(':\\') &&
-    !normalizedPath.match(/^[a-zA-Z]:\//) &&
-    !normalizedPath.match(/^\\\\/) // UNC paths
-  );
-};
-
-/**
  * Obfuscate sensitive data for logging or display
- * @param data - The sensitive data to obfuscate
- * @param type - The type of data being obfuscated
- * @param customPattern - Optional custom pattern for obfuscation
+ * 
+ * @param data - Sensitive data to obfuscate
+ * @param type - Type of data for specific obfuscation patterns
+ * @param customPattern - Custom regex pattern for obfuscation
  * @returns Obfuscated string
  */
 export const obfuscateData = (
@@ -140,3 +99,4 @@ export const obfuscateData = (
       return `${data.slice(0, visibleChars)}${'*'.repeat(length - 2 * visibleChars)}${data.slice(length - visibleChars)}`;
   }
 };
+

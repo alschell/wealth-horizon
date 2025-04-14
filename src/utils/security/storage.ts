@@ -1,18 +1,12 @@
 
 /**
- * Security utilities for secure data storage in local storage and cookies
+ * Security utilities for secure storage
  */
 
 /**
  * Secure storage with expiration and domain binding
  */
 export const secureStore = {
-  /**
-   * Store data securely with expiration
-   * @param key - Storage key
-   * @param value - Value to store
-   * @param options - Storage options including expiration
-   */
   set: (
     key: string, 
     value: string, 
@@ -56,11 +50,6 @@ export const secureStore = {
     }
   },
   
-  /**
-   * Get stored data
-   * @param key - Storage key
-   * @returns Retrieved data or null if not found/expired
-   */
   get: (key: string): string | null => {
     // Try to get from cookie first
     const cookieMatch = document.cookie.match(new RegExp(`(^| )${key}=([^;]+)`));
@@ -86,11 +75,6 @@ export const secureStore = {
     }
   },
   
-  /**
-   * Remove stored data
-   * @param key - Storage key
-   * @param path - Cookie path
-   */
   remove: (key: string, path: string = '/'): void => {
     // Remove from cookies
     document.cookie = `${key}=; path=${path}; expires=Thu, 01 Jan 1970 00:00:00 GMT; Secure; SameSite=Strict`;
@@ -106,7 +90,6 @@ export const secureStore = {
 
 /**
  * Set CSRF token using secure storage
- * @param token - CSRF token
  */
 export const storeCsrfToken = (token: string): void => {
   secureStore.set('csrf_token', token, {
@@ -117,19 +100,19 @@ export const storeCsrfToken = (token: string): void => {
 };
 
 /**
- * Get stored CSRF token or generate a new one
- * @returns CSRF token
+ * Get stored CSRF token
  */
 export const getCsrfToken = (): string => {
   const token = secureStore.get('csrf_token');
   
   if (token) return token;
   
-  // Import needed to avoid circular dependency
-  const { generateCsrfToken } = require('./authentication');
-  
   // Generate a new token if none exists
   const newToken = generateCsrfToken();
   storeCsrfToken(newToken);
   return newToken;
 };
+
+// Import this function from authentication to avoid duplication
+import { generateCsrfToken } from './authentication';
+

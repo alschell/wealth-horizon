@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Input } from "@/components/ui/input";
-import { Filter } from "lucide-react";
+import { Filter } from "@/utils/icons";
 import { Button } from "@/components/ui/button";
 import { 
   DropdownMenu, 

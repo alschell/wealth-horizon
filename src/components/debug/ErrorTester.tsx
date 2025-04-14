@@ -150,11 +150,10 @@ const ErrorTesterComponent: React.FC<ErrorTesterProps> = ({ componentName = 'Err
 // Use the useErrorBoundary hook to provide error boundary functionality
 const ErrorTester: React.FC<ErrorTesterProps> = (props) => {
   const { ErrorBoundaryWrapper } = useErrorBoundary({
-    componentName: 'ErrorTester',
-    message: 'The error tester component crashed',
-    showReset: true,
-    logError: true,
-    showToast: true
+    fallbackMessage: "The error tester component crashed",
+    showToast: true,
+    logToConsole: true,
+    componentName: 'ErrorTester'
   });
 
   return (

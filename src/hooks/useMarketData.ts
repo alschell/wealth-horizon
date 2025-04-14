@@ -1,3 +1,4 @@
+
 import { 
   getQuote, 
   getMarketNews, 
@@ -96,7 +97,10 @@ export function useSymbolSearch() {
   
   const search = async (query: string) => {
     if (!query || query.length < 2) return;
-    return refetch({ queryKey: ['symbol-search', query] });
+    return refetch({ 
+      // The line below was causing the error
+      // Don't set queryKey directly in refetch options
+    });
   };
 
   return { 

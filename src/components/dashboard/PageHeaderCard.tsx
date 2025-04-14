@@ -6,8 +6,8 @@ import { useLocalizedText } from "@/components/ui/localized-text";
 
 interface PageHeaderCardProps {
   icon: LucideIcon;
-  title: string;
-  description: string;
+  title: React.ReactNode;
+  description: React.ReactNode;
   iconColor?: string;
   iconBgColor?: string;
 }

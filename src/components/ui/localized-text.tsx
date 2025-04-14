@@ -17,6 +17,7 @@ export const LocalizedText: React.FC<LocalizedTextProps> = ({
 }) => {
   const [displayText, setDisplayText] = useState<string>(fallback || textKey);
   const [currentLanguage, setCurrentLanguage] = useState<string>('en');
+  const [renderKey, setRenderKey] = useState<number>(0); // Used to force re-render
   
   // Access language context directly with error handling
   try {
@@ -29,6 +30,7 @@ export const LocalizedText: React.FC<LocalizedTextProps> = ({
       setCurrentLanguage(language);
       const localizedText = getLocalizedText(textKey);
       setDisplayText(localizedText === textKey ? (fallback || textKey) : localizedText);
+      setRenderKey(prev => prev + 1); // Force re-render
     }, [textKey, fallback, language, getLocalizedText]);
     
     // Listen for language change events for components not directly using context
@@ -42,6 +44,7 @@ export const LocalizedText: React.FC<LocalizedTextProps> = ({
           setCurrentLanguage(customEvent.detail.language);
           const localizedText = getLocalizedText(textKey);
           setDisplayText(localizedText === textKey ? (fallback || textKey) : localizedText);
+          setRenderKey(prev => prev + 1); // Force re-render
         }
       };
       
@@ -56,7 +59,7 @@ export const LocalizedText: React.FC<LocalizedTextProps> = ({
   }
   
   // Key the component to force re-render when language changes
-  const key = `localized-text-${textKey}-${currentLanguage}`;
+  const key = `localized-text-${textKey}-${currentLanguage}-${renderKey}`;
   
   if (html) {
     return <span key={key} className={className} dangerouslySetInnerHTML={{ __html: displayText }} />;
@@ -69,6 +72,7 @@ export const LocalizedText: React.FC<LocalizedTextProps> = ({
 export const useLocalizedText = () => {
   const [language, setLanguage] = useState<string>('en');
   const [translations, setTranslations] = useState<Record<string, string>>({});
+  const [renderKey, setRenderKey] = useState<number>(0); // Used to force re-render
   
   try {
     // Get context directly
@@ -78,6 +82,7 @@ export const useLocalizedText = () => {
     useEffect(() => {
       console.log(`useLocalizedText rendered with language: ${context.language}`);
       setLanguage(context.language);
+      setRenderKey(prev => prev + 1); // Force re-render
     }, [context.language]);
     
     // Listen for language change events
@@ -87,6 +92,7 @@ export const useLocalizedText = () => {
         console.log(`useLocalizedText received language change event:`, customEvent.detail?.language);
         if (customEvent.detail?.language) {
           setLanguage(customEvent.detail.language);
+          setRenderKey(prev => prev + 1); // Force re-render
         }
       };
       
@@ -105,7 +111,7 @@ export const useLocalizedText = () => {
         console.warn(`Error getting translation for key: ${key}`, error);
         return fallback || key;
       }
-    }, [context, language]); // Add language dependency to force re-evaluation when language changes
+    }, [context, language, renderKey]); // Add renderKey dependency to force re-evaluation
     
     return { t, language };
   } catch (error) {

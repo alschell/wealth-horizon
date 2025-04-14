@@ -23,6 +23,7 @@ const LandingLayout: React.FC = () => {
   // Safe access to language context with fallback
   const [language, setLanguage] = useState<string>('en');
   const [languageContextAvailable, setLanguageContextAvailable] = useState<boolean>(false);
+  const [renderKey, setRenderKey] = useState<number>(0); // Used to force re-render
   
   // Try to safely access the language context
   useEffect(() => {
@@ -44,6 +45,8 @@ const LandingLayout: React.FC = () => {
       if (customEvent.detail?.language) {
         console.log(`LandingLayout detected language change event to: ${customEvent.detail.language}`);
         setLanguage(customEvent.detail.language);
+        // Increment render key to force complete re-render
+        setRenderKey(prev => prev + 1);
       }
     };
     
@@ -63,15 +66,18 @@ const LandingLayout: React.FC = () => {
       setLanguage(contextLanguage);
       
       // More aggressive re-rendering strategy
+      setRenderKey(prev => prev + 1);
+      
+      // Additional timeout to ensure all child components have updated
       const timer = setTimeout(() => {
         console.log("Forcing re-render of LandingLayout");
-        setLanguage(prev => prev); // Force state update to trigger re-render
+        setRenderKey(prev => prev + 1); // Force state update to trigger re-render
       }, 100);
       return () => clearTimeout(timer);
     } catch (error) {
       console.error("LandingLayout: Error accessing language context after initial mount", error);
     }
-  }, [languageContextAvailable]);
+  }, [languageContextAvailable, language]);
 
   // Handle hash-based navigation
   useEffect(() => {
@@ -94,7 +100,7 @@ const LandingLayout: React.FC = () => {
 
   // Add a key based on language to force complete re-render of the component tree
   return (
-    <div key={`landing-layout-${language}`} className="min-h-screen bg-white w-full">
+    <div key={`landing-layout-${language}-${renderKey}`} className="min-h-screen bg-white w-full">
       <HeroSection onScrollToFeatures={() => scrollToSection(featuresRef)} />
       <div ref={whyRef} id="why">
         <WhySection />

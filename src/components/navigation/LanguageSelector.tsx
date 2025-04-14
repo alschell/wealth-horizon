@@ -9,6 +9,7 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
+import { useLocation } from 'react-router-dom';
 
 // Define the Language type to match the context
 type Language = 'en' | 'zh' | 'es' | 'ar' | 'pt' | 'ru' | 'ja' | 'fr' | 'de' | 'ko';
@@ -16,6 +17,7 @@ type Language = 'en' | 'zh' | 'es' | 'ar' | 'pt' | 'ru' | 'ja' | 'fr' | 'de' | '
 const LanguageSelector: React.FC = () => {
   let { language, setLanguage } = useLanguage();
   const [open, setOpen] = React.useState(false);
+  const location = useLocation();
 
   const languages = [
     { code: 'en', name: 'English' },
@@ -51,8 +53,16 @@ const LanguageSelector: React.FC = () => {
       // Set the language in the context
       setLanguage(langCode as Language);
       
-      // Force a full page reload to ensure all components update properly
-      window.location.reload();
+      // Dispatch a custom event that all components can listen for
+      const event = new CustomEvent('languageChange', { 
+        detail: { language: langCode, previousLanguage: language }
+      });
+      window.dispatchEvent(event);
+      
+      // If on landing page, reload for full refresh of all components
+      if (location.pathname === "/" || location.pathname === "") {
+        window.location.reload();
+      }
     }
     
     setOpen(false); // Explicitly close the dropdown

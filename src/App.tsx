@@ -6,7 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Routes, Route } from "react-router-dom";
 import { OnboardingProvider } from "./context/OnboardingContext";
-import { LanguageProvider } from "./context/LanguageContext";
+import { LanguageProvider, useLanguage } from "./context/LanguageContext";
 import Navigation from "./components/Navigation";
 import NotFound from "./pages/NotFound";
 import Onboarding from "./pages/Onboarding";

@@ -6,5 +6,6 @@ export {
   showInfoToast,
   toast,
   useToast,
-  sonner
 } from '@/hooks/use-toast';
+
+export * from '@/components/ui/sonner';

@@ -34,18 +34,13 @@ const LanguageSelector: React.FC = () => {
 
   const handleLanguageSelect = (langCode: string) => {
     console.log(`Language selected: ${langCode}, current language: ${language}`);
-    setLanguage(langCode as any);
+    setLanguage(langCode);
     setOpen(false); // Explicitly close the dropdown
     
     // Add a small delay and log to confirm the change was processed
     setTimeout(() => {
       console.log(`Language should now be: ${langCode}`);
     }, 100);
-    
-    // Force page update
-    setTimeout(() => {
-      window.dispatchEvent(new Event('languageChanged'));
-    }, 200);
   };
 
   return (
@@ -57,7 +52,7 @@ const LanguageSelector: React.FC = () => {
           className="h-9 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-none"
         >
           <Globe className="h-4 w-4" />
-          <span className="ml-2 hidden sm:inline">{language.toUpperCase()}</span>
+          <span className="ml-2 hidden sm:inline">{language?.toUpperCase() || 'EN'}</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-48 bg-white">

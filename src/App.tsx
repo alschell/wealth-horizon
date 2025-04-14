@@ -95,8 +95,6 @@ function App() {
           <OnboardingProvider>
             <TooltipProvider>
               <React.StrictMode>
-                {/* Add additional context verification */}
-                <VerifyContextAvailable />
                 <Navigation />
                 <Routes>
                   <Route path="/" element={<Index />} />
@@ -137,7 +135,6 @@ function App() {
                   <Route path="/logout" element={<Logout />} />
                   <Route path="/calendar" element={<Calendar />} />
                   
-                  {/* New routes for footer links */}
                   <Route path="/about" element={<About />} />
                   <Route path="/portfolio-management" element={<PortfolioManagement />} />
                   <Route path="/careers" element={<Careers />} />
@@ -152,14 +149,12 @@ function App() {
                   <Route path="/privacy-policy" element={<PrivacyPolicy />} />
                   <Route path="/terms-of-service" element={<TermsOfService />} />
                   
-                  {/* New documentation and developer portal routes */}
                   <Route path="/api-docs" element={<ApiDocumentation />} />
                   <Route path="/api-docs/:docType" element={<ApiDocumentation />} />
                   <Route path="/sdk/download/:sdkName/:version" element={<SDKDownload />} />
                   <Route path="/developer-portal" element={<DeveloperPortal />} />
                   <Route path="/developer-portal/:section" element={<DeveloperPortal />} />
                   
-                  {/* New help center related pages */}
                   <Route path="/user-guides" element={<UserGuides />} />
                   <Route path="/support-ticket" element={<SupportTicket />} />
                   <Route path="/community-forum" element={<CommunityForum />} />
@@ -177,19 +172,5 @@ function App() {
     </QueryClientProvider>
   );
 }
-
-// Helper component to verify context availability
-const VerifyContextAvailable = () => {
-  useEffect(() => {
-    try {
-      const { language } = useLanguage();
-      console.log("Language context successfully accessed in App component, language =", language);
-    } catch (error) {
-      console.error("CRITICAL: Language context is NOT available in App component:", error);
-    }
-  }, []);
-  
-  return null;
-};
 
 export default App;

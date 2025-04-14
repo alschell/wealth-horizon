@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useNavigationRoutes } from './navigation/useNavigationRoutes';
 import { HomeNavigation, DashboardNavigation } from './navigation';
@@ -12,19 +12,30 @@ import { useLanguage } from '@/context/LanguageContext';
 const Navigation: React.FC = () => {
   const location = useLocation();
   const { isHomePage, shouldHideNavigation } = useNavigationRoutes(location);
-  const [languageProviderReady, setLanguageProviderReady] = React.useState(false);
+  const [languageProviderReady, setLanguageProviderReady] = useState(false);
 
   // Try to access the language context, but handle the case where it's not available
-  React.useEffect(() => {
+  useEffect(() => {
+    let isMounted = true;
+    
     try {
       // Just access the language context to verify it's available
-      const { language } = useLanguage();
-      console.log('Navigation: Language provider is ready, language =', language);
-      setLanguageProviderReady(true);
+      const context = useLanguage();
+      if (isMounted) {
+        console.log('Navigation: Language provider is ready, language =', context.language);
+        setLanguageProviderReady(true);
+      }
     } catch (error) {
-      console.error('Navigation: Language provider not ready yet');
-      setLanguageProviderReady(false);
+      if (isMounted) {
+        console.error('Navigation: Language provider not ready yet, will render without waiting');
+        // Render navigation even if language provider is not ready
+        setLanguageProviderReady(true);
+      }
     }
+    
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   // If navigation should be hidden, return null
@@ -32,13 +43,8 @@ const Navigation: React.FC = () => {
     return null;
   }
 
-  // If LanguageProvider is not available, don't render navigation
-  if (!languageProviderReady) {
-    console.log('Navigation: Not rendering navigation because language provider is not ready');
-    return null;
-  }
-
-  // Determine which navigation to render based on the current route
+  // Always render navigation, even if language context is not available
+  // We've added fallback text in the navigation components
   return isHomePage ? <HomeNavigation /> : <DashboardNavigation />;
 };
 

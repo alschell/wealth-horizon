@@ -6,8 +6,9 @@ import LanguageSelector from './LanguageSelector';
 import { useLocalizedText } from '@/components/ui/localized-text';
 
 const HomeNavigation: React.FC = () => {
-  const { t } = useLocalizedText();
+  // Safe access to translations
   const [scrolled, setScrolled] = useState(false);
+  const { t } = useLocalizedText();
   
   // Add scroll event listener to detect when to show shadow
   useEffect(() => {
@@ -43,16 +44,16 @@ const HomeNavigation: React.FC = () => {
             {/* Navigation Links */}
             <nav className="hidden md:flex items-center space-x-8">
               <Link to="/#features" className="text-gray-500 hover:text-gray-900">
-                {t('features')}
+                {t('features', 'Features')}
               </Link>
               <Link to="/#benefits" className="text-gray-500 hover:text-gray-900">
-                {t('benefits')}
+                {t('benefits', 'Benefits')}
               </Link>
               <Link to="/#testimonials" className="text-gray-500 hover:text-gray-900">
-                {t('testimonials')}
+                {t('testimonials', 'Testimonials')}
               </Link>
               <Link to="/#contact" className="text-gray-500 hover:text-gray-900">
-                {t('contact')}
+                {t('contact', 'Contact')}
               </Link>
             </nav>
           </div>
@@ -62,11 +63,11 @@ const HomeNavigation: React.FC = () => {
             <LanguageSelector />
             <Link to="/login">
               <Button variant="outline" size="sm">
-                {t('login')}
+                {t('login', 'Login')}
               </Button>
             </Link>
             <Link to="/#contact" className="hidden md:block">
-              <Button size="sm">{t('contactUs')}</Button>
+              <Button size="sm">{t('contactUs', 'Contact Us')}</Button>
             </Link>
           </div>
         </div>

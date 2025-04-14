@@ -103,6 +103,7 @@ export const useLocalizedText = () => {
     }
   }, [languageContextAvailable, language]);
   
+  // Always provide a t function, even if language context is not available
   const t = useCallback((key: string, fallback?: string) => {
     if (!languageContextAvailable) {
       return fallback || key;

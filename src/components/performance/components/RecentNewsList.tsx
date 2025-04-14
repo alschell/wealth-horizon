@@ -2,6 +2,7 @@
 import React from "react";
 import { Newspaper } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import NewsItem from "./news/NewsItem";
 
 type NewsItemType = {
   title: string;
@@ -20,10 +21,7 @@ const RecentNewsList = ({ newsData }: RecentNewsListProps) => {
       </h3>
       <div className="space-y-2">
         {newsData.map((news, index) => (
-          <div key={index} className="p-3 rounded-md border border-gray-100">
-            <p className="text-sm font-medium">{news.title}</p>
-            <p className="text-xs text-gray-500 mt-1">{news.time}</p>
-          </div>
+          <NewsItem key={index} news={news} />
         ))}
         <Button variant="outline" size="sm" className="w-full">
           View All News

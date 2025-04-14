@@ -1,7 +1,8 @@
 
 import React from "react";
-import { ArrowUp, ArrowDown, Briefcase, ChevronRight } from "lucide-react";
+import { Briefcase, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import AssetItem from "./assets/AssetItem";
 
 const TopAssets = () => {
   const assets = [
@@ -24,21 +25,7 @@ const TopAssets = () => {
       
       <div className="space-y-2 flex-grow">
         {assets.map((asset, index) => (
-          <div 
-            key={index} 
-            className="p-3 rounded-md border border-gray-100 hover:shadow-sm transition-shadow bg-white"
-          >
-            <div className="flex justify-between items-center">
-              <p className="text-sm font-medium">{asset.name}</p>
-              <p className="text-sm font-bold">{asset.value}</p>
-            </div>
-            <div className="flex justify-end mt-1">
-              <span className={`text-xs flex items-center ${asset.isPositive ? 'text-emerald-600' : 'text-red-500'}`}>
-                {asset.isPositive ? <ArrowUp className="h-3 w-3 mr-0.5" /> : <ArrowDown className="h-3 w-3 mr-0.5" />}
-                {asset.change}
-              </span>
-            </div>
-          </div>
+          <AssetItem key={index} asset={asset} />
         ))}
       </div>
       

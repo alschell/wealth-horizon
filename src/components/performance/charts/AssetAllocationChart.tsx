@@ -1,6 +1,7 @@
 
 import React from "react";
 import { PieChart } from "lucide-react";
+import AssetAllocationItem from "./asset-allocation/AssetAllocationItem";
 
 type AssetAllocationType = {
   name: string;
@@ -19,21 +20,11 @@ const AssetAllocationChart = ({ assetAllocationData }: AssetAllocationChartProps
       </h3>
       <div className="flex flex-wrap justify-between">
         {assetAllocationData.map((item, index) => (
-          <div key={index} className="mb-2">
-            <div className="flex items-center">
-              <div 
-                className="h-3 w-3 rounded-sm mr-2" 
-                style={{ 
-                  backgroundColor: index === 0 ? '#000' : 
-                                   index === 1 ? '#777' : 
-                                   index === 2 ? '#aaa' : 
-                                   index === 3 ? '#555' : '#ccc' 
-                }} 
-              />
-              <span className="text-xs">{item.name}</span>
-            </div>
-            <p className="text-sm font-medium ml-5">{item.value}%</p>
-          </div>
+          <AssetAllocationItem 
+            key={index} 
+            item={item} 
+            colorIndex={index} 
+          />
         ))}
       </div>
     </div>

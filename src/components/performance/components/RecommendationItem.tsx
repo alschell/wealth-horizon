@@ -1,6 +1,8 @@
 
 import React from "react";
 import { Brain } from "lucide-react";
+import { RecommendationIcon } from "./recommendation/RecommendationIcon";
+import RecommendationContent from "./recommendation/RecommendationContent";
 
 type RecommendationProps = {
   recommendation: {
@@ -21,19 +23,8 @@ const RecommendationItem = ({ recommendation }: RecommendationProps) => {
       }`}
     >
       <div className="flex items-start">
-        <div className={`h-5 w-5 rounded-full flex items-center justify-center mr-3 ${
-          isHighPriority ? 'bg-amber-200' : 'bg-gray-200'
-        }`}>
-          <Brain className="h-3 w-3 text-gray-700" />
-        </div>
-        <div>
-          <p className="text-sm font-medium">{recommendation.title}</p>
-          <p className="text-sm">{recommendation.description}</p>
-          <div className="flex justify-between items-center mt-1">
-            <p className="text-xs text-gray-500 capitalize">{recommendation.impact.toLowerCase()} impact</p>
-            <span className="text-xs text-gray-500">{recommendation.type}</span>
-          </div>
-        </div>
+        <RecommendationIcon isHighPriority={isHighPriority} />
+        <RecommendationContent recommendation={recommendation} />
       </div>
     </div>
   );

@@ -1,45 +1,36 @@
 
-# Error Handling Architecture
+# Error Handling System
 
-This directory contains a comprehensive error handling system designed to provide consistent error management throughout the application.
+This document outlines the error handling patterns and utilities available in the application.
 
-## Core Components
+## Core Principles
 
-### 1. Error Response Standardization
+1. **Standardized Error Format** - All errors should follow the `ErrorResponse` interface
+2. **Contextual Reporting** - Errors should include component context
+3. **User-Friendly Messages** - Errors displayed to users should be meaningful
+4. **Centralized Handling** - Use the central utilities for consistent handling
+5. **Fallback UI** - Always provide fallback UI when errors occur
 
-All errors are processed into a standard format:
+## Available Utilities
 
-```typescript
-interface ErrorResponse {
-  message: string;
-  code?: string;
-  details?: Record<string, any>;
-  timestamp?: string;
-}
-```
+### Error Parsing and Formatting
 
-### 2. Error Handling Functions
+- `getErrorMessage(error, fallbackMessage?)` - Extract a human-readable message from any error
+- `parseError(error)` - Convert any error to a standardized `ErrorResponse`
+- `formatZodErrors(zodError)` - Convert Zod validation errors to a simple object
 
-The system provides several key functions:
+### Error Handling
 
-- `getErrorMessage`: Extract readable messages from any error type
-- `parseError`: Convert various error formats into the standard ErrorResponse
-- `logError`: Consistently log errors with context to the console
-- `handleError`: Process errors with customizable options, including toast notifications
-- `withErrorHandling`: HOC for wrapping async functions with error handling
-- `tryCatch`: Utility for try/catch operations with standardized error management
+- `handleError(error, options?)` - Process errors with optional toast notifications
+- `logError(error, componentName?)` - Log detailed error information to console
+- `createContextualError(message, componentName)` - Create an error with context
+- `withErrorHandling(fn, options?)` - HOF to wrap async functions with error handling
+- `tryCatch(promise, options?)` - Utility to safely await promises with error handling
 
-### 3. Error Boundaries
+### Error Components
 
-React error boundaries to catch UI rendering errors:
-
-- `ErrorBoundary`: Class component implementation 
-- `withErrorBoundary`: HOC for wrapping components
-- `useErrorBoundary`: Hook for functional components
-
-### 4. Integration with Toast System
-
-Errors can automatically trigger toast notifications with configured severity levels.
+- `ErrorFallback` - Standard component for displaying errors
+- `ErrorBoundary` - React error boundary to catch rendering errors
 
 ## Usage Examples
 
@@ -49,56 +40,78 @@ Errors can automatically trigger toast notifications with configured severity le
 import { handleError } from '@/utils/errorHandling';
 
 try {
-  // Risky operation
+  await riskyOperation();
 } catch (error) {
   handleError(error, { 
-    componentName: 'MyComponent',
-    fallbackMessage: 'Failed to load data'
+    context: 'UserProfile',
+    fallbackMessage: 'Could not load user profile'
   });
 }
 ```
 
-### Wrapping Async Functions
+### With Async Functions
 
 ```typescript
 import { withErrorHandling } from '@/utils/errorHandling';
 
-const fetchDataSafely = withErrorHandling(fetchData, {
-  fallbackMessage: 'Could not retrieve your information'
+const fetchUserSafe = withErrorHandling(fetchUser, {
+  context: 'UserProfile',
+  fallbackMessage: 'Could not load user profile'
 });
 
-await fetchDataSafely(params);
+// No try/catch needed
+const user = await fetchUserSafe(userId);
 ```
 
-### Using Error Boundaries
+### With Error Boundaries
 
 ```tsx
-import { withErrorBoundary } from '@/utils/errorHandling';
+import ErrorBoundary from '@/components/common/ErrorBoundary';
+import ErrorFallback from '@/components/shared/ErrorFallback';
 
-// As HOC
-const SafeComponent = withErrorBoundary(MyComponent, {
-  fallback: <CustomFallback />,
-  onError: (error) => logToService(error)
+<ErrorBoundary
+  fallback={({error, resetErrorBoundary}) => (
+    <ErrorFallback 
+      error={error}
+      resetErrorBoundary={resetErrorBoundary}
+      message="Could not load dashboard"
+    />
+  )}
+  onError={(error) => logError(error, 'Dashboard')}
+>
+  <Dashboard />
+</ErrorBoundary>
+```
+
+### Form Validation with Zod
+
+```tsx
+import { validateForm } from '@/utils/validation/formValidationCore';
+import { z } from 'zod';
+
+const schema = z.object({
+  email: z.string().email(),
+  password: z.string().min(8)
 });
 
-// As hook
-function MyComponent() {
-  const { ErrorBoundaryWrapper } = useErrorBoundary({
-    componentName: 'MyComponent'
-  });
+const handleSubmit = (data) => {
+  const result = validateForm(data, schema);
   
-  return (
-    <ErrorBoundaryWrapper>
-      {/* Component content */}
-    </ErrorBoundaryWrapper>
-  );
-}
+  if (result.errors) {
+    setErrors(result.errors);
+    return;
+  }
+  
+  // Proceed with valid data
+  submitForm(result.data);
+};
 ```
 
 ## Best Practices
 
-1. Always provide component names for context
-2. Include fallback messages for user-friendly error presentation
-3. Use error boundaries around complex UI sections
-4. Leverage the error handler options to customize behavior
-5. Remember to handle both sync and async errors appropriately
+1. Always provide context when handling errors
+2. Use error boundaries for component rendering errors
+3. Prefer the `tryCatch` utility for async operations
+4. Use Zod for form validation when possible
+5. Always log errors in development, but be selective in production
+6. Provide user-friendly fallback UI for all error states

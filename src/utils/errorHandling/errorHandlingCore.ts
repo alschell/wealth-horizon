@@ -1,6 +1,10 @@
 
+/**
+ * Core error handling utilities for standardized error management
+ */
+
 import { toast } from '@/hooks/use-toast';
-import { ReactNode } from 'react';
+import { z } from 'zod';
 
 /**
  * Standard error response format
@@ -9,7 +13,7 @@ export interface ErrorResponse {
   message: string;
   code?: string;
   details?: Record<string, any>;
-  timestamp?: string;
+  cause?: Error;
 }
 
 /**
@@ -20,10 +24,11 @@ export interface ErrorHandlerOptions {
   logError?: boolean;
   showToast?: boolean;
   silent?: boolean;
+  context?: string;
+  captureException?: boolean;
   actionText?: string;
   action?: () => void;
   onError?: (error: unknown) => void;
-  componentName?: string;
 }
 
 /**
@@ -38,8 +43,16 @@ export function getErrorMessage(error: unknown, fallbackMessage = "An unexpected
     return error;
   }
   
-  if (error && typeof error === "object" && "message" in error) {
-    return String((error as ErrorResponse).message);
+  if (error && typeof error === "object") {
+    if ('message' in error) {
+      return String((error as ErrorResponse).message);
+    }
+    
+    // Handle Zod validation errors
+    if (error instanceof z.ZodError) {
+      const firstError = error.errors[0];
+      return firstError ? `Validation error: ${firstError.message}` : 'Validation failed';
+    }
   }
   
   return fallbackMessage;
@@ -53,33 +66,43 @@ export function parseError(error: unknown): ErrorResponse {
     return {
       message: error.message,
       code: error.name,
-      timestamp: new Date().toISOString()
+      cause: error
     };
   }
   
   if (typeof error === "string") {
     return {
       message: error,
-      code: "ERROR_STRING",
-      timestamp: new Date().toISOString()
+      code: "ERROR_STRING"
     };
   }
   
   if (error && typeof error === "object") {
+    if (error instanceof z.ZodError) {
+      return {
+        message: "Validation failed",
+        code: "VALIDATION_ERROR",
+        details: error.errors.reduce((acc, curr) => {
+          const path = curr.path.join('.');
+          acc[path] = curr.message;
+          return acc;
+        }, {} as Record<string, string>)
+      };
+    }
+    
     if ("message" in error) {
       return {
         message: String((error as ErrorResponse).message),
         code: (error as ErrorResponse).code || "ERROR_OBJECT",
         details: (error as ErrorResponse).details,
-        timestamp: new Date().toISOString()
+        cause: (error as ErrorResponse).cause
       };
     }
   }
   
   return {
     message: "An unexpected error occurred",
-    code: "UNKNOWN_ERROR",
-    timestamp: new Date().toISOString()
+    code: "UNKNOWN_ERROR"
   };
 }
 
@@ -87,15 +110,26 @@ export function parseError(error: unknown): ErrorResponse {
  * Logs error details to the console
  */
 export function logError(error: unknown, componentName?: string): void {
-  console.error(`Error${componentName ? ` in ${componentName}` : ''}:`, error);
+  const errorDetails = parseError(error);
   
-  if (error instanceof Error && error.stack) {
+  console.error(
+    `Error${componentName ? ` in ${componentName}` : ''}:`, 
+    {
+      message: errorDetails.message,
+      code: errorDetails.code,
+      details: errorDetails.details
+    }
+  );
+  
+  if (errorDetails.cause && errorDetails.cause.stack) {
+    console.error('Stack trace:', errorDetails.cause.stack);
+  } else if (error instanceof Error && error.stack) {
     console.error('Stack trace:', error.stack);
   }
 }
 
 /**
- * Creates a descriptive error with component context
+ * Creates a contextual error with component context
  */
 export function createContextualError(message: string, componentName: string): Error {
   const error = new Error(`[${componentName}] ${message}`);
@@ -112,29 +146,38 @@ export function handleError(
   const { 
     fallbackMessage = "An unexpected error occurred",
     logError: shouldLogError = true,
-    showToast = true,
+    showToast: shouldShowToast = true,
     silent = false,
+    context,
     actionText,
     action,
-    onError,
-    componentName
+    onError
   } = options;
-  
-  // Get error message
-  const errorMessage = getErrorMessage(error, fallbackMessage);
   
   // Parse error details
   const errorDetails = parseError(error);
+  const errorMessage = errorDetails.message || fallbackMessage;
+  
+  // Add context to error if provided
+  if (context && !errorDetails.message.includes(`[${context}]`)) {
+    errorDetails.message = `[${context}] ${errorDetails.message}`;
+  }
   
   // Log error to console if enabled
   if (shouldLogError && !silent) {
-    logError(error, componentName);
+    console.error("Error:", {
+      message: errorMessage,
+      code: errorDetails.code,
+      details: errorDetails.details,
+      context,
+      original: error
+    });
   }
   
   // Show toast notification if enabled and not silent
-  if (showToast && !silent) {
+  if (shouldShowToast && !silent) {
     toast({
-      title: "Error",
+      title: context ? `Error in ${context}` : "Error",
       description: errorMessage,
       variant: "destructive",
       action: actionText && action ? {
@@ -153,7 +196,7 @@ export function handleError(
 }
 
 /**
- * Creates a try-catch wrapper for async functions
+ * Higher-order function to wrap components with error handling
  */
 export function withErrorHandling<T extends (...args: any[]) => Promise<any>>(
   fn: T,
@@ -170,17 +213,16 @@ export function withErrorHandling<T extends (...args: any[]) => Promise<any>>(
 }
 
 /**
- * Try-catch helper for async operations
+ * Try-catch utility for async functions
  */
-export async function tryCatch<T>(
-  operation: () => Promise<T>,
+export function tryCatch<T>(
+  promise: Promise<T>,
   options: ErrorHandlerOptions = {}
-): Promise<T | undefined> {
-  try {
-    return await operation();
-  } catch (error) {
-    handleError(error, options);
-    return undefined;
-  }
+): Promise<[T, null] | [null, ErrorResponse]> {
+  return promise
+    .then((data) => [data, null] as [T, null])
+    .catch((error) => {
+      const errorResponse = handleError(error, options);
+      return [null, errorResponse] as [null, ErrorResponse];
+    });
 }
-

@@ -7,6 +7,8 @@ import { showSuccess, showInfo } from './toastUtils';
 
 /**
  * Show a toast for successful documentation access
+ * @param docName Name of the documentation being viewed
+ * @param description Optional custom description
  */
 export const showDocumentationToast = (docName: string, description?: string) => {
   showInfo(
@@ -17,6 +19,7 @@ export const showDocumentationToast = (docName: string, description?: string) =>
 
 /**
  * Show a toast for successful copy operation
+ * @param itemType Type of item copied (default: 'text')
  */
 export const showCopySuccessToast = (itemType: string = 'text') => {
   showSuccess(
@@ -27,6 +30,8 @@ export const showCopySuccessToast = (itemType: string = 'text') => {
 
 /**
  * Show a toast for successful download operation
+ * @param fileName Name of the file being downloaded
+ * @param version Optional version number of the file
  */
 export const showDownloadToast = (fileName: string, version?: string) => {
   showSuccess(

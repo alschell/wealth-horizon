@@ -9,23 +9,23 @@ export function getFileIcon(file: File): React.ReactNode {
   const type = file.type;
   
   if (type.startsWith('image/')) {
-    return <FileImage className="h-5 w-5 text-blue-500" />;
+    return React.createElement(FileImage, { className: "h-5 w-5 text-blue-500" });
   } else if (type === 'application/pdf') {
-    return <FileText className="h-5 w-5 text-red-500" />;
+    return React.createElement(FileText, { className: "h-5 w-5 text-red-500" });
   } else if (type.startsWith('text/')) {
-    return <FileText className="h-5 w-5 text-gray-500" />;
+    return React.createElement(FileText, { className: "h-5 w-5 text-gray-500" });
   } else if (type.includes('spreadsheet') || type.includes('excel')) {
-    return <FileBarChart className="h-5 w-5 text-green-500" />;
+    return React.createElement(FileBarChart, { className: "h-5 w-5 text-green-500" });
   } else if (type.startsWith('audio/')) {
-    return <FileAudio className="h-5 w-5 text-purple-500" />;
+    return React.createElement(FileAudio, { className: "h-5 w-5 text-purple-500" });
   } else if (type.startsWith('video/')) {
-    return <FileVideo className="h-5 w-5 text-orange-500" />;
+    return React.createElement(FileVideo, { className: "h-5 w-5 text-orange-500" });
   } else if (type.includes('zip') || type.includes('compressed')) {
-    return <FileArchive className="h-5 w-5 text-yellow-500" />;
+    return React.createElement(FileArchive, { className: "h-5 w-5 text-yellow-500" });
   } else if (type.includes('javascript') || type.includes('json') || type.includes('html') || type.includes('css')) {
-    return <FileCode className="h-5 w-5 text-indigo-500" />;
+    return React.createElement(FileCode, { className: "h-5 w-5 text-indigo-500" });
   } else {
-    return <File className="h-5 w-5 text-gray-500" />;
+    return React.createElement(File, { className: "h-5 w-5 text-gray-500" });
   }
 }
 

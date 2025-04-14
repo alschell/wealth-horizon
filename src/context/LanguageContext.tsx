@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useCallback, ReactNode, useEffect } from 'react';
 
 type Language = 'en' | 'zh' | 'es' | 'ar' | 'pt' | 'ru' | 'ja' | 'fr' | 'de' | 'ko';
@@ -273,7 +272,6 @@ const translations: Record<Language, Record<string, string>> = {
     complianceManagementDesc: '通过自动化合规监控，走在监管要求的前面。',
     comprehensiveDashboard: '综合仪表板',
     comprehensiveDashboardDesc: '全面了解您在所有银行、经纪商和托管人的财富。',
-    realTimeAnalytics: '实时分析',
     realTimeAnalyticsDesc: '通过实时更新和可自定义的仪表板监控您的投资。',
     riskManagement: '风险管理',
     riskManagementDesc: '使用我们复杂的分析工具识别并减轻风险。',
@@ -1326,4 +1324,3 @@ export const useLanguage = (): LanguageContextType => {
   }
   return context;
 };
-

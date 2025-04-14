@@ -29,7 +29,7 @@ const LanguageSelector: React.FC = () => {
 
   const handleLanguageSelect = (langCode: string) => {
     setLanguage(langCode as any);
-    setOpen(false); // Close the dropdown after selection
+    setOpen(false); // Explicitly close the dropdown
   };
 
   return (

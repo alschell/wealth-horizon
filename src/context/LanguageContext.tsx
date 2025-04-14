@@ -1,5 +1,4 @@
-
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
 
 type Language = 'en' | 'zh' | 'es' | 'ar' | 'pt' | 'ru' | 'ja' | 'fr' | 'de' | 'ko';
 
@@ -23,6 +22,8 @@ const translations: Record<Language, Record<string, string>> = {
     contact: 'Contact',
     login: 'Log In',
     contactUs: 'Contact Us',
+    contactUsSubtitle: 'Have questions about how <span class="text-indigo-600">Wealth</span>Horizon can transform your wealth management?',
+    getInTouch: 'Get in touch with our team.',
     
     // Languages
     english: 'English',
@@ -79,6 +80,8 @@ const translations: Record<Language, Record<string, string>> = {
     contact: '联系我们',
     login: '登录',
     contactUs: '联系我们',
+    contactUsSubtitle: '对<span class="text-indigo-600">财富</span>视界如何改变您的财富管理有疑问吗？',
+    getInTouch: '与我们的团队联系。',
     
     // Languages
     english: '英语',
@@ -135,14 +138,16 @@ const translations: Record<Language, Record<string, string>> = {
     contact: 'Contacto',
     login: 'Iniciar Sesión',
     contactUs: 'Contáctenos',
+    contactUsSubtitle: '¿Tiene preguntas sobre cómo <span class="text-indigo-600">Wealth</span>Horizon puede transformar su gestión de patrimonio?',
+    getInTouch: 'Póngase en contacto con nuestro equipo.',
     
     // Languages
     english: 'Inglés',
-    chinese: 'Chino',
-    spanish: 'Español',
+    chinese: 'Chinês',
+    spanish: 'Espanhol',
     arabic: 'Árabe',
     portuguese: 'Portugués',
-    russian: 'Ruso',
+    russian: 'Russo',
     japanese: 'Japonés',
     french: 'Francés',
     german: 'Alemán',
@@ -191,6 +196,8 @@ const translations: Record<Language, Record<string, string>> = {
     contact: 'اتصل بنا',
     login: 'تسجيل الدخول',
     contactUs: 'اتصل بنا',
+    contactUsSubtitle: 'هل لديك أسئلة حول كيفية تحويل <span class="text-indigo-600">ويلث</span>هورايزن لإدارة ثروتك؟',
+    getInTouch: 'تواصل مع فريقنا.',
     
     // Languages
     english: 'الإنجليزية',
@@ -247,6 +254,8 @@ const translations: Record<Language, Record<string, string>> = {
     contact: 'Contato',
     login: 'Entrar',
     contactUs: 'Entre em contato',
+    contactUsSubtitle: 'Tem perguntas sobre como o <span class="text-indigo-600">Wealth</span>Horizon pode transformar sua gestão de patrimônio?',
+    getInTouch: 'Entre em contato com nossa equipe.',
     
     // Languages
     english: 'Inglês',
@@ -303,6 +312,8 @@ const translations: Record<Language, Record<string, string>> = {
     contact: 'Контакты',
     login: 'Войти',
     contactUs: 'Связаться с нами',
+    contactUsSubtitle: 'У вас есть вопросы о том, как <span class="text-indigo-600">Wealth</span>Horizon может преобразить управление вашим капиталом?',
+    getInTouch: 'Свяжитесь с нашей командой.',
     
     // Languages
     english: 'Английский',
@@ -359,6 +370,8 @@ const translations: Record<Language, Record<string, string>> = {
     contact: 'お問い合わせ',
     login: 'ログイン',
     contactUs: 'お問い合わせ',
+    contactUsSubtitle: '<span class="text-indigo-600">ウェルス</span>ホライズンがあなたの資産管理をどのように変革できるかについてご質問がありますか？',
+    getInTouch: '私たちのチームにお問い合わせください。',
     
     // Languages
     english: '英語',
@@ -415,6 +428,8 @@ const translations: Record<Language, Record<string, string>> = {
     contact: 'Contact',
     login: 'Connexion',
     contactUs: 'Contactez-nous',
+    contactUsSubtitle: 'Vous avez des questions sur la façon dont <span class="text-indigo-600">Wealth</span>Horizon peut transformer votre gestion de patrimoine ?',
+    getInTouch: 'Contactez notre équipe.',
     
     // Languages
     english: 'Anglais',
@@ -471,6 +486,8 @@ const translations: Record<Language, Record<string, string>> = {
     contact: 'Kontakt',
     login: 'Anmelden',
     contactUs: 'Kontaktieren Sie uns',
+    contactUsSubtitle: 'Haben Sie Fragen dazu, wie <span class="text-indigo-600">Wealth</span>Horizon Ihre Vermögensverwaltung verändern kann?',
+    getInTouch: 'Kontaktieren Sie unser Team.',
     
     // Languages
     english: 'Englisch',
@@ -527,6 +544,8 @@ const translations: Record<Language, Record<string, string>> = {
     contact: '연락처',
     login: '로그인',
     contactUs: '문의하기',
+    contactUsSubtitle: '<span class="text-indigo-600">웰스</span>호라이즌이 귀하의 자산 관리를 어떻게 변화시킬 수 있는지에 대한 질문이 있으신가요?',
+    getInTouch: '저희 팀에게 연락하세요.',
     
     // Languages
     english: '영어',
@@ -582,12 +601,24 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) => {
   const [language, setLanguage] = useState<Language>('en');
 
-  const getLocalizedText = (key: string): string => {
+  // Use useCallback to ensure getLocalizedText doesn't change identity on rerenders
+  const getLocalizedText = useCallback((key: string): string => {
+    if (!translations[language]) {
+      console.warn(`Language ${language} not supported, falling back to English`);
+      return translations.en[key] || key;
+    }
     return translations[language][key] || key;
-  };
+  }, [language]);
+
+  // Force the context to rerender when language changes
+  const contextValue = React.useMemo(() => ({
+    language,
+    setLanguage,
+    getLocalizedText
+  }), [language, getLocalizedText]);
 
   return (
-    <LanguageContext.Provider value={{ language, setLanguage, getLocalizedText }}>
+    <LanguageContext.Provider value={contextValue}>
       {children}
     </LanguageContext.Provider>
   );

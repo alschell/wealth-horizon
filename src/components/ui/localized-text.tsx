@@ -1,28 +1,33 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 
 interface LocalizedTextProps {
   textKey: string;
   fallback?: string;
   className?: string;
+  html?: boolean;
 }
 
 export const LocalizedText: React.FC<LocalizedTextProps> = ({ 
   textKey, 
   fallback, 
-  className 
+  className,
+  html = false
 }) => {
   const { getLocalizedText, language } = useLanguage();
-  const localizedText = getLocalizedText(textKey);
-  
-  // If we don't have a translation, use the fallback or the key itself
-  const displayText = localizedText === textKey ? (fallback || textKey) : localizedText;
+  // Force re-render when language changes by storing the text in state
+  const [displayText, setDisplayText] = useState<string>('');
   
   useEffect(() => {
-    // This will cause the component to re-render when language changes
-    // We don't need to do anything in the effect itself
-  }, [language]);
+    const localizedText = getLocalizedText(textKey);
+    // If we don't have a translation, use the fallback or the key itself
+    setDisplayText(localizedText === textKey ? (fallback || textKey) : localizedText);
+  }, [textKey, fallback, language, getLocalizedText]);
+  
+  if (html) {
+    return <span className={className} dangerouslySetInnerHTML={{ __html: displayText }} />;
+  }
   
   return <span className={className}>{displayText}</span>;
 };
@@ -31,10 +36,10 @@ export const LocalizedText: React.FC<LocalizedTextProps> = ({
 export const useLocalizedText = () => {
   const { getLocalizedText, language } = useLanguage();
   
-  return {
-    t: (key: string, fallback?: string) => {
-      const localizedText = getLocalizedText(key);
-      return localizedText === key ? (fallback || key) : localizedText;
-    }
-  };
+  const t = React.useCallback((key: string, fallback?: string) => {
+    const localizedText = getLocalizedText(key);
+    return localizedText === key ? (fallback || key) : localizedText;
+  }, [language, getLocalizedText]);
+  
+  return { t };
 };

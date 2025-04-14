@@ -31,6 +31,7 @@ export function showDownloadToast(sdkName: string, version: string) {
   toast({
     title: `Downloading ${sdkName} SDK v${version}`,
     description: "Your download will begin shortly",
+    duration: 3000
   });
   
   // Delayed toast for download completion

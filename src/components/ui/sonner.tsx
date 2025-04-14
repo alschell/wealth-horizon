@@ -1,3 +1,6 @@
 
-// Re-export all functionality from the original toaster
-export * from "./toaster";
+// Re-export the Toaster component from the toaster.tsx file
+export { Toaster } from "./toaster";
+
+// Export all sonner functionality that might be needed
+export type { ToastT } from "sonner";

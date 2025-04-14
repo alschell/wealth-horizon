@@ -12,7 +12,7 @@ import ViewPermissionsDialog from "../components/ViewPermissionsDialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { motion } from "framer-motion";
 import { useUserActionDialog } from "../hooks/useUserActionDialog";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "@/utils/toast";
 import { useGlobalInviteUserDialog } from "../hooks/useInviteUserDialog";
 
 const UserManagementInterface = () => {
@@ -32,7 +32,6 @@ const UserManagementInterface = () => {
     handleResendInvite
   } = useUserActionDialog();
   
-  const { toast } = useToast();
   // Use the global hook to ensure the invite dialog state is properly tracked
   const { isOpen: inviteDialogOpen } = useGlobalInviteUserDialog();
   

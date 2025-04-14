@@ -8,4 +8,5 @@ export {
   useToast,
 } from '@/hooks/use-toast';
 
+// Export the Toaster component and types
 export * from '@/components/ui/sonner';

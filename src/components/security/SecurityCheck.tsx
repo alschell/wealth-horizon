@@ -1,10 +1,11 @@
+
 /**
  * Security checking component that demonstrates the use of security audit utilities
  */
 
 import React, { useState } from 'react';
-import { securityAudit } from '@/utils/security';
-import { string } from '@/utils/validation';
+import { SecurityAuditor } from '@/utils/security/securityAuditor';
+import { validateUrl, validatePassword } from '@/utils/validation/stringValidation';
 
 interface SecurityCheckProps {
   onAuditComplete?: (result: any) => void;
@@ -41,13 +42,13 @@ const SecurityCheck: React.FC<SecurityCheckProps> = ({ onAuditComplete }) => {
     
     // URL validation
     if (formValues.url) {
-      const urlError = string.url(formValues.url, { requireHttps: true });
+      const urlError = validateUrl(formValues.url, { requireHttps: true });
       if (urlError) newErrors.url = urlError;
     }
     
     // Password validation if provided
     if (formValues.password) {
-      const passwordResult = string.password(formValues.password);
+      const passwordResult = validatePassword(formValues.password);
       if (!passwordResult.valid) {
         newErrors.password = passwordResult.message;
       }
@@ -65,7 +66,7 @@ const SecurityCheck: React.FC<SecurityCheckProps> = ({ onAuditComplete }) => {
     }
     
     // Perform security audit
-    const result = securityAudit.auditSecurity({
+    const result = SecurityAuditor.performSecurityAudit({
       url: formValues.url || undefined,
       userInput: formValues.input || undefined,
       password: formValues.password || undefined

@@ -1,3 +1,4 @@
+
 /**
  * Central export point for all validation utilities
  * 
@@ -96,7 +97,8 @@ export * from './formValidationCore';
 export const {
   validateEmail,
   validatePhone,
-  validateUrl
+  validateUrl,
+  validatePassword
 } = stringVal;
 
 /**

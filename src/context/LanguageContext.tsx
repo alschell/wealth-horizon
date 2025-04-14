@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useCallback, ReactNode, useEffect } from 'react';
 
 type Language = 'en' | 'zh' | 'es' | 'ar' | 'pt' | 'ru' | 'ja' | 'fr' | 'de' | 'ko';
@@ -794,6 +795,263 @@ const translations: Record<Language, Record<string, string>> = {
     security: 'Безопасность'
   },
   ja: {
-    // Navigation
+    // Japanese translations
     features: '機能',
-    benefits
+    benefits: 'メリット',
+    testimonials: 'お客様の声',
+    contact: 'お問い合わせ',
+    login: 'ログイン',
+    contactUs: 'お問い合わせ',
+    contactUsSubtitle: '<span class="text-indigo-600">ウェルス</span>ホライズンがあなたの資産管理をどのように変革できるかについて質問がありますか？',
+    getInTouch: '私たちのチームにお問い合わせください。',
+    whyWealthHorizon: 'なぜWHか',
+    
+    // Hero Section
+    holisticWealthManagement: '総合的な資産管理',
+    familyOffices: 'ファミリーオフィス',
+    and: 'および',
+    institutions: '機関投資家',
+    actionableWealth: 'すべての資産を一つのプラットフォームで活用可能に',
+    acrossAllBanks: 'あらゆる銀行、ブローカー、カストディアンを横断して',
+    learnMore: '詳細を見る',
+    aiNativePlatform: 'AIネイティブプラットフォーム',
+    realTimeAnalytics: 'リアルタイム分析',
+    soc2Certified: 'SOC 2認証済み',
+    
+    // Languages
+    english: '英語',
+    chinese: '中国語',
+    spanish: 'スペイン語',
+    arabic: 'アラビア語',
+    portuguese: 'ポルトガル語',
+    russian: 'ロシア語',
+    japanese: '日本語',
+    french: 'フランス語',
+    german: 'ドイツ語',
+    korean: '韓国語',
+    
+    // Contact
+    contactInformation: '連絡先情報',
+    ourAddress: '住所',
+    companyAddress: 'ニューヨーク金融街123番地、スイート1500、ニューヨーク州10005',
+    phoneNumber: '電話番号',
+    contactPhone: '+1 (555) 123-4567',
+    emailAddress: 'メールアドレス',
+    contactEmail: 'contact@wealthhorizon.com',
+    officeHours: '営業時間',
+    weekdayHours: '月曜〜金曜：午前9時〜午後6時（東部標準時）',
+    weekendClosed: '土日：休業'
+  },
+  fr: {
+    // French translations
+    features: 'Fonctionnalités',
+    benefits: 'Avantages',
+    testimonials: 'Témoignages',
+    contact: 'Contact',
+    login: 'Connexion',
+    contactUs: 'Contactez-nous',
+    contactUsSubtitle: 'Vous avez des questions sur la façon dont <span class="text-indigo-600">Wealth</span>Horizon peut transformer votre gestion de patrimoine ?',
+    getInTouch: 'Entrez en contact avec notre équipe.',
+    whyWealthHorizon: 'Pourquoi WH',
+    
+    // Hero Section
+    holisticWealthManagement: 'Gestion de patrimoine holistique pour',
+    familyOffices: 'family offices',
+    and: 'et',
+    institutions: 'institutions',
+    actionableWealth: 'Toute votre richesse rendue exploitable sur une seule plateforme',
+    acrossAllBanks: 'à travers toutes vos banques, courtiers et dépositaires',
+    learnMore: 'En savoir plus',
+    aiNativePlatform: 'Plateforme native IA',
+    realTimeAnalytics: 'Analytique en temps réel',
+    soc2Certified: 'Certifié SOC 2',
+    
+    // Languages
+    english: 'Anglais',
+    chinese: 'Chinois',
+    spanish: 'Espagnol',
+    arabic: 'Arabe',
+    portuguese: 'Portugais',
+    russian: 'Russe',
+    japanese: 'Japonais',
+    french: 'Français',
+    german: 'Allemand',
+    korean: 'Coréen',
+    
+    // Contact
+    contactInformation: 'Informations de contact',
+    ourAddress: 'Notre adresse',
+    companyAddress: '123 Financial District, Suite 1500, New York, NY 10005',
+    phoneNumber: 'Numéro de téléphone',
+    contactPhone: '+1 (555) 123-4567',
+    emailAddress: 'Adresse e-mail',
+    contactEmail: 'contact@wealthhorizon.com',
+    officeHours: 'Heures d\'ouverture',
+    weekdayHours: 'Lundi-Vendredi : 9h00 - 18h00 EST',
+    weekendClosed: 'Samedi-Dimanche : Fermé'
+  },
+  de: {
+    // German translations
+    features: 'Funktionen',
+    benefits: 'Vorteile',
+    testimonials: 'Erfahrungen',
+    contact: 'Kontakt',
+    login: 'Anmelden',
+    contactUs: 'Kontaktieren Sie uns',
+    contactUsSubtitle: 'Haben Sie Fragen dazu, wie <span class="text-indigo-600">Wealth</span>Horizon Ihre Vermögensverwaltung transformieren kann?',
+    getInTouch: 'Nehmen Sie Kontakt mit unserem Team auf.',
+    whyWealthHorizon: 'Warum WH',
+    
+    // Hero Section
+    holisticWealthManagement: 'Ganzheitliche Vermögensverwaltung für',
+    familyOffices: 'Family Offices',
+    and: 'und',
+    institutions: 'Institutionen',
+    actionableWealth: 'Ihr gesamtes Vermögen auf einer Plattform handlungsfähig gemacht',
+    acrossAllBanks: 'über all Ihre Banken, Broker und Depotbanken hinweg',
+    learnMore: 'Mehr erfahren',
+    aiNativePlatform: 'KI-native Plattform',
+    realTimeAnalytics: 'Echtzeit-Analysen',
+    soc2Certified: 'SOC 2 zertifiziert',
+    
+    // Languages
+    english: 'Englisch',
+    chinese: 'Chinesisch',
+    spanish: 'Spanisch',
+    arabic: 'Arabisch',
+    portuguese: 'Portugiesisch',
+    russian: 'Russisch',
+    japanese: 'Japanisch',
+    french: 'Französisch',
+    german: 'Deutsch',
+    korean: 'Koreanisch',
+    
+    // Contact
+    contactInformation: 'Kontaktinformationen',
+    ourAddress: 'Unsere Adresse',
+    companyAddress: '123 Financial District, Suite 1500, New York, NY 10005',
+    phoneNumber: 'Telefonnummer',
+    contactPhone: '+1 (555) 123-4567',
+    emailAddress: 'E-Mail-Adresse',
+    contactEmail: 'contact@wealthhorizon.com',
+    officeHours: 'Öffnungszeiten',
+    weekdayHours: 'Montag-Freitag: 9:00 - 18:00 Uhr EST',
+    weekendClosed: 'Samstag-Sonntag: Geschlossen'
+  },
+  ko: {
+    // Korean translations
+    features: '기능',
+    benefits: '혜택',
+    testimonials: '고객 후기',
+    contact: '연락처',
+    login: '로그인',
+    contactUs: '문의하기',
+    contactUsSubtitle: '<span class="text-indigo-600">웰스</span>호라이즌이 어떻게 귀하의 자산 관리를 변화시킬 수 있는지에 대한 질문이 있으신가요?',
+    getInTouch: '저희 팀에 연락하세요.',
+    whyWealthHorizon: 'WH를 선택하는 이유',
+    
+    // Hero Section
+    holisticWealthManagement: '다음을 위한 종합적인 자산 관리',
+    familyOffices: '패밀리 오피스',
+    and: '및',
+    institutions: '기관 투자자',
+    actionableWealth: '모든 자산을 하나의 플랫폼에서 활용 가능하게',
+    acrossAllBanks: '모든 은행, 브로커 및 커스터디안을 통합',
+    learnMore: '자세히 알아보기',
+    aiNativePlatform: 'AI 네이티브 플랫폼',
+    realTimeAnalytics: '실시간 분석',
+    soc2Certified: 'SOC 2 인증',
+    
+    // Languages
+    english: '영어',
+    chinese: '중국어',
+    spanish: '스페인어',
+    arabic: '아랍어',
+    portuguese: '포르투갈어',
+    russian: '러시아어',
+    japanese: '일본어',
+    french: '프랑스어',
+    german: '독일어',
+    korean: '한국어',
+    
+    // Contact
+    contactInformation: '연락처 정보',
+    ourAddress: '주소',
+    companyAddress: '123 금융 지구, 스위트 1500, 뉴욕, NY 10005',
+    phoneNumber: '전화번호',
+    contactPhone: '+1 (555) 123-4567',
+    emailAddress: '이메일 주소',
+    contactEmail: 'contact@wealthhorizon.com',
+    officeHours: '영업 시간',
+    weekdayHours: '월요일-금요일: 오전 9시 - 오후 6시 (동부 표준시)',
+    weekendClosed: '토요일-일요일: 휴무'
+  }
+};
+
+// Create context with default value
+const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
+
+// Create Provider component
+export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) => {
+  // Get initial language from localStorage or default to English
+  const getInitialLanguage = (): Language => {
+    if (typeof window !== 'undefined') {
+      const savedLanguage = localStorage.getItem('preferredLanguage');
+      if (savedLanguage && Object.keys(translations).includes(savedLanguage)) {
+        return savedLanguage as Language;
+      }
+    }
+    return 'en';
+  };
+
+  const [language, setLanguageState] = useState<Language>(getInitialLanguage);
+
+  // Set language and save to localStorage
+  const setLanguage = useCallback((newLanguage: Language) => {
+    setLanguageState(newLanguage);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('preferredLanguage', newLanguage);
+    }
+  }, []);
+
+  // Get localized text from translations
+  const getLocalizedText = useCallback(
+    (key: string): string => {
+      if (translations[language] && translations[language][key]) {
+        return translations[language][key];
+      }
+      // Fallback to English if translation is missing
+      if (translations.en && translations.en[key]) {
+        return translations.en[key];
+      }
+      // Final fallback to key if nothing found
+      return key;
+    },
+    [language]
+  );
+
+  // Set HTML dir attribute based on language (for RTL languages)
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      document.documentElement.lang = language;
+      document.documentElement.dir = language === 'ar' ? 'rtl' : 'ltr';
+    }
+  }, [language]);
+
+  const value = {
+    language,
+    setLanguage,
+    getLocalizedText,
+  };
+
+  return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>;
+};
+
+// Create hook to use the language context
+export const useLanguage = (): LanguageContextType => {
+  const context = useContext(LanguageContext);
+  if (context === undefined) {
+    throw new Error('useLanguage must be used within a LanguageProvider');
+  }
+  return context;
+};

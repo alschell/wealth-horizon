@@ -1,11 +1,12 @@
 
-import React, { ReactNode } from 'react';
-import { motion } from 'framer-motion';
+import React from "react";
+import { motion } from "framer-motion";
 
 interface StaggerContainerProps {
-  children: ReactNode;
+  children: React.ReactNode;
   className?: string;
   delay?: number;
+  duration?: number;
   staggerDelay?: number;
 }
 
@@ -13,22 +14,26 @@ export const StaggerContainer: React.FC<StaggerContainerProps> = ({
   children,
   className = "",
   delay = 0,
+  duration = 0.5,
   staggerDelay = 0.1
 }) => {
   return (
     <motion.div
+      className={className}
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, margin: "0px 0px -200px 0px" }}
+      viewport={{ once: true }}
       variants={{
+        hidden: { opacity: 0 },
         visible: {
+          opacity: 1,
           transition: {
+            delayChildren: delay,
             staggerChildren: staggerDelay,
-            delayChildren: delay
+            duration
           }
         }
       }}
-      className={className}
     >
       {children}
     </motion.div>

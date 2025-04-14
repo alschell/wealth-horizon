@@ -103,7 +103,8 @@ export function withRenderTracking<P>(
   
   const WrappedComponent: React.FC<P> = (props) => {
     trackRender(displayName);
-    return <Component {...props} />;
+    // Fix: Use JSX with proper syntax
+    return React.createElement(Component, props);
   };
   
   WrappedComponent.displayName = `withRenderTracking(${displayName})`;

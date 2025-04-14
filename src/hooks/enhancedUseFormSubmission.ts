@@ -1,9 +1,8 @@
 
-import { useState, useCallback } from 'react';
-import { showSuccessToast, showErrorToast } from '@/utils/toast';
-import { useIsComponentMounted } from './useIsComponentMounted';
+import { useCallback } from 'react';
+import { useFormControls } from './useFormControls';
 
-interface EnhancedFormSubmissionOptions<T> {
+interface UseEnhancedFormSubmissionOptions<T> {
   onSubmit: (data: T) => Promise<void> | void;
   onSuccess?: () => void;
   onError?: (error: unknown) => void;
@@ -14,7 +13,10 @@ interface EnhancedFormSubmissionOptions<T> {
 }
 
 /**
- * Enhanced form submission hook with improved lifecycle management and error handling
+ * Enhanced hook for form submission with better error handling
+ * 
+ * @param options Form submission options
+ * @returns Form submission state and handlers
  */
 export function enhancedUseFormSubmission<T>({
   onSubmit,
@@ -24,73 +26,35 @@ export function enhancedUseFormSubmission<T>({
   errorMessage = 'An error occurred. Please try again.',
   validateForm,
   resetAfterSubmit = false,
-}: EnhancedFormSubmissionOptions<T>) {
-  const isMounted = useIsComponentMounted();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [lastError, setLastError] = useState<string | null>(null);
-  const [isSuccess, setIsSuccess] = useState(false);
+}: UseEnhancedFormSubmissionOptions<T>) {
+  const {
+    isSubmitting,
+    lastError,
+    isSuccess,
+    resetState,
+    createSubmitHandler
+  } = useFormControls<T>();
 
   const handleSubmit = useCallback(
-    async (data: T) => {
-      // Reset error and success states
-      setLastError(null);
-      setIsSuccess(false);
-
-      // Validate form if validation function is provided
-      if (validateForm && !validateForm()) {
-        return;
-      }
-
-      setIsSubmitting(true);
-
-      try {
-        await onSubmit(data);
-
-        // Only update state if component is still mounted
-        if (isMounted()) {
-          setIsSuccess(true);
-          showSuccessToast("Success", successMessage);
-
-          if (onSuccess) {
-            onSuccess();
-          }
-        }
-      } catch (error) {
-        // Only update state if component is still mounted
-        if (isMounted()) {
-          console.error("Form submission error:", error);
-          const errorMsg = error instanceof Error ? error.message : errorMessage;
-          setLastError(errorMsg);
-          showErrorToast("Error", errorMsg);
-
-          if (onError) {
-            onError(error);
-          }
-        }
-      } finally {
-        // Only update state if component is still mounted
-        if (isMounted()) {
-          setIsSubmitting(false);
-          
-          // Reset success state after a delay if configured
-          if (resetAfterSubmit && isSuccess) {
-            setTimeout(() => {
-              if (isMounted()) {
-                setIsSuccess(false);
-              }
-            }, 3000);
-          }
-        }
-      }
-    },
-    [onSubmit, onSuccess, onError, validateForm, successMessage, errorMessage, isMounted, resetAfterSubmit, isSuccess]
+    createSubmitHandler(onSubmit, {
+      onSuccess,
+      onError,
+      successMessage,
+      errorMessage,
+      resetAfterSubmit,
+      validateForm
+    }),
+    [
+      createSubmitHandler,
+      onSubmit,
+      onSuccess,
+      onError,
+      successMessage,
+      errorMessage,
+      resetAfterSubmit,
+      validateForm
+    ]
   );
-
-  const resetState = useCallback(() => {
-    setIsSubmitting(false);
-    setLastError(null);
-    setIsSuccess(false);
-  }, []);
 
   return {
     isSubmitting,

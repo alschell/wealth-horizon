@@ -8,8 +8,8 @@ export * from './inputValidation';
 export * from './numericValidation';
 export * from './fileValidation';
 export * from './fieldValidation';
+export * from './formValidationCore';
 
-// Export composite validation utility
 /**
  * Combines multiple validation rules for a single field
  * 
@@ -47,11 +47,13 @@ export const validateForm = <T extends Record<string, any>>(
   const errors: Partial<Record<keyof T, string>> = {};
   
   for (const [field, validationFn] of Object.entries(validationRules)) {
-    const value = formData[field];
-    const error = validationFn(value);
-    
-    if (error) {
-      errors[field as keyof T] = error;
+    if (validationFn) {
+      const value = formData[field as keyof T];
+      const error = validationFn(value);
+      
+      if (error) {
+        errors[field as keyof T] = error;
+      }
     }
   }
   

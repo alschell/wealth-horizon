@@ -30,8 +30,8 @@ export interface ConfirmationDialogProps {
   isLoading?: boolean;
   size?: 'sm' | 'md' | 'lg' | 'xl';
   hideCancel?: boolean;
-  confirmButtonVariant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link';
-  cancelButtonVariant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link';
+  confirmButtonVariant?: ButtonProps['variant'];
+  cancelButtonVariant?: ButtonProps['variant'];
   closeOnConfirm?: boolean;
 }
 

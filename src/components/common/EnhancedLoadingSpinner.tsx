@@ -16,15 +16,15 @@ export interface EnhancedLoadingSpinnerProps {
   customSize?: number;
   textPosition?: 'top' | 'bottom' | 'left' | 'right';
   showDelay?: number;
+  testId?: string;
 }
 
-const sizeClasses: Record<SpinnerSize, string> = {
+const sizeClasses: Record<Exclude<SpinnerSize, 'custom'>, string> = {
   xs: 'h-3 w-3',
   sm: 'h-4 w-4',
   md: 'h-6 w-6',
   lg: 'h-8 w-8',
-  xl: 'h-12 w-12',
-  custom: '' // Will use customSize
+  xl: 'h-12 w-12'
 };
 
 const variantClasses: Record<string, string> = {
@@ -47,7 +47,8 @@ export const EnhancedLoadingSpinner: React.FC<EnhancedLoadingSpinnerProps> = ({
   variant = 'primary',
   customSize,
   textPosition = 'bottom',
-  showDelay = 0
+  showDelay = 0,
+  testId = 'loading-spinner'
 }) => {
   const [isVisible, setIsVisible] = React.useState(showDelay === 0);
   
@@ -67,8 +68,8 @@ export const EnhancedLoadingSpinner: React.FC<EnhancedLoadingSpinnerProps> = ({
   
   // Determine spinner size class
   const spinnerSizeClass = size === 'custom' && customSize 
-    ? `h-[${customSize}px] w-[${customSize}px]` 
-    : sizeClasses[size];
+    ? '' // We'll use inline style for custom size
+    : sizeClasses[size as Exclude<SpinnerSize, 'custom'>];
   
   // Determine color class
   const colorClass = color ? color : variantClasses[variant];
@@ -82,6 +83,8 @@ export const EnhancedLoadingSpinner: React.FC<EnhancedLoadingSpinnerProps> = ({
         className
       )} 
       style={size === 'custom' && customSize ? { width: customSize, height: customSize } : undefined}
+      data-testid={`${testId}-icon`}
+      aria-hidden="true"
     />
   );
   
@@ -89,7 +92,8 @@ export const EnhancedLoadingSpinner: React.FC<EnhancedLoadingSpinnerProps> = ({
     <p className={cn(
       "text-sm font-medium text-gray-600",
       textClassName
-    )}>
+    )}
+    data-testid={`${testId}-text`}>
       {text}
     </p>
   );
@@ -131,14 +135,24 @@ export const EnhancedLoadingSpinner: React.FC<EnhancedLoadingSpinnerProps> = ({
   
   if (centered) {
     return (
-      <div className="flex flex-col items-center justify-center w-full h-full min-h-[100px]">
+      <div 
+        className="flex flex-col items-center justify-center w-full h-full min-h-[100px]"
+        role="status"
+        aria-live="polite"
+        data-testid={testId}
+      >
         {contentElement}
       </div>
     );
   }
   
   return (
-    <div className="flex flex-col items-center">
+    <div 
+      className="flex flex-col items-center"
+      role="status"
+      aria-live="polite"
+      data-testid={testId}
+    >
       {contentElement}
     </div>
   );

@@ -19,6 +19,10 @@ export interface FormFieldWrapperProps {
   tooltip?: string;
   layout?: 'vertical' | 'horizontal' | 'compact';
   containerClassName?: string;
+  labelWidth?: string;
+  contentWidth?: string;
+  showAsterisk?: boolean;
+  htmlFor?: string;
 }
 
 /**
@@ -38,7 +42,11 @@ const FormFieldWrapper = React.forwardRef<HTMLDivElement, FormFieldWrapperProps>
   hideLabel = false,
   tooltip,
   layout = 'vertical',
-  containerClassName
+  containerClassName,
+  labelWidth = 'w-1/3',
+  contentWidth = 'flex-1',
+  showAsterisk = true,
+  htmlFor,
 }, ref) => {
   // Base vertical layout - default
   let containerClasses = "space-y-2";
@@ -47,23 +55,23 @@ const FormFieldWrapper = React.forwardRef<HTMLDivElement, FormFieldWrapperProps>
   // Determine layout classes
   if (layout === 'horizontal') {
     containerClasses = "flex flex-wrap items-start gap-4";
-    contentClasses = "flex-1";
+    contentClasses = contentWidth;
   } else if (layout === 'compact') {
     containerClasses = "flex flex-col space-y-1";
   }
   
   const labelElement = !hideLabel && label && (
     <Label 
-      htmlFor={id} 
+      htmlFor={htmlFor || id} 
       className={cn(
         'block text-sm font-medium', 
         error ? 'text-destructive' : 'text-gray-700',
-        layout === 'horizontal' && 'w-1/3 pt-2 text-right',
+        layout === 'horizontal' && `${labelWidth} pt-2 text-right`,
         labelClassName
       )}
     >
       {label}
-      {required && <span className="text-destructive ml-1">*</span>}
+      {required && showAsterisk && <span className="text-destructive ml-1">*</span>}
       
       {tooltip && (
         <div className="relative inline-block ml-1">
@@ -79,7 +87,7 @@ const FormFieldWrapper = React.forwardRef<HTMLDivElement, FormFieldWrapperProps>
   );
   
   return (
-    <div ref={ref} className={cn(containerClasses, className, containerClassName)}>
+    <div ref={ref} className={cn(containerClasses, className, containerClassName)} data-testid={`form-field-${id}`}>
       {labelElement}
       
       <div className={contentClasses}>
@@ -92,7 +100,11 @@ const FormFieldWrapper = React.forwardRef<HTMLDivElement, FormFieldWrapperProps>
         )}
         
         {error && (
-          <p className={cn("text-xs text-destructive mt-1", errorClassName)} id={`${id}-error`}>
+          <p 
+            className={cn("text-xs text-destructive mt-1", errorClassName)} 
+            id={`${id}-error`}
+            aria-live="polite"
+          >
             {error}
           </p>
         )}

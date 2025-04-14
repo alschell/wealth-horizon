@@ -53,16 +53,14 @@ export function createErrorChecker<T extends FieldValues>(
 }
 
 /**
- * Helper to create a focused field checker
+ * Helper to create a touched field checker
  * 
  * @param form - The form instance from useForm
- * @returns A function to check if a field is focused
+ * @returns A function to check if a field has been touched
  */
 export function createFocusedChecker<T extends FieldValues>(
   form: UseFormReturn<T>
 ) {
-  // The focusedFields property doesn't exist in FormState
-  // Instead, we'll use the touchedFields property which is available
   return (name: Path<T>): boolean => {
     // Use hasOwnProperty to safely check if the field exists in touchedFields
     return Object.prototype.hasOwnProperty.call(form.formState.touchedFields, name) && 

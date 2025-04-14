@@ -4,6 +4,18 @@ import { useIsComponentMounted } from './useIsComponentMounted';
 import { showSuccessToast, showErrorToast } from '@/utils/toast';
 
 /**
+ * Options for form submission handler creation
+ */
+export interface FormSubmissionOptions<T> {
+  onSuccess?: () => void;
+  onError?: (error: unknown) => void;
+  successMessage?: string;
+  errorMessage?: string;
+  resetAfterSubmit?: boolean;
+  validateForm?: () => Promise<boolean> | boolean;
+}
+
+/**
  * Hook for managing form submission state
  * 
  * @returns Form state management utilities and handlers
@@ -25,14 +37,7 @@ export function useFormControls<T>() {
   const createSubmitHandler = useCallback(
     (
       onSubmit: (data: T) => Promise<void> | void,
-      options?: {
-        onSuccess?: () => void;
-        onError?: (error: unknown) => void;
-        successMessage?: string;
-        errorMessage?: string;
-        resetAfterSubmit?: boolean;
-        validateForm?: () => boolean;
-      }
+      options: FormSubmissionOptions<T> = {}
     ) => {
       const {
         onSuccess,
@@ -41,7 +46,7 @@ export function useFormControls<T>() {
         errorMessage = 'Error submitting form',
         resetAfterSubmit = false,
         validateForm,
-      } = options || {};
+      } = options;
 
       return async (data: T) => {
         // Reset error and success states
@@ -49,8 +54,9 @@ export function useFormControls<T>() {
         setIsSuccess(false);
 
         // Validate form if validation function is provided
-        if (validateForm && !validateForm()) {
-          return;
+        if (validateForm) {
+          const isValid = await validateForm();
+          if (!isValid) return;
         }
 
         setIsSubmitting(true);

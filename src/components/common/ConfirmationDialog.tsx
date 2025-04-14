@@ -1,146 +1,141 @@
 
 import React from 'react';
+import { AlertTriangle, HelpCircle, Info, CheckCircle } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
-  DialogHeader,
-  DialogTitle,
   DialogDescription,
   DialogFooter,
+  DialogHeader,
+  DialogTitle,
 } from '@/components/ui/dialog';
-import { Button, ButtonProps } from '@/components/ui/button';
-import { 
-  AlertTriangle, 
-  Check, 
-  X, 
-  Info, 
-  AlertCircle, 
-  HelpCircle 
-} from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
-export interface ConfirmationDialogProps {
+export type ConfirmationVariant = 'info' | 'warning' | 'danger' | 'success';
+
+interface ConfirmationDialogProps {
   open: boolean;
-  onClose: () => void;
-  onConfirm: () => void;
+  onOpenChange: (open: boolean) => void;
   title: string;
   description?: string;
   confirmLabel?: string;
   cancelLabel?: string;
-  variant?: 'destructive' | 'warning' | 'info' | 'success' | 'question';
+  onConfirm: () => void;
+  onCancel?: () => void;
   isLoading?: boolean;
-  size?: 'sm' | 'md' | 'lg' | 'xl';
-  hideCancel?: boolean;
-  confirmButtonVariant?: ButtonProps['variant'];
-  cancelButtonVariant?: ButtonProps['variant'];
-  closeOnConfirm?: boolean;
+  variant?: ConfirmationVariant;
+  children?: React.ReactNode;
+  confirmButtonVariant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link';
 }
 
-const variantIcons: Record<string, React.ReactNode> = {
-  destructive: <AlertTriangle className="h-5 w-5 text-destructive" />,
-  warning: <AlertCircle className="h-5 w-5 text-yellow-500" />,
-  info: <Info className="h-5 w-5 text-blue-500" />,
-  success: <Check className="h-5 w-5 text-green-500" />,
-  question: <HelpCircle className="h-5 w-5 text-primary" />
-};
-
-// Fix: Use proper union type for variant mappings
-const confirmButtonVariants: Record<string, ButtonProps['variant']> = {
-  destructive: 'destructive',
-  warning: 'default',
-  info: 'default',
-  success: 'default',
-  question: 'default'
-};
-
-const sizeClasses: Record<string, string> = {
-  sm: 'sm:max-w-[425px]',
-  md: 'sm:max-w-[550px]',
-  lg: 'sm:max-w-[650px]',
-  xl: 'sm:max-w-[800px]'
+const variantConfig: Record<ConfirmationVariant, {
+  icon: React.ReactNode;
+  confirmVariant: 'default' | 'destructive' | 'outline' | 'secondary';
+  titleColor: string;
+}> = {
+  info: {
+    icon: <Info className="h-6 w-6 text-blue-500" />,
+    confirmVariant: 'default',
+    titleColor: 'text-blue-700'
+  },
+  warning: {
+    icon: <AlertTriangle className="h-6 w-6 text-amber-500" />,
+    confirmVariant: 'secondary', 
+    titleColor: 'text-amber-700'
+  },
+  danger: {
+    icon: <AlertTriangle className="h-6 w-6 text-destructive" />,
+    confirmVariant: 'destructive',
+    titleColor: 'text-destructive'
+  },
+  success: {
+    icon: <CheckCircle className="h-6 w-6 text-green-500" />,
+    confirmVariant: 'default',
+    titleColor: 'text-green-700'
+  }
 };
 
 /**
- * Reusable confirmation dialog component with enhanced styling and variants
+ * A reusable confirmation dialog component
  */
-const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
+export const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
   open,
-  onClose,
-  onConfirm,
+  onOpenChange,
   title,
   description,
-  confirmLabel,
-  cancelLabel,
-  variant = 'question',
+  confirmLabel = 'Confirm',
+  cancelLabel = 'Cancel',
+  onConfirm,
+  onCancel,
   isLoading = false,
-  size = 'sm',
-  hideCancel = false,
-  confirmButtonVariant,
-  cancelButtonVariant = 'outline',
-  closeOnConfirm = true,
+  variant = 'info',
+  children,
+  confirmButtonVariant
 }) => {
+  const { icon, confirmVariant, titleColor } = variantConfig[variant];
+  const buttonVariant = confirmButtonVariant || confirmVariant;
+  
+  const handleCancel = () => {
+    if (onCancel) {
+      onCancel();
+    }
+    onOpenChange(false);
+  };
+  
   const handleConfirm = () => {
     onConfirm();
-    if (closeOnConfirm) {
-      onClose();
+    // Only close the dialog if not loading - this allows for async operations
+    if (!isLoading) {
+      onOpenChange(false);
     }
   };
-
-  // Fix: Ensure buttonVariant is of the correct type
-  const buttonVariant = confirmButtonVariant || 
-    (confirmButtonVariants[variant] as ButtonProps['variant']) || 
-    'default';
-  const iconElement = variantIcons[variant] || variantIcons.question;
-
+  
   return (
-    <Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
-      <DialogContent className={sizeClasses[size]}>
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            {iconElement}
-            {title}
-          </DialogTitle>
-          {description && (
-            <DialogDescription className="mt-2">{description}</DialogDescription>
-          )}
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader className="flex gap-4 sm:gap-6">
+          <div className="flex flex-row items-start gap-4">
+            {icon}
+            <div>
+              <DialogTitle className={titleColor}>{title}</DialogTitle>
+              {description && (
+                <DialogDescription className="mt-1.5">
+                  {description}
+                </DialogDescription>
+              )}
+            </div>
+          </div>
         </DialogHeader>
         
-        <DialogFooter className="mt-4 flex gap-2 sm:justify-end">
-          {!hideCancel && (
-            <Button
-              type="button"
-              variant={cancelButtonVariant}
-              onClick={onClose}
-              disabled={isLoading}
-              className="flex items-center"
-            >
-              <X className="h-4 w-4 mr-1" />
-              {cancelLabel || 'Cancel'}
-            </Button>
-          )}
+        {children && (
+          <div className="py-4">
+            {children}
+          </div>
+        )}
+        
+        <DialogFooter className="flex flex-row justify-end gap-2 sm:space-x-2">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={handleCancel}
+            disabled={isLoading}
+          >
+            {cancelLabel}
+          </Button>
           <Button
             type="button"
             variant={buttonVariant}
             onClick={handleConfirm}
             disabled={isLoading}
-            className={isLoading ? "opacity-70 cursor-not-allowed" : ""}
+            className="min-w-[80px]"
           >
             {isLoading ? (
-              <>
-                <svg className="animate-spin -ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                Processing...
-              </>
+              <span className="flex items-center justify-center gap-2">
+                <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                Loading
+              </span>
             ) : (
-              <>
-                {variant === 'destructive' ? (
-                  <AlertTriangle className="h-4 w-4 mr-1" />
-                ) : variant === 'success' ? (
-                  <Check className="h-4 w-4 mr-1" />
-                ) : null}
-                {confirmLabel || 'Confirm'}
-              </>
+              confirmLabel
             )}
           </Button>
         </DialogFooter>

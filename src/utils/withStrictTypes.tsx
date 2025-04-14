@@ -35,7 +35,7 @@ export function withDefaultProps<
   type ResultProps = Omit<P, keyof DP> & Partial<Pick<P, Extract<keyof P, keyof DP>>>;
   
   const ComponentWithDefaults: React.FC<ResultProps> = (props) => {
-    const combinedProps = { ...defaultProps, ...props } as unknown as P;
+    const combinedProps = { ...defaultProps, ...props } as P;
     return <Component {...combinedProps} />;
   };
   

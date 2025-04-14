@@ -1,147 +1,65 @@
 
+import { FieldValues, Path } from 'react-hook-form';
+import { validateComposite } from './index';
+
 /**
- * Validates form data against a set of validation rules
- * 
- * @param data - Form data to validate
- * @param rules - Object containing validation rules
- * @returns Object with validation errors
+ * Type for a validation function that returns either an error message or null
  */
-export function validateFormData<T extends Record<string, any>>(
-  data: T,
-  rules: {
-    [K in keyof T]?: (value: T[K]) => string | null;
-  }
-): Record<string, string> {
-  const errors: Record<string, string> = {};
-  
-  for (const field in rules) {
-    if (Object.prototype.hasOwnProperty.call(rules, field)) {
-      const validator = rules[field];
-      if (validator) {
-        const error = validator(data[field]);
+export type ValidationFn<T> = (value: T) => string | null;
+
+/**
+ * Creates a field validation schema with proper typing
+ * 
+ * @param validationMap - Map of field names to validation functions
+ * @returns Validation schema object
+ */
+export function createFieldValidationSchema<T extends FieldValues>(
+  validationMap: Partial<Record<Path<T>, ValidationFn<any>>>
+) {
+  return validationMap;
+}
+
+/**
+ * Creates a validation schema for a specific form type
+ * 
+ * @param validationRules - Object mapping field names to validation functions 
+ * @returns A function that validates an entire form
+ */
+export function createFormValidator<T extends FieldValues>(
+  validationRules: Partial<Record<Path<T>, ValidationFn<any> | ValidationFn<any>[]>>
+) {
+  return (formData: T): Partial<Record<Path<T>, string>> => {
+    const errors: Partial<Record<Path<T>, string>> = {};
+    
+    for (const [field, rule] of Object.entries(validationRules) as [Path<T>, ValidationFn<any> | ValidationFn<any>[]][]) {
+      const value = formData[field];
+      
+      // Handle array of validation functions
+      if (Array.isArray(rule)) {
+        const error = validateComposite(value, rule);
+        if (error) {
+          errors[field] = error;
+        }
+      } 
+      // Handle single validation function
+      else if (rule) {
+        const error = rule(value);
         if (error) {
           errors[field] = error;
         }
       }
     }
-  }
-  
-  return errors;
-}
-
-/**
- * Creates a validation rule for required fields
- * 
- * @param message - Custom error message
- * @returns Validation function
- */
-export function required(message = 'This field is required') {
-  return (value: any) => {
-    if (value === undefined || value === null || value === '') {
-      return message;
-    }
-    return null;
-  };
-}
-
-/**
- * Creates a validation rule for minimum length
- * 
- * @param min - Minimum length
- * @param message - Custom error message
- * @returns Validation function
- */
-export function minLength(min: number, message?: string) {
-  return (value: string) => {
-    if (!value || value.length < min) {
-      return message || `Must be at least ${min} characters`;
-    }
-    return null;
-  };
-}
-
-/**
- * Creates a validation rule for maximum length
- * 
- * @param max - Maximum length
- * @param message - Custom error message
- * @returns Validation function
- */
-export function maxLength(max: number, message?: string) {
-  return (value: string) => {
-    if (value && value.length > max) {
-      return message || `Must be at most ${max} characters`;
-    }
-    return null;
-  };
-}
-
-/**
- * Creates a validation rule for email format
- * 
- * @param message - Custom error message
- * @returns Validation function
- */
-export function email(message = 'Please enter a valid email address') {
-  return (value: string) => {
-    if (!value) return null;
     
-    const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
-    if (!emailRegex.test(value)) {
-      return message;
-    }
-    return null;
+    return errors;
   };
 }
 
 /**
- * Creates a validation rule for minimum numeric value
+ * Helper to check if a form has any validation errors
  * 
- * @param min - Minimum value
- * @param message - Custom error message
- * @returns Validation function
+ * @param errors - Form errors object 
+ * @returns Boolean indicating if form has errors
  */
-export function min(min: number, message?: string) {
-  return (value: number | string) => {
-    const numValue = typeof value === 'string' ? parseFloat(value) : value;
-    if (isNaN(numValue) || numValue < min) {
-      return message || `Must be at least ${min}`;
-    }
-    return null;
-  };
-}
-
-/**
- * Creates a validation rule for maximum numeric value
- * 
- * @param max - Maximum value
- * @param message - Custom error message
- * @returns Validation function
- */
-export function max(max: number, message?: string) {
-  return (value: number | string) => {
-    const numValue = typeof value === 'string' ? parseFloat(value) : value;
-    if (isNaN(numValue) || numValue > max) {
-      return message || `Must be at most ${max}`;
-    }
-    return null;
-  };
-}
-
-/**
- * Combines multiple validation rules
- * 
- * @param validators - Array of validation functions
- * @returns Combined validation function
- */
-export function composeValidators(...validators: ((value: any) => string | null)[]) {
-  return (value: any) => {
-    for (const validator of validators) {
-      const error = validator(value);
-      if (error) {
-        return error;
-      }
-    }
-    return null;
-  };
+export function hasFormErrors(errors: Record<string, any>): boolean {
+  return Object.keys(errors).length > 0;
 }

@@ -20,6 +20,7 @@ interface UseEnhancedFormOptions<T extends FieldValues> extends Omit<UseFormProp
   successMessage?: string;
   errorMessage?: string;
   resetAfterSubmit?: boolean;
+  validateBeforeSubmit?: boolean;
 }
 
 /**
@@ -37,6 +38,7 @@ export function enhancedUseForm<T extends FieldValues>({
   successMessage = 'Form submitted successfully',
   errorMessage = 'Error submitting form',
   resetAfterSubmit = false,
+  validateBeforeSubmit = true,
   ...formOptions
 }: UseEnhancedFormOptions<T>) {
   // Get form state management from useFormControls
@@ -64,7 +66,8 @@ export function enhancedUseForm<T extends FieldValues>({
         onError,
         successMessage,
         errorMessage,
-        resetAfterSubmit
+        resetAfterSubmit,
+        validateForm: validateBeforeSubmit ? () => methods.trigger() : undefined
       }
     ),
     [
@@ -74,7 +77,9 @@ export function enhancedUseForm<T extends FieldValues>({
       onError,
       successMessage,
       errorMessage,
-      resetAfterSubmit
+      resetAfterSubmit,
+      validateBeforeSubmit,
+      methods
     ]
   );
   

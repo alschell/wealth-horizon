@@ -1,5 +1,5 @@
 
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useLanguage } from "@/context/LanguageContext";
 import HeroSection from "./HeroSection";
@@ -20,12 +20,18 @@ const LandingLayout: React.FC = () => {
   
   // Force re-render when language changes
   const { language } = useLanguage();
-  const [, forceUpdate] = React.useState({});
+  const [, forceUpdate] = useState({});
   
   // Re-render when language changes
   useEffect(() => {
     console.log(`LandingLayout detected language change to: ${language}`);
+    // More aggressive re-rendering strategy
     forceUpdate({});
+    // Let's try to trigger re-renders in child components too
+    const timer = setTimeout(() => {
+      forceUpdate({});
+    }, 100);
+    return () => clearTimeout(timer);
   }, [language]);
 
   // Handle hash-based navigation
@@ -47,8 +53,9 @@ const LandingLayout: React.FC = () => {
     }
   };
 
+  // Add a key based on language to force complete re-render of the component tree
   return (
-    <div className="min-h-screen bg-white w-full">
+    <div key={`landing-layout-${language}`} className="min-h-screen bg-white w-full">
       <HeroSection onScrollToFeatures={() => scrollToSection(featuresRef)} />
       <div ref={featuresRef} id="features">
         <FeaturesSection id="features" />

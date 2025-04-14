@@ -1,11 +1,21 @@
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { FadeIn } from "@/components/ui/animation";
 import { LocalizedText, useLocalizedText } from "@/components/ui/localized-text";
+import { useLanguage } from "@/context/LanguageContext";
 
 const CTASection: React.FC = () => {
   const { t } = useLocalizedText();
+  // Add direct dependency on language to force re-renders
+  const { language } = useLanguage();
+  const [, forceUpdate] = useState({});
+  
+  // Force re-render when language changes
+  useEffect(() => {
+    console.log(`CTASection detected language change to: ${language}`);
+    forceUpdate({});
+  }, [language]);
   
   const scrollToContact = () => {
     const contactSection = document.getElementById('contact');

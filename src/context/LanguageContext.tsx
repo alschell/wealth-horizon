@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useCallback, ReactNode, useEffect } from 'react';
 
 type Language = 'en' | 'zh' | 'es' | 'ar' | 'pt' | 'ru' | 'ja' | 'fr' | 'de' | 'ko';
@@ -622,13 +623,19 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
     
     // Apply language change to document for accessibility
     document.documentElement.lang = language;
+    
+    // Force a more aggressive re-render by updating the DOM directly
+    document.body.style.opacity = '0.99';
+    setTimeout(() => {
+      document.body.style.opacity = '1';
+    }, 50);
   }, [language]);
 
   // Create a wrapper for setLanguage that also logs
-  const handleSetLanguage = (newLanguage: Language) => {
+  const handleSetLanguage = useCallback((newLanguage: Language) => {
     console.log(`Setting language from ${language} to ${newLanguage}`);
     setLanguage(newLanguage);
-  };
+  }, [language]);
 
   // Use useCallback to ensure getLocalizedText doesn't change identity on rerenders
   const getLocalizedText = useCallback((key: string): string => {

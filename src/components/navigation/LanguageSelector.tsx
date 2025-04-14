@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Globe } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 import {
@@ -27,6 +27,11 @@ const LanguageSelector: React.FC = () => {
     { code: 'ko', name: 'Korean', localName: '한국어' }
   ];
 
+  // Log current language when component mounts
+  useEffect(() => {
+    console.log(`LanguageSelector mounted with language: ${language}`);
+  }, [language]);
+
   const handleLanguageSelect = (langCode: string) => {
     console.log(`Language selected: ${langCode}, current language: ${language}`);
     setLanguage(langCode as any);
@@ -36,6 +41,11 @@ const LanguageSelector: React.FC = () => {
     setTimeout(() => {
       console.log(`Language should now be: ${langCode}`);
     }, 100);
+    
+    // Force page update
+    setTimeout(() => {
+      window.dispatchEvent(new Event('languageChanged'));
+    }, 200);
   };
 
   return (

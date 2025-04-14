@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 
 interface LocalizedTextProps {
@@ -16,9 +16,9 @@ export const LocalizedText: React.FC<LocalizedTextProps> = ({
   html = false
 }) => {
   const [displayText, setDisplayText] = useState<string>(fallback || textKey);
-  const [, forceUpdate] = useState({});
   
   try {
+    // Direct dependency on language to force re-renders
     const { getLocalizedText, language } = useLanguage();
     
     // Make sure component re-renders when language changes
@@ -27,8 +27,6 @@ export const LocalizedText: React.FC<LocalizedTextProps> = ({
       const localizedText = getLocalizedText(textKey);
       // If we don't have a translation, use the fallback or the key itself
       setDisplayText(localizedText === textKey ? (fallback || textKey) : localizedText);
-      // Force component to re-render
-      forceUpdate({});
     }, [textKey, fallback, language, getLocalizedText]);
   } catch (error) {
     // If language context is not available, use fallback or key
@@ -54,7 +52,7 @@ export const useLocalizedText = () => {
       setLanguage(context.language);
     }, [context.language]);
     
-    const t = React.useCallback((key: string, fallback?: string) => {
+    const t = useCallback((key: string, fallback?: string) => {
       const localizedText = context.getLocalizedText(key);
       return localizedText === key ? (fallback || key) : localizedText;
     }, [context.language, context.getLocalizedText]);

@@ -14,7 +14,7 @@ const LanguageSelector: React.FC = () => {
   const { language, setLanguage, getLocalizedText } = useLanguage();
 
   const languages = [
-    { code: 'en', name: 'English', localName: 'English' },
+    { code: 'en', name: 'English' },
     { code: 'zh', name: 'Chinese', localName: '中文' },
     { code: 'es', name: 'Spanish', localName: 'Español' },
     { code: 'ar', name: 'Arabic', localName: 'العربية' },

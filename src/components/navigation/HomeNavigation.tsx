@@ -1,87 +1,56 @@
 
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React from 'react';
+import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import LanguageSelector from './LanguageSelector';
-import { useLanguage } from '@/context/LanguageContext';
+import { useLocalizedText } from '@/components/ui/localized-text';
 
 const HomeNavigation: React.FC = () => {
-  const navigate = useNavigate();
-  const [scrolled, setScrolled] = useState(false);
-  const { getLocalizedText } = useLanguage();
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const isScrolled = window.scrollY > 10;
-      if (isScrolled !== scrolled) {
-        setScrolled(isScrolled);
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [scrolled]);
-
-  const scrollToSection = (id: string) => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-    }
-  };
-
+  const { t } = useLocalizedText();
+  
   return (
-    <header 
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled 
-          ? 'bg-white shadow-md border-b border-gray-100' 
-          : 'bg-transparent border-b border-transparent'
-      }`}
-    >
-      <nav className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-        <div className="flex items-center">
-          <Link to="/" className="font-bold text-xl flex items-center">
-            <span className="text-indigo-600">Wealth</span>
-            <span className="text-gray-900">Horizon</span>
-          </Link>
+    <header className="fixed w-full bg-white z-50 shadow-sm">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between h-16 items-center">
+          {/* Logo */}
+          <div className="flex-shrink-0">
+            <Link to="/" className="flex items-center">
+              <span className="text-xl font-bold text-gray-900">
+                <span className="text-indigo-600">Wealth</span>Horizon
+              </span>
+            </Link>
+          </div>
           
-          <div className="hidden md:flex items-center ml-10 space-x-8">
-            <button 
-              onClick={() => scrollToSection('features')} 
-              className="text-gray-700 hover:text-indigo-600 transition-colors"
-            >
-              {getLocalizedText('features')}
-            </button>
-            <button 
-              onClick={() => scrollToSection('benefits')} 
-              className="text-gray-700 hover:text-indigo-600 transition-colors"
-            >
-              {getLocalizedText('benefits')}
-            </button>
-            <button 
-              onClick={() => scrollToSection('testimonials')} 
-              className="text-gray-700 hover:text-indigo-600 transition-colors"
-            >
-              {getLocalizedText('testimonials')}
-            </button>
-            <button 
-              onClick={() => scrollToSection('contact')} 
-              className="text-gray-700 hover:text-indigo-600 transition-colors"
-            >
-              {getLocalizedText('contact')}
-            </button>
+          {/* Navigation Links */}
+          <nav className="hidden md:flex items-center space-x-8">
+            <Link to="/#features" className="text-gray-500 hover:text-gray-900">
+              {t('features')}
+            </Link>
+            <Link to="/#benefits" className="text-gray-500 hover:text-gray-900">
+              {t('benefits')}
+            </Link>
+            <Link to="/#testimonials" className="text-gray-500 hover:text-gray-900">
+              {t('testimonials')}
+            </Link>
+            <Link to="/#contact" className="text-gray-500 hover:text-gray-900">
+              {t('contact')}
+            </Link>
+          </nav>
+          
+          {/* Right side actions */}
+          <div className="flex items-center space-x-4">
+            <LanguageSelector />
+            <Link to="/login">
+              <Button variant="outline" size="sm">
+                {t('login')}
+              </Button>
+            </Link>
+            <Link to="/#contact" className="hidden md:block">
+              <Button size="sm">{t('contactUs')}</Button>
+            </Link>
           </div>
         </div>
-        
-        <div className="flex items-center gap-3">
-          <LanguageSelector />
-          <Button variant="ghost" onClick={() => navigate('/login')}>
-            {getLocalizedText('login')}
-          </Button>
-          <Button onClick={() => scrollToSection('contact')}>
-            {getLocalizedText('contactUs')}
-          </Button>
-        </div>
-      </nav>
+      </div>
     </header>
   );
 };

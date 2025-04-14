@@ -90,6 +90,17 @@ const translations: Record<Language, Record<string, string>> = {
     joinLeading: 'Join leading family offices and institutions that have transformed their operations with',
     trustedByLeading: 'Trusted by Leading Institutions',
     seeWhatFamilyOffices: 'See what family offices and institutional investors say about',
+    
+    // Testimonials
+    testimonial1: "WealthHorizon has transformed how our family office operates. We've eliminated multiple tools and streamlined the way we facilitate our business.",
+    testimonial1Name: "Alexandra Chen",
+    testimonial1Position: "CEO, Chen Family Office",
+    testimonial2: "The analytics capabilities are exceptional. We're able to see portfolio insights we never had access to before, which has directly improved our returns.",
+    testimonial2Name: "Michael Thompson",
+    testimonial2Position: "CIO, Granite Investments",
+    testimonial3: "We were not aware that this degree of automation and efficiency is possible using artificial intelligence.",
+    testimonial3Name: "Sarah Rodriguez",
+    testimonial3Position: "Head of Compliance, Legacy Capital",
   },
   zh: {
     // Navigation
@@ -167,6 +178,17 @@ const translations: Record<Language, Record<string, string>> = {
     joinLeading: '加入已使用我们的平台转变运营方式的领先家族办公室和机构',
     trustedByLeading: '受到领先机构的信任',
     seeWhatFamilyOffices: '看看家族办公室和机构投资者对以下方面的评价',
+    
+    // Testimonials
+    testimonial1: "财富视界改变了我们家族办公室的运营方式。我们淘汰了多种工具，简化了业务流程。",
+    testimonial1Name: "陈亚历山大",
+    testimonial1Position: "陈氏家族办公室，首席执行官",
+    testimonial2: "分析能力非常出色。我们能够看到以前从未有过的投资组合洞察，这直接改善了我们的回报。",
+    testimonial2Name: "迈克尔·汤普森",
+    testimonial2Position: "花岗岩投资，首席投资官",
+    testimonial3: "我们没有意识到使用人工智能可以达到这种程度的自动化和效率。",
+    testimonial3Name: "莎拉·罗德里格斯",
+    testimonial3Position: "传承资本，合规主管",
   },
   es: {
     // Navigation
@@ -248,7 +270,7 @@ const translations: Record<Language, Record<string, string>> = {
     login: 'تسجيل الدخول',
     contactUs: 'اتصل بنا',
     contactUsSubtitle: 'هل لديك أسئلة حول كيفية تحويل <span class="text-indigo-600">ويلث</span>هورايزن لإدارة ثروتك؟',
-    getInTouch: 'تواصل مع فريقنا.',
+    getInTouch: 'تواصل مع فر��قنا.',
     whyWealthHorizon: 'لماذا WH',
     
     // Hero Section

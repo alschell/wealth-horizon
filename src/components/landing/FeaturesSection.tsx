@@ -1,52 +1,82 @@
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { FadeIn, ScaleIn, StaggerContainer, StaggerItem } from "@/components/ui/animation";
 import { LineChart, Shield, BarChart3, FileText, Users, Lock, LucideIcon } from "lucide-react";
 import FeatureAnimation from "@/components/animations/FeatureAnimation";
+import { LocalizedText, useLocalizedText } from "@/components/ui/localized-text";
+import { useLanguage } from "@/context/LanguageContext";
 
 // Define the features with the correct icon type and sort them alphabetically
-const features = [
-  {
-    title: "Compliance Management",
-    description: "Stay ahead of regulatory requirements with automated compliance monitoring.",
-    icon: Shield
-  },
-  {
-    title: "Comprehensive Dashboard",
-    description: "Get a holistic view of your wealth across all your banks, brokers and custodians.",
-    icon: LineChart
-  },
-  {
-    title: "Real-time Analytics",
-    description: "Monitor your investments with real-time updates and customizable dashboards.",
-    icon: BarChart3
-  },
-  {
-    title: "Risk Management",
-    description: "Identify and mitigate risks with our sophisticated analysis tools.",
-    icon: BarChart3
-  },
-  {
-    title: "Secure Collaboration",
-    description: "Invite team members and stakeholders to the platform.",
-    icon: Users
-  },
-  {
-    title: "Advanced Reporting",
-    description: "Create custom reports with detailed insights and easy-to-understand visualizations.",
-    icon: FileText
-  }
-].sort((a, b) => a.title.localeCompare(b.title));
-
 const FeaturesSection: React.FC<{ id?: string }> = ({ id }) => {
+  const { t } = useLocalizedText();
+  const { language } = useLanguage();
+  const [, forceUpdate] = useState({});
+  
+  // Force re-render when language changes
+  useEffect(() => {
+    console.log(`FeaturesSection detected language change to: ${language}`);
+    forceUpdate({});
+  }, [language]);
+  
+  // Listen for language change events
+  useEffect(() => {
+    const handleLanguageChange = () => {
+      console.log("FeaturesSection detected language change event");
+      forceUpdate({});
+    };
+    
+    window.addEventListener('languageChange', handleLanguageChange);
+    return () => {
+      window.removeEventListener('languageChange', handleLanguageChange);
+    };
+  }, []);
+  
+  const features = [
+    {
+      title: t("complianceManagement", "Compliance Management"),
+      description: t("complianceManagementDesc", "Stay ahead of regulatory requirements with automated compliance monitoring."),
+      icon: Shield
+    },
+    {
+      title: t("comprehensiveDashboard", "Comprehensive Dashboard"),
+      description: t("comprehensiveDashboardDesc", "Get a holistic view of your wealth across all your banks, brokers and custodians."),
+      icon: LineChart
+    },
+    {
+      title: t("realTimeAnalytics", "Real-time Analytics"),
+      description: t("realTimeAnalyticsDesc", "Monitor your investments with real-time updates and customizable dashboards."),
+      icon: BarChart3
+    },
+    {
+      title: t("riskManagement", "Risk Management"),
+      description: t("riskManagementDesc", "Identify and mitigate risks with our sophisticated analysis tools."),
+      icon: BarChart3
+    },
+    {
+      title: t("secureCollaboration", "Secure Collaboration"),
+      description: t("secureCollaborationDesc", "Invite team members and stakeholders to the platform."),
+      icon: Users
+    },
+    {
+      title: t("advancedReporting", "Advanced Reporting"),
+      description: t("advancedReportingDesc", "Create custom reports with detailed insights and easy-to-understand visualizations."),
+      icon: FileText
+    }
+  ].sort((a, b) => a.title.localeCompare(b.title));
+
   return (
-    <section className="py-24 bg-gray-50" id={id}>
+    <section className="py-24 bg-gray-50" id={id} key={`features-section-${language}`}>
       <div className="max-w-7xl mx-auto px-6">
         <FadeIn>
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Key Features</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
+              <LocalizedText textKey="keyFeatures" fallback="Key Features" />
+            </h2>
             <p className="mt-4 text-xl text-gray-600 max-w-3xl mx-auto">
-              Our AI-native platform simplifies managing all your wealth with intuitive tools designed for the most sophisticated family offices and institutions
+              <LocalizedText 
+                textKey="keyFeaturesSubtitle" 
+                fallback="Our AI-native platform simplifies managing all your wealth with intuitive tools designed for the most sophisticated family offices and institutions" 
+              />
             </p>
           </div>
         </FadeIn>

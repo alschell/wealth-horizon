@@ -4,24 +4,6 @@ import { FadeIn } from "@/components/ui/animation";
 import { LocalizedText, useLocalizedText } from "@/components/ui/localized-text";
 import { useLanguage } from "@/context/LanguageContext";
 
-const testimonials = [
-  {
-    quote: "WealthHorizon has transformed how our family office operates. We've eliminated multiple tools and streamlined the way we facilitate our business.",
-    name: "Alexandra Chen",
-    position: "CEO, Chen Family Office",
-  },
-  {
-    quote: "The analytics capabilities are exceptional. We're able to see portfolio insights we never had access to before, which has directly improved our returns.",
-    name: "Michael Thompson",
-    position: "CIO, Granite Investments",
-  },
-  {
-    quote: "We were not aware that this degree of automation and efficiency is possible using artificial intelligence.",
-    name: "Sarah Rodriguez",
-    position: "Head of Compliance, Legacy Capital",
-  },
-];
-
 const TestimonialsSection: React.FC = () => {
   const { t } = useLocalizedText();
   // Add direct dependency on language to force re-renders
@@ -33,9 +15,27 @@ const TestimonialsSection: React.FC = () => {
     console.log(`TestimonialsSection detected language change to: ${language}`);
     forceUpdate({});
   }, [language]);
+
+  const testimonials = [
+    {
+      quote: t("testimonial1", "WealthHorizon has transformed how our family office operates. We've eliminated multiple tools and streamlined the way we facilitate our business."),
+      name: t("testimonial1Name", "Alexandra Chen"),
+      position: t("testimonial1Position", "CEO, Chen Family Office"),
+    },
+    {
+      quote: t("testimonial2", "The analytics capabilities are exceptional. We're able to see portfolio insights we never had access to before, which has directly improved our returns."),
+      name: t("testimonial2Name", "Michael Thompson"),
+      position: t("testimonial2Position", "CIO, Granite Investments"),
+    },
+    {
+      quote: t("testimonial3", "We were not aware that this degree of automation and efficiency is possible using artificial intelligence."),
+      name: t("testimonial3Name", "Sarah Rodriguez"),
+      position: t("testimonial3Position", "Head of Compliance, Legacy Capital"),
+    },
+  ];
   
   return (
-    <section className="py-24 bg-white" id="testimonials">
+    <section className="py-24 bg-white" id="testimonials" key={`testimonials-section-${language}`}>
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-16">
           <FadeIn>

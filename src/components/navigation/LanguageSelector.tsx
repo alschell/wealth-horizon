@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button';
 
 const LanguageSelector: React.FC = () => {
   const { language, setLanguage, getLocalizedText } = useLanguage();
+  const [open, setOpen] = React.useState(false);
 
   const languages = [
     { code: 'en', name: 'English' },
@@ -26,18 +27,23 @@ const LanguageSelector: React.FC = () => {
     { code: 'ko', name: 'Korean', localName: '한국어' }
   ];
 
+  const handleLanguageSelect = (langCode: string) => {
+    setLanguage(langCode as any);
+    setOpen(false); // Close the dropdown after selection
+  };
+
   return (
-    <DropdownMenu>
+    <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="sm" className="h-9">
           <Globe className="h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-48">
+      <DropdownMenuContent align="end" className="w-48 bg-white">
         {languages.map((lang) => (
           <DropdownMenuItem
             key={lang.code}
-            onClick={() => setLanguage(lang.code as any)}
+            onClick={() => handleLanguageSelect(lang.code)}
             className={language === lang.code ? "bg-gray-100" : ""}
           >
             {lang.name} {lang.code !== 'en' && `(${lang.localName})`}

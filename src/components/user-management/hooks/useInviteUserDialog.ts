@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { UserFormData } from "../types";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "@/utils/toast";
 
 export const useInviteUserDialog = () => {
   const [isOpen, setIsOpen] = useState(false);

@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { useOnboarding } from "@/context/OnboardingContext";
-import { toast } from "@/components/ui/use-toast";
+import { toast } from "@/utils/toast";
 import { FormSubmissionProps } from "../types";
 
 export const useFormSubmission = ({ 

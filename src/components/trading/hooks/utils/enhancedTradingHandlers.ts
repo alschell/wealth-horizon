@@ -1,7 +1,6 @@
-
 import { useCallback, useState, useMemo } from "react";
 import { TradingFormState } from "../types/tradingHookTypes";
-import { showErrorToast, showSuccessToast } from "@/utils/toast";
+import { showError as showErrorToast, showSuccess as showSuccessToast } from "@/utils/toast";
 
 interface EnhancedTradingHandlersProps {
   state: TradingFormState;
@@ -31,7 +30,6 @@ export const useEnhancedTradingHandlers = ({
 }: EnhancedTradingHandlersProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   
-  // Memoize state values to prevent unnecessary rerenders
   const {
     currentStep,
     selectedInstrument,
@@ -45,18 +43,15 @@ export const useEnhancedTradingHandlers = ({
     order
   } = state;
   
-  // Handle next step with optimized validations
   const handleNextStep = useCallback(() => {
     console.log("Current step:", currentStep);
     
-    // Step 1: Instrument selection
     if (currentStep === 1) {
       if (!validations.validateInstrumentSelection(selectedInstrument)) {
         return;
       }
       setCurrentStep(2);
     }
-    // Step 2: Order execution and quantity/price
     else if (currentStep === 2) {
       if (!validations.validateOrderExecution(orderExecutionType)) {
         return;
@@ -66,13 +61,11 @@ export const useEnhancedTradingHandlers = ({
       }
       setCurrentStep(3);
     }
-    // Step 3: Broker selection
     else if (currentStep === 3) {
       if (!validations.validateBrokerSelection(selectedBroker)) {
         return;
       }
       
-      // Create the basic order object
       setOrder({
         instrumentId: selectedInstrument?.id || '',
         orderType: currentOrderType,
@@ -88,7 +81,6 @@ export const useEnhancedTradingHandlers = ({
       
       setCurrentStep(4);
     }
-    // Add more steps as needed
   }, [
     currentStep, 
     selectedInstrument, 
@@ -104,43 +96,34 @@ export const useEnhancedTradingHandlers = ({
     validations
   ]);
   
-  // Handle previous step
   const handlePreviousStep = useCallback(() => {
     if (currentStep > 1) {
       setCurrentStep(current => current - 1);
     }
   }, [currentStep, setCurrentStep]);
   
-  // Handle submit order with performance improvements
   const handleSubmitOrder = useCallback(() => {
     console.log("Submitting order");
     
-    // Special validation for GTD when timeInForce is set to gtd
     if (timeInForce === "gtd" && !gtdDate) {
       showErrorToast('Error', 'Please select an expiry date for your Good Till Date order');
       return;
     }
     
-    // Final validation for allocations
     if (!validations.validateAllocations(currentOrderType, order)) {
       return;
     }
     
-    // Set submitting state
     setIsSubmitting(true);
     
-    // Use setTimeout to prevent UI freeze during order submission
     setTimeout(() => {
       try {
-        // Calculate final price based on order execution type
         const finalPrice = orderExecutionType === "market"
           ? selectedInstrument?.currentPrice || 0
           : Number(price);
         
-        // Calculate total amount including leverage
         const totalAmount = Number(quantity) * finalPrice * (leverage || 1);
         
-        // Create the complete order object
         const completeOrder = {
           ...order,
           orderType: currentOrderType,
@@ -154,20 +137,17 @@ export const useEnhancedTradingHandlers = ({
           leverage: leverage || 1
         };
         
-        // Add gtdDate to the order if timeInForce is gtd
         if (timeInForce === "gtd" && gtdDate) {
           (completeOrder as any).gtdDate = gtdDate;
         }
         
         console.log("Submitting order:", completeOrder);
         
-        // Show success message
         showSuccessToast(
           'Order Submitted', 
           `Your ${currentOrderType} order for ${quantity} ${selectedInstrument?.symbol} has been submitted successfully.`
         );
         
-        // Reset form
         resetForm();
       } catch (error) {
         console.error("Error submitting order:", error);

@@ -6,6 +6,7 @@ import LandingPage from "./LandingPage";
 const Index = () => {
   const location = useLocation();
   
+  console.log("Index page rendered, loading landing page");
   return <LandingPage />;
 };
 

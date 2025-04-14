@@ -7,6 +7,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Routes, Route } from "react-router-dom";
 import { OnboardingProvider } from "./context/OnboardingContext";
+import { LanguageProvider } from "./context/LanguageContext";
 import Navigation from "./components/Navigation";
 import NotFound from "./pages/NotFound";
 import Onboarding from "./pages/Onboarding";
@@ -45,7 +46,6 @@ import LegacyPage from "./pages/LegacyPages";
 import LandingPage from "./pages/LandingPage";
 import Login from "./pages/Login";
 import ResetPassword from "./pages/ResetPassword";
-import { LanguageProvider } from "./context/LanguageContext";
 
 // Import new pages
 import About from "./pages/About";
@@ -90,9 +90,9 @@ function App() {
   }, []);
 
   return (
-    <LanguageProvider>
-      <QueryClientProvider client={queryClient}>
-        <HelmetProvider>
+    <QueryClientProvider client={queryClient}>
+      <HelmetProvider>
+        <LanguageProvider>
           <OnboardingProvider>
             <Navigation />
             <Routes>
@@ -167,9 +167,9 @@ function App() {
             <Sonner />
             <ChatButton />
           </OnboardingProvider>
-        </HelmetProvider>
-      </QueryClientProvider>
-    </LanguageProvider>
+        </LanguageProvider>
+      </HelmetProvider>
+    </QueryClientProvider>
   );
 }
 

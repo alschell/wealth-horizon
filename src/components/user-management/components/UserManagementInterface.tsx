@@ -12,7 +12,7 @@ import ViewPermissionsDialog from "../components/ViewPermissionsDialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { motion } from "framer-motion";
 import { useUserActionDialog } from "../hooks/useUserActionDialog";
-import { toast } from "@/utils/toast";
+import { showSuccess } from "@/utils/toast";
 import { useGlobalInviteUserDialog } from "../hooks/useInviteUserDialog";
 
 const UserManagementInterface = () => {
@@ -93,10 +93,7 @@ const UserManagementInterface = () => {
         onClose={closeAllDialogs} 
         onConfirm={() => {
           handleDeleteUser();
-          toast({
-            title: "User invitation deleted",
-            description: selectedUser ? `Invitation for ${selectedUser.name} has been deleted.` : "",
-          });
+          showSuccess("User invitation deleted", selectedUser ? `Invitation for ${selectedUser.name} has been deleted.` : "");
         }} 
       />
       
@@ -106,10 +103,7 @@ const UserManagementInterface = () => {
         onClose={closeAllDialogs} 
         onConfirm={() => {
           handleDeactivateUser();
-          toast({
-            title: "User deactivated",
-            description: selectedUser ? `${selectedUser.name} has been deactivated.` : "",
-          });
+          showSuccess("User deactivated", selectedUser ? `${selectedUser.name} has been deactivated.` : "");
         }} 
       />
       
@@ -119,10 +113,7 @@ const UserManagementInterface = () => {
         onClose={closeAllDialogs} 
         onConfirm={() => {
           handleActivateUser();
-          toast({
-            title: "User activated",
-            description: selectedUser ? `${selectedUser.name} has been activated.` : "",
-          });
+          showSuccess("User activated", selectedUser ? `${selectedUser.name} has been activated.` : "");
         }} 
       />
       
@@ -132,10 +123,7 @@ const UserManagementInterface = () => {
         onClose={closeAllDialogs} 
         onConfirm={() => {
           handleResendInvite();
-          toast({
-            title: "Invitation resent",
-            description: selectedUser ? `Invitation has been resent to ${selectedUser.email}.` : "",
-          });
+          showSuccess("Invitation resent", selectedUser ? `Invitation has been resent to ${selectedUser.email}.` : "");
         }} 
       />
       

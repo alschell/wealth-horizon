@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { UserFormData } from "../types";
-import { toast } from "@/utils/toast";
+import { showSuccess } from "@/utils/toast";
 
 export const useInviteUserDialog = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -20,10 +20,7 @@ export const useInviteUserDialog = () => {
     
     // Simulate a successful invitation
     setTimeout(() => {
-      toast({
-        title: "Invitation sent successfully",
-        description: `An invitation has been sent to ${data.email}`,
-      });
+      showSuccess("Invitation sent successfully", `An invitation has been sent to ${data.email}`);
       closeInviteDialog();
     }, 500);
   };
@@ -53,10 +50,7 @@ export const getInviteUserDialogStore = () => {
       handleInviteUser: (data: UserFormData) => {
         console.log("Global invite user:", data);
         if (globalStore) {
-          toast({
-            title: "Invitation sent successfully",
-            description: `An invitation has been sent to ${data.email}`,
-          });
+          showSuccess("Invitation sent successfully", `An invitation has been sent to ${data.email}`);
           globalStore.isOpen = false;
         }
       }

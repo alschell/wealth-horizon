@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { useOnboarding } from "@/context/OnboardingContext";
-import { toast } from "@/utils/toast";
+import { showSuccess, showError } from "@/utils/toast";
 import { FormSubmissionProps } from "../types";
 
 export const useFormSubmission = ({ 
@@ -15,11 +15,7 @@ export const useFormSubmission = ({
 
   const validateForm = () => {
     if (documentFiles.length === 0) {
-      toast({
-        title: "Missing documents",
-        description: "Please add at least one document before proceeding.",
-        variant: "destructive"
-      });
+      showError("Missing documents", "Please add at least one document before proceeding.");
       return false;
     }
     
@@ -46,17 +42,10 @@ export const useFormSubmission = ({
       await updateLegalDocuments(legalDocumentsData);
       setCurrentStep(4); // Move to the next step (data source step)
 
-      toast({
-        title: "Information saved",
-        description: "Legal documents information has been saved successfully.",
-      });
+      showSuccess("Information saved", "Legal documents information has been saved successfully.");
     } catch (error) {
       console.error("Error submitting form:", error);
-      toast({
-        title: "An error occurred",
-        description: "There was a problem saving your information. Please try again.",
-        variant: "destructive"
-      });
+      showError("An error occurred", "There was a problem saving your information. Please try again.");
     } finally {
       setIsSubmitting(false);
     }

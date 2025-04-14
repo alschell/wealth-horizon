@@ -17,6 +17,12 @@ const LandingLayout: React.FC = () => {
   const contactRef = useRef<HTMLDivElement>(null);
   const aboutRef = useRef<HTMLDivElement>(null);
 
+  // Add debugging
+  useEffect(() => {
+    console.log("LandingLayout component mounted");
+    console.log("Location hash:", location.hash);
+  }, [location]);
+
   // Handle hash-based navigation
   useEffect(() => {
     if (location.hash) {

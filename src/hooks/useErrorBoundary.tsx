@@ -1,89 +1,83 @@
 
-import React, { useState, useCallback } from 'react';
-import ErrorBoundary from '@/components/common/ErrorBoundary';
-import ErrorFallback from '@/components/common/ErrorFallback';
-import { useErrorHandler } from './useErrorHandler';
+import { useCallback, useState } from "react";
+import { toast } from "@/hooks/use-toast";
+import React from "react";
 
-interface ErrorBoundaryConfig {
-  fallback?: React.ReactNode;
-  onError?: (error: Error, errorInfo: React.ErrorInfo) => void;
-  showReset?: boolean;
-  message?: string;
-  componentName?: string;
-  logError?: boolean;
+interface ErrorBoundaryHookOptions {
+  fallbackMessage?: string;
   showToast?: boolean;
+  resetOnUnmount?: boolean;
+  logToConsole?: boolean;
+  componentName?: string;
 }
 
 /**
- * Hook for consistent error boundary usage
+ * Hook for use in components to show error boundary functionality
+ * without using class components
  */
-export function useErrorBoundary(config: ErrorBoundaryConfig = {}) {
+export function useErrorBoundary(options: ErrorBoundaryHookOptions = {}) {
   const {
-    fallback,
-    onError,
-    showReset = true,
-    message = "Something went wrong",
-    componentName,
-    logError = true,
-    showToast = true
-  } = config;
+    fallbackMessage = "Something went wrong",
+    showToast = true,
+    resetOnUnmount = true,
+    logToConsole = true,
+    componentName
+  } = options;
   
-  const { showError } = useErrorHandler();
-  const [key, setKey] = useState<number>(0);
-  const [errorInfo, setErrorInfo] = useState<React.ErrorInfo | null>(null);
+  const [error, setError] = useState<Error | null>(null);
   
-  // Error callback
-  const handleError = useCallback((error: Error, info: React.ErrorInfo) => {
-    if (logError) {
-      console.error(`Error in ${componentName || 'component'}:`, error);
-      console.error('Component stack:', info.componentStack);
-    }
+  const handleError = useCallback((caught: unknown) => {
+    const err = caught instanceof Error ? caught : new Error(String(caught));
     
-    setErrorInfo(info);
+    setError(err);
+    
+    if (logToConsole) {
+      console.error(`Error ${componentName ? `in ${componentName}` : 'caught by boundary'}:`, err);
+    }
     
     if (showToast) {
-      showError(message, error.message || "The application encountered an error");
+      toast({
+        title: "An error occurred",
+        description: err.message || fallbackMessage,
+        variant: "destructive"
+      });
     }
     
-    if (onError) {
-      onError(error, info);
-    }
-  }, [componentName, logError, message, onError, showError, showToast]);
+    return err;
+  }, [fallbackMessage, showToast, logToConsole, componentName]);
   
-  // Reset the error boundary
-  const resetErrorBoundary = useCallback(() => {
-    setKey(prevKey => prevKey + 1);
-    setErrorInfo(null);
+  const reset = useCallback(() => {
+    setError(null);
   }, []);
   
-  // Wrapper component with error boundary
-  const ErrorBoundaryWrapper = useCallback(
-    ({ children, customFallback }: { children: React.ReactNode, customFallback?: React.ReactNode }) => (
-      <ErrorBoundary
-        key={key}
-        fallback={
-          customFallback || fallback || (
-            <ErrorFallback 
-              message={message} 
-              resetErrorBoundary={resetErrorBoundary}
-              showReset={showReset}
-              errorInfo={errorInfo || undefined}
-            />
-          )
-        }
-        onError={handleError}
-        componentName={componentName}
-      >
-        {children}
-      </ErrorBoundary>
-    ),
-    [key, fallback, message, resetErrorBoundary, showReset, handleError, componentName, errorInfo]
-  );
+  // Add ErrorBoundaryWrapper component
+  const ErrorBoundaryWrapper = useCallback(({ children }: { children: React.ReactNode }) => {
+    if (error) {
+      return (
+        <div className="p-4 border border-red-300 rounded bg-red-50">
+          <h3 className="text-lg font-medium text-red-800">Error</h3>
+          <p className="mt-1 text-red-700">{error.message || fallbackMessage}</p>
+          {reset && (
+            <button 
+              onClick={reset}
+              className="mt-3 px-3 py-1 text-sm bg-red-100 text-red-800 rounded hover:bg-red-200"
+            >
+              Try Again
+            </button>
+          )}
+        </div>
+      );
+    }
+    
+    return <>{children}</>;
+  }, [error, fallbackMessage, reset]);
   
   return {
-    ErrorBoundaryWrapper,
-    resetErrorBoundary,
-    errorInfo
+    error,
+    handleError,
+    reset,
+    isError: error !== null,
+    ErrorBoundaryWrapper
   };
 }
 
@@ -92,17 +86,14 @@ export function useErrorBoundary(config: ErrorBoundaryConfig = {}) {
  */
 export function withErrorHandling<P extends object>(
   Component: React.ComponentType<P>,
-  options: ErrorBoundaryConfig = {}
-) {
-  const {
-    componentName = Component.displayName || Component.name || 'Component',
-    ...restOptions
-  } = options;
+  options: ErrorBoundaryHookOptions = {}
+): React.FC<P> {
+  const displayName = Component.displayName || Component.name || 'Component';
   
   const WrappedComponent: React.FC<P> = (props) => {
     const { ErrorBoundaryWrapper } = useErrorBoundary({
-      componentName,
-      ...restOptions
+      ...options,
+      componentName: options.componentName || displayName
     });
     
     return (
@@ -112,6 +103,9 @@ export function withErrorHandling<P extends object>(
     );
   };
   
-  WrappedComponent.displayName = `withErrorHandling(${componentName})`;
+  WrappedComponent.displayName = `withErrorHandling(${displayName})`;
+  
   return WrappedComponent;
 }
+
+export default useErrorBoundary;

@@ -97,10 +97,7 @@ export function useSymbolSearch() {
   
   const search = async (query: string) => {
     if (!query || query.length < 2) return;
-    return refetch({ 
-      // The line below was causing the error
-      // Don't set queryKey directly in refetch options
-    });
+    return refetch();
   };
 
   return { 

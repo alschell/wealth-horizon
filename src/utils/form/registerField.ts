@@ -12,11 +12,9 @@ import { RegisterOptions, UseFormReturn, FieldValues, Path } from 'react-hook-fo
 export function registerField<T extends FieldValues>(
   form: UseFormReturn<T>,
   name: Path<T>,
-  options?: Omit<RegisterOptions<T, Path<T>>, 'deps'> & {
-    deps?: Path<T>[] | Path<T>;
-  }
+  options?: RegisterOptions<T, Path<T>>
 ): ReturnType<UseFormReturn<T>['register']> {
-  return form.register(name, options as RegisterOptions<T, Path<T>>);
+  return form.register(name, options);
 }
 
 /**

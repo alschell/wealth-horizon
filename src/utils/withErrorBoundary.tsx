@@ -45,7 +45,7 @@ export function withErrorBoundary<P extends object>(
 export function withCustomErrorFallback<P extends object, FallbackProps extends {error?: Error}>(
   Component: React.ComponentType<P>,
   FallbackComponent: React.ComponentType<FallbackProps>
-): React.FC<P> {
+): React.ComponentType<P> {
   return class WithCustomErrorFallback extends React.Component<P, {hasError: boolean; error?: Error}> {
     constructor(props: P) {
       super(props);

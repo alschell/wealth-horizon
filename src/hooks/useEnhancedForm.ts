@@ -1,8 +1,14 @@
-
 import { useState, useCallback } from 'react';
 import { useIsComponentMounted } from './useIsComponentMounted';
 import { showSuccessToast, showErrorToast } from '@/utils/toast';
-import { useForm, UseFormProps, UseFormReturn, FieldValues } from 'react-hook-form';
+import { 
+  useForm, 
+  UseFormProps, 
+  UseFormReturn, 
+  FieldValues, 
+  DefaultValues,
+  UnpackNestedValue
+} from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 
@@ -17,10 +23,10 @@ interface UseEnhancedFormSubmissionOptions<T> {
   resetAfterSubmit?: boolean;
 }
 
-// Enhanced Form Options
-interface UseEnhancedFormOptions<T extends FieldValues> extends UseFormProps<T> {
+// Enhanced Form Options - Fixed the type issue with defaultValues
+interface UseEnhancedFormOptions<T extends FieldValues> extends Omit<UseFormProps<T>, 'defaultValues'> {
   schema?: z.ZodType<T>;
-  defaultValues: T;
+  defaultValues: DefaultValues<T>;
   onSubmit?: (data: T) => Promise<void> | void;
   onSuccess?: () => void;
   onError?: (error: unknown) => void;
@@ -51,7 +57,7 @@ export function useEnhancedForm<T extends FieldValues>({
   // Initialize react-hook-form with zod resolver if schema is provided
   const methods = useForm<T>({
     ...formOptions,
-    defaultValues,
+    defaultValues, // Now defaultValues is properly typed
     ...(schema && { resolver: zodResolver(schema) })
   });
   

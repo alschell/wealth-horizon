@@ -8,7 +8,7 @@ import {
   DialogDescription,
   DialogFooter,
 } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
+import { Button, ButtonProps } from '@/components/ui/button';
 import { 
   AlertTriangle, 
   Check, 
@@ -43,7 +43,8 @@ const variantIcons: Record<string, React.ReactNode> = {
   question: <HelpCircle className="h-5 w-5 text-primary" />
 };
 
-const confirmButtonVariants: Record<string, string> = {
+// Fix: Use proper union type for variant mappings
+const confirmButtonVariants: Record<string, ButtonProps['variant']> = {
   destructive: 'destructive',
   warning: 'default',
   info: 'default',
@@ -84,7 +85,10 @@ const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
     }
   };
 
-  const buttonVariant = confirmButtonVariant || confirmButtonVariants[variant] || 'default';
+  // Fix: Ensure buttonVariant is of the correct type
+  const buttonVariant = confirmButtonVariant || 
+    (confirmButtonVariants[variant] as ButtonProps['variant']) || 
+    'default';
   const iconElement = variantIcons[variant] || variantIcons.question;
 
   return (

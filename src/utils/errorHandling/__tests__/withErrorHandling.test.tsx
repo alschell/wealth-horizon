@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { withErrorHandling, withCustomErrorFallback } from '@/utils/withErrorBoundary';
+import { withErrorBoundary, withCustomErrorFallback } from '@/components/shared/ErrorBoundary';
 
 // Mock components for testing
 const WorkingComponent = () => <div>Working Component</div>;
@@ -28,14 +28,14 @@ describe('withErrorHandling', () => {
   });
   
   it('should render the component normally when there are no errors', () => {
-    const WrappedComponent = withErrorHandling(WorkingComponent);
+    const WrappedComponent = withErrorBoundary(WorkingComponent);
     render(<WrappedComponent />);
     
     expect(screen.getByText('Working Component')).toBeInTheDocument();
   });
   
   it('should render the default fallback UI when component throws', () => {
-    const WrappedComponent = withErrorHandling(ErrorComponent);
+    const WrappedComponent = withErrorBoundary(ErrorComponent);
     render(<WrappedComponent />);
     
     expect(screen.getByText(/Something went wrong/i)).toBeInTheDocument();
@@ -44,7 +44,7 @@ describe('withErrorHandling', () => {
   
   it('should render custom fallback when provided', () => {
     const customFallback = <div>Custom Fallback UI</div>;
-    const WrappedComponent = withErrorHandling(ErrorComponent, { fallback: customFallback });
+    const WrappedComponent = withErrorBoundary(ErrorComponent, { fallback: customFallback });
     render(<WrappedComponent />);
     
     expect(screen.getByText('Custom Fallback UI')).toBeInTheDocument();
@@ -52,7 +52,7 @@ describe('withErrorHandling', () => {
   
   it('should call onError when component throws', () => {
     const onError = jest.fn();
-    const WrappedComponent = withErrorHandling(ErrorComponent, { onError });
+    const WrappedComponent = withErrorBoundary(ErrorComponent, { onError });
     render(<WrappedComponent />);
     
     expect(onError).toHaveBeenCalledTimes(1);
@@ -61,7 +61,7 @@ describe('withErrorHandling', () => {
   });
   
   it('should recover when clicking try again button', () => {
-    const WrappedComponent = withErrorHandling(ErrorComponent);
+    const WrappedComponent = withErrorBoundary(ErrorComponent);
     const { rerender } = render(<WrappedComponent />);
     
     // Click the try again button

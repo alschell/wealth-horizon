@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Users } from "lucide-react";
+import { Users } from "@/utils/icons";
 
 const FormHeader: React.FC = () => {
   return (

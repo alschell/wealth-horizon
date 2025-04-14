@@ -43,8 +43,33 @@ import { Calendar, Clock, User } from '@/utils/icons';
 
 **Important Note**: Some icon names might be different in the lucide-react package. For instance, use `CheckCircle2` instead of `CheckCircle`. The icons utility also provides compatibility exports when needed.
 
+## Fixing Files Systematically
+You can fix the remaining files systematically by:
+
+1. Search for all files with the import pattern: `import { ... } from 'lucide-react'`
+2. Replace with the new import pattern: `import { ... } from '@/utils/icons'`
+3. Check for any icon name differences (like CheckCircle vs CheckCircle2)
+
 ## Running the Application
 After fixing the imports, you should be able to run the application with:
 ```
 npm run dev
 ```
+
+## Files Already Fixed
+We've already fixed several files as examples:
+- src/components/OnboardingHeader.tsx
+- src/components/activity/ActivityHeader.tsx
+- src/components/advice/components/OverviewCards.tsx
+- src/components/advice/components/QuickActions.tsx
+- src/components/advice/sections/assets/TransferActions.tsx
+- src/components/ai-assistant/messages/ChatInputForm.tsx
+- src/components/onboarding/address/AddressFormHeader.tsx
+- src/components/onboarding/beneficial-owners/FormHeader.tsx
+- src/components/advice/components/AdviceHeader.tsx
+- src/components/advice/tabs/ActiveMandatesTab.tsx
+- src/components/advice/NewAdviceInterface.tsx
+- src/components/advice/components/StepProgress.tsx
+- src/components/advice/tabs/BenchmarkingTab.tsx
+- src/components/advice/tabs/PendingMandatesTab.tsx
+- src/components/advice/sections/mandate/MandateTypeSelector.tsx

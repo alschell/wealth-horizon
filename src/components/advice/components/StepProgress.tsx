@@ -1,7 +1,7 @@
 
 import React from "react";
 import { cn } from "@/lib/utils";
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2 } from "@/utils/icons";
 
 interface Step {
   id: string;

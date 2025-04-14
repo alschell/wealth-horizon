@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, ArrowLeft } from "lucide-react";
+import { ArrowRight, ArrowLeft } from "@/utils/icons";
 
 interface TransferActionsProps {
   moveAssetsToScope: () => void;

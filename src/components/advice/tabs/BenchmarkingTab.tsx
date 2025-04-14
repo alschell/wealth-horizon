@@ -2,7 +2,7 @@
 import React from "react";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { BarChart3 } from "lucide-react";
+import { BarChart3 } from "@/utils/icons";
 
 const BenchmarkingTab: React.FC = () => {
   return (

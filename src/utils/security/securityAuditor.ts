@@ -1,4 +1,3 @@
-
 /**
  * Security auditing utility for identifying potential security issues
  * 
@@ -6,7 +5,7 @@
  */
 
 // Import validation utilities directly from their source modules to avoid circular dependencies
-import * as validation from '../validation/validation';
+import { validatePath, validateUrl, containsInjectionPatterns, validateFileContentType } from '../security/validation'; 
 import * as sanitize from './sanitization';
 import * as authentication from './authentication';
 
@@ -101,7 +100,7 @@ export class SecurityAuditor {
     const findings: SecurityFinding[] = [];
     
     // Check for XSS patterns
-    if (validation.containsInjectionPatterns(input)) {
+    if (containsInjectionPatterns(input)) {
       findings.push({
         id: 'INPUT-XSS-001',
         description: 'Input contains potential XSS patterns',
@@ -263,7 +262,7 @@ export class SecurityAuditor {
       }
       
       // Check URL with validation utility
-      if (!validation.validateUrl(params.url)) {
+      if (!validateUrl(params.url)) {
         findings.push({
           id: 'URL-VALID-001',
           description: 'Potentially unsafe URL detected',

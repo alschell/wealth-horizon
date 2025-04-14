@@ -158,23 +158,27 @@ const translations: Record<Language, Record<string, string>> = {
     email: 'Email',
     message: 'Message',
     sendMessage: 'Send Message',
+    submitting: 'Submitting...',
     
-    // Footer
+    // Solutions section
     solutions: 'Solutions',
     portfolioManagement: 'Portfolio Management',
     trading: 'Trading',
     wealthAnalysis: 'Wealth Analysis',
     reporting: 'Reporting',
     compliance: 'Compliance',
+    
+    // Company section
     company: 'Company',
     aboutUs: 'About Us',
     careers: 'Careers',
     blog: 'Blog',
     press: 'Press',
+    
+    // Resources section
     resources: 'Resources',
     documentation: 'Documentation',
-    helpCenter: 'Help Center',
-    security: 'Security'
+    helpCenter: 'Help Center'
   },
   zh: {
     // Navigation
@@ -308,19 +312,24 @@ const translations: Record<Language, Record<string, string>> = {
     email: '电子邮件',
     message: '消息',
     sendMessage: '发送消息',
+    submitting: '提交中...',
     
-    // Footer
+    // Solutions section
     solutions: '解决方案',
     portfolioManagement: '投资组合管理',
     trading: '交易',
     wealthAnalysis: '财富分析',
     reporting: '报告',
     compliance: '合规',
+    
+    // Company section
     company: '公司',
     aboutUs: '关于我们',
     careers: '职业机会',
     blog: '博客',
     press: '新闻',
+    
+    // Resources section
     resources: '资源',
     documentation: '文档',
     helpCenter: '帮助中心',
@@ -352,11 +361,11 @@ const translations: Record<Language, Record<string, string>> = {
     
     // Languages
     english: 'Inglés',
-    chinese: 'Chinês',
-    spanish: 'Espanhol',
+    chinese: 'Chino',
+    spanish: 'Español',
     arabic: 'Árabe',
     portuguese: 'Portugués',
-    russian: 'Russo',
+    russian: 'Ruso',
     japanese: 'Japonés',
     french: 'Francés',
     german: 'Alemán',
@@ -458,19 +467,24 @@ const translations: Record<Language, Record<string, string>> = {
     email: 'Correo electrónico',
     message: 'Mensaje',
     sendMessage: 'Enviar Mensaje',
+    submitting: 'Enviando...',
     
-    // Footer
+    // Solutions section
     solutions: 'Soluciones',
     portfolioManagement: 'Gestión de Cartera',
     trading: 'Trading',
     wealthAnalysis: 'Análisis de Patrimonio',
     reporting: 'Informes',
     compliance: 'Cumplimiento',
+    
+    // Company section
     company: 'Empresa',
     aboutUs: 'Sobre Nosotros',
     careers: 'Carreras',
     blog: 'Blog',
     press: 'Prensa',
+    
+    // Resources section
     resources: 'Recursos',
     documentation: 'Documentación',
     helpCenter: 'Centro de Ayuda',
@@ -564,19 +578,24 @@ const translations: Record<Language, Record<string, string>> = {
     email: 'بريد إلكتروني',
     message: 'رسالة',
     sendMessage: 'أرسل رسالة',
+    submitting: 'جاري الإرسال...',
     
-    // Footer
+    // Solutions section
     solutions: 'حلول',
     portfolioManagement: 'إدارة المحافظ',
     trading: 'تداول',
     wealthAnalysis: 'تحليل الثروة',
     reporting: 'إعداد التقارير',
     compliance: 'الامتثال',
+    
+    // Company section
     company: 'شركة',
     aboutUs: 'معلومات عنا',
     careers: 'وظائف',
     blog: 'مدونة',
     press: 'صحافة',
+    
+    // Resources section
     resources: 'الموارد',
     documentation: 'توثيق',
     helpCenter: 'مركز المساعدة',
@@ -670,19 +689,24 @@ const translations: Record<Language, Record<string, string>> = {
     email: 'E-mail',
     message: 'Mensagem',
     sendMessage: 'Enviar Mensagem',
+    submitting: 'Enviando...',
     
-    // Footer
+    // Solutions section
     solutions: 'Soluções',
     portfolioManagement: 'Gestão de Portfólio',
     trading: 'Trading',
     wealthAnalysis: 'Análise de Riqueza',
     reporting: 'Relatórios',
     compliance: 'Conformidade',
+    
+    // Company section
     company: 'Empresa',
     aboutUs: 'Sobre Nós',
     careers: 'Carreiras',
     blog: 'Blog',
     press: 'Imprensa',
+    
+    // Resources section
     resources: 'Recursos',
     documentation: 'Documentação',
     helpCenter: 'Central de Ajuda',
@@ -776,26 +800,31 @@ const translations: Record<Language, Record<string, string>> = {
     email: 'Электронная почта',
     message: 'Сообщение',
     sendMessage: 'Отправить сообщение',
+    submitting: 'Отправка...',
     
-    // Footer
+    // Solutions section
     solutions: 'Решения',
     portfolioManagement: 'Управление портфелем',
     trading: 'Торговля',
     wealthAnalysis: 'Анализ благосостояния',
     reporting: 'Отчетность',
     compliance: 'Соответствие нормативным требованиям',
+    
+    // Company section
     company: 'Компания',
     aboutUs: 'О нас',
     careers: 'Карьера',
     blog: 'Блог',
     press: 'Пресса',
+    
+    // Resources section
     resources: 'Ресурсы',
     documentation: 'Документация',
     helpCenter: 'Центр помощи',
     security: 'Безопасность'
   },
   ja: {
-    // Japanese translations
+    // Navigation
     features: '機能',
     benefits: 'メリット',
     testimonials: 'お客様の声',
@@ -830,6 +859,41 @@ const translations: Record<Language, Record<string, string>> = {
     german: 'ドイツ語',
     korean: '韓国語',
     
+    // Dashboard
+    dashboard: 'ダッシュボード',
+    overview: '概要',
+    performance: 'パフォーマンス',
+    portfolio: 'ポートフォリオ',
+    assets: '資産',
+    
+    // Common actions
+    search: '検索',
+    filter: 'フィルター',
+    save: '保存',
+    cancel: 'キャンセル',
+    edit: '編集',
+    delete: '削除',
+    create: '作成',
+    view: '表示',
+    submit: '送信',
+    
+    // Common sections
+    settings: '設定',
+    notifications: '通知',
+    profile: 'プロフィール',
+    security: 'セキュリティ',
+    help: 'ヘルプ',
+    
+    // Messaging
+    welcomeMessage: 'WealthHorizonへようこそ',
+    loadingMessage: '読み込み中...',
+    errorMessage: 'エラーが発生しました',
+    
+    // Footer
+    termsOfService: '利用規約',
+    privacyPolicy: 'プライバシーポリシー',
+    copyright: '© 2025 WealthHorizon. All rights reserved.',
+    
     // Contact
     contactInformation: '連絡先情報',
     ourAddress: '住所',
@@ -840,10 +904,38 @@ const translations: Record<Language, Record<string, string>> = {
     contactEmail: 'contact@wealthhorizon.com',
     officeHours: '営業時間',
     weekdayHours: '月曜〜金曜：午前9時〜午後6時（東部標準時）',
-    weekendClosed: '土日：休業'
+    weekendClosed: '土日：休業',
+    sendUsAMessage: 'メッセージを送る',
+    firstName: '名',
+    lastName: '姓',
+    email: 'メール',
+    message: 'メッセージ',
+    sendMessage: '送信',
+    submitting: '送信中...',
+    
+    // Solutions section
+    solutions: 'ソリューション',
+    portfolioManagement: 'ポートフォリオ管理',
+    trading: '取引',
+    wealthAnalysis: '資産分析',
+    reporting: 'レポーティング',
+    compliance: 'コンプライアンス',
+    
+    // Company section
+    company: '会社情報',
+    aboutUs: '会社概要',
+    careers: '採用情報',
+    blog: 'ブログ',
+    press: 'プレス',
+    
+    // Resources section
+    resources: 'リソース',
+    documentation: 'ドキュメント',
+    helpCenter: 'ヘルプセンター',
+    security: 'セキュリティ'
   },
   fr: {
-    // French translations
+    // Navigation
     features: 'Fonctionnalités',
     benefits: 'Avantages',
     testimonials: 'Témoignages',
@@ -878,6 +970,41 @@ const translations: Record<Language, Record<string, string>> = {
     german: 'Allemand',
     korean: 'Coréen',
     
+    // Dashboard
+    dashboard: 'Tableau de bord',
+    overview: 'Aperçu',
+    performance: 'Performance',
+    portfolio: 'Portefeuille',
+    assets: 'Actifs',
+    
+    // Common actions
+    search: 'Rechercher',
+    filter: 'Filtrer',
+    save: 'Enregistrer',
+    cancel: 'Annuler',
+    edit: 'Modifier',
+    delete: 'Supprimer',
+    create: 'Créer',
+    view: 'Voir',
+    submit: 'Soumettre',
+    
+    // Common sections
+    settings: 'Paramètres',
+    notifications: 'Notifications',
+    profile: 'Profil',
+    security: 'Sécurité',
+    help: 'Aide',
+    
+    // Messaging
+    welcomeMessage: 'Bienvenue sur WealthHorizon',
+    loadingMessage: 'Chargement...',
+    errorMessage: 'Une erreur est survenue',
+    
+    // Footer
+    termsOfService: 'Conditions d\'utilisation',
+    privacyPolicy: 'Politique de confidentialité',
+    copyright: '© 2025 WealthHorizon. Tous droits réservés.',
+    
     // Contact
     contactInformation: 'Informations de contact',
     ourAddress: 'Notre adresse',
@@ -888,10 +1015,38 @@ const translations: Record<Language, Record<string, string>> = {
     contactEmail: 'contact@wealthhorizon.com',
     officeHours: 'Heures d\'ouverture',
     weekdayHours: 'Lundi-Vendredi : 9h00 - 18h00 EST',
-    weekendClosed: 'Samedi-Dimanche : Fermé'
+    weekendClosed: 'Samedi-Dimanche : Fermé',
+    sendUsAMessage: 'Envoyez-nous un message',
+    firstName: 'Prénom',
+    lastName: 'Nom',
+    email: 'E-mail',
+    message: 'Message',
+    sendMessage: 'Envoyer le message',
+    submitting: 'Envoi en cours...',
+    
+    // Solutions section
+    solutions: 'Solutions',
+    portfolioManagement: 'Gestion de portefeuille',
+    trading: 'Trading',
+    wealthAnalysis: 'Analyse de patrimoine',
+    reporting: 'Rapports',
+    compliance: 'Conformité',
+    
+    // Company section
+    company: 'Entreprise',
+    aboutUs: 'À propos de nous',
+    careers: 'Carrières',
+    blog: 'Blog',
+    press: 'Presse',
+    
+    // Resources section
+    resources: 'Ressources',
+    documentation: 'Documentation',
+    helpCenter: 'Centre d\'aide',
+    security: 'Sécurité'
   },
   de: {
-    // German translations
+    // Navigation
     features: 'Funktionen',
     benefits: 'Vorteile',
     testimonials: 'Erfahrungen',
@@ -926,6 +1081,41 @@ const translations: Record<Language, Record<string, string>> = {
     german: 'Deutsch',
     korean: 'Koreanisch',
     
+    // Dashboard
+    dashboard: 'Dashboard',
+    overview: 'Überblick',
+    performance: 'Leistung',
+    portfolio: 'Portfolio',
+    assets: 'Vermögenswerte',
+    
+    // Common actions
+    search: 'Suchen',
+    filter: 'Filtern',
+    save: 'Speichern',
+    cancel: 'Abbrechen',
+    edit: 'Bearbeiten',
+    delete: 'Löschen',
+    create: 'Erstellen',
+    view: 'Ansehen',
+    submit: 'Absenden',
+    
+    // Common sections
+    settings: 'Einstellungen',
+    notifications: 'Benachrichtigungen',
+    profile: 'Profil',
+    security: 'Sicherheit',
+    help: 'Hilfe',
+    
+    // Messaging
+    welcomeMessage: 'Willkommen bei WealthHorizon',
+    loadingMessage: 'Wird geladen...',
+    errorMessage: 'Ein Fehler ist aufgetreten',
+    
+    // Footer
+    termsOfService: 'Nutzungsbedingungen',
+    privacyPolicy: 'Datenschutzrichtlinie',
+    copyright: '© 2025 WealthHorizon. Alle Rechte vorbehalten.',
+    
     // Contact
     contactInformation: 'Kontaktinformationen',
     ourAddress: 'Unsere Adresse',
@@ -936,10 +1126,38 @@ const translations: Record<Language, Record<string, string>> = {
     contactEmail: 'contact@wealthhorizon.com',
     officeHours: 'Öffnungszeiten',
     weekdayHours: 'Montag-Freitag: 9:00 - 18:00 Uhr EST',
-    weekendClosed: 'Samstag-Sonntag: Geschlossen'
+    weekendClosed: 'Samstag-Sonntag: Geschlossen',
+    sendUsAMessage: 'Senden Sie uns eine Nachricht',
+    firstName: 'Vorname',
+    lastName: 'Nachname',
+    email: 'E-Mail',
+    message: 'Nachricht',
+    sendMessage: 'Nachricht senden',
+    submitting: 'Wird gesendet...',
+    
+    // Solutions section
+    solutions: 'Lösungen',
+    portfolioManagement: 'Portfoliomanagement',
+    trading: 'Trading',
+    wealthAnalysis: 'Vermögensanalyse',
+    reporting: 'Berichterstattung',
+    compliance: 'Compliance',
+    
+    // Company section
+    company: 'Unternehmen',
+    aboutUs: 'Über uns',
+    careers: 'Karriere',
+    blog: 'Blog',
+    press: 'Presse',
+    
+    // Resources section
+    resources: 'Ressourcen',
+    documentation: 'Dokumentation',
+    helpCenter: 'Hilfezentrum',
+    security: 'Sicherheit'
   },
   ko: {
-    // Korean translations
+    // Navigation
     features: '기능',
     benefits: '혜택',
     testimonials: '고객 후기',
@@ -974,6 +1192,41 @@ const translations: Record<Language, Record<string, string>> = {
     german: '독일어',
     korean: '한국어',
     
+    // Dashboard
+    dashboard: '대시보드',
+    overview: '개요',
+    performance: '성과',
+    portfolio: '포트폴리오',
+    assets: '자산',
+    
+    // Common actions
+    search: '검색',
+    filter: '필터',
+    save: '저장',
+    cancel: '취소',
+    edit: '편집',
+    delete: '삭제',
+    create: '생성',
+    view: '보기',
+    submit: '제출',
+    
+    // Common sections
+    settings: '설정',
+    notifications: '알림',
+    profile: '프로필',
+    security: '보안',
+    help: '도움말',
+    
+    // Messaging
+    welcomeMessage: 'WealthHorizon에 오신 것을 환영합니다',
+    loadingMessage: '로딩 중...',
+    errorMessage: '오류가 발생했습니다',
+    
+    // Footer
+    termsOfService: '서비스 약관',
+    privacyPolicy: '개인정보 처리방침',
+    copyright: '© 2025 WealthHorizon. 모든 권리 보유.',
+    
     // Contact
     contactInformation: '연락처 정보',
     ourAddress: '주소',
@@ -984,7 +1237,35 @@ const translations: Record<Language, Record<string, string>> = {
     contactEmail: 'contact@wealthhorizon.com',
     officeHours: '영업 시간',
     weekdayHours: '월요일-금요일: 오전 9시 - 오후 6시 (동부 표준시)',
-    weekendClosed: '토요일-일요일: 휴무'
+    weekendClosed: '토요일-일요일: 휴무',
+    sendUsAMessage: '메시지 보내기',
+    firstName: '이름',
+    lastName: '성',
+    email: '이메일',
+    message: '메시지',
+    sendMessage: '메시지 보내기',
+    submitting: '전송 중...',
+    
+    // Solutions section
+    solutions: '솔루션',
+    portfolioManagement: '포트폴리오 관리',
+    trading: '거래',
+    wealthAnalysis: '자산 분석',
+    reporting: '보고서',
+    compliance: '규정 준수',
+    
+    // Company section
+    company: '회사',
+    aboutUs: '회사 소개',
+    careers: '채용',
+    blog: '블로그',
+    press: '언론 보도',
+    
+    // Resources section
+    resources: '리소스',
+    documentation: '문서',
+    helpCenter: '고객 센터',
+    security: '보안'
   }
 };
 

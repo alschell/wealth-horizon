@@ -109,7 +109,6 @@ const translations: Record<Language, Record<string, string>> = {
     complianceManagementDesc: 'Stay ahead of regulatory requirements with automated compliance monitoring.',
     comprehensiveDashboard: 'Comprehensive Dashboard',
     comprehensiveDashboardDesc: 'Get a holistic view of your wealth across all your banks, brokers and custodians.',
-    realTimeAnalytics: 'Real-time Analytics',
     realTimeAnalyticsDesc: 'Monitor your investments with real-time updates and customizable dashboards.',
     riskManagement: 'Risk Management',
     riskManagementDesc: 'Identify and mitigate risks with our sophisticated analysis tools.',
@@ -332,8 +331,7 @@ const translations: Record<Language, Record<string, string>> = {
     // Resources section
     resources: '资源',
     documentation: '文档',
-    helpCenter: '帮助中心',
-    security: '安全'
+    helpCenter: '帮助中心'
   },
   es: {
     // Navigation
@@ -487,8 +485,7 @@ const translations: Record<Language, Record<string, string>> = {
     // Resources section
     resources: 'Recursos',
     documentation: 'Documentación',
-    helpCenter: 'Centro de Ayuda',
-    security: 'Seguridad'
+    helpCenter: 'Centro de Ayuda'
   },
   ar: {
     // Navigation
@@ -598,8 +595,7 @@ const translations: Record<Language, Record<string, string>> = {
     // Resources section
     resources: 'الموارد',
     documentation: 'توثيق',
-    helpCenter: 'مركز المساعدة',
-    security: 'الأمان'
+    helpCenter: 'مركز المساعدة'
   },
   pt: {
     // Navigation
@@ -709,8 +705,7 @@ const translations: Record<Language, Record<string, string>> = {
     // Resources section
     resources: 'Recursos',
     documentation: 'Documentação',
-    helpCenter: 'Central de Ajuda',
-    security: 'Segurança'
+    helpCenter: 'Central de Ajuda'
   },
   ru: {
     // Navigation
@@ -820,8 +815,7 @@ const translations: Record<Language, Record<string, string>> = {
     // Resources section
     resources: 'Ресурсы',
     documentation: 'Документация',
-    helpCenter: 'Центр помощи',
-    security: 'Безопасность'
+    helpCenter: 'Центр помощи'
   },
   ja: {
     // Navigation
@@ -931,8 +925,7 @@ const translations: Record<Language, Record<string, string>> = {
     // Resources section
     resources: 'リソース',
     documentation: 'ドキュメント',
-    helpCenter: 'ヘルプセンター',
-    security: 'セキュリティ'
+    helpCenter: 'ヘルプセンター'
   },
   fr: {
     // Navigation
@@ -1042,8 +1035,7 @@ const translations: Record<Language, Record<string, string>> = {
     // Resources section
     resources: 'Ressources',
     documentation: 'Documentation',
-    helpCenter: 'Centre d\'aide',
-    security: 'Sécurité'
+    helpCenter: 'Centre d\'aide'
   },
   de: {
     // Navigation
@@ -1153,8 +1145,7 @@ const translations: Record<Language, Record<string, string>> = {
     // Resources section
     resources: 'Ressourcen',
     documentation: 'Dokumentation',
-    helpCenter: 'Hilfezentrum',
-    security: 'Sicherheit'
+    helpCenter: 'Hilfezentrum'
   },
   ko: {
     // Navigation
@@ -1264,8 +1255,7 @@ const translations: Record<Language, Record<string, string>> = {
     // Resources section
     resources: '리소스',
     documentation: '문서',
-    helpCenter: '고객 센터',
-    security: '보안'
+    helpCenter: '고객 센터'
   }
 };
 
@@ -1336,3 +1326,4 @@ export const useLanguage = (): LanguageContextType => {
   }
   return context;
 };
+

@@ -14,6 +14,7 @@ import { useScrollToSection } from "@/hooks/useScrollToSection";
 const SECTION_IDS = ['why-wh', 'features', 'benefits', 'testimonials', 'contact', 'about'];
 
 const LandingLayout: React.FC = () => {
+  // Create refs for each section - this is where the error is occurring
   const { sectionRefs, scrollToSection } = useScrollToSection(SECTION_IDS);
 
   return (
@@ -27,7 +28,7 @@ const LandingLayout: React.FC = () => {
       </div>
       
       <div ref={sectionRefs.features} id="features">
-        <FeaturesSection id="features" />
+        <FeaturesSection />
       </div>
       
       <div ref={sectionRefs.benefits} id="benefits">

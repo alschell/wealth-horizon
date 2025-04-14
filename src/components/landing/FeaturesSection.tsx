@@ -38,7 +38,11 @@ const features = [
   }
 ].sort((a, b) => a.title.localeCompare(b.title));
 
-const FeaturesSection: React.FC<{ id?: string }> = ({ id }) => {
+interface FeaturesSectionProps {
+  id?: string;
+}
+
+const FeaturesSection: React.FC<FeaturesSectionProps> = ({ id }) => {
   return (
     <section className="py-24 bg-gray-50" id={id}>
       <div className="max-w-7xl mx-auto px-6">

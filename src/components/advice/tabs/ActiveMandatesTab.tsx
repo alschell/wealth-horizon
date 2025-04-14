@@ -2,7 +2,7 @@
 import React from "react";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { CheckCircle } from "@/utils/icons";
+import { CheckCircle } from "lucide-react";
 
 const ActiveMandatesTab: React.FC = () => {
   return (

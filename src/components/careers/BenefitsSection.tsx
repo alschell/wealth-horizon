@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Target, Users, Heart } from "@/utils/icons";
+import { Target, Users, Heart } from "lucide-react";
 
 export const BenefitsSection: React.FC = () => {
   return (

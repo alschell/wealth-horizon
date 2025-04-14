@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Clock, User } from "@/utils/icons";
+import { Clock, User } from "lucide-react";
 import { BlogPost } from "./types";
 
 interface BlogCardProps {

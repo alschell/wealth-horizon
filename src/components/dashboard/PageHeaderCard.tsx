@@ -2,12 +2,11 @@
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { LucideIcon } from "lucide-react";
-import { useLocalizedText } from "@/components/ui/localized-text";
 
 interface PageHeaderCardProps {
   icon: LucideIcon;
-  title: React.ReactNode;
-  description: React.ReactNode;
+  title: string;
+  description: string;
   iconColor?: string;
   iconBgColor?: string;
 }
@@ -19,8 +18,6 @@ const PageHeaderCard: React.FC<PageHeaderCardProps> = ({
   iconColor = "text-gray-700",
   iconBgColor = "bg-gray-100"
 }) => {
-  const { t } = useLocalizedText();
-  
   return (
     <Card className="border-none shadow-none bg-transparent">
       <CardContent className="p-0">

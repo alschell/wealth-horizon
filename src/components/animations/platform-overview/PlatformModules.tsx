@@ -1,13 +1,13 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { Briefcase, ChartBar, ShieldCheck } from "@/utils/icons";
+import { Briefcase, ChartBar, Shield } from "lucide-react";
 import { moduleVariants, moduleItemVariants } from "./AnimationVariants";
 
 const modules = [
   { title: 'Portfolio', icon: <Briefcase size={24} />, color: 'bg-indigo-100 text-indigo-600' },
   { title: 'Analysis', icon: <ChartBar size={24} />, color: 'bg-green-100 text-green-600' },
-  { title: 'Security', icon: <ShieldCheck size={24} />, color: 'bg-amber-100 text-amber-600' }
+  { title: 'Security', icon: <Shield size={24} />, color: 'bg-amber-100 text-amber-600' }
 ];
 
 const PlatformModules: React.FC = () => {

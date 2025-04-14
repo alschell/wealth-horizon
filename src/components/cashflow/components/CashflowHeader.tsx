@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { CircleDollarSign } from "@/utils/icons";
+import { CircleDollarSign } from "lucide-react";
 
 const CashflowHeader = () => {
   return null;

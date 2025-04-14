@@ -1,7 +1,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { ArrowRight } from "@/utils/icons";
+import { ArrowRight } from "lucide-react";
 import { actionVariants } from "./AnimationVariants";
 
 const ActionButton: React.FC = () => {

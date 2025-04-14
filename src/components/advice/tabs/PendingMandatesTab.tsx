@@ -2,7 +2,7 @@
 import React from "react";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Clock } from "@/utils/icons";
+import { Clock } from "lucide-react";
 
 const PendingMandatesTab: React.FC = () => {
   return (

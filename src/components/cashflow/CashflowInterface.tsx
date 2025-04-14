@@ -5,7 +5,7 @@ import CashflowOverview from "./sections/CashflowOverview";
 import LiquidityPlanner from "./sections/LiquidityPlanner";
 import TermDeposits from "./sections/TermDeposits";
 import RecurringPayments from "./sections/RecurringPayments";
-import { ChartBar, Calendar, Wallet, Coins } from "@/utils/icons";
+import { ChartBar, Calendar, Wallet, Coins } from "lucide-react";
 import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
 

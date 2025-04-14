@@ -1,134 +1,194 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { LocalizedText, useLocalizedText } from "@/components/ui/localized-text";
-import { useLanguage } from "@/context/LanguageContext";
+import { Label } from "@/components/ui/label";
+import CustomSearchableSelect from "@/components/ui/custom-searchable-select";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { CheckCheck } from "lucide-react";
 
 const ContactForm: React.FC = () => {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { t } = useLocalizedText();
-  const { language } = useLanguage();
-  const [, forceUpdate] = useState({});
-  
-  // Force re-render when language changes
-  useEffect(() => {
-    console.log(`ContactForm detected language change to: ${language}`);
-    forceUpdate({});
-  }, [language]);
-  
-  // Listen for language change events
-  useEffect(() => {
-    const handleLanguageChange = () => {
-      console.log("ContactForm detected language change event");
-      forceUpdate({});
-    };
-    
-    window.addEventListener('languageChange', handleLanguageChange);
-    return () => {
-      window.removeEventListener('languageChange', handleLanguageChange);
-    };
-  }, []);
+  const [email, setEmail] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [company, setCompany] = useState("");
+  const [industry, setIndustry] = useState("");
+  const [inquiry, setInquiry] = useState("");
+  const [message, setMessage] = useState("");
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
     setIsSubmitting(true);
     
-    // Simulate form submission
+    // Simulate API call with a timeout
     setTimeout(() => {
-      console.log({ firstName, lastName, email, message });
-      setFirstName("");
-      setLastName("");
+      // Show success modal instead of toast
+      setShowSuccessModal(true);
+      
+      // Reset form fields
       setEmail("");
+      setFullName("");
+      setCompany("");
+      setIndustry("");
+      setInquiry("");
       setMessage("");
+      
       setIsSubmitting(false);
-      // Here you would typically send the data to your backend
-    }, 1500);
+    }, 1000);
   };
 
+  // Sort industry options alphabetically, keeping "Other" at the end
+  const industryOptions = [
+    "Advisor",
+    "Aggregator",
+    "Asset Manager",
+    "Broker Dealer",
+    "Family Office",
+    "Institutional",
+    "Other"
+  ];
+
+  // Define the inquiry options in the EXACT order specified - preserving this order exactly
+  // These must be in this specific, non-alphabetical order
+  const inquiryOptions = [
+    "Speak with a sales representative",
+    "Request a demo",
+    "Get information on our partnership program",
+    "Other"
+  ];
+
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <h3 className="text-xl font-semibold text-gray-900 mb-6">
-        <LocalizedText textKey="sendUsAMessage" fallback="Send us a message" />
-      </h3>
+    <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-200">
+      <h3 className="text-xl font-semibold text-gray-900 mb-6">Send us a message</h3>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-1">
-            <LocalizedText textKey="firstName" fallback="First Name" />
-          </label>
-          <Input
-            id="firstName"
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
-            className="w-full"
-            required
-          />
+      <form onSubmit={handleSubmit} className="flex flex-col h-full">
+        <div className="space-y-6 flex-grow">
+          <div className="space-y-2">
+            <Label htmlFor="email">
+              Email<span className="text-indigo-600 ml-1">*</span>
+            </Label>
+            <Input 
+              id="email" 
+              type="email" 
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="john@example.com" 
+              required 
+            />
+          </div>
+          
+          <div className="space-y-2">
+            <Label htmlFor="full-name">
+              Full name<span className="text-indigo-600 ml-1">*</span>
+            </Label>
+            <Input 
+              id="full-name" 
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+              placeholder="John Doe" 
+              required 
+            />
+          </div>
+          
+          <div className="space-y-2">
+            <Label htmlFor="company">
+              Company<span className="text-indigo-600 ml-1">*</span>
+            </Label>
+            <Input 
+              id="company" 
+              value={company}
+              onChange={(e) => setCompany(e.target.value)}
+              placeholder="Your company" 
+              required 
+            />
+          </div>
+          
+          <div className="space-y-2">
+            <Label htmlFor="industry">
+              Industry<span className="text-indigo-600 ml-1">*</span>
+            </Label>
+            <CustomSearchableSelect 
+              id="industry"
+              label=""
+              value={industry}
+              placeholder="Select your industry"
+              options={industryOptions}
+              onChange={(value) => setIndustry(value)}
+              required={true}
+              allowCustomValue
+            />
+          </div>
+          
+          <div className="space-y-2">
+            <Label htmlFor="inquiry-type">
+              Type of inquiry<span className="text-indigo-600 ml-1">*</span>
+            </Label>
+            <CustomSearchableSelect 
+              id="inquiry-type"
+              label=""
+              value={inquiry}
+              placeholder="Select inquiry type"
+              options={inquiryOptions}
+              onChange={(value) => setInquiry(value)}
+              required={true}
+              allowCustomValue
+            />
+          </div>
+          
+          <div className="space-y-2">
+            <Label htmlFor="message">
+              Message<span className="text-indigo-600 ml-1">*</span>
+            </Label>
+            <div className="h-[144px]">
+              <Textarea 
+                id="message" 
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                placeholder="How can we help you?"
+                className="h-full w-full resize-none focus-visible:outline-none focus-visible:ring-0 focus-visible:border-black focus-visible:border-2"
+                required
+              />
+            </div>
+          </div>
         </div>
-        <div>
-          <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-1">
-            <LocalizedText textKey="lastName" fallback="Last Name" />
-          </label>
-          <Input
-            id="lastName"
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
-            className="w-full"
-            required
-          />
+        
+        <div className="mt-6 flex-shrink-0">
+          <Button type="submit" className="w-full md:w-auto" disabled={isSubmitting}>
+            {isSubmitting ? "Sending..." : "Send Message"}
+          </Button>
         </div>
-      </div>
-      
-      <div>
-        <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-          <LocalizedText textKey="email" fallback="Email" />
-        </label>
-        <Input
-          id="email"
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="w-full"
-          required
-        />
-      </div>
-      
-      <div>
-        <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
-          <LocalizedText textKey="message" fallback="Message" />
-        </label>
-        <Textarea
-          id="message"
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          className="w-full min-h-[120px]"
-          required
-        />
-      </div>
-      
-      <Button 
-        type="submit" 
-        className="w-full py-3 px-5 font-semibold bg-indigo-600 hover:bg-indigo-700 text-white"
-        disabled={isSubmitting}
-      >
-        {isSubmitting ? (
-          <span className="flex items-center">
-            <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
-            <LocalizedText textKey="submitting" fallback="Submitting..." />
-          </span>
-        ) : (
-          <LocalizedText textKey="sendMessage" fallback="Send Message" />
-        )}
-      </Button>
-    </form>
+      </form>
+
+      {/* Success Modal - Fixed spacing and centered button */}
+      <Dialog open={showSuccessModal} onOpenChange={setShowSuccessModal}>
+        <DialogContent className="sm:max-w-md flex flex-col items-center justify-center p-8" hideCloseButton>
+          <div className="flex flex-col items-center justify-center w-full space-y-4 py-6">
+            <CheckCheck className="h-12 w-12 text-[#4E46DC]" />
+            
+            <DialogTitle className="text-xl font-semibold text-center mt-2">
+              Message sent successfully!
+            </DialogTitle>
+            
+            <div className="text-center space-y-1">
+              <p className="text-gray-700">Thank you for your message.</p>
+              <p className="text-gray-700">We will get back to you within 1-2 working days.</p>
+            </div>
+          </div>
+          
+          <DialogFooter className="w-full flex justify-center mt-4">
+            <Button 
+              onClick={() => setShowSuccessModal(false)}
+              className="bg-black text-white hover:bg-gray-800"
+            >
+              Close
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
   );
 };
 

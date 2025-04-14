@@ -1,6 +1,6 @@
 
 import React from "react";
-import { MapPin } from "@/utils/icons";
+import { MapPin } from "lucide-react";
 import FormHeader from "@/components/onboarding/family-office/FormHeader";
 
 const AddressFormHeader: React.FC = () => {

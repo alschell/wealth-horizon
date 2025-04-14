@@ -9,7 +9,7 @@ import {
   BarChart3, 
   Send, 
   Brain 
-} from "@/utils/icons";
+} from "lucide-react";
 
 interface MessageItemProps {
   message: MessageType;

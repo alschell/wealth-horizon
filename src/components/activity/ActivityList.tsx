@@ -3,7 +3,7 @@ import React from "react";
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Clock, CreditCard, DollarSign, FileText, Lock, TrendingUp } from "@/utils/icons";
+import { Clock, CreditCard, DollarSign, FileText, Lock, TrendingUp } from "lucide-react";
 
 export interface Activity {
   id: string;

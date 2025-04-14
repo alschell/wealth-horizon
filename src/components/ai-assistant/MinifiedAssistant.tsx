@@ -1,7 +1,7 @@
 
 import React from "react";
 import { CardContent } from "@/components/ui/card";
-import { TrendingUp, AlertTriangle, DollarSign } from "@/utils/icons";
+import { TrendingUp, AlertTriangle, DollarSign } from "lucide-react";
 import ChatInputForm from "./messages/ChatInputForm";
 import { MessageType } from "./types";
 

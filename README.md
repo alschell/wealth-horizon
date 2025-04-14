@@ -1,49 +1,89 @@
 
-# Icons Usage Guide
+# Enterprise Financial Platform
 
-## Importing Icons
+A comprehensive financial platform with advanced form handling, error management, and type safety.
 
-All icons should be imported from `@/utils/icons` rather than directly from `lucide-react`.
+## Project Structure
 
-```tsx
-// INCORRECT - Don't do this:
-import { ArrowRight } from 'lucide-react';
-
-// CORRECT - Do this instead:
-import { ArrowRight } from '@/utils/icons';
+```
+src/
+├── components/           # UI components
+│   ├── ui/               # Reusable UI components
+│   ├── team/             # Team-related components
+│   ├── trading/          # Trading components
+│   ├── compliance/       # Compliance components
+│   ├── landing/          # Landing page components
+│   └── cashflow/         # Cashflow management components
+├── hooks/                # Custom React hooks
+├── lib/                  # Shared utilities
+├── utils/                # Utility functions
+│   ├── errorHandling/    # Error handling utilities
+│   ├── form/             # Form utilities
+│   ├── toast/            # Toast notification utilities
+│   └── validation/       # Validation utilities
+├── pages/                # Page components
+└── context/              # React context providers
 ```
 
-This ensures consistent usage across the application and makes it easier to update icons in the future.
+## Best Practices
 
-## Available Icons
+### Form Handling
 
-All icons from `lucide-react` are available through the `@/utils/icons` module.
+Use the unified form system for consistent form handling across the application:
 
-## Helper Function
+```typescript
+import { useFormSystem } from '@/hooks/useFormSystem';
+import { z } from 'zod';
 
-If you need to dynamically render an icon by name, use the `getIconByName` function:
+// Define your form schema with zod
+const formSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(8)
+});
 
-```tsx
-import { getIconByName } from '@/utils/icons';
-
-// Later in your component:
-const IconComponent = getIconByName('ArrowRight');
-return <IconComponent />;
+function LoginForm() {
+  const form = useFormSystem({
+    defaultValues: { email: '', password: '' },
+    schema: formSchema,
+    onSubmit: async (data) => {
+      // Handle form submission
+    }
+  });
+  
+  return (
+    <form onSubmit={form.handleSubmit}>
+      {/* Form fields */}
+    </form>
+  );
+}
 ```
 
-## How To Fix Icon Import Errors
+### Error Handling
 
-If you're seeing errors like `Cannot find module 'lucide-react'`, you need to update your imports:
+Use the standardized error handling utilities:
 
-1. Remove all direct imports from 'lucide-react'
-2. Replace them with imports from '@/utils/icons'
-3. Run the application to ensure the fixes worked
+```typescript
+import { withErrorHandling } from '@/utils/errorHandling';
 
-Example:
-```tsx
-// Before:
-import { ArrowUp, ChevronDown } from 'lucide-react';
-
-// After:
-import { ArrowUp, ChevronDown } from '@/utils/icons';
+// Wrap async functions for consistent error handling
+const fetchUserData = withErrorHandling(async (userId: string) => {
+  // API call logic
+});
 ```
+
+### Component Design
+
+Follow these component design principles:
+
+1. Use `withStrictTypes` for enhanced type safety
+2. Keep components small and focused
+3. Leverage composition for complex UI
+4. Use the ButtonWithLoading component for all loading states
+5. Implement FormField for consistent form UIs
+
+## Available Tools
+
+- **Form System**: Unified form handling with Zod validation
+- **Error Handling**: Consistent error management across the app
+- **Toast Notifications**: Centralized toast system
+- **Type Safety**: Enhanced type checking with withStrictTypes

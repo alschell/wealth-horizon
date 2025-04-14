@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, Lightbulb } from "@/utils/icons";
+import { ChevronLeft, Lightbulb } from "lucide-react";
 import AdviceContent from "./components/AdviceContent";
 import { useAdvice } from "./hooks/useAdvice";
 

@@ -1,47 +1,45 @@
 
 import React from "react";
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
-import { CheckCircle2, Clock, BarChart3 } from "@/utils/icons";
+import { CheckCircle, Clock, BarChart3 } from "lucide-react";
 
 const OverviewCards: React.FC = () => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
       <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-base font-medium flex items-center">
-            <CheckCircle2 className="h-4 w-4 mr-2 text-emerald-500" />
-            Active Mandates
-          </CardTitle>
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardTitle className="text-sm font-medium">Active Mandates</CardTitle>
+          <CheckCircle className="h-4 w-4 text-gray-500" />
         </CardHeader>
         <CardContent>
-          <p className="text-2xl font-bold">2</p>
-          <p className="text-sm text-gray-500">Discretionary and Advisory</p>
+          <div className="text-2xl font-bold">2</div>
+          <p className="text-xs text-muted-foreground">
+            1 discretionary, 1 advisory
+          </p>
         </CardContent>
       </Card>
-      
       <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-base font-medium flex items-center">
-            <Clock className="h-4 w-4 mr-2 text-amber-500" />
-            Pending Approval
-          </CardTitle>
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardTitle className="text-sm font-medium">Pending Approval</CardTitle>
+          <Clock className="h-4 w-4 text-gray-500" />
         </CardHeader>
         <CardContent>
-          <p className="text-2xl font-bold">1</p>
-          <p className="text-sm text-gray-500">JP Morgan private bank</p>
+          <div className="text-2xl font-bold">1</div>
+          <p className="text-xs text-muted-foreground">
+            Setup completed, waiting for bank approval
+          </p>
         </CardContent>
       </Card>
-      
       <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-base font-medium flex items-center">
-            <BarChart3 className="h-4 w-4 mr-2 text-blue-500" />
-            Portfolio Performance
-          </CardTitle>
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardTitle className="text-sm font-medium">Performance</CardTitle>
+          <BarChart3 className="h-4 w-4 text-gray-500" />
         </CardHeader>
         <CardContent>
-          <p className="text-2xl font-bold">+8.2%</p>
-          <p className="text-sm text-gray-500">Across all mandates</p>
+          <div className="text-2xl font-bold">+8.2%</div>
+          <p className="text-xs text-muted-foreground">
+            Average performance across all mandates (YTD)
+          </p>
         </CardContent>
       </Card>
     </div>

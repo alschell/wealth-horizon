@@ -21,11 +21,19 @@ import {
 } from "lucide-react";
 import { QuickLinkItem } from "./types";
 
-// Function to create consistent icon elements with proper sizing
+/**
+ * Creates a standardized icon element with proper sizing
+ * 
+ * @param Icon - Lucide icon component to render
+ * @returns React node with consistent styling
+ */
 const createIcon = (Icon: LucideIcon): React.ReactNode => {
   return <Icon className="h-4 w-4" />;
 };
 
+/**
+ * Complete collection of all available quick links for the application
+ */
 export const allQuickLinks: QuickLinkItem[] = [
   {
     id: "analyze-wealth",
@@ -141,4 +149,8 @@ export const allQuickLinks: QuickLinkItem[] = [
   }
 ];
 
+/**
+ * Default subset of quick links to show initially
+ * Can be customized by the user via the CustomizeDialog
+ */
 export const defaultQuickLinks = allQuickLinks.slice(0, 8);

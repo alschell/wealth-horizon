@@ -1,10 +1,12 @@
 
-import { renderHook, act } from '@testing-library/react-hooks';
+import { renderHook, act } from '@testing-library/react';
 import { useQuickAccess } from '../useQuickAccess';
+import { defaultQuickLinks } from '../quickLinksData';
 
 // Mock localStorage
 const mockLocalStorage = (() => {
   let store: Record<string, string> = {};
+  
   return {
     getItem: jest.fn((key: string) => store[key] || null),
     setItem: jest.fn((key: string, value: string) => {
@@ -15,7 +17,8 @@ const mockLocalStorage = (() => {
     }),
     removeItem: jest.fn((key: string) => {
       delete store[key];
-    })
+    }),
+    getAll: () => store,
   };
 })();
 
@@ -23,107 +26,164 @@ Object.defineProperty(window, 'localStorage', {
   value: mockLocalStorage
 });
 
-describe('useQuickAccess', () => {
+describe('useQuickAccess Hook', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockLocalStorage.clear();
   });
-
-  test('should initialize with default items when no saved preferences', () => {
-    const { result } = renderHook(() => useQuickAccess('/dashboard'));
-    expect(result.current.filteredItems.length).toBeGreaterThan(0);
+  
+  test('initializes with defaultQuickLinks when no localStorage data', () => {
+    const { result } = renderHook(() => useQuickAccess());
+    
+    expect(result.current.filteredItems.length).toBe(defaultQuickLinks.length);
+    expect(mockLocalStorage.getItem).toHaveBeenCalledWith('quickAccessLinks');
   });
-
-  test('should load saved preferences from localStorage', () => {
-    // Set up mock localStorage with saved preferences
-    const savedItems = ['market-data', 'trade', 'reports'];
-    mockLocalStorage.setItem('quickAccessItems_dashboard', JSON.stringify(savedItems));
+  
+  test('loads data from localStorage when available', () => {
+    const savedIds = ['documents', 'reports', 'users'];
+    mockLocalStorage.setItem('quickAccessLinks', JSON.stringify(savedIds));
     
-    const { result } = renderHook(() => useQuickAccess('/dashboard'));
+    const { result } = renderHook(() => useQuickAccess());
     
-    // Verify that items were loaded from localStorage
-    expect(mockLocalStorage.getItem).toHaveBeenCalledWith('quickAccessItems_dashboard');
-    expect(result.current.visibleItems).toEqual(savedItems);
+    expect(result.current.filteredItems.length).toBe(3);
+    expect(result.current.filteredItems.map(item => item.id)).toEqual(savedIds);
   });
-
-  test('should update temporarySelection when toggleItem is called', () => {
-    const { result } = renderHook(() => useQuickAccess('/dashboard'));
+  
+  test('handles invalid localStorage data gracefully', () => {
+    mockLocalStorage.setItem('quickAccessLinks', 'invalid json');
     
-    // Toggle an item in the temporary selection
+    const { result } = renderHook(() => useQuickAccess());
+    
+    // Should fallback to defaults
+    expect(result.current.filteredItems.length).toBe(defaultQuickLinks.length);
+    expect(result.current.error).toBe('Failed to load saved quick links. Using defaults.');
+  });
+  
+  test('toggleItem adds and removes items from temporarySelection', () => {
+    const { result } = renderHook(() => useQuickAccess());
+    
+    // Open the customize dialog to set temporarySelection
     act(() => {
       result.current.handleCustomizeOpen();
-      result.current.toggleItem('market-data');
     });
     
-    // Check if the item was toggled in temporary selection
-    const itemIndex = result.current.temporarySelection.indexOf('market-data');
-    if (itemIndex > -1) {
-      expect(itemIndex).toBeGreaterThan(-1);
-    } else {
-      // Item might have been removed, check it's not in the array
-      expect(result.current.temporarySelection.includes('market-data')).toBe(false);
-    }
+    const initialLength = result.current.temporarySelection.length;
+    const newItemId = 'entity'; // An item not in default selection
     
-    // Toggle it again to add it back
+    // Add a new item
     act(() => {
-      result.current.toggleItem('market-data');
+      result.current.toggleItem(newItemId);
     });
     
-    // Now it should be either added or removed again
-    const newItemIndex = result.current.temporarySelection.indexOf('market-data');
-    if (itemIndex > -1) {
-      expect(newItemIndex).toBe(-1);
-    } else {
-      expect(newItemIndex).toBeGreaterThan(-1);
-    }
-  });
-
-  test('should save preferences to localStorage when handleCustomizeSave is called', () => {
-    const { result } = renderHook(() => useQuickAccess('/dashboard'));
+    expect(result.current.temporarySelection.length).toBe(initialLength + 1);
+    expect(result.current.temporarySelection).toContain(newItemId);
     
-    // Open customize dialog and make some changes
+    // Remove the same item
+    act(() => {
+      result.current.toggleItem(newItemId);
+    });
+    
+    expect(result.current.temporarySelection.length).toBe(initialLength);
+    expect(result.current.temporarySelection).not.toContain(newItemId);
+  });
+  
+  test('handleCustomizeSave updates localStorage and selection', () => {
+    const { result } = renderHook(() => useQuickAccess());
+    
+    // Open the customize dialog
     act(() => {
       result.current.handleCustomizeOpen();
-      result.current.toggleItem('market-data');
+    });
+    
+    // Modify the selection
+    act(() => {
+      result.current.toggleItem('entity');
+    });
+    
+    // Initial filteredItems count
+    const initialCount = result.current.filteredItems.length;
+    
+    // Save changes
+    act(() => {
       result.current.handleCustomizeSave();
     });
     
-    // Check if localStorage was updated
+    // Should have saved to localStorage
     expect(mockLocalStorage.setItem).toHaveBeenCalled();
-    expect(mockLocalStorage.setItem.mock.calls[0][0]).toBe('quickAccessItems_dashboard');
+    // Should have updated the filteredItems
+    expect(result.current.filteredItems.length).toBe(initialCount + 1);
+    // Dialog should be closed
+    expect(result.current.isCustomizing).toBe(false);
   });
   
-  test('should handle invalid localStorage data gracefully', () => {
-    // Set invalid data in localStorage
-    mockLocalStorage.setItem('quickAccessItems_dashboard', 'invalid-json');
+  test('resetToDefaults reverts to default selection', () => {
+    // Start with custom selection
+    const customIds = ['documents', 'tax'];
+    mockLocalStorage.setItem('quickAccessLinks', JSON.stringify(customIds));
     
-    // This should not throw an error
-    const { result } = renderHook(() => useQuickAccess('/dashboard'));
+    const { result } = renderHook(() => useQuickAccess());
     
-    // Should fall back to default items
-    expect(result.current.filteredItems.length).toBeGreaterThan(0);
+    // Verify initial custom state
+    expect(result.current.filteredItems.length).toBe(2);
+    
+    // Reset to defaults
+    act(() => {
+      result.current.resetToDefaults();
+    });
+    
+    // Should now have default items
+    expect(result.current.filteredItems.length).toBe(defaultQuickLinks.length);
+    expect(mockLocalStorage.setItem).toHaveBeenCalledWith('quickAccessLinks', 
+      JSON.stringify(defaultQuickLinks.map(item => item.id)));
   });
   
-  test('should use different storage keys for different paths', () => {
-    const { result: resultDashboard } = renderHook(() => useQuickAccess('/dashboard'));
-    const { result: resultAnalytics } = renderHook(() => useQuickAccess('/analytics'));
+  test('handles error when trying to save empty selection', () => {
+    const { result } = renderHook(() => useQuickAccess());
     
-    // Make changes to dashboard items
+    // Open customize and clear selection
     act(() => {
-      resultDashboard.current.handleCustomizeOpen();
-      resultDashboard.current.toggleItem('market-data');
-      resultDashboard.current.handleCustomizeSave();
+      result.current.handleCustomizeOpen();
+      // Clear the selection by toggling all items
+      const initialSelection = [...result.current.temporarySelection];
+      initialSelection.forEach(id => {
+        result.current.toggleItem(id);
+      });
     });
     
-    // Make changes to analytics items
+    // Try to save empty selection
     act(() => {
-      resultAnalytics.current.handleCustomizeOpen();
-      resultAnalytics.current.toggleItem('reports');
-      resultAnalytics.current.handleCustomizeSave();
+      result.current.handleCustomizeSave();
     });
     
-    // Check that separate storage keys were used
-    expect(mockLocalStorage.setItem).toHaveBeenCalledWith('quickAccessItems_dashboard', expect.any(String));
-    expect(mockLocalStorage.setItem).toHaveBeenCalledWith('quickAccessItems_analytics', expect.any(String));
+    // Should show error
+    expect(result.current.error).toBe('Please select at least one item');
+    // Dialog should remain open
+    expect(result.current.isCustomizing).toBe(true);
+  });
+  
+  test('clearError resets error state', () => {
+    const { result } = renderHook(() => useQuickAccess());
+    
+    // Create an error state
+    act(() => {
+      result.current.handleCustomizeOpen();
+      // Clear selection and try to save
+      const initialSelection = [...result.current.temporarySelection];
+      initialSelection.forEach(id => {
+        result.current.toggleItem(id);
+      });
+      result.current.handleCustomizeSave();
+    });
+    
+    // Verify error state
+    expect(result.current.error).toBeTruthy();
+    
+    // Clear error
+    act(() => {
+      result.current.clearError();
+    });
+    
+    // Error should be cleared
+    expect(result.current.error).toBeNull();
   });
 });

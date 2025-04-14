@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import QuickAccessItem from '../QuickAccessItem';
 import { FileText } from 'lucide-react';
 
@@ -41,5 +41,35 @@ describe('QuickAccessItem', () => {
     const iconContainer = screen.getByText('Test Item').parentElement?.querySelector('div');
     expect(iconContainer).toBeInTheDocument();
     expect(iconContainer).toHaveClass('bg-primary/10');
+  });
+
+  test('handles keyboard navigation correctly', () => {
+    const { container } = render(<QuickAccessItem item={mockItem} />);
+    
+    const linkElement = screen.getByText('Test Item').closest('a');
+    
+    // Mock window.location.href for testing
+    const originalLocation = window.location;
+    delete window.location;
+    window.location = { ...originalLocation, href: '' };
+    
+    // Test Enter key
+    fireEvent.keyDown(linkElement as HTMLElement, { key: 'Enter' });
+    expect(window.location.href).toBe('/test-path');
+    
+    // Reset and test Space key
+    window.location.href = '';
+    fireEvent.keyDown(linkElement as HTMLElement, { key: ' ' });
+    expect(window.location.href).toBe('/test-path');
+    
+    // Restore original location
+    window.location = originalLocation;
+  });
+  
+  test('applies custom className when provided', () => {
+    render(<QuickAccessItem item={mockItem} className="custom-class" />);
+    
+    const linkElement = screen.getByText('Test Item').closest('a');
+    expect(linkElement).toHaveClass('custom-class');
   });
 });

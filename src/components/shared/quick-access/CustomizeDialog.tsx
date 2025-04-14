@@ -1,23 +1,26 @@
 
 import React from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { Check, X, AlertCircle } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { QuickLinkItem } from "./types";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Check, X } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 /**
  * CustomizeDialog Component
  * 
- * Allows users to customize which quick access items they want to display
+ * Allows users to select which quick access items they want to display
  * 
  * @param {Object} props - Component props
  * @param {boolean} props.isOpen - Whether the dialog is open
- * @param {Function} props.onOpenChange - Callback for when the dialog open state changes
+ * @param {Function} props.onOpenChange - Callback when dialog open state changes
  * @param {QuickLinkItem[]} props.items - All available quick access items
- * @param {string[]} props.selectedItems - IDs of the currently selected items
- * @param {Function} props.onItemToggle - Callback for when an item is toggled
- * @param {Function} props.onSave - Callback for when changes are saved
+ * @param {string[]} props.selectedItems - Currently selected item IDs
+ * @param {Function} props.onItemToggle - Callback when an item is toggled
+ * @param {Function} props.onSave - Callback when customization is saved
+ * @param {Function} [props.onReset] - Callback to reset to defaults
+ * @param {string} [props.error] - Error message to display
  */
 interface CustomizeDialogProps {
   isOpen: boolean;
@@ -26,6 +29,8 @@ interface CustomizeDialogProps {
   selectedItems: string[];
   onItemToggle: (id: string) => void;
   onSave: () => void;
+  onReset?: () => void;
+  error?: string | null;
 }
 
 const CustomizeDialog: React.FC<CustomizeDialogProps> = ({
@@ -34,72 +39,117 @@ const CustomizeDialog: React.FC<CustomizeDialogProps> = ({
   items,
   selectedItems,
   onItemToggle,
-  onSave
+  onSave,
+  onReset,
+  error
 }) => {
-  // Handle keyboard navigation for better accessibility
-  const handleKeyDown = (e: React.KeyboardEvent, id: string) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      onItemToggle(id);
+  // Group items by categories for better organization
+  const itemsByCategory: Record<string, QuickLinkItem[]> = items.reduce((acc, item) => {
+    const category = item.category || 'General';
+    if (!acc[category]) {
+      acc[category] = [];
     }
-  };
+    acc[category].push(item);
+    return acc;
+  }, {} as Record<string, QuickLinkItem[]>);
+
+  // Sort categories alphabetically
+  const sortedCategories = Object.keys(itemsByCategory).sort();
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md">
+      <DialogContent className="max-w-md max-h-[85vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Customize Quick Access</DialogTitle>
+          <DialogTitle className="text-xl font-semibold">Customize Quick Access</DialogTitle>
         </DialogHeader>
+        
+        {error && (
+          <Alert variant="destructive" className="mt-2">
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        )}
         
         <div className="py-4">
           <p className="text-sm text-muted-foreground mb-4">
-            Select the items you would like to see in your Quick Access panel.
+            Select the items you want to display in your Quick Access panel.
           </p>
           
-          <ScrollArea className="h-[300px] pr-4">
-            <div className="space-y-2" role="listbox" aria-label="Quick access options">
-              {items.map((item) => {
-                const isSelected = selectedItems.includes(item.id);
-                return (
-                  <div 
-                    key={item.id}
-                    className={`
-                      flex items-center justify-between p-2 rounded-md cursor-pointer 
-                      ${isSelected 
-                        ? 'bg-primary/10 border border-primary/30' 
-                        : 'hover:bg-muted'}
-                    `}
-                    onClick={() => onItemToggle(item.id)}
-                    onKeyDown={(e) => handleKeyDown(e, item.id)}
-                    role="option"
-                    aria-selected={isSelected}
-                    tabIndex={0}
-                  >
-                    <div className="flex items-center">
-                      <div className="mr-3 text-primary">
-                        {item.icon}
-                      </div>
-                      <span>{item.title}</span>
-                    </div>
-                    <div>
-                      {isSelected ? (
-                        <Check className="h-5 w-5 text-primary" aria-hidden="true" />
-                      ) : (
-                        <X className="h-5 w-5 text-muted-foreground/50" aria-hidden="true" />
+          <div className="space-y-6">
+            {sortedCategories.map(category => (
+              <div key={category} className="space-y-2">
+                {sortedCategories.length > 1 && (
+                  <h3 className="text-sm font-medium text-muted-foreground">{category}</h3>
+                )}
+                <div className="space-y-1">
+                  {itemsByCategory[category].map((item) => (
+                    <div
+                      key={item.id}
+                      onClick={() => onItemToggle(item.id)}
+                      className={cn(
+                        "flex items-center p-2 rounded-md cursor-pointer transition-colors",
+                        selectedItems.includes(item.id) 
+                          ? "bg-primary/10 hover:bg-primary/20" 
+                          : "hover:bg-accent"
                       )}
+                      role="checkbox"
+                      aria-checked={selectedItems.includes(item.id)}
+                      tabIndex={0}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          onItemToggle(item.id);
+                        }
+                      }}
+                    >
+                      <div className="mr-3 text-sm">
+                        {selectedItems.includes(item.id) ? (
+                          <Check className="h-5 w-5 text-primary" />
+                        ) : (
+                          <X className="h-5 w-5 text-muted-foreground/50" />
+                        )}
+                      </div>
+                      <div className="flex items-center gap-3 flex-1">
+                        <div className="rounded-full p-1 bg-primary/10 text-primary">
+                          {item.icon}
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium">{item.title}</p>
+                          <p className="text-xs text-muted-foreground">{item.description}</p>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
-            </div>
-          </ScrollArea>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
         
-        <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
-            Cancel
-          </Button>
-          <Button onClick={onSave} data-testid="save-changes-button">
+        <DialogFooter className="flex flex-col sm:flex-row gap-2 sm:justify-between">
+          <div className="flex gap-2 order-2 sm:order-1">
+            <Button 
+              variant="outline" 
+              onClick={() => onOpenChange(false)}
+              className="flex-1 sm:flex-none"
+            >
+              Cancel
+            </Button>
+            {onReset && (
+              <Button 
+                variant="secondary" 
+                onClick={onReset}
+                className="flex-1 sm:flex-none"
+              >
+                Reset to Default
+              </Button>
+            )}
+          </div>
+          <Button 
+            onClick={onSave} 
+            className="order-1 sm:order-2"
+            disabled={selectedItems.length === 0}
+          >
             Save Changes
           </Button>
         </DialogFooter>
@@ -108,4 +158,4 @@ const CustomizeDialog: React.FC<CustomizeDialogProps> = ({
   );
 };
 
-export default React.memo(CustomizeDialog);
+export default CustomizeDialog;

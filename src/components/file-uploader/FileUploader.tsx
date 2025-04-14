@@ -1,6 +1,6 @@
 
 import React, { useCallback, useState } from 'react';
-import { Upload, AlertCircle, X, File, CheckCircle } from 'lucide-react';
+import { Upload, AlertCircle, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useDropzone } from 'react-dropzone';
 import { cn } from '@/lib/utils';
@@ -8,33 +8,37 @@ import { FilePreview } from './FilePreview';
 
 export interface FileUploaderProps {
   onFilesSelected: (files: File[]) => void;
+  initialFiles?: File[];
   maxFiles?: number;
   maxSize?: number;
-  acceptedFileTypes?: string[];
+  accept?: string; 
   multiple?: boolean;
   className?: string;
   label?: string;
   description?: string;
   showPreview?: boolean;
-  initialFiles?: File[];
   error?: string;
+  disabled?: boolean;
+  customFileDeleteButton?: (file: File) => React.ReactNode;
 }
 
 const FileUploader: React.FC<FileUploaderProps> = ({
   onFilesSelected,
+  initialFiles = [],
   maxFiles = 5,
   maxSize = 5 * 1024 * 1024, // 5MB default
-  acceptedFileTypes = ['image/*', 'application/pdf'],
+  accept = 'image/*,application/pdf',
   multiple = true,
   className,
   label = 'Upload files',
   description = 'Drag and drop files here or click to browse',
   showPreview = true,
-  initialFiles = [],
-  error
+  error: externalError,
+  disabled = false,
+  customFileDeleteButton
 }) => {
   const [files, setFiles] = useState<File[]>(initialFiles);
-  const [fileError, setFileError] = useState<string | null>(error || null);
+  const [fileError, setFileError] = useState<string | null>(externalError || null);
 
   const onDrop = useCallback((acceptedFiles: File[], rejectedFiles: any[]) => {
     // Handle rejected files
@@ -66,14 +70,20 @@ const FileUploader: React.FC<FileUploaderProps> = ({
     }
   }, [files, maxFiles, multiple, onFilesSelected]);
 
+  // Convert accept string format to the format expected by react-dropzone
+  const getAcceptFormat = (acceptString: string) => {
+    return acceptString.split(',').reduce((acc, type) => {
+      acc[type.trim()] = [];
+      return acc;
+    }, {} as Record<string, string[]>);
+  };
+
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
-    accept: acceptedFileTypes.reduce((acc, type) => {
-      acc[type] = [];
-      return acc;
-    }, {} as Record<string, string[]>),
+    accept: getAcceptFormat(accept),
     maxSize,
-    multiple
+    multiple,
+    disabled
   });
 
   const removeFile = (index: number) => {
@@ -95,6 +105,7 @@ const FileUploader: React.FC<FileUploaderProps> = ({
           "border-2 border-dashed rounded-lg p-4 text-center cursor-pointer transition-colors",
           isDragActive ? "border-primary bg-primary/5" : "border-gray-300 hover:bg-gray-50",
           fileError && "border-red-500 bg-red-50",
+          disabled && "opacity-50 cursor-not-allowed",
           className
         )}
       >
@@ -123,6 +134,7 @@ const FileUploader: React.FC<FileUploaderProps> = ({
               variant="outline"
               size="sm"
               onClick={e => e.stopPropagation()}
+              disabled={disabled}
             >
               Browse files
             </Button>

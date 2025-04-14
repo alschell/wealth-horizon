@@ -2,11 +2,16 @@
 import { useState, useCallback } from 'react';
 import { useToast } from './use-toast';
 import { 
-  handleError, 
   parseError, 
-  type ErrorHandlerOptions,
-  type ErrorResponse 
+  type ErrorHandlerOptions
 } from '@/utils/errorHandling/errorHandlingCore';
+
+// Define proper error response type
+export interface ErrorResponse {
+  message: string;
+  code?: string;
+  details?: Record<string, any>;
+}
 
 /**
  * Hook for consistent error handling throughout the application
@@ -20,7 +25,7 @@ export function useErrorHandler(defaultOptions: ErrorHandlerOptions = {}) {
    */
   const handleErrorWithState = useCallback((error: unknown, options: ErrorHandlerOptions = {}) => {
     const mergedOptions = { ...defaultOptions, ...options };
-    const errorDetails = handleError(error, mergedOptions);
+    const errorDetails = parseError(error);
     setLastError(errorDetails);
     return errorDetails;
   }, [defaultOptions]);

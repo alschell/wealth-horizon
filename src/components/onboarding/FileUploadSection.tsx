@@ -25,11 +25,11 @@ const FileUploadSection: React.FC<FileUploadSectionProps> = ({
       <CardContent className="p-5">
         <FileUploader
           onFilesSelected={handleBulkFilesSelected}
-          existingFiles={uploadedFiles}
+          initialFiles={uploadedFiles}
           multiple={true}
           accept={allowedFileTypes}
           label={title}
-          maxSize={maxFileSize}
+          maxSize={maxFileSize * 1024 * 1024}
           disabled={disabled}
         />
       </CardContent>

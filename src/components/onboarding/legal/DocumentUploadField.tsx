@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useCallback } from "react";
 import { Label } from "@/components/ui/label";
 import FileUploader from "@/components/file-uploader";
 import { Button } from "@/components/ui/button";
@@ -33,7 +33,7 @@ const DocumentUploadField: React.FC<DocumentUploadFieldProps> = ({
   maxSize = 10,
   label = "Upload Legal Document"
 }) => {
-  const existingFiles = file ? [file] : [];
+  const initialFiles = file ? [file] : [];
   
   const handleCustomFileDelete = () => {
     if (onFileDelete) {
@@ -42,6 +42,21 @@ const DocumentUploadField: React.FC<DocumentUploadFieldProps> = ({
       onFileClear();
     }
   };
+
+  const customDeleteButton = useCallback((file: File) => (
+    <Button
+      type="button"
+      variant="ghost"
+      size="sm"
+      className="text-gray-500 hover:text-red-500 p-2 h-auto"
+      onClick={handleCustomFileDelete}
+      aria-label="Remove document"
+      disabled={disabled}
+    >
+      <Trash2 className="h-5 w-5" />
+      <span className="sr-only">Remove document</span>
+    </Button>
+  ), [handleCustomFileDelete, disabled]);
 
   return (
     <div className="space-y-2">
@@ -58,25 +73,12 @@ const DocumentUploadField: React.FC<DocumentUploadFieldProps> = ({
         <FileUploader
           accept={accept}
           multiple={false}
-          maxSize={maxSize}
+          maxSize={maxSize * 1024 * 1024}
           onFilesSelected={onFileSelected}
-          existingFiles={existingFiles}
+          initialFiles={initialFiles}
           label={label}
           disabled={disabled}
-          customFileDeleteButton={(file) => (
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              className="text-gray-500 hover:text-red-500 p-2 h-auto"
-              onClick={handleCustomFileDelete}
-              aria-label="Remove document"
-              disabled={disabled}
-            >
-              <Trash2 className="h-5 w-5" />
-              <span className="sr-only">Remove document</span>
-            </Button>
-          )}
+          customFileDeleteButton={customDeleteButton}
         />
       </div>
       

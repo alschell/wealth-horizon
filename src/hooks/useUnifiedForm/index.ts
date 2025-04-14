@@ -37,9 +37,16 @@ export function useUnifiedForm<T extends Record<string, any>>(props: UseUnifiedF
     isSuccess: false
   });
 
-  const clearError = createErrorClearer((errors) => {
-    setFormState(prev => ({ ...prev, errors }));
-  });
+  const clearError = useCallback((field: keyof T) => {
+    setFormState(prev => {
+      const newErrors = { ...prev.errors };
+      delete newErrors[field as string];
+      return {
+        ...prev,
+        errors: newErrors
+      };
+    });
+  }, []);
 
   // Handle input changes
   const handleChange = useCallback((
@@ -58,7 +65,7 @@ export function useUnifiedForm<T extends Record<string, any>>(props: UseUnifiedF
     }));
     
     clearError(name as keyof T);
-  }, []);
+  }, [clearError]);
 
   // Handle field blur
   const handleBlur = useCallback((field: keyof T) => {
@@ -78,7 +85,7 @@ export function useUnifiedForm<T extends Record<string, any>>(props: UseUnifiedF
     }));
     
     clearError(field);
-  }, []);
+  }, [clearError]);
 
   // Set multiple field values at once
   const setFieldValues = useCallback((fields: Partial<T>) => {
@@ -100,7 +107,7 @@ export function useUnifiedForm<T extends Record<string, any>>(props: UseUnifiedF
     Object.keys(fields).forEach(field => {
       clearError(field as keyof T);
     });
-  }, []);
+  }, [clearError]);
 
   // Set a field error
   const setFieldError = useCallback((field: keyof T, message: string) => {

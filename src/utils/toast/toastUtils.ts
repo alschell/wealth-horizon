@@ -21,20 +21,22 @@ export function showToast(
 ): void {
   const { duration, actionLabel, actionFn, onDismiss } = options;
   
-  toast({
+  const toastOptions: any = {
     title,
     description,
     variant: variant === "success" ? "default" : variant === "info" ? "default" : variant,
-    duration,
-    // Include action if provided
-    ...(actionLabel && actionFn ? {
-      action: (
-        <button onClick={actionFn} className="px-3 py-1 rounded bg-primary text-primary-foreground text-xs">
-          {actionLabel}
-        </button>
-      )
-    } : {})
-  });
+    duration
+  };
+  
+  // Include action if provided
+  if (actionLabel && actionFn) {
+    toastOptions.action = {
+      label: actionLabel,
+      onClick: actionFn
+    };
+  }
+  
+  toast(toastOptions);
   
   // Call onDismiss if provided
   if (onDismiss) {

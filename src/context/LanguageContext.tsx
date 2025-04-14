@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useCallback, ReactNode, useEffect } from 'react';
 
 type Language = 'en' | 'zh' | 'es' | 'ar' | 'pt' | 'ru' | 'ja' | 'fr' | 'de' | 'ko';
@@ -544,7 +543,7 @@ const translations: Record<Language, Record<string, string>> = {
     testimonials: '추천사',
     contact: '연락처',
     login: '로그인',
-    contactUs: '문의하기',
+    contactUs: '문��하기',
     contactUsSubtitle: '<span class="text-indigo-600">웰스</span>호라이즌이 귀하의 자산 관리를 어떻게 변화시킬 수 있는지에 대한 질문이 있으신가요?',
     getInTouch: '저희 팀에게 연락하세요.',
     
@@ -601,12 +600,13 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 
 export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) => {
   const [language, setLanguage] = useState<Language>('en');
+  const [, forceUpdate] = useState({});
 
   // Force a complete re-render when language changes
   useEffect(() => {
-    // This effect intentionally left empty to ensure the context 
-    // update triggers a re-render across the app
     console.log(`Language changed to: ${language}`);
+    // Force update to trigger re-renders of components using the context
+    forceUpdate({});
   }, [language]);
 
   // Use useCallback to ensure getLocalizedText doesn't change identity on rerenders
@@ -618,15 +618,12 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
     return translations[language][key] || key;
   }, [language]);
 
-  // Force the context to rerender when language changes
-  const contextValue = React.useMemo(() => ({
-    language,
-    setLanguage,
-    getLocalizedText
-  }), [language, getLocalizedText]);
-
   return (
-    <LanguageContext.Provider value={contextValue}>
+    <LanguageContext.Provider value={{
+      language,
+      setLanguage,
+      getLocalizedText
+    }}>
       {children}
     </LanguageContext.Provider>
   );

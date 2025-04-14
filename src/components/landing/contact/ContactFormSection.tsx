@@ -11,7 +11,9 @@ const ContactFormSection: React.FC = () => {
       <div className="max-w-7xl mx-auto px-6">
         <FadeIn>
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900"><LocalizedText textKey="contactUs" /></h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
+              <LocalizedText textKey="contactUs" />
+            </h2>
             <p className="mt-4 text-xl text-gray-600 mx-auto max-w-5xl">
               <LocalizedText 
                 textKey="contactUsSubtitle" 

@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import LanguageSelector from './LanguageSelector';
@@ -7,9 +7,28 @@ import { useLocalizedText } from '@/components/ui/localized-text';
 
 const HomeNavigation: React.FC = () => {
   const { t } = useLocalizedText();
+  const [scrolled, setScrolled] = useState(false);
+  
+  // Add scroll event listener to detect when to show shadow
+  useEffect(() => {
+    const handleScroll = () => {
+      const offset = window.scrollY;
+      if (offset > 10) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
   
   return (
-    <header className="fixed w-full bg-white z-50 shadow-sm">
+    <header className={`fixed w-full bg-white z-50 transition-shadow duration-300 ${scrolled ? 'shadow-sm' : ''}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
           {/* Logo and Navigation Links */}

@@ -112,4 +112,35 @@ export function withErrorBoundary<P extends object>(
   return WrappedComponent;
 }
 
+/**
+ * HOC to wrap a component with a custom error fallback
+ */
+export function withCustomErrorFallback<P extends object, FallbackProps extends {error?: Error}>(
+  Component: React.ComponentType<P>,
+  FallbackComponent: React.ComponentType<FallbackProps>
+): React.ComponentType<P> {
+  return class WithCustomErrorFallback extends React.Component<P, {hasError: boolean; error?: Error}> {
+    constructor(props: P) {
+      super(props);
+      this.state = { hasError: false };
+    }
+
+    static getDerivedStateFromError(error: Error) {
+      return { hasError: true, error };
+    }
+
+    componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+      console.error("Error caught by withCustomErrorFallback:", error, errorInfo);
+    }
+
+    render() {
+      if (this.state.hasError) {
+        return <FallbackComponent error={this.state.error} {...{} as any} />;
+      }
+
+      return <Component {...this.props} />;
+    }
+  };
+}
+
 export default ErrorBoundary;

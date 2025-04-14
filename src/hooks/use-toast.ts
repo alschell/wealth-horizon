@@ -1,6 +1,7 @@
 
 import { toast as sonnerToast } from "sonner";
-import { Toast, toast as defaultToast, useToast as useDefaultToast } from "@/components/ui/toast";
+import { ToastAction, type ToastProps, type ToastActionElement } from "@/components/ui/toast";
+import { useToast as useToastPrimitive } from "@/components/ui/use-toast";
 
 // Re-export the types
 export * from "@/components/ui/toast";
@@ -28,12 +29,20 @@ export function showInfoToast(title: string, message: string) {
   });
 }
 
+export interface Toast extends ToastProps {
+  id?: string;
+  title?: React.ReactNode;
+  description?: React.ReactNode;
+  action?: ToastActionElement;
+}
+
 export function toast(props: Toast) {
-  return defaultToast(props);
+  const { toast } = useToastPrimitive();
+  return toast(props);
 }
 
 export function useToast() {
-  return useDefaultToast();
+  return useToastPrimitive();
 }
 
 // Alternative toast using sonner

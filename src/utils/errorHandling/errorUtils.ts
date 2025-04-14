@@ -9,17 +9,6 @@ export interface ErrorResponse {
 }
 
 /**
- * Options for error handling
- */
-export interface ErrorHandlerOptions {
-  silent?: boolean;
-  fallbackMessage?: string;
-  logError?: boolean;
-  showToast?: boolean;
-  onError?: (error: unknown) => void;
-}
-
-/**
  * Safely extracts error message from various error types
  */
 export function getErrorMessage(error: unknown, fallbackMessage = "An unexpected error occurred"): string {

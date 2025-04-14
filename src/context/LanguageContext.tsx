@@ -472,7 +472,7 @@ const translations: Record<Language, Record<string, string>> = {
     actionableWealth: 'すべての資産を一つのプラットフォームで実行可能に',
     acrossAllBanks: 'すべての銀行、ブローカー、カストディアンにわたって',
     learnMore: '詳細を見る',
-    aiNativePlatform: 'AIネイティブプラットフォーム',
+    aiNativePlatform: 'AIネイティ���プラットフォーム',
     realTimeAnalytics: 'リアルタイム分析',
     soc2Certified: 'SOC 2認証',
     
@@ -770,6 +770,11 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
     
     // Store language preference in localStorage
     localStorage.setItem('preferredLanguage', newLanguage);
+    
+    // Dispatch a global event for all components to listen to
+    window.dispatchEvent(new CustomEvent('languageChange', { 
+      detail: { language: newLanguage } 
+    }));
   }, [language]);
 
   // Use useCallback to ensure getLocalizedText doesn't change identity on rerenders
@@ -778,7 +783,7 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
       console.warn(`Language ${language} not supported, falling back to English`);
       return translations.en[key] || key;
     }
-    return translations[language][key] || key;
+    return translations[language][key] || translations[language][key] === '' ? translations[language][key] : (translations.en[key] || key);
   }, [language]);
 
   // Load saved language preference on initial load
@@ -787,6 +792,10 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
     if (savedLanguage && Object.keys(translations).includes(savedLanguage)) {
       console.log(`Loading saved language preference: ${savedLanguage}`);
       setLanguage(savedLanguage);
+    } else {
+      // Set default language as English
+      console.log('No saved language preference, defaulting to English');
+      setLanguage('en');
     }
   }, []);
 

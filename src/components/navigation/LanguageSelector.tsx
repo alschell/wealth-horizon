@@ -48,15 +48,10 @@ const LanguageSelector: React.FC = () => {
       // Store the selection in localStorage for persistence
       localStorage.setItem('preferredLanguage', langCode);
       
-      // Dispatch a custom event before setting the language
-      window.dispatchEvent(new CustomEvent('languageChange', { 
-        detail: { language: langCode } 
-      }));
-      
       // Set the language in the context
       setLanguage(langCode as Language);
       
-      // Force reload the page to ensure all components update
+      // Force a full page reload to ensure all components update properly
       window.location.reload();
     }
     

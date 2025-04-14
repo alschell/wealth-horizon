@@ -20,6 +20,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToFeatures }) => {
   useEffect(() => {
     console.log("HeroSection component mounted");
     console.log("HeroSection container:", document.querySelector('section.relative'));
+    console.log("Current language:", language);
   }, []);
 
   // Force re-render when language changes
@@ -28,6 +29,19 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToFeatures }) => {
     forceUpdate({});
   }, [language]);
 
+  // Listen for language change events
+  useEffect(() => {
+    const handleLanguageChange = () => {
+      console.log("HeroSection detected language change event");
+      forceUpdate({});
+    };
+    
+    window.addEventListener('languageChange', handleLanguageChange);
+    return () => {
+      window.removeEventListener('languageChange', handleLanguageChange);
+    };
+  }, []);
+
   const scrollToContact = () => {
     const contactSection = document.getElementById('contact');
     if (contactSection) {
@@ -35,8 +49,9 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToFeatures }) => {
     }
   };
 
+  // Add key to force re-render when language changes
   return (
-    <section className="relative overflow-hidden">
+    <section key={`hero-section-${language}`} className="relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-br from-indigo-50 to-white -z-10"></div>
       <div className="max-w-7xl mx-auto px-6 py-24 md:py-32 lg:py-40 pt-24">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">

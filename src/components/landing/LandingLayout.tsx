@@ -37,6 +37,22 @@ const LandingLayout: React.FC = () => {
     }
   }, []);
   
+  // Listen for language change events
+  useEffect(() => {
+    const handleLanguageChange = (event: Event) => {
+      const customEvent = event as CustomEvent;
+      if (customEvent.detail?.language) {
+        console.log(`LandingLayout detected language change event to: ${customEvent.detail.language}`);
+        setLanguage(customEvent.detail.language);
+      }
+    };
+    
+    window.addEventListener('languageChange', handleLanguageChange);
+    return () => {
+      window.removeEventListener('languageChange', handleLanguageChange);
+    };
+  }, []);
+  
   // Force re-render when language changes if context is available
   useEffect(() => {
     if (!languageContextAvailable) return;

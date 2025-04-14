@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
-import { CheckCircle, Clock, BarChart3 } from "lucide-react";
+import { CheckCircle, Clock, BarChart3 } from "@/utils/icons";
 
 const OverviewCards: React.FC = () => {
   return (

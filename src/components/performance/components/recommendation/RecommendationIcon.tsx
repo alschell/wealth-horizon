@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Brain } from "lucide-react";
+import { Brain } from "@/utils/icons";
 
 type RecommendationIconProps = {
   isHighPriority: boolean;

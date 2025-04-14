@@ -46,4 +46,3 @@ After fixing the imports, you should be able to run the application with:
 ```
 npm run dev
 ```
-

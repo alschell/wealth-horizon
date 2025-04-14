@@ -79,6 +79,25 @@ export const {
   PlusCircle,
   MinusCircle,
   
+  // Additional icons needed by the codebase
+  Send,
+  Brain,
+  ArrowUp,
+  ArrowDown,
+  RefreshCcw,
+  Circle,
+  CheckCircle2,
+  BarChart3,
+  MapPin,
+  Video,
+  Target,
+  Users,
+  Loader2,
+  MessageCircle,
+  AlertTriangle,
+  BarChartHorizontal,
+  CalendarIcon,
+  
   // All other icons (available through the LucideIcons object)
   ...LucideIcons
 } = LucideIcons;

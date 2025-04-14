@@ -51,7 +51,7 @@ export const validateForm = <T>(
   if (result.errors) {
     return { data: null, errors: formatZodErrors(result.errors) };
   }
-  return result;
+  return result as { data: T; errors: null };
 };
 
 /**

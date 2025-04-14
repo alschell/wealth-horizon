@@ -15,10 +15,17 @@ export const showToast = (
   message?: string, 
   variant: ToastVariant = 'default'
 ) => {
+  // Map our custom variants to the available toast variants
+  const toastVariant = variant === 'success' || variant === 'info' 
+    ? 'default' 
+    : variant === 'warning' 
+      ? 'destructive' 
+      : variant;
+      
   toast({
     title,
     description: message,
-    variant: variant === 'success' ? 'default' : variant === 'info' ? 'default' : variant
+    variant: toastVariant
   });
 };
 

@@ -2,189 +2,170 @@
 import { useState, useCallback } from 'react';
 import { DocumentFileWithMetadata } from '../types';
 import { toast } from '@/components/ui/use-toast';
-
-// Utils for file validation
-const validateFile = (file: File): string | null => {
-  // Check file size (max 5MB)
-  const maxSize = 5 * 1024 * 1024; // 5MB
-  if (file.size > maxSize) {
-    return `File size exceeds 5MB limit (${(file.size / (1024 * 1024)).toFixed(2)}MB)`;
-  }
-
-  // Check file type
-  const allowedTypes = ['application/pdf', 'image/jpeg', 'image/png', 'image/gif'];
-  if (!allowedTypes.includes(file.type)) {
-    return `File type ${file.type} is not supported. Please upload PDF or image files.`;
-  }
-
-  return null;
-};
-
-// Utils for document validation
-const validateDocumentFields = (
-  documentType: string,
-  issueDate: string,
-  selectedFile: File | null
-): Record<string, boolean> => {
-  const errors: Record<string, boolean> = {};
-  
-  if (!documentType) errors.documentType = true;
-  if (!issueDate) errors.issueDate = true;
-  if (!selectedFile) errors.selectedFile = true;
-  
-  return errors;
-};
-
-// Utils for document creation
-const createDocument = (
-  documentType: string,
-  issueDate: string,
-  expiryDate: string,
-  selectedFile: File
-): DocumentFileWithMetadata => {
-  return {
-    id: `doc-${Date.now()}`,
-    file: selectedFile,
-    documentType,
-    issueDate,
-    expiryDate
-  };
-};
+import { useUnifiedForm } from '@/hooks/form/useUnifiedForm';
+import DocumentValidationUtil from './document/useDocumentValidationUtil';
+import { useDocumentFactory } from './document/useDocumentFactory';
 
 export interface UseDocumentCoreProps {
   onSave: (documents: DocumentFileWithMetadata[]) => void;
   initialDocuments?: DocumentFileWithMetadata[];
 }
 
+export interface DocumentFormValues {
+  documentType: string;
+  issueDate: string;
+  expiryDate: string;
+  selectedFile: File | null;
+}
+
 export const useDocumentCore = ({
   onSave,
   initialDocuments = []
 }: UseDocumentCoreProps) => {
-  // Document form state
-  const [documentType, setDocumentType] = useState<string>('');
-  const [issueDate, setIssueDate] = useState<string>('');
-  const [expiryDate, setExpiryDate] = useState<string>('');
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  
-  // Document list state
+  // State for the list of documents
   const [documentFiles, setDocumentFiles] = useState<DocumentFileWithMetadata[]>(initialDocuments);
   
-  // Validation state
-  const [errors, setErrors] = useState<Record<string, boolean>>({});
+  // State for file validation errors
   const [fileError, setFileError] = useState<string | null>(null);
   
   // Editing state
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [editingDocumentId, setEditingDocumentId] = useState<string | null>(null);
   
-  // Submission state
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  // Get document factory functions
+  const { createDocument, updateDocumentInList, removeDocumentFromList } = useDocumentFactory();
+  
+  // Use unified form for document form
+  const form = useUnifiedForm<DocumentFormValues>({
+    initialValues: {
+      documentType: '',
+      issueDate: '',
+      expiryDate: '',
+      selectedFile: null
+    },
+    validate: (values) => {
+      const errors: Record<string, string> = {};
+      
+      if (!values.documentType) errors.documentType = 'Document type is required';
+      if (!values.issueDate) errors.issueDate = 'Issue date is required';
+      if (!values.selectedFile) errors.selectedFile = 'A document file is required';
+      
+      return errors;
+    }
+  });
   
   // Handle file selection
   const handleFileSelected = useCallback((files: File[]) => {
     if (files.length === 0) return;
     
     const file = files[0]; // Only use the first file
-    const error = validateFile(file);
+    const error = DocumentValidationUtil.validateFile(file);
     
     if (error) {
       setFileError(error);
       return;
     }
     
-    setSelectedFile(file);
+    form.setValue('selectedFile', file);
     setFileError(null);
-    setErrors(prev => ({ ...prev, selectedFile: false }));
     
     toast({
       title: "File uploaded",
       description: "Document has been successfully uploaded.",
     });
-  }, []);
+  }, [form]);
   
   // Clear selected file
   const handleFileClear = useCallback(() => {
-    setSelectedFile(null);
+    form.setValue('selectedFile', null);
     setFileError(null);
-  }, []);
+  }, [form]);
   
   // Handle date changes
   const handleDateChange = useCallback((field: 'issueDate' | 'expiryDate', date?: Date) => {
-    if (field === 'issueDate') {
-      setIssueDate(date ? date.toISOString().split('T')[0] : '');
-      setErrors(prev => ({ ...prev, issueDate: false }));
+    if (date) {
+      form.setValue(field, date.toISOString().split('T')[0]);
     } else {
-      setExpiryDate(date ? date.toISOString().split('T')[0] : '');
+      form.setValue(field, '');
     }
-  }, []);
+  }, [form]);
   
   // Handle document type selection
   const handleDocumentTypeChange = useCallback((type: string) => {
-    setDocumentType(type);
-    setErrors(prev => ({ ...prev, documentType: false }));
-  }, []);
+    form.setValue('documentType', type);
+  }, [form]);
   
   // Add a new document
   const handleAddDocument = useCallback(() => {
-    // Validate required fields
-    const newErrors = validateDocumentFields(documentType, issueDate, selectedFile);
+    const { values } = form;
+    const { isValid, errors } = form.validateForm();
     
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
+    if (!isValid || !values.selectedFile) {
       return;
     }
     
     // Create new document with metadata
     const newDocument = createDocument(
-      documentType,
-      issueDate,
-      expiryDate,
-      selectedFile as File
+      values.documentType,
+      values.issueDate,
+      values.expiryDate,
+      values.selectedFile
     );
     
     // Add to list
-    const updatedDocuments = [...documentFiles, newDocument];
-    setDocumentFiles(updatedDocuments);
+    setDocumentFiles(prev => [...prev, newDocument]);
     
     // Reset form
-    resetForm();
+    form.resetForm();
     
     toast({
       title: "Document added",
       description: "The document has been added successfully.",
     });
-  }, [documentType, issueDate, expiryDate, selectedFile, documentFiles]);
+  }, [form, createDocument]);
+  
+  // Edit an existing document
+  const handleEditDocument = useCallback((documentId: string) => {
+    const documentToEdit = documentFiles.find(doc => doc.id === documentId);
+    
+    if (documentToEdit) {
+      form.setValues({
+        documentType: documentToEdit.documentType,
+        issueDate: documentToEdit.issueDate,
+        expiryDate: documentToEdit.expiryDate || '',
+        selectedFile: documentToEdit.file
+      });
+      
+      setIsEditing(true);
+      setEditingDocumentId(documentId);
+    }
+  }, [documentFiles, form]);
   
   // Update an existing document
   const handleUpdateDocument = useCallback(() => {
     if (!editingDocumentId) return;
     
-    // Validate required fields
-    const newErrors = validateDocumentFields(documentType, issueDate, selectedFile);
+    const { values } = form;
+    const { isValid } = form.validateForm();
     
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
+    if (!isValid || !values.selectedFile) {
       return;
     }
     
     // Update document
-    const updatedDocuments = documentFiles.map(doc => {
-      if (doc.id === editingDocumentId) {
-        return {
-          ...doc,
-          file: selectedFile as File,
-          documentType,
-          issueDate,
-          expiryDate
-        };
-      }
-      return doc;
-    });
-    
-    setDocumentFiles(updatedDocuments);
+    setDocumentFiles(prev => 
+      updateDocumentInList(
+        prev,
+        editingDocumentId,
+        values.documentType,
+        values.issueDate,
+        values.expiryDate,
+        values.selectedFile
+      )
+    );
     
     // Reset form and editing state
-    resetForm();
+    form.resetForm();
     setIsEditing(false);
     setEditingDocumentId(null);
     
@@ -192,53 +173,37 @@ export const useDocumentCore = ({
       title: "Document updated",
       description: "The document has been updated successfully.",
     });
-  }, [editingDocumentId, documentType, issueDate, expiryDate, selectedFile, documentFiles]);
-  
-  // Edit an existing document
-  const handleEditDocument = useCallback((documentId: string) => {
-    const documentToEdit = documentFiles.find(doc => doc.id === documentId);
-    
-    if (documentToEdit) {
-      setDocumentType(documentToEdit.documentType);
-      setIssueDate(documentToEdit.issueDate);
-      setExpiryDate(documentToEdit.expiryDate || '');
-      setSelectedFile(documentToEdit.file);
-      setIsEditing(true);
-      setEditingDocumentId(documentId);
-    }
-  }, [documentFiles]);
+  }, [editingDocumentId, form, updateDocumentInList]);
   
   // Cancel edit operation
   const handleCancelEdit = useCallback(() => {
-    resetForm();
+    form.resetForm();
     setIsEditing(false);
     setEditingDocumentId(null);
-  }, []);
+  }, [form]);
   
   // Remove a document
   const handleRemoveDocument = useCallback((documentId: string) => {
-    setDocumentFiles(prev => prev.filter(doc => doc.id !== documentId));
+    setDocumentFiles(prev => removeDocumentFromList(prev, documentId));
+    
     toast({
       title: "Document removed",
       description: "The document has been removed successfully.",
     });
-  }, []);
+  }, [removeDocumentFromList]);
   
   // Submit all documents
   const handleSubmit = useCallback(() => {
-    setIsSubmitting(true);
+    if (documentFiles.length === 0) {
+      toast({
+        title: "No documents",
+        description: "Please add at least one document.",
+        variant: "destructive"
+      });
+      return;
+    }
     
     try {
-      if (documentFiles.length === 0) {
-        toast({
-          title: "No documents",
-          description: "Please add at least one document.",
-          variant: "destructive"
-        });
-        setIsSubmitting(false);
-        return;
-      }
-      
       onSave(documentFiles);
       
       toast({
@@ -252,32 +217,27 @@ export const useDocumentCore = ({
         description: "An error occurred while saving documents.",
         variant: "destructive"
       });
-    } finally {
-      setIsSubmitting(false);
     }
   }, [documentFiles, onSave]);
-  
-  // Reset the form
-  const resetForm = useCallback(() => {
-    setDocumentType('');
-    setIssueDate('');
-    setExpiryDate('');
-    setSelectedFile(null);
-    setFileError(null);
-    setErrors({});
-  }, []);
-  
+
   return {
-    documentType,
-    issueDate,
-    expiryDate,
-    selectedFile,
+    // Form values from unified form
+    documentType: form.values.documentType,
+    issueDate: form.values.issueDate,
+    expiryDate: form.values.expiryDate,
+    selectedFile: form.values.selectedFile,
+    
+    // Lists and errors
     documentFiles,
-    errors,
+    errors: form.errors,
     fileError,
-    isSubmitting,
+    
+    // State flags
+    isSubmitting: form.isSubmitting,
     isEditing,
     editingDocumentId,
+    
+    // Event handlers
     handleFileSelected,
     handleFileClear,
     handleDateChange,
@@ -288,7 +248,9 @@ export const useDocumentCore = ({
     handleCancelEdit,
     handleRemoveDocument,
     handleSubmit,
-    resetForm,
+    
+    // Form methods
+    resetForm: form.resetForm,
     setDocumentFiles
   };
 };

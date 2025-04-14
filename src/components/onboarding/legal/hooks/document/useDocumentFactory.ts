@@ -2,7 +2,7 @@
 import { DocumentFileWithMetadata } from '../../types';
 
 /**
- * Hook providing document creation and manipulation functions
+ * Hook providing factory functions for document management
  */
 export function useDocumentFactory() {
   /**
@@ -24,21 +24,21 @@ export function useDocumentFactory() {
   };
 
   /**
-   * Updates an existing document in the document list
+   * Updates a document in a list of documents
    */
   const updateDocumentInList = (
-    documentFiles: DocumentFileWithMetadata[],
-    editingDocumentId: string,
+    documents: DocumentFileWithMetadata[],
+    id: string,
     documentType: string,
     issueDate: string,
     expiryDate: string,
-    selectedFile: File
+    file: File
   ): DocumentFileWithMetadata[] => {
-    return documentFiles.map(doc => {
-      if (doc.id === editingDocumentId) {
+    return documents.map(doc => {
+      if (doc.id === id) {
         return {
           ...doc,
-          file: selectedFile,
+          file,
           documentType,
           issueDate,
           expiryDate
@@ -49,13 +49,13 @@ export function useDocumentFactory() {
   };
 
   /**
-   * Removes a document from the document list
+   * Removes a document from a list of documents
    */
   const removeDocumentFromList = (
-    documentFiles: DocumentFileWithMetadata[],
-    documentId: string
+    documents: DocumentFileWithMetadata[],
+    id: string
   ): DocumentFileWithMetadata[] => {
-    return documentFiles.filter(doc => doc.id !== documentId);
+    return documents.filter(doc => doc.id !== id);
   };
 
   return {

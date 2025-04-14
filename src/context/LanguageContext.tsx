@@ -837,4 +837,4 @@ const translations: Record<Language, Record<string, string>> = {
     soc2Certified: 'SOC 2 zertifiziert',
     
     // Languages
-    english: 'Englisch
+    english:

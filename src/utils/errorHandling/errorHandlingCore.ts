@@ -21,7 +21,7 @@ export interface ErrorHandlerOptions {
   actionText?: string;
   action?: () => void;
   onError?: (error: unknown) => void;
-  componentName?: string; // Add this property to fix the error
+  componentName?: string;
 }
 
 /**
@@ -41,6 +41,25 @@ export function getErrorMessage(error: unknown, fallbackMessage = "An unexpected
   }
   
   return fallbackMessage;
+}
+
+/**
+ * Logs error details to the console
+ */
+export function logError(error: unknown, componentName?: string): void {
+  console.error(`Error${componentName ? ` in ${componentName}` : ''}:`, error);
+  
+  if (error instanceof Error && error.stack) {
+    console.error('Stack trace:', error.stack);
+  }
+}
+
+/**
+ * Creates a descriptive error with component context
+ */
+export function createContextualError(message: string, componentName: string): Error {
+  const error = new Error(`[${componentName}] ${message}`);
+  return error;
 }
 
 /**

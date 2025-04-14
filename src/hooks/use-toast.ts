@@ -1,38 +1,45 @@
 
-import { toast as sonnerToast, type ExternalToast } from "sonner";
+import { toast as sonnerToast } from "sonner";
+import { Toast, toast as defaultToast, useToast as useDefaultToast } from "@/components/ui/toast";
 
-export type ToastProps = {
-  title?: string;
-  description?: string;
-  variant?: "default" | "destructive";
-  className?: string;
-  duration?: number;
-};
+// Re-export the types
+export * from "@/components/ui/toast";
 
-/**
- * Custom toast function that wraps Sonner toast with our preferred API
- * @param props - Toast configuration options
- * @returns The toast instance
- */
-export function toast(props: ToastProps) {
-  const toastOptions: ExternalToast = {
-    description: props.description,
-    className: props.className,
-    duration: props.duration,
-  };
-
-  // Add variant-specific styling
-  if (props.variant === "destructive") {
-    toastOptions.className = `${toastOptions.className || ''} bg-destructive text-destructive-foreground`.trim();
-  }
-
-  return sonnerToast(props.title || "", toastOptions);
+export function showSuccessToast(title: string, message: string) {
+  toast({
+    title,
+    description: message,
+    variant: "default",
+  });
 }
 
-/**
- * Toast hook that returns the toast function for use in components
- * @returns Object containing the toast function
- */
+export function showErrorToast(title: string, message: string) {
+  toast({
+    title,
+    description: message,
+    variant: "destructive",
+  });
+}
+
+export function showInfoToast(title: string, message: string) {
+  toast({
+    title,
+    description: message,
+  });
+}
+
+export function toast(props: Toast) {
+  return defaultToast(props);
+}
+
 export function useToast() {
-  return { toast };
+  return useDefaultToast();
 }
+
+// Alternative toast using sonner
+export const sonner = {
+  success: (message: string, options?: any) => sonnerToast.success(message, options),
+  error: (message: string, options?: any) => sonnerToast.error(message, options),
+  info: (message: string, options?: any) => sonnerToast.info(message, options),
+  warning: (message: string, options?: any) => sonnerToast.warning(message, options),
+};

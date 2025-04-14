@@ -64,7 +64,7 @@ export function createFocusedChecker<T extends FieldValues>(
   return (name: Path<T>): boolean => {
     // Use hasOwnProperty to safely check if the field exists in touchedFields
     return Object.prototype.hasOwnProperty.call(form.formState.touchedFields, name) && 
-           !!form.formState.touchedFields[name as keyof typeof form.formState.touchedFields];
+           Boolean(form.formState.touchedFields[name as keyof typeof form.formState.touchedFields]);
   };
 }
 

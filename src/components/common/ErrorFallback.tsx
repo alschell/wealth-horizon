@@ -2,55 +2,77 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { AlertTriangle, RefreshCw } from 'lucide-react';
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+import { motion } from 'framer-motion';
 
 export interface ErrorFallbackProps {
   error?: Error;
   resetErrorBoundary?: () => void;
   message?: string;
   showReset?: boolean;
+  showDetails?: boolean;
+  errorInfo?: React.ErrorInfo;
 }
 
 /**
- * Default error fallback component for use with ErrorBoundary
+ * Unified error fallback component for use with ErrorBoundary
+ * Displays a user-friendly error message with optional reset functionality
  */
 const ErrorFallback: React.FC<ErrorFallbackProps> = ({
   error,
   resetErrorBoundary,
   message = "Something went wrong",
-  showReset = true
+  showReset = true,
+  showDetails = process.env.NODE_ENV !== 'production',
+  errorInfo
 }) => {
   return (
-    <div className="p-6 mx-auto my-8 bg-white border border-red-200 rounded-lg shadow-sm max-w-2xl">
-      <div className="flex flex-col items-center text-center space-y-4">
-        <div className="flex items-center justify-center w-12 h-12 text-red-500 bg-red-100 rounded-full">
-          <AlertTriangle className="w-6 h-6" />
-        </div>
-        
-        <h2 className="text-xl font-semibold text-gray-800">{message}</h2>
-        
-        {error && (
-          <div className="w-full p-4 mt-4 overflow-auto text-left text-sm bg-gray-50 border border-gray-200 rounded-md">
-            <p className="font-medium text-red-600">{error.message}</p>
-            {error.stack && (
-              <pre className="mt-2 text-xs text-gray-600 whitespace-pre-wrap">
-                {error.stack.split('\n').slice(1, 4).join('\n')}
+    <motion.div
+      className="p-6 mx-auto my-8 rounded-lg shadow-sm max-w-2xl"
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+    >
+      <Alert variant="destructive" className="mb-4">
+        <AlertTriangle className="h-4 w-4" />
+        <AlertTitle className="text-lg">{message}</AlertTitle>
+        <AlertDescription className="mt-2">
+          <p className="mb-2">
+            {error?.message || "An unexpected error occurred."}
+          </p>
+          
+          {showDetails && (error || errorInfo) && (
+            <details className="mt-2 text-xs">
+              <summary className="cursor-pointer text-sm">
+                Technical details
+              </summary>
+              <pre className="mt-2 whitespace-pre-wrap bg-gray-800 text-white p-2 rounded overflow-auto max-h-[200px]">
+                {errorInfo?.componentStack || error?.stack?.split('\n').slice(0, 5).join('\n')}
               </pre>
-            )}
-          </div>
-        )}
-        
-        {showReset && resetErrorBoundary && (
+            </details>
+          )}
+        </AlertDescription>
+      </Alert>
+      
+      {showReset && resetErrorBoundary && (
+        <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 mt-4">
           <Button 
             variant="outline"
-            className="mt-4 flex items-center space-x-2"
+            className="flex items-center"
             onClick={resetErrorBoundary}
           >
-            <RefreshCw className="w-4 h-4 mr-2" />
+            <RefreshCw className="h-4 w-4 mr-2" />
             Try Again
           </Button>
-        )}
-      </div>
-    </div>
+          <Button 
+            className="flex items-center"
+            onClick={() => window.location.reload()}
+          >
+            Reload page
+          </Button>
+        </div>
+      )}
+    </motion.div>
   );
 };
 

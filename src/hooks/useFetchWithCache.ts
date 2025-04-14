@@ -21,6 +21,11 @@ export interface FetchWithCacheOptions<TData, TError>
    * Whether to show a toast notification on error
    */
   showErrorToast?: boolean;
+  
+  /**
+   * Component name for better error logging
+   */
+  componentName?: string;
 }
 
 /**
@@ -39,10 +44,11 @@ export function useFetchWithCache<TData, TError = unknown>(
     onError,
     errorMessage = 'Failed to fetch data',
     showErrorToast = true,
+    componentName,
     ...queryOptions
   } = options;
   
-  return useQuery({
+  return useQuery<TData, TError>({
     queryKey,
     queryFn: async () => {
       try {
@@ -55,7 +61,8 @@ export function useFetchWithCache<TData, TError = unknown>(
         handleError(error, {
           fallbackMessage: errorMessage,
           showToast: showErrorToast,
-          onError: onError as (error: unknown) => void
+          onError: onError as (error: unknown) => void,
+          componentName
         });
         throw error; // Let React Query handle the error state
       }

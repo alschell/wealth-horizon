@@ -16,15 +16,15 @@ export const showToast = (
   variant: ToastVariant = 'default'
 ) => {
   // Map our custom variants to the available toast variants
-  // Toast component only accepts 'default' or 'destructive'
-  const toastVariant = variant === 'warning' || variant === 'destructive' 
-    ? 'destructive' 
-    : 'default';
+  const mappedVariant = 
+    variant === 'success' || variant === 'info' || variant === 'default' 
+      ? 'default' 
+      : 'destructive';
       
   toast({
     title,
     description: message,
-    variant: toastVariant
+    variant: mappedVariant
   });
 };
 

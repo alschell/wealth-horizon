@@ -4,14 +4,12 @@ import { useToast } from './use-toast';
 import { 
   handleError, 
   parseError, 
-  tryCatch, 
-  withErrorHandling,
   type ErrorHandlerOptions,
   type ErrorResponse 
 } from '@/utils/errorHandling/errorHandlingCore';
 
 /**
- * Unified hook for error handling
+ * Hook for consistent error handling throughout the application
  */
 export function useErrorHandler(defaultOptions: ErrorHandlerOptions = {}) {
   const [lastError, setLastError] = useState<ErrorResponse | null>(null);
@@ -85,13 +83,3 @@ export function useErrorHandler(defaultOptions: ErrorHandlerOptions = {}) {
     parseError
   };
 }
-
-// Re-export the core utilities for direct usage
-export { 
-  handleError, 
-  withErrorHandling, 
-  tryCatch, 
-  parseError,
-  type ErrorHandlerOptions,
-  type ErrorResponse
-} from '@/utils/errorHandling/errorHandlingCore';

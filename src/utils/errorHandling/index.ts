@@ -17,14 +17,10 @@ export {
   type ErrorHandlerOptions
 } from './errorHandlingCore';
 
-// Re-export error boundary HOCs
+// Re-export error boundary HOCs from common components
 export { 
-  withErrorBoundary,
-  withCustomErrorFallback
-} from '@/components/shared/ErrorBoundary';
+  withErrorBoundary
+} from '@/components/common/ErrorBoundary';
 
-// Legacy utilities for backward compatibility
-export {
-  handleError as handleErrorLegacy,
-  withErrorHandling as withErrorHandlingLegacy
-} from './errorHandlingUtils';
+// Re-export error hook for functional components
+export { useErrorHandler } from '@/hooks/useErrorHandler';

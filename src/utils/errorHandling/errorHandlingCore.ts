@@ -105,7 +105,7 @@ export function handleError(
 ): ErrorResponse {
   const { 
     fallbackMessage = "An unexpected error occurred",
-    logError = true,
+    logError: shouldLogError = true,
     showToast = true,
     silent = false,
     actionText,
@@ -120,23 +120,23 @@ export function handleError(
   // Parse error details
   const errorDetails = parseError(error);
   
-  // Add component context to error message if provided
-  if (componentName && !silent) {
-    console.error(`Error in ${componentName}:`, {
-      message: errorMessage,
-      code: errorDetails.code,
-      details: errorDetails.details,
-      original: error
-    });
-  }
-  // Log error to console if enabled
-  else if (logError && !silent) {
-    console.error("Error:", {
-      message: errorMessage,
-      code: errorDetails.code,
-      details: errorDetails.details,
-      original: error
-    });
+  // Log error if enabled and not silent
+  if (shouldLogError && !silent) {
+    if (componentName) {
+      console.error(`Error in ${componentName}:`, {
+        message: errorMessage,
+        code: errorDetails.code,
+        details: errorDetails.details,
+        original: error
+      });
+    } else {
+      console.error("Error:", {
+        message: errorMessage,
+        code: errorDetails.code,
+        details: errorDetails.details,
+        original: error
+      });
+    }
   }
   
   // Show toast notification if enabled and not silent

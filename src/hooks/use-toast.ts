@@ -1,48 +1,56 @@
 
 import { toast as sonnerToast } from "sonner";
 import { ToastAction, type ToastProps, type ToastActionElement } from "@/components/ui/toast";
-import { useToast as useToastPrimitive } from "@/components/ui/use-toast";
 
 // Re-export the types
 export * from "@/components/ui/toast";
 
 export function showSuccessToast(title: string, message: string) {
-  toast({
-    title,
-    description: message,
-    variant: "default",
+  sonnerToast.success(message, {
+    description: title
   });
 }
 
 export function showErrorToast(title: string, message: string) {
-  toast({
-    title,
-    description: message,
-    variant: "destructive",
+  sonnerToast.error(message, {
+    description: title
   });
 }
 
 export function showInfoToast(title: string, message: string) {
-  toast({
-    title,
-    description: message,
+  sonnerToast.info(message, {
+    description: title
   });
 }
 
-export interface Toast extends ToastProps {
+export interface Toast {
   id?: string;
   title?: React.ReactNode;
   description?: React.ReactNode;
   action?: ToastActionElement;
+  variant?: "default" | "destructive";
 }
 
 export function toast(props: Toast) {
-  const { toast } = useToastPrimitive();
-  return toast(props);
+  const { title, description, variant, action } = props;
+  
+  if (variant === "destructive") {
+    return sonnerToast.error(title as string, {
+      description: description as string,
+    });
+  }
+  
+  return sonnerToast(title as string, {
+    description: description as string,
+  });
 }
 
+// Stub implementation for useToast that returns the toast function
 export function useToast() {
-  return useToastPrimitive();
+  return {
+    toast,
+    dismiss: sonnerToast.dismiss
+  };
 }
 
 // Alternative toast using sonner

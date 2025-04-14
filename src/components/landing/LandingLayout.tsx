@@ -1,6 +1,5 @@
 
-import React, { useRef, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import React from "react";
 import HeroSection from "./HeroSection";
 import FeaturesSection from "./FeaturesSection";
 import BenefitsSection from "./BenefitsSection";
@@ -8,51 +7,39 @@ import TestimonialsSection from "./TestimonialsSection";
 import CTASection from "./CTASection";
 import FooterSection from "./FooterSection";
 import { ContactFormSection } from "./contact";
+import { useScrollToSection } from "@/hooks/useScrollToSection";
+
+// Define section IDs
+const SECTION_IDS = ['features', 'benefits', 'testimonials', 'contact', 'about'];
 
 const LandingLayout: React.FC = () => {
-  const location = useLocation();
-  const featuresRef = useRef<HTMLDivElement>(null);
-  const benefitsRef = useRef<HTMLDivElement>(null);
-  const testimonialsRef = useRef<HTMLDivElement>(null);
-  const contactRef = useRef<HTMLDivElement>(null);
-  const aboutRef = useRef<HTMLDivElement>(null);
-
-  // Handle hash-based navigation
-  useEffect(() => {
-    if (location.hash) {
-      const id = location.hash.substring(1);
-      const element = document.getElementById(id);
-      if (element) {
-        setTimeout(() => {
-          element.scrollIntoView({ behavior: "smooth" });
-        }, 100);
-      }
-    }
-  }, [location.hash]);
-
-  const scrollToSection = (sectionRef: React.RefObject<HTMLDivElement>) => {
-    if (sectionRef.current) {
-      sectionRef.current.scrollIntoView({ behavior: "smooth" });
-    }
-  };
+  const { sectionRefs, scrollToSection } = useScrollToSection(SECTION_IDS);
 
   return (
     <div className="min-h-screen bg-white w-full">
-      <HeroSection onScrollToFeatures={() => scrollToSection(featuresRef)} />
-      <div ref={featuresRef} id="features">
+      <HeroSection 
+        onScrollToFeatures={() => scrollToSection(sectionRefs.features)} 
+      />
+      
+      <div ref={sectionRefs.features} id="features">
         <FeaturesSection id="features" />
       </div>
-      <div ref={benefitsRef} id="benefits">
+      
+      <div ref={sectionRefs.benefits} id="benefits">
         <BenefitsSection />
       </div>
-      <div ref={testimonialsRef} id="testimonials">
+      
+      <div ref={sectionRefs.testimonials} id="testimonials">
         <TestimonialsSection />
       </div>
-      <div ref={contactRef} id="contact">
+      
+      <div ref={sectionRefs.contact} id="contact">
         <ContactFormSection />
       </div>
+      
       <CTASection />
-      <div ref={aboutRef} id="about">
+      
+      <div ref={sectionRefs.about} id="about">
         <FooterSection />
       </div>
     </div>

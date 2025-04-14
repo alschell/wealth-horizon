@@ -1,6 +1,8 @@
-import { useCallback, useState, useMemo } from "react";
+
+import { useCallback, useState } from "react";
 import { TradingFormState } from "../types/tradingHookTypes";
-import { showError as showErrorToast, showSuccess as showSuccessToast } from "@/utils/toast";
+import { showError, showSuccess } from "@/utils/toast";
+import { tradingValidation } from "./tradingValidation";
 
 interface EnhancedTradingHandlersProps {
   state: TradingFormState;
@@ -8,13 +10,6 @@ interface EnhancedTradingHandlersProps {
   setOrder: (value: React.SetStateAction<any>) => void;
   resetForm: () => void;
   gtdDate?: Date;
-  validations: {
-    validateInstrumentSelection: (instrument: any) => boolean;
-    validateOrderExecution: (executionType: string) => boolean;
-    validateQuantityPrice: (quantity: number | "", price: number | "", executionType: string) => boolean;
-    validateBrokerSelection: (broker: string | "best" | undefined) => boolean;
-    validateAllocations: (orderType: string, order: any) => boolean;
-  };
 }
 
 /**
@@ -25,8 +20,7 @@ export const useEnhancedTradingHandlers = ({
   setCurrentStep,
   setOrder,
   resetForm,
-  gtdDate,
-  validations
+  gtdDate
 }: EnhancedTradingHandlersProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   
@@ -43,29 +37,31 @@ export const useEnhancedTradingHandlers = ({
     order
   } = state;
   
+  // Handle moving to the next step
   const handleNextStep = useCallback(() => {
     console.log("Current step:", currentStep);
     
     if (currentStep === 1) {
-      if (!validations.validateInstrumentSelection(selectedInstrument)) {
+      if (!tradingValidation.validateInstrumentSelection(selectedInstrument)) {
         return;
       }
       setCurrentStep(2);
     }
     else if (currentStep === 2) {
-      if (!validations.validateOrderExecution(orderExecutionType)) {
+      if (!tradingValidation.validateOrderExecution(orderExecutionType)) {
         return;
       }
-      if (!validations.validateQuantityPrice(quantity, price, orderExecutionType)) {
+      if (!tradingValidation.validateQuantityPrice(quantity, price, orderExecutionType)) {
         return;
       }
       setCurrentStep(3);
     }
     else if (currentStep === 3) {
-      if (!validations.validateBrokerSelection(selectedBroker)) {
+      if (!tradingValidation.validateBrokerSelection(selectedBroker)) {
         return;
       }
       
+      // Prepare order data for next step
       setOrder({
         instrumentId: selectedInstrument?.id || '',
         orderType: currentOrderType,
@@ -92,25 +88,28 @@ export const useEnhancedTradingHandlers = ({
     currentOrderType,
     leverage,
     setCurrentStep,
-    setOrder,
-    validations
+    setOrder
   ]);
   
+  // Handle moving to the previous step
   const handlePreviousStep = useCallback(() => {
     if (currentStep > 1) {
       setCurrentStep(current => current - 1);
     }
   }, [currentStep, setCurrentStep]);
   
+  // Handle order submission
   const handleSubmitOrder = useCallback(() => {
     console.log("Submitting order");
     
+    // Validate time in force settings
     if (timeInForce === "gtd" && !gtdDate) {
-      showErrorToast('Error', 'Please select an expiry date for your Good Till Date order');
+      showError('Error', 'Please select an expiry date for your Good Till Date order');
       return;
     }
     
-    if (!validations.validateAllocations(currentOrderType, order)) {
+    // Validate allocations for specific order types
+    if (!tradingValidation.validateAllocations(currentOrderType, order)) {
       return;
     }
     
@@ -118,12 +117,15 @@ export const useEnhancedTradingHandlers = ({
     
     setTimeout(() => {
       try {
+        // Calculate final price based on execution type
         const finalPrice = orderExecutionType === "market"
           ? selectedInstrument?.currentPrice || 0
           : Number(price);
         
+        // Calculate total order amount
         const totalAmount = Number(quantity) * finalPrice * (leverage || 1);
         
+        // Prepare complete order data
         const completeOrder = {
           ...order,
           orderType: currentOrderType,
@@ -137,21 +139,24 @@ export const useEnhancedTradingHandlers = ({
           leverage: leverage || 1
         };
         
+        // Add GTD date if applicable
         if (timeInForce === "gtd" && gtdDate) {
           (completeOrder as any).gtdDate = gtdDate;
         }
         
         console.log("Submitting order:", completeOrder);
         
-        showSuccessToast(
+        // Show success message
+        showSuccess(
           'Order Submitted', 
           `Your ${currentOrderType} order for ${quantity} ${selectedInstrument?.symbol} has been submitted successfully.`
         );
         
+        // Reset form after successful submission
         resetForm();
       } catch (error) {
         console.error("Error submitting order:", error);
-        showErrorToast(
+        showError(
           'Error', 
           'There was an error submitting your order. Please try again.'
         );
@@ -170,8 +175,7 @@ export const useEnhancedTradingHandlers = ({
     quantity,
     leverage,
     selectedBroker,
-    resetForm,
-    validations
+    resetForm
   ]);
   
   return {

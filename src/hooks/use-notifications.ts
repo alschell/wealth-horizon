@@ -32,7 +32,6 @@ export const useNotifications = () => {
       title: message,
       description: description,
       variant: "destructive",
-      className: "bg-amber-50 border-amber-200 text-amber-800",
     });
   }, []);
 

@@ -1,8 +1,7 @@
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Check, Copy, Info } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { showCopySuccessToast } from "@/utils/toast/documentationToasts";
 
 interface QuickStartGuideProps {
   copiedCode: string | null;
@@ -10,16 +9,11 @@ interface QuickStartGuideProps {
 }
 
 export const QuickStartGuide: React.FC<QuickStartGuideProps> = ({ copiedCode, setCopiedCode }) => {
-  const { toast } = useToast();
 
   const handleCopyClick = (text: string, id: string) => {
     navigator.clipboard.writeText(text);
     setCopiedCode(id);
-    toast({
-      title: "Code copied to clipboard",
-      description: "You can now paste it in your application",
-      duration: 3000,
-    });
+    showCopySuccessToast();
     
     setTimeout(() => {
       setCopiedCode(null);

@@ -1,22 +1,16 @@
-
 import React, { useState } from "react";
 import { Check, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useToast } from "@/hooks/use-toast";
+import { showCopySuccessToast } from "@/utils/toast/documentationToasts";
 
 export const CodeExamples: React.FC = () => {
-  const { toast } = useToast();
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
 
   const handleCopyClick = (text: string, id: string) => {
     navigator.clipboard.writeText(text);
     setCopiedCode(id);
-    toast({
-      title: "Code copied to clipboard",
-      description: "You can now paste it in your application",
-      duration: 3000,
-    });
+    showCopySuccessToast();
     
     setTimeout(() => {
       setCopiedCode(null);

@@ -1,38 +1,25 @@
-
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { BookOpen, Download, FileText } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { showDownloadToast, showDocumentationToast } from "@/utils/toast/documentationToasts";
 
 export const DocumentationHeader: React.FC = () => {
-  const { toast } = useToast();
   const [downloadingSDK, setDownloadingSDK] = useState<string | null>(null);
   const [openingDocs, setOpeningDocs] = useState<string | null>(null);
 
   const handleDownloadSDK = (sdkName: string, version: string) => {
     setDownloadingSDK(sdkName);
-    toast({
-      title: `Downloading ${sdkName} SDK v${version}`,
-      description: "Your download will begin shortly",
-    });
+    showDownloadToast(sdkName, version);
     
     setTimeout(() => {
-      toast({
-        title: "Download complete",
-        description: `${sdkName} SDK v${version} has been downloaded`,
-        duration: 3000,
-      });
       setDownloadingSDK(null);
     }, 1500);
   };
 
   const openDocumentation = (docType: string) => {
     setOpeningDocs(docType);
-    toast({
-      title: `Opening ${docType} documentation`,
-      description: "Loading documentation resources",
-    });
+    showDocumentationToast(`Opening ${docType} documentation`, "Loading documentation resources");
     
     setTimeout(() => {
       setOpeningDocs(null);

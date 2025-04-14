@@ -1,11 +1,10 @@
-
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import PageTemplate from "@/components/shared/PageTemplate";
 import { FileText, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import { useToast } from "@/hooks/use-toast";
+import { showCopySuccessToast } from "@/utils/toast/documentationToasts";
 import { 
   ApiReferenceContent, 
   GettingStartedContent,
@@ -17,7 +16,6 @@ import {
 
 const ApiDocumentation = () => {
   const { docType } = useParams();
-  const { toast } = useToast();
   const [searchQuery, setSearchQuery] = useState("");
   const [activeSection, setActiveSection] = useState("overview");
   const [copiedSnippet, setCopiedSnippet] = useState<string | null>(null);
@@ -32,11 +30,7 @@ const ApiDocumentation = () => {
   const handleCopySnippet = (snippet: string, id: string) => {
     navigator.clipboard.writeText(snippet);
     setCopiedSnippet(id);
-    toast({
-      title: "Code copied to clipboard",
-      description: "You can now paste it in your application",
-      duration: 3000,
-    });
+    showCopySuccessToast();
     
     setTimeout(() => {
       setCopiedSnippet(null);

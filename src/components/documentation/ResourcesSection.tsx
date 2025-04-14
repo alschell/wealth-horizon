@@ -1,38 +1,26 @@
-
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Download, Link as LinkIcon, ExternalLink, Check } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { showDownloadToast } from "@/utils/toast/documentationToasts";
+import { showDocumentationToast } from "@/utils/toast/documentationToasts";
 
 export const ResourcesSection: React.FC = () => {
-  const { toast } = useToast();
   const [downloadingSDK, setDownloadingSDK] = useState<string | null>(null);
   const [joiningProgram, setJoiningProgram] = useState(false);
 
   const handleDownloadSDK = (sdkName: string, version: string) => {
     setDownloadingSDK(sdkName);
-    toast({
-      title: `Downloading ${sdkName} SDK v${version}`,
-      description: "Your download will begin shortly",
-    });
+    showDownloadToast(sdkName, version);
     
     setTimeout(() => {
-      toast({
-        title: "Download complete",
-        description: `${sdkName} SDK v${version} has been downloaded`,
-        duration: 3000,
-      });
       setDownloadingSDK(null);
     }, 1500);
   };
 
   const joinDeveloperProgram = () => {
     setJoiningProgram(true);
-    toast({
-      title: "Joining Developer Program",
-      description: "Redirecting to developer registration portal",
-    });
+    showDocumentationToast("Joining Developer Program", "Redirecting to developer registration portal");
     
     setTimeout(() => {
       setJoiningProgram(false);

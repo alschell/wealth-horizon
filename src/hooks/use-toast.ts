@@ -1,6 +1,6 @@
 
 import { toast as sonnerToast } from "sonner";
-import { ToastAction, type ToastProps, type ToastActionElement } from "@/components/ui/toast";
+import type { ToastActionElement, ToastProps } from "@/components/ui/toast";
 
 // Re-export the types
 export * from "@/components/ui/toast";
@@ -29,19 +29,25 @@ export interface Toast {
   description?: React.ReactNode;
   action?: ToastActionElement;
   variant?: "default" | "destructive";
+  duration?: number;
+  className?: string;
 }
 
 export function toast(props: Toast) {
-  const { title, description, variant, action } = props;
+  const { title, description, variant, action, duration, className } = props;
   
   if (variant === "destructive") {
     return sonnerToast.error(title as string, {
       description: description as string,
+      duration: duration,
+      className: className
     });
   }
   
   return sonnerToast(title as string, {
     description: description as string,
+    duration: duration,
+    className: className
   });
 }
 

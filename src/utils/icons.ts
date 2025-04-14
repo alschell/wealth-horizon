@@ -56,6 +56,7 @@ export const {
   // UI component icons
   CreditCard,
   DollarSign,
+  CircleDollarSign,
   Percent,
   TrendingUp,
   TrendingDown,

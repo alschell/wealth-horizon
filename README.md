@@ -73,3 +73,6 @@ We've already fixed several files as examples:
 - src/components/advice/tabs/BenchmarkingTab.tsx
 - src/components/advice/tabs/PendingMandatesTab.tsx
 - src/components/advice/sections/mandate/MandateTypeSelector.tsx
+- src/components/cashflow/components/CashflowHeader.tsx
+- src/components/ai-assistant/AIAssistant.tsx
+- src/components/ai-assistant/MinifiedAssistant.tsx

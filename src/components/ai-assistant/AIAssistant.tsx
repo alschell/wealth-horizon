@@ -1,7 +1,7 @@
 
 import React from "react";
 import { CardTitle } from "@/components/ui/card";
-import { Brain, X } from "lucide-react";
+import { Brain, X } from "@/utils/icons";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useAIAssistant } from "./hooks/useAIAssistant";

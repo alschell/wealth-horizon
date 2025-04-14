@@ -1,1 +1,5 @@
+
 project_id = "afkmehzykgdbeuilkgqp"
+
+[functions.finnhub]
+verify_jwt = true

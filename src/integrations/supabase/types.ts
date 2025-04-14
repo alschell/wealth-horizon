@@ -9,7 +9,116 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      market_data_cache: {
+        Row: {
+          data: Json
+          data_type: string
+          expiry: string
+          id: string
+          symbol: string | null
+          timestamp: string
+        }
+        Insert: {
+          data: Json
+          data_type: string
+          expiry: string
+          id?: string
+          symbol?: string | null
+          timestamp?: string
+        }
+        Update: {
+          data?: Json
+          data_type?: string
+          expiry?: string
+          id?: string
+          symbol?: string | null
+          timestamp?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          first_name: string | null
+          id: string
+          last_name: string | null
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          first_name?: string | null
+          id: string
+          last_name?: string | null
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          first_name?: string | null
+          id?: string
+          last_name?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      watchlist_items: {
+        Row: {
+          created_at: string
+          id: string
+          instrument_type: string
+          symbol: string
+          watchlist_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          instrument_type: string
+          symbol: string
+          watchlist_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          instrument_type?: string
+          symbol?: string
+          watchlist_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "watchlist_items_watchlist_id_fkey"
+            columns: ["watchlist_id"]
+            isOneToOne: false
+            referencedRelation: "watchlists"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      watchlists: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

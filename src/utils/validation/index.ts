@@ -3,11 +3,42 @@
  * Central export point for all validation utilities
  */
 
-// Re-export all validation functions from respective modules
-export * from './inputValidation';
+// Import validation functions from respective modules with specific names
+import { 
+  validateRequired as validateRequiredField,
+  validatePattern,
+  validateLei,
+  validateDate as validateDateFormat,
+  validateMinLength as validateMinLengthField
+} from './fieldValidation';
+
+import {
+  validateEmail as validateEmailFormat,
+  validatePhone as validatePhoneFormat,
+  validateUrl as validateUrlFormat,
+  validatePassword,
+  validateZipCode,
+  validateName
+} from './inputValidation';
+
+// Export renamed functions to avoid conflicts
+export {
+  validateRequiredField,
+  validatePattern,
+  validateLei,
+  validateDateFormat,
+  validateMinLengthField,
+  validateEmailFormat,
+  validatePhoneFormat,
+  validateUrlFormat,
+  validatePassword,
+  validateZipCode,
+  validateName
+};
+
+// Export other validation functions that don't have naming conflicts
 export * from './numericValidation';
 export * from './fileValidation';
-export * from './fieldValidation';
 export * from './formValidationCore';
 
 /**

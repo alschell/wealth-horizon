@@ -425,7 +425,6 @@ const translations: Record<Language, Record<string, string>> = {
     complianceManagementDesc: 'Manténgase al día con los requisitos reglamentarios con monitoreo automatizado de cumplimiento.',
     comprehensiveDashboard: 'Panel de Control Integral',
     comprehensiveDashboardDesc: 'Obtenga una visión holística de su riqueza en todos sus bancos, corredores y custodios.',
-    realTimeAnalytics: 'Análisis en Tiempo Real',
     realTimeAnalyticsDesc: 'Monitoree sus inversiones con actualizaciones en tiempo real y paneles personalizables.',
     riskManagement: 'Gestión de Riesgos',
     riskManagementDesc: 'Identifique y mitigue riesgos con nuestras sofisticadas herramientas de análisis.',

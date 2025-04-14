@@ -13,3 +13,7 @@ export { useErrorHandler } from '@/utils/errorHandling/useErrorHandler';
 export { useErrorBoundary } from '@/utils/errorHandling/useErrorBoundary';
 export { withErrorHandling } from '@/utils/errorHandling/withErrorHandling';
 export { useDocumentManager } from '@/context/DocumentContext';
+
+// Export error utilities
+export { getErrorMessage, parseError, logError, createContextualError } from '@/utils/errorHandling/errorUtils';
+export { handleError, withErrorHandling as withErrorHandlingFn } from '@/utils/errorHandling/withErrorHandling';

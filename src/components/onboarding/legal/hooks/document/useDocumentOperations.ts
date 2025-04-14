@@ -5,17 +5,32 @@ import { showSuccess } from '@/utils/toast';
 
 interface UseDocumentOperationsProps {
   documentFiles: DocumentFileWithMetadata[];
-  setDocumentFiles: (files: DocumentFileWithMetadata[] | ((prev: DocumentFileWithMetadata[]) => DocumentFileWithMetadata[])) => void;
+  setDocumentFiles: React.Dispatch<React.SetStateAction<DocumentFileWithMetadata[]>>;
   resetForm: () => void;
   setIsEditing: (isEditing: boolean) => void;
   setEditingDocumentId: (id: string | null) => void;
-  createDocument: (documentType: string, issueDate: string, expiryDate: string, file: File) => DocumentFileWithMetadata;
-  updateDocumentInList: (documents: DocumentFileWithMetadata[], id: string, type: string, issueDate: string, expiryDate: string, file: File) => DocumentFileWithMetadata[];
-  removeDocumentFromList: (documents: DocumentFileWithMetadata[], id: string) => DocumentFileWithMetadata[];
+  createDocument: (
+    documentType: string,
+    issueDate: string,
+    expiryDate: string,
+    selectedFile: File
+  ) => DocumentFileWithMetadata;
+  updateDocumentInList: (
+    documents: DocumentFileWithMetadata[],
+    id: string,
+    documentType: string,
+    issueDate: string,
+    expiryDate: string,
+    file: File
+  ) => DocumentFileWithMetadata[];
+  removeDocumentFromList: (
+    documents: DocumentFileWithMetadata[],
+    id: string
+  ) => DocumentFileWithMetadata[];
 }
 
 /**
- * Hook for document list operations (add, edit, update, delete)
+ * Hook for handling document CRUD operations
  */
 export function useDocumentOperations({
   documentFiles,
@@ -28,28 +43,28 @@ export function useDocumentOperations({
   removeDocumentFromList
 }: UseDocumentOperationsProps) {
   /**
-   * Add a new document
+   * Add a document to the list
    */
-  const handleAddDocument = useCallback((documentType: string, issueDate: string, expiryDate: string, selectedFile: File) => {
+  const handleAddDocument = useCallback((
+    documentType: string,
+    issueDate: string,
+    expiryDate: string,
+    selectedFile: File
+  ) => {
     // Create new document with metadata
-    const newDocument = createDocument(
-      documentType,
-      issueDate,
-      expiryDate,
-      selectedFile
-    );
+    const newDocument = createDocument(documentType, issueDate, expiryDate, selectedFile);
     
     // Add to list
-    setDocumentFiles((prev: DocumentFileWithMetadata[]) => [...prev, newDocument]);
+    setDocumentFiles(prev => [...prev, newDocument]);
     
-    // Reset form
+    // Reset form after adding
     resetForm();
     
     showSuccess("Document added", "The document has been added successfully.");
   }, [createDocument, setDocumentFiles, resetForm]);
   
   /**
-   * Edit an existing document
+   * Begin editing a document
    */
   const handleEditDocument = useCallback((documentId: string) => {
     const documentToEdit = documentFiles.find(doc => doc.id === documentId);
@@ -57,34 +72,26 @@ export function useDocumentOperations({
     if (documentToEdit) {
       setIsEditing(true);
       setEditingDocumentId(documentId);
-      return documentToEdit;
     }
-    return null;
+    
+    return documentToEdit;
   }, [documentFiles, setIsEditing, setEditingDocumentId]);
   
   /**
-   * Update an existing document
+   * Update a document in the list
    */
   const handleUpdateDocument = useCallback((
-    editingDocumentId: string, 
-    documentType: string, 
-    issueDate: string, 
-    expiryDate: string, 
+    id: string,
+    documentType: string,
+    issueDate: string,
+    expiryDate: string,
     selectedFile: File
   ) => {
-    // Update document
-    setDocumentFiles((prev: DocumentFileWithMetadata[]) => 
-      updateDocumentInList(
-        prev,
-        editingDocumentId,
-        documentType,
-        issueDate,
-        expiryDate,
-        selectedFile
-      )
+    setDocumentFiles(prev => 
+      updateDocumentInList(prev, id, documentType, issueDate, expiryDate, selectedFile)
     );
     
-    // Reset form and editing state
+    // Reset form after updating
     resetForm();
     setIsEditing(false);
     setEditingDocumentId(null);
@@ -93,7 +100,7 @@ export function useDocumentOperations({
   }, [updateDocumentInList, setDocumentFiles, resetForm, setIsEditing, setEditingDocumentId]);
   
   /**
-   * Cancel edit operation
+   * Cancel editing a document
    */
   const handleCancelEdit = useCallback(() => {
     resetForm();
@@ -102,13 +109,14 @@ export function useDocumentOperations({
   }, [resetForm, setIsEditing, setEditingDocumentId]);
   
   /**
-   * Remove a document
+   * Remove a document from the list
    */
-  const handleRemoveDocument = useCallback((documentId: string) => {
-    setDocumentFiles((prev: DocumentFileWithMetadata[]) => removeDocumentFromList(prev, documentId));
+  const handleRemoveDocument = useCallback((id: string) => {
+    setDocumentFiles(prev => removeDocumentFromList(prev, id));
+    
     showSuccess("Document removed", "The document has been removed successfully.");
   }, [removeDocumentFromList, setDocumentFiles]);
-
+  
   return {
     handleAddDocument,
     handleEditDocument,

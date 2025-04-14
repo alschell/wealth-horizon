@@ -166,6 +166,7 @@ export function useDocumentEventHandlers({
   }, [documentFiles, onSave]);
   
   return {
+    fileError,
     // File handling
     handleFileSelected: fileHandler.handleFileSelected,
     handleFileClear: fileHandler.handleFileClear,

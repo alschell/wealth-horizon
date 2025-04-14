@@ -543,7 +543,7 @@ const translations: Record<Language, Record<string, string>> = {
     testimonials: '추천사',
     contact: '연락처',
     login: '로그인',
-    contactUs: '문��하기',
+    contactUs: '문����하기',
     contactUsSubtitle: '<span class="text-indigo-600">웰스</span>호라이즌이 귀하의 자산 관리를 어떻게 변화시킬 수 있는지에 대한 질문이 있으신가요?',
     getInTouch: '저희 팀에게 연락하세요.',
     

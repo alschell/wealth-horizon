@@ -9,6 +9,7 @@ const HomeNavigation: React.FC = () => {
   // Safe access to translations
   const [scrolled, setScrolled] = useState(false);
   const { t } = useLocalizedText();
+  const [forceUpdate, setForceUpdate] = useState(0);
   
   // Add scroll event listener to detect when to show shadow
   useEffect(() => {
@@ -25,6 +26,19 @@ const HomeNavigation: React.FC = () => {
     
     return () => {
       window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+  // Force re-render when language changes
+  useEffect(() => {
+    const handleLanguageChange = () => {
+      console.log('HomeNavigation detected language change');
+      setForceUpdate(prev => prev + 1);
+    };
+    
+    window.addEventListener('languageChange', handleLanguageChange);
+    return () => {
+      window.removeEventListener('languageChange', handleLanguageChange);
     };
   }, []);
   

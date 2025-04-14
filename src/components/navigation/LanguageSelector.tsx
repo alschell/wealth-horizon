@@ -42,12 +42,8 @@ const LanguageSelector: React.FC = () => {
   useEffect(() => {
     console.log(`LanguageSelector mounted with language: ${language}`);
     
-    // Force rerender when component mounts to ensure language is properly applied
-    const timer = setTimeout(() => {
-      document.documentElement.lang = language;
-    }, 100);
-    
-    return () => clearTimeout(timer);
+    // Set the document language when component mounts
+    document.documentElement.lang = language;
   }, [language]);
 
   const handleLanguageSelect = (langCode: string) => {
@@ -57,10 +53,13 @@ const LanguageSelector: React.FC = () => {
     if (languages.find(lang => lang.code === langCode)) {
       setLanguage(langCode as Language);
       
-      // Force a page reload to ensure all components pick up the language change
-      setTimeout(() => {
-        window.location.reload();
-      }, 100);
+      // Store the selection in localStorage for persistence
+      localStorage.setItem('preferredLanguage', langCode);
+      
+      // Dispatch a custom event for other components to listen for
+      window.dispatchEvent(new CustomEvent('languageChange', { 
+        detail: { language: langCode } 
+      }));
     }
     
     setOpen(false); // Explicitly close the dropdown
@@ -72,7 +71,7 @@ const LanguageSelector: React.FC = () => {
         <Button 
           variant="ghost" 
           size="sm" 
-          className="h-9 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-none"
+          className="h-9 focus:ring-2 focus:ring-black focus:ring-offset-0 focus-visible:ring-2 focus-visible:ring-black focus-visible:outline-none"
         >
           <Globe className="h-4 w-4" />
         </Button>

@@ -1,85 +1,49 @@
 
-# Dependency Issue Fix Guide
+# Icons Usage Guide
 
-## Problem
-The application has multiple errors related to missing dependencies:
-1. `lucide-react` package is missing, causing TypeScript errors in many files
-2. `vite` command is not found, preventing the app from running
+## Importing Icons
 
-## Solution
-Since we can't modify package.json directly, we've taken a different approach:
+All icons should be imported from `@/utils/icons` rather than directly from `lucide-react`.
 
-1. We've installed the required dependencies using runtime commands:
-   - `lucide-react@latest`
-   - `vite@latest`
+```tsx
+// INCORRECT - Don't do this:
+import { ArrowRight } from 'lucide-react';
 
-2. We've created a central icons utility at `src/utils/icons.ts` that:
-   - Re-exports all Lucide icons
-   - Provides proper TypeScript types
-   - Includes a helper function to get icons by name
-
-## How to Fix All Files
-To fix the remaining files with the same error, update their imports:
-
-Change:
-```typescript
-import { IconName } from 'lucide-react';
+// CORRECT - Do this instead:
+import { ArrowRight } from '@/utils/icons';
 ```
 
-To:
-```typescript
-import { IconName } from '@/utils/icons';
+This ensures consistent usage across the application and makes it easier to update icons in the future.
+
+## Available Icons
+
+All icons from `lucide-react` are available through the `@/utils/icons` module.
+
+## Helper Function
+
+If you need to dynamically render an icon by name, use the `getIconByName` function:
+
+```tsx
+import { getIconByName } from '@/utils/icons';
+
+// Later in your component:
+const IconComponent = getIconByName('ArrowRight');
+return <IconComponent />;
 ```
 
-For example, if you have:
-```typescript
-import { Calendar, Clock, User } from 'lucide-react';
+## How To Fix Icon Import Errors
+
+If you're seeing errors like `Cannot find module 'lucide-react'`, you need to update your imports:
+
+1. Remove all direct imports from 'lucide-react'
+2. Replace them with imports from '@/utils/icons'
+3. Run the application to ensure the fixes worked
+
+Example:
+```tsx
+// Before:
+import { ArrowUp, ChevronDown } from 'lucide-react';
+
+// After:
+import { ArrowUp, ChevronDown } from '@/utils/icons';
 ```
-
-Update it to:
-```typescript
-import { Calendar, Clock, User } from '@/utils/icons';
-```
-
-**Important Note**: Some icon names might be different in the lucide-react package. For instance, use `CheckCircle2` instead of `CheckCircle`. The icons utility also provides compatibility exports when needed.
-
-## Fixing Files Systematically
-You can fix the remaining files systematically by:
-
-1. Search for all files with the import pattern: `import { ... } from 'lucide-react'`
-2. Replace with the new import pattern: `import { ... } from '@/utils/icons'`
-3. Check for any icon name differences (like CheckCircle vs CheckCircle2)
-
-## Running the Application
-After fixing the imports, you should be able to run the application with:
-```
-npm run dev
-```
-
-## Files Already Fixed
-We've already fixed several files as examples:
-- src/components/OnboardingHeader.tsx
-- src/components/activity/ActivityHeader.tsx
-- src/components/advice/components/OverviewCards.tsx
-- src/components/advice/components/QuickActions.tsx
-- src/components/advice/sections/assets/TransferActions.tsx
-- src/components/ai-assistant/messages/ChatInputForm.tsx
-- src/components/onboarding/address/AddressFormHeader.tsx
-- src/components/onboarding/beneficial-owners/FormHeader.tsx
-- src/components/advice/components/AdviceHeader.tsx
-- src/components/advice/tabs/ActiveMandatesTab.tsx
-- src/components/advice/NewAdviceInterface.tsx
-- src/components/advice/components/StepProgress.tsx
-- src/components/advice/tabs/BenchmarkingTab.tsx
-- src/components/advice/tabs/PendingMandatesTab.tsx
-- src/components/advice/sections/mandate/MandateTypeSelector.tsx
-- src/components/cashflow/components/CashflowHeader.tsx
-- src/components/ai-assistant/AIAssistant.tsx
-- src/components/ai-assistant/MinifiedAssistant.tsx
-- src/components/api-documentation/DocumentationLink.tsx
-- src/components/dashboard/HeaderAction.tsx
-- src/components/dashboard/DashboardHeader.tsx
-- src/components/performance/components/assets/AssetItem.tsx
-
-## Important Note
-Due to the large number of files requiring updates, we've taken a progressive approach. The central icons utility file has been expanded with more icons, and we'll continue to add more as needed.

@@ -71,7 +71,7 @@ export const {
   // Advanced icons
   Lightbulb,
   ShieldCheck,
-  CheckCircle2,  // Note: The correct name is CheckCircle2 (not CheckCircle)
+  CheckCircle2,
   History,
   Globe,
   FileChart,
@@ -113,12 +113,9 @@ export const {
   Sun,
   Moon,
   Cloud,
-  ExternalLinkIcon,
   FileSpreadsheet,
   Ship,
   ShoppingCart,
-  TrendingDownIcon,
-  TrendingUpIcon,
   
   // All other icons (available through the LucideIcons object)
   ...LucideIcons
@@ -135,3 +132,8 @@ export const getIconByName = (name: string): LucideIcon => {
 
 // For compatibility with existing code using CheckCircle
 export { CheckCircle2 as CheckCircle };
+
+// Re-export specific icons with alternative names for backward compatibility
+export const ExternalLinkIcon = LucideIcons.ExternalLink;
+export const TrendingUpIcon = LucideIcons.TrendingUp;
+export const TrendingDownIcon = LucideIcons.TrendingDown;

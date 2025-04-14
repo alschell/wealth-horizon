@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight } from "@/utils/icons";
 import { useToast } from "@/hooks/use-toast";
 
 export const NewsletterSubscription: React.FC = () => {

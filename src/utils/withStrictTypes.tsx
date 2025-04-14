@@ -25,12 +25,17 @@ export function withStrictTypes<P extends object>(
  * @param defaultProps - Default props object
  * @returns The component with default props
  */
-export function withDefaultProps<P extends object, DP extends Partial<P>>(
+export function withDefaultProps<
+  P extends object,
+  DP extends Partial<P>
+>(
   Component: React.ComponentType<P>,
   defaultProps: DP
-): React.FC<Omit<P, keyof DP> & Partial<Pick<P, keyof DP>>> {
-  const ComponentWithDefaults: React.FC<Omit<P, keyof DP> & Partial<Pick<P, keyof DP>>> = (props) => {
-    const combinedProps = { ...defaultProps, ...props } as P;
+): React.FC<Omit<P, keyof DP> & Partial<Pick<P, Extract<keyof P, keyof DP>>>> {
+  type ResultProps = Omit<P, keyof DP> & Partial<Pick<P, Extract<keyof P, keyof DP>>>;
+  
+  const ComponentWithDefaults: React.FC<ResultProps> = (props) => {
+    const combinedProps = { ...defaultProps, ...props } as unknown as P;
     return <Component {...combinedProps} />;
   };
   

@@ -61,8 +61,10 @@ export function createErrorChecker<T extends FieldValues>(
 export function createFocusedChecker<T extends FieldValues>(
   form: UseFormReturn<T>
 ) {
+  // The focusedFields property doesn't exist in FormState
+  // Instead, we'll use the isTouched method which is available
   return (name: Path<T>): boolean => {
-    return form.formState.focusedFields.includes(name);
+    return !!form.formState.touchedFields[name];
   };
 }
 

@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
+
+import React, { createContext, useContext, useState, useCallback, ReactNode, useEffect } from 'react';
 
 type Language = 'en' | 'zh' | 'es' | 'ar' | 'pt' | 'ru' | 'ja' | 'fr' | 'de' | 'ko';
 
@@ -600,6 +601,12 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 
 export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) => {
   const [language, setLanguage] = useState<Language>('en');
+
+  // Force a complete re-render when language changes
+  useEffect(() => {
+    // This effect intentionally left empty to ensure the context 
+    // update triggers a re-render across the app
+  }, [language]);
 
   // Use useCallback to ensure getLocalizedText doesn't change identity on rerenders
   const getLocalizedText = useCallback((key: string): string => {

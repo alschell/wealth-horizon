@@ -16,7 +16,6 @@ export const LocalizedText: React.FC<LocalizedTextProps> = ({
   html = false
 }) => {
   const { getLocalizedText, language } = useLanguage();
-  // Force re-render when language changes by storing the text in state
   const [displayText, setDisplayText] = useState<string>('');
   
   useEffect(() => {

@@ -35,7 +35,11 @@ const LanguageSelector: React.FC = () => {
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="sm" className="h-9">
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          className="h-9 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-none"
+        >
           <Globe className="h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>

@@ -6,6 +6,19 @@ import { QuickLinkItem } from "./types";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Check, X } from "lucide-react";
 
+/**
+ * CustomizeDialog Component
+ * 
+ * Allows users to customize which quick access items they want to display
+ * 
+ * @param {Object} props - Component props
+ * @param {boolean} props.isOpen - Whether the dialog is open
+ * @param {Function} props.onOpenChange - Callback for when the dialog open state changes
+ * @param {QuickLinkItem[]} props.items - All available quick access items
+ * @param {string[]} props.selectedItems - IDs of the currently selected items
+ * @param {Function} props.onItemToggle - Callback for when an item is toggled
+ * @param {Function} props.onSave - Callback for when changes are saved
+ */
 interface CustomizeDialogProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
@@ -15,10 +28,6 @@ interface CustomizeDialogProps {
   onSave: () => void;
 }
 
-/**
- * Dialog for customizing quick access items
- * Allows users to select which items they want to show in the quick access panel
- */
 const CustomizeDialog: React.FC<CustomizeDialogProps> = ({
   isOpen,
   onOpenChange,
@@ -27,6 +36,14 @@ const CustomizeDialog: React.FC<CustomizeDialogProps> = ({
   onItemToggle,
   onSave
 }) => {
+  // Handle keyboard navigation for better accessibility
+  const handleKeyDown = (e: React.KeyboardEvent, id: string) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      onItemToggle(id);
+    }
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md">
@@ -40,33 +57,40 @@ const CustomizeDialog: React.FC<CustomizeDialogProps> = ({
           </p>
           
           <ScrollArea className="h-[300px] pr-4">
-            <div className="space-y-2">
-              {items.map((item) => (
-                <div 
-                  key={item.id}
-                  className={`
-                    flex items-center justify-between p-2 rounded-md cursor-pointer 
-                    ${selectedItems.includes(item.id) 
-                      ? 'bg-primary/10 border border-primary/30' 
-                      : 'hover:bg-muted'}
-                  `}
-                  onClick={() => onItemToggle(item.id)}
-                >
-                  <div className="flex items-center">
-                    <div className="mr-3 text-primary">
-                      {item.icon}
+            <div className="space-y-2" role="listbox" aria-label="Quick access options">
+              {items.map((item) => {
+                const isSelected = selectedItems.includes(item.id);
+                return (
+                  <div 
+                    key={item.id}
+                    className={`
+                      flex items-center justify-between p-2 rounded-md cursor-pointer 
+                      ${isSelected 
+                        ? 'bg-primary/10 border border-primary/30' 
+                        : 'hover:bg-muted'}
+                    `}
+                    onClick={() => onItemToggle(item.id)}
+                    onKeyDown={(e) => handleKeyDown(e, item.id)}
+                    role="option"
+                    aria-selected={isSelected}
+                    tabIndex={0}
+                  >
+                    <div className="flex items-center">
+                      <div className="mr-3 text-primary">
+                        {item.icon}
+                      </div>
+                      <span>{item.title}</span>
                     </div>
-                    <span>{item.title}</span>
+                    <div>
+                      {isSelected ? (
+                        <Check className="h-5 w-5 text-primary" aria-hidden="true" />
+                      ) : (
+                        <X className="h-5 w-5 text-muted-foreground/50" aria-hidden="true" />
+                      )}
+                    </div>
                   </div>
-                  <div>
-                    {selectedItems.includes(item.id) ? (
-                      <Check className="h-5 w-5 text-primary" />
-                    ) : (
-                      <X className="h-5 w-5 text-muted-foreground/50" />
-                    )}
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </ScrollArea>
         </div>
@@ -75,7 +99,7 @@ const CustomizeDialog: React.FC<CustomizeDialogProps> = ({
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
-          <Button onClick={onSave}>
+          <Button onClick={onSave} data-testid="save-changes-button">
             Save Changes
           </Button>
         </DialogFooter>
@@ -84,4 +108,4 @@ const CustomizeDialog: React.FC<CustomizeDialogProps> = ({
   );
 };
 
-export default CustomizeDialog;
+export default React.memo(CustomizeDialog);

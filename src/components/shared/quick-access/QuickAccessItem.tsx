@@ -1,41 +1,35 @@
 
 import React from "react";
-import { Link } from "react-router-dom";
-import { cn } from "@/lib/utils";
-import { QuickAccessItemProps } from "./types";
+import { QuickLinkItem } from "./types";
 
-const QuickAccessItem = ({ 
-  title, 
-  description, 
-  icon, 
-  link, 
-  color = "bg-gray-50",
-  onClick
-}: QuickAccessItemProps) => {
-  // Clone the icon element and apply the color
-  const coloredIcon = React.cloneElement(icon as React.ReactElement, {
-    className: `h-5 w-5 text-[#4E46DC]`
-  });
+/**
+ * QuickAccessItem Component
+ * 
+ * Renders a single quick access item link
+ * 
+ * @param {Object} props - Component props
+ * @param {QuickLinkItem} props.item - The quick access item to display
+ */
+interface QuickAccessItemProps {
+  item: QuickLinkItem;
+}
 
+const QuickAccessItem: React.FC<QuickAccessItemProps> = ({ item }) => {
   return (
-    <Link
-      to={link}
-      className="flex p-4 rounded-lg transition-all duration-200 h-full hover:bg-gray-50"
-      onClick={onClick}
+    <a
+      href={item.href}
+      className="flex flex-col items-center p-3 rounded-lg bg-card hover:bg-accent transition-colors text-center"
+      aria-label={`${item.title}: ${item.description}`}
     >
-      <div className="flex items-start gap-3">
-        <div className={cn("h-10 w-10 flex-shrink-0 flex items-center justify-center rounded-full", color)}>
-          {coloredIcon}
-        </div>
-        <div className="flex flex-col">
-          <h3 className="text-sm font-medium mb-1">{title}</h3>
-          <p className="text-xs text-gray-500">
-            {description}
-          </p>
-        </div>
+      <div className="mb-2 p-2 rounded-full bg-primary/10 text-primary">
+        {item.icon}
       </div>
-    </Link>
+      <span className="text-sm font-medium">{item.title}</span>
+      <span className="text-xs text-muted-foreground mt-1 line-clamp-2">
+        {item.description}
+      </span>
+    </a>
   );
 };
 
-export default QuickAccessItem;
+export default React.memo(QuickAccessItem);

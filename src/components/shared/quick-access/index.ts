@@ -5,7 +5,7 @@ import QuickAccessItem from "./QuickAccessItem";
 import CustomizeDialog from "./CustomizeDialog";
 import { useQuickAccess } from "./useQuickAccess";
 import { allQuickLinks, defaultQuickLinks } from "./quickLinksData";
-import { QuickLinkItem, QuickAccessGridProps, CustomizeDialogProps } from "./types";
+import type { QuickLinkItem } from "./types";
 
 export {
   QuickAccess,
@@ -14,11 +14,6 @@ export {
   CustomizeDialog,
   useQuickAccess,
   allQuickLinks,
-  defaultQuickLinks
-};
-
-export type {
-  QuickLinkItem,
-  QuickAccessGridProps,
-  CustomizeDialogProps
+  defaultQuickLinks,
+  QuickLinkItem
 };

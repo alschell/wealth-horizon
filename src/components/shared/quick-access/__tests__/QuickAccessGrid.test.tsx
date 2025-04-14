@@ -34,4 +34,21 @@ describe('QuickAccessGrid', () => {
     expect(gridElement).toBeInTheDocument();
     expect(gridElement.children.length).toBe(0);
   });
+  
+  test('renders grid with proper aria attributes for accessibility', () => {
+    const testItems = allQuickLinks.slice(0, 2);
+    render(<QuickAccessGrid items={testItems} />);
+    
+    const gridElement = screen.getByRole('list');
+    expect(gridElement).toHaveAttribute('aria-label', 'Quick access links');
+  });
+  
+  test('handles null or undefined items gracefully', () => {
+    // @ts-ignore - Testing incorrect prop types for error handling
+    render(<QuickAccessGrid items={null} />);
+    
+    const gridElement = screen.getByRole('list');
+    expect(gridElement).toBeInTheDocument();
+    expect(gridElement.children.length).toBe(0);
+  });
 });

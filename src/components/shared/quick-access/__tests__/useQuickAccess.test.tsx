@@ -12,6 +12,9 @@ const mockLocalStorage = (() => {
     }),
     clear: jest.fn(() => {
       store = {};
+    }),
+    removeItem: jest.fn((key: string) => {
+      delete store[key];
     })
   };
 })();
@@ -52,7 +55,7 @@ describe('useQuickAccess', () => {
       result.current.toggleItem('market-data');
     });
     
-    // Check if the item was removed from temporary selection
+    // Check if the item was toggled in temporary selection
     const itemIndex = result.current.temporarySelection.indexOf('market-data');
     if (itemIndex > -1) {
       expect(itemIndex).toBeGreaterThan(-1);
@@ -88,5 +91,39 @@ describe('useQuickAccess', () => {
     // Check if localStorage was updated
     expect(mockLocalStorage.setItem).toHaveBeenCalled();
     expect(mockLocalStorage.setItem.mock.calls[0][0]).toBe('quickAccessItems_dashboard');
+  });
+  
+  test('should handle invalid localStorage data gracefully', () => {
+    // Set invalid data in localStorage
+    mockLocalStorage.setItem('quickAccessItems_dashboard', 'invalid-json');
+    
+    // This should not throw an error
+    const { result } = renderHook(() => useQuickAccess('/dashboard'));
+    
+    // Should fall back to default items
+    expect(result.current.filteredItems.length).toBeGreaterThan(0);
+  });
+  
+  test('should use different storage keys for different paths', () => {
+    const { result: resultDashboard } = renderHook(() => useQuickAccess('/dashboard'));
+    const { result: resultAnalytics } = renderHook(() => useQuickAccess('/analytics'));
+    
+    // Make changes to dashboard items
+    act(() => {
+      resultDashboard.current.handleCustomizeOpen();
+      resultDashboard.current.toggleItem('market-data');
+      resultDashboard.current.handleCustomizeSave();
+    });
+    
+    // Make changes to analytics items
+    act(() => {
+      resultAnalytics.current.handleCustomizeOpen();
+      resultAnalytics.current.toggleItem('reports');
+      resultAnalytics.current.handleCustomizeSave();
+    });
+    
+    // Check that separate storage keys were used
+    expect(mockLocalStorage.setItem).toHaveBeenCalledWith('quickAccessItems_dashboard', expect.any(String));
+    expect(mockLocalStorage.setItem).toHaveBeenCalledWith('quickAccessItems_analytics', expect.any(String));
   });
 });

@@ -8,11 +8,19 @@ import CustomizeDialog from "./CustomizeDialog";
 import { useQuickAccess } from "./useQuickAccess";
 import { allQuickLinks } from "./quickLinksData";
 
+/**
+ * QuickAccess Component
+ * 
+ * Displays a customizable grid of quick access links
+ * 
+ * @param {Object} props - Component props
+ * @param {string} [props.pathname] - Current path from router
+ */
 interface QuickAccessProps {
   pathname?: string;
 }
 
-const QuickAccess = ({ pathname }: QuickAccessProps) => {
+const QuickAccess: React.FC<QuickAccessProps> = ({ pathname }) => {
   const {
     isCustomizing,
     setIsCustomizing,
@@ -33,6 +41,7 @@ const QuickAccess = ({ pathname }: QuickAccessProps) => {
             size="sm" 
             onClick={handleCustomizeOpen}
             className="h-8 w-8 p-0"
+            aria-label="Customize quick access"
           >
             <Sliders className="h-4 w-4" />
             <span className="sr-only">Customize</span>

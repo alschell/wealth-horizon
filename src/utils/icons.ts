@@ -70,7 +70,7 @@ export const {
   // Advanced icons
   Lightbulb,
   ShieldCheck,
-  CircleCheck,
+  CheckCircle2,  // Note: The correct name is CheckCircle2 (not CheckCircle)
   History,
   Globe,
   FileChart,
@@ -86,7 +86,6 @@ export const {
   ArrowDown,
   RefreshCcw,
   Circle,
-  CheckCircle2,
   BarChart3,
   MapPin,
   Video,
@@ -97,6 +96,10 @@ export const {
   AlertTriangle,
   BarChartHorizontal,
   CalendarIcon,
+  Newspaper,
+  ArrowUpDown,
+  CheckCheck,
+  CircleCheck,
   
   // All other icons (available through the LucideIcons object)
   ...LucideIcons
@@ -110,3 +113,6 @@ export type { LucideProps } from 'lucide-react';
 export const getIconByName = (name: string): LucideIcon => {
   return (LucideIcons as any)[name] || LucideIcons.HelpCircle;
 };
+
+// For compatibility with existing code using CheckCircle
+export const CheckCircle = CheckCircle2;

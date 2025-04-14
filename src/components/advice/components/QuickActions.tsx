@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Plus, BarChart3, Lightbulb, ArrowRight } from "lucide-react";
+import { Plus, BarChart3, Lightbulb, ArrowRight } from "@/utils/icons";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 

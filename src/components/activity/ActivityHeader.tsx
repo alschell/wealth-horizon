@@ -1,33 +1,34 @@
 
 import React from "react";
-import { useNavigate } from "react-router-dom";
-import { ArrowLeft, History } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import PageHeaderCard from "@/components/dashboard/PageHeaderCard";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Filter, Download } from "@/utils/icons";
 
-export const ActivityHeader: React.FC = () => {
-  const navigate = useNavigate();
-  
+const ActivityHeader: React.FC = () => {
   return (
-    <>
-      <div className="flex items-center gap-2 mb-4">
-        <Button 
-          variant="ghost" 
-          size="sm" 
-          onClick={() => navigate("/dashboard")}
-          className="flex items-center gap-1"
-        >
-          <ArrowLeft className="h-4 w-4" /> Back to Dashboard
+    <div className="flex justify-between items-center mb-4">
+      <h2 className="text-xl font-semibold">Recent Activity</h2>
+      <div className="flex gap-2">
+        <Select defaultValue="all">
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Filter" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Activities</SelectItem>
+            <SelectItem value="transactions">Transactions</SelectItem>
+            <SelectItem value="logins">Logins</SelectItem>
+            <SelectItem value="documents">Documents</SelectItem>
+          </SelectContent>
+        </Select>
+        <Button variant="outline" size="icon">
+          <Filter className="h-4 w-4" />
+        </Button>
+        <Button variant="outline" size="icon">
+          <Download className="h-4 w-4" />
         </Button>
       </div>
-      
-      <PageHeaderCard
-        icon={History}
-        title="Activity History"
-        description="View your complete activity history across all accounts and services"
-        iconColor="text-gray-700"
-        iconBgColor="bg-gray-100"
-      />
-    </>
+    </div>
   );
 };
+
+export default ActivityHeader;

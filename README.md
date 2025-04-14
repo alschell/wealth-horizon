@@ -41,6 +41,8 @@ Update it to:
 import { Calendar, Clock, User } from '@/utils/icons';
 ```
 
+**Important Note**: Some icon names might be different in the lucide-react package. For instance, use `CheckCircle2` instead of `CheckCircle`. The icons utility also provides compatibility exports when needed.
+
 ## Running the Application
 After fixing the imports, you should be able to run the application with:
 ```

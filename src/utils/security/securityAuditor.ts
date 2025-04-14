@@ -4,7 +4,7 @@
  * @module securityAuditor
  */
 
-// Import validation utilities directly from their source modules
+// Import validation utilities directly from their source modules to avoid circular dependencies
 import * as validation from './validation';
 import * as sanitize from './sanitization';
 import * as authentication from './authentication';

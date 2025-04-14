@@ -59,7 +59,7 @@ export const {
   decryptDataWithMetadata
 } = encrypt;
 
-// Export security audit utilities
+// Export security audit utilities - make sure these are exported
 export const {
   SecurityAuditor,
   auditSecurity,

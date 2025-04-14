@@ -1,4 +1,3 @@
-
 /**
  * Central export point for all security utilities
  * 
@@ -21,7 +20,7 @@ export const authentication = auth;
 export const storage = store;
 export const validation = validate;
 export const encryption = encrypt;
-export const securityAudit = audit;
+export const securityAudit = audit; // Make sure this is exported
 
 // Direct exports for commonly used functions to maintain backward compatibility
 export const {
@@ -59,7 +58,7 @@ export const {
   decryptDataWithMetadata
 } = encrypt;
 
-// Export security audit utilities - make sure these are exported
+// Export security audit utilities
 export const {
   SecurityAuditor,
   auditSecurity,

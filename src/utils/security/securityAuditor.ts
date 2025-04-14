@@ -1,3 +1,4 @@
+
 /**
  * Security auditing utility for identifying potential security issues
  * 
@@ -5,7 +6,7 @@
  */
 
 // Import validation utilities directly from their source modules to avoid circular dependencies
-import * as validation from './validation';
+import * as validation from '../validation/validation';
 import * as sanitize from './sanitization';
 import * as authentication from './authentication';
 

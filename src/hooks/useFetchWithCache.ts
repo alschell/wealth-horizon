@@ -70,3 +70,4 @@ export function useFetchWithCache<TData, TError = unknown>(
     ...queryOptions
   });
 }
+

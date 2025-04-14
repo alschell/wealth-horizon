@@ -21,4 +21,5 @@ export {
   handleError,
   withErrorHandling as withAsyncErrorHandling,
   tryCatch
-} from '@/utils/errorHandling/errorHandlingCore';
+} from '@/utils/errorHandling';
+

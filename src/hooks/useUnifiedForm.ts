@@ -10,7 +10,7 @@ export interface FormSubmissionOptions<T> {
   errorMessage?: string;
   validateForm?: (data: T) => boolean;
   resetAfterSubmit?: boolean;
-  logErrors?: boolean;
+  logToConsole?: boolean;
 }
 
 /**
@@ -96,7 +96,7 @@ export function useUnifiedForm<T extends Record<string, any>>(initialData: T) {
       errorMessage = 'Error submitting form',
       validateForm,
       resetAfterSubmit = false,
-      logErrors = true
+      logToConsole = true
     } = options;
 
     // Validate form if validation function is provided
@@ -134,7 +134,7 @@ export function useUnifiedForm<T extends Record<string, any>>(initialData: T) {
       handleError(error, {
         fallbackMessage: errorMessage,
         onError,
-        logError: logErrors
+        logToConsole
       });
       
       return false;
@@ -160,3 +160,4 @@ export function useUnifiedForm<T extends Record<string, any>>(initialData: T) {
     submitForm
   };
 }
+

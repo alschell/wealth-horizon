@@ -111,10 +111,14 @@ export function useUnifiedForm<T extends Record<string, any>>(props: UseUnifiedF
 
   // Set a field error
   const setFieldError = useCallback((field: keyof T, message: string) => {
-    setFormState(prev => ({
-      ...prev,
-      errors: { ...prev.errors, [field]: message }
-    }));
+    setFormState(prev => {
+      const updatedErrors = { ...prev.errors };
+      updatedErrors[field as string] = message;
+      return {
+        ...prev,
+        errors: updatedErrors
+      };
+    });
   }, []);
 
   // Clear a field error
@@ -249,3 +253,4 @@ export function useUnifiedForm<T extends Record<string, any>>(props: UseUnifiedF
 
 export * from './types';
 export * from './utils';
+

@@ -24,3 +24,4 @@ export {
 
 // Re-export error hook for functional components
 export { useErrorHandler } from '@/hooks/useErrorHandler';
+

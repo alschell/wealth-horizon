@@ -11,7 +11,7 @@ import {
 import { Button } from '@/components/ui/button';
 
 const LanguageSelector: React.FC = () => {
-  const { language, setLanguage, getLocalizedText } = useLanguage();
+  const { language, setLanguage } = useLanguage();
   const [open, setOpen] = React.useState(false);
 
   const languages = [
@@ -28,6 +28,7 @@ const LanguageSelector: React.FC = () => {
   ];
 
   const handleLanguageSelect = (langCode: string) => {
+    console.log(`Setting language to: ${langCode}`);
     setLanguage(langCode as any);
     setOpen(false); // Explicitly close the dropdown
   };

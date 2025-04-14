@@ -18,6 +18,7 @@ export const LocalizedText: React.FC<LocalizedTextProps> = ({
   const { getLocalizedText, language } = useLanguage();
   const [displayText, setDisplayText] = useState<string>('');
   
+  // Make sure component re-renders when language changes
   useEffect(() => {
     const localizedText = getLocalizedText(textKey);
     // If we don't have a translation, use the fallback or the key itself

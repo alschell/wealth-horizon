@@ -606,6 +606,7 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
   useEffect(() => {
     // This effect intentionally left empty to ensure the context 
     // update triggers a re-render across the app
+    console.log(`Language changed to: ${language}`);
   }, [language]);
 
   // Use useCallback to ensure getLocalizedText doesn't change identity on rerenders

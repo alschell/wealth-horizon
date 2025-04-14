@@ -1,4 +1,3 @@
-
 import React, { Component, ErrorInfo, ReactNode } from "react";
 import { AlertTriangle, RefreshCw } from "lucide-react";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
@@ -173,5 +172,40 @@ export const withErrorBoundary = <P extends object>(
   
   return WrappedComponent;
 };
+
+/**
+ * Creates a component wrapped with error boundary and custom fallback
+ * 
+ * @param Component - Component to wrap
+ * @param FallbackComponent - Custom fallback component
+ * @returns Component wrapped with error boundary and custom fallback
+ */
+export function withCustomErrorFallback<P extends object, FallbackProps extends {error?: Error}>(
+  Component: React.ComponentType<P>,
+  FallbackComponent: React.ComponentType<FallbackProps>
+): React.ComponentType<P> {
+  return class WithCustomErrorFallback extends React.Component<P, {hasError: boolean; error?: Error}> {
+    constructor(props: P) {
+      super(props);
+      this.state = { hasError: false };
+    }
+
+    static getDerivedStateFromError(error: Error) {
+      return { hasError: true, error };
+    }
+
+    componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+      console.error("Error caught by withCustomErrorFallback:", error, errorInfo);
+    }
+
+    render() {
+      if (this.state.hasError) {
+        return <FallbackComponent error={this.state.error} {...{} as any} />;
+      }
+
+      return <Component {...this.props} />;
+    }
+  };
+}
 
 export default ErrorBoundary;

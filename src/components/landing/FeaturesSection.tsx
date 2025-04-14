@@ -2,7 +2,7 @@
 import React from "react";
 import { FadeIn, ScaleIn, StaggerContainer, StaggerItem } from "@/components/ui/animation";
 import { LineChart, Shield, BarChart3, FileText, Users, Lock, LucideIcon } from "lucide-react";
-import FeatureAnimation from "@/components/animations/FeatureAnimation";
+import DashboardAnimation from "@/components/animations/DashboardAnimation";
 
 // Define the features with the correct icon type and sort them alphabetically
 const features = [
@@ -59,7 +59,7 @@ const FeaturesSection: React.FC<FeaturesSectionProps> = ({ id }) => {
           <ScaleIn delay={0.2}>
             <div className="relative rounded-xl overflow-hidden shadow-2xl border border-gray-100">
               <div className="relative aspect-[4/3]">
-                <FeatureAnimation features={features} />
+                <DashboardAnimation />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent"></div>
               </div>
             </div>

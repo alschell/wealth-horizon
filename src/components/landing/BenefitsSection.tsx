@@ -2,7 +2,7 @@
 import React from "react";
 import { BarChart3, Shield, Layers, Clock } from "lucide-react";
 import { FadeIn, StaggerContainer, StaggerItem, ScaleIn } from "@/components/ui/animation";
-import WealthTransformAnimation from "@/components/animations/WealthTransformAnimation";
+import DashboardAnimation from "@/components/animations/DashboardAnimation";
 
 const benefits = [
   {
@@ -24,7 +24,7 @@ const benefits = [
     title: "Operational Efficiency",
     description: "Streamline workflows, automate routine tasks, and reduce manual work to focus on high-value activities.",
     icon: <Clock size={24} />,
-  },
+  }
 ].sort((a, b) => a.title.localeCompare(b.title));
 
 const BenefitsSection: React.FC = () => {
@@ -60,7 +60,7 @@ const BenefitsSection: React.FC = () => {
           <ScaleIn delay={0.2}>
             <div className="relative rounded-xl overflow-hidden shadow-2xl border border-gray-100">
               <div className="relative aspect-[4/3]">
-                <WealthTransformAnimation />
+                <DashboardAnimation />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent"></div>
               </div>
             </div>

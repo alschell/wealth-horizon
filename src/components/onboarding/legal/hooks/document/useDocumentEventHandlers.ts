@@ -18,9 +18,9 @@ interface UseDocumentEventHandlersProps {
   selectedFile: File | null;
   setSelectedFile: (file: File | null) => void;
   documentFiles: DocumentFileWithMetadata[];
-  setDocumentFiles: (files: DocumentFileWithMetadata[] | ((prev: DocumentFileWithMetadata[]) => DocumentFileWithMetadata[])) => void;
+  setDocumentFiles: React.Dispatch<React.SetStateAction<DocumentFileWithMetadata[]>>;
   errors: Record<string, boolean>;
-  setErrors: (errors: Record<string, boolean> | ((prev: Record<string, boolean>) => Record<string, boolean>)) => void;
+  setErrors: React.Dispatch<React.SetStateAction<Record<string, boolean>>>;
   fileError: string | null;
   setFileError: (error: string | null) => void;
   isEditing: boolean;
@@ -98,7 +98,7 @@ export function useDocumentEventHandlers({
     const newErrors = validateDocumentFields(documentType, issueDate, selectedFile);
     
     if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
+      setErrors((prev) => ({ ...prev, ...newErrors }));
       return;
     }
     
@@ -133,7 +133,7 @@ export function useDocumentEventHandlers({
     const newErrors = validateDocumentFields(documentType, issueDate, selectedFile);
     
     if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
+      setErrors((prev) => ({ ...prev, ...newErrors }));
       return;
     }
     

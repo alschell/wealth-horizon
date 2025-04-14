@@ -9,3 +9,7 @@ export { enhancedUseForm } from './enhancedUseForm';
 export { useFormWithValidation } from './useFormWithValidation';
 export { useIsComponentMounted } from './useIsComponentMounted';
 export { useNotifications } from './use-notifications';
+export { useErrorHandler } from '@/utils/errorHandling/useErrorHandler';
+export { useErrorBoundary } from '@/utils/errorHandling/useErrorBoundary';
+export { withErrorHandling } from '@/utils/errorHandling/withErrorHandling';
+export { useDocumentManager } from '@/context/DocumentContext';

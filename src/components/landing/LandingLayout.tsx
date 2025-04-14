@@ -1,6 +1,7 @@
 
 import React from "react";
 import HeroSection from "./HeroSection";
+import WhyWHSection from "./WhyWHSection";
 import FeaturesSection from "./FeaturesSection";
 import BenefitsSection from "./BenefitsSection";
 import TestimonialsSection from "./TestimonialsSection";
@@ -10,7 +11,7 @@ import { ContactFormSection } from "./contact";
 import { useScrollToSection } from "@/hooks/useScrollToSection";
 
 // Define section IDs
-const SECTION_IDS = ['features', 'benefits', 'testimonials', 'contact', 'about'];
+const SECTION_IDS = ['why-wh', 'features', 'benefits', 'testimonials', 'contact', 'about'];
 
 const LandingLayout: React.FC = () => {
   const { sectionRefs, scrollToSection } = useScrollToSection(SECTION_IDS);
@@ -20,6 +21,10 @@ const LandingLayout: React.FC = () => {
       <HeroSection 
         onScrollToFeatures={() => scrollToSection(sectionRefs.features)} 
       />
+      
+      <div ref={sectionRefs['why-wh']} id="why-wh">
+        <WhyWHSection />
+      </div>
       
       <div ref={sectionRefs.features} id="features">
         <FeaturesSection id="features" />

@@ -43,6 +43,12 @@ const HomeNavigation: React.FC = () => {
           
           <div className="hidden md:flex items-center ml-10 space-x-8">
             <button 
+              onClick={() => scrollToSection('why-wh')} 
+              className="text-gray-700 hover:text-indigo-600 transition-colors"
+            >
+              Why WH
+            </button>
+            <button 
               onClick={() => scrollToSection('features')} 
               className="text-gray-700 hover:text-indigo-600 transition-colors"
             >
@@ -59,12 +65,6 @@ const HomeNavigation: React.FC = () => {
               className="text-gray-700 hover:text-indigo-600 transition-colors"
             >
               Testimonials
-            </button>
-            <button 
-              onClick={() => scrollToSection('contact')} 
-              className="text-gray-700 hover:text-indigo-600 transition-colors"
-            >
-              Contact
             </button>
           </div>
         </div>

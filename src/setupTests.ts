@@ -1,40 +1,29 @@
 
+/**
+ * Setup file for Jest tests
+ * This file is run before each test file
+ */
+
+// Add testing library extensions
 import '@testing-library/jest-dom';
 
-// Mock for matchMedia
-Object.defineProperty(window, 'matchMedia', {
-  writable: true,
-  value: jest.fn().mockImplementation(query => ({
-    matches: false,
-    media: query,
-    onchange: null,
-    addListener: jest.fn(), // deprecated
-    removeListener: jest.fn(), // deprecated
-    addEventListener: jest.fn(),
-    removeEventListener: jest.fn(),
-    dispatchEvent: jest.fn(),
-  })),
+// Mock implementations
+jest.mock('@/hooks/use-toast', () => ({
+  useToast: () => ({
+    toast: jest.fn(),
+    dismiss: jest.fn()
+  }),
+  toast: jest.fn()
+}));
+
+// Add global test helpers
+global.ResizeObserver = jest.fn().mockImplementation(() => ({
+  observe: jest.fn(),
+  unobserve: jest.fn(),
+  disconnect: jest.fn(),
+}));
+
+// Test environment cleanup
+afterEach(() => {
+  jest.clearAllMocks();
 });
-
-// Silent console errors during tests
-const originalConsoleError = console.error;
-console.error = (...args) => {
-  if (
-    typeof args[0] === 'string' && 
-    (args[0].includes('Warning: ReactDOM.render') || 
-     args[0].includes('React.createFactory') ||
-     args[0].includes('useLayoutEffect'))
-  ) {
-    return;
-  }
-  originalConsoleError(...args);
-};
-
-// Mock ResizeObserver
-class ResizeObserverMock {
-  observe() {}
-  unobserve() {}
-  disconnect() {}
-}
-
-window.ResizeObserver = ResizeObserverMock;

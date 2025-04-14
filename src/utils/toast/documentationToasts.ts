@@ -1,33 +1,36 @@
 
-import { toast } from '@/hooks/use-toast';
+/**
+ * Specialized toast utilities for documentation-related actions
+ */
+
+import { showSuccess, showInfo } from './toastUtils';
 
 /**
- * Show a toast notification for documentation
+ * Show a toast for successful documentation access
  */
-export function showDocumentationToast(title: string, description?: string): void {
-  toast({
-    title,
-    description,
-    variant: "default",
-  });
-}
+export const showDocumentationToast = (docName: string) => {
+  showInfo(
+    'Documentation Opened', 
+    `You're now viewing documentation for ${docName}`
+  );
+};
 
 /**
- * Show a toast notification for successful copy operation
+ * Show a toast for successful copy operation
  */
-export function showCopySuccessToast(message: string = "Copied to clipboard"): void {
-  toast({
-    title: "Success",
-    description: message,
-  });
-}
+export const showCopySuccessToast = (itemType: string = 'text') => {
+  showSuccess(
+    'Copied to Clipboard', 
+    `The ${itemType} has been copied to your clipboard`
+  );
+};
 
 /**
- * Show a toast notification for download operation
+ * Show a toast for successful download operation
  */
-export function showDownloadToast(title: string, description?: string): void {
-  toast({
-    title,
-    description: description || "Your download has started",
-  });
-}
+export const showDownloadToast = (fileName: string) => {
+  showSuccess(
+    'Download Started', 
+    `${fileName} is being downloaded`
+  );
+};

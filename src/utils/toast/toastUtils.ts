@@ -1,78 +1,72 @@
 
+/**
+ * Toast utility functions for common toast notifications
+ */
+
 import { toast } from '@/hooks/use-toast';
 
-export type ToastVariant = "default" | "destructive" | "success" | "warning" | "info";
-
-interface ToastOptions {
-  duration?: number;
-  actionLabel?: string;
-  actionFn?: () => void;
-  onDismiss?: () => void;
-}
+export type ToastVariant = 'default' | 'destructive' | 'success' | 'warning' | 'info';
 
 /**
- * Centralized toast notification function with consistent interface
+ * Show a generic toast notification
  */
-export function showToast(
+export const showToast = (
   title: string, 
-  description?: string, 
-  variant: ToastVariant = "default",
-  options: ToastOptions = {}
-): void {
-  const { duration, actionLabel, actionFn, onDismiss } = options;
-  
-  const toastOptions: any = {
+  message?: string, 
+  variant: ToastVariant = 'default'
+) => {
+  toast({
     title,
-    description,
-    variant: variant === "success" ? "default" : variant === "info" ? "default" : variant,
-    duration
-  };
-  
-  // Include action if provided
-  if (actionLabel && actionFn) {
-    toastOptions.action = {
-      label: actionLabel,
-      onClick: actionFn
-    };
-  }
-  
-  toast(toastOptions);
-  
-  // Call onDismiss if provided
-  if (onDismiss) {
-    setTimeout(onDismiss, (duration || 5000) + 300);
-  }
-}
+    description: message,
+    variant: variant === 'success' ? 'default' : variant === 'info' ? 'default' : variant
+  });
+};
 
 /**
  * Show a success toast notification
  */
-export function showSuccess(title: string, description?: string, options?: ToastOptions): void {
-  showToast(title, description, "success", options);
-}
+export const showSuccess = (title: string, message?: string) => {
+  toast({
+    title,
+    description: message,
+    variant: 'default'
+  });
+};
 
 /**
  * Show an error toast notification
  */
-export function showError(title: string, description?: string, options?: ToastOptions): void {
-  showToast(title, description, "destructive", options);
-}
+export const showError = (title: string, message?: string) => {
+  toast({
+    title,
+    description: message,
+    variant: 'destructive'
+  });
+};
 
 /**
  * Show an info toast notification
  */
-export function showInfo(title: string, description?: string, options?: ToastOptions): void {
-  showToast(title, description, "info", options);
-}
+export const showInfo = (title: string, message?: string) => {
+  toast({
+    title,
+    description: message,
+    variant: 'default'
+  });
+};
 
 /**
  * Show a warning toast notification
  */
-export function showWarning(title: string, description?: string, options?: ToastOptions): void {
-  showToast(title, description, "warning", options);
-}
+export const showWarning = (title: string, message?: string) => {
+  toast({
+    title,
+    description: message,
+    variant: 'destructive'
+  });
+};
 
-// Add aliases for backward compatibility
+// Aliases for backward compatibility
 export const showSuccessToast = showSuccess;
 export const showErrorToast = showError;
 export const showInfoToast = showInfo;

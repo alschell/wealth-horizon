@@ -62,9 +62,11 @@ export function createFocusedChecker<T extends FieldValues>(
   form: UseFormReturn<T>
 ) {
   // The focusedFields property doesn't exist in FormState
-  // Instead, we'll use the isTouched method which is available
+  // Instead, we'll use the touchedFields property which is available
   return (name: Path<T>): boolean => {
-    return !!form.formState.touchedFields[name];
+    // Use hasOwnProperty to safely check if the field exists in touchedFields
+    return Object.prototype.hasOwnProperty.call(form.formState.touchedFields, name) && 
+           !!form.formState.touchedFields[name as keyof typeof form.formState.touchedFields];
   };
 }
 

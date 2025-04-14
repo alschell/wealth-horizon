@@ -19,13 +19,13 @@ async function fetchMarketData<T>(
   try {
     const { data, error } = await supabase.functions.invoke("finnhub", {
       body: { 
+        endpoint,
         ...params,
       },
       headers: {
         "Content-Type": "application/json",
       },
       method: "POST",
-      path: endpoint,
     });
 
     if (error) {

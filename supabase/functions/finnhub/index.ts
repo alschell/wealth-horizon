@@ -31,17 +31,14 @@ serve(async (req) => {
   if (corsResponse) return corsResponse;
 
   try {
-    const url = new URL(req.url);
-    const endpoint = url.pathname.split("/").pop();
-    
     // Parse request data
-    const body = await req.json().catch(() => ({}));
-    const { symbol, symbols, category, from, to, resolution } = body;
+    const body = await req.json();
+    const { endpoint, symbol, symbols, category, from, to, resolution, query } = body;
     
     let apiUrl = "";
     let response;
     
-    console.log(`Processing ${endpoint} request for ${symbol || symbols || category}`);
+    console.log(`Processing ${endpoint} request for ${symbol || symbols || category || query}`);
     
     switch (endpoint) {
       case "quote":
@@ -57,7 +54,6 @@ serve(async (req) => {
         
       case "search":
         // Search for symbols
-        const query = body.query;
         if (!query) {
           return new Response(
             JSON.stringify({ error: "Query is required" }),
@@ -81,10 +77,10 @@ serve(async (req) => {
       case "indices":
         // Get indices data - we'll use a collection of major indices
         const majorIndices = ["^GSPC", "^DJI", "^IXIC", "^FTSE", "^N225"];
-        const indices = symbols || majorIndices;
+        const indicesToFetch = symbols || majorIndices;
         
         // Fetch data for all indices in parallel
-        const indicesPromises = indices.map(async (idx) => {
+        const indicesPromises = indicesToFetch.map(async (idx) => {
           const quoteUrl = `${FINNHUB_API_URL}/quote?symbol=${idx}&token=${FINNHUB_API_KEY}`;
           const quoteRes = await fetch(quoteUrl);
           const quoteData = await quoteRes.json();
@@ -122,9 +118,6 @@ serve(async (req) => {
       const apiRes = await fetch(apiUrl);
       response = await apiRes.json();
     }
-    
-    // Cache the response in the database if needed
-    // This would be implemented here
     
     return new Response(
       JSON.stringify(response),

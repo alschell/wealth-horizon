@@ -396,6 +396,12 @@ const translations: Record<Language, Record<string, string>> = {
     privacyPolicy: 'Política de Privacidad',
     copyright: '© 2025 WealthHorizon. Todos los derechos reservados.',
     
+    // Landing page sections
+    readyToOptimize: '¿Listo para optimizar su gestión de patrimonio?',
+    joinLeading: 'Únase a las principales family offices e instituciones que han transformado sus operaciones con',
+    trustedByLeading: 'Con la confianza de las instituciones líderes',
+    seeWhatFamilyOffices: 'Vea lo que dicen las family offices y los inversores institucionales sobre',
+    
     // Why Section
     comprehensiveSolution: 'Solución Integral',
     comprehensiveSolutionDesc: 'Nuestra plataforma unifica todos sus datos financieros en todas las instituciones, proporcionando una única fuente de verdad para su riqueza.',
@@ -421,6 +427,18 @@ const translations: Record<Language, Record<string, string>> = {
     secureCollaborationDesc: 'Invite a miembros del equipo y partes interesadas a la plataforma.',
     advancedReporting: 'Informes Avanzados',
     advancedReportingDesc: 'Cree informes personalizados con insights detallados y visualizaciones fáciles de entender.',
+    
+    // Benefits
+    transformYourWealth: 'Transforme su Gestión Patrimonial',
+    transformYourWealthDesc: 'Experimente un nuevo nivel de eficiencia, conocimiento y control con',
+    centralizedAssetManagement: 'Gestión Centralizada de Activos',
+    centralizedAssetManagementDesc: 'Elimine los silos de datos y gestione todos los activos, inversiones y operaciones en una plataforma unificada.',
+    dataDrivenDecisionMaking: 'Toma de Decisiones Basada en Datos',
+    dataDrivenDecisionMakingDesc: 'Aproveche el análisis avanzado y los conocimientos impulsados por la IA para tomar decisiones de inversión más informadas.',
+    enterpriseGradeSecurity: 'Seguridad de Nivel Empresarial',
+    enterpriseGradeSecurityDesc: 'Proteja los datos financieros confidenciales con seguridad, cifrado y controles de acceso de nivel bancario.',
+    operationalEfficiency: 'Eficiencia Operacional',
+    operationalEfficiencyDesc: 'Agilice los flujos de trabajo, automatice las tareas rutinarias y reduzca el trabajo manual para centrarse en actividades de alto valor.',
     
     // Contact
     contactInformation: 'Información de Contacto',
@@ -527,6 +545,41 @@ const translations: Record<Language, Record<string, string>> = {
     termsOfService: 'شروط الخدمة',
     privacyPolicy: 'سياسة الخصوصية',
     copyright: '© 2025 آفاق الثروة. جميع الحقوق محفوظة.',
+    
+    // Contact
+    contactInformation: 'معلومات الاتصال',
+    ourAddress: 'عنواننا',
+    companyAddress: '123 الحي المالي ، جناح 1500 ، نيويورك ، نيويورك 10005',
+    phoneNumber: 'رقم الهاتف',
+    contactPhone: '+1 (555) 123-4567',
+    emailAddress: 'عنوان البريد الإلكتروني',
+    contactEmail: 'contact@wealthhorizon.com',
+    officeHours: 'ساعات العمل',
+    weekdayHours: 'من الاثنين إلى الجمعة: 9:00 صباحًا - 6:00 مساءً بالتوقيت الشرقي',
+    weekendClosed: 'السبت والأحد: مغلق',
+    sendUsAMessage: 'أرسل لنا رسالة',
+    firstName: 'الاسم الأول',
+    lastName: 'اسم العائلة',
+    email: 'بريد إلكتروني',
+    message: 'رسالة',
+    sendMessage: 'أرسل رسالة',
+    
+    // Footer
+    solutions: 'حلول',
+    portfolioManagement: 'إدارة المحافظ',
+    trading: 'تداول',
+    wealthAnalysis: 'تحليل الثروة',
+    reporting: 'إعداد التقارير',
+    compliance: 'الامتثال',
+    company: 'شركة',
+    aboutUs: 'معلومات عنا',
+    careers: 'وظائف',
+    blog: 'مدونة',
+    press: 'صحافة',
+    resources: 'الموارد',
+    documentation: 'توثيق',
+    helpCenter: 'مركز المساعدة',
+    security: 'الأمان'
   },
   pt: {
     // Navigation
@@ -598,6 +651,41 @@ const translations: Record<Language, Record<string, string>> = {
     termsOfService: 'Termos de Serviço',
     privacyPolicy: 'Política de Privacidade',
     copyright: '© 2025 WealthHorizon. Todos os direitos reservados.',
+    
+    // Contact
+    contactInformation: 'Informações de Contato',
+    ourAddress: 'Nosso Endereço',
+    companyAddress: '123 Distrito Financeiro, Suite 1500, Nova York, NY 10005',
+    phoneNumber: 'Número de Telefone',
+    contactPhone: '+1 (555) 123-4567',
+    emailAddress: 'Endereço de E-mail',
+    contactEmail: 'contact@wealthhorizon.com',
+    officeHours: 'Horário de Atendimento',
+    weekdayHours: 'Segunda a Sexta: 9h00 - 18h00 EST',
+    weekendClosed: 'Sábado e Domingo: Fechado',
+    sendUsAMessage: 'Envie-nos uma mensagem',
+    firstName: 'Primeiro Nome',
+    lastName: 'Sobrenome',
+    email: 'E-mail',
+    message: 'Mensagem',
+    sendMessage: 'Enviar Mensagem',
+    
+    // Footer
+    solutions: 'Soluções',
+    portfolioManagement: 'Gestão de Portfólio',
+    trading: 'Trading',
+    wealthAnalysis: 'Análise de Riqueza',
+    reporting: 'Relatórios',
+    compliance: 'Conformidade',
+    company: 'Empresa',
+    aboutUs: 'Sobre Nós',
+    careers: 'Carreiras',
+    blog: 'Blog',
+    press: 'Imprensa',
+    resources: 'Recursos',
+    documentation: 'Documentação',
+    helpCenter: 'Central de Ajuda',
+    security: 'Segurança'
   },
   ru: {
     // Navigation
@@ -669,172 +757,43 @@ const translations: Record<Language, Record<string, string>> = {
     termsOfService: 'Условия использования',
     privacyPolicy: 'Политика конфиденциальности',
     copyright: '© 2025 WealthHorizon. Все права защищены.',
+    
+    // Contact
+    contactInformation: 'Контактная информация',
+    ourAddress: 'Наш адрес',
+    companyAddress: '123 Financial District, Suite 1500, New York, NY 10005',
+    phoneNumber: 'Номер телефона',
+    contactPhone: '+1 (555) 123-4567',
+    emailAddress: 'Адрес электронной почты',
+    contactEmail: 'contact@wealthhorizon.com',
+    officeHours: 'Часы работы',
+    weekdayHours: 'Понедельник-пятница: 9:00 - 18:00 EST',
+    weekendClosed: 'Суббота-воскресенье: Закрыто',
+    sendUsAMessage: 'Отправьте нам сообщение',
+    firstName: 'Имя',
+    lastName: 'Фамилия',
+    email: 'Электронная почта',
+    message: 'Сообщение',
+    sendMessage: 'Отправить сообщение',
+    
+    // Footer
+    solutions: 'Решения',
+    portfolioManagement: 'Управление портфелем',
+    trading: 'Торговля',
+    wealthAnalysis: 'Анализ благосостояния',
+    reporting: 'Отчетность',
+    compliance: 'Соответствие нормативным требованиям',
+    company: 'Компания',
+    aboutUs: 'О нас',
+    careers: 'Карьера',
+    blog: 'Блог',
+    press: 'Пресса',
+    resources: 'Ресурсы',
+    documentation: 'Документация',
+    helpCenter: 'Центр помощи',
+    security: 'Безопасность'
   },
   ja: {
     // Navigation
     features: '機能',
-    benefits: 'メリット',
-    testimonials: '推薦文',
-    contact: 'お問い合わせ',
-    login: 'ログイン',
-    contactUs: 'お問い合わせ',
-    contactUsSubtitle: '<span class="text-indigo-600">ウェルス</span>ホライズンがあなたの資産管理をどのように変革できるかについてご質問がありますか？',
-    getInTouch: '私たちのチームにお問い合わせください。',
-    whyWealthHorizon: 'なぜWH',
-    
-    // Hero Section
-    holisticWealthManagement: '総合的な資産管理',
-    familyOffices: 'ファミリーオフィス',
-    and: 'および',
-    institutions: '機関',
-    actionableWealth: 'すべての資産を一つのプラットフォームで実行可能に',
-    acrossAllBanks: 'すべての銀行、ブローカー、カストディアンにわたって',
-    learnMore: '詳細を見る',
-    aiNativePlatform: 'AIネイティブプラットフォーム',
-    realTimeAnalytics: 'リアルタイム分析',
-    soc2Certified: 'SOC 2認証',
-    
-    // Languages
-    english: '英語',
-    chinese: '中国語',
-    spanish: 'スペイン語',
-    arabic: 'アラビア語',
-    portuguese: 'ポルトガル語',
-    russian: 'ロシア語',
-    japanese: '日本語',
-    french: 'フランス語',
-    german: 'ドイツ語',
-    korean: '韓国語',
-    
-    // Dashboard
-    dashboard: 'ダッシュボード',
-    overview: '概要',
-    performance: 'パフォーマンス',
-    portfolio: 'ポートフォリオ',
-    assets: '資産',
-    
-    // Common actions
-    search: '検索',
-    filter: 'フィルター',
-    save: '保存',
-    cancel: 'キャンセル',
-    edit: '編集',
-    delete: '削除',
-    create: '作成',
-    view: '表示',
-    submit: '送信',
-    
-    // Common sections
-    settings: '設定',
-    notifications: '通知',
-    profile: 'プロフィール',
-    security: 'セキュリティ',
-    help: 'ヘルプ',
-    
-    // Messaging
-    welcomeMessage: 'WealthHorizonへようこそ',
-    loadingMessage: '読み込み中...',
-    errorMessage: 'エラーが発生しました',
-    
-    // Footer
-    termsOfService: '利用規約',
-    privacyPolicy: 'プライバシーポリシー',
-    copyright: '© 2025 WealthHorizon. All rights reserved.',
-  },
-  fr: {
-    // Navigation
-    features: 'Fonctionnalités',
-    benefits: 'Avantages',
-    testimonials: 'Témoignages',
-    contact: 'Contact',
-    login: 'Connexion',
-    contactUs: 'Contactez-nous',
-    contactUsSubtitle: 'Vous avez des questions sur la façon dont <span class="text-indigo-600">Wealth</span>Horizon peut transformer votre gestion de patrimoine ?',
-    getInTouch: 'Contactez notre équipe.',
-    whyWealthHorizon: 'Pourquoi WH',
-    
-    // Hero Section
-    holisticWealthManagement: 'Gestion de patrimoine holistique pour',
-    familyOffices: 'family offices',
-    and: 'et',
-    institutions: 'institutions',
-    actionableWealth: 'Toute votre richesse exploitable sur une seule plateforme',
-    acrossAllBanks: 'à travers toutes vos banques, courtiers et dépositaires',
-    learnMore: 'En savoir plus',
-    aiNativePlatform: 'Plateforme native IA',
-    realTimeAnalytics: 'Analytique en temps réel',
-    soc2Certified: 'Certifié SOC 2',
-    
-    // Languages
-    english: 'Anglais',
-    chinese: 'Chinois',
-    spanish: 'Espagnol',
-    arabic: 'Arabe',
-    portuguese: 'Portugais',
-    russian: 'Russe',
-    japanese: 'Japonais',
-    french: 'Français',
-    german: 'Allemand',
-    korean: 'Coréen',
-    
-    // Dashboard
-    dashboard: 'Tableau de bord',
-    overview: 'Aperçu',
-    performance: 'Performance',
-    portfolio: 'Portefeuille',
-    assets: 'Actifs',
-    
-    // Common actions
-    search: 'Rechercher',
-    filter: 'Filtrer',
-    save: 'Enregistrer',
-    cancel: 'Annuler',
-    edit: 'Modifier',
-    delete: 'Supprimer',
-    create: 'Créer',
-    view: 'Voir',
-    submit: 'Soumettre',
-    
-    // Common sections
-    settings: 'Paramètres',
-    notifications: 'Notifications',
-    profile: 'Profil',
-    security: 'Sécurité',
-    help: 'Aide',
-    
-    // Messaging
-    welcomeMessage: 'Bienvenue sur WealthHorizon',
-    loadingMessage: 'Chargement...',
-    errorMessage: 'Une erreur est survenue',
-    
-    // Footer
-    termsOfService: 'Conditions d\'utilisation',
-    privacyPolicy: 'Politique de confidentialité',
-    copyright: '© 2025 WealthHorizon. Tous droits réservés.',
-  },
-  de: {
-    // Navigation
-    features: 'Funktionen',
-    benefits: 'Vorteile',
-    testimonials: 'Referenzen',
-    contact: 'Kontakt',
-    login: 'Anmelden',
-    contactUs: 'Kontaktieren Sie uns',
-    contactUsSubtitle: 'Haben Sie Fragen dazu, wie <span class="text-indigo-600">Wealth</span>Horizon Ihre Vermögensverwaltung verändern kann?',
-    getInTouch: 'Kontaktieren Sie unser Team.',
-    whyWealthHorizon: 'Warum WH',
-    
-    // Hero Section
-    holisticWealthManagement: 'Ganzheitliche Vermögensverwaltung für',
-    familyOffices: 'Family Offices',
-    and: 'und',
-    institutions: 'Institutionen',
-    actionableWealth: 'Ihr gesamtes Vermögen auf einer Plattform nutzbar gemacht',
-    acrossAllBanks: 'über alle Ihre Banken, Broker und Verwahrer hinweg',
-    learnMore: 'Mehr erfahren',
-    aiNativePlatform: 'KI-native Plattform',
-    realTimeAnalytics: 'Echtzeit-Analytik',
-    soc2Certified: 'SOC 2 zertifiziert',
-    
-    // Languages
-    english:
+    benefits

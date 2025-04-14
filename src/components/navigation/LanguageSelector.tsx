@@ -10,8 +10,20 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 
+// Define the Language type to match the context
+type Language = 'en' | 'zh' | 'es' | 'ar' | 'pt' | 'ru' | 'ja' | 'fr' | 'de' | 'ko';
+
 const LanguageSelector: React.FC = () => {
-  const { language, setLanguage } = useLanguage();
+  let { language, setLanguage } = { language: 'en' as Language, setLanguage: (lang: Language) => {} };
+  
+  try {
+    const languageContext = useLanguage();
+    language = languageContext.language;
+    setLanguage = languageContext.setLanguage;
+  } catch (error) {
+    console.error('Language context not available in LanguageSelector:', error);
+  }
+  
   const [open, setOpen] = React.useState(false);
 
   const languages = [
@@ -34,7 +46,12 @@ const LanguageSelector: React.FC = () => {
 
   const handleLanguageSelect = (langCode: string) => {
     console.log(`Language selected: ${langCode}, current language: ${language}`);
-    setLanguage(langCode);
+    
+    // Only set language if the code is a valid Language type
+    if (languages.find(lang => lang.code === langCode)) {
+      setLanguage(langCode as Language);
+    }
+    
     setOpen(false); // Explicitly close the dropdown
     
     // Add a small delay and log to confirm the change was processed

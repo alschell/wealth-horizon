@@ -1,5 +1,5 @@
 
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "@/hooks/use-toast";
 
 /**
  * Standard error response format
@@ -24,8 +24,6 @@ export interface ErrorHandlerOptions {
  * Custom hook for handling errors in a consistent way
  */
 export function useErrorHandler() {
-  const { toast } = useToast();
-  
   /**
    * Handles an error and shows an appropriate toast message
    * @param error - The error to handle

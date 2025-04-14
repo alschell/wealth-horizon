@@ -8,7 +8,7 @@ import {
   DialogClose 
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
+import { showSuccess, showError } from "@/utils/toast";
 import { validateEmail, validatePhone, validateRequired } from "@/utils/validation";
 import { FormField } from "./form/FormFields";
 import { ResumeFileUpload } from "./form/ResumeFileUpload";
@@ -76,7 +76,7 @@ export const ResumeUploadModal: React.FC<ResumeUploadModalProps> = ({
       // Success handling is done by the hook
     },
     onSuccess: () => {
-      toast.success("Your resume has been submitted! We'll be in touch soon.");
+      showSuccess("Your resume has been submitted! We'll be in touch soon.");
       onOpenChange(false);
       resetForm();
       setResumeFile(null);
@@ -84,7 +84,7 @@ export const ResumeUploadModal: React.FC<ResumeUploadModalProps> = ({
       announceToScreenReader("Resume submitted successfully", "polite");
     },
     onError: (error) => {
-      toast.error(error instanceof Error ? error.message : "An error occurred. Please try again.");
+      showError(error instanceof Error ? error.message : "An error occurred. Please try again.");
       announceToScreenReader("Error submitting resume. Please check the form for errors.", "assertive");
     }
   });
@@ -108,7 +108,7 @@ export const ResumeUploadModal: React.FC<ResumeUploadModalProps> = ({
       // Validate file size
       if (file.size > MAX_FILE_SIZE) {
         setFileError(`File size exceeds the maximum allowed size of 5MB`);
-        toast.error(`File size exceeds the maximum allowed size of 5MB`);
+        showError(`File size exceeds the maximum allowed size of 5MB`);
         return;
       }
       
@@ -116,14 +116,14 @@ export const ResumeUploadModal: React.FC<ResumeUploadModalProps> = ({
       const fileExtension = `.${file.name.split('.').pop()?.toLowerCase()}`;
       if (!ALLOWED_FILE_TYPES.includes(fileExtension)) {
         setFileError(`Invalid file type. Allowed types: ${ALLOWED_FILE_TYPES.join(', ')}`);
-        toast.error(`Invalid file type. Allowed types: PDF, DOC, DOCX`);
+        showError(`Invalid file type. Allowed types: PDF, DOC, DOCX`);
         return;
       }
       
       // Validate MIME type for better security
       if (!ALLOWED_MIME_TYPES.includes(file.type)) {
         setFileError(`Invalid file format. Please upload a valid document.`);
-        toast.error(`Invalid file format. Please upload a valid document.`);
+        showError(`Invalid file format. Please upload a valid document.`);
         return;
       }
       

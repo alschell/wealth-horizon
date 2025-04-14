@@ -1,6 +1,6 @@
 
 import { getErrorMessage } from './errorUtils';
-import { toast } from '@/hooks/use-toast';
+import { showError } from '@/utils/toast';
 
 /**
  * Options for error handling
@@ -36,11 +36,7 @@ export function handleError(
   
   // Show toast
   if (showToast) {
-    toast({
-      title: "Error",
-      description: errorMessage,
-      variant: "destructive",
-    });
+    showError("Error", errorMessage);
   }
   
   // Call error callback

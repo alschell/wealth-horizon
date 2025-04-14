@@ -39,9 +39,15 @@ const LanguageSelector: React.FC = () => {
     { code: 'ko', name: 'Korean', localName: '한국어' }
   ];
 
-  // Log current language when component mounts
   useEffect(() => {
     console.log(`LanguageSelector mounted with language: ${language}`);
+    
+    // Force rerender when component mounts to ensure language is properly applied
+    const timer = setTimeout(() => {
+      document.documentElement.lang = language;
+    }, 100);
+    
+    return () => clearTimeout(timer);
   }, [language]);
 
   const handleLanguageSelect = (langCode: string) => {
@@ -50,14 +56,14 @@ const LanguageSelector: React.FC = () => {
     // Only set language if the code is a valid Language type
     if (languages.find(lang => lang.code === langCode)) {
       setLanguage(langCode as Language);
+      
+      // Force a page reload to ensure all components pick up the language change
+      setTimeout(() => {
+        window.location.reload();
+      }, 100);
     }
     
     setOpen(false); // Explicitly close the dropdown
-    
-    // Add a small delay and log to confirm the change was processed
-    setTimeout(() => {
-      console.log(`Language should now be: ${langCode}`);
-    }, 100);
   };
 
   return (

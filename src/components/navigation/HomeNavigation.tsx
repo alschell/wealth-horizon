@@ -28,6 +28,13 @@ const HomeNavigation: React.FC = () => {
     };
   }, []);
   
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+  
   return (
     <header className={`fixed w-full bg-white z-50 transition-shadow duration-300 ${scrolled ? 'shadow-sm' : ''}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -44,7 +51,7 @@ const HomeNavigation: React.FC = () => {
             {/* Navigation Links */}
             <nav className="hidden md:flex items-center space-x-8">
               <Link to="/#why" className="text-gray-500 hover:text-gray-900">
-                {t('whyWealthHorizon', 'Why WealthHorizon')}
+                {t('whyWealthHorizon', 'Why WH')}
               </Link>
               <Link to="/#features" className="text-gray-500 hover:text-gray-900">
                 {t('features', 'Features')}
@@ -66,9 +73,12 @@ const HomeNavigation: React.FC = () => {
                 {t('login', 'Login')}
               </Button>
             </Link>
-            <Link to="/#contact" className="hidden md:block">
-              <Button size="sm">{t('contactUs', 'Contact Us')}</Button>
-            </Link>
+            <Button 
+              size="sm"
+              onClick={() => scrollToSection('contact')}
+            >
+              {t('contactUs', 'Contact Us')}
+            </Button>
           </div>
         </div>
       </div>

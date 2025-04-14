@@ -38,6 +38,32 @@ export const LocalizedText: React.FC<LocalizedTextProps> = ({
     }
   }, [textKey, fallback]);
   
+  // Listen for language change events
+  useEffect(() => {
+    const handleLanguageChange = (event: Event) => {
+      const customEvent = event as CustomEvent;
+      const newLanguage = customEvent.detail?.language;
+      
+      if (newLanguage && newLanguage !== currentLanguage) {
+        console.log(`LocalizedText received language change event: ${newLanguage} for key: ${textKey}`);
+        setCurrentLanguage(newLanguage);
+        
+        try {
+          const { getLocalizedText } = useLanguage();
+          const localizedText = getLocalizedText(textKey);
+          setDisplayText(localizedText === textKey ? (fallback || textKey) : localizedText);
+        } catch (error) {
+          console.warn(`Could not update text after language change for key: ${textKey}`, error);
+        }
+      }
+    };
+    
+    window.addEventListener('languageChange', handleLanguageChange);
+    return () => {
+      window.removeEventListener('languageChange', handleLanguageChange);
+    };
+  }, [textKey, fallback, currentLanguage]);
+  
   // Update the text when language changes, but only if context is available
   useEffect(() => {
     if (!languageContextAvailable) return;
@@ -86,6 +112,24 @@ export const useLocalizedText = () => {
       setLanguageContextAvailable(false);
     }
   }, []);
+  
+  // Listen for language change events
+  useEffect(() => {
+    const handleLanguageChange = (event: Event) => {
+      const customEvent = event as CustomEvent;
+      const newLanguage = customEvent.detail?.language;
+      
+      if (newLanguage && newLanguage !== language) {
+        console.log(`useLocalizedText received language change event: ${newLanguage}`);
+        setLanguage(newLanguage);
+      }
+    };
+    
+    window.addEventListener('languageChange', handleLanguageChange);
+    return () => {
+      window.removeEventListener('languageChange', handleLanguageChange);
+    };
+  }, [language]);
   
   // Update local state when language changes to force re-renders
   useEffect(() => {

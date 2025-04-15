@@ -1,46 +1,36 @@
 
-// Toast utility functions
-import { toast as toastFunction } from "@/hooks/use-toast";
+import { toast } from '@/components/ui/use-toast';
+import { ToastAction } from '@/components/ui/toast';
 
-/**
- * Shows a success toast notification
- */
 export const showSuccess = (title: string, description?: string) => {
-  toastFunction({
+  toast({
     title,
     description,
-    variant: "default",
+    variant: 'default',
   });
 };
 
-/**
- * Shows an error toast notification
- */
 export const showError = (title: string, description?: string) => {
-  toastFunction({
+  toast({
     title,
-    description: description || "An error occurred",
-    variant: "destructive",
+    description,
+    variant: 'destructive',
   });
 };
 
-/**
- * Shows an info toast notification
- */
+export const showWarning = (title: string, description?: string, action?: {label: string, onClick: () => void}) => {
+  toast({
+    title,
+    description,
+    variant: 'default',
+    action: action ? <ToastAction altText={action.label} onClick={action.onClick}>{action.label}</ToastAction> : undefined,
+  });
+};
+
 export const showInfo = (title: string, description?: string) => {
-  toastFunction({
+  toast({
     title,
     description,
-  });
-};
-
-/**
- * Shows a warning toast notification
- */
-export const showWarning = (title: string, description?: string) => {
-  toastFunction({
-    title,
-    description,
-    variant: "destructive",
+    variant: 'default',
   });
 };

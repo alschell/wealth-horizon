@@ -29,9 +29,10 @@ export interface ConnectedIntegrationType {
   icon: ReactNode;
   category: string;
   features: string[];
-  status: ConnectionStatus;
+  status: IntegrationStatus;
   connectionStatus: ConnectionStatus;
   lastSync: string;
+  lastSynced?: string; // For backward compatibility
   authMethod: AuthMethod;
   authUrl?: string;
   apiKeyName?: string;
@@ -41,4 +42,11 @@ export interface ConnectedIntegrationType {
 export interface ApiKeyFormData {
   apiKey: string;
   service?: string;
+}
+
+export interface AuthenticationDialogProps {
+  integration: IntegrationType;
+  isOpen: boolean;
+  onOpenChange?: React.Dispatch<React.SetStateAction<boolean>>;
+  onClose?: () => void;
 }

@@ -1,86 +1,64 @@
 
 import React from 'react';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { cn } from '@/lib/utils';
+import { UseFormReturn, Path, FieldValues } from 'react-hook-form';
+import { FormControl, FormDescription, FormField as ShadcnFormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { createErrorAccessor } from '@/utils/form/enhancedFormUtils';
 
-type InputType = 'text' | 'email' | 'password' | 'number' | 'date' | 'tel' | 'url' | 'textarea';
-
-interface FormFieldProps {
-  name: string;
+interface FormFieldProps<T extends FieldValues> {
+  form: UseFormReturn<T>;
+  name: Path<T>;
   label?: string;
-  type?: InputType;
-  placeholder?: string;
-  error?: string;
-  required?: boolean;
-  disabled?: boolean;
+  description?: string;
+  children: React.ReactNode;
   className?: string;
-  inputClassName?: string;
   labelClassName?: string;
+  descriptionClassName?: string;
   errorClassName?: string;
-  [key: string]: any;
+  showErrorMessage?: boolean;
 }
 
 /**
- * A standardized form field component that handles different input types
- * and displays validation errors
+ * Enhanced form field component with better typing support
  */
-export function FormField({
+export function FormField<T extends FieldValues>({
+  form,
   name,
   label,
-  type = 'text',
-  placeholder,
-  error,
-  required,
-  disabled,
+  description,
+  children,
   className,
-  inputClassName,
   labelClassName,
+  descriptionClassName,
   errorClassName,
-  ...props
-}: FormFieldProps) {
-  // Determine if we should render a textarea or input
-  const isTextarea = type === 'textarea';
-  const InputComponent = isTextarea ? Textarea : Input;
-  
+  showErrorMessage = true,
+}: FormFieldProps<T>) {
   return (
-    <div className={cn('space-y-2', className)}>
-      {label && (
-        <Label 
-          htmlFor={name} 
-          className={cn(
-            required && 'after:content-["*"] after:ml-0.5 after:text-red-500',
-            labelClassName
-          )}
-        >
-          {label}
-        </Label>
+    <ShadcnFormField
+      control={form.control}
+      name={name}
+      render={({ field }) => (
+        <FormItem className={className}>
+          {label && <FormLabel className={labelClassName}>{label}</FormLabel>}
+          <FormControl>
+            {React.isValidElement(children) ? React.cloneElement(children as React.ReactElement, { ...field }) : children}
+          </FormControl>
+          {description && <FormDescription className={descriptionClassName}>{description}</FormDescription>}
+          {showErrorMessage && <FormMessage className={errorClassName} />}
+        </FormItem>
       )}
-      
-      <InputComponent
-        id={name}
-        name={name}
-        type={isTextarea ? undefined : type}
-        placeholder={placeholder}
-        disabled={disabled}
-        className={cn(error && 'border-red-500 focus-visible:ring-red-500', inputClassName)}
-        aria-invalid={!!error}
-        aria-describedby={error ? `${name}-error` : undefined}
-        {...props}
-      />
-      
-      {error && (
-        <p 
-          id={`${name}-error`} 
-          className={cn('text-sm font-medium text-red-500', errorClassName)}
-          aria-live="polite"
-        >
-          {error}
-        </p>
-      )}
-    </div>
+    />
   );
 }
 
-export default FormField;
+/**
+ * Creates a helper function to get field error message
+ */
+export function useFormErrors<T extends FieldValues>(form: UseFormReturn<T>) {
+  return {
+    getError: createErrorAccessor(form),
+    hasError: (name: Path<T>) => !!form.formState.errors[name],
+    isSubmitted: form.formState.isSubmitted,
+    isSubmitting: form.formState.isSubmitting,
+    isValid: form.formState.isValid,
+  };
+}

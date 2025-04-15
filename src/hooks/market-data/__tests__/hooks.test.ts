@@ -1,6 +1,6 @@
 
 import { renderHook, act } from '@testing-library/react-hooks';
-import { useQuote, useMarketNews, useCompanyNews, useSymbolSearch, useIndices, useCandleData } from '../useMarketData';
+import { useQuote, useMarketNews, useCompanyNews, useSymbolSearch, useIndices, useCandleData } from '../index';
 import * as api from '@/utils/market-data/api';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React from 'react';
@@ -29,7 +29,7 @@ const queryClient = new QueryClient({
 });
 
 // Wrapper for testing hooks with react-query
-const wrapper = ({ children }: { children: React.ReactNode }) => (
+const wrapper = ({ children }) => (
   <QueryClientProvider client={queryClient}>
     {children}
   </QueryClientProvider>
@@ -44,8 +44,8 @@ describe('Market Data Hooks', () => {
   describe('useQuote', () => {
     it('fetches quote data for a symbol', async () => {
       const mockQuote = { c: 100, d: 5, dp: 5, h: 105, l: 95, o: 98, pc: 95, t: 1234567890 };
-      (api.getQuote as jest.Mock).mockResolvedValue(mockQuote);
-      (api.formatQuote as jest.Mock).mockReturnValue({
+      (api.getQuote).mockResolvedValue(mockQuote);
+      (api.formatQuote).mockReturnValue({
         price: '100.00',
         change: '5.00',
         percentChange: '5.00',

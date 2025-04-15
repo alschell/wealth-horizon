@@ -1,101 +1,74 @@
 
 import React from 'react';
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { cn } from '@/lib/utils';
 
-interface FormFieldProps {
+export interface FormFieldProps {
   id: string;
   name: string;
   label: string;
-  placeholder?: string;
-  error?: string | null;
-  type?: string;
   value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   required?: boolean;
-  disabled?: boolean;
-  autoComplete?: string;
-  description?: string;
+  error?: string;
+  type?: string;
+  placeholder?: string;
+  className?: string;
+  inputClassName?: string;
+  labelClassName?: string;
 }
 
-export const FormField: React.FC<FormFieldProps> = ({
+const FormFields: React.FC<FormFieldProps> = ({
   id,
   name,
   label,
-  placeholder,
-  error,
-  type = "text",
   value,
   onChange,
   required = false,
-  disabled = false,
-  autoComplete,
-  description
+  error,
+  type = 'text',
+  placeholder,
+  className,
+  inputClassName,
+  labelClassName,
 }) => {
-  const inputId = `field-${id}`;
-  const errorId = `error-${id}`;
-  const descriptionId = `desc-${id}`;
-  
-  const ariaDescribedBy = [
-    error ? errorId : null,
-    description ? descriptionId : null
-  ].filter(Boolean).join(' ') || undefined;
-  
   return (
-    <div className="space-y-2">
-      <label 
-        htmlFor={inputId} 
-        className="flex items-center block text-gray-700"
-      >
-        {label}
-        {required && <span className="text-indigo-600 ml-1" aria-hidden="true">*</span>}
-      </label>
-      
-      {description && (
-        <p 
-          id={descriptionId} 
-          className="text-xs text-gray-500"
+    <div className={cn('space-y-2', className)}>
+      <div className="flex items-baseline justify-between">
+        <Label 
+          htmlFor={id} 
+          className={cn(
+            "text-sm font-medium", 
+            error ? "text-red-500" : "text-gray-700",
+            labelClassName
+          )}
         >
-          {description}
-        </p>
-      )}
+          {label} {required && <span className="text-red-500">*</span>}
+        </Label>
+      </div>
       
-      {type === 'textarea' ? (
-        <Textarea
-          id={inputId}
-          name={name}
-          placeholder={placeholder}
-          value={value}
-          onChange={onChange as any}
-          disabled={disabled}
-          className={error ? 'border-red-300 focus:border-red-500' : ''}
-          aria-invalid={!!error}
-          aria-describedby={ariaDescribedBy}
-          aria-required={required}
-          rows={4}
-        />
-      ) : (
-        <Input
-          id={inputId}
-          name={name}
-          type={type}
-          placeholder={placeholder}
-          value={value}
-          onChange={onChange}
-          disabled={disabled}
-          className={error ? 'border-red-300 focus:border-red-500' : ''}
-          aria-invalid={!!error}
-          aria-describedby={ariaDescribedBy}
-          aria-required={required}
-          autoComplete={autoComplete}
-        />
-      )}
+      <Input
+        id={id}
+        name={name}
+        type={type}
+        value={value}
+        onChange={onChange}
+        placeholder={placeholder}
+        required={required}
+        className={cn(
+          error ? "border-red-500 focus-visible:ring-red-500" : "",
+          inputClassName
+        )}
+        aria-describedby={error ? `${id}-error` : undefined}
+        aria-invalid={!!error}
+      />
       
       {error && (
         <p 
-          id={errorId} 
+          id={`${id}-error`} 
           className="text-sm font-medium text-red-500"
-          aria-live="polite"
+          role="alert"
         >
           {error}
         </p>
@@ -103,3 +76,5 @@ export const FormField: React.FC<FormFieldProps> = ({
     </div>
   );
 };
+
+export default FormFields;

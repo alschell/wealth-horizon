@@ -1,7 +1,7 @@
 
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, History } from "lucide-react";
+import { Icon } from "@/utils/icons";
 import { Button } from "@/components/ui/button";
 import PageHeaderCard from "@/components/dashboard/PageHeaderCard";
 
@@ -17,12 +17,12 @@ export const ActivityHeader: React.FC = () => {
           onClick={() => navigate("/dashboard")}
           className="flex items-center gap-1"
         >
-          <ArrowLeft className="h-4 w-4" /> Back to Dashboard
+          <Icon name="ArrowLeft" className="h-4 w-4" /> Back to Dashboard
         </Button>
       </div>
       
       <PageHeaderCard
-        icon={History}
+        icon="History" 
         title="Activity History"
         description="View your complete activity history across all accounts and services"
         iconColor="text-gray-700"

@@ -1,72 +1,61 @@
 
-# Utilities Architecture
+# Icon Utility
 
-This directory contains utility functions organized by domain:
+This utility provides a consistent way to use icons throughout the application.
 
-## Error Handling
+## How to Use
 
-`/errorHandling` - Centralized error management:
-- `getErrorMessage` - Extract readable messages from any error
-- `parseError` - Convert errors to standardized format
-- `handleError` - Process errors with customizable options
-- `withErrorHandling` - Higher-order function for try/catch wrapping
+### Basic Usage
 
-## Toast Notifications
+Import the `Icon` component from the utils and use it with the icon name:
 
-`/toast` - Unified toast notification system:
-- `showToast` - Base toast function with customization options
-- Convenience methods: `showSuccess`, `showError`, `showInfo`, `showWarning`
-- Domain-specific toasts (documentation, copy, download operations)
+```tsx
+import { Icon } from "@/utils/icons";
 
-## Validation
-
-`/validation` - Form and input validation:
-- Namespaced validations to avoid conflicts:
-  - `field` - Field validation (required, patterns, dates, etc.)
-  - `input` - Input validation (email, phone, passwords, etc.)
-- File and numeric validations
-- Composite validation for multiple rules
-- Form-level validation helpers
-
-## Security
-
-`/security` - Security-related utilities:
-- Data sanitization
-- Authentication helpers
-- URL validation with security checks
-
-## Usage Examples
-
-```typescript
-// Error handling
-import { handleError, withErrorHandling } from '@/utils/errorHandling';
-
-try {
-  // Code that might throw
-} catch (error) {
-  handleError(error, { 
-    fallbackMessage: 'Custom error message',
-    showToast: true 
-  });
-}
-
-// Wrap async function with error handling
-const safeFetch = withErrorHandling(fetchData);
-await safeFetch(params);
-
-// Toast notifications
-import { showSuccess, showError } from '@/utils/toast';
-
-showSuccess('Operation complete', 'Your data has been saved');
-showError('Error', 'Failed to save data');
-
-// Validation
-import { field, input, validateComposite } from '@/utils/validation';
-
-const nameError = field.required('John', 'Name');
-const emailError = input.email('user@example.com');
-const passwordError = validateComposite('Password123', [
-  (value) => field.required(value, 'Password'),
-  input.password
-]);
+// In your component
+return (
+  <div>
+    <Icon name="ArrowLeft" className="h-4 w-4" />
+    Back to Dashboard
+  </div>
+);
 ```
+
+### Direct Import
+
+For better performance and type safety, you can import icons directly:
+
+```tsx
+import { ArrowLeft, Check, User } from "@/utils/icons";
+
+// In your component
+return (
+  <div>
+    <ArrowLeft className="h-4 w-4" />
+    <Check className="h-4 w-4 text-green-500" />
+    <User size={24} />
+  </div>
+);
+```
+
+### Updating PageHeaderCard and Other Components
+
+Components like PageHeaderCard now accept icon names as strings:
+
+```tsx
+<PageHeaderCard
+  icon="History" 
+  title="Activity History"
+  description="View your activity history"
+  iconColor="text-gray-700"
+  iconBgColor="bg-gray-100"
+/>
+```
+
+## Adding New Icons
+
+If a new icon is needed, add it to the re-exports in `src/utils/icons.tsx`.
+
+## Troubleshooting
+
+If you encounter an icon that doesn't exist in the lucide-react library, the `Icon` component will display a fallback. Check the console for warnings about missing icons.

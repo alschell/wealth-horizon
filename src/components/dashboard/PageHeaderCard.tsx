@@ -1,11 +1,10 @@
 
 import React from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { LucideIcon } from "lucide-react";
-import { TranslatedText } from "@/components/ui/translated-text";
+import { Icon } from "@/utils/icons"; 
+import { Card } from "@/components/ui/card";
 
 interface PageHeaderCardProps {
-  icon: LucideIcon;
+  icon: string;
   title: string;
   description: string;
   iconColor?: string;
@@ -13,29 +12,24 @@ interface PageHeaderCardProps {
 }
 
 const PageHeaderCard: React.FC<PageHeaderCardProps> = ({
-  icon: Icon,
+  icon,
   title,
   description,
-  iconColor = "text-gray-700",
-  iconBgColor = "bg-gray-100"
+  iconColor = "text-primary",
+  iconBgColor = "bg-primary/10",
 }) => {
   return (
-    <Card className="border-none shadow-none bg-transparent">
-      <CardContent className="p-0">
-        <div className="flex items-start gap-4">
-          <div className={`p-3 rounded-lg ${iconBgColor}`}>
-            <Icon className={`h-8 w-8 ${iconColor}`} />
-          </div>
-          <div className="space-y-1">
-            <h1 className="text-3xl font-semibold tracking-tight">
-              <TranslatedText>{title}</TranslatedText>
-            </h1>
-            <p className="text-muted-foreground max-w-3xl">
-              <TranslatedText>{description}</TranslatedText>
-            </p>
-          </div>
+    <Card className="p-6 mb-6">
+      <div className="flex items-start gap-4">
+        <div className={`p-3 rounded-lg ${iconBgColor}`}>
+          <Icon name={icon} className={`h-6 w-6 ${iconColor}`} />
         </div>
-      </CardContent>
+        
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight">{title}</h1>
+          <p className="text-gray-500 mt-1">{description}</p>
+        </div>
+      </div>
     </Card>
   );
 };

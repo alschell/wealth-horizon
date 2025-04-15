@@ -23,12 +23,21 @@ export const TranslatedText: React.FC<TranslatedTextProps> = ({
     let isMounted = true;
     
     const translateText = async () => {
-      const translated = await translate(children);
-      if (isMounted) {
-        setTranslatedContent(translated);
+      try {
+        const translated = await translate(children);
+        if (isMounted) {
+          setTranslatedContent(translated);
+        }
+      } catch (error) {
+        console.error("Translation error:", error);
+        // If translation fails, fall back to original text
+        if (isMounted) {
+          setTranslatedContent(children);
+        }
       }
     };
 
+    // Always run translation when language changes or text changes
     translateText();
     
     return () => {

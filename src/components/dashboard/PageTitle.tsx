@@ -1,6 +1,7 @@
 
 import React from "react";
 import { useLocation } from "react-router-dom";
+import { TranslatedText } from "@/components/ui/translated-text";
 
 const PageTitle = () => {
   const location = useLocation();
@@ -26,7 +27,7 @@ const PageTitle = () => {
     return "Wealth Pro";
   };
 
-  return <span className="text-lg font-medium">{getPageTitle()}</span>;
+  return <TranslatedText className="text-lg font-medium">{getPageTitle()}</TranslatedText>;
 };
 
 export default PageTitle;

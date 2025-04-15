@@ -132,12 +132,11 @@ function ValidatedFormInner<T extends Record<string, any>>({
   );
 }
 
-// Fix: Use proper options for withErrorHandling
+// Fix: Use proper options for withErrorHandling, removing the unsupported 'showReset' property
 export const ValidatedForm = withErrorHandling(
   ValidatedFormInner,
   {
-    fallbackMessage: 'There was a problem with the form. Please try again.',
-    showReset: true
+    fallbackMessage: 'There was a problem with the form. Please try again.'
   }
 ) as typeof ValidatedFormInner;
 

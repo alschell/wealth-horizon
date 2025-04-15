@@ -33,7 +33,7 @@ const ValidationDemo: React.FC = () => {
     password: '',
     confirmPassword: '',
     bio: '',
-    acceptTerms: false
+    acceptTerms: false  // This is fine, it's a default value that will be validated
   };
 
   const handleSubmit = async (data: UserFormData) => {
@@ -145,8 +145,7 @@ const ValidationDemo: React.FC = () => {
   );
 };
 
-// Fixed: Use the withErrorHandling HOC correctly - importing from useErrorBoundary
+// Fixed: Use the withErrorHandling HOC correctly with appropriate options
 export default withErrorHandling(ValidationDemo, {
-  fallbackMessage: 'Could not load the validation demo',
-  showReset: true
+  fallbackMessage: 'Could not load the validation demo'
 });

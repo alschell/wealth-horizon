@@ -1,5 +1,5 @@
 
-import { renderHook, act } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react-hooks';
 import { useQuote, useMarketNews, useCompanyNews, useSymbolSearch, useIndices, useCandleData } from '../index';
 import * as api from '@/utils/market-data/api';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';

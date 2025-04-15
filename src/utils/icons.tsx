@@ -6,7 +6,7 @@ import * as LucideIcons from 'lucide-react';
 export type IconName = keyof typeof LucideIcons;
 
 interface IconProps {
-  iconName: string;
+  iconName: IconName;
   className?: string;
   size?: number;
   strokeWidth?: number;
@@ -20,18 +20,13 @@ export const Icon: React.FC<IconProps> = ({
   strokeWidth = 2,
   onClick
 }) => {
-  // Type guard to check if the icon name exists in Lucide icons
-  const isLucideIcon = (name: string): name is IconName => {
-    return name in LucideIcons;
-  };
-
-  // Default to a placeholder if the icon doesn't exist
-  if (!isLucideIcon(iconName)) {
+  // Get the icon from Lucide icons
+  const LucideIcon = LucideIcons[iconName];
+  
+  if (!LucideIcon) {
     console.warn(`Icon "${iconName}" not found in Lucide icons`);
     return <span className={className}>□</span>;
   }
-
-  const LucideIcon = LucideIcons[iconName];
   
   return (
     <LucideIcon 
@@ -42,3 +37,59 @@ export const Icon: React.FC<IconProps> = ({
     />
   );
 };
+
+// Re-export all Lucide icons for direct use
+export const { 
+  // Common icons used in the application
+  Activity,
+  AlertTriangle,
+  ArrowDown,
+  ArrowLeft,
+  ArrowRight,
+  ArrowUp,
+  ArrowUpDown,
+  ArrowUpRight,
+  BarChart,
+  BarChart3,
+  Bell,
+  Brain,
+  Calendar,
+  Check,
+  CheckCircle,
+  CheckCircle2,
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  ChevronUp,
+  Clock,
+  CreditCard,
+  DollarSign,
+  FileSpreadsheet,
+  FileText,
+  Filter,
+  Heart,
+  History,
+  Info,
+  Layers,
+  LayoutDashboard, 
+  Lightbulb,
+  LineChart,
+  Lock,
+  Menu,
+  MinusCircle,
+  PieChart,
+  Plus,
+  PlusCircle,
+  Reply,
+  Search,
+  Send,
+  ShieldCheck,
+  Target,
+  Terminal,
+  ThumbsUp,
+  TrendingUp,
+  User,
+  Users,
+  Wallet,
+  X
+} = LucideIcons;

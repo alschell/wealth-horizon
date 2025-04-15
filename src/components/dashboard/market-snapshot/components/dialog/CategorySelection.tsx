@@ -21,7 +21,7 @@ const CategorySelection: React.FC<CategorySelectionProps> = ({
           <div className="space-y-3 pl-2">
             {marketItems
               .filter(item => item.category === category)
-              .sort((a, b) => a.label.localeCompare(b.label))
+              .sort((a, b) => a.name.localeCompare(b.name))
               .map((item) => (
                 <div key={item.id} className="flex items-start space-x-3">
                   <Checkbox 
@@ -34,7 +34,7 @@ const CategorySelection: React.FC<CategorySelectionProps> = ({
                       htmlFor={`market-${item.id}`}
                       className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     >
-                      {item.label}
+                      {item.name}
                     </label>
                   </div>
                 </div>

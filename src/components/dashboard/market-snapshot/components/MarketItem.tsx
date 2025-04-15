@@ -2,7 +2,6 @@
 import React from 'react';
 import { TrendingUp, TrendingDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { getCountryFlagCode } from "../utils";
 
 interface MarketItemProps {
   name: string;
@@ -13,6 +12,7 @@ interface MarketItemProps {
   isUp: boolean;
   category: string;
   isLarge?: boolean;
+  item?: any; // Added to support alternative usage
 }
 
 const MarketItem: React.FC<MarketItemProps> = ({
@@ -24,8 +24,70 @@ const MarketItem: React.FC<MarketItemProps> = ({
   isUp,
   category,
   isLarge = false,
+  item
 }) => {
-  const countryCode = getCountryFlagCode(category, name);
+  // If item prop is provided, use it instead of individual props
+  const itemData = item || {
+    name,
+    ticker,
+    value,
+    change,
+    changePercent,
+    isUp,
+    category
+  };
+
+  // Function to get country flag code
+  const getCountryFlagCode = (category: string, name: string): string => {
+    // Map common indices to country codes
+    const indicesMap: Record<string, string> = {
+      'S&P 500': 'us',
+      'NASDAQ': 'us',
+      'Dow Jones': 'us',
+      'FTSE 100': 'gb',
+      'DAX': 'de',
+      'CAC 40': 'fr',
+      'Nikkei 225': 'jp',
+      'Hang Seng': 'hk',
+      'Shanghai Composite': 'cn',
+      'KOSPI': 'kr',
+      'ASX 200': 'au',
+      'Sensex': 'in',
+      'Bovespa': 'br'
+    };
+
+    // Map currencies to country codes
+    const currencyMap: Record<string, string> = {
+      'USD': 'us',
+      'EUR': 'eu',
+      'GBP': 'gb',
+      'JPY': 'jp',
+      'CHF': 'ch',
+      'CAD': 'ca',
+      'AUD': 'au',
+      'CNY': 'cn',
+      'HKD': 'hk',
+      'SGD': 'sg',
+      'EUR/USD': 'eu',
+      'USD/JPY': 'jp',
+      'GBP/USD': 'gb',
+      'USD/CHF': 'ch',
+      'USD/CAD': 'ca',
+      'AUD/USD': 'au',
+      'USD/CNY': 'cn'
+    };
+
+    if (category === "Indices") {
+      return indicesMap[name] || 'us';
+    } else if (category === "Currencies") {
+      // Extract currency code from pair or use direct mapping
+      const currency = name.split('/')[0];
+      return currencyMap[name] || currencyMap[currency] || 'us';
+    }
+
+    // Default fallback
+    return 'us';
+  };
 
   return (
     <div className={cn(
@@ -34,27 +96,27 @@ const MarketItem: React.FC<MarketItemProps> = ({
     )}>
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center">
-          {category === 'Indices' && (
-            <span className={`fi fi-${countryCode} mr-2`} />
+          {itemData.category === 'Indices' && (
+            <span className={`fi fi-${getCountryFlagCode(itemData.category, itemData.name)} mr-2`} />
           )}
-          <h3 className="font-medium">{name}</h3>
+          <h3 className="font-medium">{itemData.name}</h3>
         </div>
-        <span className="text-xs text-muted-foreground">{ticker}</span>
+        <span className="text-xs text-muted-foreground">{itemData.ticker}</span>
       </div>
       
       <div className="flex items-end justify-between">
-        <span className="text-xl font-bold">{value}</span>
+        <span className="text-xl font-bold">{itemData.value}</span>
         <div className={cn(
           'flex items-center text-sm',
-          isUp ? 'text-green-600' : 'text-red-600'
+          itemData.isUp ? 'text-green-600' : 'text-red-600'
         )}>
-          {isUp ? (
+          {itemData.isUp ? (
             <TrendingUp className="h-3 w-3 mr-1" />
           ) : (
             <TrendingDown className="h-3 w-3 mr-1" />
           )}
-          <span>{change}</span>
-          <span className="ml-1">({changePercent})</span>
+          <span>{itemData.change}</span>
+          <span className="ml-1">({itemData.changePercent})</span>
         </div>
       </div>
     </div>

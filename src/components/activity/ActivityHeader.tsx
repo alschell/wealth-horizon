@@ -3,7 +3,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import PageHeaderCard from "@/components/dashboard/PageHeaderCard";
-import { ArrowLeft, History } from "@/utils/Icons";
+import { ArrowLeft, History } from "@/utils/icons";
 
 export const ActivityHeader: React.FC = () => {
   const navigate = useNavigate();
@@ -22,7 +22,7 @@ export const ActivityHeader: React.FC = () => {
       </div>
       
       <PageHeaderCard
-        icon="History" 
+        icon={History} 
         title="Activity History"
         description="View your complete activity history across all accounts and services"
         iconColor="text-gray-700"

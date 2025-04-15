@@ -24,3 +24,16 @@ export {
   handleError,
   tryCatch
 } from '@/utils/errorHandling';
+
+// Export all market data hooks for convenience
+export {
+  useQuote,
+  useMarketNews,
+  useCompanyNews,
+  useSymbolSearch,
+  useIndices,
+  useCandleData,
+  useMarketDataRefresh,
+  formatQuote,
+  refreshMarketData
+} from './useMarketData';

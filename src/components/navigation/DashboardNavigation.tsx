@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { LogOut, Settings, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -8,9 +8,21 @@ import NotificationsPopover from '@/components/dashboard/notifications/Notificat
 import { LanguageSelector } from '@/components/ui/language-selector';
 import { TranslatedText } from '@/components/ui/translated-text';
 import { toast } from 'sonner';
+import { useTranslation } from '@/context/TranslationContext';
 
 const DashboardNavigation: React.FC = () => {
   const navigate = useNavigate();
+  const { translate, currentLanguage } = useTranslation();
+  const [searchPlaceholder, setSearchPlaceholder] = useState("Search...");
+
+  useEffect(() => {
+    const updatePlaceholder = async () => {
+      const translated = await translate("Search...");
+      setSearchPlaceholder(translated);
+    };
+    
+    updatePlaceholder();
+  }, [translate, currentLanguage]);
 
   const handleLogout = () => {
     localStorage.removeItem("auth_token");
@@ -34,7 +46,7 @@ const DashboardNavigation: React.FC = () => {
         <div className="flex items-center gap-3">
           <div className="relative w-64 mr-2">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-            <Input placeholder={<TranslatedText>Search...</TranslatedText>} className="pl-10 bg-white" />
+            <Input placeholder={searchPlaceholder} className="pl-10 bg-white" />
           </div>
           <NotificationsPopover />
           <LanguageSelector />

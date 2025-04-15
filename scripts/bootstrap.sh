@@ -10,4 +10,15 @@ if [ ! -d "node_modules" ]; then
   npm install
 fi
 
-echo "Setup complete. To start the development server, run: sh scripts/run-dev.sh"
+# Ensure Vite is installed
+if ! npm list vite > /dev/null 2>&1; then
+  echo "Installing Vite..."
+  npm install vite --save-dev
+fi
+
+# Install any missing dependencies from package.json
+npm install
+
+echo "Setup complete. Running the development server now..."
+# Run the development server directly
+npx vite

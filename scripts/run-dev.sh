@@ -13,6 +13,6 @@ if ! npm list vite > /dev/null 2>&1; then
   npm install vite --save-dev
 fi
 
-# Run the development server
+# Run the development server using npx to ensure we use the local installation
 echo "Starting development server..."
 npx vite

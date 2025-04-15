@@ -28,5 +28,8 @@ export default defineConfig(({ mode }) => ({
     'process.env.NODE_ENV': JSON.stringify(mode),
     // Add any other environment variables needed for the application
     'process.env.NEXT_PUBLIC_APP_URL': JSON.stringify('http://localhost:8080'),
+  },
+  optimizeDeps: {
+    include: ['@tanstack/react-query'],
   }
 }));

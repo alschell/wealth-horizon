@@ -1,70 +1,63 @@
 
 import React from "react";
-import { BarChart3, Shield, Layers, Clock } from "lucide-react";
-import { FadeIn, StaggerContainer, StaggerItem, ScaleIn } from "@/components/ui/animation";
-import DashboardAnimation from "@/components/animations/DashboardAnimation";
-
-const benefits = [
-  {
-    title: "Centralized Asset Management",
-    description: "Eliminate data silos and manage all assets, investments, and operations in one unified platform.",
-    icon: <Layers size={24} />,
-  },
-  {
-    title: "Data-Driven Decision Making",
-    description: "Leverage advanced analytics and AI-powered insights to make more informed investment decisions.",
-    icon: <BarChart3 size={24} />,
-  },
-  {
-    title: "Enterprise-Grade Security",
-    description: "Safeguard sensitive financial data with bank-level security, encryption, and access controls.",
-    icon: <Shield size={24} />,
-  },
-  {
-    title: "Operational Efficiency",
-    description: "Streamline workflows, automate routine tasks, and reduce manual work to focus on high-value activities.",
-    icon: <Clock size={24} />,
-  }
-].sort((a, b) => a.title.localeCompare(b.title));
+import { FadeIn } from "@/components/ui/animation";
+import { TranslatedText } from "@/components/ui/translated-text";
 
 const BenefitsSection: React.FC = () => {
-  return (
-    <section className="py-24 bg-gray-50" id="benefits">
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="text-center mb-16">
-          <FadeIn>
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Transform Your Wealth Management</h2>
-            <p className="mt-4 text-xl text-gray-600 max-w-3xl mx-auto">
-              Experience a new level of efficiency, insight, and control with <span className="text-indigo-600">Wealth</span><span className="text-gray-900">Horizon</span>.
-            </p>
-          </FadeIn>
-        </div>
+  const benefits = [
+    {
+      title: "Increased Efficiency",
+      description: "Automate routine tasks and streamline workflows to save time and reduce operational costs",
+      percentage: "47%",
+      metric: "reduction in administrative tasks"
+    },
+    {
+      title: "Enhanced Decision Making",
+      description: "Gain deeper insights through advanced analytics and comprehensive data visualization",
+      percentage: "68%",
+      metric: "of clients report improved investment decisions"
+    },
+    {
+      title: "Consolidated Reporting",
+      description: "Access all your financial information in one place with customizable reporting tools",
+      percentage: "92%",
+      metric: "reduction in reporting time"
+    }
+  ];
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
-          <StaggerContainer className="space-y-8">
-            {benefits.map((benefit, index) => (
-              <StaggerItem key={index}>
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-12 h-12 flex items-center justify-center rounded-lg bg-gray-50 text-[#4E46DC]">
-                    {benefit.icon}
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2">{benefit.title}</h3>
-                    <p className="text-gray-600">{benefit.description}</p>
-                  </div>
-                </div>
-              </StaggerItem>
-            ))}
-          </StaggerContainer>
-          
-          <ScaleIn delay={0.2}>
-            <div className="relative rounded-xl overflow-hidden shadow-2xl border border-gray-100">
-              <div className="relative aspect-[4/3]">
-                <DashboardAnimation />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent"></div>
+  return (
+    <section className="py-24 bg-white" id="benefits">
+      <div className="max-w-7xl mx-auto px-6">
+        <FadeIn>
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
+              <TranslatedText>Measurable Benefits</TranslatedText>
+            </h2>
+            <p className="mt-4 text-xl text-gray-600 max-w-3xl mx-auto">
+              <TranslatedText>
+                Real results our clients experience after implementing WealthHorizon
+              </TranslatedText>
+            </p>
+          </div>
+        </FadeIn>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {benefits.map((benefit, index) => (
+            <FadeIn key={index} delay={0.1 * index}>
+              <div className="p-8 border border-gray-100 rounded-xl bg-white h-full flex flex-col">
+                <div className="text-4xl font-bold text-indigo-600 mb-4">{benefit.percentage}</div>
+                <p className="text-sm text-gray-500 mb-6">
+                  <TranslatedText>{benefit.metric}</TranslatedText>
+                </p>
+                <h3 className="text-xl font-semibold mb-3 text-gray-900">
+                  <TranslatedText>{benefit.title}</TranslatedText>
+                </h3>
+                <p className="text-gray-600 flex-grow">
+                  <TranslatedText>{benefit.description}</TranslatedText>
+                </p>
               </div>
-            </div>
-          </ScaleIn>
+            </FadeIn>
+          ))}
         </div>
       </div>
     </section>

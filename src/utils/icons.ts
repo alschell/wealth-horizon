@@ -280,7 +280,6 @@ export const Lightbulb = createIconComponent(
   </>
 );
 
-// More icons as needed (matching the ones in the shims file)
 // CreditCard icon
 export const CreditCard = createIconComponent(
   <>

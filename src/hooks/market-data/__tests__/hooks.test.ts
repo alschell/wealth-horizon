@@ -1,12 +1,12 @@
 
 import { renderHook, act } from '@testing-library/react-hooks';
-import { useQuote, useMarketNews, useCompanyNews, useSymbolSearch, useIndices, useCandleData } from '..';
-import * as api from '../api';
+import { useQuote, useMarketNews, useCompanyNews, useSymbolSearch, useIndices, useCandleData } from '../useMarketData';
+import * as api from '@/utils/market-data/api';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React from 'react';
 
 // Mock the API functions
-jest.mock('../api', () => ({
+jest.mock('@/utils/market-data/api', () => ({
   getQuote: jest.fn(),
   getMarketNews: jest.fn(),
   getCompanyNews: jest.fn(),

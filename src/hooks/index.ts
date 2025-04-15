@@ -36,4 +36,4 @@ export {
   useMarketDataRefresh,
   formatQuote,
   refreshMarketData
-} from './market-data/useMarketData';
+} from './market-data';

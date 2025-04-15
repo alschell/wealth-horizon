@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { supabase } from '@/utils/supabaseClient';
 
@@ -32,6 +33,20 @@ export const LANGUAGES: Language[] = [
   { code: 'de', name: 'German', nativeName: 'Deutsch' },
   { code: 'ko', name: 'Korean', nativeName: '한국어' },
 ];
+
+// Country to language mapping
+const COUNTRY_LANGUAGE_MAP: Record<string, LanguageCode> = {
+  'US': 'en', 'GB': 'en', 'AU': 'en', 'CA': 'en',
+  'CN': 'zh', 'TW': 'zh', 'HK': 'zh', 'SG': 'zh',
+  'ES': 'es', 'MX': 'es', 'AR': 'es', 'CO': 'es', 'CL': 'es', 'PE': 'es',
+  'SA': 'ar', 'AE': 'ar', 'EG': 'ar', 'IQ': 'ar', 'KW': 'ar',
+  'BR': 'pt', 'PT': 'pt', 'AO': 'pt', 'MZ': 'pt',
+  'RU': 'ru', 'BY': 'ru', 'KZ': 'ru',
+  'JP': 'ja',
+  'FR': 'fr', 'BE': 'fr', 'CH': 'fr', 'LU': 'fr',
+  'DE': 'de', 'AT': 'de', 'CH': 'de',
+  'KR': 'ko', 'KP': 'ko'
+};
 
 // Terms that should not be translated
 export const NON_TRANSLATABLE_TERMS = [
@@ -71,17 +86,56 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
   const [translationCache, setTranslationCache] = useState<Record<string, Record<string, string>>>({});
   const [isLoading, setIsLoading] = useState(false);
   
-  // Load language preference from local storage on initial load
+  // Detect user's language based on IP address
   useEffect(() => {
-    const savedLanguage = localStorage.getItem('preferredLanguage') as LanguageCode;
-    if (savedLanguage && LANGUAGES.some(lang => lang.code === savedLanguage)) {
-      setCurrentLanguage(savedLanguage);
-    } else {
-      // Default to browser language if available and supported
+    const detectLanguageFromIP = async () => {
+      try {
+        // Fetch IP geolocation data (using a free service)
+        const response = await fetch('https://ipapi.co/json/');
+        const data = await response.json();
+        
+        if (data && data.country_code) {
+          const countryCode = data.country_code;
+          console.log(`Detected country code: ${countryCode}`);
+          
+          // Get language based on country
+          const detectedLanguage = COUNTRY_LANGUAGE_MAP[countryCode];
+          
+          if (detectedLanguage && LANGUAGES.some(lang => lang.code === detectedLanguage)) {
+            console.log(`Setting language based on location: ${detectedLanguage}`);
+            setCurrentLanguage(detectedLanguage);
+            localStorage.setItem('preferredLanguage', detectedLanguage);
+          } else {
+            // If no language detected for country or not supported, check browser
+            checkBrowserLanguage();
+          }
+        } else {
+          checkBrowserLanguage();
+        }
+      } catch (error) {
+        console.error('Error detecting language from IP:', error);
+        checkBrowserLanguage();
+      }
+    };
+    
+    const checkBrowserLanguage = () => {
+      // If IP detection fails, try browser language
       const browserLang = navigator.language.split('-')[0] as LanguageCode;
       if (LANGUAGES.some(lang => lang.code === browserLang)) {
+        console.log(`Setting language from browser: ${browserLang}`);
         setCurrentLanguage(browserLang);
+        localStorage.setItem('preferredLanguage', browserLang);
       }
+    };
+    
+    // Check if user already has a preference saved
+    const savedLanguage = localStorage.getItem('preferredLanguage') as LanguageCode;
+    if (savedLanguage && LANGUAGES.some(lang => lang.code === savedLanguage)) {
+      console.log(`Using saved language preference: ${savedLanguage}`);
+      setCurrentLanguage(savedLanguage);
+    } else {
+      // No saved preference, detect from IP
+      detectLanguageFromIP();
     }
   }, []);
 

@@ -11,11 +11,15 @@
 import React from "react";
 import { Helmet } from "react-helmet-async"; 
 import { LandingLayout } from "@/components/landing";
+import { useTranslation } from "@/context/TranslationContext";
+import { TranslatedText } from "@/components/ui/translated-text";
 
 /**
  * Main landing page with SEO optimization and structured data
  */
 const LandingPage: React.FC = () => {
+  const { currentLanguage } = useTranslation();
+
   // Structured data for rich search results
   const structuredData = {
     "@context": "https://schema.org",
@@ -44,10 +48,18 @@ const LandingPage: React.FC = () => {
     "keywords": "wealth management, family office, financial planning, investment, portfolio optimization"
   };
 
+  const getPageTitle = () => {
+    return <TranslatedText>Wealth Horizon | Intelligent Wealth Management</TranslatedText>;
+  };
+
+  const getPageDescription = () => {
+    return <TranslatedText>Wealth Horizon provides comprehensive wealth management solutions for family offices and high-net-worth individuals.</TranslatedText>;
+  };
+
   return (
     <>
       <Helmet>
-        <title>Wealth Horizon | Intelligent Wealth Management</title>
+        <title>{getPageTitle()}</title>
         <meta name="description" content="Wealth Horizon provides comprehensive wealth management solutions for family offices and high-net-worth individuals." />
         <meta name="keywords" content="wealth management, family office, financial planning, investment" />
         <meta property="og:title" content="Wealth Horizon | Intelligent Wealth Management" />
@@ -62,7 +74,7 @@ const LandingPage: React.FC = () => {
         <link rel="canonical" href="https://wealthhorizon.com/" />
         
         {/* Add language and direction */}
-        <html lang="en" dir="ltr" />
+        <html lang={currentLanguage} dir={currentLanguage === 'ar' ? 'rtl' : 'ltr'} />
         
         {/* Add structured data for rich search results */}
         <script type="application/ld+json">

@@ -1,54 +1,46 @@
 
-import { toast } from 'sonner';
+import { toast } from '@/hooks/use-toast';
 
 /**
- * Show a success toast message
+ * Show a success toast notification
  */
-export const showSuccess = (title: string, message?: string) => {
-  toast.success(title, {
+export function showSuccess(title: string, message?: string) {
+  toast({
+    title,
     description: message,
-    duration: 4000
+    variant: 'default'
   });
-};
+}
 
 /**
- * Show an error toast message
+ * Show an error toast notification
  */
-export const showError = (title: string, message?: string) => {
-  toast.error(title, {
+export function showError(title: string, message?: string) {
+  toast({
+    title,
     description: message,
-    duration: 5000
+    variant: 'destructive'
   });
-};
+}
 
 /**
- * Show an information toast message
+ * Show an info toast notification
  */
-export const showInfo = (title: string, message?: string) => {
-  toast(title, {
-    description: message,
-    duration: 3000
-  });
-};
-
-/**
- * Show a warning toast message
- */
-export const showWarning = (title: string, message?: string) => {
-  toast(title, {
-    description: message,
-    icon: '⚠️',
-    duration: 4500
-  });
-};
-
-/**
- * Show a loading toast message that can be updated
- */
-export const showLoading = (title: string, message?: string) => {
-  return toast.loading(title, {
+export function showInfo(title: string, message?: string) {
+  toast({
+    title,
     description: message
   });
-};
+}
 
-export { toast };
+/**
+ * Show a warning toast notification
+ */
+export function showWarning(title: string, message?: string) {
+  toast({
+    title,
+    description: message,
+    variant: 'destructive',
+    className: 'bg-amber-500'
+  });
+}

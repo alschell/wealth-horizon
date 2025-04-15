@@ -13,14 +13,12 @@ export { useErrorHandler } from './useErrorHandler';
 export { useErrorBoundary } from './useErrorBoundary';
 export { useDocumentManager } from '@/context/DocumentContext';
 
-// Add the new validated form hook
-export { useValidatedForm } from './useValidatedForm';
-
 // Using withErrorHandling from useErrorBoundary
 export { withErrorHandling } from './useErrorBoundary';
 
 // Export error utilities for convenience
 export {
+  getErrorMessage,
   parseError,
   logError,
   handleError,

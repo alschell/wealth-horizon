@@ -1,5 +1,10 @@
 
-import { toast } from 'sonner';
+/**
+ * Core error handling utilities
+ * This centralizes error handling logic for consistent error management
+ */
+
+import { toast } from '@/hooks/use-toast';
 
 /**
  * Standard error response format
@@ -8,128 +13,140 @@ export interface ErrorResponse {
   message: string;
   code?: string;
   details?: Record<string, any>;
-  original?: unknown;
 }
 
 /**
  * Options for error handling
  */
 export interface ErrorHandlerOptions {
-  silent?: boolean;
+  componentName?: string;
   showToast?: boolean;
   logError?: boolean;
+  rethrow?: boolean;
   fallbackMessage?: string;
-  componentName?: string;
+  silent?: boolean;
+  logToConsole?: boolean;
+  toastTitle?: string;
   onError?: (error: unknown) => void;
+}
+
+/**
+ * Extract a readable message from various error types
+ */
+export function getErrorMessage(error: unknown, fallbackMessage: string = "An unexpected error occurred"): string {
+  if (error instanceof Error) {
+    return error.message;
+  }
+  
+  if (typeof error === 'string') {
+    return error;
+  }
+  
+  if (error && typeof error === 'object' && 'message' in error) {
+    return String((error as {message: unknown}).message);
+  }
+  
+  return fallbackMessage;
 }
 
 /**
  * Parse an error into a standardized format
  */
 export function parseError(error: unknown): ErrorResponse {
-  // If it's already our ErrorResponse type, return it
-  if (error && typeof error === 'object' && 'message' in error && typeof error.message === 'string') {
-    return error as ErrorResponse;
-  }
-  
-  // If it's a standard Error object
   if (error instanceof Error) {
     return {
       message: error.message,
-      code: error.name,
-      original: error
+      code: error.name
     };
   }
   
-  // If it's a string
   if (typeof error === 'string') {
     return {
       message: error,
-      code: 'STRING_ERROR'
+      code: 'ERROR'
     };
   }
   
-  // Unknown error type
+  if (error && typeof error === 'object') {
+    if ('message' in error) {
+      return {
+        message: String((error as ErrorResponse).message),
+        code: (error as ErrorResponse).code || 'ERROR',
+        details: (error as ErrorResponse).details
+      };
+    }
+  }
+  
   return {
-    message: 'An unknown error occurred',
-    code: 'UNKNOWN_ERROR',
-    original: error
+    message: 'An unexpected error occurred',
+    code: 'UNKNOWN_ERROR'
   };
 }
 
 /**
- * Log an error to the console with additional context
+ * Log error details to the console
  */
-export function logError(error: unknown, context?: string): ErrorResponse {
-  const parsedError = parseError(error);
+export function logError(error: unknown, componentName?: string): void {
+  console.error(`Error${componentName ? ` in ${componentName}` : ''}:`, error);
   
-  console.error(
-    `[Error${context ? ` in ${context}` : ''}]:`, 
-    parsedError.message,
-    parsedError.original || ''
-  );
-  
-  return parsedError;
-}
-
-/**
- * Create a contextual error with additional information
- */
-export function createContextualError(
-  originalError: unknown, 
-  contextMessage: string
-): Error {
-  const parsedError = parseError(originalError);
-  const newError = new Error(`${contextMessage}: ${parsedError.message}`);
-  newError.name = parsedError.code || 'ContextualError';
-  
-  // Preserve the original stack trace if possible
-  if (originalError instanceof Error) {
-    newError.stack = originalError.stack;
+  if (error instanceof Error && error.stack) {
+    console.error('Stack trace:', error.stack);
   }
-  
-  return newError;
 }
 
 /**
- * Handle an error with standardized approach
+ * Create a descriptive error with component context
  */
-export function handleError(
-  error: unknown, 
-  options: ErrorHandlerOptions = {}
-): ErrorResponse {
-  const {
-    silent = false,
-    showToast = !silent,
-    logError: shouldLogError = !silent,
-    fallbackMessage = 'An unexpected error occurred',
-    componentName,
+export function createContextualError(message: string, componentName: string): Error {
+  const error = new Error(`[${componentName}] ${message}`);
+  return error;
+}
+
+/**
+ * Handle an error with consistent approach
+ */
+export function handleError(error: unknown, options: ErrorHandlerOptions = {}): ErrorResponse {
+  const { 
+    componentName, 
+    showToast = true, 
+    logError: shouldLogError = true,
+    rethrow = false,
+    fallbackMessage = "An unexpected error occurred",
     onError
   } = options;
   
-  // Parse the error
-  const parsedError = parseError(error);
+  // Parse error into standardized format
+  const errorDetails = parseError(error);
   
-  // Log to console if enabled
+  // Log error if requested
   if (shouldLogError) {
     logError(error, componentName);
   }
   
-  // Show toast notification if enabled
+  // Show toast if requested
   if (showToast) {
-    toast.error(parsedError.message || fallbackMessage);
+    toast({
+      title: "Error",
+      description: errorDetails.message || fallbackMessage,
+      variant: "destructive"
+    });
   }
   
-  // Execute custom error handler if provided
+  // Call onError if provided
   if (onError) {
     onError(error);
   }
   
-  return parsedError;
+  // Rethrow if requested
+  if (rethrow && error instanceof Error) {
+    throw error;
+  }
+  
+  return errorDetails;
 }
 
 /**
- * Wrap an async function with error handling
+ * HOC to wrap a function with error handling
  */
 export function withErrorHandling<T extends (...args: any[]) => Promise<any>>(
   fn: T,
@@ -146,22 +163,16 @@ export function withErrorHandling<T extends (...args: any[]) => Promise<any>>(
 }
 
 /**
- * Execute a function with try-catch and standardized error handling
+ * Try-catch wrapper with standardized error handling
  */
-export function tryCatch<T>(
+export async function tryCatch<T>(
   fn: () => Promise<T> | T,
   options: ErrorHandlerOptions = {}
 ): Promise<T | undefined> {
   try {
-    const result = fn();
-    return result instanceof Promise 
-      ? result.catch(error => {
-          handleError(error, options);
-          return undefined;
-        })
-      : Promise.resolve(result);
+    return await fn();
   } catch (error) {
     handleError(error, options);
-    return Promise.resolve(undefined);
+    return undefined;
   }
 }

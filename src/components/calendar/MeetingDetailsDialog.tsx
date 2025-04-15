@@ -2,7 +2,7 @@
 import React from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { CalendarIcon, Users, ExternalLink, MapPin } from "lucide-react";
+import { Calendar, Users, ExternalLink, MapPin } from "lucide-react";
 
 interface MeetingDetailsDialogProps {
   open: boolean;
@@ -23,7 +23,7 @@ const MeetingDetailsDialog = ({ open, onOpenChange, meeting }: MeetingDetailsDia
         <div className="space-y-4">
           <div className="border-b pb-2">
             <div className="flex items-center gap-2 mb-2">
-              <CalendarIcon className="h-4 w-4 text-gray-500" />
+              <Calendar className="h-4 w-4 text-gray-500" />
               <span className="text-sm">{meeting.date}</span>
             </div>
             <div className="flex items-center gap-2 mb-2">

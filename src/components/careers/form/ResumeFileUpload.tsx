@@ -1,17 +1,4 @@
 
-/**
- * ResumeFileUpload component
- * 
- * An accessible file upload component specifically designed for resume/CV uploads.
- * Features:
- * - Drag and drop support
- * - File preview
- * - Accessible error handling
- * - Screen reader announcements
- * 
- * @component
- */
-
 import React, { useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { File, Upload, X } from "lucide-react";
@@ -32,17 +19,6 @@ interface ResumeFileUploadProps {
 
 /**
  * A fully accessible file upload component for resumes
- * 
- * @example
- * ```tsx
- * <ResumeFileUpload
- *   resumeFile={resumeFile}
- *   setResumeFile={setResumeFile}
- *   handleFileChange={handleFileChange}
- *   error={errors.resume}
- *   disabled={isSubmitting}
- * />
- * ```
  */
 export const ResumeFileUpload: React.FC<ResumeFileUploadProps> = ({
   resumeFile,
@@ -73,7 +49,7 @@ export const ResumeFileUpload: React.FC<ResumeFileUploadProps> = ({
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
-    announceToScreenReader("Resume file removed", "polite");
+    announceToScreenReader("Resume file removed");
   };
 
   /**
@@ -104,7 +80,7 @@ export const ResumeFileUpload: React.FC<ResumeFileUploadProps> = ({
           onChange={(e) => {
             handleFileChange(e);
             if (e.target.files && e.target.files[0]) {
-              announceToScreenReader(`File ${e.target.files[0].name} selected`, "polite");
+              announceToScreenReader(`File ${e.target.files[0].name} selected`);
             }
           }}
           aria-labelledby={labelId}

@@ -1,7 +1,6 @@
 
 import { useCallback } from 'react';
 import { DocumentFileWithMetadata } from '../../types';
-import { showSuccess } from '@/utils/toast';
 
 interface UseDocumentOperationsProps {
   documentFiles: DocumentFileWithMetadata[];
@@ -60,7 +59,7 @@ export function useDocumentOperations({
     // Reset form after adding
     resetForm();
     
-    showSuccess("Document added", "The document has been added successfully.");
+    console.log("Document added successfully");
   }, [createDocument, setDocumentFiles, resetForm]);
   
   /**
@@ -96,7 +95,7 @@ export function useDocumentOperations({
     setIsEditing(false);
     setEditingDocumentId(null);
     
-    showSuccess("Document updated", "The document has been updated successfully.");
+    console.log("Document updated successfully");
   }, [updateDocumentInList, setDocumentFiles, resetForm, setIsEditing, setEditingDocumentId]);
   
   /**
@@ -114,7 +113,7 @@ export function useDocumentOperations({
   const handleRemoveDocument = useCallback((id: string) => {
     setDocumentFiles(prev => removeDocumentFromList(prev, id));
     
-    showSuccess("Document removed", "The document has been removed successfully.");
+    console.log("Document removed successfully");
   }, [removeDocumentFromList, setDocumentFiles]);
   
   return {

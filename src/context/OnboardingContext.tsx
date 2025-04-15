@@ -1,147 +1,56 @@
 
-import React, { createContext, useState, useContext, ReactNode } from "react";
+import React, { createContext, useContext, useState, ReactNode } from 'react';
 
-import { 
-  OnboardingData, 
-  OnboardingContextType,
-  FamilyOfficeInfo,
-  PrimaryContactInfo,
-  AddressInfo,
-  LegalDocuments,
-  AggregatorInfo,
-  BeneficialOwnerInfo,
-  PersonalInfo,
-  IdentityVerification,
-  FinancialAccountInfo
-} from "@/types/onboarding";
-import { defaultOnboardingData } from "./onboardingDefaults";
-
-// Re-export types for convenience
-export type {
-  FamilyOfficeInfo,
-  PrimaryContactInfo,
-  AddressInfo,
-  LegalDocuments,
-  AggregatorInfo,
-  FinancialAccountInfo,
-  BeneficialOwnerInfo,
-  PersonalInfo,
-  IdentityVerification
-};
+interface OnboardingContextType {
+  currentStep: number;
+  setCurrentStep: (step: number) => void;
+  isComplete: boolean;
+  setIsComplete: (isComplete: boolean) => void;
+  goToNextStep: () => void;
+  goToPreviousStep: () => void;
+  resetOnboarding: () => void;
+}
 
 const OnboardingContext = createContext<OnboardingContextType | undefined>(undefined);
 
-export function OnboardingProvider({ children }: { children: ReactNode }) {
-  const [onboardingData, setOnboardingData] = useState<OnboardingData>(defaultOnboardingData);
+export const OnboardingProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [currentStep, setCurrentStep] = useState(0);
+  const [isComplete, setIsComplete] = useState(false);
 
-  const updateFamilyOfficeInfo = (info: FamilyOfficeInfo) => {
-    setOnboardingData((prev) => ({ ...prev, familyOfficeInfo: info }));
+  const goToNextStep = () => {
+    setCurrentStep((prev) => prev + 1);
   };
 
-  const updatePrimaryContactInfo = (info: PrimaryContactInfo) => {
-    setOnboardingData((prev) => ({ ...prev, primaryContactInfo: info }));
-  };
-
-  const updateAddressInfo = (info: AddressInfo) => {
-    setOnboardingData((prev) => ({ ...prev, addressInfo: info }));
-  };
-
-  const updateLegalDocuments = (info: LegalDocuments) => {
-    setOnboardingData((prev) => ({ ...prev, legalDocuments: info }));
-  };
-
-  const updateAggregatorInfo = (info: AggregatorInfo) => {
-    setOnboardingData((prev) => ({ ...prev, aggregatorInfo: info }));
-  };
-
-  const addFinancialAccount = (account: FinancialAccountInfo) => {
-    setOnboardingData((prev) => ({
-      ...prev,
-      financialAccounts: [...prev.financialAccounts, account],
-    }));
-  };
-
-  const removeFinancialAccount = (index: number) => {
-    setOnboardingData((prev) => ({
-      ...prev,
-      financialAccounts: prev.financialAccounts.filter((_, i) => i !== index),
-    }));
-  };
-
-  const updateFinancialAccount = (index: number, updatedAccount: FinancialAccountInfo) => {
-    setOnboardingData((prev) => {
-      const newAccounts = [...prev.financialAccounts];
-      newAccounts[index] = updatedAccount;
-      return {
-        ...prev,
-        financialAccounts: newAccounts
-      };
-    });
-  };
-
-  const addBeneficialOwner = (owner: BeneficialOwnerInfo) => {
-    setOnboardingData((prev) => ({
-      ...prev,
-      beneficialOwners: [...prev.beneficialOwners, owner],
-    }));
-  };
-
-  const removeBeneficialOwner = (index: number) => {
-    setOnboardingData((prev) => ({
-      ...prev,
-      beneficialOwners: prev.beneficialOwners.filter((_, i) => i !== index),
-    }));
-  };
-
-  const updatePersonalInfo = (info: PersonalInfo) => {
-    setOnboardingData((prev) => ({ ...prev, personalInfo: info }));
-  };
-
-  const updateIdentityVerification = (info: IdentityVerification) => {
-    setOnboardingData((prev) => ({ ...prev, identityVerification: info }));
-  };
-
-  const setOnboardingCompleted = () => {
-    setOnboardingData((prev) => ({ ...prev, completed: true }));
+  const goToPreviousStep = () => {
+    setCurrentStep((prev) => Math.max(0, prev - 1));
   };
 
   const resetOnboarding = () => {
-    setOnboardingData(defaultOnboardingData);
     setCurrentStep(0);
+    setIsComplete(false);
   };
 
   return (
     <OnboardingContext.Provider
       value={{
-        onboardingData,
-        updateFamilyOfficeInfo,
-        updatePrimaryContactInfo,
-        updateAddressInfo,
-        updateLegalDocuments,
-        updateAggregatorInfo,
-        addFinancialAccount,
-        removeFinancialAccount,
-        updateFinancialAccount,
-        addBeneficialOwner,
-        removeBeneficialOwner,
-        updatePersonalInfo,
-        updateIdentityVerification,
-        setOnboardingCompleted,
         currentStep,
         setCurrentStep,
+        isComplete,
+        setIsComplete,
+        goToNextStep,
+        goToPreviousStep,
         resetOnboarding,
       }}
     >
       {children}
     </OnboardingContext.Provider>
   );
-}
+};
 
-export function useOnboarding() {
+export const useOnboarding = (): OnboardingContextType => {
   const context = useContext(OnboardingContext);
   if (context === undefined) {
-    throw new Error("useOnboarding must be used within an OnboardingProvider");
+    throw new Error('useOnboarding must be used within an OnboardingProvider');
   }
   return context;
-}
+};

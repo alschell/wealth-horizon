@@ -3,65 +3,88 @@ import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
 /**
- * Combines class names with tailwind-merge
- * @param inputs class names to combine
- * @returns combined class name string
+ * Combines class names and merges tailwind classes
  */
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
 /**
- * Formats a currency value
- * @param amount - The amount to format
- * @param currency - The currency code (default: USD)
- * @returns The formatted currency string
+ * Formats a date to a human-readable string
  */
-export function formatCurrency(amount: number, currency: string = "USD") {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
+export function formatDate(date: Date | string): string {
+  if (!date) return '';
+  
+  const d = typeof date === 'string' ? new Date(date) : date;
+  return d.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+}
+
+/**
+ * Formats a number as currency
+ */
+export function formatCurrency(
+  amount: number, 
+  currency: string = 'USD', 
+  locale: string = 'en-US'
+): string {
+  return new Intl.NumberFormat(locale, {
+    style: 'currency',
     currency,
-    maximumFractionDigits: 0,
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
   }).format(amount);
 }
 
 /**
- * Adds delay using Promise
- * @param ms - Milliseconds to delay
- * @returns A promise that resolves after the specified time
+ * Formats a number as percentage
  */
-export const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
-/**
- * Truncates text to a specified length
- * @param text - The text to truncate
- * @param maxLength - Maximum length before truncation
- * @returns Truncated text with ellipsis if needed
- */
-export function truncateText(text: string, maxLength: number = 50): string {
-  if (text.length <= maxLength) return text;
-  return `${text.substring(0, maxLength)}...`;
+export function formatPercent(
+  value: number, 
+  locale: string = 'en-US',
+  digits: number = 2
+): string {
+  return new Intl.NumberFormat(locale, {
+    style: 'percent',
+    minimumFractionDigits: digits,
+    maximumFractionDigits: digits,
+  }).format(value / 100);
 }
 
 /**
- * Capitalizes the first letter of each word in a string
- * @param str - The string to capitalize
- * @returns The capitalized string
+ * Truncates text to a specified length
  */
-export function capitalizeWords(str: string): string {
-  return str
-    .split(" ")
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-    .join(" ");
+export function truncateText(text: string, maxLength: number): string {
+  if (!text || text.length <= maxLength) return text;
+  return `${text.slice(0, maxLength)}...`;
+}
+
+/**
+ * Debounces a function
+ */
+export function debounce<T extends (...args: any[]) => any>(
+  fn: T,
+  delay: number
+): (...args: Parameters<T>) => void {
+  let timeoutId: ReturnType<typeof setTimeout> | null = null;
+  
+  return function(this: any, ...args: Parameters<T>) {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+    
+    timeoutId = setTimeout(() => {
+      fn.apply(this, args);
+    }, delay);
+  };
 }
 
 /**
  * Generates a random ID
- * @param length - Length of the ID (default: 8)
- * @returns Random ID string
  */
-export function generateId(length: number = 8): string {
-  return Math.random()
-    .toString(36)
-    .substring(2, 2 + length);
+export function generateId(prefix: string = ''): string {
+  return `${prefix}${Date.now().toString(36)}${Math.random().toString(36).substring(2, 9)}`;
 }

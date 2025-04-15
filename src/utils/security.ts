@@ -1,92 +1,56 @@
 
+// Security utility functions
+
 /**
- * Sanitizes a file name to prevent path traversal attacks
- * @param fileName The original file name
- * @returns The sanitized file name
+ * Sanitizes a filename by removing potentially dangerous characters
+ * Prevents directory traversal and other file-related attacks
  */
 export const sanitizeFileName = (fileName: string): string => {
-  // Remove any path components (slashes, backslashes)
-  let sanitized = fileName.replace(/[/\\]/g, '');
+  // First remove any directory traversal characters
+  let sanitized = fileName.replace(/\.\.\//g, '').replace(/\\/g, '');
   
-  // Remove any potential harmful characters
-  sanitized = sanitized.replace(/[^a-zA-Z0-9._-]/g, '');
+  // Remove any leading directory paths
+  sanitized = sanitized.split(/[\/\\]/).pop() || sanitized;
   
-  // Prevent null bytes
-  sanitized = sanitized.replace(/\0/g, '');
+  // Remove any potentially dangerous characters
+  sanitized = sanitized.replace(/[^\w\s.-]/g, '');
   
-  // Prevent overly long file names
-  if (sanitized.length > 255) {
-    const extension = sanitized.lastIndexOf('.');
-    if (extension > 0) {
-      sanitized = sanitized.substring(0, 251) + sanitized.substring(extension);
-    } else {
-      sanitized = sanitized.substring(0, 255);
-    }
-  }
+  return sanitized;
+};
+
+/**
+ * Sanitizes input text for display
+ * Helps prevent XSS by stripping HTML tags
+ */
+export const sanitizeText = (text: string): string => {
+  if (!text) return '';
+  return text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+};
+
+/**
+ * Sanitizes a URL to prevent javascript: protocol and other malicious links
+ */
+export const sanitizeUrl = (url: string): string => {
+  if (!url) return '';
   
-  // Prevent empty file names
-  if (sanitized.length === 0) {
-    sanitized = 'unnamed_file';
+  // Check for javascript: protocol and other potentially harmful protocols
+  const sanitized = url.replace(/javascript:/gi, '').replace(/data:/gi, '');
+  
+  // If the URL doesn't start with http, https, or /, it might be suspicious
+  if (!sanitized.startsWith('http://') && 
+      !sanitized.startsWith('https://') && 
+      !sanitized.startsWith('/')) {
+    return '';
   }
   
   return sanitized;
 };
 
 /**
- * Sanitizes HTML content to prevent XSS attacks
- * @param html The original HTML content
- * @returns The sanitized HTML content
+ * Generate a random secure token
  */
-export const sanitizeHtml = (html: string): string => {
-  // Replace potentially dangerous tags
-  return html
-    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
-    .replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, '')
-    .replace(/<object\b[^<]*(?:(?!<\/object>)<[^<]*)*<\/object>/gi, '')
-    .replace(/<embed\b[^<]*(?:(?!<\/embed>)<[^<]*)*<\/embed>/gi, '')
-    .replace(/<base\b[^<]*(?:(?!<\/base>)<[^<]*)*<\/base>/gi, '')
-    .replace(/<form\b[^<]*(?:(?!<\/form>)<[^<]*)*<\/form>/gi, '')
-    .replace(/on\w+="[^"]*"/gi, '') // Remove inline event handlers
-    .replace(/javascript:/gi, 'removed:'); // Remove javascript: protocol
-};
-
-/**
- * Validates an email address
- * @param email The email address to validate
- * @returns True if the email is valid, false otherwise
- */
-export const isValidEmail = (email: string): boolean => {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
-};
-
-/**
- * Validates a password strength
- * @param password The password to validate
- * @returns An object with validation results
- */
-export const validatePasswordStrength = (password: string): { 
-  isValid: boolean; 
-  hasMinLength: boolean;
-  hasUppercase: boolean;
-  hasLowercase: boolean;
-  hasNumber: boolean;
-  hasSpecialChar: boolean;
-} => {
-  const hasMinLength = password.length >= 8;
-  const hasUppercase = /[A-Z]/.test(password);
-  const hasLowercase = /[a-z]/.test(password);
-  const hasNumber = /[0-9]/.test(password);
-  const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
-  
-  const isValid = hasMinLength && hasUppercase && hasLowercase && hasNumber && hasSpecialChar;
-  
-  return {
-    isValid,
-    hasMinLength,
-    hasUppercase,
-    hasLowercase,
-    hasNumber,
-    hasSpecialChar
-  };
+export const generateSecureToken = (length: number = 32): string => {
+  const array = new Uint8Array(length);
+  crypto.getRandomValues(array);
+  return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
 };

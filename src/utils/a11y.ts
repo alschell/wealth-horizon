@@ -1,67 +1,44 @@
 
+// Accessibility utility functions
+
 /**
  * Announces a message to screen readers
- * @param message The message to announce
- * @param politeness The politeness level ('polite' or 'assertive')
+ * Creates a visually hidden element that is announced by screen readers,
+ * then removes the element after the announcement is made
  */
-export const announceToScreenReader = (message: string, politeness: 'polite' | 'assertive' = 'assertive') => {
-  const announce = document.createElement('div');
-  announce.setAttribute('aria-live', politeness);
-  announce.setAttribute('aria-atomic', 'true');
-  announce.setAttribute('class', 'sr-only');
-  document.body.appendChild(announce);
+export const announceToScreenReader = (message: string, politeness: 'polite' | 'assertive' = 'polite') => {
+  // Check if we're in a browser environment
+  if (typeof document === 'undefined') return;
   
-  // Timeout needed to ensure the DOM change is announced
-  setTimeout(() => {
-    announce.textContent = message;
-    
-    // Remove the element after it's been announced
-    setTimeout(() => {
-      document.body.removeChild(announce);
-    }, 1000);
-  }, 100);
-};
-
-/**
- * Adds a non-visual focus indicator for keyboard navigation
- * @param element The element to add focus styles to
- */
-export const addFocusRing = (element: HTMLElement) => {
-  element.classList.add('focus-visible:ring-2', 'focus-visible:ring-offset-2', 'focus-visible:ring-primary', 'focus-visible:outline-none');
-};
-
-/**
- * Manages focus trap for modal dialogs
- * @param containerRef Reference to the container element
- * @param isActive Whether the focus trap is active
- */
-export const useFocusTrap = (containerRef: React.RefObject<HTMLElement>, isActive: boolean) => {
-  const handleKeyDown = (e: KeyboardEvent) => {
-    if (e.key !== 'Tab' || !isActive || !containerRef.current) return;
-    
-    const focusableElements = containerRef.current.querySelectorAll(
-      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-    );
-    
-    const firstElement = focusableElements[0] as HTMLElement;
-    const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
-    
-    // If shift+tab and on first element, move to last element
-    if (e.shiftKey && document.activeElement === firstElement) {
-      e.preventDefault();
-      lastElement.focus();
-    } 
-    // If tab and on last element, move to first element
-    else if (!e.shiftKey && document.activeElement === lastElement) {
-      e.preventDefault();
-      firstElement.focus();
-    }
-  };
+  // Create an aria-live region
+  const announcement = document.createElement('div');
+  announcement.setAttribute('aria-live', politeness);
+  announcement.setAttribute('aria-atomic', 'true');
+  announcement.setAttribute('role', politeness === 'assertive' ? 'alert' : 'status');
   
-  if (isActive) {
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }
+  // Make it visually hidden but still accessible to screen readers
+  announcement.style.position = 'absolute';
+  announcement.style.width = '1px';
+  announcement.style.height = '1px';
+  announcement.style.padding = '0';
+  announcement.style.margin = '-1px';
+  announcement.style.overflow = 'hidden';
+  announcement.style.clip = 'rect(0, 0, 0, 0)';
+  announcement.style.whiteSpace = 'nowrap';
+  announcement.style.border = '0';
   
-  return undefined;
+  // Add to the DOM
+  document.body.appendChild(announcement);
+  
+  // Set the text content after a brief delay to ensure it's announced
+  window.setTimeout(() => {
+    announcement.textContent = message;
+    
+    // Remove the element after announcement (generally after 3 seconds)
+    window.setTimeout(() => {
+      if (document.body.contains(announcement)) {
+        document.body.removeChild(announcement);
+      }
+    }, 3000);
+  }, 50);
 };

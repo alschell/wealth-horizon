@@ -1,94 +1,77 @@
 
-/**
- * Gets the appropriate country code for a flag icon
- * 
- * @param category The category of the market item
- * @param label The label of the market item
- * @returns The country code for the flag
- */
-export const getCountryFlagCode = (category: string, label: string): string => {
-  // Map for country names to ISO codes
-  const countryCodes: Record<string, string> = {
-    // Major indices
-    "S&P 500": "us",
-    "Dow Jones": "us",
-    "Nasdaq": "us",
-    "Russell 2000": "us",
-    "FTSE 100": "gb",
-    "DAX": "de",
-    "CAC 40": "fr",
-    "Nikkei 225": "jp",
-    "Hang Seng": "hk",
-    "Shanghai Composite": "cn",
-    "Sensex": "in",
-    "ASX 200": "au",
-    "TSX Composite": "ca",
-    
-    // Currencies
-    "EUR/USD": "eu",
-    "GBP/USD": "gb",
-    "USD/JPY": "jp", 
-    "USD/CHF": "ch",
-    "USD/CAD": "ca",
-    "AUD/USD": "au",
-    "NZD/USD": "nz"
-  };
+// Market items and categories
+export interface MarketItem {
+  id: string;
+  label: string;
+  category: string;
+  value?: number;
+  changePercent?: number;
+  change?: number;
+  source?: string;
+  icon?: React.ReactNode;
+}
+
+export const categories = ["Indices", "Commodities", "Currencies", "Bonds"];
+
+export const marketItems: MarketItem[] = [
+  // Indices
+  { id: "sp500", label: "S&P 500", category: "Indices", value: 4486.83, changePercent: 0.45, change: 20.12 },
+  { id: "nasdaq", label: "NASDAQ", category: "Indices", value: 14897.34, changePercent: 0.75, change: 110.98 },
+  { id: "dowjones", label: "Dow Jones", category: "Indices", value: 35559.18, changePercent: 0.28, change: 99.12 },
+  { id: "ftse100", label: "FTSE 100", category: "Indices", value: 7652.55, changePercent: -0.14, change: -10.89 },
+  { id: "nikkei225", label: "Nikkei 225", category: "Indices", value: 32851.24, changePercent: 0.91, change: 295.17 },
   
-  // Check if the label exists in our mapping
-  if (label in countryCodes) {
-    return countryCodes[label];
-  }
+  // Commodities
+  { id: "gold", label: "Gold", category: "Commodities", value: 1985.12, changePercent: 0.34, change: 6.75 },
+  { id: "silver", label: "Silver", category: "Commodities", value: 24.56, changePercent: 0.65, change: 0.16 },
+  { id: "crude-oil", label: "Crude Oil", category: "Commodities", value: 76.38, changePercent: -0.89, change: -0.69 },
+  { id: "natural-gas", label: "Natural Gas", category: "Commodities", value: 2.87, changePercent: 1.23, change: 0.035 },
   
-  // Default fallbacks based on currency codes
-  if (category === "Currencies") {
-    // Check if it's a currency pair like EUR/USD
-    const parts = label.split('/');
-    if (parts.length === 2) {
-      // For pairs, use the first currency's code
-      const firstCurrency = parts[0];
-      
-      // Map of currency codes to country codes
-      const currencyToCountry: Record<string, string> = {
-        "EUR": "eu",
-        "USD": "us",
-        "GBP": "gb",
-        "JPY": "jp",
-        "CHF": "ch",
-        "CAD": "ca",
-        "AUD": "au",
-        "NZD": "nz",
-        "CNY": "cn",
-        "HKD": "hk",
-        "SGD": "sg"
-      };
-      
-      if (firstCurrency in currencyToCountry) {
-        return currencyToCountry[firstCurrency];
-      }
+  // Currencies
+  { id: "eur-usd", label: "EUR/USD", category: "Currencies", value: 1.0945, changePercent: 0.11, change: 0.0012 },
+  { id: "gbp-usd", label: "GBP/USD", category: "Currencies", value: 1.2834, changePercent: -0.22, change: -0.0028 },
+  { id: "usd-jpy", label: "USD/JPY", category: "Currencies", value: 141.86, changePercent: 0.45, change: 0.64 },
+  { id: "usd-chf", label: "USD/CHF", category: "Currencies", value: 0.9124, changePercent: -0.19, change: -0.0017 },
+  
+  // Bonds
+  { id: "us-10y", label: "US 10Y", category: "Bonds", value: 4.268, changePercent: 0.78, change: 0.033 },
+  { id: "us-30y", label: "US 30Y", category: "Bonds", value: 4.375, changePercent: 0.62, change: 0.027 },
+  { id: "ger-10y", label: "German 10Y", category: "Bonds", value: 2.457, changePercent: 0.86, change: 0.021 },
+  { id: "uk-10y", label: "UK 10Y", category: "Bonds", value: 4.179, changePercent: 0.35, change: 0.015 }
+];
+
+// LocalStorage utils for market snapshot configuration
+export const loadVisibleItems = (): string[] => {
+  try {
+    const stored = localStorage.getItem('market-snapshot-visible-items');
+    if (stored) {
+      return JSON.parse(stored);
     }
+  } catch (error) {
+    console.error('Error loading visible items:', error);
   }
-  
-  // If the item is a country-specific index, try to extract the country
-  if (category === "Indices" && label.includes(" ")) {
-    const words = label.split(" ");
-    const lastWord = words[words.length - 1];
-    
-    // Map of common index suffixes to country codes
-    const indexToCountry: Record<string, string> = {
-      "Index": "us", // Default for "X Index" 
-      "Composite": "us",
-      "500": "us",
-      "100": "gb",
-      "40": "fr",
-      "30": "de",
-      "225": "jp"
-    };
-    
-    if (lastWord in indexToCountry) {
-      return indexToCountry[lastWord];
+  // Default visible items - first 6
+  return marketItems.slice(0, 6).map(item => item.id);
+};
+
+export const loadItemOrder = (): string[] => {
+  try {
+    const stored = localStorage.getItem('market-snapshot-item-order');
+    if (stored) {
+      return JSON.parse(stored);
     }
+  } catch (error) {
+    console.error('Error loading item order:', error);
   }
-  
-  // Default fallback
-  return "us";
+  // Default order is the order of all items
+  return marketItems.map(item => item.id);
+};
+
+export const saveToLocalStorage = (visibleItems: string[], itemOrder: string[]): void => {
+  try {
+    localStorage.setItem('market-snapshot-visible-items', JSON.stringify(visibleItems));
+    localStorage.setItem('market-snapshot-item-order', JSON.stringify(itemOrder));
+  } catch (error) {
+    console.error('Error saving to localStorage:', error);
+  }
 };

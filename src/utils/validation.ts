@@ -1,142 +1,97 @@
 
+// Utility functions for validation
+
 /**
- * Validates a required field
- * @param value - The value to validate
- * @param fieldName - The name of the field for error messaging
- * @returns An error message if invalid, or undefined if valid
+ * Validates if the value is not empty
  */
-export const validateRequired = (value: string, fieldName: string = 'Field'): string | undefined => {
+export const validateRequired = (value: string, fieldName: string): string | null => {
   if (!value || value.trim() === '') {
     return `${fieldName} is required`;
   }
-  return undefined;
+  return null;
 };
 
 /**
- * Validates an email address
- * @param value - The email to validate
- * @returns An error message if invalid, or undefined if valid
+ * Validates email format
  */
-export const validateEmail = (value: string): string | undefined => {
-  if (!value) {
-    return 'Email is required';
-  }
+export const validateEmail = (value: string): string | null => {
+  if (!value) return 'Email is required';
   
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(value)) {
     return 'Please enter a valid email address';
   }
   
-  return undefined;
+  return null;
 };
 
 /**
- * Validates a phone number
- * @param value - The phone number to validate
- * @returns An error message if invalid, or undefined if valid
+ * Validates phone number format
  */
-export const validatePhone = (value: string): string | undefined => {
-  if (!value) {
-    return 'Phone number is required';
-  }
+export const validatePhone = (value: string): string | null => {
+  if (!value) return 'Phone number is required';
   
-  // Allow for international format with + and spaces, hyphens, parentheses
-  const phoneRegex = /^[+]?[(]?[0-9]{1,4}[)]?[-\s./0-9]*$/;
+  // Allow various formats like: +1 (555) 123-4567, 555-123-4567, 5551234567, etc.
+  const phoneRegex = /^(\+\d{1,3}\s?)?(\(\d{1,4}\)\s?)?[\d\s-]{7,}$/;
   if (!phoneRegex.test(value)) {
     return 'Please enter a valid phone number';
   }
   
-  // Ensure minimum length after removing non-digits
-  const digitsOnly = value.replace(/\D/g, '');
-  if (digitsOnly.length < 8) {
-    return 'Phone number is too short';
-  }
-  
-  return undefined;
+  return null;
 };
 
 /**
- * Validates a password meets strength requirements
- * @param value - The password to validate
- * @returns An error message if invalid, or undefined if valid
+ * Validates LEI (Legal Entity Identifier) format
  */
-export const validatePassword = (value: string): string | undefined => {
-  if (!value) {
-    return 'Password is required';
+export const validateLei = (value: string): string | null => {
+  if (!value) return null; // LEI might be optional
+  
+  // LEI is a 20-character alphanumeric code
+  const leiRegex = /^[A-Z0-9]{18}[0-9]{2}$/;
+  if (!leiRegex.test(value)) {
+    return 'Please enter a valid Legal Entity Identifier (20 characters)';
   }
+  
+  return null;
+};
+
+/**
+ * Validates file size
+ */
+export const validateFileSize = (file: File, maxSizeInMB: number): string | null => {
+  const maxSizeInBytes = maxSizeInMB * 1024 * 1024;
+  if (file.size > maxSizeInBytes) {
+    return `File size should not exceed ${maxSizeInMB}MB`;
+  }
+  return null;
+};
+
+/**
+ * Validates file type based on allowed extensions
+ */
+export const validateFileType = (file: File, allowedTypes: string[]): string | null => {
+  const fileExtension = file.name.split('.').pop()?.toLowerCase() || '';
+  if (!allowedTypes.includes(`.${fileExtension}`)) {
+    return `Accepted file types: ${allowedTypes.join(', ')}`;
+  }
+  return null;
+};
+
+/**
+ * Validates password strength
+ */
+export const validatePassword = (value: string): string | null => {
+  if (!value) return 'Password is required';
   
   if (value.length < 8) {
-    return 'Password must be at least 8 characters';
+    return 'Password must be at least 8 characters long';
   }
   
-  // At least one uppercase, one lowercase, one number, one special character
-  const hasUpper = /[A-Z]/.test(value);
-  const hasLower = /[a-z]/.test(value);
-  const hasNumber = /[0-9]/.test(value);
-  const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(value);
-  
-  if (!hasUpper || !hasLower || !hasNumber || !hasSpecial) {
-    return 'Password must include uppercase, lowercase, number and special character';
+  // Check for at least one uppercase letter, one lowercase letter, and one number
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/;
+  if (!passwordRegex.test(value)) {
+    return 'Password must include uppercase, lowercase, and numbers';
   }
   
-  return undefined;
-};
-
-/**
- * Validates if two passwords match
- * @param password - The main password
- * @param confirm - The confirmation password
- * @returns An error message if invalid, or undefined if valid
- */
-export const validatePasswordMatch = (password: string, confirm: string): string | undefined => {
-  if (!confirm) {
-    return 'Please confirm your password';
-  }
-  
-  if (password !== confirm) {
-    return 'Passwords do not match';
-  }
-  
-  return undefined;
-};
-
-/**
- * Validates a URL
- * @param value - The URL to validate
- * @returns An error message if invalid, or undefined if valid
- */
-export const validateUrl = (value: string): string | undefined => {
-  if (!value) {
-    return undefined; // URL might be optional
-  }
-  
-  try {
-    new URL(value);
-    return undefined;
-  } catch (e) {
-    return 'Please enter a valid URL';
-  }
-};
-
-/**
- * Validates a number is within a range
- * @param value - The number to validate
- * @param min - The minimum allowed value
- * @param max - The maximum allowed value
- * @returns An error message if invalid, or undefined if valid
- */
-export const validateNumberRange = (value: number, min?: number, max?: number): string | undefined => {
-  if (value === undefined || value === null) {
-    return 'Value is required';
-  }
-  
-  if (min !== undefined && value < min) {
-    return `Value must be at least ${min}`;
-  }
-  
-  if (max !== undefined && value > max) {
-    return `Value must be at most ${max}`;
-  }
-  
-  return undefined;
+  return null;
 };

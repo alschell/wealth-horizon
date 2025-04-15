@@ -1,143 +1,107 @@
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 
-interface UseStandardFormOptions<T> {
+interface UseStandardFormProps<T> {
   initialValues: T;
-  validationRules?: { [K in keyof T]?: (value: T[K], formData?: T) => string | undefined };
-  onSubmit: (values: T) => Promise<void>;
+  validationRules?: Record<keyof T, (value: any) => string | null>;
+  onSubmit: (data: T) => void | Promise<void>;
   onSuccess?: () => void;
   onError?: (error: unknown) => void;
 }
 
-interface UseStandardFormResult<T> {
-  formData: T;
-  errors: { [K in keyof T]?: string };
-  isSubmitting: boolean;
-  isSuccess: boolean;
-  handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  setFieldValue: (field: keyof T, value: any) => void;
-  handleSubmit: (e: React.FormEvent) => Promise<void>;
-  validateField: (field: keyof T) => string | undefined;
-  validateForm: () => boolean;
-  resetForm: () => void;
-}
-
-/**
- * Custom hook for form state management with validation and submission handling
- * 
- * @param options Configuration options for the form
- * @returns An object with form state and handlers
- */
-export function useStandardForm<T extends Record<string, any>>(
-  options: UseStandardFormOptions<T>
-): UseStandardFormResult<T> {
-  const { initialValues, validationRules = {}, onSubmit, onSuccess, onError } = options;
-  
+export function useStandardForm<T extends Record<string, any>>({
+  initialValues,
+  validationRules = {} as Record<keyof T, (value: any) => string | null>,
+  onSubmit,
+  onSuccess,
+  onError
+}: UseStandardFormProps<T>) {
   const [formData, setFormData] = useState<T>(initialValues);
-  const [errors, setErrors] = useState<{ [K in keyof T]?: string }>({});
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const [isSuccess, setIsSuccess] = useState<boolean>(false);
-  
-  const validateField = (field: keyof T): string | undefined => {
-    const validateFn = validationRules[field];
-    if (!validateFn) return undefined;
+  const [errors, setErrors] = useState<Record<string, string | null>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+
+  // Handle field change
+  const handleChange = useCallback((
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
     
-    const errorMessage = validateFn(formData[field], formData);
-    setErrors(prev => ({
-      ...prev,
-      [field]: errorMessage
-    }));
-    
-    return errorMessage;
-  };
-  
-  const validateForm = (): boolean => {
-    const newErrors: { [K in keyof T]?: string } = {};
-    let isValid = true;
-    
-    Object.keys(validationRules).forEach(key => {
-      const field = key as keyof T;
-      const validateFn = validationRules[field];
-      if (validateFn) {
-        const errorMessage = validateFn(formData[field], formData);
-        if (errorMessage) {
-          newErrors[field] = errorMessage;
-          isValid = false;
-        }
-      }
-    });
-    
-    setErrors(newErrors);
-    return isValid;
-  };
-  
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, type, checked } = e.target;
-    
-    setFieldValue(
-      name as keyof T,
-      type === 'checkbox' ? checked : value
-    );
-  };
-  
-  const setFieldValue = (field: keyof T, value: any) => {
     setFormData(prev => ({
       ...prev,
-      [field]: value
+      [name]: value
     }));
     
-    // Clear error when user starts typing again
-    if (errors[field]) {
+    // Clear error when field is modified
+    if (errors[name]) {
       setErrors(prev => ({
         ...prev,
-        [field]: undefined
+        [name]: null
       }));
     }
-  };
-  
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  }, [errors]);
+
+  // Reset form to initial values
+  const resetForm = useCallback(() => {
+    setFormData(initialValues);
+    setErrors({});
+    setIsSuccess(false);
+  }, [initialValues]);
+
+  // Validate all fields
+  const validateForm = useCallback(() => {
+    const newErrors: Record<string, string | null> = {};
+    let isValid = true;
+
+    // Apply validation rules to each field
+    Object.keys(validationRules).forEach(key => {
+      const fieldName = key as keyof T;
+      const validateField = validationRules[fieldName];
+      if (validateField) {
+        const error = validateField(formData[fieldName]);
+        newErrors[key] = error;
+        if (error) isValid = false;
+      }
+    });
+
+    setErrors(newErrors);
+    return isValid;
+  }, [formData, validationRules]);
+
+  // Handle form submission
+  const handleSubmit = useCallback(async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
     
-    if (!validateForm()) {
-      return;
-    }
+    if (isSubmitting) return;
+    
+    const isValid = validateForm();
+    if (!isValid) return;
     
     setIsSubmitting(true);
-    setIsSuccess(false);
     
     try {
       await onSubmit(formData);
       setIsSuccess(true);
-      if (onSuccess) {
-        onSuccess();
-      }
+      if (onSuccess) onSuccess();
     } catch (error) {
-      if (onError) {
-        onError(error);
-      }
+      if (onError) onError(error);
+      console.error('Form submission error:', error);
     } finally {
       setIsSubmitting(false);
     }
-  };
-  
-  const resetForm = () => {
-    setFormData(initialValues);
-    setErrors({});
-    setIsSubmitting(false);
-    setIsSuccess(false);
-  };
-  
+  }, [formData, isSubmitting, validateForm, onSubmit, onSuccess, onError]);
+
   return {
     formData,
+    setFormData,
     errors,
+    setErrors,
     isSubmitting,
     isSuccess,
     handleChange,
-    setFieldValue,
     handleSubmit,
-    validateField,
-    validateForm,
     resetForm,
+    validateForm
   };
 }
 

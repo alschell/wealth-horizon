@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Edit2 } from "lucide-react";
+import { Edit } from "lucide-react";
 import { useOnboarding } from "@/context/OnboardingContext";
 
 interface ReviewSectionHeaderProps {
@@ -24,7 +24,7 @@ const ReviewSectionHeader: React.FC<ReviewSectionHeaderProps> = ({
         className="text-black hover:text-gray-800"
         onClick={() => setCurrentStep(stepIndex)}
       >
-        <Edit2 className="h-4 w-4 mr-1 text-black" />
+        <Edit className="h-4 w-4 mr-1 text-black" />
         Edit
       </Button>
     </div>

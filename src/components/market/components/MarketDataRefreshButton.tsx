@@ -3,12 +3,10 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { RefreshCw } from "lucide-react";
 import { useMarketDataRefresh } from "@/hooks/market-data";
-import { toast } from "@/hooks/use-toast";
-import type { RefreshableMarketDataType } from "@/hooks/market-data/types";
 
 interface MarketDataRefreshButtonProps {
   /** Data types to refresh */
-  types: RefreshableMarketDataType[];
+  types: string[];
   /** Symbol to refresh data for (if applicable) */
   symbol?: string;
   /** Variant for the button */
@@ -21,14 +19,6 @@ interface MarketDataRefreshButtonProps {
 
 /**
  * A button component that refreshes market data
- * 
- * @example
- * ```tsx
- * <MarketDataRefreshButton 
- *   types={['quote', 'indices']} 
- *   symbol="AAPL" 
- * />
- * ```
  */
 const MarketDataRefreshButton: React.FC<MarketDataRefreshButtonProps> = ({
   types,
@@ -49,25 +39,12 @@ const MarketDataRefreshButton: React.FC<MarketDataRefreshButtonProps> = ({
       const success = await refreshMarketData(types, { symbol });
       
       if (success) {
-        toast({
-          title: "Data refreshed",
-          description: `Latest market data has been loaded`,
-          variant: "default"
-        });
+        console.log("Data refreshed successfully");
       } else {
-        toast({
-          title: "Could not refresh data",
-          description: "Please try again later",
-          variant: "destructive"
-        });
+        console.error("Could not refresh data");
       }
     } catch (error) {
       console.error("Error refreshing market data:", error);
-      toast({
-        title: "Error refreshing data",
-        description: "An unexpected error occurred",
-        variant: "destructive"
-      });
     } finally {
       setIsRefreshing(false);
     }

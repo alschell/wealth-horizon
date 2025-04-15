@@ -1,10 +1,14 @@
-
 import React from "react";
-import { X } from "lucide-react";
+import { 
+  Bell,
+  AlertCircle,
+  Info,
+  CheckCircle,
+  X
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Notification } from "./types";
-import { format } from "date-fns";
 
 interface NotificationItemProps {
   notification: Notification;
@@ -12,50 +16,112 @@ interface NotificationItemProps {
   onClick: (notification: Notification) => void;
 }
 
-const NotificationItem = ({ notification, onDismiss, onClick }: NotificationItemProps) => {
-  // Format the time if it's a Date object
-  const formattedTime = typeof notification.time === 'string' 
-    ? notification.time 
-    : format(notification.time, 'MMM dd, yyyy');
+/**
+ * Notification item component that displays a single notification
+ */
+const NotificationItem: React.FC<NotificationItemProps> = ({ 
+  notification, 
+  onDismiss, 
+  onClick 
+}) => {
+  const { id, title, message, read, type, time } = notification;
+
+  /**
+   * Get the appropriate icon based on notification type
+   */
+  const getIcon = () => {
+    if (notification.icon) return notification.icon;
+
+    switch (type) {
+      case "warning":
+        return <AlertCircle className="h-5 w-5 text-amber-500" />;
+      case "error":
+        return <AlertCircle className="h-5 w-5 text-red-500" />;
+      case "success":
+        return <CheckCircle className="h-5 w-5 text-green-500" />;
+      case "info":
+      default:
+        return <Info className="h-5 w-5 text-blue-500" />;
+    }
+  };
+
+  /**
+   * Format the timestamp
+   */
+  const formatTime = (time: string | Date): string => {
+    if (typeof time === 'string') {
+      return time;
+    }
     
+    // Format date objects
+    const now = new Date();
+    const notificationDate = new Date(time);
+    
+    // If today, return time only
+    if (notificationDate.toDateString() === now.toDateString()) {
+      return notificationDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+    
+    // Otherwise return date
+    return notificationDate.toLocaleDateString();
+  };
+
+  /**
+   * Handle notification click
+   */
+  const handleClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    onClick(notification);
+  };
+
+  /**
+   * Handle dismiss button click
+   */
+  const handleDismiss = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onDismiss(id);
+  };
+
   return (
     <div 
-      key={notification.id} 
+      onClick={handleClick}
       className={cn(
-        "flex items-start gap-3 p-3 hover:bg-muted/50 transition-colors cursor-pointer group",
-        !notification.read && "bg-muted/30"
+        "flex items-start p-3 cursor-pointer hover:bg-muted transition-colors relative",
+        !read && "bg-muted/50"
       )}
-      onClick={() => onClick(notification)}
+      role="button"
+      tabIndex={0}
+      aria-label={`Notification: ${title}`}
     >
-      <div className="mt-0.5 h-8 w-8 flex items-center justify-center bg-gray-50 rounded-full">
-        {notification.icon}
+      {/* Notification icon */}
+      <div className="mr-3 mt-0.5">
+        {getIcon()}
       </div>
       
-      <div className="flex-1 space-y-1">
-        <div className="flex items-center gap-2">
-          <p className="text-sm font-medium">{notification.title}</p>
-          {!notification.read && (
-            <span className="h-2 w-2 rounded-full bg-black" />
-          )}
-        </div>
-        <p className="text-xs text-muted-foreground line-clamp-2">
-          {notification.description}
-        </p>
-        <p className="text-xs text-muted-foreground">{formattedTime}</p>
+      {/* Notification content */}
+      <div className="flex-1 min-w-0">
+        <h4 className="text-sm font-semibold leading-none mb-1">{title}</h4>
+        <p className="text-xs text-muted-foreground line-clamp-2">{message}</p>
+        <span className="text-xs text-muted-foreground mt-1 block">
+          {formatTime(time)}
+        </span>
       </div>
       
-      <Button
-        variant="ghost"
-        size="icon"
-        className="h-6 w-6 text-muted-foreground opacity-0 group-hover:opacity-100"
-        onClick={(e) => {
-          e.stopPropagation();
-          onDismiss(notification.id);
-        }}
+      {/* Dismiss button */}
+      <Button 
+        variant="ghost" 
+        size="sm" 
+        className="h-6 w-6 p-0 absolute top-2 right-2 opacity-0 group-hover:opacity-100 hover:opacity-100 focus:opacity-100"
+        onClick={handleDismiss}
+        aria-label="Dismiss notification"
       >
         <X className="h-3 w-3" />
-        <span className="sr-only">Dismiss</span>
       </Button>
+      
+      {/* Unread indicator */}
+      {!read && (
+        <div className="absolute top-3 right-3 w-2 h-2 rounded-full bg-primary" />
+      )}
     </div>
   );
 };

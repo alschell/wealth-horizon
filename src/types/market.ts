@@ -1,69 +1,119 @@
 
+import { ReactNode } from 'react';
+
 /**
- * Types for market data functionality
+ * Available market data types
  */
+export type MarketDataType = 'quote' | 'index' | 'news' | 'chart' | 'performance';
 
-// Market snapshot types
-export interface MarketItem {
-  id: string;
-  label: string;
-  value: string;
-  change: string;
-  category: string;
-}
-
-export interface MarketItemVisibility {
-  visibleItems: string[];
-  itemOrder: string[];
-}
-
-// Quote data types
+/**
+ * Market quote data
+ */
 export interface Quote {
-  c: number;  // Current price
-  d: number;  // Change
-  dp: number; // Percent change
-  h: number;  // High price of the day
-  l: number;  // Low price of the day
-  o: number;  // Open price of the day
-  pc: number; // Previous close price
-  t: number;  // Timestamp
+  symbol: string;
+  name: string;
+  price: number;
+  change: number;
+  changePercent: number;
+  marketCap?: number;
+  volume?: number;
+  open?: number;
+  high?: number;
+  low?: number;
+  previousClose?: number;
+  exchange?: string;
+  currency?: string;
+  lastUpdated: Date | string;
 }
 
+/**
+ * News item structure
+ */
 export interface NewsItem {
-  category: string;
-  datetime: number;
-  headline: string;
-  id: number;
-  image: string;
-  related: string;
-  source: string;
+  id: string;
+  title: string;
   summary: string;
   url: string;
+  source: string;
+  publishedAt: Date | string;
+  category?: string;
+  image?: string;
+  relatedSymbols?: string[];
+  sentiment?: 'positive' | 'negative' | 'neutral';
 }
 
-export interface SymbolSearchResult {
-  count: number;
-  result: Array<{
-    description: string;
-    displaySymbol: string;
-    symbol: string;
-    type: string;
-  }>;
-}
-
-export interface CandleData {
-  c: number[]; // List of close prices
-  h: number[]; // List of high prices
-  l: number[]; // List of low prices
-  o: number[]; // List of open prices
-  s: string;   // Status of the response
-  t: number[]; // List of timestamps
-  v: number[]; // List of volume data
-}
-
+/**
+ * Index data structure
+ */
 export interface IndexData {
-  symbol: string;
-  data: Quote;
+  id: string;
+  name: string;
+  value: string | number;
+  change: number;
+  changePercent: number;
+  region: string;
+  currency?: string;
+  lastUpdated: Date | string;
 }
 
-export type MarketDataType = 'quote' | 'news' | 'search' | 'indices' | 'candles';
+/**
+ * Symbol search result
+ */
+export interface SymbolSearchResult {
+  symbol: string;
+  name: string;
+  type: 'stock' | 'etf' | 'index' | 'forex' | 'crypto' | 'other';
+  exchange?: string;
+  region?: string;
+}
+
+/**
+ * Candle/OHLC data point
+ */
+export interface CandleData {
+  date: Date | string;
+  open: number;
+  high: number;
+  low: number;
+  close: number;
+  volume?: number;
+}
+
+/**
+ * Market data refresh status
+ */
+export interface MarketDataRefreshStatus {
+  isRefreshing: boolean;
+  lastRefreshed?: Date | string;
+  error?: string;
+  success?: boolean;
+}
+
+/**
+ * Market watchlist item
+ */
+export interface WatchlistItem {
+  id: string;
+  symbol: string;
+  name: string;
+  addedAt: Date | string;
+  notes?: string;
+  alerts?: {
+    priceAbove?: number;
+    priceBelow?: number;
+    changeAbove?: number;
+    changeBelow?: number;
+  };
+}
+
+/**
+ * Market widget configuration
+ */
+export interface MarketWidgetConfig {
+  id: string;
+  type: 'quote' | 'chart' | 'news' | 'watchlist' | 'indices';
+  title: string;
+  icon?: ReactNode;
+  defaultVisible: boolean;
+  settings?: Record<string, any>;
+}

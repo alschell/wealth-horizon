@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { LanguageSelector } from '@/components/ui/language-selector';
+import { TranslatedText } from '@/components/ui/translated-text';
 
 const HomeNavigation: React.FC = () => {
   const navigate = useNavigate();
@@ -46,35 +48,36 @@ const HomeNavigation: React.FC = () => {
               onClick={() => scrollToSection('why-wh')} 
               className="text-gray-700 hover:text-indigo-600 transition-colors"
             >
-              Why WH
+              <TranslatedText>Why WH</TranslatedText>
             </button>
             <button 
               onClick={() => scrollToSection('features')} 
               className="text-gray-700 hover:text-indigo-600 transition-colors"
             >
-              Features
+              <TranslatedText>Features</TranslatedText>
             </button>
             <button 
               onClick={() => scrollToSection('benefits')} 
               className="text-gray-700 hover:text-indigo-600 transition-colors"
             >
-              Benefits
+              <TranslatedText>Benefits</TranslatedText>
             </button>
             <button 
               onClick={() => scrollToSection('testimonials')} 
               className="text-gray-700 hover:text-indigo-600 transition-colors"
             >
-              Testimonials
+              <TranslatedText>Testimonials</TranslatedText>
             </button>
           </div>
         </div>
         
         <div className="flex items-center gap-3">
+          <LanguageSelector />
           <Button variant="ghost" onClick={() => navigate('/login')}>
-            Log In
+            <TranslatedText>Log In</TranslatedText>
           </Button>
           <Button onClick={() => scrollToSection('contact')}>
-            Contact Us
+            <TranslatedText>Contact Us</TranslatedText>
           </Button>
         </div>
       </nav>

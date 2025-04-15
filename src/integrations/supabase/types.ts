@@ -63,6 +63,30 @@ export type Database = {
         }
         Relationships: []
       }
+      user_language_preferences: {
+        Row: {
+          created_at: string
+          id: string
+          language_code: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          language_code?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          language_code?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       watchlist_items: {
         Row: {
           created_at: string

@@ -1,47 +1,16 @@
 
 import React from "react";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { ChevronRight } from "lucide-react";
-import { Link } from "react-router-dom";
-import { TranslatedText } from "@/components/ui/translated-text";
 
 interface SectionHeaderProps {
   title: string;
-  description?: string;
-  action?: React.ReactNode;
-  link?: string;
-  linkText?: string;
-  className?: string;
+  subtitle?: string;
 }
 
-const SectionHeader = ({
-  title,
-  description,
-  action,
-  link,
-  linkText = "View all",
-  className,
-}: SectionHeaderProps) => {
+const SectionHeader: React.FC<SectionHeaderProps> = ({ title, subtitle }) => {
   return (
-    <div className={cn("flex flex-col sm:flex-row sm:items-center justify-between mb-4", className)}>
-      <div>
-        <h2 className="text-xl font-semibold"><TranslatedText>{title}</TranslatedText></h2>
-        {description && <p className="text-sm text-gray-500 mt-1"><TranslatedText>{description}</TranslatedText></p>}
-      </div>
-      
-      <div className="flex items-center mt-2 sm:mt-0">
-        {action}
-        
-        {link && (
-          <Link to={link}>
-            <Button variant="ghost" size="sm" className="text-sm text-gray-600">
-              <TranslatedText>{linkText}</TranslatedText>
-              <ChevronRight className="h-4 w-4 ml-1" />
-            </Button>
-          </Link>
-        )}
-      </div>
+    <div className="mb-4">
+      <h3 className="text-lg font-medium text-gray-900">{title}</h3>
+      {subtitle && <p className="text-sm text-gray-500 mt-1">{subtitle}</p>}
     </div>
   );
 };

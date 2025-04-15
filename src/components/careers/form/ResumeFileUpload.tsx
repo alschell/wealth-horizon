@@ -14,7 +14,7 @@
 
 import React, { useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { FileIcon, UploadIcon, XIcon } from "lucide-react";
+import { File, Upload, X } from "lucide-react";
 import { announceToScreenReader } from "@/utils/a11y";
 
 interface ResumeFileUploadProps {
@@ -117,7 +117,7 @@ export const ResumeFileUpload: React.FC<ResumeFileUploadProps> = ({
         {resumeFile ? (
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              <FileIcon className="h-5 w-5 text-blue-500" aria-hidden="true" />
+              <File className="h-5 w-5 text-blue-500" aria-hidden="true" />
               <span id={labelId} className="text-sm font-medium">{resumeFile.name}</span>
             </div>
             <Button
@@ -129,7 +129,7 @@ export const ResumeFileUpload: React.FC<ResumeFileUploadProps> = ({
               aria-label={`Remove resume file: ${resumeFile.name}`}
               disabled={disabled}
             >
-              <XIcon className="h-4 w-4" aria-hidden="true" />
+              <X className="h-4 w-4" aria-hidden="true" />
               <span className="sr-only">Remove file</span>
             </Button>
           </div>
@@ -142,7 +142,7 @@ export const ResumeFileUpload: React.FC<ResumeFileUploadProps> = ({
             aria-labelledby={labelId}
             onKeyDown={handleKeyDown}
           >
-            <UploadIcon className="h-8 w-8 text-gray-400 mb-2" aria-hidden="true" />
+            <Upload className="h-8 w-8 text-gray-400 mb-2" aria-hidden="true" />
             <p id={labelId} className="text-sm text-center font-medium text-gray-700">
               Drag and drop your resume or <span className="text-blue-500">browse files</span>
             </p>

@@ -1,11 +1,11 @@
 
-import { ClassValue, clsx } from "clsx";
+import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
 /**
- * Combines class names using clsx and tailwind-merge
- * @param inputs - Class values to combine
- * @returns Combined class string
+ * Combines class names with tailwind-merge
+ * @param inputs class names to combine
+ * @returns combined class name string
  */
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -13,99 +13,55 @@ export function cn(...inputs: ClassValue[]) {
 
 /**
  * Formats a currency value
- * @param value - The value to format
- * @param currency - The currency code
- * @param locale - The locale to use
- * @returns Formatted currency string
+ * @param amount - The amount to format
+ * @param currency - The currency code (default: USD)
+ * @returns The formatted currency string
  */
-export function formatCurrency(
-  value: number,
-  currency: string = "USD",
-  locale: string = "en-US"
-): string {
-  return new Intl.NumberFormat(locale, {
+export function formatCurrency(amount: number, currency: string = "USD") {
+  return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency,
-  }).format(value);
+    maximumFractionDigits: 0,
+  }).format(amount);
 }
 
 /**
- * Truncates a string to a specified length
- * @param str - The string to truncate
+ * Adds delay using Promise
+ * @param ms - Milliseconds to delay
+ * @returns A promise that resolves after the specified time
+ */
+export const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+/**
+ * Truncates text to a specified length
+ * @param text - The text to truncate
  * @param maxLength - Maximum length before truncation
- * @returns Truncated string with ellipsis
+ * @returns Truncated text with ellipsis if needed
  */
-export function truncate(str: string, maxLength: number): string {
-  if (!str) return "";
-  if (str.length <= maxLength) return str;
-  return str.slice(0, maxLength) + "...";
+export function truncateText(text: string, maxLength: number = 50): string {
+  if (text.length <= maxLength) return text;
+  return `${text.substring(0, maxLength)}...`;
 }
 
 /**
- * Capitalizes the first letter of a string
+ * Capitalizes the first letter of each word in a string
  * @param str - The string to capitalize
- * @returns Capitalized string
+ * @returns The capitalized string
  */
-export function capitalize(str: string): string {
-  if (!str) return "";
-  return str.charAt(0).toUpperCase() + str.slice(1);
+export function capitalizeWords(str: string): string {
+  return str
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(" ");
 }
 
 /**
- * Creates a debounced function
- * @param fn - The function to debounce
- * @param delay - The delay in milliseconds
- * @returns Debounced function
+ * Generates a random ID
+ * @param length - Length of the ID (default: 8)
+ * @returns Random ID string
  */
-export function debounce<T extends (...args: any[]) => any>(
-  fn: T,
-  delay: number
-): (...args: Parameters<T>) => void {
-  let timeoutId: ReturnType<typeof setTimeout>;
-  
-  return function(...args: Parameters<T>) {
-    clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => fn(...args), delay);
-  };
-}
-
-/**
- * Generates a unique ID
- * @returns Unique string ID
- */
-export function generateId(): string {
-  return Math.random().toString(36).substring(2, 9);
-}
-
-/**
- * Safely parses JSON
- * @param json - The JSON string to parse
- * @param fallback - Fallback value if parsing fails
- * @returns Parsed object or fallback
- */
-export function safeJsonParse<T>(json: string, fallback: T): T {
-  try {
-    return JSON.parse(json) as T;
-  } catch (error) {
-    return fallback;
-  }
-}
-
-/**
- * Gets a deep property from an object using a path string
- * @param obj - The object to get the property from
- * @param path - The property path (e.g., "user.address.street")
- * @param fallback - Fallback value if property doesn't exist
- * @returns The property value or fallback
- */
-export function getDeepValue<T>(
-  obj: Record<string, any>,
-  path: string,
-  fallback: T
-): T {
-  const keys = path.split(".");
-  
-  return keys.reduce((acc, key) => {
-    return acc && typeof acc === "object" && key in acc ? acc[key] : fallback;
-  }, obj as any);
+export function generateId(length: number = 8): string {
+  return Math.random()
+    .toString(36)
+    .substring(2, 2 + length);
 }

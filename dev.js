@@ -23,10 +23,30 @@ if (!fs.existsSync('package.json')) {
   fs.writeFileSync('package.json', JSON.stringify(packageJson, null, 2));
 }
 
+// Check if index.html exists, if not create it
+if (!fs.existsSync('index.html')) {
+  console.log('Creating index.html...');
+  const indexHtml = `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wealth Horizon</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>`;
+  
+  fs.writeFileSync('index.html', indexHtml);
+}
+
 // Check if node_modules exists, if not run npm install
 if (!fs.existsSync('node_modules')) {
   console.log('Installing dependencies...');
-  const install = spawn('npm', ['install', 'vite', '@vitejs/plugin-react-swc', 'lucide-react', 'react-router-dom', 'framer-motion'], {
+  const install = spawn('npm', ['install', 'vite@latest', '@vitejs/plugin-react-swc@latest', 'lucide-react', 'react-router-dom', 'framer-motion'], {
     stdio: 'inherit',
     shell: true
   });

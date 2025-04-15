@@ -1,82 +1,101 @@
 
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 
-// Define validation rules type differently to avoid mapped type syntax issue
-interface FormValidationRules<T> {
-  [key: string]: ((value: any) => string | null) | undefined;
-}
-
-interface UseStandardFormProps<T extends Record<string, any>> {
+interface UseStandardFormOptions<T> {
   initialValues: T;
-  validationRules: FormValidationRules<T>;
-  onSubmit: (data: T) => Promise<void>;
+  validationRules?: { [K in keyof T]?: (value: T[K], formData?: T) => string | undefined };
+  onSubmit: (values: T) => Promise<void>;
   onSuccess?: () => void;
   onError?: (error: unknown) => void;
 }
 
-export function useStandardForm<T extends Record<string, any>>({
-  initialValues,
-  validationRules,
-  onSubmit,
-  onSuccess,
-  onError
-}: UseStandardFormProps<T>) {
-  const [formData, setFormData] = useState<T>(initialValues);
-  const [errors, setErrors] = useState<Record<string, string | null>>({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
+interface UseStandardFormResult<T> {
+  formData: T;
+  errors: { [K in keyof T]?: string };
+  isSubmitting: boolean;
+  isSuccess: boolean;
+  handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  setFieldValue: (field: keyof T, value: any) => void;
+  handleSubmit: (e: React.FormEvent) => Promise<void>;
+  validateField: (field: keyof T) => string | undefined;
+  validateForm: () => boolean;
+  resetForm: () => void;
+}
 
-  // Handle input change without validation (except for password fields)
-  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value, type } = e.target;
+/**
+ * Custom hook for form state management with validation and submission handling
+ * 
+ * @param options Configuration options for the form
+ * @returns An object with form state and handlers
+ */
+export function useStandardForm<T extends Record<string, any>>(
+  options: UseStandardFormOptions<T>
+): UseStandardFormResult<T> {
+  const { initialValues, validationRules = {}, onSubmit, onSuccess, onError } = options;
+  
+  const [formData, setFormData] = useState<T>(initialValues);
+  const [errors, setErrors] = useState<{ [K in keyof T]?: string }>({});
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [isSuccess, setIsSuccess] = useState<boolean>(false);
+  
+  const validateField = (field: keyof T): string | undefined => {
+    const validateFn = validationRules[field];
+    if (!validateFn) return undefined;
     
-    setFormData(prev => ({
+    const errorMessage = validateFn(formData[field], formData);
+    setErrors(prev => ({
       ...prev,
-      [name]: value
+      [field]: errorMessage
     }));
     
-    // Only validate password fields while typing
-    if (type === 'password' && validationRules[name]) {
-      const validationFunc = validationRules[name];
-      const error = validationFunc ? validationFunc(value) : null;
-      
-      setErrors(prev => ({
-        ...prev,
-        [name]: error
-      }));
-    }
-  }, [validationRules]);
-
-  // Reset form to initial values
-  const resetForm = useCallback(() => {
-    setFormData(initialValues);
-    setErrors({});
-    setIsSubmitting(false);
-    setIsSuccess(false);
-  }, [initialValues]);
-
-  // Validate all fields
-  const validateForm = useCallback(() => {
-    const newErrors: Record<string, string | null> = {};
+    return errorMessage;
+  };
+  
+  const validateForm = (): boolean => {
+    const newErrors: { [K in keyof T]?: string } = {};
     let isValid = true;
-
-    // Check each field with a validation rule
-    Object.entries(validationRules).forEach(([field, validateFunc]) => {
-      if (validateFunc && field in formData) {
-        const error = validateFunc(formData[field]);
-        if (error) {
-          newErrors[field] = error;
+    
+    Object.keys(validationRules).forEach(key => {
+      const field = key as keyof T;
+      const validateFn = validationRules[field];
+      if (validateFn) {
+        const errorMessage = validateFn(formData[field], formData);
+        if (errorMessage) {
+          newErrors[field] = errorMessage;
           isValid = false;
         }
       }
     });
-
+    
     setErrors(newErrors);
     return isValid;
-  }, [formData, validationRules]);
-
-  // Handle form submission
-  const handleSubmit = useCallback(async (e: React.FormEvent) => {
+  };
+  
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value, type, checked } = e.target;
+    
+    setFieldValue(
+      name as keyof T,
+      type === 'checkbox' ? checked : value
+    );
+  };
+  
+  const setFieldValue = (field: keyof T, value: any) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+    
+    // Clear error when user starts typing again
+    if (errors[field]) {
+      setErrors(prev => ({
+        ...prev,
+        [field]: undefined
+      }));
+    }
+  };
+  
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!validateForm()) {
@@ -89,22 +108,37 @@ export function useStandardForm<T extends Record<string, any>>({
     try {
       await onSubmit(formData);
       setIsSuccess(true);
-      if (onSuccess) onSuccess();
+      if (onSuccess) {
+        onSuccess();
+      }
     } catch (error) {
-      if (onError) onError(error);
+      if (onError) {
+        onError(error);
+      }
     } finally {
       setIsSubmitting(false);
     }
-  }, [formData, validateForm, onSubmit, onSuccess, onError]);
-
+  };
+  
+  const resetForm = () => {
+    setFormData(initialValues);
+    setErrors({});
+    setIsSubmitting(false);
+    setIsSuccess(false);
+  };
+  
   return {
     formData,
     errors,
-    handleChange,
-    handleSubmit,
-    resetForm,
     isSubmitting,
     isSuccess,
-    setFormData
+    handleChange,
+    setFieldValue,
+    handleSubmit,
+    validateField,
+    validateForm,
+    resetForm,
   };
 }
+
+export default useStandardForm;

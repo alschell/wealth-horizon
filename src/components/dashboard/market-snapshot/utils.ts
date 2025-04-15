@@ -1,89 +1,94 @@
 
-import { MarketItem } from "./types";
-
-// Get country flag code by category
+/**
+ * Gets the appropriate country code for a flag icon
+ * 
+ * @param category The category of the market item
+ * @param label The label of the market item
+ * @returns The country code for the flag
+ */
 export const getCountryFlagCode = (category: string, label: string): string => {
-  if (category === "Indices") {
-    const mapping: Record<string, string> = {
-      "S&P 500": "us",
-      "Nasdaq": "us",
-      "Dow Jones": "us",
-      "Nikkei 225": "jp",
-      "DAX": "de",
-      "FTSE 100": "gb",
-      "Shanghai": "cn",
-    };
-    return mapping[label] || "globe";
+  // Map for country names to ISO codes
+  const countryCodes: Record<string, string> = {
+    // Major indices
+    "S&P 500": "us",
+    "Dow Jones": "us",
+    "Nasdaq": "us",
+    "Russell 2000": "us",
+    "FTSE 100": "gb",
+    "DAX": "de",
+    "CAC 40": "fr",
+    "Nikkei 225": "jp",
+    "Hang Seng": "hk",
+    "Shanghai Composite": "cn",
+    "Sensex": "in",
+    "ASX 200": "au",
+    "TSX Composite": "ca",
+    
+    // Currencies
+    "EUR/USD": "eu",
+    "GBP/USD": "gb",
+    "USD/JPY": "jp", 
+    "USD/CHF": "ch",
+    "USD/CAD": "ca",
+    "AUD/USD": "au",
+    "NZD/USD": "nz"
+  };
+  
+  // Check if the label exists in our mapping
+  if (label in countryCodes) {
+    return countryCodes[label];
   }
   
+  // Default fallbacks based on currency codes
   if (category === "Currencies") {
-    const mapping: Record<string, string> = {
-      "US Dollar": "us",
-      "Euro": "eu",
-      "British Pound": "gb",
-      "Japanese Yen": "jp",
-      "Swiss Franc": "ch",
+    // Check if it's a currency pair like EUR/USD
+    const parts = label.split('/');
+    if (parts.length === 2) {
+      // For pairs, use the first currency's code
+      const firstCurrency = parts[0];
+      
+      // Map of currency codes to country codes
+      const currencyToCountry: Record<string, string> = {
+        "EUR": "eu",
+        "USD": "us",
+        "GBP": "gb",
+        "JPY": "jp",
+        "CHF": "ch",
+        "CAD": "ca",
+        "AUD": "au",
+        "NZD": "nz",
+        "CNY": "cn",
+        "HKD": "hk",
+        "SGD": "sg"
+      };
+      
+      if (firstCurrency in currencyToCountry) {
+        return currencyToCountry[firstCurrency];
+      }
+    }
+  }
+  
+  // If the item is a country-specific index, try to extract the country
+  if (category === "Indices" && label.includes(" ")) {
+    const words = label.split(" ");
+    const lastWord = words[words.length - 1];
+    
+    // Map of common index suffixes to country codes
+    const indexToCountry: Record<string, string> = {
+      "Index": "us", // Default for "X Index" 
+      "Composite": "us",
+      "500": "us",
+      "100": "gb",
+      "40": "fr",
+      "30": "de",
+      "225": "jp"
     };
-    return mapping[label] || "globe";
+    
+    if (lastWord in indexToCountry) {
+      return indexToCountry[lastWord];
+    }
   }
-
-  // Default flag code
-  return "globe";
-};
-
-// Define market items data
-export const marketItems: MarketItem[] = [
-  // Indices
-  { id: "sp500", label: "S&P 500", value: "4,400.50", change: "+0.25%", category: "Indices" },
-  { id: "nasdaq", label: "Nasdaq", value: "13,630.75", change: "-0.10%", category: "Indices" },
-  { id: "dowjones", label: "Dow Jones", value: "34,500.20", change: "+0.15%", category: "Indices" },
-  { id: "japan", label: "Nikkei 225", value: "32,450.80", change: "+1.20%", category: "Indices" },
-  { id: "germany", label: "DAX", value: "15,720.30", change: "+0.22%", category: "Indices" },
-  { id: "uk", label: "FTSE 100", value: "7,650.10", change: "-0.05%", category: "Indices" },
-  { id: "china", label: "Shanghai", value: "3,210.40", change: "-0.30%", category: "Indices" },
   
-  // Cryptocurrencies
-  { id: "bitcoin", label: "Bitcoin", value: "29,500.00", change: "+1.50%", category: "Cryptocurrencies" },
-  { id: "ethereum", label: "Ethereum", value: "1,850.40", change: "+0.75%", category: "Cryptocurrencies" },
-  
-  // Commodities
-  { id: "gold", label: "Gold", value: "$1,850.20", change: "+0.35%", category: "Commodities" },
-  { id: "oil", label: "Crude Oil", value: "$79.15", change: "-0.60%", category: "Commodities" },
-  
-  // Currencies
-  { id: "dollar", label: "US Dollar", value: "1.0870", change: "+0.12%", category: "Currencies" },
-];
-
-// Get unique categories
-export const categories = [...new Set(marketItems.map(item => item.category))];
-
-// Get sorted items
-export const getAlphabeticallySortedItems = () => {
-  return [...marketItems].sort((a, b) => a.label.localeCompare(b.label));
-};
-
-// Load visible items from localStorage
-export const loadVisibleItems = (): string[] => {
-  try {
-    const saved = localStorage.getItem("marketSnapshotVisibleItems");
-    return saved ? JSON.parse(saved) : getAlphabeticallySortedItems().map(item => item.id);
-  } catch (e) {
-    return getAlphabeticallySortedItems().map(item => item.id);
-  }
-};
-
-// Load item order from localStorage
-export const loadItemOrder = (): string[] => {
-  try {
-    const savedOrder = localStorage.getItem("marketSnapshotItemOrder");
-    return savedOrder ? JSON.parse(savedOrder) : getAlphabeticallySortedItems().map(item => item.id);
-  } catch (e) {
-    return getAlphabeticallySortedItems().map(item => item.id);
-  }
-};
-
-// Save to localStorage
-export const saveToLocalStorage = (visibleItems: string[], itemOrder: string[]) => {
-  localStorage.setItem("marketSnapshotVisibleItems", JSON.stringify(visibleItems));
-  localStorage.setItem("marketSnapshotItemOrder", JSON.stringify(itemOrder));
+  // Default fallback
+  return "us";
 };

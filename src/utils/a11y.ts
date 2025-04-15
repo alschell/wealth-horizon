@@ -1,110 +1,67 @@
 
 /**
- * Utility functions for accessibility improvements
- */
-
-/**
  * Announces a message to screen readers
  * @param message The message to announce
- * @param politeness The politeness level (polite or assertive)
+ * @param politeness The politeness level ('polite' or 'assertive')
  */
-export function announceToScreenReader(
-  message: string, 
-  politeness: 'polite' | 'assertive' = 'polite'
-): void {
-  if (typeof document === 'undefined') return;
+export const announceToScreenReader = (message: string, politeness: 'polite' | 'assertive' = 'assertive') => {
+  const announce = document.createElement('div');
+  announce.setAttribute('aria-live', politeness);
+  announce.setAttribute('aria-atomic', 'true');
+  announce.setAttribute('class', 'sr-only');
+  document.body.appendChild(announce);
   
-  // Create or get the announcement element
-  let announcementElement = document.getElementById('screen-reader-announcement');
-  
-  if (!announcementElement) {
-    announcementElement = document.createElement('div');
-    announcementElement.id = 'screen-reader-announcement';
-    announcementElement.setAttribute('aria-live', politeness);
-    announcementElement.setAttribute('aria-atomic', 'true');
-    announcementElement.style.position = 'absolute';
-    announcementElement.style.width = '1px';
-    announcementElement.style.height = '1px';
-    announcementElement.style.padding = '0';
-    announcementElement.style.margin = '-1px';
-    announcementElement.style.overflow = 'hidden';
-    announcementElement.style.clip = 'rect(0, 0, 0, 0)';
-    announcementElement.style.whiteSpace = 'nowrap';
-    announcementElement.style.border = '0';
+  // Timeout needed to ensure the DOM change is announced
+  setTimeout(() => {
+    announce.textContent = message;
     
-    document.body.appendChild(announcementElement);
-  }
-  
-  // Set the politeness level (in case it changed)
-  announcementElement.setAttribute('aria-live', politeness);
-  
-  // Announce the message
-  announcementElement.textContent = message;
-}
+    // Remove the element after it's been announced
+    setTimeout(() => {
+      document.body.removeChild(announce);
+    }, 1000);
+  }, 100);
+};
 
 /**
- * Checks if a component is being navigated with a keyboard
+ * Adds a non-visual focus indicator for keyboard navigation
+ * @param element The element to add focus styles to
  */
-export function isKeyboardNavigation(event: React.KeyboardEvent): boolean {
-  return event.key === 'Tab' || 
-         event.key === 'ArrowUp' || 
-         event.key === 'ArrowDown' || 
-         event.key === 'ArrowLeft' || 
-         event.key === 'ArrowRight';
-}
+export const addFocusRing = (element: HTMLElement) => {
+  element.classList.add('focus-visible:ring-2', 'focus-visible:ring-offset-2', 'focus-visible:ring-primary', 'focus-visible:outline-none');
+};
 
 /**
- * Generates aria-label for image fallbacks
+ * Manages focus trap for modal dialogs
+ * @param containerRef Reference to the container element
+ * @param isActive Whether the focus trap is active
  */
-export function getImageFallbackAriaLabel(name: string): string {
-  return `Profile image for ${name} couldn't be loaded`;
-}
-
-/**
- * Helper for focus management within a component
- */
-export function trapFocus(
-  containerRef: React.RefObject<HTMLElement>,
-  callback?: () => void
-): () => void {
-  if (!containerRef.current) return () => {};
-  
-  const focusableElements = containerRef.current.querySelectorAll(
-    'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-  );
-  
-  if (focusableElements.length === 0) return () => {};
-  
-  const firstElement = focusableElements[0] as HTMLElement;
-  const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
-  
-  // Focus the first element
-  firstElement.focus();
-  
-  // Create the event handler
+export const useFocusTrap = (containerRef: React.RefObject<HTMLElement>, isActive: boolean) => {
   const handleKeyDown = (e: KeyboardEvent) => {
-    if (e.key === 'Tab') {
-      // If Shift+Tab on first element, move to last
-      if (e.shiftKey && document.activeElement === firstElement) {
-        e.preventDefault();
-        lastElement.focus();
-      } 
-      // If Tab on last element, move to first
-      else if (!e.shiftKey && document.activeElement === lastElement) {
-        e.preventDefault();
-        firstElement.focus();
-      }
+    if (e.key !== 'Tab' || !isActive || !containerRef.current) return;
+    
+    const focusableElements = containerRef.current.querySelectorAll(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    );
+    
+    const firstElement = focusableElements[0] as HTMLElement;
+    const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
+    
+    // If shift+tab and on first element, move to last element
+    if (e.shiftKey && document.activeElement === firstElement) {
+      e.preventDefault();
+      lastElement.focus();
+    } 
+    // If tab and on last element, move to first element
+    else if (!e.shiftKey && document.activeElement === lastElement) {
+      e.preventDefault();
+      firstElement.focus();
     }
   };
   
-  // Add the event listener
-  document.addEventListener('keydown', handleKeyDown);
+  if (isActive) {
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }
   
-  // Optional callback
-  if (callback) callback();
-  
-  // Return cleanup function
-  return () => {
-    document.removeEventListener('keydown', handleKeyDown);
-  };
-}
+  return undefined;
+};

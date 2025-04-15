@@ -1,63 +1,21 @@
 
-import React, { useEffect, useState } from 'react';
-import { useTranslation } from '@/context/TranslationContext';
+import React from 'react';
 
 interface TranslatedTextProps {
-  children: string;
-  as?: React.ElementType;
-  className?: string;
-  withLoading?: boolean;
+  children: React.ReactNode;
+  context?: string;
 }
 
-export const TranslatedText: React.FC<TranslatedTextProps> = ({
-  children,
-  as: Component = 'span',
-  className = '',
-  withLoading = false,
-  ...rest
+/**
+ * A component that supports text translation
+ * In a real application, this would use a translation library
+ */
+export const TranslatedText: React.FC<TranslatedTextProps> = ({ 
+  children, 
+  context 
 }) => {
-  const { translate, currentLanguage, isLoading } = useTranslation();
-  const [translatedContent, setTranslatedContent] = useState(children);
-
-  useEffect(() => {
-    let isMounted = true;
-    
-    const translateText = async () => {
-      try {
-        const translated = await translate(children);
-        if (isMounted) {
-          setTranslatedContent(translated);
-        }
-      } catch (error) {
-        console.error("Translation error:", error);
-        // If translation fails, fall back to original text
-        if (isMounted) {
-          setTranslatedContent(children);
-        }
-      }
-    };
-
-    // Always run translation when language changes or text changes
-    translateText();
-    
-    return () => {
-      isMounted = false;
-    };
-  }, [children, currentLanguage, translate]);
-
-  if (withLoading && isLoading) {
-    return (
-      <Component className={`animate-pulse ${className}`} {...rest}>
-        {translatedContent}
-      </Component>
-    );
-  }
-
-  return (
-    <Component className={className} {...rest}>
-      {translatedContent}
-    </Component>
-  );
+  // In a real app, this would use i18n translation
+  return <>{children}</>;
 };
 
 export default TranslatedText;

@@ -14,6 +14,7 @@ fi
 if ! npm list vite > /dev/null 2>&1; then
   echo "Installing Vite..."
   npm install vite --save-dev
+  npm install @vitejs/plugin-react-swc --save-dev
 fi
 
 # Install any missing dependencies from package.json
@@ -21,4 +22,4 @@ npm install
 
 echo "Setup complete. Running the development server now..."
 # Run the development server directly
-npx vite
+node_modules/.bin/vite --force || npx vite --force

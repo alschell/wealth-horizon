@@ -5,7 +5,30 @@
  */
 
 import { toast } from '@/hooks/use-toast';
-import { ErrorResponse, ErrorHandlerOptions } from '@/types/common';
+
+/**
+ * Standard error response format
+ */
+export interface ErrorResponse {
+  message: string;
+  code?: string;
+  details?: Record<string, any>;
+}
+
+/**
+ * Options for error handling
+ */
+export interface ErrorHandlerOptions {
+  componentName?: string;
+  showToast?: boolean;
+  logError?: boolean;
+  rethrow?: boolean;
+  fallbackMessage?: string;
+  silent?: boolean;
+  logToConsole?: boolean;
+  toastTitle?: string;
+  onError?: (error: unknown) => void;
+}
 
 /**
  * Extract a readable message from various error types
@@ -88,7 +111,8 @@ export function handleError(error: unknown, options: ErrorHandlerOptions = {}): 
     showToast = true, 
     logError: shouldLogError = true,
     rethrow = false,
-    fallbackMessage = "An unexpected error occurred"
+    fallbackMessage = "An unexpected error occurred",
+    onError
   } = options;
   
   // Parse error into standardized format
@@ -106,6 +130,11 @@ export function handleError(error: unknown, options: ErrorHandlerOptions = {}): 
       description: errorDetails.message || fallbackMessage,
       variant: "destructive"
     });
+  }
+  
+  // Call onError if provided
+  if (onError) {
+    onError(error);
   }
   
   // Rethrow if requested

@@ -1,6 +1,6 @@
 
 import { useState, useCallback } from 'react';
-import { handleError } from '@/utils/errorHandling';
+import { handleError, ErrorHandlerOptions } from '@/utils/errorHandling';
 import { showSuccess } from '@/utils/toast';
 
 export interface FormSubmissionOptions<T> {
@@ -131,11 +131,16 @@ export function useUnifiedForm<T extends Record<string, any>>(initialData: T) {
       const errorMsg = error instanceof Error ? error.message : errorMessage;
       setLastError(errorMsg);
       
-      handleError(error, {
+      const errorHandlerOptions: ErrorHandlerOptions = {
         fallbackMessage: errorMessage,
-        onError,
-        logToConsole
-      });
+        logError: logToConsole
+      };
+      
+      if (onError) {
+        errorHandlerOptions.onError = onError;
+      }
+      
+      handleError(error, errorHandlerOptions);
       
       return false;
     } finally {
@@ -160,4 +165,3 @@ export function useUnifiedForm<T extends Record<string, any>>(initialData: T) {
     submitForm
   };
 }
-

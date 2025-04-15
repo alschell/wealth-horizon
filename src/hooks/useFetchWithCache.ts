@@ -1,6 +1,6 @@
 
 import { useQuery, QueryKey, UseQueryOptions } from '@tanstack/react-query';
-import { handleError } from '@/utils/errorHandling';
+import { handleError, ErrorHandlerOptions } from '@/utils/errorHandling';
 
 /**
  * Options for the useFetchWithCache hook
@@ -58,16 +58,20 @@ export function useFetchWithCache<TData, TError = unknown>(
         }
         return result;
       } catch (error) {
-        handleError(error, {
+        const errorHandlerOptions: ErrorHandlerOptions = {
           fallbackMessage: errorMessage,
           showToast: showErrorToast,
-          onError: onError as (error: unknown) => void,
           componentName
-        });
+        };
+        
+        if (onError) {
+          errorHandlerOptions.onError = onError as (error: unknown) => void;
+        }
+        
+        handleError(error, errorHandlerOptions);
         throw error; // Let React Query handle the error state
       }
     },
     ...queryOptions
   });
 }
-

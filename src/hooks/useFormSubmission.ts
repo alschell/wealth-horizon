@@ -1,6 +1,6 @@
 
 import { useState, useCallback } from 'react';
-import { handleError } from '@/utils/errorHandling';
+import { handleError, ErrorHandlerOptions } from '@/utils/errorHandling';
 import { showSuccess } from '@/utils/toast';
 
 export interface FormSubmissionOptions<T> {
@@ -52,10 +52,15 @@ export function useFormSubmission<T>() {
       
       return true;
     } catch (error) {
-      handleError(error, {
-        fallbackMessage: errorMessage,
-        onError
-      });
+      const errorHandlerOptions: ErrorHandlerOptions = {
+        fallbackMessage: errorMessage
+      };
+      
+      if (onError) {
+        errorHandlerOptions.onError = onError;
+      }
+      
+      handleError(error, errorHandlerOptions);
       
       return false;
     } finally {

@@ -1,161 +1,149 @@
 
 import React, { useState } from "react";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { 
-  Command, 
-  CommandEmpty, 
-  CommandGroup, 
-  CommandInput, 
-  CommandItem, 
-  CommandList
-} from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Check, ChevronsUpDown } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Search } from "lucide-react";
+import type { Currency } from "@/utils/constants/currencies";
 
 interface SearchableSelectFieldProps {
   id: string;
   label: string;
   value: string;
   placeholder: string;
-  options: string[];
+  options: string[] | Currency[];
+  onChange: (value: string) => void;
   required?: boolean;
   error?: string;
-  onChange: (value: string) => void;
   allowCustomValue?: boolean;
   className?: string;
-  disabled?: boolean;
 }
 
-const SearchableSelectField = ({
+const SearchableSelectField: React.FC<SearchableSelectFieldProps> = ({
   id,
   label,
   value,
   placeholder,
   options,
+  onChange,
   required = false,
   error,
-  onChange,
   allowCustomValue = false,
-  className,
-  disabled = false
-}: SearchableSelectFieldProps) => {
-  const [open, setOpen] = useState(false);
-  const [inputValue, setInputValue] = useState("");
+  className = "",
+}) => {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
 
-  // Ensure options is always an array
-  const safeOptions = Array.isArray(options) ? options : [];
+  // Get display value based on the current value
+  const getDisplayValue = () => {
+    if (!value) return "";
 
-  // Sort options alphabetically, but ensure "Other" is at the end
-  let sortedOptions = [...safeOptions];
-  if (sortedOptions.includes("Other")) {
-    sortedOptions = sortedOptions
-      .filter(option => option !== "Other")
-      .sort((a, b) => a.localeCompare(b));
-    sortedOptions.push("Other");
-  } else {
-    sortedOptions.sort((a, b) => a.localeCompare(b));
-  }
-
-  const handleSelect = (selectedValue: string) => {
-    onChange(selectedValue);
-    setOpen(false);
-    setInputValue("");
+    // Check if options is Currency[] or string[]
+    if (options.length > 0 && typeof options[0] !== "string") {
+      const currencyOptions = options as Currency[];
+      const selectedCurrency = currencyOptions.find((option) => option.code === value || option.name === value);
+      return selectedCurrency ? `${selectedCurrency.code} - ${selectedCurrency.name}` : value;
+    }
+    
+    return value;
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (allowCustomValue && e.key === "Enter" && inputValue && !safeOptions.includes(inputValue)) {
-      e.preventDefault();
-      onChange(inputValue);
-      setOpen(false);
-      setInputValue("");
+  const filteredOptions = options.filter((option) => {
+    const searchTermLower = searchTerm.toLowerCase();
+    
+    if (typeof option === "string") {
+      return option.toLowerCase().includes(searchTermLower);
+    } else {
+      const currencyOption = option as Currency;
+      return (
+        currencyOption.code.toLowerCase().includes(searchTermLower) ||
+        currencyOption.name.toLowerCase().includes(searchTermLower)
+      );
+    }
+  });
+
+  const handleOptionClick = (option: string | Currency) => {
+    let selectedValue: string;
+    
+    if (typeof option === "string") {
+      selectedValue = option;
+    } else {
+      selectedValue = option.code;
+    }
+    
+    onChange(selectedValue);
+    setSearchTerm("");
+    setIsOpen(false);
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+    if (allowCustomValue) {
+      onChange(e.target.value);
     }
   };
 
   return (
-    <div className={cn("space-y-2", className)}>
-      <Label htmlFor={id} className="text-black">
-        {label}{required && <span className="text-red-500 ml-1">*</span>}
-      </Label>
-      <Popover open={open} onOpenChange={disabled ? undefined : setOpen}>
-        <PopoverTrigger asChild>
-          <Button
-            id={id}
-            variant="outline"
-            role="combobox"
-            aria-expanded={open}
-            aria-label={`Select ${label}`}
-            className={cn(
-              "h-11 w-full justify-between text-left font-normal bg-white border border-input text-black",
-              error ? "border-red-500" : "",
-              disabled ? "opacity-70 cursor-not-allowed" : ""
-            )}
-            type="button"
-            disabled={disabled}
-          >
-            {value ? (
-              <span className="truncate text-black text-left">{value}</span>
-            ) : (
-              <span className="truncate text-gray-500 text-left">{placeholder}</span>
-            )}
-            <ChevronsUpDown className="h-4 w-4 shrink-0 opacity-50 ml-2 text-black" />
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent 
-          className="w-[var(--radix-popover-trigger-width)] p-0 bg-white border shadow-md" 
-          align="start"
-          sideOffset={8}
-          avoidCollisions={true}
-          style={{ zIndex: 100 }}
-        >
-          <Command onKeyDown={handleKeyDown}>
-            <CommandInput 
-              placeholder={`Search ${label.toLowerCase()}...`} 
-              className="h-9 text-black"
-              value={inputValue}
-              onValueChange={setInputValue}
-            />
-            <CommandList>
-              <CommandEmpty>
-                {allowCustomValue ? (
-                  <div className="py-3 px-4 text-sm">
-                    <p className="text-black">No results found.</p>
-                    <p className="font-medium text-black">Press Enter to add "{inputValue}"</p>
-                  </div>
-                ) : (
-                  <span className="text-black">No results found.</span>
-                )}
-              </CommandEmpty>
-              <CommandGroup className="max-h-[300px] overflow-y-auto">
-                {sortedOptions.map((option) => (
-                  <CommandItem
-                    key={option}
-                    value={option}
-                    onSelect={() => handleSelect(option)}
-                    className="hover:bg-slate-100 cursor-pointer text-black"
+    <div className={`relative ${className}`}>
+      <label
+        htmlFor={id}
+        className="block mb-1 text-sm font-medium text-gray-700"
+      >
+        {label} {required && <span className="text-red-500">*</span>}
+      </label>
+      
+      <div className="relative">
+        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <Search className="h-4 w-4 text-gray-400" />
+        </div>
+        
+        <input
+          type="text"
+          id={id}
+          className={`pl-10 pr-4 py-2 w-full border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${error ? "border-red-500 focus:ring-red-500 focus:border-red-500" : "border-gray-300"}`}
+          placeholder={placeholder}
+          value={isOpen ? searchTerm : getDisplayValue()}
+          onChange={handleInputChange}
+          onFocus={() => setIsOpen(true)}
+          onBlur={() => {
+            // Delay closing to allow for option selection
+            setTimeout(() => setIsOpen(false), 200);
+          }}
+        />
+      </div>
+      
+      {isOpen && (
+        <div className="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto">
+          {filteredOptions.length > 0 ? (
+            <ul className="py-1">
+              {filteredOptions.map((option, index) => {
+                let displayText: string;
+                let optionValue: string;
+                
+                if (typeof option === "string") {
+                  displayText = option;
+                  optionValue = option;
+                } else {
+                  const currencyOption = option as Currency;
+                  displayText = `${currencyOption.code} - ${currencyOption.name}`;
+                  optionValue = currencyOption.code;
+                }
+                
+                return (
+                  <li
+                    key={index}
+                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                    onMouseDown={() => handleOptionClick(option)}
                   >
-                    <Check
-                      className={cn(
-                        "mr-2 h-4 w-4 text-black",
-                        value === option ? "opacity-100" : "opacity-0"
-                      )}
-                    />
-                    {option}
-                  </CommandItem>
-                ))}
-              </CommandGroup>
-            </CommandList>
-          </Command>
-        </PopoverContent>
-      </Popover>
-      {error && (
-        <p className="text-red-500 text-sm mt-1">{error}</p>
+                    {displayText}
+                  </li>
+                );
+              })}
+            </ul>
+          ) : (
+            <div className="px-4 py-2 text-gray-500">No results found</div>
+          )}
+        </div>
       )}
+      
+      {error && <p className="mt-1 text-xs text-red-500">{error}</p>}
     </div>
   );
 };

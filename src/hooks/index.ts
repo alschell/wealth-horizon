@@ -10,8 +10,11 @@ export { useFormWithValidation } from './useFormWithValidation';
 export { useIsComponentMounted } from './useIsComponentMounted';
 export { useNotifications } from './use-notifications';
 export { useErrorHandler } from './useErrorHandler';
-export { useErrorBoundary, withErrorHandling } from './useErrorBoundary';
+export { useErrorBoundary } from './useErrorBoundary';
 export { useDocumentManager } from '@/context/DocumentContext';
+
+// Using withErrorHandling from useErrorBoundary
+export { withErrorHandling } from './useErrorBoundary';
 
 // Export error utilities for convenience
 export {
@@ -19,6 +22,5 @@ export {
   parseError,
   logError,
   handleError,
-  withErrorHandling,  // Changed from withAsyncErrorHandling
   tryCatch
 } from '@/utils/errorHandling';

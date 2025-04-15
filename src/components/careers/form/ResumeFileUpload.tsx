@@ -1,7 +1,20 @@
 
+/**
+ * ResumeFileUpload component
+ * 
+ * An accessible file upload component specifically designed for resume/CV uploads.
+ * Features:
+ * - Drag and drop support
+ * - File preview
+ * - Accessible error handling
+ * - Screen reader announcements
+ * 
+ * @component
+ */
+
 import React, { useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { File, Upload, X } from "lucide-react";
+import { FileIcon, UploadIcon, XIcon } from "lucide-react";
 import { announceToScreenReader } from "@/utils/a11y";
 
 interface ResumeFileUploadProps {
@@ -19,6 +32,17 @@ interface ResumeFileUploadProps {
 
 /**
  * A fully accessible file upload component for resumes
+ * 
+ * @example
+ * ```tsx
+ * <ResumeFileUpload
+ *   resumeFile={resumeFile}
+ *   setResumeFile={setResumeFile}
+ *   handleFileChange={handleFileChange}
+ *   error={errors.resume}
+ *   disabled={isSubmitting}
+ * />
+ * ```
  */
 export const ResumeFileUpload: React.FC<ResumeFileUploadProps> = ({
   resumeFile,
@@ -49,7 +73,7 @@ export const ResumeFileUpload: React.FC<ResumeFileUploadProps> = ({
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
-    announceToScreenReader("Resume file removed");
+    announceToScreenReader("Resume file removed", "polite");
   };
 
   /**
@@ -80,7 +104,7 @@ export const ResumeFileUpload: React.FC<ResumeFileUploadProps> = ({
           onChange={(e) => {
             handleFileChange(e);
             if (e.target.files && e.target.files[0]) {
-              announceToScreenReader(`File ${e.target.files[0].name} selected`);
+              announceToScreenReader(`File ${e.target.files[0].name} selected`, "polite");
             }
           }}
           aria-labelledby={labelId}
@@ -93,7 +117,7 @@ export const ResumeFileUpload: React.FC<ResumeFileUploadProps> = ({
         {resumeFile ? (
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              <File className="h-5 w-5 text-blue-500" aria-hidden="true" />
+              <FileIcon className="h-5 w-5 text-blue-500" aria-hidden="true" />
               <span id={labelId} className="text-sm font-medium">{resumeFile.name}</span>
             </div>
             <Button
@@ -105,7 +129,7 @@ export const ResumeFileUpload: React.FC<ResumeFileUploadProps> = ({
               aria-label={`Remove resume file: ${resumeFile.name}`}
               disabled={disabled}
             >
-              <X className="h-4 w-4" aria-hidden="true" />
+              <XIcon className="h-4 w-4" aria-hidden="true" />
               <span className="sr-only">Remove file</span>
             </Button>
           </div>
@@ -118,7 +142,7 @@ export const ResumeFileUpload: React.FC<ResumeFileUploadProps> = ({
             aria-labelledby={labelId}
             onKeyDown={handleKeyDown}
           >
-            <Upload className="h-8 w-8 text-gray-400 mb-2" aria-hidden="true" />
+            <UploadIcon className="h-8 w-8 text-gray-400 mb-2" aria-hidden="true" />
             <p id={labelId} className="text-sm text-center font-medium text-gray-700">
               Drag and drop your resume or <span className="text-blue-500">browse files</span>
             </p>

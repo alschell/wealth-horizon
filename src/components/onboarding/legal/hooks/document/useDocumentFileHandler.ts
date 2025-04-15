@@ -1,5 +1,6 @@
 
 import { useCallback } from 'react';
+import { showSuccess } from '@/utils/toast';
 
 interface UseDocumentFileHandlerProps {
   validateFile: (file: File) => string | null;
@@ -35,7 +36,7 @@ export function useDocumentFileHandler({
     setFileError(null);
     setErrors((prev: Record<string, boolean>) => ({ ...prev, selectedFile: false }));
     
-    console.log("File uploaded successfully");
+    showSuccess("File uploaded", "Document has been successfully uploaded.");
   }, [validateFile, setSelectedFile, setFileError, setErrors]);
   
   /**

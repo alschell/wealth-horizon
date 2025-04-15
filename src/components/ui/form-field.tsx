@@ -20,7 +20,6 @@ interface FormFieldProps {
   inputClassName?: string;
   labelClassName?: string;
   errorClassName?: string;
-  autoComplete?: string;
   [key: string]: any;
 }
 
@@ -36,7 +35,6 @@ const FormField: React.FC<FormFieldProps> = ({
   inputClassName,
   labelClassName,
   errorClassName,
-  autoComplete,
   ...props
 }) => {
   // Determine if we should render a textarea or input
@@ -63,7 +61,6 @@ const FormField: React.FC<FormFieldProps> = ({
         type={isTextarea ? undefined : type}
         placeholder={placeholder}
         disabled={disabled}
-        autoComplete={autoComplete}
         className={cn(error && 'border-red-500 focus-visible:ring-red-500', inputClassName)}
         aria-invalid={!!error}
         aria-describedby={error ? `${name}-error` : undefined}

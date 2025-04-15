@@ -15,10 +15,10 @@ export const connectedIntegrations: ConnectedIntegrationType[] = [
       "Track performance in real time",
       "Consolidated reporting with other assets"
     ],
-    status: "active",
+    status: "stable" as const,
     connectionStatus: "active",
-    lastSync: "Today at 09:45 AM",
-    authMethod: "oauth",
+    lastSynced: "Today at 09:45 AM",
+    authMethod: "oauth" as const,
     authUrl: "https://www.coinbase.com/oauth/authorize",
     scopes: ["wallet:accounts:read", "wallet:transactions:read"]
   },
@@ -33,10 +33,10 @@ export const connectedIntegrations: ConnectedIntegrationType[] = [
       "Automated bookkeeping",
       "Consolidated financial statements"
     ],
-    status: "active",
+    status: "stable" as const,
     connectionStatus: "needs attention",
-    lastSync: "Apr 02, 2025",
-    authMethod: "oauth",
+    lastSynced: "Apr 02, 2025",
+    authMethod: "oauth" as const,
     authUrl: "https://appcenter.intuit.com/connect/oauth2"
   },
   {
@@ -50,10 +50,10 @@ export const connectedIntegrations: ConnectedIntegrationType[] = [
       "Transaction history",
       "Account balance monitoring"
     ],
-    status: "active",
+    status: "stable" as const,
     connectionStatus: "active",
-    lastSync: "Today at 10:30 AM",
-    authMethod: "apiKey",
+    lastSynced: "Today at 10:30 AM",
+    authMethod: "apiKey" as const,
     apiKeyName: "Plaid Client ID and Secret"
   },
   // This is a placeholder that will be replaced dynamically from onboarding data
@@ -68,10 +68,10 @@ export const connectedIntegrations: ConnectedIntegrationType[] = [
       "Financial data consolidation",
       "Reporting integration"
     ],
-    status: "active",
+    status: "stable" as const,
     connectionStatus: "active", 
-    lastSync: "Today at 11:00 AM",
-    authMethod: "apiKey",
+    lastSynced: "Today at 11:00 AM",
+    authMethod: "apiKey" as const,
     apiKeyName: "Aggregator API Key"
   }
 ];

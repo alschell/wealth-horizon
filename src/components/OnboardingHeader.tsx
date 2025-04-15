@@ -1,7 +1,7 @@
 
 import React from "react";
 import { useOnboarding } from "@/context/OnboardingContext";
-import { Check } from "lucide-react";
+import { CheckIcon } from "lucide-react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
@@ -71,7 +71,7 @@ const OnboardingHeader = () => {
                     )}
                   >
                     {isCompleted ? (
-                      <Check className="h-5 w-5" />
+                      <CheckIcon className="h-5 w-5" />
                     ) : (
                       step.number
                     )}

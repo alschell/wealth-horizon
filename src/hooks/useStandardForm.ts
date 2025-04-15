@@ -1,17 +1,22 @@
 
 import { useState, useCallback } from 'react';
 
-interface UseStandardFormProps<T> {
+// Define validation rules type differently to avoid mapped type syntax issue
+interface FormValidationRules<T> {
+  [key: string]: ((value: any) => string | null) | undefined;
+}
+
+interface UseStandardFormProps<T extends Record<string, any>> {
   initialValues: T;
-  validationRules?: Record<keyof T, (value: any) => string | null>;
-  onSubmit: (data: T) => void | Promise<void>;
+  validationRules: FormValidationRules<T>;
+  onSubmit: (data: T) => Promise<void>;
   onSuccess?: () => void;
   onError?: (error: unknown) => void;
 }
 
 export function useStandardForm<T extends Record<string, any>>({
   initialValues,
-  validationRules = {} as Record<keyof T, (value: any) => string | null>,
+  validationRules,
   onSubmit,
   onSuccess,
   onError
@@ -21,30 +26,32 @@ export function useStandardForm<T extends Record<string, any>>({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
-  // Handle field change
-  const handleChange = useCallback((
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target;
+  // Handle input change without validation (except for password fields)
+  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value, type } = e.target;
     
     setFormData(prev => ({
       ...prev,
       [name]: value
     }));
     
-    // Clear error when field is modified
-    if (errors[name]) {
+    // Only validate password fields while typing
+    if (type === 'password' && validationRules[name]) {
+      const validationFunc = validationRules[name];
+      const error = validationFunc ? validationFunc(value) : null;
+      
       setErrors(prev => ({
         ...prev,
-        [name]: null
+        [name]: error
       }));
     }
-  }, [errors]);
+  }, [validationRules]);
 
   // Reset form to initial values
   const resetForm = useCallback(() => {
     setFormData(initialValues);
     setErrors({});
+    setIsSubmitting(false);
     setIsSuccess(false);
   }, [initialValues]);
 
@@ -53,14 +60,14 @@ export function useStandardForm<T extends Record<string, any>>({
     const newErrors: Record<string, string | null> = {};
     let isValid = true;
 
-    // Apply validation rules to each field
-    Object.keys(validationRules).forEach(key => {
-      const fieldName = key as keyof T;
-      const validateField = validationRules[fieldName];
-      if (validateField) {
-        const error = validateField(formData[fieldName]);
-        newErrors[key] = error;
-        if (error) isValid = false;
+    // Check each field with a validation rule
+    Object.entries(validationRules).forEach(([field, validateFunc]) => {
+      if (validateFunc && field in formData) {
+        const error = validateFunc(formData[field]);
+        if (error) {
+          newErrors[field] = error;
+          isValid = false;
+        }
       }
     });
 
@@ -69,15 +76,15 @@ export function useStandardForm<T extends Record<string, any>>({
   }, [formData, validationRules]);
 
   // Handle form submission
-  const handleSubmit = useCallback(async (e?: React.FormEvent) => {
-    if (e) e.preventDefault();
+  const handleSubmit = useCallback(async (e: React.FormEvent) => {
+    e.preventDefault();
     
-    if (isSubmitting) return;
-    
-    const isValid = validateForm();
-    if (!isValid) return;
+    if (!validateForm()) {
+      return;
+    }
     
     setIsSubmitting(true);
+    setIsSuccess(false);
     
     try {
       await onSubmit(formData);
@@ -85,24 +92,19 @@ export function useStandardForm<T extends Record<string, any>>({
       if (onSuccess) onSuccess();
     } catch (error) {
       if (onError) onError(error);
-      console.error('Form submission error:', error);
     } finally {
       setIsSubmitting(false);
     }
-  }, [formData, isSubmitting, validateForm, onSubmit, onSuccess, onError]);
+  }, [formData, validateForm, onSubmit, onSuccess, onError]);
 
   return {
     formData,
-    setFormData,
     errors,
-    setErrors,
-    isSubmitting,
-    isSuccess,
     handleChange,
     handleSubmit,
     resetForm,
-    validateForm
+    isSubmitting,
+    isSuccess,
+    setFormData
   };
 }
-
-export default useStandardForm;

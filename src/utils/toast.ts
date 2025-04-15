@@ -1,36 +1,46 @@
 
-import { toast } from '@/components/ui/use-toast';
-import { ToastAction } from '@/components/ui/toast';
+import { toast } from '@/hooks/use-toast';
 
-export const showSuccess = (title: string, description?: string) => {
+/**
+ * Show a success toast notification
+ */
+export function showSuccess(title: string, message?: string) {
   toast({
     title,
-    description,
-    variant: 'default',
+    description: message,
+    variant: 'default'
   });
-};
+}
 
-export const showError = (title: string, description?: string) => {
+/**
+ * Show an error toast notification
+ */
+export function showError(title: string, message?: string) {
   toast({
     title,
-    description,
+    description: message,
+    variant: 'destructive'
+  });
+}
+
+/**
+ * Show an info toast notification
+ */
+export function showInfo(title: string, message?: string) {
+  toast({
+    title,
+    description: message
+  });
+}
+
+/**
+ * Show a warning toast notification
+ */
+export function showWarning(title: string, message?: string) {
+  toast({
+    title,
+    description: message,
     variant: 'destructive',
+    className: 'bg-amber-500'
   });
-};
-
-export const showWarning = (title: string, description?: string, action?: {label: string, onClick: () => void}) => {
-  toast({
-    title,
-    description,
-    variant: 'default',
-    action: action ? <ToastAction altText={action.label} onClick={action.onClick}>{action.label}</ToastAction> : undefined,
-  });
-};
-
-export const showInfo = (title: string, description?: string) => {
-  toast({
-    title,
-    description,
-    variant: 'default',
-  });
-};
+}

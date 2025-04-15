@@ -1,6 +1,7 @@
 
 import { useCallback } from 'react';
 import { DocumentFileWithMetadata } from '../../types';
+import { showSuccess, showError } from '@/utils/toast';
 import { useDocumentValidation } from './useDocumentValidation';
 import { useDocumentFactory } from './useDocumentFactory';
 import { useDocumentFileHandler } from './useDocumentFileHandler';
@@ -148,7 +149,7 @@ export function useDocumentEventHandlers({
    */
   const handleSubmit = useCallback(async () => {
     if (documentFiles.length === 0) {
-      console.error("No documents");
+      showError("No documents", "Please add at least one document.");
       return;
     }
     
@@ -157,9 +158,10 @@ export function useDocumentEventHandlers({
         await onSave(documentFiles);
       }
       
-      console.log("Documents saved successfully");
+      showSuccess("Documents saved", "Documents have been saved successfully.");
     } catch (error) {
       console.error("Error submitting documents:", error);
+      showError("Error", "An error occurred while saving documents.");
     }
   }, [documentFiles, onSave]);
   

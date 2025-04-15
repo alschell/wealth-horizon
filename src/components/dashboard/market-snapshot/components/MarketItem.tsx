@@ -1,57 +1,50 @@
 
 import React from "react";
-import { Card } from "@/components/ui/card";
-import { getChangeColorClass, getChangeIcon } from "../utils";
+import { Link } from "react-router-dom";
+import { getCountryFlagCode } from "../utils";
+import { MarketItem as MarketItemType } from "../types";
 
-export interface MarketItemProps {
-  name: string;
-  ticker: string;
-  value: string;
-  change: string;
-  changePercent: number;
-  isUp: boolean;
-  category: string;
+interface MarketItemProps {
+  item: MarketItemType;
 }
 
-const MarketItem: React.FC<MarketItemProps> = ({
-  name,
-  ticker,
-  value,
-  change,
-  changePercent,
-  isUp,
-  category
-}) => {
-  const ChangeIcon = getChangeIcon(isUp);
-  const changeColorClass = getChangeColorClass(isUp);
-  
+const MarketItem: React.FC<MarketItemProps> = ({ item }) => {
   return (
-    <Card className="p-4 hover:shadow-md transition-shadow duration-200">
-      <div className="flex flex-col h-full">
-        <div className="flex justify-between items-start mb-2">
-          <div>
-            <h3 className="font-medium text-sm">{name}</h3>
-            <p className="text-muted-foreground text-xs">{ticker}</p>
-          </div>
-          <span className="bg-slate-100 text-slate-700 text-xs px-2 py-1 rounded">
-            {category}
-          </span>
-        </div>
-        
-        <div className="mt-auto">
-          <div className="text-xl font-semibold">{value}</div>
-          <div className="flex items-center">
-            <ChangeIcon className={`h-4 w-4 ${changeColorClass} mr-1`} />
-            <span className={`${changeColorClass} text-sm mr-1`}>
-              {change}
+    <Link 
+      to="/market-data" 
+      className="p-3 rounded-md bg-white hover:bg-gray-50 transition-colors cursor-pointer"
+    >
+      <div className="flex items-center mb-1">
+        <span className="w-6 h-6 mr-2 flex items-center justify-center">
+          {/* Use flag for indices and currencies */}
+          {(item.category === "Indices" || item.category === "Currencies") ? (
+            <img 
+              src={`https://flagcdn.com/w20/${getCountryFlagCode(item.category, item.label)}.png`} 
+              alt={`${item.label} flag`}
+              className="w-5 h-auto"
+              onError={(e) => {
+                e.currentTarget.style.display = 'none';
+              }}
+            />
+          ) : (
+            // Use emoji or symbol for other categories
+            <span className="text-lg">
+              {item.category === "Cryptocurrencies" ? "₿" : 
+               item.category === "Commodities" && item.label === "Gold" ? "🥇" : "🛢️"}
             </span>
-            <span className={`${changeColorClass} text-xs`}>
-              ({changePercent.toFixed(2)}%)
-            </span>
-          </div>
-        </div>
+          )}
+        </span>
+        <p className="text-sm font-medium">{item.label}</p>
       </div>
-    </Card>
+      <div className="flex flex-col ml-8">
+        <p className="text-sm font-mono font-bold">{item.value}</p>
+        <p className={`text-xs font-medium ${
+          item.change.startsWith('+') ? 'text-emerald-600' : 'text-red-500'
+        }`}>
+          {item.change}
+        </p>
+      </div>
+    </Link>
   );
 };
 

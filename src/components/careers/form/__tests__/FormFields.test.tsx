@@ -1,108 +1,79 @@
 
-import React from 'react';
-import { render, screen } from '@testing-library/react';
-import FormFields from '../FormFields';
-import { vi } from 'vitest';
+import React from "react";
+import { render, screen, fireEvent } from "@testing-library/react";
+import { FormField } from "../FormFields";
 
-describe('FormFields', () => {
-  it('renders a label', () => {
-    const onChange = vi.fn();
+describe("FormField Component", () => {
+  const defaultProps = {
+    id: "test-field",
+    label: "Test Field",
+    value: "",
+    onChange: jest.fn(),
+  };
+  
+  test("renders with label and input", () => {
+    render(<FormField {...defaultProps} />);
     
-    render(
-      <FormFields
-        id="testId"
-        name="testName"
-        label="Test Label"
-        value="Test Value"
-        onChange={onChange}
-      />
-    );
-    
-    expect(screen.getByText('Test Label')).toBeInTheDocument();
+    expect(screen.getByLabelText(/Test Field/)).toBeInTheDocument();
+    expect(screen.getByRole("textbox")).toBeInTheDocument();
   });
   
-  it('marks required fields', () => {
-    const onChange = vi.fn();
+  test("renders required indicator when required is true", () => {
+    render(<FormField {...defaultProps} required={true} />);
     
-    render(
-      <FormFields
-        required={true}
-        id="testId"
-        name="testName"
-        label="Test Label"
-        value="Test Value"
-        onChange={onChange}
-      />
-    );
-    
-    expect(screen.getByText('*')).toBeInTheDocument();
+    const label = screen.getByText("Test Field");
+    expect(label.nextSibling).toHaveTextContent("*");
   });
   
-  it('does not show asterisk for non-required fields', () => {
-    const onChange = vi.fn();
+  test("does not render required indicator when required is false", () => {
+    render(<FormField {...defaultProps} required={false} />);
     
-    render(
-      <FormFields
-        required={false}
-        id="testId"
-        name="testName"
-        label="Test Label"
-        value="Test Value"
-        onChange={onChange}
-      />
-    );
-    
-    expect(screen.queryByText('*')).not.toBeInTheDocument();
+    const labelElement = screen.getByText("Test Field");
+    const parentElement = labelElement.parentElement;
+    expect(parentElement?.textContent).not.toContain("*");
   });
   
-  it('displays an error message when provided', () => {
-    const onChange = vi.fn();
+  test("displays error message when error is provided", () => {
+    const errorMessage = "This field is required";
+    render(<FormField {...defaultProps} error={errorMessage} />);
     
-    render(
-      <FormFields
-        error="This is an error"
-        id="testId"
-        name="testName"
-        label="Test Label"
-        value="Test Value"
-        onChange={onChange}
-      />
-    );
-    
-    expect(screen.getByText('This is an error')).toBeInTheDocument();
+    expect(screen.getByText(errorMessage)).toBeInTheDocument();
   });
   
-  it('renders an input field with the correct value', () => {
-    const onChange = vi.fn();
+  test("calls onChange handler when input value changes", () => {
+    render(<FormField {...defaultProps} />);
     
-    render(
-      <FormFields
-        id="testId"
-        name="testName"
-        label="Test Label"
-        value="Test Value"
-        onChange={onChange}
-      />
-    );
+    const input = screen.getByRole("textbox");
+    fireEvent.change(input, { target: { value: "test value" } });
     
-    expect(screen.getByDisplayValue('Test Value')).toBeInTheDocument();
+    expect(defaultProps.onChange).toHaveBeenCalled();
   });
   
-  it('applies error styles when error is provided', () => {
-    const onChange = vi.fn();
+  test("sets aria-invalid when error is provided", () => {
+    render(<FormField {...defaultProps} error="Error message" />);
     
-    render(
-      <FormFields
-        error="This is an error"
-        id="testId"
-        name="testName"
-        label="Test Label"
-        value="Test Value"
-        onChange={onChange}
-      />
-    );
+    const input = screen.getByRole("textbox");
+    expect(input).toHaveAttribute("aria-invalid", "true");
+  });
+  
+  test("sets aria-describedby only when error exists", () => {
+    render(<FormField {...defaultProps} error="Error message" />);
     
-    const input = screen.getByDisplayValue('Test Value');
-    expect(input).toHaveClass('border-red-500');
+    const input = screen.getByRole("textbox");
+    expect(input).toHaveAttribute("aria-describedby", "test-field-error");
+  });
+  
+  test("does not set aria-describedby when no error exists", () => {
+    render(<FormField {...defaultProps} />);
+    
+    const input = screen.getByRole("textbox");
+    expect(input).not.toHaveAttribute("aria-describedby");
+  });
+  
+  test("applies correct disabled state", () => {
+    render(<FormField {...defaultProps} disabled={true} />);
+    
+    const input = screen.getByRole("textbox");
+    expect(input).toBeDisabled();
   });
 });

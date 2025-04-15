@@ -1,16 +1,21 @@
 
+// Account types constants
 export const ACCOUNT_TYPES = [
-  "investment",
-  "checking",
-  "savings",
-  "retirement",
-  "trust",
-  "brokerage",
-  "credit",
-  "loan",
-  "mortgage",
-  "custody",
-  "fiduciary",
-  "cash",
-  "other"
+  "Cash",
+  "Portfolio",
+  "Investment",
+  "Custody",
+  "Broker",
+  "Checking",
+  "Savings",
+  "Brokerage",
+  "Trust",
+  "Retirement",
+  "Private Equity",
+  "Hedge Fund",
+  "Venture Capital",
+  "Real Estate",
+  "Fixed Income",
+  "Credit",
+  "Other"
 ];

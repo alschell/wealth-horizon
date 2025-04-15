@@ -3,7 +3,6 @@ import React from "react";
 import { LayoutDashboard, Sliders } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import PageHeaderCard from "@/components/dashboard/PageHeaderCard";
-import { TranslatedText } from "@/components/ui/translated-text";
 
 interface DashboardHeaderProps {
   onCustomizeClick: () => void;

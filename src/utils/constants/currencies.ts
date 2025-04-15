@@ -1,24 +1,61 @@
 
-export interface Currency {
-  code: string;
-  name: string;
-}
+// Currencies constants with symbols
+export const CURRENCIES = [
+  "USD - US Dollar",
+  "EUR - Euro",
+  "GBP - British Pound",
+  "CHF - Swiss Franc",
+  "JPY - Japanese Yen",
+  "CNY - Chinese Yuan",
+  "CAD - Canadian Dollar",
+  "AUD - Australian Dollar",
+  "HKD - Hong Kong Dollar",
+  "SGD - Singapore Dollar",
+  "NZD - New Zealand Dollar",
+  "SEK - Swedish Krona",
+  "NOK - Norwegian Krone",
+  "DKK - Danish Krone",
+  "BRL - Brazilian Real",
+  "INR - Indian Rupee",
+  "MXN - Mexican Peso",
+  "ZAR - South African Rand",
+  "RUB - Russian Ruble",
+  "TRY - Turkish Lira",
+  "AED - UAE Dirham",
+  "SAR - Saudi Riyal",
+  "KRW - South Korean Won",
+  "PLN - Polish Zloty",
+  "THB - Thai Baht",
+  "IDR - Indonesian Rupiah",
+  "PHP - Philippine Peso",
+  "MYR - Malaysian Ringgit",
+  "CZK - Czech Koruna",
+  "HUF - Hungarian Forint"
+].sort();
 
-export const CURRENCIES: Currency[] = [
-  { code: "USD", name: "US Dollar (USD)" },
-  { code: "EUR", name: "Euro (EUR)" },
-  { code: "GBP", name: "British Pound (GBP)" },
-  { code: "JPY", name: "Japanese Yen (JPY)" },
-  { code: "CHF", name: "Swiss Franc (CHF)" },
-  { code: "CAD", name: "Canadian Dollar (CAD)" },
-  { code: "AUD", name: "Australian Dollar (AUD)" },
-  { code: "CNY", name: "Chinese Yuan (CNY)" },
-  { code: "HKD", name: "Hong Kong Dollar (HKD)" },
-  { code: "SGD", name: "Singapore Dollar (SGD)" }
-];
+// Common currencies subset for simpler forms
+export const COMMON_CURRENCIES = [
+  "USD - US Dollar",
+  "EUR - Euro",
+  "GBP - British Pound",
+  "CHF - Swiss Franc",
+  "JPY - Japanese Yen",
+  "CNY - Chinese Yuan",
+  "CAD - Canadian Dollar",
+  "AUD - Australian Dollar",
+  "HKD - Hong Kong Dollar",
+  "SGD - Singapore Dollar",
+  "NZD - New Zealand Dollar",
+  "SEK - Swedish Krona",
+  "NOK - Norwegian Krone",
+  "DKK - Danish Krone",
+  "BRL - Brazilian Real",
+  "INR - Indian Rupee",
+  "MXN - Mexican Peso",
+  "ZAR - South African Rand"
+].sort();
 
-// Utility function to extract currency code from a string like "US Dollar (USD)"
-export const extractCurrencyCode = (currencyString: string): string => {
-  const match = currencyString.match(/\(([^)]+)\)/);
-  return match ? match[1] : currencyString;
+// Helper function to extract currency code from option
+export const extractCurrencyCode = (currencyOption: string): string => {
+  return currencyOption.split(" - ")[0];
 };

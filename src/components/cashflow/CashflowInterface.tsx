@@ -5,7 +5,7 @@ import CashflowOverview from "./sections/CashflowOverview";
 import LiquidityPlanner from "./sections/LiquidityPlanner";
 import TermDeposits from "./sections/TermDeposits";
 import RecurringPayments from "./sections/RecurringPayments";
-import { BarChart, Calendar, Wallet, CircleDollarSign } from "lucide-react";
+import { ChartBar, Calendar, Wallet, Coins } from "lucide-react";
 import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
 
@@ -27,7 +27,7 @@ const CashflowInterface = () => {
                   value="overview" 
                   className="flex items-center justify-center gap-2 py-3 data-[state=active]:bg-white"
                 >
-                  <BarChart className="h-4 w-4" />
+                  <ChartBar className="h-4 w-4" />
                   <span>Overview</span>
                 </TabsTrigger>
                 <TabsTrigger 
@@ -48,7 +48,7 @@ const CashflowInterface = () => {
                   value="deposits" 
                   className="flex items-center justify-center gap-2 py-3 data-[state=active]:bg-white"
                 >
-                  <CircleDollarSign className="h-4 w-4" />
+                  <Coins className="h-4 w-4" />
                   <span>Term Deposits</span>
                 </TabsTrigger>
               </TabsList>

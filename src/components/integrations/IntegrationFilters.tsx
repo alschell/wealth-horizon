@@ -14,13 +14,8 @@ const IntegrationFilters: React.FC<IntegrationFiltersProps> = ({
   selectedCategory, 
   onSelectCategory 
 }) => {
-  // Helper function to get the ID and name from a CategoryType
-  const getCategoryInfo = (category: CategoryType) => {
-    if (typeof category === 'string') {
-      return { id: category, name: category.charAt(0).toUpperCase() + category.slice(1) };
-    }
-    return category;
-  };
+  // Log the categories being received by the component
+  console.log('Categories in IntegrationFilters:', categories);
   
   return (
     <div className="flex flex-wrap gap-2">
@@ -32,19 +27,16 @@ const IntegrationFilters: React.FC<IntegrationFiltersProps> = ({
         All
       </Button>
       {categories && categories.length > 0 ? (
-        categories.map((category) => {
-          const { id, name } = getCategoryInfo(category);
-          return (
-            <Button
-              key={id}
-              variant={selectedCategory === id ? "default" : "outline"}
-              onClick={() => onSelectCategory(id)}
-              size="sm"
-            >
-              {name}
-            </Button>
-          );
-        })
+        categories.map((category) => (
+          <Button
+            key={category.id}
+            variant={selectedCategory === category.id ? "default" : "outline"}
+            onClick={() => onSelectCategory(category.id)}
+            size="sm"
+          >
+            {category.name}
+          </Button>
+        ))
       ) : (
         <div className="text-sm text-gray-500">No categories available</div>
       )}

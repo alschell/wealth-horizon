@@ -1,11 +1,10 @@
 
 import React from "react";
-import { Icon as IconComponent } from "@/utils/icons"; 
-import { Card } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { LucideIcon } from "lucide-react";
 
 interface PageHeaderCardProps {
-  icon: string | LucideIcon;
+  icon: LucideIcon;
   title: string;
   description: string;
   iconColor?: string;
@@ -13,31 +12,27 @@ interface PageHeaderCardProps {
 }
 
 const PageHeaderCard: React.FC<PageHeaderCardProps> = ({
-  icon,
+  icon: Icon,
   title,
   description,
-  iconColor = "text-primary",
-  iconBgColor = "bg-primary/10",
+  iconColor = "text-gray-700",
+  iconBgColor = "bg-gray-100"
 }) => {
   return (
-    <Card className="p-6 mb-6">
-      <div className="flex items-start gap-4">
-        <div className={`p-3 rounded-lg ${iconBgColor}`}>
-          {typeof icon === 'string' ? (
-            <IconComponent iconName={icon as any} className={`h-6 w-6 ${iconColor}`} />
-          ) : (
-            (() => {
-              const IconComponent = icon;
-              return <IconComponent className={`h-6 w-6 ${iconColor}`} />;
-            })()
-          )}
+    <Card className="border-none shadow-none bg-transparent">
+      <CardContent className="p-0">
+        <div className="flex items-start gap-4">
+          <div className={`p-3 rounded-lg ${iconBgColor}`}>
+            <Icon className={`h-8 w-8 ${iconColor}`} />
+          </div>
+          <div className="space-y-1">
+            <h1 className="text-3xl font-semibold tracking-tight">{title}</h1>
+            <p className="text-muted-foreground max-w-3xl">
+              {description}
+            </p>
+          </div>
         </div>
-        
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">{title}</h1>
-          <p className="text-gray-500 mt-1">{description}</p>
-        </div>
-      </div>
+      </CardContent>
     </Card>
   );
 };

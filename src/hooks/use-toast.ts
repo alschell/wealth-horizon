@@ -1,12 +1,54 @@
 
-import { useToast as useToastShadcn } from "@/components/ui/use-toast";
-import { toast as toastShadcn } from "@/components/ui/use-toast";
+import { toast as sonnerToast } from "sonner";
 
-// Re-export useToast hook
-export const useToast = useToastShadcn;
+// Export types from toast component
+export * from "@/components/ui/toast";
 
-// Create a toast function for direct use without the hook
-export const toast = toastShadcn;
+// Define the Toast interface with all required properties
+export interface Toast {
+  id?: string;
+  title?: React.ReactNode;
+  description?: React.ReactNode;
+  action?: {
+    label: string;
+    onClick: () => void;
+  };
+  variant?: "default" | "destructive";
+  duration?: number;
+  className?: string;
+}
 
-// Default export for backward compatibility
-export default useToastShadcn;
+// Main toast function that accepts our Toast interface
+export function toast(props: Toast) {
+  const { title, description, variant, duration, className, action } = props;
+  
+  if (variant === "destructive") {
+    return sonnerToast.error(title as string, {
+      description: description as string,
+      duration: duration,
+      className: className,
+      action: action ? {
+        label: action.label,
+        onClick: action.onClick
+      } : undefined
+    });
+  }
+  
+  return sonnerToast(title as string, {
+    description: description as string,
+    duration: duration,
+    className: className,
+    action: action ? {
+      label: action.label,
+      onClick: action.onClick
+    } : undefined
+  });
+}
+
+// Stub implementation for useToast that returns the toast function
+export function useToast() {
+  return {
+    toast,
+    dismiss: sonnerToast.dismiss
+  };
+}

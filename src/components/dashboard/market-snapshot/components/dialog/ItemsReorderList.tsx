@@ -48,7 +48,7 @@ const ItemsReorderList: React.FC<ItemsReorderListProps> = ({
                           className="flex items-center p-2 border rounded bg-white"
                         >
                           <GripVertical className="h-4 w-4 mr-2 text-gray-400" />
-                          <span className="text-sm">{item.name}</span>
+                          <span className="text-sm">{item.label}</span>
                         </div>
                       )}
                     </Draggable>

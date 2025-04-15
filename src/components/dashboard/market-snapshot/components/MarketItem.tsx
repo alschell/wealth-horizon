@@ -1,50 +1,63 @@
 
-import React from "react";
-import { Link } from "react-router-dom";
+import React from 'react';
+import { TrendingUp, TrendingDown } from 'lucide-react';
+import { cn } from '@/lib/utils';
 import { getCountryFlagCode } from "../utils";
-import { MarketItem as MarketItemType } from "../types";
 
 interface MarketItemProps {
-  item: MarketItemType;
+  name: string;
+  ticker: string;
+  value: string;
+  change: string;
+  changePercent: string;
+  isUp: boolean;
+  category: string;
+  isLarge?: boolean;
 }
 
-const MarketItem: React.FC<MarketItemProps> = ({ item }) => {
+const MarketItem: React.FC<MarketItemProps> = ({
+  name,
+  ticker,
+  value,
+  change,
+  changePercent,
+  isUp,
+  category,
+  isLarge = false,
+}) => {
+  const countryCode = getCountryFlagCode(category, name);
+
   return (
-    <Link 
-      to="/market-data" 
-      className="p-3 rounded-md bg-white hover:bg-gray-50 transition-colors cursor-pointer"
-    >
-      <div className="flex items-center mb-1">
-        <span className="w-6 h-6 mr-2 flex items-center justify-center">
-          {/* Use flag for indices and currencies */}
-          {(item.category === "Indices" || item.category === "Currencies") ? (
-            <img 
-              src={`https://flagcdn.com/w20/${getCountryFlagCode(item.category, item.label)}.png`} 
-              alt={`${item.label} flag`}
-              className="w-5 h-auto"
-              onError={(e) => {
-                e.currentTarget.style.display = 'none';
-              }}
-            />
-          ) : (
-            // Use emoji or symbol for other categories
-            <span className="text-lg">
-              {item.category === "Cryptocurrencies" ? "₿" : 
-               item.category === "Commodities" && item.label === "Gold" ? "🥇" : "🛢️"}
-            </span>
+    <div className={cn(
+      'p-3 border rounded-lg bg-background transition-all',
+      isLarge ? 'col-span-2' : ''
+    )}>
+      <div className="flex items-center justify-between mb-2">
+        <div className="flex items-center">
+          {category === 'Indices' && (
+            <span className={`fi fi-${countryCode} mr-2`} />
           )}
-        </span>
-        <p className="text-sm font-medium">{item.label}</p>
+          <h3 className="font-medium">{name}</h3>
+        </div>
+        <span className="text-xs text-muted-foreground">{ticker}</span>
       </div>
-      <div className="flex flex-col ml-8">
-        <p className="text-sm font-mono font-bold">{item.value}</p>
-        <p className={`text-xs font-medium ${
-          item.change.startsWith('+') ? 'text-emerald-600' : 'text-red-500'
-        }`}>
-          {item.change}
-        </p>
+      
+      <div className="flex items-end justify-between">
+        <span className="text-xl font-bold">{value}</span>
+        <div className={cn(
+          'flex items-center text-sm',
+          isUp ? 'text-green-600' : 'text-red-600'
+        )}>
+          {isUp ? (
+            <TrendingUp className="h-3 w-3 mr-1" />
+          ) : (
+            <TrendingDown className="h-3 w-3 mr-1" />
+          )}
+          <span>{change}</span>
+          <span className="ml-1">({changePercent})</span>
+        </div>
       </div>
-    </Link>
+    </div>
   );
 };
 

@@ -1,4 +1,6 @@
 
+import React from 'react';
+
 export interface IntegrationType {
   id: string;
   name: string;

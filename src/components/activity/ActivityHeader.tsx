@@ -1,9 +1,9 @@
 
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { Icon } from "@/utils/icons";
 import { Button } from "@/components/ui/button";
 import PageHeaderCard from "@/components/dashboard/PageHeaderCard";
+import { ArrowLeft, History } from "@/utils/Icons";
 
 export const ActivityHeader: React.FC = () => {
   const navigate = useNavigate();
@@ -17,7 +17,7 @@ export const ActivityHeader: React.FC = () => {
           onClick={() => navigate("/dashboard")}
           className="flex items-center gap-1"
         >
-          <Icon name="ArrowLeft" className="h-4 w-4" /> Back to Dashboard
+          <ArrowLeft className="h-4 w-4" /> Back to Dashboard
         </Button>
       </div>
       

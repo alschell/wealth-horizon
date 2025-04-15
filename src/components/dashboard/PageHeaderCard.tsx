@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Icon } from "@/utils/icons"; 
+import { Icon, IconName } from "@/utils/Icons"; 
 import { Card } from "@/components/ui/card";
 import { LucideIcon } from "lucide-react";
 
@@ -24,7 +24,7 @@ const PageHeaderCard: React.FC<PageHeaderCardProps> = ({
       <div className="flex items-start gap-4">
         <div className={`p-3 rounded-lg ${iconBgColor}`}>
           {typeof icon === 'string' ? (
-            <Icon iconName={icon} className={`h-6 w-6 ${iconColor}`} />
+            <Icon iconName={icon as IconName} className={`h-6 w-6 ${iconColor}`} />
           ) : (
             (() => {
               const IconComponent = icon;

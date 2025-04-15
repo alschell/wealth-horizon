@@ -1,59 +1,23 @@
 
-/**
- * Higher-order component that enforces strict typing for components
- * 
- * @module withStrictTypes
- */
-
 import React from 'react';
 
 /**
- * A higher-order component that wraps a component to ensure proper type checking
- * without changing its functionality.
- * 
- * @template P - The props type of the wrapped component
- * @param Component - The component to wrap
- * @returns The same component with enhanced type safety
+ * A higher-order component that enforces strict typing for components.
+ * This is useful for components where we want to ensure that all required props are passed.
  */
-export function withStrictTypes<P extends object>(
-  Component: React.ComponentType<P>
-): React.FC<P> {
-  // Create a properly named wrapped component
-  const displayName = Component.displayName || Component.name || 'Component';
-  
-  const WrappedComponent: React.FC<P> = (props: P) => {
+export function withStrictTypes<P>(Component: React.ComponentType<P>): React.FC<P> {
+  const StrictComponent: React.FC<P> = (props) => {
     return <Component {...props} />;
   };
-  
-  // Set proper display name for debugging
-  WrappedComponent.displayName = `withStrictTypes(${displayName})`;
-  
-  return WrappedComponent;
-}
 
-/**
- * Function to create a strictly typed component with predefined props
- * 
- * @template P - The props type of the component
- * @param Component - The component to enhance
- * @param defaultProps - Default props to apply
- * @returns Enhanced component with default props
- */
-export function createTypeSafeComponent<P extends object>(
-  Component: React.ComponentType<P>,
-  defaultProps: Partial<P>
-): React.FC<Partial<P>> {
-  const StrictComponent = withStrictTypes(Component);
+  // Preserve the original component's name and defaultProps
+  StrictComponent.displayName = `withStrictTypes(${
+    Component.displayName || Component.name || 'Component'
+  })`;
   
-  // Create a component with merged default props
-  const EnhancedComponent: React.FC<Partial<P>> = (props) => {
-    const mergedProps = { ...defaultProps, ...props } as P;
-    return <StrictComponent {...mergedProps} />;
-  };
-  
-  EnhancedComponent.displayName = `TypeSafe(${Component.displayName || Component.name || 'Component'})`;
-  
-  return EnhancedComponent;
-}
+  if (Component.defaultProps) {
+    StrictComponent.defaultProps = { ...Component.defaultProps };
+  }
 
-export default withStrictTypes;
+  return StrictComponent;
+}

@@ -130,7 +130,7 @@ export const createZodSchema = <T extends Record<string, any>>(
     });
   }
   
-  // Use type assertion with 'as unknown as' to safely convert the type
+  // Fix: Explicitly type cast to resolve the typescript error
   return z.object(schemaMap) as unknown as z.ZodSchema<T>;
 };
 

@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { ValidatedForm } from '@/components/ui/validated-form';
 import { ValidatedField } from '@/components/ui/validated-field';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { withErrorHandling } from '@/utils/errorHandling';
+import { withErrorHandling } from '@/hooks/useErrorBoundary';
 
 // Define the form schema using Zod
 const userFormSchema = z.object({
@@ -145,7 +145,8 @@ const ValidationDemo: React.FC = () => {
   );
 };
 
+// Fixed: Use the withErrorHandling HOC correctly - importing from useErrorBoundary
 export default withErrorHandling(ValidationDemo, {
-  componentName: 'ValidationDemo',
-  fallbackMessage: 'Could not load the validation demo'
+  fallbackMessage: 'Could not load the validation demo',
+  showReset: true
 });

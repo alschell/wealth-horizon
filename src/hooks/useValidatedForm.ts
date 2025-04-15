@@ -62,7 +62,9 @@ export function useValidatedForm<T extends Record<string, any>>({
   const handleChange = useCallback((
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
-    const { name, value, type, checked } = e.target as HTMLInputElement;
+    const { name, value, type } = e.target as HTMLInputElement;
+    const checked = (e.target as HTMLInputElement).checked;
+    
     const fieldValue = type === 'checkbox' ? checked : value;
     setValue(name as keyof T, fieldValue as any);
   }, [setValue]);
@@ -71,11 +73,14 @@ export function useValidatedForm<T extends Record<string, any>>({
    * Handle blur event - mark field as touched
    */
   const handleBlur = useCallback((e: React.FocusEvent<HTMLElement>) => {
-    const { name } = e.target;
-    setTouched(prev => ({ ...prev, [name]: true }));
-    
-    // Validate field on blur
-    validateField(name as keyof T);
+    // Fix: Get the name using getAttribute for better type safety
+    const name = e.target.getAttribute('name');
+    if (name) {
+      setTouched(prev => ({ ...prev, [name]: true }));
+      
+      // Validate field on blur
+      validateField(name as keyof T);
+    }
   }, []);
   
   /**

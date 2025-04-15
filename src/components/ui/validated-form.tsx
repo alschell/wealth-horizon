@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { FormValidationError } from '@/components/ui/form-validation-error';
-import { withErrorHandling } from '@/components/hoc/withErrorHandling';
+import { withErrorHandling } from '@/hooks/useErrorBoundary';
 
 interface ValidatedFormProps<T extends Record<string, any>> {
   schema: z.ZodSchema<T>;
@@ -132,11 +132,10 @@ function ValidatedFormInner<T extends Record<string, any>>({
   );
 }
 
-// Wrap with error handling HOC
+// Fix: Use proper options for withErrorHandling
 export const ValidatedForm = withErrorHandling(
   ValidatedFormInner,
   {
-    componentName: 'ValidatedForm',
     fallbackMessage: 'There was a problem with the form. Please try again.',
     showReset: true
   }

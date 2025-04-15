@@ -1,15 +1,15 @@
 
 import React from "react";
-import { 
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger
-} from "@/components/ui/tooltip";
-import { Button } from "@/components/ui/button";
-import { PopoverTrigger } from "@/components/ui/popover";
 import { Bell } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { 
+  Tooltip, 
+  TooltipContent, 
+  TooltipProvider, 
+  TooltipTrigger 
+} from "@/components/ui/tooltip";
+import { PopoverTrigger } from "@/components/ui/popover";
 
 interface NotificationBadgeProps {
   unreadCount: number;

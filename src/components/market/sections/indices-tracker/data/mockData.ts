@@ -4,103 +4,83 @@ import { IndexData } from "../types";
 export const mockIndices: IndexData[] = [
   {
     id: "sp500",
-    symbol: "^GSPC",
     name: "S&P 500",
-    currentValue: "4,587.20",
-    change: "0.85",
+    value: "4,587.20",
+    change: 0.85,
     volume: "2.5B",
-    region: "United States",
-    isPositive: true
+    region: "United States"
   },
   {
     id: "nasdaq",
-    symbol: "^IXIC",
     name: "NASDAQ",
-    currentValue: "14,346.30",
-    change: "1.2",
+    value: "14,346.30",
+    change: 1.2,
     volume: "1.8B",
-    region: "United States",
-    isPositive: true
+    region: "United States"
   },
   {
     id: "dowjones",
-    symbol: "^DJI",
     name: "Dow Jones",
-    currentValue: "36,124.56",
-    change: "0.32",
+    value: "36,124.56",
+    change: 0.32,
     volume: "850M",
-    region: "United States",
-    isPositive: true
+    region: "United States"
   },
   {
     id: "ftse",
-    symbol: "^FTSE",
     name: "FTSE 100",
-    currentValue: "7,582.10",
-    change: "-0.32",
+    value: "7,582.10",
+    change: -0.32,
     volume: "620M",
-    region: "United Kingdom",
-    isPositive: false
+    region: "United Kingdom"
   },
   {
     id: "dax",
-    symbol: "^GDAXI",
     name: "DAX",
-    currentValue: "15,947.80",
-    change: "-0.15",
+    value: "15,947.80",
+    change: -0.15,
     volume: "720M",
-    region: "Germany",
-    isPositive: false
+    region: "Germany"
   },
   {
     id: "nikkei",
-    symbol: "^N225",
     name: "Nikkei 225",
-    currentValue: "37,156.45",
-    change: "1.45",
+    value: "37,156.45",
+    change: 1.45,
     volume: "1.2B",
-    region: "Japan",
-    isPositive: true
+    region: "Japan"
   },
   {
     id: "shanghai",
-    symbol: "000001.SS",
     name: "Shanghai Composite",
-    currentValue: "3,210.40",
-    change: "-0.30",
+    value: "3,210.40",
+    change: -0.30,
     volume: "950M",
-    region: "China",
-    isPositive: false
+    region: "China"
   },
   {
     id: "cac",
-    symbol: "^FCHI",
     name: "CAC 40",
-    currentValue: "7,125.80",
-    change: "0.42",
+    value: "7,125.80",
+    change: 0.42,
     volume: "580M",
-    region: "France",
-    isPositive: true
+    region: "France"
   },
   {
     id: "asx",
-    symbol: "^AXJO",
     name: "ASX 200",
-    currentValue: "7,648.25",
-    change: "0.85",
+    value: "7,648.25",
+    change: 0.85,
     volume: "490M",
-    region: "Australia",
-    isPositive: true
+    region: "Australia"
   },
   {
     id: "hangseng",
-    symbol: "^HSI",
     name: "Hang Seng",
-    currentValue: "18,125.45",
-    change: "-1.20",
+    value: "18,125.45",
+    change: -1.20,
     volume: "1.1B",
-    region: "Hong Kong",
-    isPositive: false
+    region: "Hong Kong"
   }
 ];
 

@@ -1,16 +1,11 @@
 
-import { Quote } from "@/utils/market-data/types";
-
 export interface IndexData {
-  symbol: string;
+  id: string;
   name: string;
+  value: string;
+  change: number;
+  volume: string;
   region: string;
-  data?: Quote;
-  currentValue: string;
-  change: string;
-  isPositive: boolean;
-  id?: string;
-  volume?: string;
 }
 
 export interface ChartDataPoint {

@@ -1,34 +1,39 @@
 
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { useMarketNews } from "@/hooks/market-data/useNewsHooks";
-import NewsFilters from "./components/NewsFilters";
-import NewsList from "./components/NewsList";
-import NewsArticle from "./components/NewsArticle";
-import LoadingSkeleton from "./components/LoadingSkeleton";
-import ErrorMessage from "./components/ErrorMessage";
+import { NewsSectionProps } from "./types";
+import { filterNewsItems, getNewsItems } from "./utils/newsUtils";
+import NewsHeader from "./components/NewsHeader";
+import NewsGrid from "./components/NewsGrid";
+import LoadMoreButton from "./components/LoadMoreButton";
 
-const NewsSection = ({ articleId }: { articleId?: string }) => {
-  const [selectedCategory, setSelectedCategory] = useState("general");
-  const [selectedArticle, setSelectedArticle] = useState<string | null>(null);
-  const [categories] = useState([
-    { id: "general", name: "General" },
-    { id: "forex", name: "Forex" },
-    { id: "crypto", name: "Crypto" },
-    { id: "merger", name: "Mergers" },
-    { id: "economy", name: "Economy" },
-    { id: "ipo", name: "IPO" }
-  ]);
+const NewsSection: React.FC<NewsSectionProps> = ({ articleId }) => {
+  const [category, setCategory] = useState("all");
+  const [searchTerm, setSearchTerm] = useState("");
   
-  const { data: news, isLoading, error, refetch } = useMarketNews(selectedCategory, 20);
+  // Get all news items
+  const newsItems = getNewsItems();
   
-  // Set selected article from props if provided
+  // Effect to scroll to specific article if articleId is provided
   useEffect(() => {
     if (articleId) {
-      setSelectedArticle(articleId);
+      // Find the article in our data
+      const article = newsItems.find(item => item.id === articleId);
+      if (article) {
+        // We could automatically set the category filter based on the article
+        setCategory(article.category !== "all" ? article.category : "all");
+        
+        // In a real implementation, you might want to scroll to the article or highlight it
+        // This is a placeholder for that functionality
+        console.log(`Article ${articleId} should be displayed prominently`);
+      }
     }
   }, [articleId]);
-
+  
+  // Filter news based on category and search term
+  const filteredNews = filterNewsItems(newsItems, category, searchTerm);
+  
+  // Animation variants
   const container = {
     hidden: { opacity: 0 },
     show: {
@@ -39,41 +44,6 @@ const NewsSection = ({ articleId }: { articleId?: string }) => {
     }
   };
 
-  const item = {
-    hidden: { opacity: 0, y: 20 },
-    show: { opacity: 1, y: 0 }
-  };
-
-  // Handle article selection
-  const handleArticleSelect = (id: string) => {
-    setSelectedArticle(id);
-  };
-
-  // Handle back to list
-  const handleBackToList = () => {
-    setSelectedArticle(null);
-  };
-
-  // If loading
-  if (isLoading) {
-    return <LoadingSkeleton />;
-  }
-
-  // If error
-  if (error) {
-    return <ErrorMessage error={error} onRetry={refetch} />;
-  }
-
-  // If no news
-  if (!news || news.length === 0) {
-    return (
-      <div className="py-10 text-center">
-        <h3 className="text-lg font-medium">No news articles found</h3>
-        <p className="text-muted-foreground mt-2">Try selecting a different category or check back later.</p>
-      </div>
-    );
-  }
-
   return (
     <motion.div
       variants={container}
@@ -81,32 +51,16 @@ const NewsSection = ({ articleId }: { articleId?: string }) => {
       animate="show"
       className="space-y-6"
     >
-      {!selectedArticle ? (
-        <>
-          <motion.div variants={item}>
-            <NewsFilters 
-              categories={categories}
-              selectedCategory={selectedCategory}
-              onSelectCategory={setSelectedCategory}
-            />
-          </motion.div>
-          
-          <motion.div variants={item}>
-            <NewsList 
-              news={news} 
-              onSelectArticle={handleArticleSelect} 
-            />
-          </motion.div>
-        </>
-      ) : (
-        <motion.div variants={item}>
-          <NewsArticle 
-            articleId={selectedArticle} 
-            onBack={handleBackToList}
-            news={news}
-          />
-        </motion.div>
-      )}
+      <NewsHeader 
+        category={category}
+        setCategory={setCategory}
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+      />
+      
+      <NewsGrid news={filteredNews} />
+      
+      <LoadMoreButton />
     </motion.div>
   );
 };

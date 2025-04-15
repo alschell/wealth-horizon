@@ -1,28 +1,19 @@
 
-import { LucideIcon } from "lucide-react";
-import { ReactNode } from "react";
-
-export interface NotificationType {
-  id: number;
-  title: string;
-  description: string;
-  time: string;
-  read: boolean;
-  icon: LucideIcon;
-  iconColor?: string;
-  link: string;
-  details?: Record<string, any>;
-}
-
 export interface Notification {
   id: number;
   title: string;
-  description: string;
   message: string;
+  description: string; // Add description property
   time: string | Date;
   read: boolean;
-  type: string;
-  icon: ReactNode;
-  link: string;
-  details?: Record<string, any>;
+  type: 'info' | 'warning' | 'success' | 'error';
+  icon?: React.ReactNode; // Add icon property
+  link?: string;
+  action?: string;
+  entity?: {
+    id: string;
+    type: string;
+    name: string;
+  };
+  details?: Record<string, any>; // For additional details
 }

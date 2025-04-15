@@ -5,7 +5,7 @@ import { ChartDataPoint, IndexData } from "../types";
 export const generateChartData = (indexName: string, indices: IndexData[]): ChartDataPoint[] => {
   // This would come from a real API in a production app
   const data: ChartDataPoint[] = [];
-  const startValue = parseFloat(indices.find(i => i.name === indexName)?.currentValue.replace(',', '') || "4000");
+  const startValue = parseFloat(indices.find(i => i.name === indexName)?.value.replace(',', '') || "4000");
   const volatility = Math.random() * 0.5 + 0.5; // Random volatility factor
   
   // Generate 30 days of data

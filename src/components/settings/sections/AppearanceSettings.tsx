@@ -1,123 +1,112 @@
 
-import React from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { useTranslation, LANGUAGES } from "@/context/TranslationContext";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Check } from "lucide-react";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
+import { toast } from "@/hooks/use-toast";
 
 const AppearanceSettings = () => {
-  const { currentLanguage, setLanguage } = useTranslation();
-  const [darkMode, setDarkMode] = React.useState(false);
-  const [compactMode, setCompactMode] = React.useState(false);
-  const [highContrast, setHighContrast] = React.useState(false);
+  const [theme, setTheme] = useState("light");
+  const [density, setDensity] = useState("comfortable");
+  const [fontSize, setFontSize] = useState("medium");
   
+  const handleSaveSettings = () => {
+    toast({
+      title: "Appearance settings saved",
+      description: `Theme: ${theme}, Density: ${density}, Font size: ${fontSize}`,
+    });
+  };
+
   return (
     <div className="space-y-6">
-      <Card>
-        <CardHeader>
-          <CardTitle>Language Settings</CardTitle>
-          <CardDescription>
-            Choose your preferred language for the interface
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-            {LANGUAGES.map((language) => (
-              <Button
-                key={language.code}
-                variant={currentLanguage === language.code ? "default" : "outline"}
-                className="justify-start"
-                onClick={() => setLanguage(language.code)}
-              >
-                <span className="mr-2">{language.nativeName}</span>
-                {currentLanguage === language.code && (
-                  <Check className="h-4 w-4 ml-auto" />
-                )}
-              </Button>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Theme Settings</CardTitle>
-          <CardDescription>
-            Customize the appearance of the interface
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="flex items-center justify-between">
-            <Label htmlFor="dark-mode" className="flex flex-col space-y-1">
-              <span>Dark Mode</span>
-              <span className="font-normal text-xs text-muted-foreground">
-                Enable dark color scheme
-              </span>
-            </Label>
-            <Switch
-              id="dark-mode"
-              checked={darkMode}
-              onCheckedChange={setDarkMode}
-            />
-          </div>
-          
-          <div className="flex items-center justify-between">
-            <Label htmlFor="compact-mode" className="flex flex-col space-y-1">
-              <span>Compact Mode</span>
-              <span className="font-normal text-xs text-muted-foreground">
-                Reduce spacing between elements
-              </span>
-            </Label>
-            <Switch
-              id="compact-mode"
-              checked={compactMode}
-              onCheckedChange={setCompactMode}
-            />
-          </div>
-          
-          <div className="flex items-center justify-between">
-            <Label htmlFor="high-contrast" className="flex flex-col space-y-1">
-              <span>High Contrast</span>
-              <span className="font-normal text-xs text-muted-foreground">
-                Improve visibility with higher contrast
-              </span>
-            </Label>
-            <Switch
-              id="high-contrast"
-              checked={highContrast}
-              onCheckedChange={setHighContrast}
-            />
-          </div>
-        </CardContent>
-      </Card>
+      <div>
+        <h3 className="text-lg font-medium">Appearance</h3>
+        <p className="text-sm text-gray-500">
+          Customize how the application looks and feels
+        </p>
+      </div>
       
-      <Card>
-        <CardHeader>
-          <CardTitle>Layout Preferences</CardTitle>
-          <CardDescription>
-            Choose your preferred layout style
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <RadioGroup defaultValue="standard">
-            <div className="flex items-center space-x-2 mb-3">
-              <RadioGroupItem value="standard" id="standard" />
-              <Label htmlFor="standard">Standard Layout</Label>
-            </div>
-            <div className="flex items-center space-x-2 mb-3">
-              <RadioGroupItem value="compact" id="compact" />
-              <Label htmlFor="compact">Compact Layout</Label>
+      <div className="space-y-8">
+        <div>
+          <h4 className="font-medium mb-4">Theme</h4>
+          <RadioGroup 
+            defaultValue={theme} 
+            onValueChange={setTheme}
+            className="grid grid-cols-1 md:grid-cols-3 gap-4"
+          >
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="light" id="theme-light" />
+              <Label htmlFor="theme-light" className="cursor-pointer">Light</Label>
             </div>
             <div className="flex items-center space-x-2">
-              <RadioGroupItem value="expanded" id="expanded" />
-              <Label htmlFor="expanded">Expanded Layout</Label>
+              <RadioGroupItem value="dark" id="theme-dark" />
+              <Label htmlFor="theme-dark" className="cursor-pointer">Dark</Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="system" id="theme-system" />
+              <Label htmlFor="theme-system" className="cursor-pointer">System</Label>
             </div>
           </RadioGroup>
-        </CardContent>
-      </Card>
+        </div>
+        
+        <div>
+          <h4 className="font-medium mb-4">Interface Density</h4>
+          <RadioGroup 
+            defaultValue={density} 
+            onValueChange={setDensity}
+            className="grid grid-cols-1 md:grid-cols-3 gap-4"
+          >
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="comfortable" id="density-comfortable" />
+              <Label htmlFor="density-comfortable" className="cursor-pointer">Comfortable</Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="compact" id="density-compact" />
+              <Label htmlFor="density-compact" className="cursor-pointer">Compact</Label>
+            </div>
+          </RadioGroup>
+        </div>
+        
+        <div>
+          <h4 className="font-medium mb-4">Font Size</h4>
+          <RadioGroup 
+            defaultValue={fontSize} 
+            onValueChange={setFontSize}
+            className="grid grid-cols-1 md:grid-cols-3 gap-4"
+          >
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="small" id="font-small" />
+              <Label htmlFor="font-small" className="cursor-pointer">Small</Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="medium" id="font-medium" />
+              <Label htmlFor="font-medium" className="cursor-pointer">Medium</Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="large" id="font-large" />
+              <Label htmlFor="font-large" className="cursor-pointer">Large</Label>
+            </div>
+          </RadioGroup>
+        </div>
+        
+        <div>
+          <h4 className="font-medium mb-4">Animation</h4>
+          <div className="flex items-center space-x-2">
+            <input 
+              type="checkbox" 
+              id="reduce-motion" 
+              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+            />
+            <label htmlFor="reduce-motion" className="text-sm text-gray-900">
+              Reduce motion - minimize animations
+            </label>
+          </div>
+        </div>
+      </div>
+      
+      <Button onClick={handleSaveSettings}>
+        Save Appearance Settings
+      </Button>
     </div>
   );
 };

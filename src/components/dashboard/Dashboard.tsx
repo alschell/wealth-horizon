@@ -1,82 +1,43 @@
 
-import React, { useEffect, useState } from "react";
-import { Card } from "@/components/ui/card";
-import { Grid } from "@/components/common/Grid";
-import MarketSnapshot from "@/components/dashboard/market-snapshot/MarketSnapshot";
-import NotificationsFeed from "./NotificationsFeed";
-import RecentActivity from "./RecentActivity";
-import PersonalizedSettings from "./PersonalizedSettings";
-import DashboardHeader from "./DashboardHeader";
+import React from "react";
+import DashboardLayout from "@/components/dashboard/DashboardLayout";
+import DashboardContent from "@/components/dashboard/DashboardContent";
+import { DashboardCustomizeDialog } from "@/components/dashboard/customize";
+import { useDashboardCustomize } from "@/components/dashboard/customize/useDashboardCustomize";
 
-/**
- * Main dashboard component displaying user's financial overview
- */
 const Dashboard = () => {
-  const [scrolled, setScrolled] = useState(false);
-
-  // Handle scroll effect for the navigation
-  useEffect(() => {
-    const handleScroll = () => {
-      const offset = window.scrollY;
-      if (offset > 10) {
-        setScrolled(true);
-      } else {
-        setScrolled(false);
-      }
-    };
-
-    // Add scroll event listener
-    window.addEventListener('scroll', handleScroll);
-
-    // Initialize scroll state
-    handleScroll();
-
-    // Apply shadow class based on scroll state
-    const header = document.getElementById('dashboard-header');
-    if (header) {
-      if (scrolled) {
-        header.classList.add('shadow-md');
-      } else {
-        header.classList.remove('shadow-md');
-      }
-    }
-
-    // Remove event listener on cleanup
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, [scrolled]);
-
-  const handleCustomizeClick = () => {
-    // Placeholder for customize dashboard functionality
-    console.log("Customize dashboard clicked");
-  };
+  const {
+    isCustomizing,
+    setIsCustomizing,
+    dashboardSections,
+    sectionsOrder,
+    orderedVisibleSections,
+    toggleSection,
+    handleCustomizeSave,
+    handleDragEnd
+  } = useDashboardCustomize();
 
   return (
-    <div className="max-w-7xl mx-auto p-6 space-y-6">
-      <div className="flex items-center justify-between mb-6">
-        <DashboardHeader onCustomizeClick={handleCustomizeClick} />
-        <PersonalizedSettings />
+    <DashboardLayout>
+      <div className="space-y-6">
+        {/* Dashboard content */}
+        <DashboardContent 
+          orderedVisibleSections={orderedVisibleSections} 
+          onCustomizeClick={() => setIsCustomizing(true)}
+        />
+
+        {/* Dashboard Customization Dialog */}
+        <DashboardCustomizeDialog
+          isCustomizing={isCustomizing}
+          setIsCustomizing={setIsCustomizing}
+          dashboardSections={dashboardSections}
+          toggleSection={toggleSection}
+          sectionsOrder={sectionsOrder}
+          handleDragEnd={handleDragEnd}
+          handleCustomizeSave={handleCustomizeSave}
+        />
       </div>
-      
-      <Grid>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <Card className="shadow-sm h-60">
-            {/* Net Worth Chart */}
-          </Card>
-          <Card className="shadow-sm h-60">
-            {/* Performance Chart */}
-          </Card>
-        </div>
-        
-        <MarketSnapshot />
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <NotificationsFeed />
-          <RecentActivity />
-        </div>
-      </Grid>
-    </div>
+    </DashboardLayout>
   );
 };
 

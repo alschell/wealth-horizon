@@ -41,90 +41,84 @@ const IndicesTable: React.FC<IndicesTableProps> = ({
         </TableRow>
       </TableHeader>
       <TableBody>
-        {indices.map((index) => {
-          const isPositive = typeof index.change === 'string' 
-            ? parseFloat(index.change) >= 0 
-            : index.isPositive;
-            
-          return (
-            <TableRow 
-              key={index.symbol || index.name} 
-              className={`hover:bg-gray-50 cursor-pointer ${selectedIndex?.symbol === index.symbol ? 'bg-gray-50' : ''}`}
-              onClick={() => handleSelectIndex(index)}
-            >
-              <TableCell className="font-medium">
-                <div className="flex items-center gap-2">
-                  <span className="flex items-center justify-center w-6 h-6">
-                    {/* Flag using the region to determine the country code */}
-                    <img 
-                      src={`https://flagcdn.com/w20/${getCountryFlagCode(index.region)}.png`} 
-                      alt={`${index.region} flag`}
-                      className="w-5 h-auto"
-                      onError={(e) => {
-                        // Fallback to globe icon if flag doesn't load
-                        e.currentTarget.style.display = 'none';
-                        const parent = e.currentTarget.parentElement;
-                        if (parent) {
-                          const globe = document.createElement('span');
-                          globe.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>';
-                          parent.appendChild(globe);
-                        }
-                      }}
-                    />
-                  </span>
-                  {index.name}
-                </div>
-              </TableCell>
-              <TableCell>{index.currentValue}</TableCell>
-              <TableCell>
-                <div className={`flex items-center ${
-                  isPositive ? "text-green-500" : "text-red-500"
-                }`}>
-                  {isPositive ? (
-                    <TrendingUp className="h-4 w-4 mr-1" />
-                  ) : (
-                    <TrendingDown className="h-4 w-4 mr-1" />
-                  )}
-                  <span>
-                    {isPositive && !index.change.startsWith('+') ? "+" : ""}{index.change}%
-                  </span>
-                </div>
-              </TableCell>
-              <TableCell className="hidden md:table-cell">{index.volume || "N/A"}</TableCell>
-              <TableCell className="hidden md:table-cell">{index.region}</TableCell>
-              <TableCell className="text-right">
-                <div className="flex justify-end gap-2" onClick={(e) => e.stopPropagation()}>
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    className="h-8 w-8 p-0"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleSelectIndex(index);
+        {indices.map((index) => (
+          <TableRow 
+            key={index.id} 
+            className={`hover:bg-gray-50 cursor-pointer ${selectedIndex?.id === index.id ? 'bg-gray-50' : ''}`}
+            onClick={() => handleSelectIndex(index)}
+          >
+            <TableCell className="font-medium">
+              <div className="flex items-center gap-2">
+                <span className="flex items-center justify-center w-6 h-6">
+                  {/* Flag using the region to determine the country code */}
+                  <img 
+                    src={`https://flagcdn.com/w20/${getCountryFlagCode(index.region)}.png`} 
+                    alt={`${index.region} flag`}
+                    className="w-5 h-auto"
+                    onError={(e) => {
+                      // Fallback to globe icon if flag doesn't load
+                      e.currentTarget.style.display = 'none';
+                      const parent = e.currentTarget.parentElement;
+                      if (parent) {
+                        const globe = document.createElement('span');
+                        globe.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>';
+                        parent.appendChild(globe);
+                      }
                     }}
-                  >
-                    <LineChart className="h-4 w-4" />
-                    <span className="sr-only">View chart</span>
-                  </Button>
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    className={`h-8 w-8 p-0 ${subscribedIndices.includes(index.name) ? 'text-amber-500' : ''}`}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      toggleSubscription(index.name);
-                    }}
-                  >
-                    <Star className="h-4 w-4" fill={subscribedIndices.includes(index.name) ? "currentColor" : "none"} />
-                    <span className="sr-only">
-                      {subscribedIndices.includes(index.name) ? 'Unsubscribe' : 'Subscribe'}
-                    </span>
-                  </Button>
-                </div>
-              </TableCell>
-            </TableRow>
-          );
-        })}
+                  />
+                </span>
+                {index.name}
+              </div>
+            </TableCell>
+            <TableCell>{index.value}</TableCell>
+            <TableCell>
+              <div className={`flex items-center ${
+                index.change >= 0 ? "text-green-500" : "text-red-500"
+              }`}>
+                {index.change >= 0 ? (
+                  <TrendingUp className="h-4 w-4 mr-1" />
+                ) : (
+                  <TrendingDown className="h-4 w-4 mr-1" />
+                )}
+                <span>
+                  {index.change >= 0 ? "+" : ""}{index.change}%
+                </span>
+              </div>
+            </TableCell>
+            <TableCell className="hidden md:table-cell">{index.volume}</TableCell>
+            <TableCell className="hidden md:table-cell">{index.region}</TableCell>
+            <TableCell className="text-right">
+              <div className="flex justify-end gap-2" onClick={(e) => e.stopPropagation()}>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="h-8 w-8 p-0"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleSelectIndex(index);
+                  }}
+                >
+                  <LineChart className="h-4 w-4" />
+                  <span className="sr-only">View chart</span>
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className={`h-8 w-8 p-0 ${subscribedIndices.includes(index.name) ? 'text-amber-500' : ''}`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleSubscription(index.name);
+                  }}
+                >
+                  <Star className="h-4 w-4" fill={subscribedIndices.includes(index.name) ? "currentColor" : "none"} />
+                  <span className="sr-only">
+                    {subscribedIndices.includes(index.name) ? 'Unsubscribe' : 'Subscribe'}
+                  </span>
+                </Button>
+              </div>
+            </TableCell>
+          </TableRow>
+        ))}
       </TableBody>
     </Table>
   );

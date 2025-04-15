@@ -5,6 +5,7 @@ import { LogOut, Settings, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import NotificationsPopover from '@/components/dashboard/notifications/NotificationsPopover';
+import { LanguageSelector } from '@/components/ui/language-selector';
 import { TranslatedText } from '@/components/ui/translated-text';
 import { toast } from 'sonner';
 import { useTranslation } from '@/context/TranslationContext';
@@ -33,7 +34,7 @@ const DashboardNavigation: React.FC = () => {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-white shadow-sm transition-shadow duration-200" id="dashboard-header">
+    <header className="sticky top-0 z-50 w-full border-b bg-white shadow-sm">
       <div className="flex h-16 items-center justify-between mx-auto max-w-7xl px-6">
         <div className="flex items-center">
           <Link to="/" className="font-bold text-xl flex items-center">
@@ -48,6 +49,7 @@ const DashboardNavigation: React.FC = () => {
             <Input placeholder={searchPlaceholder} className="pl-10 bg-white" />
           </div>
           <NotificationsPopover />
+          <LanguageSelector />
           <Button 
             variant="ghost" 
             size="icon"

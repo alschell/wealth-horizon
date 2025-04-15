@@ -280,7 +280,162 @@ export const Lightbulb = createIconComponent(
   </>
 );
 
-// More icons as needed...
+// More icons as needed (matching the ones in the shims file)
+// CreditCard icon
+export const CreditCard = createIconComponent(
+  <>
+    <rect width="20" height="14" x="2" y="5" rx="2" />
+    <line x1="2" y1="10" x2="22" y2="10" />
+  </>
+);
+
+// TrendingDown icon
+export const TrendingDown = createIconComponent(
+  <>
+    <polyline points="22 17 13.5 8.5 8.5 13.5 2 7" />
+    <polyline points="16 17 22 17 22 11" />
+  </>
+);
+
+// Lock icon
+export const Lock = createIconComponent(
+  <>
+    <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
+    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+  </>
+);
+
+// FileX icon
+export const FileX = createIconComponent(
+  <>
+    <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
+    <polyline points="14 2 14 8 20 8" />
+    <line x1="9.5" y1="12.5" x2="14.5" y2="17.5" />
+    <line x1="14.5" y1="12.5" x2="9.5" y2="17.5" />
+  </>
+);
+
+// UserPlus icon
+export const UserPlus = createIconComponent(
+  <>
+    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+    <circle cx="9" cy="7" r="4" />
+    <line x1="19" y1="8" x2="19" y2="14" />
+    <line x1="22" y1="11" x2="16" y2="11" />
+  </>
+);
+
+// BadgeCheck icon
+export const BadgeCheck = createIconComponent(
+  <>
+    <path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z" />
+    <path d="m9 12 2 2 4-4" />
+  </>
+);
+
+// XCircle icon
+export const XCircle = createIconComponent(
+  <>
+    <circle cx="12" cy="12" r="10" />
+    <path d="m15 9-6 6" />
+    <path d="m9 9 6 6" />
+  </>
+);
+
+// Trash2 icon
+export const Trash2 = createIconComponent(
+  <>
+    <path d="M3 6h18" />
+    <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+    <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+    <line x1="10" y1="11" x2="10" y2="17" />
+    <line x1="14" y1="11" x2="14" y2="17" />
+  </>
+);
+
+// UserCheck icon
+export const UserCheck = createIconComponent(
+  <>
+    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+    <circle cx="9" cy="7" r="4" />
+    <polyline points="16 11 18 13 22 9" />
+  </>
+);
+
+// UserX icon
+export const UserX = createIconComponent(
+  <>
+    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+    <circle cx="9" cy="7" r="4" />
+    <line x1="17" y1="8" x2="22" y2="13" />
+    <line x1="22" y1="8" x2="17" y2="13" />
+  </>
+);
+
+// UserRound icon 
+export const UserRound = createIconComponent(
+  <>
+    <circle cx="12" cy="8" r="5" />
+    <path d="M20 21a8 8 0 1 0-16 0" />
+  </>
+);
+
+// UserRoundCheck icon
+export const UserRoundCheck = createIconComponent(
+  <>
+    <path d="M2 21a8 8 0 0 1 13.292-6" />
+    <circle cx="10" cy="8" r="5" />
+    <path d="m16 19 2 2 4-4" />
+  </>
+);
+
+// UserRoundX icon
+export const UserRoundX = createIconComponent(
+  <>
+    <path d="M2 21a8 8 0 0 1 13.292-6" />
+    <circle cx="10" cy="8" r="5" />
+    <path d="m17 17 5 5" />
+    <path d="m22 17-5 5" />
+  </>
+);
+
+// CircleUser icon
+export const CircleUser = createIconComponent(
+  <>
+    <circle cx="12" cy="12" r="10" />
+    <circle cx="12" cy="10" r="3" />
+    <path d="M7 20.662V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.662" />
+  </>
+);
+
+// CircleUserRound icon 
+export const CircleUserRound = CircleUser;
+
+// ArrowUpRight icon
+export const ArrowUpRight = createIconComponent(
+  <>
+    <path d="m7 7 10 10" />
+    <path d="M17 7v10H7" />
+  </>
+);
+
+// ArrowRightFromLine icon
+export const ArrowRightFromLine = createIconComponent(
+  <>
+    <path d="M3 5v14" />
+    <path d="M21 12H7" />
+    <path d="m15 6 6 6-6 6" />
+  </>
+);
+
+// ArrowUpFromLine icon
+export const ArrowUpFromLine = createIconComponent(
+  <>
+    <path d="m18 9-6-6-6 6" />
+    <path d="M12 3v14" />
+    <path d="M5 21h14" />
+  </>
+);
 
 // Export a mock icons object
 export const icons = {
@@ -312,7 +467,25 @@ export const icons = {
   ChevronLeft,
   ChevronUp,
   BarChart3,
-  Lightbulb
+  Lightbulb,
+  CreditCard,
+  TrendingDown,
+  Lock,
+  FileX,
+  UserPlus,
+  BadgeCheck,
+  XCircle,
+  Trash2,
+  UserCheck,
+  UserX,
+  UserRound,
+  UserRoundCheck,
+  UserRoundX,
+  CircleUser,
+  CircleUserRound,
+  ArrowUpRight,
+  ArrowRightFromLine,
+  ArrowUpFromLine
 };
 
 // Re-export as default

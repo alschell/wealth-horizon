@@ -57,13 +57,13 @@ const MarketSnapshot = () => {
     
     stocksData.forEach(stock => {
       if (stock.data) {
-        const formattedQuote = formatQuote(stock.data);
-        if (formattedQuote) {
+        const formattedData = formatQuote(stock.data);
+        if (formattedData) {
           marketItems.push({
             id: `stock-${stock.symbol}`,
             label: stock.name,
-            value: `$${formattedQuote.price}`,
-            change: `${parseFloat(formattedQuote.percentChange) >= 0 ? '+' : ''}${formattedQuote.percentChange}%`,
+            value: `$${formattedData.price}`,
+            change: `${parseFloat(formattedData.percentChange) >= 0 ? '+' : ''}${formattedData.percentChange}%`,
             category: "stock"
           });
         }
@@ -105,7 +105,7 @@ const MarketSnapshot = () => {
         <div className="flex items-center justify-between">
           <SectionHeader 
             title="Market Snapshot" 
-            subtitle="View real-time market data" 
+            description="View real-time market data" 
           />
           <div className="flex items-center gap-2">
             <Button 

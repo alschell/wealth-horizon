@@ -30,6 +30,13 @@ const IndexPerformanceChart: React.FC<IndexPerformanceChartProps> = ({
     ? generateChartData(selectedIndex.name, indices)
     : [];
 
+  const isPositive = selectedIndex ? 
+    // Convert to number if it's a string (from parseFloat)
+    (typeof selectedIndex.change === 'string' ? 
+      parseFloat(selectedIndex.change) >= 0 : 
+      selectedIndex.isPositive) 
+    : true;
+
   return (
     <Card className="col-span-1 md:col-span-2">
       <CardHeader className="pb-2">
@@ -58,8 +65,8 @@ const IndexPerformanceChart: React.FC<IndexPerformanceChartProps> = ({
               >
                 <defs>
                   <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor={selectedIndex.change >= 0 ? "#10B981" : "#EF4444"} stopOpacity={0.8}/>
-                    <stop offset="95%" stopColor={selectedIndex.change >= 0 ? "#10B981" : "#EF4444"} stopOpacity={0}/>
+                    <stop offset="5%" stopColor={isPositive ? "#10B981" : "#EF4444"} stopOpacity={0.8}/>
+                    <stop offset="95%" stopColor={isPositive ? "#10B981" : "#EF4444"} stopOpacity={0}/>
                   </linearGradient>
                 </defs>
                 <XAxis dataKey="date" />
@@ -72,7 +79,7 @@ const IndexPerformanceChart: React.FC<IndexPerformanceChartProps> = ({
                 <Area 
                   type="monotone" 
                   dataKey="value" 
-                  stroke={selectedIndex.change >= 0 ? "#10B981" : "#EF4444"} 
+                  stroke={isPositive ? "#10B981" : "#EF4444"} 
                   fillOpacity={1} 
                   fill="url(#colorValue)" 
                 />

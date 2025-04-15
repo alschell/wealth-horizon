@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
-import Grid from "./Grid";
+import Grid from "@/components/common/Grid";
 import MarketSnapshot from "./market-snapshot/MarketSnapshot";
 import NotificationsFeed from "./NotificationsFeed";
 import RecentActivity from "./RecentActivity";
@@ -47,10 +47,15 @@ const Dashboard = () => {
     };
   }, [scrolled]);
 
+  const handleCustomizeClick = () => {
+    // Placeholder for customize dashboard functionality
+    console.log("Customize dashboard clicked");
+  };
+
   return (
     <div className="max-w-7xl mx-auto p-6 space-y-6">
       <div className="flex items-center justify-between mb-6">
-        <DashboardHeader />
+        <DashboardHeader onCustomizeClick={handleCustomizeClick} />
         <PersonalizedSettings />
       </div>
       

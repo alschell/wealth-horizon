@@ -57,16 +57,18 @@ export function enhancedUseForm<T extends FieldValues>({
     formMethods.reset(defaultValues);
   };
   
-  // Create a properly typed handleSubmit function
-  const enhancedHandleSubmit = (...args: any[]) => {
+  // Create a properly typed handleSubmit function that satisfies both parts of the intersection type
+  const enhancedHandleSubmit: UseEnhancedFormReturn<T>['handleSubmit'] = ((...args: any[]) => {
     // If called with form event, prevent default and call submitHandler with form values
     if (args[0] && args[0].preventDefault) {
       args[0].preventDefault();
       return submitHandler(formMethods.getValues());
     }
+    
     // Otherwise, use react-hook-form's handleSubmit
-    return formMethods.handleSubmit(submitHandler)(...args);
-  };
+    // This branch ensures it conforms to the UseFormHandleSubmit type
+    return formMethods.handleSubmit(submitHandler);
+  }) as UseEnhancedFormReturn<T>['handleSubmit'];
   
   return {
     ...formMethods,

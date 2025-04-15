@@ -54,8 +54,9 @@ export const validateMinLength = (length: number, message?: string) => {
  */
 export const createFormSchema = <T extends Record<string, any>>(
   fields: Record<keyof T, z.ZodType<any>>
-): z.ZodType<T> => {
-  return z.object(fields) as z.ZodType<T>;
+): z.ZodSchema<T> => {
+  // Cast to unknown first, then to the target type to avoid TypeScript error
+  return z.object(fields) as unknown as z.ZodSchema<T>;
 };
 
 /**

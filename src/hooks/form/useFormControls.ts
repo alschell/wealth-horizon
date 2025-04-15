@@ -61,7 +61,7 @@ export function useFormControls<T>() {
           if (isMounted()) {
             setIsSuccess(true);
             if (options.successMessage) {
-              toast.success("Success", options.successMessage);
+              toast.success(options.successMessage);
             }
 
             if (options.onSuccess) {
@@ -78,7 +78,7 @@ export function useFormControls<T>() {
             
             setLastError(errorMsg);
             if (options.errorMessage) {
-              toast.error("Error", errorMsg);
+              toast.error(errorMsg);
             }
 
             if (options.onError) {

@@ -71,5 +71,32 @@ describe('Market Data Hooks', () => {
     });
   });
 
-  // Additional tests can be added for other hooks
+  // Additional tests for other hooks
+  describe('useMarketNews', () => {
+    it('fetches market news', async () => {
+      const mockNews = [{ id: 1, headline: 'Test News', summary: 'Test Summary' }];
+      (api.getMarketNews as jest.Mock).mockResolvedValue(mockNews);
+
+      const { result, waitFor } = renderHook(() => useMarketNews('general', 5), { wrapper });
+
+      await waitFor(() => result.current.isSuccess);
+
+      expect(api.getMarketNews).toHaveBeenCalledWith('general', 5, expect.any(Object));
+      expect(result.current.data).toEqual(mockNews);
+    });
+  });
+
+  describe('useIndices', () => {
+    it('fetches indices data', async () => {
+      const mockIndices = [{ symbol: '^GSPC', name: 'S&P 500', price: 4000 }];
+      (api.getIndices as jest.Mock).mockResolvedValue(mockIndices);
+
+      const { result, waitFor } = renderHook(() => useIndices(), { wrapper });
+
+      await waitFor(() => result.current.isSuccess);
+
+      expect(api.getIndices).toHaveBeenCalled();
+      expect(result.current.data).toEqual(mockIndices);
+    });
+  });
 });

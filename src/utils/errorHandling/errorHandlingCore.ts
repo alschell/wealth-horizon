@@ -1,29 +1,14 @@
 
 /**
- * Standard error response format
+ * Core error handling utilities
+ * This centralizes error handling logic for consistent error management
  */
-export interface ErrorResponse {
-  message: string;
-  code?: string;
-  details?: Record<string, any>;
-}
+
+import { toast } from '@/hooks/use-toast';
+import { ErrorResponse, ErrorHandlerOptions } from '@/types/common';
 
 /**
- * Options for error handling
- */
-export interface ErrorHandlerOptions {
-  silent?: boolean;
-  logToConsole?: boolean;
-  showToast?: boolean;
-  toastTitle?: string;
-  fallbackMessage?: string;
-  onError?: (error: unknown) => void;
-  componentName?: string;
-  logError?: boolean;
-}
-
-/**
- * Get a readable message from any error type
+ * Extract a readable message from various error types
  */
 export function getErrorMessage(error: unknown, fallbackMessage: string = "An unexpected error occurred"): string {
   if (error instanceof Error) {
@@ -35,14 +20,14 @@ export function getErrorMessage(error: unknown, fallbackMessage: string = "An un
   }
   
   if (error && typeof error === 'object' && 'message' in error) {
-    return String((error as any).message);
+    return String((error as {message: unknown}).message);
   }
   
   return fallbackMessage;
 }
 
 /**
- * Parse an error into a standard format
+ * Parse an error into a standardized format
  */
 export function parseError(error: unknown): ErrorResponse {
   if (error instanceof Error) {
@@ -62,9 +47,9 @@ export function parseError(error: unknown): ErrorResponse {
   if (error && typeof error === 'object') {
     if ('message' in error) {
       return {
-        message: String((error as any).message),
-        code: (error as any).code || 'ERROR',
-        details: (error as any).details
+        message: String((error as ErrorResponse).message),
+        code: (error as ErrorResponse).code || 'ERROR',
+        details: (error as ErrorResponse).details
       };
     }
   }
@@ -76,7 +61,7 @@ export function parseError(error: unknown): ErrorResponse {
 }
 
 /**
- * Logs error details to the console
+ * Log error details to the console
  */
 export function logError(error: unknown, componentName?: string): void {
   console.error(`Error${componentName ? ` in ${componentName}` : ''}:`, error);
@@ -87,7 +72,7 @@ export function logError(error: unknown, componentName?: string): void {
 }
 
 /**
- * Creates a descriptive error with component context
+ * Create a descriptive error with component context
  */
 export function createContextualError(message: string, componentName: string): Error {
   const error = new Error(`[${componentName}] ${message}`);
@@ -95,24 +80,44 @@ export function createContextualError(message: string, componentName: string): E
 }
 
 /**
- * Handle an error with standardized approach
+ * Handle an error with consistent approach
  */
 export function handleError(error: unknown, options: ErrorHandlerOptions = {}): ErrorResponse {
-  const parsedError = parseError(error);
+  const { 
+    componentName, 
+    showToast = true, 
+    logError: shouldLogError = true,
+    rethrow = false,
+    fallbackMessage = "An unexpected error occurred"
+  } = options;
   
-  if (options.logToConsole !== false) {
-    console.error('[Error Handler]:', parsedError);
+  // Parse error into standardized format
+  const errorDetails = parseError(error);
+  
+  // Log error if requested
+  if (shouldLogError) {
+    logError(error, componentName);
   }
   
-  if (options.onError) {
-    options.onError(error);
+  // Show toast if requested
+  if (showToast) {
+    toast({
+      title: "Error",
+      description: errorDetails.message || fallbackMessage,
+      variant: "destructive"
+    });
   }
   
-  return parsedError;
+  // Rethrow if requested
+  if (rethrow && error instanceof Error) {
+    throw error;
+  }
+  
+  return errorDetails;
 }
 
 /**
- * Wraps an async function with error handling
+ * HOC to wrap a function with error handling
  */
 export function withErrorHandling<T extends (...args: any[]) => Promise<any>>(
   fn: T,
@@ -129,19 +134,16 @@ export function withErrorHandling<T extends (...args: any[]) => Promise<any>>(
 }
 
 /**
- * Safely executes a function with error handling
+ * Try-catch wrapper with standardized error handling
  */
-export function tryCatch<T>(
+export async function tryCatch<T>(
   fn: () => Promise<T> | T,
   options: ErrorHandlerOptions = {}
 ): Promise<T | undefined> {
-  return Promise.resolve().then(async () => {
-    try {
-      return await fn();
-    } catch (error) {
-      handleError(error, options);
-      return undefined;
-    }
-  });
+  try {
+    return await fn();
+  } catch (error) {
+    handleError(error, options);
+    return undefined;
+  }
 }
-

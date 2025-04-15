@@ -4,9 +4,11 @@ import {
   UseFormReturn, 
   FieldValues, 
   DefaultValues,
-  Path
+  Path,
+  UseFormHandleSubmit
 } from 'react-hook-form';
 import { z } from 'zod';
+import { SyntheticEvent } from 'react';
 
 // Enhanced Form Options
 export interface EnhancedFormOptions<T extends FieldValues> extends Omit<UseFormProps<T>, 'defaultValues'> {
@@ -27,7 +29,7 @@ export interface FormSubmissionOptions<T> {
   onError?: (error: unknown) => void;
   successMessage?: string;
   errorMessage?: string;
-  validateForm?: () => boolean;
+  validateForm?: () => Promise<boolean> | boolean;
   resetAfterSubmit?: boolean;
 }
 
@@ -37,13 +39,19 @@ export interface FormStateOptions<T extends FieldValues> extends Omit<UseFormPro
   defaultValues: DefaultValues<T>;
 }
 
+// Custom handle submit function type that can handle both event and regular submissions
+export type EnhancedHandleSubmit<T extends FieldValues> = 
+  ((e?: SyntheticEvent) => Promise<void>) & 
+  UseFormHandleSubmit<T, undefined>;
+
 // Extended UseFormReturn with additional properties
-export interface UseEnhancedFormReturn<T extends FieldValues> extends UseFormReturn<T> {
+export interface UseEnhancedFormReturn<T extends FieldValues> extends Omit<UseFormReturn<T>, 'handleSubmit'> {
   isSubmitting: boolean;
   lastError: string | null;
   isSuccess: boolean;
   resetFormState: () => void;
   submit: (data: T) => Promise<void>;
+  handleSubmit: EnhancedHandleSubmit<T>;
 }
 
 // Error type for form validation

@@ -2,7 +2,7 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { FormField } from '@/components/ui/form-field';
+import FormField from '@/components/ui/form-field';
 
 interface EnhancedFormProps {
   onSubmit: (e: React.FormEvent) => void;
@@ -82,4 +82,4 @@ const EnhancedForm: React.FC<EnhancedFormProps> = ({
   );
 };
 
-export { EnhancedForm };
+export { EnhancedForm, FormField };

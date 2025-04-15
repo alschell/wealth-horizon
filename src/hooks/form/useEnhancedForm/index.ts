@@ -1,4 +1,3 @@
-
 import { useFormState } from './useFormState';
 import { useFormSubmission } from './useFormSubmission';
 import { useFormValidation } from './useFormValidation';
@@ -45,7 +44,11 @@ export function enhancedUseForm<T extends FieldValues>({
     successMessage,
     errorMessage,
     resetAfterSubmit,
-    validateForm: () => formMethods.trigger()
+    // Need to adjust this to handle Promise<boolean> correctly
+    validateForm: async () => {
+      const result = await formMethods.trigger();
+      return result;
+    }
   });
   
   // Reset form state
@@ -54,12 +57,23 @@ export function enhancedUseForm<T extends FieldValues>({
     formMethods.reset(defaultValues);
   };
   
+  // Create a properly typed handleSubmit function
+  const enhancedHandleSubmit = (...args: any[]) => {
+    // If called with form event, prevent default and call submitHandler with form values
+    if (args[0] && args[0].preventDefault) {
+      args[0].preventDefault();
+      return submitHandler(formMethods.getValues());
+    }
+    // Otherwise, use react-hook-form's handleSubmit
+    return formMethods.handleSubmit(submitHandler)(...args);
+  };
+  
   return {
     ...formMethods,
     isSubmitting,
     lastError,
     isSuccess,
-    handleSubmit: formMethods.handleSubmit(submitHandler),
+    handleSubmit: enhancedHandleSubmit,
     resetFormState,
     submit: submitHandler
   };

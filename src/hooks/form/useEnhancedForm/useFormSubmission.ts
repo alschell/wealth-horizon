@@ -33,8 +33,11 @@ export function useFormSubmission<T>({
       setIsSuccess(false);
 
       // Validate form if validation function is provided
-      if (validateForm && !validateForm()) {
-        return;
+      if (validateForm) {
+        const isValid = await validateForm();
+        if (!isValid) {
+          return;
+        }
       }
 
       setIsSubmitting(true);

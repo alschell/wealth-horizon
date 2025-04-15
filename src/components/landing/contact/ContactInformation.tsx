@@ -25,9 +25,9 @@ const ContactInformation: React.FC = () => {
             </h4>
             <p className="text-gray-600">
               <TranslatedText>
-                123 Finance Street, Suite 400<br />
-                New York, NY 10001<br />
-                United States
+                {`123 Finance Street, Suite 400
+New York, NY 10001
+United States`}
               </TranslatedText>
             </p>
           </div>

@@ -1,67 +1,69 @@
 
-import React, { useState } from 'react';
-import CustomizeDialog from './CustomizeDialog';
-import { marketItems } from '../utils';
+import React from "react";
+import { Button } from "@/components/ui/button";
+import { Settings } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { DialogContent as CustomDialogContent } from "./dialog";
 
 interface MarketSettingsProps {
-  isOpen: boolean;
-  onClose: () => void;
-  allItems: any[];
-  visibleItems: string[];
-  itemOrder: string[];
-  setVisibleItems: (items: string[]) => void;
-  setItemOrder: (order: string[]) => void;
+  onCustomizeOpen: () => void;
+  isCustomizing: boolean;
+  onCustomizeSave: () => void;
+  temporarySelection: string[];
+  temporaryOrder: string[];
+  onToggle: (id: string) => void;
+  onDragEnd: (result: any) => void;
+  setIsCustomizing: (value: boolean) => void;
 }
 
 const MarketSettings: React.FC<MarketSettingsProps> = ({
-  isOpen,
-  onClose,
-  allItems,
-  visibleItems,
-  itemOrder,
-  setVisibleItems,
-  setItemOrder
+  onCustomizeOpen,
+  isCustomizing,
+  onCustomizeSave,
+  temporarySelection,
+  temporaryOrder,
+  onToggle,
+  onDragEnd,
+  setIsCustomizing
 }) => {
-  const [temporarySelection, setTemporarySelection] = useState<string[]>([...visibleItems]);
-  const [temporaryOrder, setTemporaryOrder] = useState<string[]>([...itemOrder]);
-  
-  const handleToggle = (id: string) => {
-    if (temporarySelection.includes(id)) {
-      setTemporarySelection(temporarySelection.filter(item => item !== id));
-    } else {
-      setTemporarySelection([...temporarySelection, id]);
-      if (!temporaryOrder.includes(id)) {
-        setTemporaryOrder([...temporaryOrder, id]);
-      }
-    }
-  };
-  
-  const handleDragEnd = (result: any) => {
-    if (!result.destination) return;
-    
-    const items = Array.from(temporaryOrder);
-    const [reorderedItem] = items.splice(result.source.index, 1);
-    items.splice(result.destination.index, 0, reorderedItem);
-    
-    setTemporaryOrder(items);
-  };
-  
-  const handleSave = () => {
-    setVisibleItems(temporarySelection);
-    setItemOrder(temporaryOrder);
-    onClose();
-  };
-  
   return (
-    <CustomizeDialog
-      isOpen={isOpen}
-      onOpenChange={onClose}
-      temporarySelection={temporarySelection}
-      temporaryOrder={temporaryOrder}
-      onToggle={handleToggle}
-      onDragEnd={handleDragEnd}
-      onSave={handleSave}
-    />
+    <Dialog open={isCustomizing} onOpenChange={setIsCustomizing}>
+      <DialogTrigger asChild>
+        <Button
+          variant="outline"
+          size="sm"
+          className="flex items-center gap-1"
+          onClick={onCustomizeOpen}
+        >
+          <Settings className="h-4 w-4" />
+          Customize
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[550px]">
+        <DialogHeader>
+          <DialogTitle>Customize Market View</DialogTitle>
+          <DialogDescription>
+            Select which market items to display and arrange their order.
+          </DialogDescription>
+        </DialogHeader>
+        
+        <CustomDialogContent
+          temporarySelection={temporarySelection}
+          temporaryOrder={temporaryOrder}
+          onToggle={onToggle}
+          onDragEnd={onDragEnd}
+          onSave={onCustomizeSave}
+          onOpenChange={setIsCustomizing}
+        />
+      </DialogContent>
+    </Dialog>
   );
 };
 

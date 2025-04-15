@@ -6,32 +6,34 @@ import { Label } from "@/components/ui/label";
 import { IntegrationType } from "../types";
 import { toast } from "@/components/ui/use-toast";
 
-export interface ApiKeyFormData {
-  apiKey: string;
+interface CredentialsFormData {
+  username: string;
+  password: string;
   service?: string;
 }
 
-interface ApiKeyFormProps {
+interface CredentialsFormProps {
   integration: IntegrationType;
-  onSubmit: (data: ApiKeyFormData) => void;
+  onSubmit: (data: CredentialsFormData) => void;
   onCancel: () => void;
 }
 
-const ApiKeyForm: React.FC<ApiKeyFormProps> = ({ 
-  integration, 
+const CredentialsForm: React.FC<CredentialsFormProps> = ({
+  integration,
   onSubmit,
-  onCancel
+  onCancel,
 }) => {
-  const [apiKey, setApiKey] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!apiKey.trim()) {
+    if (!username.trim() || !password.trim()) {
       toast({
-        title: "Missing API Key",
-        description: "Please enter your API key",
+        title: "Missing Information",
+        description: "Please enter both username and password",
         variant: "destructive",
       });
       return;
@@ -40,14 +42,15 @@ const ApiKeyForm: React.FC<ApiKeyFormProps> = ({
     setIsSubmitting(true);
     
     try {
-      const formData: ApiKeyFormData = {
-        apiKey,
-        service: integration.id
+      const formData: CredentialsFormData = {
+        username,
+        password,
+        service: integration.id,
       };
       
       onSubmit(formData);
     } catch (error) {
-      console.error("Error connecting API:", error);
+      console.error("Error connecting:", error);
       toast({
         title: "Connection Failed",
         description: "There was an error connecting to the service. Please try again.",
@@ -58,18 +61,28 @@ const ApiKeyForm: React.FC<ApiKeyFormProps> = ({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-4">
       <div className="space-y-2">
-        <Label htmlFor="apiKey">
-          {integration.apiKeyName || `${integration.name} API Key`}
-        </Label>
+        <Label htmlFor="username">Username</Label>
         <Input
-          id="apiKey"
+          id="username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          placeholder="Enter your username"
+          autoComplete="username"
+          required
+        />
+      </div>
+      
+      <div className="space-y-2">
+        <Label htmlFor="password">Password</Label>
+        <Input
+          id="password"
           type="password"
-          value={apiKey}
-          onChange={(e) => setApiKey(e.target.value)}
-          placeholder="Enter your API key"
-          autoComplete="off"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Enter your password"
+          autoComplete="current-password"
           required
         />
       </div>
@@ -86,4 +99,4 @@ const ApiKeyForm: React.FC<ApiKeyFormProps> = ({
   );
 };
 
-export default ApiKeyForm;
+export default CredentialsForm;

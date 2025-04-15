@@ -1,18 +1,16 @@
 
-import React from 'react';
-import { TrendingUp, TrendingDown } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import React from "react";
+import { Card } from "@/components/ui/card";
+import { getChangeColorClass, getChangeIcon } from "../utils";
 
-interface MarketItemProps {
+export interface MarketItemProps {
   name: string;
   ticker: string;
   value: string;
   change: string;
-  changePercent: string;
+  changePercent: number;
   isUp: boolean;
   category: string;
-  isLarge?: boolean;
-  item?: any; // Added to support alternative usage
 }
 
 const MarketItem: React.FC<MarketItemProps> = ({
@@ -22,104 +20,38 @@ const MarketItem: React.FC<MarketItemProps> = ({
   change,
   changePercent,
   isUp,
-  category,
-  isLarge = false,
-  item
+  category
 }) => {
-  // If item prop is provided, use it instead of individual props
-  const itemData = item || {
-    name,
-    ticker,
-    value,
-    change,
-    changePercent,
-    isUp,
-    category
-  };
-
-  // Function to get country flag code
-  const getCountryFlagCode = (category: string, name: string): string => {
-    // Map common indices to country codes
-    const indicesMap: Record<string, string> = {
-      'S&P 500': 'us',
-      'NASDAQ': 'us',
-      'Dow Jones': 'us',
-      'FTSE 100': 'gb',
-      'DAX': 'de',
-      'CAC 40': 'fr',
-      'Nikkei 225': 'jp',
-      'Hang Seng': 'hk',
-      'Shanghai Composite': 'cn',
-      'KOSPI': 'kr',
-      'ASX 200': 'au',
-      'Sensex': 'in',
-      'Bovespa': 'br'
-    };
-
-    // Map currencies to country codes
-    const currencyMap: Record<string, string> = {
-      'USD': 'us',
-      'EUR': 'eu',
-      'GBP': 'gb',
-      'JPY': 'jp',
-      'CHF': 'ch',
-      'CAD': 'ca',
-      'AUD': 'au',
-      'CNY': 'cn',
-      'HKD': 'hk',
-      'SGD': 'sg',
-      'EUR/USD': 'eu',
-      'USD/JPY': 'jp',
-      'GBP/USD': 'gb',
-      'USD/CHF': 'ch',
-      'USD/CAD': 'ca',
-      'AUD/USD': 'au',
-      'USD/CNY': 'cn'
-    };
-
-    if (category === "Indices") {
-      return indicesMap[name] || 'us';
-    } else if (category === "Currencies") {
-      // Extract currency code from pair or use direct mapping
-      const currency = name.split('/')[0];
-      return currencyMap[name] || currencyMap[currency] || 'us';
-    }
-
-    // Default fallback
-    return 'us';
-  };
-
+  const ChangeIcon = getChangeIcon(isUp);
+  const changeColorClass = getChangeColorClass(isUp);
+  
   return (
-    <div className={cn(
-      'p-3 border rounded-lg bg-background transition-all',
-      isLarge ? 'col-span-2' : ''
-    )}>
-      <div className="flex items-center justify-between mb-2">
-        <div className="flex items-center">
-          {itemData.category === 'Indices' && (
-            <span className={`fi fi-${getCountryFlagCode(itemData.category, itemData.name)} mr-2`} />
-          )}
-          <h3 className="font-medium">{itemData.name}</h3>
+    <Card className="p-4 hover:shadow-md transition-shadow duration-200">
+      <div className="flex flex-col h-full">
+        <div className="flex justify-between items-start mb-2">
+          <div>
+            <h3 className="font-medium text-sm">{name}</h3>
+            <p className="text-muted-foreground text-xs">{ticker}</p>
+          </div>
+          <span className="bg-slate-100 text-slate-700 text-xs px-2 py-1 rounded">
+            {category}
+          </span>
         </div>
-        <span className="text-xs text-muted-foreground">{itemData.ticker}</span>
-      </div>
-      
-      <div className="flex items-end justify-between">
-        <span className="text-xl font-bold">{itemData.value}</span>
-        <div className={cn(
-          'flex items-center text-sm',
-          itemData.isUp ? 'text-green-600' : 'text-red-600'
-        )}>
-          {itemData.isUp ? (
-            <TrendingUp className="h-3 w-3 mr-1" />
-          ) : (
-            <TrendingDown className="h-3 w-3 mr-1" />
-          )}
-          <span>{itemData.change}</span>
-          <span className="ml-1">({itemData.changePercent})</span>
+        
+        <div className="mt-auto">
+          <div className="text-xl font-semibold">{value}</div>
+          <div className="flex items-center">
+            <ChangeIcon className={`h-4 w-4 ${changeColorClass} mr-1`} />
+            <span className={`${changeColorClass} text-sm mr-1`}>
+              {change}
+            </span>
+            <span className={`${changeColorClass} text-xs`}>
+              ({changePercent.toFixed(2)}%)
+            </span>
+          </div>
         </div>
       </div>
-    </div>
+    </Card>
   );
 };
 

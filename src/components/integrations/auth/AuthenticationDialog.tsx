@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -7,85 +7,107 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { IntegrationType, ApiKeyFormData } from "../types";
-import OAuthButton from "./OAuthButton";
+import { IntegrationType } from "../types";
 import ApiKeyForm from "./ApiKeyForm";
-import { toast } from "@/hooks/use-toast";
+import OAuthButton from "./OAuthButton";
+import CredentialsForm from "./CredentialsForm";
+import { toast } from "@/components/ui/use-toast";
+
+export interface ApiKeyFormData {
+  apiKey: string;
+  service?: string;
+}
 
 interface AuthenticationDialogProps {
   isOpen: boolean;
-  onOpenChange: (open: boolean) => void;
+  onClose: () => void;
   integration: IntegrationType;
 }
 
 const AuthenticationDialog: React.FC<AuthenticationDialogProps> = ({
   isOpen,
-  onOpenChange,
+  onClose,
   integration,
 }) => {
-  const handleApiKeySubmit = (data: ApiKeyFormData) => {
-    // In a real app, you would send this to your backend
-    console.log("API Key submitted:", data);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleApiKeySubmit = async (data: ApiKeyFormData) => {
+    setIsSubmitting(true);
+    try {
+      // Mock API call
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      toast({
+        title: "Integration Connected",
+        description: `Successfully connected to ${integration.name}`,
+      });
+      
+      onClose();
+    } catch (error) {
+      toast({
+        title: "Connection Failed",
+        description: "Failed to connect. Please check your API key and try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // Determine which authentication UI to show
+  const renderAuthUI = () => {
+    if (integration.authMethod === "apiKey") {
+      return (
+        <ApiKeyForm
+          integration={integration}
+          onSubmit={handleApiKeySubmit}
+          onCancel={onClose}
+        />
+      );
+    } else if (integration.authMethod === "oauth") {
+      return <OAuthButton integration={integration} onSuccess={onClose} />;
+    } else if (integration.authMethod === "credentials") {
+      return <CredentialsForm integration={integration} onSubmit={() => {}} onCancel={onClose} />;
+    } else if (integration.authMethod === "both") {
+      return (
+        <div className="space-y-6">
+          <div className="space-y-4">
+            <h3 className="text-sm font-medium">Connect with OAuth</h3>
+            <OAuthButton integration={integration} onSuccess={onClose} />
+          </div>
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-background px-2 text-muted-foreground">Or</span>
+            </div>
+          </div>
+          <div className="space-y-4">
+            <h3 className="text-sm font-medium">Connect with API Key</h3>
+            <ApiKeyForm
+              integration={integration}
+              onSubmit={handleApiKeySubmit}
+              onCancel={onClose}
+            />
+          </div>
+        </div>
+      );
+    }
     
-    // Close the dialog
-    onOpenChange(false);
-    
-    // Show success toast
-    toast({
-      title: "Integration Connected",
-      description: `Successfully connected to ${integration.name}`,
-    });
+    return <div>Unsupported authentication method</div>;
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onOpenChange}>
+    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Connect to {integration.name}</DialogTitle>
           <DialogDescription>
-            Choose your preferred authentication method to connect.
+            {integration.description}
           </DialogDescription>
         </DialogHeader>
-        
-        {integration.authMethod === "both" ? (
-          <Tabs defaultValue="oauth" className="w-full">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="oauth">OAuth</TabsTrigger>
-              <TabsTrigger value="apiKey">API Key</TabsTrigger>
-            </TabsList>
-            <TabsContent value="oauth" className="mt-4">
-              <div className="space-y-4">
-                <p className="text-sm text-muted-foreground">
-                  Connect securely with OAuth. You will be redirected to {integration.name} to authorize access.
-                </p>
-                <OAuthButton integration={integration} />
-              </div>
-            </TabsContent>
-            <TabsContent value="apiKey" className="mt-4">
-              <div className="space-y-4">
-                <p className="text-sm text-muted-foreground">
-                  Enter your API key from your {integration.name} account.
-                </p>
-                <ApiKeyForm integration={integration} onSubmit={handleApiKeySubmit} />
-              </div>
-            </TabsContent>
-          </Tabs>
-        ) : integration.authMethod === "oauth" ? (
-          <div className="space-y-4">
-            <p className="text-sm text-muted-foreground">
-              Connect securely with OAuth. You will be redirected to {integration.name} to authorize access.
-            </p>
-            <OAuthButton integration={integration} />
-          </div>
-        ) : (
-          <div className="space-y-4">
-            <p className="text-sm text-muted-foreground">
-              Enter your API key from your {integration.name} account.
-            </p>
-            <ApiKeyForm integration={integration} onSubmit={handleApiKeySubmit} />
-          </div>
-        )}
+        {renderAuthUI()}
       </DialogContent>
     </Dialog>
   );

@@ -22,8 +22,6 @@ const IntegrationFilters: React.FC<IntegrationFiltersProps> = ({
     return category;
   };
   
-  console.log('Categories in IntegrationFilters:', categories);
-  
   return (
     <div className="flex flex-wrap gap-2">
       <Button

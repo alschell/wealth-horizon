@@ -1,69 +1,44 @@
 
-import React from 'react';
+import { ReactNode } from "react";
 
-// Update the CategoryType to allow objects with id and name
-export type CategoryTypeString = 
-  | "all" 
-  | "banking" 
-  | "wealth" 
-  | "market_data" 
-  | "accounting" 
-  | "crm" 
-  | "reporting" 
-  | "crypto"
-  | "analytics"
-  | "tax"
-  | "aggregators";
+export type CategoryType = string | { id: string; name: string };
 
-export interface CategoryTypeObject {
-  id: string;
-  name: string;
-}
+export type IntegrationStatus = "stable" | "beta" | "alpha";
+export type ConnectionStatus = "active" | "pending" | "error" | "needs attention";
+export type AuthMethod = "oauth" | "apiKey" | "credentials" | "both";
 
-export type CategoryType = CategoryTypeString | CategoryTypeObject;
-
-// Update IntegrationType to make logo optional and add all required fields
 export interface IntegrationType {
   id: string;
   name: string;
-  description: string;
   logo?: string;
-  icon?: React.ReactNode;
+  description: string;
+  icon: ReactNode;
   category: string;
-  authMethod: "oauth" | "apiKey" | "credentials" | "both";
-  apiKeyName?: string;
+  features: string[];
+  status: IntegrationStatus;
+  authMethod: AuthMethod;
   authUrl?: string;
+  apiKeyName?: string;
   scopes?: string[];
-  popular?: boolean;
-  new?: boolean;
-  features?: string[];
-  status?: "stable" | "beta";
 }
 
-// Update ConnectedIntegrationType to align with the real structure
 export interface ConnectedIntegrationType {
   id: string;
   name: string;
-  logo?: string;
-  description?: string;
-  icon?: React.ReactNode;
-  category: CategoryType | string;
-  status: "active" | "error" | "pending" | "stable";
-  connectionStatus?: "active" | "needs attention";
+  description: string;
+  icon: ReactNode;
+  category: string;
+  features: string[];
+  status: ConnectionStatus;
+  connectionStatus: ConnectionStatus;
   lastSync: string;
-  lastSynced?: string;
-  accountsConnected?: number;
-  features?: string[];
-  authMethod?: "oauth" | "apiKey" | "credentials" | "both";
+  authMethod: AuthMethod;
   authUrl?: string;
   apiKeyName?: string;
   scopes?: string[];
 }
 
-// Add ApiKeyFormData interface
 export interface ApiKeyFormData {
   apiKey: string;
-  apiSecret?: string;
-  accountId?: string;
   service?: string;
 }

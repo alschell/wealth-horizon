@@ -21,12 +21,15 @@ export type PrimaryContactInfo = {
 };
 
 export type AddressInfo = {
-  streetAddress: string;
-  addressLine2?: string;
+  line1: string;
+  line2?: string;
   city: string;
   state: string;
-  postalCode: string;
+  zipCode: string;
   country: string;
+  streetAddress: string;
+  postalCode: string;
+  addressLine2?: string;
 };
 
 export type LegalDocuments = {
@@ -38,6 +41,10 @@ export type LegalDocuments = {
 };
 
 export type AggregatorInfo = {
+  id: string;
+  name: string;
+  description: string;
+  isConnected: boolean;
   usesAggregator: boolean;
   aggregatorName?: string;
   aggregatorCredentials?: {
@@ -48,17 +55,22 @@ export type AggregatorInfo = {
 };
 
 export type FinancialAccountInfo = {
-  accountName: string;
+  id?: string;
+  name: string;
   institution: string;
   accountType: "cash" | "portfolio" | "investment" | "custody" | "broker" | "checking" | "savings" | "brokerage" | "trust" | "retirement" | "private equity" | "hedge fund" | "venture capital" | "real estate" | "fixed income" | "credit" | "other";
   accountSubtype: string;
   currency: string;
+  balance?: number;
   approximateValue: string;
   statements: File[];
   legalEntity: string;
   legalEntityIdentifier: string;
-  accountNumber: string; // Add accountNumber field
-  swiftCode: string; // Add swiftCode field
+  accountNumber: string;
+  swiftCode: string;
+  accountName: string;
+  isActive?: boolean;
+  openingDate?: string;
 };
 
 export type BeneficialOwnerInfo = {
@@ -70,6 +82,13 @@ export type BeneficialOwnerInfo = {
   nationality: string;
   dateOfBirth: string;
   documents: File[];
+  email?: string;
+  phone?: string;
+  percentageOwnership?: number;
+  isPEP?: boolean;
+  idType?: string;
+  idNumber?: string;
+  idExpiryDate?: string;
 };
 
 export type PersonalInfo = {
@@ -102,6 +121,8 @@ export type OnboardingData = {
   personalInfo: PersonalInfo;
   identityVerification: IdentityVerification;
   completed: boolean;
+  documents?: string[];
+  isOnboardingCompleted?: boolean;
 };
 
 export type OnboardingContextType = {

@@ -33,7 +33,7 @@ const ValidationDemo: React.FC = () => {
     password: '',
     confirmPassword: '',
     bio: '',
-    acceptTerms: false  // This is fine, it's a default value that will be validated
+    acceptTerms: false as any // Using type assertion to bypass the TS error for default value
   };
 
   const handleSubmit = async (data: UserFormData) => {

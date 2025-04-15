@@ -6,7 +6,6 @@
 
 // Re-export all core error handling utilities
 export {
-  getErrorMessage,
   parseError,
   logError,
   createContextualError,

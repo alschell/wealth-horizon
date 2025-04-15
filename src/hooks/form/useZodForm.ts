@@ -74,18 +74,28 @@ export function useZodForm<T extends Record<string, any>>({
    */
   const validateField = useCallback(<K extends keyof T>(field: K): string | null => {
     try {
-      // Create a partial schema for just this field
-      const fieldSchema = z.object({ [field]: schema.shape[field as string] } as any);
+      // Instead of accessing schema.shape directly, create a partial schema for just this field
+      // Use safeParse to validate just this field
+      const fieldValue = { [field]: values[field] };
+      const partialSchema = z.object({
+        [field]: z.any()
+      }).superRefine((data, ctx) => {
+        const result = schema.safeParse(data);
+        if (!result.success) {
+          const fieldErrors = result.error.errors.filter(err => err.path[0] === field);
+          fieldErrors.forEach(err => ctx.addIssue(err));
+        }
+      });
       
-      // Validate just this field
-      fieldSchema.parse({ [field]: values[field] });
-      return null;
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        const fieldError = error.errors.find(err => err.path[0] === field);
+      const result = partialSchema.safeParse(fieldValue);
+      if (!result.success) {
+        const fieldError = result.error.errors.find(err => err.path[0] === field);
         return fieldError?.message || null;
       }
       return null;
+    } catch (error) {
+      console.error(`Error validating field ${String(field)}:`, error);
+      return "Validation error";
     }
   }, [schema, values]);
   

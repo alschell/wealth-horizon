@@ -101,28 +101,36 @@ export const validateComposite = <T>(value: T, validators: ValidationFn<T>[]): s
 export const createZodSchema = <T extends Record<string, any>>(
   validationMap: Record<keyof T, ValidationFn | ValidationFn[]>
 ): z.ZodSchema<T> => {
-  const schemaMap: Record<string, z.ZodType<any>> = {};
+  const schemaMap: Record<string, z.ZodTypeAny> = {};
   
   for (const [field, validators] of Object.entries(validationMap)) {
-    schemaMap[field] = z.any().refine(
-      (value) => {
-        if (Array.isArray(validators)) {
-          return !validateComposite(value, validators);
-        }
-        return !validators(value);
-      },
-      {
-        message: (value) => {
-          if (Array.isArray(validators)) {
-            return validateComposite(value, validators) || 'Invalid value';
-          }
-          return validators(value) || 'Invalid value';
-        }
+    // Create a Zod type for the field
+    const fieldSchema = z.any();
+    
+    // Add custom validation using superRefine instead of refine
+    schemaMap[field] = fieldSchema.superRefine((value, ctx) => {
+      let error: string | null = null;
+      
+      if (Array.isArray(validators)) {
+        error = validateComposite(value, validators);
+      } else {
+        error = validators(value);
       }
-    );
+      
+      if (error) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: error,
+          path: [field]
+        });
+        return false;
+      }
+      
+      return true;
+    });
   }
   
-  return z.object(schemaMap) as unknown as z.ZodSchema<T>;
+  return z.object(schemaMap) as z.ZodSchema<T>;
 };
 
 /**

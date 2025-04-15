@@ -1,7 +1,8 @@
 
 import { useState, useCallback } from 'react';
 import { useIsComponentMounted } from '../useIsComponentMounted';
-import { toast } from 'sonner';
+import { showSuccess, showError } from '@/utils/toast';
+import { handleError } from '@/utils/errorHandling/errorHandlingCore';
 
 interface FormSubmissionOptions<T> {
   onSuccess?: () => void;
@@ -9,81 +10,88 @@ interface FormSubmissionOptions<T> {
   successMessage?: string;
   errorMessage?: string;
   resetAfterSubmit?: boolean;
-  validateForm?: () => boolean;
+  validateForm?: () => Promise<boolean> | boolean;
 }
 
 /**
- * Hook that provides form submission controls and state management
+ * Hook for managing form submission state
+ * 
+ * @returns Form state management utilities and handlers
  */
 export function useFormControls<T>() {
+  const isMounted = useIsComponentMounted();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [lastError, setLastError] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState(false);
-  const isMounted = useIsComponentMounted();
 
-  /**
-   * Resets the form control state
-   */
+  // Reset state handler
   const resetState = useCallback(() => {
     setIsSubmitting(false);
     setLastError(null);
     setIsSuccess(false);
   }, []);
 
-  /**
-   * Creates a submit handler function with the provided options
-   * 
-   * @param submitFn Function to call on submit
-   * @param options Submission options
-   * @returns A function that handles form submission
-   */
+  // Create a submission handler creator
   const createSubmitHandler = useCallback(
-    <D extends T>(
-      submitFn: (data: D) => Promise<void> | void,
-      options: FormSubmissionOptions<D>
+    (
+      onSubmit: (data: T) => Promise<void> | void,
+      options: FormSubmissionOptions<T> = {}
     ) => {
-      return async (data: D) => {
-        // Reset state
+      const {
+        onSuccess,
+        onError,
+        successMessage = 'Form submitted successfully',
+        errorMessage = 'Error submitting form',
+        resetAfterSubmit = false,
+        validateForm,
+      } = options;
+
+      return async (data: T) => {
+        // Reset error and success states
         setLastError(null);
         setIsSuccess(false);
 
         // Validate form if validation function is provided
-        if (options.validateForm && !options.validateForm()) {
-          return;
+        if (validateForm) {
+          const isValid = await validateForm();
+          if (!isValid) return;
         }
 
         setIsSubmitting(true);
 
         try {
-          await submitFn(data);
+          await onSubmit(data);
 
           // Only update state if component is still mounted
           if (isMounted()) {
             setIsSuccess(true);
-            if (options.successMessage) {
-              toast.success(options.successMessage);
+            
+            if (successMessage) {
+              showSuccess('Success', successMessage);
             }
 
-            if (options.onSuccess) {
-              options.onSuccess();
+            if (onSuccess) {
+              onSuccess();
+            }
+            
+            if (resetAfterSubmit) {
+              setTimeout(() => {
+                if (isMounted()) {
+                  resetState();
+                }
+              }, 3000);
             }
           }
         } catch (error) {
           // Only update state if component is still mounted
           if (isMounted()) {
-            console.error("Form submission error:", error);
-            const errorMsg = error instanceof Error 
-              ? error.message 
-              : options.errorMessage || "An error occurred";
-            
+            const errorMsg = error instanceof Error ? error.message : errorMessage;
             setLastError(errorMsg);
-            if (options.errorMessage) {
-              toast.error(errorMsg);
-            }
-
-            if (options.onError) {
-              options.onError(error);
-            }
+            
+            handleError(error, {
+              fallbackMessage: errorMessage,
+              onError: options.onError
+            });
           }
         } finally {
           // Only update state if component is still mounted
@@ -93,7 +101,7 @@ export function useFormControls<T>() {
         }
       };
     },
-    [isMounted]
+    [isMounted, resetState]
   );
 
   return {
@@ -101,6 +109,6 @@ export function useFormControls<T>() {
     lastError,
     isSuccess,
     resetState,
-    createSubmitHandler
+    createSubmitHandler,
   };
 }

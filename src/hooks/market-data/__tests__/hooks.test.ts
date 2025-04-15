@@ -29,7 +29,7 @@ const queryClient = new QueryClient({
 });
 
 // Wrapper for testing hooks with react-query
-const wrapper = ({ children }) => (
+const wrapper = ({ children }: { children: React.ReactNode }) => (
   <QueryClientProvider client={queryClient}>
     {children}
   </QueryClientProvider>

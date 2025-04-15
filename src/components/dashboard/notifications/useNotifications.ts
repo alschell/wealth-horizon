@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FileText, TrendingUp, AlertTriangle, Check, Bell } from "lucide-react";
 import { NotificationType } from "./types";
+import { toast } from "sonner";
 
 // Initial notification data
 const notificationData: NotificationType[] = [
@@ -102,7 +103,52 @@ export const useNotifications = () => {
   const handleNotificationClick = (notification: NotificationType) => {
     markAsRead(notification.id);
     setIsOpen(false);
-    navigate(notification.link);
+    
+    // Handle navigation based on notification link
+    if (!notification.link) {
+      navigate("/dashboard");
+      return;
+    }
+    
+    // Sanitize link to ensure it starts with a slash
+    let targetRoute = notification.link.startsWith('/') 
+      ? notification.link 
+      : `/${notification.link}`;
+    
+    // List of valid routes to prevent navigation to non-existent pages
+    const validRoutes = [
+      '/dashboard',
+      '/analyze-wealth',
+      '/market-data',
+      '/profile',
+      '/settings',
+      '/notifications',
+      '/advice',
+      '/cashflow',
+      '/reporting',
+      '/integrations',
+      '/documents',
+      '/esg',
+      '/tax-optimization',
+      '/legacy-planning',
+      '/entity-management',
+      '/compliance-monitoring',
+      '/client-portal',
+      '/trading',
+      '/credit-facilities',
+      '/reports'
+    ];
+    
+    // Check if the link is valid or default to dashboard
+    const isValidRoute = validRoutes.some(route => targetRoute.startsWith(route));
+    
+    if (!isValidRoute) {
+      console.warn(`Invalid notification link: ${targetRoute}, redirecting to dashboard`);
+      toast.warning("That page doesn't exist yet. Redirecting to dashboard.");
+      targetRoute = "/dashboard";
+    }
+    
+    navigate(targetRoute);
   };
 
   return {

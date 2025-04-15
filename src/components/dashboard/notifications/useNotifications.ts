@@ -13,7 +13,8 @@ const notificationData: NotificationType[] = [
     description: "UBS has sent a new proposal for your review",
     time: "10 minutes ago",
     read: false,
-    icon: <FileText className="h-4 w-4 text-[#4E46DC]" />,
+    icon: FileText,
+    iconColor: "#4E46DC",
     link: "/advice",
     details: {
       sender: "UBS Wealth Management",
@@ -31,7 +32,8 @@ const notificationData: NotificationType[] = [
     description: "Unusual volatility detected in your portfolio",
     time: "2 hours ago",
     read: false,
-    icon: <AlertTriangle className="h-4 w-4 text-[#4E46DC]" />,
+    icon: AlertTriangle,
+    iconColor: "#4E46DC",
     link: "/market-data",
     details: {
       sender: "Market Alert System",
@@ -46,7 +48,8 @@ const notificationData: NotificationType[] = [
     description: "Your mandate agreement was successfully signed",
     time: "Yesterday",
     read: true,
-    icon: <Check className="h-4 w-4 text-[#4E46DC]" />,
+    icon: Check,
+    iconColor: "#4E46DC",
     link: "/documents",
     details: {
       sender: "Document Management",
@@ -61,7 +64,8 @@ const notificationData: NotificationType[] = [
     description: "Your Q1 performance report is now available",
     time: "3 days ago",
     read: true,
-    icon: <TrendingUp className="h-4 w-4 text-[#4E46DC]" />,
+    icon: TrendingUp,
+    iconColor: "#4E46DC",
     link: "/reports",
     details: {
       sender: "Performance Reporting",

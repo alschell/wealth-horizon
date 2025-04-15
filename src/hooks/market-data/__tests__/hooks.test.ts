@@ -29,7 +29,7 @@ const queryClient = new QueryClient({
 });
 
 // Wrapper for testing hooks with react-query
-const wrapper = ({ children }) => (
+const wrapper = ({ children }: { children: React.ReactNode }) => (
   <QueryClientProvider client={queryClient}>
     {children}
   </QueryClientProvider>
@@ -44,8 +44,8 @@ describe('Market Data Hooks', () => {
   describe('useQuote', () => {
     it('fetches quote data for a symbol', async () => {
       const mockQuote = { c: 100, d: 5, dp: 5, h: 105, l: 95, o: 98, pc: 95, t: 1234567890 };
-      (api.getQuote).mockResolvedValue(mockQuote);
-      (api.formatQuote).mockReturnValue({
+      (api.getQuote as jest.Mock).mockResolvedValue(mockQuote);
+      (api.formatQuote as jest.Mock).mockReturnValue({
         price: '100.00',
         change: '5.00',
         percentChange: '5.00',

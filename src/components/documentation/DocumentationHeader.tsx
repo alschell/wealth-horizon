@@ -11,7 +11,7 @@ export const DocumentationHeader: React.FC = () => {
 
   const handleDownloadSDK = (sdkName: string, version: string) => {
     setDownloadingSDK(sdkName);
-    showDownloadToast(sdkName, version);
+    showDownloadToast(`${sdkName} SDK v${version}`);
     
     setTimeout(() => {
       setDownloadingSDK(null);
@@ -20,7 +20,7 @@ export const DocumentationHeader: React.FC = () => {
 
   const openDocumentation = (docType: string) => {
     setOpeningDocs(docType);
-    showDocumentationToast(`Opening ${docType} documentation`, "Loading documentation resources");
+    showDocumentationToast(`Opening ${docType} documentation`);
     
     setTimeout(() => {
       setOpeningDocs(null);

@@ -4,13 +4,13 @@ import { toast } from '@/hooks/use-toast';
 /**
  * Show a toast notification for documentation links
  */
-export const showDocumentationToast = (title: string, docLink: string) => {
+export const showDocumentationToast = (title: string) => {
   toast({
     title,
     description: "Check out the documentation for more information.",
     action: {
       label: "View Docs",
-      onClick: () => window.open(docLink, '_blank')
+      onClick: () => console.log("Documentation link clicked")
     }
   });
 };

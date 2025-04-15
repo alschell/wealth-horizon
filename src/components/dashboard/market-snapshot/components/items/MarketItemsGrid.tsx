@@ -2,10 +2,10 @@
 import React, { memo } from 'react';
 import { cn } from '@/lib/utils';
 import MarketItemCard from './MarketItemCard';
-import type { MarketItemData } from '../../types';
+import type { MarketItem } from '../../types';
 
 interface MarketItemsGridProps {
-  items: MarketItemData[];
+  items: MarketItem[];
   className?: string;
 }
 

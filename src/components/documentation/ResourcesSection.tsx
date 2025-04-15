@@ -9,11 +9,11 @@ interface ResourcesSectionProps {}
 
 export const ResourcesSection: React.FC<ResourcesSectionProps> = () => {
   const handleResourceClick = (resourceName: string) => {
-    showDocumentationToast(`Accessing ${resourceName}`, "Loading resource");
+    showDocumentationToast(`Accessing ${resourceName}`);
   };
 
   const handleDownloadSDK = (sdkName: string, version: string) => {
-    showDownloadToast(sdkName, version);
+    showDownloadToast(`${sdkName} SDK v${version}`);
   };
 
   return (

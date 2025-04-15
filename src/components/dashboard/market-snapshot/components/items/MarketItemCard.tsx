@@ -4,10 +4,10 @@ import { cn } from '@/lib/utils';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ChevronUp, ChevronDown } from 'lucide-react';
-import type { MarketItemData } from '../../types';
+import type { MarketItem } from '../../types';
 
 interface MarketItemCardProps {
-  item: MarketItemData;
+  item: MarketItem;
   className?: string;
 }
 
@@ -16,23 +16,10 @@ interface MarketItemCardProps {
  */
 const MarketItemCard = ({ item, className }: MarketItemCardProps) => {
   // Determine if the change is positive, negative, or neutral
-  const isPositive = item.changePercent > 0;
-  const isNegative = item.changePercent < 0;
+  const changeValue = parseFloat(item.change);
+  const isPositive = changeValue > 0;
+  const isNegative = changeValue < 0;
   const isNeutral = !isPositive && !isNegative;
-  
-  // Format values
-  const formattedValue = Intl.NumberFormat('en-US', {
-    style: 'decimal',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  }).format(item.value);
-  
-  const formattedPercent = Intl.NumberFormat('en-US', {
-    style: 'percent',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-    signDisplay: 'exceptZero'
-  }).format(item.changePercent / 100);
   
   return (
     <Card className={cn("h-full overflow-hidden transition-all duration-200 hover:shadow-md", className)}>
@@ -40,11 +27,11 @@ const MarketItemCard = ({ item, className }: MarketItemCardProps) => {
         <div className="space-y-2">
           {/* Title area */}
           <div className="flex items-center justify-between">
-            <h3 className="font-medium text-sm truncate" title={item.title}>
-              {item.title}
+            <h3 className="font-medium text-sm truncate" title={item.label}>
+              {item.label}
             </h3>
             <Badge 
-              variant={item.category === 'stock' ? 'default' : 'outline'}
+              variant={item.category === "stock" ? 'default' : 'outline'}
               className="text-xs"
             >
               {item.category}
@@ -52,7 +39,7 @@ const MarketItemCard = ({ item, className }: MarketItemCardProps) => {
           </div>
           
           {/* Value area */}
-          <div className="text-xl font-bold">{formattedValue}</div>
+          <div className="text-xl font-bold">{item.value}</div>
           
           {/* Change area */}
           <div className={cn(
@@ -63,7 +50,7 @@ const MarketItemCard = ({ item, className }: MarketItemCardProps) => {
           )}>
             {isPositive && <ChevronUp className="h-4 w-4 mr-1" />}
             {isNegative && <ChevronDown className="h-4 w-4 mr-1" />}
-            {formattedPercent}
+            {item.change}
           </div>
         </div>
       </CardContent>

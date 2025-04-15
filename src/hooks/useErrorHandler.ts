@@ -2,27 +2,44 @@
 import { useState, useCallback } from 'react';
 import { useToast } from './use-toast';
 import { 
-  parseError, 
+  parseError,
+  handleError,
+  tryCatch as coreTryCatch,
+  withErrorHandling as coreWithErrorHandling,
+  isError,
+  isErrorResponse,
   type ErrorHandlerOptions,
   type ErrorResponse
 } from '@/utils/errorHandling/errorHandlingCore';
 
 /**
- * Hook for consistent error handling throughout the application
+ * Enhanced error handler hook with improved type safety and error state management
  */
 export function useErrorHandler(defaultOptions: ErrorHandlerOptions = {}) {
   const [lastError, setLastError] = useState<ErrorResponse | null>(null);
+  const [errorCount, setErrorCount] = useState(0);
   const { toast } = useToast();
   
   /**
-   * Handle an error with standardized approach
+   * Handle an error with standardized approach and state updates
    */
   const handleErrorWithState = useCallback((error: unknown, options: ErrorHandlerOptions = {}) => {
     const mergedOptions = { ...defaultOptions, ...options };
-    const errorDetails = parseError(error);
+    const errorDetails = handleError(error, mergedOptions);
+    
     setLastError(errorDetails);
+    setErrorCount(prev => prev + 1);
+    
     return errorDetails;
   }, [defaultOptions]);
+  
+  /**
+   * Reset error state
+   */
+  const clearErrors = useCallback(() => {
+    setLastError(null);
+    setErrorCount(0);
+  }, []);
   
   /**
    * Wrap an async function with error handling
@@ -65,18 +82,33 @@ export function useErrorHandler(defaultOptions: ErrorHandlerOptions = {}) {
       description: message,
       variant: "destructive"
     });
+    
+    setLastError({
+      message,
+      code: 'MANUAL_ERROR',
+      timestamp: new Date().toISOString(),
+      source: 'manual'
+    });
+    
+    setErrorCount(prev => prev + 1);
   }, [toast]);
   
   return {
     // State
     lastError,
-    clearLastError: () => setLastError(null),
+    errorCount,
+    hasError: lastError !== null,
+    clearErrors,
     
     // Error handling functions
     handleError: handleErrorWithState,
     withErrorHandling: withErrorHandlingState,
     tryCatch: tryCatchWithState,
     showError,
+    
+    // Type guards
+    isError,
+    isErrorResponse,
     
     // Utility functions re-exported for convenience
     parseError

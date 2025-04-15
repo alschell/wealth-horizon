@@ -1,41 +1,38 @@
 
-/**
- * Specialized toast utilities for documentation-related actions
- */
-
-import { showSuccess, showInfo } from './toastUtils';
+import { toast } from '@/hooks/use-toast';
 
 /**
- * Show a toast for successful documentation access
- * @param docName Name of the documentation being viewed
- * @param description Optional custom description
+ * Show a toast notification for documentation links
  */
-export const showDocumentationToast = (docName: string, description?: string) => {
-  showInfo(
-    'Documentation Opened', 
-    description || `You're now viewing documentation for ${docName}`
-  );
+export const showDocumentationToast = (title: string, docLink: string) => {
+  toast({
+    title,
+    description: "Check out the documentation for more information.",
+    action: {
+      label: "View Docs",
+      onClick: () => window.open(docLink, '_blank')
+    }
+  });
 };
 
 /**
- * Show a toast for successful copy operation
- * @param itemType Type of item copied (default: 'text')
+ * Show a toast notification for successful copy operations
  */
-export const showCopySuccessToast = (itemType: string = 'text') => {
-  showSuccess(
-    'Copied to Clipboard', 
-    `The ${itemType} has been copied to your clipboard`
-  );
+export const showCopySuccessToast = (itemType: string = "Content") => {
+  toast({
+    title: "Copied to Clipboard",
+    description: `${itemType} has been copied to your clipboard.`,
+    variant: "default"
+  });
 };
 
 /**
- * Show a toast for successful download operation
- * @param fileName Name of the file being downloaded
- * @param version Optional version number of the file
+ * Show a toast notification for download operations
  */
-export const showDownloadToast = (fileName: string, version?: string) => {
-  showSuccess(
-    'Download Started', 
-    version ? `${fileName} v${version} is being downloaded` : `${fileName} is being downloaded`
-  );
+export const showDownloadToast = (fileName: string) => {
+  toast({
+    title: "Download Started",
+    description: `${fileName} is being downloaded.`,
+    variant: "default"
+  });
 };

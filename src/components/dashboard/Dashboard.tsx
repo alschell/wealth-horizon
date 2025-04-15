@@ -1,10 +1,14 @@
 
-import React from "react";
+import React, { memo } from "react";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import DashboardContent from "@/components/dashboard/DashboardContent";
 import { DashboardCustomizeDialog } from "@/components/dashboard/customize";
 import { useDashboardCustomize } from "@/components/dashboard/customize/useDashboardCustomize";
+import { tryCatch } from "@/utils/errorHandling/errorHandlingCore";
 
+/**
+ * Main Dashboard component with customization capabilities
+ */
 const Dashboard = () => {
   const {
     isCustomizing,
@@ -17,13 +21,23 @@ const Dashboard = () => {
     handleDragEnd
   } = useDashboardCustomize();
 
+  // Event handlers with error catching
+  const handleCustomizeClick = () => {
+    tryCatch(() => {
+      setIsCustomizing(true);
+    }, { 
+      componentName: 'Dashboard',
+      fallbackMessage: 'Failed to open customization dialog' 
+    });
+  };
+
   return (
     <DashboardLayout>
       <div className="space-y-6">
         {/* Dashboard content */}
         <DashboardContent 
           orderedVisibleSections={orderedVisibleSections} 
-          onCustomizeClick={() => setIsCustomizing(true)}
+          onCustomizeClick={handleCustomizeClick}
         />
 
         {/* Dashboard Customization Dialog */}
@@ -41,4 +55,5 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+// Use memo to prevent unnecessary re-renders
+export default memo(Dashboard);

@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { supabase } from '@/utils/supabaseClient';
 
@@ -118,7 +117,15 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
   // Function to set the language
   const setLanguage = async (language: LanguageCode) => {
+    console.log(`Changing language to: ${language}`);
     setCurrentLanguage(language);
+    // Clear any cached translations when changing language
+    // This ensures all components will re-translate their content
+    setTranslationCache(prevCache => {
+      const newCache = { ...prevCache };
+      delete newCache[language];
+      return newCache;
+    });
   };
 
   // Process text before translation to protect non-translatable terms

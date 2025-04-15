@@ -9,6 +9,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { LucideIcon } from "lucide-react";
+import { TranslatedText } from "@/components/ui/translated-text";
 
 interface HeaderActionProps {
   icon: LucideIcon;
@@ -29,7 +30,7 @@ const HeaderAction = ({ icon: Icon, label, to }: HeaderActionProps) => {
           </Button>
         </TooltipTrigger>
         <TooltipContent>
-          <p>{label}</p>
+          <p><TranslatedText>{label}</TranslatedText></p>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>

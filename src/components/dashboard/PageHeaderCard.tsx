@@ -2,6 +2,7 @@
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { LucideIcon } from "lucide-react";
+import { TranslatedText } from "@/components/ui/translated-text";
 
 interface PageHeaderCardProps {
   icon: LucideIcon;
@@ -26,9 +27,11 @@ const PageHeaderCard: React.FC<PageHeaderCardProps> = ({
             <Icon className={`h-8 w-8 ${iconColor}`} />
           </div>
           <div className="space-y-1">
-            <h1 className="text-3xl font-semibold tracking-tight">{title}</h1>
+            <h1 className="text-3xl font-semibold tracking-tight">
+              <TranslatedText>{title}</TranslatedText>
+            </h1>
             <p className="text-muted-foreground max-w-3xl">
-              {description}
+              <TranslatedText>{description}</TranslatedText>
             </p>
           </div>
         </div>

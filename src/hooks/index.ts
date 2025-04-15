@@ -18,7 +18,6 @@ export { withErrorHandling } from './useErrorBoundary';
 
 // Export error utilities for convenience
 export {
-  getErrorMessage,
   parseError,
   logError,
   handleError,

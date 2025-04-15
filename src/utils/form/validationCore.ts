@@ -130,7 +130,8 @@ export const createZodSchema = <T extends Record<string, any>>(
     });
   }
   
-  return z.object(schemaMap) as z.ZodSchema<T>;
+  // Use type assertion with 'as unknown as' to safely convert the type
+  return z.object(schemaMap) as unknown as z.ZodSchema<T>;
 };
 
 /**

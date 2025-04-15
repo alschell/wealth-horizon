@@ -1,30 +1,15 @@
 
-import React from 'react';
-import { createRoot } from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
-import App from './App.tsx';
-import './index.css';
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import App from './App.tsx'
+import './index.css'
 
-console.log("Starting application...");
+// Register our custom lucide-react shim for components that might need it
+// This is a safe workaround since we can't modify package.json
+import './utils/icons.ts';
 
-const rootElement = document.getElementById("root");
-
-if (!rootElement) {
-  console.error("Failed to find the root element");
-  throw new Error("Failed to find the root element");
-}
-
-console.log("Root element found:", rootElement);
-
-const root = createRoot(rootElement);
-
-// Make sure the entire app is wrapped in React and BrowserRouter
-root.render(
+ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-  </React.StrictMode>
-);
-
-console.log("Finished mounting application");
+    <App />
+  </React.StrictMode>,
+)

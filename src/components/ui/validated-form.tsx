@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { FormValidationError } from '@/components/ui/form-validation-error';
 import { withErrorHandling } from '@/hooks/useErrorBoundary';
+import { useValidatedForm } from '@/hooks/useValidatedForm';
 
 interface ValidatedFormProps<T extends Record<string, any>> {
   schema: z.ZodSchema<T>;
@@ -49,12 +50,7 @@ function ValidatedFormInner<T extends Record<string, any>>({
   errorMessage,
   showValidationSummary = true
 }: ValidatedFormProps<T>) {
-  // Import the useValidatedForm hook
-  const { 
-    useValidatedForm 
-  } = require('@/hooks/useValidatedForm');
-
-  // Use our custom form hook
+  // Use our custom form hook (imported at the top of the file now)
   const {
     values,
     errors,
@@ -132,7 +128,7 @@ function ValidatedFormInner<T extends Record<string, any>>({
   );
 }
 
-// Fix: Use proper options for withErrorHandling, removing the unsupported 'showReset' property
+// Use proper options for withErrorHandling
 export const ValidatedForm = withErrorHandling(
   ValidatedFormInner,
   {

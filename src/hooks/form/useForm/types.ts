@@ -3,7 +3,7 @@ import {
   FieldValues, 
   DefaultValues,
   Path,
-  UseFormReturn,
+  UseFormReturn as RHFUseFormReturn,
   UseFormProps
 } from 'react-hook-form';
 import { z } from 'zod';
@@ -61,12 +61,12 @@ export interface UseFormOptions<T extends FieldValues> extends FormStateOptions<
  */
 export type EnhancedHandleSubmit<T extends FieldValues> = 
   ((e?: SyntheticEvent) => Promise<void>) & 
-  UseFormReturn<T>['handleSubmit'];
+  RHFUseFormReturn<T>['handleSubmit'];
 
 /**
  * Return type for useForm hook
  */
-export interface UseFormReturn<T extends FieldValues> extends Omit<UseFormReturn<T>, 'handleSubmit'> {
+export interface UseFormReturn<T extends FieldValues> extends Omit<RHFUseFormReturn<T>, 'handleSubmit'> {
   handleSubmit: EnhancedHandleSubmit<T>;
   isSubmitting: boolean;
   isSuccess: boolean;

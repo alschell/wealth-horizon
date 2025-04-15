@@ -1,8 +1,5 @@
 
-// Export all constants from separate files
-export * from './institutions';
+// Re-export all constants
 export * from './accountTypes';
 export * from './currencies';
-export * from './aggregators';
-export * from './countries';
-export * from './jurisdictions';
+export * from './institutions';

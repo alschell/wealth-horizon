@@ -1,21 +1,16 @@
 
-import React from 'react';
+import React from "react";
 
-interface TranslatedTextProps {
+export interface TranslatedTextProps {
   children: React.ReactNode;
-  context?: string;
+  className?: string;
 }
 
-/**
- * A component that supports text translation
- * In a real application, this would use a translation library
- */
 export const TranslatedText: React.FC<TranslatedTextProps> = ({ 
-  children, 
-  context 
+  children,
+  className = ""
 }) => {
-  // In a real app, this would use i18n translation
-  return <>{children}</>;
+  return (
+    <span className={className}>{children}</span>
+  );
 };
-
-export default TranslatedText;

@@ -27,6 +27,14 @@ const processFile = (filePath) => {
         'import { $1 } from "@/utils/icons"'
       );
       
+      // Update PageHeaderCard icon usage from direct component to string
+      if (filePath.includes("PageHeaderCard")) {
+        newContent = newContent.replace(
+          /icon={(\w+)}/g,
+          'icon="$1"'
+        );
+      }
+      
       fs.writeFileSync(filePath, newContent, 'utf-8');
       console.log(`✅ Updated ${filePath}`);
     }

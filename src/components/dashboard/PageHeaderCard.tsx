@@ -2,9 +2,10 @@
 import React from "react";
 import { Icon } from "@/utils/icons"; 
 import { Card } from "@/components/ui/card";
+import { LucideIcon } from "lucide-react";
 
 interface PageHeaderCardProps {
-  icon: string;
+  icon: string | LucideIcon;
   title: string;
   description: string;
   iconColor?: string;
@@ -22,7 +23,14 @@ const PageHeaderCard: React.FC<PageHeaderCardProps> = ({
     <Card className="p-6 mb-6">
       <div className="flex items-start gap-4">
         <div className={`p-3 rounded-lg ${iconBgColor}`}>
-          <Icon name={icon} className={`h-6 w-6 ${iconColor}`} />
+          {typeof icon === 'string' ? (
+            <Icon name={icon} className={`h-6 w-6 ${iconColor}`} />
+          ) : (
+            (() => {
+              const IconComponent = icon;
+              return <IconComponent className={`h-6 w-6 ${iconColor}`} />;
+            })()
+          )}
         </div>
         
         <div>

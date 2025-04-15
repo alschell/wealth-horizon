@@ -26,7 +26,7 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({ onCustomizeClick }) =
         className="h-8 w-8 p-0"
       >
         <Sliders className="h-4 w-4" />
-        <span className="sr-only"><TranslatedText>Customize</TranslatedText></span>
+        <span className="sr-only">Customize</span>
       </Button>
     </div>
   );

@@ -10,7 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { showSuccess, showError } from "@/utils/toast";
 import { validateEmail, validatePhone, validateRequired } from "@/utils/validation";
-import { FormField } from "./form/FormFields";
+import FormFields from "./form/FormFields";
 import { ResumeFileUpload } from "./form/ResumeFileUpload";
 import { sanitizeFileName } from "@/utils/security";
 import { useStandardForm } from "@/hooks/useStandardForm";
@@ -149,7 +149,7 @@ export const ResumeUploadModal: React.FC<ResumeUploadModalProps> = ({
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4" aria-labelledby="resume-form-title">
-          <FormField
+          <FormFields
             id="name"
             name="name"
             value={formData.name}
@@ -161,7 +161,7 @@ export const ResumeUploadModal: React.FC<ResumeUploadModalProps> = ({
             required
           />
           
-          <FormField
+          <FormFields
             id="email"
             name="email"
             type="email"
@@ -174,7 +174,7 @@ export const ResumeUploadModal: React.FC<ResumeUploadModalProps> = ({
             required
           />
           
-          <FormField
+          <FormFields
             id="phone"
             name="phone"
             value={formData.phone}

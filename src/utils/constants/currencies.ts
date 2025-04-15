@@ -34,6 +34,11 @@ export const CURRENCIES: Currency[] = [
   { code: "SAR", name: "Saudi Riyal", symbol: "﷼" }
 ];
 
+// Create a string array version of currencies for components that expect string[]
+export const CURRENCY_STRINGS: string[] = CURRENCIES.map(
+  currency => `${currency.code} - ${currency.name}`
+);
+
 /**
  * Get currency by code
  */

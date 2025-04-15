@@ -1,3 +1,3 @@
 
 // Re-export currencies from the central location
-export { CURRENCIES, extractCurrencyCode } from "@/utils/constants/currencies";
+export { CURRENCIES, CURRENCY_STRINGS, extractCurrencyCode } from "@/utils/constants/currencies";

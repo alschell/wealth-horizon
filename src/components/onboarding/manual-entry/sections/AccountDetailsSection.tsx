@@ -24,6 +24,9 @@ const AccountDetailsSection: React.FC<AccountDetailsSectionProps> = ({
     onSelectionChange(name, value);
   };
 
+  // Convert Currency objects to string representations for the component
+  const currencyOptions = CURRENCIES.map(currency => `${currency.code} - ${currency.name}`);
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
       <SearchableSelectField
@@ -31,7 +34,7 @@ const AccountDetailsSection: React.FC<AccountDetailsSectionProps> = ({
         label="Currency"
         value={account.currency}
         onChange={handleSelectChange("currency")}
-        options={CURRENCIES}
+        options={currencyOptions}
         placeholder="Select currency"
         required={false}
       />

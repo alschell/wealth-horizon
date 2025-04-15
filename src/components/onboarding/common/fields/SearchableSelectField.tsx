@@ -14,6 +14,7 @@ interface SearchableSelectFieldProps {
   error?: string;
   allowCustomValue?: boolean;
   className?: string;
+  disabled?: boolean; // Added disabled prop
 }
 
 const SearchableSelectField: React.FC<SearchableSelectFieldProps> = ({
@@ -27,6 +28,7 @@ const SearchableSelectField: React.FC<SearchableSelectFieldProps> = ({
   error,
   allowCustomValue = false,
   className = "",
+  disabled = false, // Added with default value
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [isOpen, setIsOpen] = useState(false);
@@ -97,19 +99,20 @@ const SearchableSelectField: React.FC<SearchableSelectFieldProps> = ({
         <input
           type="text"
           id={id}
-          className={`pl-10 pr-4 py-2 w-full border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${error ? "border-red-500 focus:ring-red-500 focus:border-red-500" : "border-gray-300"}`}
+          className={`pl-10 pr-4 py-2 w-full border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${error ? "border-red-500 focus:ring-red-500 focus:border-red-500" : "border-gray-300"} ${disabled ? "bg-gray-100 cursor-not-allowed" : ""}`}
           placeholder={placeholder}
           value={isOpen ? searchTerm : getDisplayValue()}
           onChange={handleInputChange}
-          onFocus={() => setIsOpen(true)}
+          onFocus={() => !disabled && setIsOpen(true)}
           onBlur={() => {
             // Delay closing to allow for option selection
             setTimeout(() => setIsOpen(false), 200);
           }}
+          disabled={disabled}
         />
       </div>
       
-      {isOpen && (
+      {isOpen && !disabled && (
         <div className="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto">
           {filteredOptions.length > 0 ? (
             <ul className="py-1">

@@ -5,4 +5,3 @@
 
 echo "Starting development server..."
 ./node_modules/.bin/vite
-

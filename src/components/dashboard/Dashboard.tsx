@@ -1,59 +1,78 @@
 
-import React, { memo } from "react";
-import DashboardLayout from "@/components/dashboard/DashboardLayout";
-import DashboardContent from "@/components/dashboard/DashboardContent";
-import { DashboardCustomizeDialog } from "@/components/dashboard/customize";
-import { useDashboardCustomize } from "@/components/dashboard/customize/useDashboardCustomize";
-import { tryCatch } from "@/utils/errorHandling/errorHandlingCore";
+import React, { useEffect, useState } from "react";
+import { Card } from "@/components/ui/card";
+import Grid from "./Grid";
+import MarketSnapshot from "./market-snapshot/MarketSnapshot";
+import NotificationsFeed from "./NotificationsFeed";
+import RecentActivity from "./RecentActivity";
+import PersonalizedSettings from "./PersonalizedSettings";
+import DashboardHeader from "./DashboardHeader";
 
 /**
- * Main Dashboard component with customization capabilities
+ * Main dashboard component displaying user's financial overview
  */
 const Dashboard = () => {
-  const {
-    isCustomizing,
-    setIsCustomizing,
-    dashboardSections,
-    sectionsOrder,
-    orderedVisibleSections,
-    toggleSection,
-    handleCustomizeSave,
-    handleDragEnd
-  } = useDashboardCustomize();
+  const [scrolled, setScrolled] = useState(false);
 
-  // Event handlers with error catching
-  const handleCustomizeClick = () => {
-    tryCatch(() => {
-      setIsCustomizing(true);
-    }, { 
-      componentName: 'Dashboard',
-      fallbackMessage: 'Failed to open customization dialog' 
-    });
-  };
+  // Handle scroll effect for the navigation
+  useEffect(() => {
+    const handleScroll = () => {
+      const offset = window.scrollY;
+      if (offset > 10) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+
+    // Add scroll event listener
+    window.addEventListener('scroll', handleScroll);
+
+    // Initialize scroll state
+    handleScroll();
+
+    // Apply shadow class based on scroll state
+    const header = document.getElementById('dashboard-header');
+    if (header) {
+      if (scrolled) {
+        header.classList.add('shadow-md');
+      } else {
+        header.classList.remove('shadow-md');
+      }
+    }
+
+    // Remove event listener on cleanup
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [scrolled]);
 
   return (
-    <DashboardLayout>
-      <div className="space-y-6">
-        {/* Dashboard content */}
-        <DashboardContent 
-          orderedVisibleSections={orderedVisibleSections} 
-          onCustomizeClick={handleCustomizeClick}
-        />
-
-        {/* Dashboard Customization Dialog */}
-        <DashboardCustomizeDialog
-          isCustomizing={isCustomizing}
-          setIsCustomizing={setIsCustomizing}
-          dashboardSections={dashboardSections}
-          toggleSection={toggleSection}
-          sectionsOrder={sectionsOrder}
-          handleDragEnd={handleDragEnd}
-          handleCustomizeSave={handleCustomizeSave}
-        />
+    <div className="max-w-7xl mx-auto p-6 space-y-6">
+      <div className="flex items-center justify-between mb-6">
+        <DashboardHeader />
+        <PersonalizedSettings />
       </div>
-    </DashboardLayout>
+      
+      <Grid>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <Card className="shadow-sm h-60">
+            {/* Net Worth Chart */}
+          </Card>
+          <Card className="shadow-sm h-60">
+            {/* Performance Chart */}
+          </Card>
+        </div>
+        
+        <MarketSnapshot />
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <NotificationsFeed />
+          <RecentActivity />
+        </div>
+      </Grid>
+    </div>
   );
 };
 
-// Use memo to prevent unnecessary re-renders
-export default memo(Dashboard);
+export default Dashboard;

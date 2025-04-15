@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ChevronUp, ChevronDown } from 'lucide-react';
-import type { MarketItem } from '../../types';
+import type { MarketItem } from '@/types/market';
 
 interface MarketItemCardProps {
   item: MarketItem;

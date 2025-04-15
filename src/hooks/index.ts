@@ -19,6 +19,6 @@ export {
   parseError,
   logError,
   handleError,
-  withAsyncErrorHandling,
+  withErrorHandling,  // Changed from withAsyncErrorHandling
   tryCatch
 } from '@/utils/errorHandling';

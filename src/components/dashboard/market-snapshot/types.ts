@@ -1,14 +1,13 @@
 
-// Define types for market snapshot components
-export type MarketItem = {
+export type MarketCategory = "Indices" | "Commodities" | "Currencies" | "Cryptocurrencies" | "Bonds";
+
+export interface MarketItem {
   id: string;
-  label: string;
+  name: string;
+  ticker: string;
+  category: MarketCategory;
   value: string;
   change: string;
-  category: string;
-};
-
-export type MarketItemVisibility = {
-  visibleItems: string[];
-  itemOrder: string[];
-};
+  changePercent: string;
+  isUp: boolean;
+}

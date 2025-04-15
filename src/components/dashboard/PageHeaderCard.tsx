@@ -24,7 +24,7 @@ const PageHeaderCard: React.FC<PageHeaderCardProps> = ({
       <div className="flex items-start gap-4">
         <div className={`p-3 rounded-lg ${iconBgColor}`}>
           {typeof icon === 'string' ? (
-            <Icon name={icon} className={`h-6 w-6 ${iconColor}`} />
+            <Icon iconName={icon} className={`h-6 w-6 ${iconColor}`} />
           ) : (
             (() => {
               const IconComponent = icon;

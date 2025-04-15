@@ -17,6 +17,7 @@ export interface FormFieldProps {
   className?: string;
   inputClassName?: string;
   labelClassName?: string;
+  autoComplete?: string; // Add autoComplete property
 }
 
 const FormFields: React.FC<FormFieldProps> = ({
@@ -32,6 +33,7 @@ const FormFields: React.FC<FormFieldProps> = ({
   className,
   inputClassName,
   labelClassName,
+  autoComplete,
 }) => {
   return (
     <div className={cn('space-y-2', className)}>
@@ -56,6 +58,7 @@ const FormFields: React.FC<FormFieldProps> = ({
         onChange={onChange}
         placeholder={placeholder}
         required={required}
+        autoComplete={autoComplete}
         className={cn(
           error ? "border-red-500 focus-visible:ring-red-500" : "",
           inputClassName

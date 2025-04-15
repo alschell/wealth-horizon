@@ -1,8 +1,8 @@
 
 import React, { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
-import Grid from "@/components/common/Grid";
-import MarketSnapshot from "./market-snapshot/MarketSnapshot";
+import { Grid } from "@/components/common/Grid";
+import MarketSnapshot from "@/components/dashboard/market-snapshot/MarketSnapshot";
 import NotificationsFeed from "./NotificationsFeed";
 import RecentActivity from "./RecentActivity";
 import PersonalizedSettings from "./PersonalizedSettings";

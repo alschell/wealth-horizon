@@ -49,10 +49,10 @@ const MarketSnapshot = () => {
     
     // Add stocks
     const stocksData = [
-      { symbol: "AAPL", data: appleData, name: "Apple" },
-      { symbol: "MSFT", data: microsoftData, name: "Microsoft" },
-      { symbol: "GOOGL", data: googleData, name: "Google" },
-      { symbol: "AMZN", data: amazonData, name: "Amazon" }
+      { symbol: "AAPL", data: appleData?.raw, name: "Apple" },
+      { symbol: "MSFT", data: microsoftData?.raw, name: "Microsoft" },
+      { symbol: "GOOGL", data: googleData?.raw, name: "Google" },
+      { symbol: "AMZN", data: amazonData?.raw, name: "Amazon" }
     ];
     
     stocksData.forEach(stock => {

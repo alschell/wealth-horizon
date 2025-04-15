@@ -25,10 +25,6 @@ if ! npm list vite > /dev/null 2>&1; then
   fi
 fi
 
-# Add vite and @vitejs/plugin-react-swc as direct dependencies
-echo "Ensuring Vite and React plugin are installed..."
-npm install vite@latest @vitejs/plugin-react-swc@latest --save-dev
-
 # Try multiple methods to start the development server
 echo "Starting development server..."
 

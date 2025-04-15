@@ -1,17 +1,23 @@
 
-import teamLogger from "@/components/team/utils/teamLogger";
-
 /**
- * Dedicated logger for market data operations
- * Provides consistent formatting and categorization for market data logs
+ * Simple logger for market data operations
  */
 export const marketLogger = {
-  debug: (message: string, data?: any) => 
-    teamLogger.debug('data', `[Market] ${message}`, data),
-  info: (message: string, data?: any) => 
-    teamLogger.info('data', `[Market] ${message}`, data),
-  warn: (message: string, data?: any) => 
-    teamLogger.warn('data', `[Market] ${message}`, data),
-  error: (message: string, data?: any) => 
-    teamLogger.error('data', `[Market] ${message}`, data)
+  info: (message: string, ...args: any[]) => {
+    console.info(`[Market Data] ${message}`, ...args);
+  },
+  
+  error: (message: string, error?: any) => {
+    console.error(`[Market Data Error] ${message}`, error);
+  },
+  
+  warn: (message: string, ...args: any[]) => {
+    console.warn(`[Market Data Warning] ${message}`, ...args);
+  },
+  
+  debug: (message: string, ...args: any[]) => {
+    if (process.env.NODE_ENV !== 'production') {
+      console.debug(`[Market Data Debug] ${message}`, ...args);
+    }
+  }
 };

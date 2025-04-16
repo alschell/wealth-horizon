@@ -33,7 +33,7 @@ const DocumentUploadField: React.FC<DocumentUploadFieldProps> = ({
   maxSize = 10,
   label = "Upload Legal Document"
 }) => {
-  const initialFiles = file ? [file] : [];
+  const files = file ? [file] : [];
   
   const handleCustomFileDelete = () => {
     if (onFileDelete) {
@@ -73,9 +73,9 @@ const DocumentUploadField: React.FC<DocumentUploadFieldProps> = ({
         <FileUploader
           accept={accept}
           multiple={false}
-          maxSize={maxSize * 1024 * 1024}
+          maxSizeMB={maxSize}
           onFilesSelected={onFileSelected}
-          initialFiles={initialFiles}
+          files={files}
           label={label}
           disabled={disabled}
           customFileDeleteButton={customDeleteButton}

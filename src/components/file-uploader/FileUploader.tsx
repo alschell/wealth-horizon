@@ -1,39 +1,58 @@
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Upload, X } from 'lucide-react';
 import { FilePreview } from './FilePreview';
+import DropZone from './DropZone';
+import FileList from './FileList';
 import { validateFileSize, validateFileType } from '@/utils/validation/fileValidation';
+import { useFileUploader } from './useFileUploader';
 
 interface FileUploaderProps {
   onFilesSelected: (files: File[]) => void;
-  maxFiles?: number;
   maxSizeMB?: number;
   accept?: string;
   multiple?: boolean;
   className?: string;
   files?: File[];
+  initialFiles?: File[];
+  label?: string;
+  disabled?: boolean;
+  customFileDeleteButton?: (file: File) => React.ReactNode;
 }
 
 const FileUploader: React.FC<FileUploaderProps> = ({
   onFilesSelected,
-  maxFiles = 5,
   maxSizeMB = 5,
   accept = "image/*,application/pdf",
   multiple = true,
   className = "",
-  files = []
+  files,
+  initialFiles = [],
+  label = "Upload Files",
+  disabled = false,
+  customFileDeleteButton
 }) => {
-  const [dragActive, setDragActive] = useState(false);
-  const [selectedFiles, setSelectedFiles] = useState<File[]>(files);
-  const [errors, setErrors] = useState<string[]>([]);
+  const {
+    files: selectedFiles,
+    errors,
+    addFiles,
+    removeFile,
+    clearFiles
+  } = useFileUploader({
+    maxFiles: multiple ? 5 : 1,
+    maxSizeMB,
+    acceptedTypes: accept.split(',').map(type => type.trim()),
+    initialFiles: initialFiles.length > 0 ? initialFiles : (files || []),
+    onFilesChange: onFilesSelected
+  });
 
-  // Parse accepted file types
-  const acceptedTypes = accept.split(',').map(type => type.trim());
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [dragActive, setDragActive] = useState(false);
 
   // Handle file selection
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      handleFiles(Array.from(e.target.files));
+      addFiles(Array.from(e.target.files));
     }
   };
 
@@ -56,87 +75,47 @@ const FileUploader: React.FC<FileUploaderProps> = ({
     setDragActive(false);
     
     if (e.dataTransfer.files) {
-      handleFiles(Array.from(e.dataTransfer.files));
+      addFiles(Array.from(e.dataTransfer.files));
     }
   };
 
-  // Process selected files
-  const handleFiles = (newFiles: File[]) => {
-    const newErrors: string[] = [];
-    const validFiles: File[] = [];
-    
-    // Check if adding new files would exceed maxFiles limit
-    if (selectedFiles.length + newFiles.length > maxFiles) {
-      newErrors.push(`Maximum ${maxFiles} files allowed`);
-      // Only process files up to the limit
-      newFiles = newFiles.slice(0, maxFiles - selectedFiles.length);
+  const handleClick = () => {
+    if (!disabled && fileInputRef.current) {
+      fileInputRef.current.click();
     }
-    
-    // Validate each file
-    for (const file of newFiles) {
-      // Validate file size
-      const sizeValidation = validateFileSize(file, maxSizeMB);
-      if (!sizeValidation.valid) {
-        newErrors.push(sizeValidation.message || '');
-        continue;
-      }
-      
-      // Validate file type
-      const typeValidation = validateFileType(file, acceptedTypes);
-      if (!typeValidation.valid) {
-        newErrors.push(typeValidation.message || '');
-        continue;
-      }
-      
-      validFiles.push(file);
-    }
-    
-    // Update state with valid files
-    if (validFiles.length > 0) {
-      const updatedFiles = [...selectedFiles, ...validFiles];
-      setSelectedFiles(updatedFiles);
-      onFilesSelected(updatedFiles);
-    }
-    
-    // Update error state
-    setErrors(newErrors);
   };
 
-  // Remove a file
-  const removeFile = (index: number) => {
-    const updatedFiles = [...selectedFiles];
-    updatedFiles.splice(index, 1);
-    setSelectedFiles(updatedFiles);
-    onFilesSelected(updatedFiles);
-  };
-
+  // Use the DropZone component
   return (
     <div className={`w-full ${className}`}>
       {/* File upload area */}
       <div
-        className={`border-2 border-dashed rounded-lg p-4 text-center cursor-pointer transition-colors ${
-          dragActive ? 'border-blue-500 bg-blue-50' : 'border-gray-300 hover:border-gray-400'
-        }`}
-        onDragEnter={handleDrag}
-        onDragOver={handleDrag}
-        onDragLeave={handleDrag}
-        onDrop={handleDrop}
-        onClick={() => document.getElementById('file-upload')?.click()}
+        onDragEnter={!disabled ? handleDrag : undefined}
+        onDragOver={!disabled ? handleDrag : undefined}
+        onDragLeave={!disabled ? handleDrag : undefined}
+        onDrop={!disabled ? handleDrop : undefined}
       >
-        <Upload className="mx-auto h-8 w-8 text-gray-400" />
-        <p className="mt-2 text-sm text-gray-600">
-          Drag and drop files here, or <span className="text-blue-600 font-medium">browse</span>
-        </p>
-        <p className="mt-1 text-xs text-gray-500">
-          {multiple ? `Up to ${maxFiles} files` : 'One file'} (max {maxSizeMB}MB each)
-        </p>
+        <DropZone
+          label={label}
+          accept={accept}
+          maxSize={maxSizeMB}
+          isDragging={dragActive}
+          onClick={handleClick}
+          onDragOver={handleDrag}
+          onDragLeave={() => setDragActive(false)}
+          onDrop={handleDrop}
+          disabled={disabled}
+        />
+        
         <input
+          ref={fileInputRef}
           id="file-upload"
           type="file"
           multiple={multiple}
           accept={accept}
           onChange={handleFileChange}
           className="hidden"
+          disabled={disabled}
         />
       </div>
 
@@ -155,13 +134,11 @@ const FileUploader: React.FC<FileUploaderProps> = ({
       {/* Selected files preview */}
       {selectedFiles.length > 0 && (
         <div className="mt-4 space-y-2">
-          {selectedFiles.map((file, index) => (
-            <FilePreview
-              key={`${file.name}-${index}`}
-              file={file}
-              onRemove={() => removeFile(index)}
-            />
-          ))}
+          <FileList 
+            files={selectedFiles} 
+            onDeleteClick={removeFile}
+            customFileDeleteButton={customFileDeleteButton}
+          />
         </div>
       )}
     </div>

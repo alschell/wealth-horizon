@@ -1,60 +1,63 @@
 
 import React from 'react';
-import { Button } from '@/components/ui/button';
 import { AlertTriangle, RefreshCw } from 'lucide-react';
-import { ErrorFallbackProps } from './ErrorFallbackProps';
 
-/**
- * A standardized error fallback component for use with error boundaries
- * Displays a user-friendly error message with optional reset functionality
- */
+interface ErrorFallbackProps {
+  error?: Error;
+  resetErrorBoundary: () => void;
+  message?: string;
+  showReset?: boolean;
+  showDetails?: boolean;
+  errorInfo?: React.ErrorInfo;
+}
+
 const ErrorFallback: React.FC<ErrorFallbackProps> = ({
   error,
   resetErrorBoundary,
   message = "Something went wrong",
   showReset = true,
-  showDetails = process.env.NODE_ENV !== 'production',
+  showDetails = true,
   errorInfo
 }) => {
   return (
-    <div className="p-6 mx-auto my-8 bg-white border border-red-200 rounded-lg shadow-sm max-w-2xl">
-      <div className="flex flex-col items-center text-center space-y-4">
-        <div className="flex items-center justify-center w-12 h-12 text-red-500 bg-red-100 rounded-full">
-          <AlertTriangle className="w-6 h-6" />
-        </div>
-        
-        <h2 className="text-xl font-semibold text-gray-800">{message}</h2>
-        
-        {error && showDetails && (
-          <div className="w-full p-4 mt-4 overflow-auto text-left text-sm bg-gray-50 border border-gray-200 rounded-md">
-            <p className="font-medium text-red-600">{error.message}</p>
-            {error.stack && (
-              <pre className="mt-2 text-xs text-gray-600 whitespace-pre-wrap">
-                {error.stack.split('\n').slice(1, 4).join('\n')}
-              </pre>
-            )}
-            {errorInfo && (
-              <div className="mt-2 pt-2 border-t border-gray-200">
-                <p className="font-medium text-gray-700">Component Stack:</p>
-                <pre className="text-xs text-gray-600 whitespace-pre-wrap">
-                  {errorInfo.componentStack.split('\n').slice(0, 3).join('\n')}
-                </pre>
-              </div>
-            )}
-          </div>
-        )}
-        
-        {showReset && resetErrorBoundary && (
-          <Button 
-            variant="outline"
-            className="mt-4 flex items-center space-x-2"
-            onClick={resetErrorBoundary}
-          >
-            <RefreshCw className="w-4 h-4 mr-2" />
-            Try Again
-          </Button>
-        )}
+    <div role="alert" className="p-6 border border-red-300 rounded-lg bg-red-50 text-red-800 flex flex-col">
+      <div className="flex items-center mb-4">
+        <AlertTriangle className="w-6 h-6 mr-2" />
+        <h3 className="text-lg font-semibold">{message}</h3>
       </div>
+      
+      {showDetails && error && (
+        <div className="mb-4">
+          <p className="font-mono text-sm bg-red-100 p-2 rounded">{error.message}</p>
+          {error.stack && (
+            <details className="mt-2">
+              <summary className="cursor-pointer text-sm">View stack trace</summary>
+              <pre className="p-2 mt-2 text-xs overflow-auto whitespace-pre-wrap bg-red-100 rounded">
+                {error.stack}
+              </pre>
+            </details>
+          )}
+        </div>
+      )}
+      
+      {errorInfo && (
+        <div className="mb-4">
+          <p className="text-sm font-semibold mb-1">Component Stack:</p>
+          <pre className="p-2 text-xs overflow-auto whitespace-pre-wrap bg-red-100 rounded">
+            {errorInfo.componentStack}
+          </pre>
+        </div>
+      )}
+      
+      {showReset && (
+        <button
+          onClick={resetErrorBoundary}
+          className="mt-2 self-start flex items-center px-3 py-2 bg-red-200 hover:bg-red-300 transition-colors rounded text-sm"
+        >
+          <RefreshCw className="w-4 h-4 mr-2" />
+          Try again
+        </button>
+      )}
     </div>
   );
 };

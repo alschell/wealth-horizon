@@ -1,3 +1,5 @@
 
-export { default } from './ErrorFallback';
-export * from './ErrorFallbackProps';
+import ErrorFallback from './ErrorFallback';
+
+export default ErrorFallback;
+export { ErrorFallback };

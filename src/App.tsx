@@ -5,6 +5,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Routes, Route } from "react-router-dom";
+import { BuildStatusCheck } from "@/components/BuildStatusCheck";
 import { OnboardingProvider } from "./context/OnboardingContext";
 import { TranslationProvider } from "./context/TranslationContext";
 import Navigation from "./components/Navigation";
@@ -93,6 +94,7 @@ function App() {
       <HelmetProvider>
         <TranslationProvider>
           <OnboardingProvider>
+            <BuildStatusCheck />
             <Navigation />
             <Routes>
               <Route path="/" element={<Index />} />

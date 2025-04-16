@@ -49,13 +49,14 @@ describe('QuickAccessItem', () => {
     const linkElement = screen.getByText('Test Item').closest('a');
     
     // Create a mock location object for testing
-    const originalLocation = window.location;
     const mockLocation = { href: '' };
     
     // Replace window.location with our mock
+    const originalLocation = window.location;
+    // Fix type issue by using type assertion
     Object.defineProperty(window, 'location', {
       writable: true,
-      value: mockLocation
+      value: mockLocation as unknown as Location
     });
     
     // Test Enter key

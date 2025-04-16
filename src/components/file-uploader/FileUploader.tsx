@@ -1,10 +1,11 @@
+
 import React, { useCallback, useState } from 'react';
 import { Upload, AlertCircle, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useDropzone } from 'react-dropzone';
 import { cn } from '@/lib/utils';
 import { FilePreview } from './FilePreview';
-import { validateFileSize, validateFileType } from '@/utils/validation';
+import { validateFileSize, validateFileType } from '@/utils/validation/fileValidation';
 
 export interface FileUploaderProps {
   onFilesSelected: (files: File[]) => void;

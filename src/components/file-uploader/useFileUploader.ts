@@ -1,6 +1,7 @@
+
 import { useState, useCallback } from "react";
 import { toast } from "sonner";
-import { file } from "@/utils/validation";
+import { validateFileSize, validateFileType } from "@/utils/validation/fileValidation";
 
 interface UseFileUploaderProps {
   accept: string;
@@ -30,8 +31,8 @@ export const useFileUploader = ({
   const validateFile = useCallback(
     (file: File): string | null => {
       // Check file size
-      const sizeResult = file.size.validate ? file.size.validate(file, maxSize) : null;
-      if (sizeResult && !sizeResult.valid) return sizeResult.message || "File size exceeds limit";
+      const sizeResult = validateFileSize(file, maxSize / (1024 * 1024));
+      if (!sizeResult.valid) return sizeResult.message || "File size exceeds limit";
 
       // Convert accept string to an array of file extensions
       const acceptedTypes = accept
@@ -44,7 +45,7 @@ export const useFileUploader = ({
         .filter(Boolean);
 
       // Check file type
-      const typeResult = file.type.validate ? file.type.validate(file, acceptedTypes) : null;
+      const typeResult = validateFileType(file, acceptedTypes);
       return typeResult && !typeResult.valid ? typeResult.message : null;
     },
     [accept, maxSize]

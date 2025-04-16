@@ -21,6 +21,7 @@ export interface ErrorHandlerOptions {
   showToast?: boolean;
   rethrow?: boolean;
   context?: Record<string, any>;
+  onError?: (error: unknown) => void;
 }
 
 /**
@@ -99,6 +100,24 @@ export function parseError(error: unknown): ErrorResponse {
 }
 
 /**
+ * Log an error with contextual information
+ */
+export function logError(
+  error: unknown, 
+  context: Record<string, any> = {}
+): void {
+  const parsedError = parseError(error);
+  
+  console.error(
+    'Error:', 
+    parsedError.message,
+    '\nCode:', parsedError.code || 'N/A',
+    '\nContext:', { ...parsedError.context, ...context },
+    '\nDetails:', parsedError.details || 'N/A'
+  );
+}
+
+/**
  * Create an error with additional context
  */
 export function createContextualError(
@@ -121,10 +140,11 @@ export function handleError(
   const {
     fallbackMessage = 'An unexpected error occurred',
     componentName,
-    logError = true,
+    logError: shouldLogError = true,
     showToast = false,
     rethrow = false,
-    context = {}
+    context = {},
+    onError
   } = options;
   
   // Parse the error into a standard format
@@ -138,7 +158,7 @@ export function handleError(
   };
   
   // Log the error if requested
-  if (logError) {
+  if (shouldLogError) {
     if (componentName) {
       console.error(`Error in ${componentName}:`, parsedError);
     } else {
@@ -151,6 +171,11 @@ export function handleError(
     // This would typically call a toast notification function
     // You would implement this based on your UI library
     console.log('TOAST:', parsedError.message || fallbackMessage);
+  }
+  
+  // Call onError callback if provided
+  if (onError) {
+    onError(error);
   }
   
   // Rethrow if requested

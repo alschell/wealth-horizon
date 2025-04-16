@@ -1,10 +1,10 @@
-
 import React, { useCallback, useState } from 'react';
 import { Upload, AlertCircle, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useDropzone } from 'react-dropzone';
 import { cn } from '@/lib/utils';
 import { FilePreview } from './FilePreview';
+import { validateFileSize, validateFileType } from '@/utils/validation';
 
 export interface FileUploaderProps {
   onFilesSelected: (files: File[]) => void;
@@ -39,6 +39,25 @@ const FileUploader: React.FC<FileUploaderProps> = ({
 }) => {
   const [files, setFiles] = useState<File[]>(initialFiles);
   const [fileError, setFileError] = useState<string | null>(externalError || null);
+
+  const validateFile = useCallback((file: File): string | null => {
+    // Check file size
+    const sizeResult = validateFileSize(file, maxSize / (1024 * 1024));
+    if (!sizeResult.valid) {
+      return sizeResult.message || `File size exceeds the maximum allowed size of ${Math.round(maxSize / (1024 * 1024))}MB`;
+    }
+    
+    // Convert accept string to an array of file extensions
+    const acceptedTypes = accept.split(",").map(type => type.trim());
+    
+    // Check file type
+    const typeResult = validateFileType(file, acceptedTypes);
+    if (!typeResult.valid) {
+      return typeResult.message || `File type not allowed. Accepted formats: ${accept}`;
+    }
+    
+    return null;
+  }, [accept, maxSize]);
 
   const onDrop = useCallback((acceptedFiles: File[], rejectedFiles: any[]) => {
     // Handle rejected files

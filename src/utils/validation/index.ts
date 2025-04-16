@@ -101,6 +101,9 @@ export const {
   validatePassword
 } = stringVal;
 
+// Also export fileValidation directly to ensure the functions are available at top level
+export const { validateFileSize, validateFileType } = fileVal;
+
 /**
  * Combines multiple validation rules for a single field
  */

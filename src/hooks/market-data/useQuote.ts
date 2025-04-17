@@ -1,9 +1,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { getQuote, formatQuote } from "@/utils/market-data/api";
-import { DEFAULT_QUERY_CONFIG } from "./utils";
-import type { Quote } from "@/utils/market-data/types";
-import type { FormattedQuote } from "./types";
+import { marketLogger, DEFAULT_QUERY_CONFIG } from "./utils";
 
 /**
  * Hook for fetching stock quotes
@@ -12,13 +10,25 @@ import type { FormattedQuote } from "./types";
  * const { data, isLoading, error, refetch } = useQuote("AAPL");
  */
 export function useQuote(symbol: string) {
-  return useQuery<Quote, Error, { raw: Quote; formatted: FormattedQuote }>({
+  return useQuery({
     queryKey: ['quote', symbol],
-    queryFn: () => getQuote(symbol),
+    queryFn: async () => {
+      marketLogger.info(`Fetching quote for ${symbol}`);
+      const startTime = performance.now();
+      try {
+        const data = await getQuote(symbol);
+        const endTime = performance.now();
+        marketLogger.debug(`Quote for ${symbol} fetched in ${(endTime - startTime).toFixed(2)}ms`, data);
+        return data;
+      } catch (error) {
+        marketLogger.error(`Failed to fetch quote for ${symbol}`, error);
+        throw error;
+      }
+    },
     enabled: Boolean(symbol),
     ...DEFAULT_QUERY_CONFIG,
-    staleTime: 5 * 60 * 1000, // 5 minutes
     select: (data) => {
+      marketLogger.debug(`Formatting quote data for ${symbol}`);
       return {
         raw: data,
         formatted: formatQuote(data)

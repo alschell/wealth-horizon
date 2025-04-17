@@ -1,29 +1,46 @@
 
+import type { 
+  Quote, 
+  NewsItem, 
+  SymbolSearchResult, 
+  CandleData, 
+  IndexData,
+  MarketDataType
+} from "@/utils/market-data/types";
+
 /**
- * Types for market data hooks
+ * Options for market data refresh operations
  */
-
-import type { Quote, NewsItem, IndexData, CandleData, SymbolSearchResult } from "@/utils/market-data/types";
-
-export type RefreshableMarketDataType = 'indices' | 'news' | 'quotes' | 'candles' | 'search';
-
 export interface MarketDataRefreshOptions {
+  /** Symbol to refresh data for (if applicable) */
   symbol?: string;
-  clearCache?: boolean;
+  /** Whether to show a toast notification on refresh completion */
+  showToast?: boolean;
 }
 
-export interface UseMarketDataRefreshReturn {
-  refreshMarketData: (dataType: RefreshableMarketDataType, additionalParams?: string[]) => Promise<void>;
-  refreshAll: (clearCache?: boolean) => Promise<void>;
+/**
+ * Supported market data types for refresh operations
+ */
+export type RefreshableMarketDataType = 'quote' | 'indices' | 'news' | 'candles';
+
+/**
+ * Configuration for a market data refresh operation
+ */
+export interface MarketDataRefreshConfig {
+  /** Type of market data to refresh */
+  type: MarketDataType;
+  /** Symbol to refresh data for (if applicable) */
+  symbol?: string;
+  /** Additional parameters for the refresh operation */
+  params?: Record<string, any>;
 }
 
-export interface FormattedQuote {
-  price: string;
-  change: string;
-  percentChange: string;
-  high: string;
-  low: string;
-  open: string;
-  previousClose: string;
-  timestamp: string;
+/**
+ * Result of a market data refresh operation
+ */
+export interface MarketDataRefreshResult {
+  /** Whether the refresh was successful */
+  success: boolean;
+  /** Error message if the refresh failed */
+  error?: string;
 }

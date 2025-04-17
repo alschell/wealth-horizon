@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { IndexData } from "../types";
@@ -21,7 +22,7 @@ export const useIndicesTracker = () => {
   const symbolToData = new Map<string, { value: number, change: number, percentChange: number, volume?: number }>();
   
   // Prepare API data for mapping to our indices
-  if (apiIndices && Array.isArray(apiIndices) && apiIndices.length > 0) {
+  if (apiIndices?.length) {
     apiIndices.forEach(indexData => {
       if (indexData.data && indexData.symbol) {
         symbolToData.set(indexData.symbol, {
@@ -160,7 +161,7 @@ export const useIndicesTracker = () => {
       console.log("Current indices state:", {
         totalIndices: indices.length,
         filteredIndices: filteredIndices.length,
-        apiIndicesFetched: apiIndices && Array.isArray(apiIndices) ? apiIndices.length : 0,
+        apiIndicesFetched: apiIndices?.length || 0,
         subscribedIndices: subscribedIndices.length,
         currentFilter: filter,
         searchTerm,

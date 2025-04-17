@@ -1,8 +1,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { searchSymbols } from "@/utils/market-data/api";
-import { DEFAULT_QUERY_CONFIG } from "./utils";
-import type { SymbolSearchResult } from "@/utils/market-data/types";
+import { marketLogger, DEFAULT_QUERY_CONFIG } from "./utils";
 
 /**
  * Hook for searching symbols
@@ -13,23 +12,41 @@ import type { SymbolSearchResult } from "@/utils/market-data/types";
  * search("Apple");
  */
 export function useSymbolSearch() {
-  const { refetch, data, isLoading, error } = useQuery<SymbolSearchResult, Error>({
+  const {
+    data: results,
+    isLoading,
+    error,
+    refetch
+  } = useQuery({
     queryKey: ['symbol-search', ''],
-    queryFn: () => searchSymbols(''),
+    queryFn: async () => {
+      marketLogger.info(`Performing symbol search`);
+      const startTime = performance.now();
+      try {
+        const data = await searchSymbols('');
+        const endTime = performance.now();
+        marketLogger.debug(`Symbol search completed in ${(endTime - startTime).toFixed(2)}ms`, 
+          { count: data.result?.length || 0 });
+        return data;
+      } catch (error) {
+        marketLogger.error(`Symbol search failed`, error);
+        throw error;
+      }
+    },
     ...DEFAULT_QUERY_CONFIG,
     enabled: false // Don't run the query automatically
   });
-
-  // Function to trigger search
+  
   const search = async (query: string) => {
     if (!query || query.length < 2) return;
+    marketLogger.info(`Searching for symbol: ${query}`);
     return refetch();
   };
 
-  return {
-    results: data,
-    isLoading,
-    error,
-    search
+  return { 
+    results, 
+    isLoading, 
+    error, 
+    search 
   };
 }

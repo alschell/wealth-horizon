@@ -1,68 +1,89 @@
 
 import { MarketItem } from "./types";
 
-// Helper function to get country flag code based on market item
+// Get country flag code by category
 export const getCountryFlagCode = (category: string, label: string): string => {
   if (category === "Indices") {
-    // Map common indices to their country codes
-    const indexToCountry: Record<string, string> = {
+    const mapping: Record<string, string> = {
       "S&P 500": "us",
+      "Nasdaq": "us",
       "Dow Jones": "us",
-      "NASDAQ": "us",
-      "FTSE 100": "gb",
       "Nikkei 225": "jp",
       "DAX": "de",
-      "CAC 40": "fr",
-      "ASX 200": "au",
-      "Hang Seng": "hk",
-      "SSE Composite": "cn",
+      "FTSE 100": "gb",
+      "Shanghai": "cn",
     };
-    return indexToCountry[label] || "us";
-  } else if (category === "Currencies") {
-    // For currencies, use the first country code
-    const currencyPair = label.split('/');
-    if (currencyPair.length === 2) {
-      const firstCurrency = currencyPair[0].toLowerCase();
-      const currencyToCountry: Record<string, string> = {
-        "eur": "eu",
-        "usd": "us",
-        "gbp": "gb",
-        "jpy": "jp",
-        "aud": "au",
-        "cad": "ca",
-        "chf": "ch",
-        "cny": "cn",
-      };
-      return currencyToCountry[firstCurrency] || "us";
-    }
+    return mapping[label] || "globe";
   }
-  return "us"; // Default to US flag
+  
+  if (category === "Currencies") {
+    const mapping: Record<string, string> = {
+      "US Dollar": "us",
+      "Euro": "eu",
+      "British Pound": "gb",
+      "Japanese Yen": "jp",
+      "Swiss Franc": "ch",
+    };
+    return mapping[label] || "globe";
+  }
+
+  // Default flag code
+  return "globe";
 };
 
-// Sample market items for the UI
+// Define market items data
 export const marketItems: MarketItem[] = [
   // Indices
-  { id: "sp500", label: "S&P 500", value: "4,587.20", change: "+0.65%", category: "Indices" },
-  { id: "nasdaq", label: "NASDAQ", value: "14,346.30", change: "+1.20%", category: "Indices" },
-  { id: "djia", label: "Dow Jones", value: "36,124.56", change: "+0.32%", category: "Indices" },
-  { id: "ftse", label: "FTSE 100", value: "7,582.10", change: "-0.32%", category: "Indices" },
-  { id: "nikkei", label: "Nikkei 225", value: "37,156.45", change: "+1.45%", category: "Indices" },
-  
-  // Currencies
-  { id: "eur-usd", label: "EUR/USD", value: "1.0875", change: "+0.15%", category: "Currencies" },
-  { id: "gbp-usd", label: "GBP/USD", value: "1.2650", change: "-0.23%", category: "Currencies" },
-  { id: "usd-jpy", label: "USD/JPY", value: "151.25", change: "+0.42%", category: "Currencies" },
-  { id: "usd-cad", label: "USD/CAD", value: "1.3575", change: "+0.08%", category: "Currencies" },
+  { id: "sp500", label: "S&P 500", value: "4,400.50", change: "+0.25%", category: "Indices" },
+  { id: "nasdaq", label: "Nasdaq", value: "13,630.75", change: "-0.10%", category: "Indices" },
+  { id: "dowjones", label: "Dow Jones", value: "34,500.20", change: "+0.15%", category: "Indices" },
+  { id: "japan", label: "Nikkei 225", value: "32,450.80", change: "+1.20%", category: "Indices" },
+  { id: "germany", label: "DAX", value: "15,720.30", change: "+0.22%", category: "Indices" },
+  { id: "uk", label: "FTSE 100", value: "7,650.10", change: "-0.05%", category: "Indices" },
+  { id: "china", label: "Shanghai", value: "3,210.40", change: "-0.30%", category: "Indices" },
   
   // Cryptocurrencies
-  { id: "btc-usd", label: "Bitcoin", value: "$51,234.85", change: "-2.15%", category: "Cryptocurrencies" },
-  { id: "eth-usd", label: "Ethereum", value: "$2,876.42", change: "-1.32%", category: "Cryptocurrencies" },
+  { id: "bitcoin", label: "Bitcoin", value: "29,500.00", change: "+1.50%", category: "Cryptocurrencies" },
+  { id: "ethereum", label: "Ethereum", value: "1,850.40", change: "+0.75%", category: "Cryptocurrencies" },
   
   // Commodities
-  { id: "gold", label: "Gold", value: "$2,356.70", change: "+0.75%", category: "Commodities" },
-  { id: "wti-crude", label: "Crude Oil", value: "$75.46", change: "-0.65%", category: "Commodities" },
-  { id: "silver", label: "Silver", value: "$28.12", change: "+1.15%", category: "Commodities" },
+  { id: "gold", label: "Gold", value: "$1,850.20", change: "+0.35%", category: "Commodities" },
+  { id: "oil", label: "Crude Oil", value: "$79.15", change: "-0.60%", category: "Commodities" },
+  
+  // Currencies
+  { id: "dollar", label: "US Dollar", value: "1.0870", change: "+0.12%", category: "Currencies" },
 ];
 
-// Categories for market items
-export const categories = ["Indices", "Currencies", "Cryptocurrencies", "Commodities"];
+// Get unique categories
+export const categories = [...new Set(marketItems.map(item => item.category))];
+
+// Get sorted items
+export const getAlphabeticallySortedItems = () => {
+  return [...marketItems].sort((a, b) => a.label.localeCompare(b.label));
+};
+
+// Load visible items from localStorage
+export const loadVisibleItems = (): string[] => {
+  try {
+    const saved = localStorage.getItem("marketSnapshotVisibleItems");
+    return saved ? JSON.parse(saved) : getAlphabeticallySortedItems().map(item => item.id);
+  } catch (e) {
+    return getAlphabeticallySortedItems().map(item => item.id);
+  }
+};
+
+// Load item order from localStorage
+export const loadItemOrder = (): string[] => {
+  try {
+    const savedOrder = localStorage.getItem("marketSnapshotItemOrder");
+    return savedOrder ? JSON.parse(savedOrder) : getAlphabeticallySortedItems().map(item => item.id);
+  } catch (e) {
+    return getAlphabeticallySortedItems().map(item => item.id);
+  }
+};
+
+// Save to localStorage
+export const saveToLocalStorage = (visibleItems: string[], itemOrder: string[]) => {
+  localStorage.setItem("marketSnapshotVisibleItems", JSON.stringify(visibleItems));
+  localStorage.setItem("marketSnapshotItemOrder", JSON.stringify(itemOrder));
+};

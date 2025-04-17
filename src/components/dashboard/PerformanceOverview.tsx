@@ -19,7 +19,7 @@ const PerformanceOverview = () => {
   const [timeRange, setTimeRange] = useState<'1m' | '3m' | '6m' | '1y' | 'All'>('1y');
 
   return (
-    <Card className="shadow-sm h-[336px]"> {/* Reduced height by 25% from 448px to 336px */}
+    <Card className="shadow-sm h-[350px]">
       <CardHeader className="pb-2 flex flex-row items-center justify-between">
         <CardTitle className="text-xl">Performance Overview</CardTitle>
         <div className="flex items-center space-x-4">
@@ -41,7 +41,7 @@ const PerformanceOverview = () => {
           </div>
         </div>
       </CardHeader>
-      <CardContent className="pt-0 pb-4 h-[calc(336px-80px)]"> {/* Updated the calculation to use the new height */}
+      <CardContent className="pt-0 pb-4 h-[calc(350px-80px)]"> 
         <Tabs defaultValue="networth" className="h-full">
           <TabsList className="mb-2">
             <TabsTrigger value="networth">Net Worth</TabsTrigger>

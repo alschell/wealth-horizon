@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { MarketItemVisibility, MarketItem } from "@/types/market";
@@ -5,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 import { useIndices, useQuote } from "@/hooks/useMarketData";
 import { CACHE_KEYS, saveToCache, getFromCache } from "@/utils/market-data/cache";
 import { toast } from "sonner";
-import type { IndexData } from "@/utils/market-data/types";
 
 // Default visible items
 const DEFAULT_VISIBLE_ITEMS = [
@@ -43,9 +43,9 @@ export function useMarketSnapshot() {
         let newMarketItems: MarketItem[] = [];
         
         // If we have indices data from the API
-        if (indicesData && Array.isArray(indicesData) && indicesData.length > 0) {
+        if (indicesData && indicesData.length > 0) {
           // Map indices to market items
-          const indicesItems = indicesData.map((index: IndexData) => {
+          const indicesItems = indicesData.map(index => {
             if (!index.data) return null;
             
             // Convert index symbol to market item id

@@ -22,7 +22,7 @@ export const useIndicesTracker = () => {
   const symbolToData = new Map<string, { value: number, change: number, percentChange: number, volume?: number }>();
   
   // Prepare API data for mapping to our indices
-  if (apiIndices?.length) {
+  if (apiIndices && apiIndices.length > 0) {
     apiIndices.forEach(indexData => {
       if (indexData.data && indexData.symbol) {
         symbolToData.set(indexData.symbol, {
@@ -161,7 +161,7 @@ export const useIndicesTracker = () => {
       console.log("Current indices state:", {
         totalIndices: indices.length,
         filteredIndices: filteredIndices.length,
-        apiIndicesFetched: apiIndices?.length || 0,
+        apiIndicesFetched: apiIndices && apiIndices.length > 0 ? apiIndices.length : 0,
         subscribedIndices: subscribedIndices.length,
         currentFilter: filter,
         searchTerm,

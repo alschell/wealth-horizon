@@ -2,6 +2,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { getCandleData } from "@/utils/market-data/api";
 import { marketLogger, DEFAULT_QUERY_CONFIG } from "./utils";
+import type { CandleData } from "@/utils/market-data/types";
 
 /**
  * Hook for fetching candle data for charts
@@ -15,9 +16,9 @@ export function useCandleData(
   from: number = Math.floor(Date.now() / 1000) - 30 * 24 * 60 * 60,
   to: number = Math.floor(Date.now() / 1000)
 ) {
-  return useQuery({
+  return useQuery<CandleData>({
     queryKey: ['candle-data', symbol, resolution, from, to],
-    queryFn: async () => {
+    queryFn: async (): Promise<CandleData> => {
       marketLogger.info(`Fetching candle data for ${symbol} with resolution ${resolution}`);
       const startTime = performance.now();
       try {

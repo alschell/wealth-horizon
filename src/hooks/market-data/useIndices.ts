@@ -2,6 +2,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { getIndices } from "@/utils/market-data/api";
 import { marketLogger, DEFAULT_QUERY_CONFIG } from "./utils";
+import type { IndexData } from "@/utils/market-data/types";
 
 /**
  * Hook for fetching market indices
@@ -10,7 +11,7 @@ import { marketLogger, DEFAULT_QUERY_CONFIG } from "./utils";
  * const { data, isLoading, error, refetch } = useIndices(["^GSPC", "^DJI"]);
  */
 export function useIndices(symbols?: string[]) {
-  return useQuery({
+  return useQuery<IndexData[]>({
     queryKey: ['indices', symbols ? symbols.join(',') : 'all'],
     queryFn: async () => {
       marketLogger.info(`Fetching indices ${symbols ? symbols.join(', ') : 'all'}`);

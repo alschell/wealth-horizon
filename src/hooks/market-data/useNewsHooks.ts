@@ -2,6 +2,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { getMarketNews, getCompanyNews } from "@/utils/market-data/api";
 import { marketLogger, DEFAULT_QUERY_CONFIG } from "./utils";
+import type { NewsItem } from "@/utils/market-data/types";
 
 /**
  * Hook for fetching market news
@@ -10,7 +11,7 @@ import { marketLogger, DEFAULT_QUERY_CONFIG } from "./utils";
  * const { data, isLoading, error, refetch } = useMarketNews("general", 10);
  */
 export function useMarketNews(category: string = "general", count: number = 10) {
-  return useQuery({
+  return useQuery<NewsItem[]>({
     queryKey: ['market-news', category],
     queryFn: async () => {
       marketLogger.info(`Fetching market news for category ${category}`);
@@ -42,7 +43,7 @@ export function useCompanyNews(
   from?: string,
   to?: string
 ) {
-  return useQuery({
+  return useQuery<NewsItem[]>({
     queryKey: ['company-news', symbol, from, to],
     queryFn: async () => {
       marketLogger.info(`Fetching news for ${symbol}`);

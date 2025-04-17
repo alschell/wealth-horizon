@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Globe } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -16,7 +16,7 @@ export function LanguageSelector() {
   const [isOpen, setIsOpen] = useState(false);
   const [isChanging, setIsChanging] = useState(false);
 
-  const handleLanguageChange = async (langCode: string) => {
+  const handleLanguageChange = useCallback(async (langCode: string) => {
     setIsChanging(true);
     try {
       await setLanguage(langCode as any);
@@ -27,7 +27,7 @@ export function LanguageSelector() {
       setIsChanging(false);
       setIsOpen(false);
     }
-  };
+  }, [setLanguage]);
 
   const currentLang = LANGUAGES.find(lang => lang.code === currentLanguage);
 

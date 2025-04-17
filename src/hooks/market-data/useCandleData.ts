@@ -18,9 +18,7 @@ export function useCandleData(
 ) {
   return useQuery<CandleData, Error>({
     queryKey: ['candle-data', symbol, resolution, from, to],
-    queryFn: async () => {
-      return getCandleData(symbol, resolution, from, to);
-    },
+    queryFn: () => getCandleData(symbol, resolution, from, to),
     enabled: Boolean(symbol),
     ...DEFAULT_QUERY_CONFIG,
     staleTime: 5 * 60 * 1000 // 5 minutes

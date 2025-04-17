@@ -11,14 +11,13 @@ import type { Quote } from "@/utils/market-data/types";
  * const { data, isLoading, error, refetch } = useQuote("AAPL");
  */
 export function useQuote(symbol: string) {
-  return useQuery<Quote, Error, { raw: Quote; formatted: ReturnType<typeof formatQuote> }>({
+  return useQuery<Quote, Error>({
     queryKey: ['quote', symbol],
-    queryFn: async () => {
-      return getQuote(symbol);
-    },
+    queryFn: () => getQuote(symbol),
     enabled: Boolean(symbol),
     ...DEFAULT_QUERY_CONFIG,
-    select: (data: Quote) => {
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    select: (data) => {
       return {
         raw: data,
         formatted: formatQuote(data)

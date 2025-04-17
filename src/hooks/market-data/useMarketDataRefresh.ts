@@ -1,136 +1,144 @@
 
-import { useState, useCallback } from "react";
-import { useQueryClient } from "@tanstack/react-query";
-import { refreshMarketData as refreshAPI } from "@/utils/market-data/api";
-import { marketLogger } from "./utils";
-import type { MarketDataType } from "@/utils/market-data/types";
-import type { RefreshableMarketDataType, MarketDataRefreshOptions, UseMarketDataRefreshReturn } from "./types";
+import { useCallback } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { refreshMarketData } from '@/utils/market-data/api';
+import { RefreshableMarketDataType, MarketDataRefreshOptions, UseMarketDataRefreshReturn } from './types';
+import { toast } from "@/hooks/use-toast";
 
 /**
- * Mapping from RefreshableMarketDataType to MarketDataType
- */
-const dataTypeMapping: Record<RefreshableMarketDataType, MarketDataType> = {
-  indices: 'indices',
-  quotes: 'quote',
-  news: 'news',
-  candles: 'candles',
-  search: 'search'
-};
-
-/**
- * Hook to refresh market data
+ * Hook for refreshing market data
  * 
  * @example
  * const { refreshMarketData, refreshAll } = useMarketDataRefresh();
- * 
- * // Refresh indices
+ * // Later in your component
  * refreshMarketData('indices');
- * 
- * // Refresh a specific symbol
- * refreshMarketData('quotes', ['AAPL']);
- * 
- * // Refresh all data
- * refreshAll();
  */
 export function useMarketDataRefresh(): UseMarketDataRefreshReturn {
   const queryClient = useQueryClient();
-  const [isRefreshing, setIsRefreshing] = useState(false);
-  
+
   /**
    * Refresh a specific type of market data
    */
-  const refreshMarketData = useCallback((
-    dataType: RefreshableMarketDataType,
-    additionalParams?: string[],
-    options?: MarketDataRefreshOptions
-  ) => {
-    const { clearCache = false } = options || {};
-    
-    marketLogger.info(`Refreshing ${dataType} data${additionalParams ? ` for ${additionalParams.join(', ')}` : ''}`);
-    
-    // Map the dataType to the appropriate query key pattern
-    let queryKeysToInvalidate: string[] = [];
-    switch (dataType) {
-      case 'indices':
-        queryKeysToInvalidate = ['indices'];
-        break;
-      case 'quotes':
-        if (additionalParams && additionalParams.length > 0) {
-          // Invalidate specific quotes
-          additionalParams.forEach(symbol => {
-            queryClient.invalidateQueries({ queryKey: ['quote', symbol] });
-          });
-        } else {
-          // Invalidate all quotes
-          queryClient.invalidateQueries({ queryKey: ['quote'] });
+  const refreshData = useCallback(
+    async (dataType: RefreshableMarketDataType, additionalParams: string[] = []) => {
+      try {
+        toast({
+          title: 'Refreshing Data',
+          description: `Updating ${dataType} data...`,
+        });
+
+        // Create data type configs for the refresh function
+        const refreshTypes = [];
+
+        switch (dataType) {
+          case 'indices':
+            refreshTypes.push({ type: 'indices' });
+            break;
+          case 'quotes':
+            refreshTypes.push({ 
+              type: 'quote', 
+              symbol: additionalParams?.[0] 
+            });
+            break;
+          case 'news':
+            refreshTypes.push({ type: 'news' });
+            break;
+          case 'candles':
+            refreshTypes.push({ 
+              type: 'candles', 
+              symbol: additionalParams?.[0] 
+            });
+            break;
+          default:
+            // No action for unsupported types
+            break;
         }
-        break;
-      case 'news':
-        queryKeysToInvalidate = ['market-news', 'company-news'];
-        break;
-      case 'candles':
-        if (additionalParams && additionalParams.length > 0) {
-          // Invalidate specific candle data
-          additionalParams.forEach(symbol => {
-            queryClient.invalidateQueries({ queryKey: ['candle-data', symbol] });
-          });
-        } else {
-          // Invalidate all candle data
-          queryClient.invalidateQueries({ queryKey: ['candle-data'] });
+
+        // Refresh the data
+        if (refreshTypes.length > 0) {
+          await refreshMarketData(refreshTypes);
         }
-        break;
-      case 'search':
-        queryKeysToInvalidate = ['symbol-search'];
-        break;
-    }
-    
-    // Invalidate the query keys
-    queryKeysToInvalidate.forEach(key => {
-      queryClient.invalidateQueries({ queryKey: [key] });
-    });
-    
-    // If we want to clear server cache, trigger an API refresh
-    if (clearCache && dataType !== 'search') {
-      const apiType = dataTypeMapping[dataType];
-      const symbol = additionalParams?.[0];
-      
-      refreshAPI([{ type: apiType, symbol }]);
-    }
-  }, [queryClient]);
-  
+
+        // Invalidate related queries
+        switch (dataType) {
+          case 'indices':
+            queryClient.invalidateQueries({ queryKey: ['indices'] });
+            break;
+          case 'quotes':
+            const symbol = additionalParams?.[0];
+            if (symbol) {
+              queryClient.invalidateQueries({ queryKey: ['quote', symbol] });
+            }
+            break;
+          case 'news':
+            queryClient.invalidateQueries({ queryKey: ['market-news'] });
+            queryClient.invalidateQueries({ queryKey: ['company-news'] });
+            break;
+          case 'candles':
+            const candleSymbol = additionalParams?.[0];
+            if (candleSymbol) {
+              queryClient.invalidateQueries({ queryKey: ['candle-data', candleSymbol] });
+            }
+            break;
+          case 'search':
+            queryClient.invalidateQueries({ queryKey: ['symbol-search'] });
+            break;
+        }
+
+        toast({
+          title: 'Data Refreshed',
+          description: `${dataType.charAt(0).toUpperCase() + dataType.slice(1)} data has been updated.`,
+        });
+      } catch (error) {
+        toast({
+          title: 'Refresh Failed',
+          description: `Could not refresh ${dataType} data. Please try again.`,
+          variant: 'destructive',
+        });
+        console.error(`Error refreshing ${dataType} data:`, error);
+      }
+    },
+    [queryClient]
+  );
+
   /**
    * Refresh all market data
    */
-  const refreshAll = useCallback((clearCache: boolean = false) => {
-    marketLogger.info(`Refreshing all market data${clearCache ? ' with cache clearing' : ''}`);
-    setIsRefreshing(true);
-    
-    // Invalidate all relevant queries
-    refreshMarketData('indices');
-    refreshMarketData('quotes');
-    refreshMarketData('news');
-    refreshMarketData('candles');
-    refreshMarketData('search');
-    
-    // Map RefreshableMarketDataType to MarketDataType for API call
-    const refreshTypes: Array<{ type: MarketDataType; symbol?: string }> = [
-      { type: 'indices' },
-      { type: 'quote' },
-      { type: 'news' }
-    ];
-    
-    // Also trigger API refresh (to clear server cache if needed)
-    if (clearCache) {
-      refreshAPI(refreshTypes);
-    }
-    
-    setIsRefreshing(false);
-    
-    return true;
-  }, [refreshMarketData]);
-  
+  const refreshAll = useCallback(
+    async (clearCache = false) => {
+      toast({
+        title: 'Refreshing All Data',
+        description: 'Updating market data...',
+      });
+
+      try {
+        const types: RefreshableMarketDataType[] = ['indices', 'news', 'quotes', 'candles', 'search'];
+        
+        // Refresh each type of data
+        await Promise.allSettled(types.map(type => refreshData(type)));
+
+        if (clearCache) {
+          queryClient.clear();
+        }
+
+        toast({
+          title: 'All Data Refreshed',
+          description: 'Market data has been successfully updated.',
+        });
+      } catch (error) {
+        toast({
+          title: 'Refresh Failed',
+          description: 'Failed to refresh market data. Please try again.',
+          variant: 'destructive',
+        });
+        console.error('Error in refreshAll:', error);
+      }
+    },
+    [queryClient, refreshData]
+  );
+
   return {
-    refreshMarketData,
+    refreshMarketData: refreshData,
     refreshAll
   };
 }

@@ -13,7 +13,10 @@ import type { Quote } from "@/utils/market-data/types";
 export function useQuote(symbol: string) {
   return useQuery<Quote, Error, { raw: Quote; formatted: ReturnType<typeof formatQuote> }>({
     queryKey: ['quote', symbol],
-    queryFn: () => getQuote(symbol) as Promise<Quote>,
+    queryFn: async () => {
+      const data = await getQuote(symbol);
+      return data;
+    },
     enabled: Boolean(symbol),
     ...DEFAULT_QUERY_CONFIG,
     select: (data: Quote) => {

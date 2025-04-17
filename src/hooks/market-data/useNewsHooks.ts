@@ -13,7 +13,10 @@ import type { NewsItem } from "@/utils/market-data/types";
 export function useMarketNews(category: string = "general", count: number = 10) {
   return useQuery<NewsItem[], Error>({
     queryKey: ['market-news', category],
-    queryFn: () => getMarketNews(category, count) as Promise<NewsItem[]>,
+    queryFn: async () => {
+      const data = await getMarketNews(category, count);
+      return data;
+    },
     ...DEFAULT_QUERY_CONFIG,
     staleTime: 15 * 60 * 1000 // 15 minutes
   });
@@ -32,7 +35,10 @@ export function useCompanyNews(
 ) {
   return useQuery<NewsItem[], Error>({
     queryKey: ['company-news', symbol, from, to],
-    queryFn: () => getCompanyNews(symbol, from, to) as Promise<NewsItem[]>,
+    queryFn: async () => {
+      const data = await getCompanyNews(symbol, from, to);
+      return data;
+    },
     enabled: Boolean(symbol),
     ...DEFAULT_QUERY_CONFIG,
     staleTime: 10 * 60 * 1000 // 10 minutes

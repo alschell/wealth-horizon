@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { IndexData } from "../types";
+import { IndexData, ChartDataPoint } from "../types";
 import { worldIndices, regionToCountryMap, allWorldIndices } from "../data/worldIndices";
 import { useIndices } from "@/hooks/market-data";
 import { toast } from "@/components/ui/use-toast";
@@ -36,8 +36,18 @@ export const useIndicesTracker = () => {
       };
     }
     
-    // Fallback to API data
-    return apiIndex;
+    // Fallback to API data with default values for missing fields
+    return {
+      id: apiIndex.symbol,
+      name: apiIndex.symbol,
+      symbol: apiIndex.symbol,
+      value: apiIndex.data.c,
+      change: apiIndex.data.d,
+      percentChange: apiIndex.data.dp,
+      region: "Unknown",
+      description: `${apiIndex.symbol} index`,
+      volume: 0
+    } as IndexData;
   }) : allWorldIndices;
   
   const location = useLocation();

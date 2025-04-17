@@ -1,8 +1,9 @@
 
 import React from "react";
-import { Star } from "lucide-react";
-import { AnimatePresence, motion } from "framer-motion";
+import { Star, TrendingUp, TrendingDown, Search, Flag, Globe } from "lucide-react";
 import { IndexData } from "../types";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { getCountryFlagCode } from "../data/mockData";
 
 interface IndicesTableProps {
@@ -10,8 +11,19 @@ interface IndicesTableProps {
   selectedIndex: IndexData | null;
   subscribedIndices: string[];
   handleSelectIndex: (index: IndexData) => void;
-  toggleSubscription: (name: string) => void;
+  toggleSubscription: (indexName: string) => void;
 }
+
+const formatValue = (value: number) => {
+  return new Intl.NumberFormat('en-US', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }).format(value);
+};
+
+const formatChange = (change: number, percentChange: number) => {
+  return `${change >= 0 ? "+" : ""}${formatValue(change)} (${change >= 0 ? "+" : ""}${formatValue(percentChange)}%)`;
+};
 
 const IndicesTable: React.FC<IndicesTableProps> = ({
   indices,
@@ -20,118 +32,118 @@ const IndicesTable: React.FC<IndicesTableProps> = ({
   handleSelectIndex,
   toggleSubscription
 }) => {
+  // If no indices are available, show loading state
   if (!indices.length) {
     return (
-      <div className="flex justify-center items-center p-8 bg-white rounded-lg">
-        <p className="text-gray-500">No indices found matching the current filters.</p>
+      <div className="py-8 text-center">
+        <Search className="h-8 w-8 text-gray-300 mx-auto mb-2" />
+        <p className="text-gray-500">No indices match your search criteria.</p>
       </div>
     );
   }
 
   return (
-    <div className="bg-white rounded-lg overflow-hidden shadow">
-      <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Index
-              </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Region
-              </th>
-              <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Value
-              </th>
-              <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Change
-              </th>
-              <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                % Change
-              </th>
-              <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Volume
-              </th>
-              <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            <AnimatePresence>
-              {indices.map((index) => (
-                <motion.tr
-                  key={index.id}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  onClick={() => handleSelectIndex(index)}
-                  className={`hover:bg-gray-50 cursor-pointer transition-colors ${
-                    selectedIndex?.id === index.id ? "bg-indigo-50" : ""
-                  }`}
+    <div className="overflow-x-auto">
+      <table className="min-w-full divide-y divide-gray-200">
+        <thead className="bg-gray-50">
+          <tr>
+            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Index
+            </th>
+            <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Value
+            </th>
+            <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Change
+            </th>
+            <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Volume
+            </th>
+            <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Region
+            </th>
+            <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Actions
+            </th>
+          </tr>
+        </thead>
+        <tbody className="bg-white divide-y divide-gray-200">
+          {indices.map((index) => (
+            <tr
+              key={index.id}
+              onClick={() => handleSelectIndex(index)}
+              className={`cursor-pointer hover:bg-gray-50 transition-colors ${
+                selectedIndex?.id === index.id ? "bg-blue-50" : ""
+              }`}
+            >
+              <td className="px-6 py-4 whitespace-nowrap">
+                <div className="text-sm font-medium text-gray-900">{index.name}</div>
+                <div className="text-xs text-gray-500">{index.symbol}</div>
+              </td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-right">
+                {formatValue(index.value)}
+              </td>
+              <td 
+                className={`px-6 py-4 whitespace-nowrap text-sm text-right ${
+                  index.change >= 0 ? "text-green-600" : "text-red-600"
+                }`}
+              >
+                <div className="flex items-center justify-end">
+                  {index.change >= 0 ? (
+                    <TrendingUp className="h-4 w-4 mr-1" />
+                  ) : (
+                    <TrendingDown className="h-4 w-4 mr-1" />
+                  )}
+                  <span>{formatChange(index.change, index.percentChange)}</span>
+                </div>
+              </td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+                {index.volume 
+                  ? index.volume >= 1000000000
+                    ? `${(index.volume / 1000000000).toFixed(1)}B`
+                    : index.volume >= 1000000 
+                      ? `${(index.volume / 1000000).toFixed(1)}M` 
+                      : index.volume.toLocaleString()
+                  : 'N/A'
+                }
+              </td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+                <div className="flex items-center justify-center">
+                  {getCountryFlagCode(index.region) !== "globe" ? (
+                    <img 
+                      src={`https://flagcdn.com/16x12/${getCountryFlagCode(index.region)}.png`} 
+                      alt={index.region} 
+                      className="mr-1.5 h-3" 
+                    />
+                  ) : (
+                    <Globe className="h-4 w-4 mr-1 text-gray-400" />
+                  )}
+                  <span>{index.region}</span>
+                </div>
+              </td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-8 w-8 p-0"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleSubscription(index.name);
+                  }}
                 >
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 flex items-center">
-                    <span className="font-medium">{index.name}</span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 flex items-center">
-                    <span className="w-6 h-4 mr-2 flex-shrink-0">
-                      <img 
-                        src={`https://flagcdn.com/w20/${getCountryFlagCode(index.region)}.png`} 
-                        alt={`${index.region} flag`}
-                        className="w-5 h-auto"
-                        onError={(e) => {
-                          e.currentTarget.style.display = 'none';
-                        }}
-                      />
-                    </span>
-                    {index.region}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-right font-mono">
-                    {typeof index.value === 'number' ? index.value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : index.value}
-                  </td>
-                  <td className={`px-6 py-4 whitespace-nowrap text-sm text-right font-mono ${
-                    parseFloat(String(index.change)) >= 0 ? "text-green-600" : "text-red-600"
-                  }`}>
-                    {typeof index.change === 'number' ? index.change.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2, signDisplay: 'always' }) : index.change}
-                  </td>
-                  <td className={`px-6 py-4 whitespace-nowrap text-sm text-right font-mono ${
-                    parseFloat(String(index.percentChange)) >= 0 ? "text-green-600" : "text-red-600"
-                  }`}>
-                    {typeof index.percentChange === 'number' ? `${index.percentChange.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2, signDisplay: 'always' })}%` : index.percentChange}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-right font-mono">
-                    {typeof index.volume === 'number' 
-                      ? index.volume >= 1000000000 
-                        ? `${(index.volume / 1000000000).toFixed(1)}B` 
-                        : index.volume >= 1000000 
-                          ? `${(index.volume / 1000000).toFixed(1)}M` 
-                          : index.volume.toLocaleString()
-                      : index.volume || 'N/A'
-                    }
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        toggleSubscription(index.name);
-                      }}
-                      className="text-gray-400 hover:text-yellow-500 transition-colors"
-                    >
-                      <Star
-                        className={`h-5 w-5 ${
-                          subscribedIndices.includes(index.name)
-                            ? "fill-yellow-400 text-yellow-400"
-                            : ""
-                        }`}
-                      />
-                    </button>
-                  </td>
-                </motion.tr>
-              ))}
-            </AnimatePresence>
-          </tbody>
-        </table>
-      </div>
+                  <Star
+                    className={`h-4 w-4 ${
+                      subscribedIndices.includes(index.name)
+                        ? "text-yellow-500 fill-yellow-500"
+                        : "text-gray-400"
+                    }`}
+                  />
+                </Button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };

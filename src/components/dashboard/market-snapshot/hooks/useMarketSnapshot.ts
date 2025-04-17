@@ -2,13 +2,6 @@
 import { useState } from "react";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { MarketItemVisibility } from "@/types/market";
-import { 
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { useNavigate } from "react-router-dom";
 
 // Generate sample market data
@@ -105,12 +98,7 @@ export function useMarketSnapshot() {
   
   // Handle click on market item
   const handleMarketItemClick = (itemId: string) => {
-    navigate("/market-data", { 
-      state: { 
-        activeTab: "indices",
-        selectedItem: itemId
-      }
-    });
+    // Instead of navigating, we'll handle the dialog open in the MarketItemsGrid component
   };
   
   return {

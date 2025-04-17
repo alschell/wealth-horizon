@@ -21,7 +21,8 @@ const MarketSnapshot = () => {
     temporaryOrder,
     toggleItem,
     handleDragEnd,
-    handleMarketItemClick
+    handleMarketItemClick,
+    allMarketItems
   } = useMarketSnapshot();
 
   return (
@@ -42,27 +43,7 @@ const MarketSnapshot = () => {
       </CardHeader>
       <CardContent className="p-6 pt-0 h-[calc(350px-80px)] flex flex-col">
         <ScrollArea className="flex-1 -mr-4 pr-4">
-          <div className="grid grid-cols-2 gap-3">
-            {filteredAndOrderedItems.map(item => (
-              <div 
-                key={item.id}
-                className="p-3 border border-gray-100 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
-                onClick={() => handleMarketItemClick(item.id)}
-              >
-                <div className="flex flex-col">
-                  <span className="text-sm font-medium">{item.label}</span>
-                  <div className="flex justify-between mt-1">
-                    <span className="text-sm">{item.value}</span>
-                    <span className={`text-xs flex items-center ${
-                      parseFloat(item.change) >= 0 ? 'text-green-600' : 'text-red-500'
-                    }`}>
-                      {parseFloat(item.change) >= 0 ? '+' : ''}{item.change}%
-                    </span>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+          <MarketItemsGrid items={filteredAndOrderedItems} />
         </ScrollArea>
         
         <div className="pt-4 mt-auto">

@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { IndexData, ChartDataPoint } from "../types";
+import { IndexData } from "../types";
 import { regionToCountryMap, allWorldIndices } from "../data/worldIndices";
 import { useIndices } from "@/hooks/market-data";
 import { toast } from "@/components/ui/use-toast";
@@ -10,7 +10,7 @@ import { toast } from "@/components/ui/use-toast";
  * Custom hook for managing the indices tracker state and functionality
  */
 export const useIndicesTracker = () => {
-  const [filter, setFilter] = useState("all");
+  const [filter, setFilter] = useState("ALL");
   const [searchTerm, setSearchTerm] = useState("");
   const [subscribedIndices, setSubscribedIndices] = useState<string[]>(["S&P 500", "NASDAQ Composite", "Dow Jones", "FTSE 100", "Nikkei 225"]);
   const [selectedIndex, setSelectedIndex] = useState<IndexData | null>(null);
@@ -18,39 +18,35 @@ export const useIndicesTracker = () => {
   // Fetch indices data from API
   const { data: apiIndices, isLoading, error } = useIndices();
   
-  // Combine API indices with our complete list if available
-  const indices: IndexData[] = apiIndices?.length 
-    ? apiIndices.map(apiIndex => {
-        // Find matching index in our detailed list
-        const matchedIndex = allWorldIndices.find(idx => 
-          idx.symbol === apiIndex.symbol || 
-          idx.name.includes(apiIndex.symbol.replace('^', ''))
-        );
-        
-        if (matchedIndex) {
-          // Update with live data
-          return {
-            ...matchedIndex,
-            value: apiIndex.data.c,
-            change: apiIndex.data.d,
-            percentChange: apiIndex.data.dp
-          };
-        }
-        
-        // Fallback to API data with default values for missing fields
-        return {
-          id: apiIndex.symbol,
-          name: apiIndex.symbol,
-          symbol: apiIndex.symbol,
-          value: apiIndex.data.c,
-          change: apiIndex.data.d,
-          percentChange: apiIndex.data.dp,
-          region: "Other",
-          description: `${apiIndex.symbol} index`,
-          volume: 0
-        };
-      })
-    : allWorldIndices;
+  // Map to store symbol -> index data mapping
+  const symbolToData = new Map<string, { value: number, change: number, percentChange: number }>();
+  
+  // Prepare API data for mapping to our indices
+  if (apiIndices?.length) {
+    apiIndices.forEach(indexData => {
+      if (indexData.data && indexData.symbol) {
+        symbolToData.set(indexData.symbol, {
+          value: indexData.data.c || 0,
+          change: indexData.data.d || 0,
+          percentChange: indexData.data.dp || 0
+        });
+      }
+    });
+  }
+  
+  // Combine API data with our complete list of indices
+  const indices: IndexData[] = allWorldIndices.map(index => {
+    const apiData = symbolToData.get(index.symbol);
+    if (apiData) {
+      return {
+        ...index,
+        value: apiData.value,
+        change: apiData.change,
+        percentChange: apiData.percentChange
+      };
+    }
+    return index;
+  });
   
   const location = useLocation();
   const navigate = useNavigate();
@@ -88,20 +84,15 @@ export const useIndicesTracker = () => {
   };
   
   /**
-   * Filter indices by region
+   * Filter indices by region based on the new region groups
    */
   const filterByRegion = (index: IndexData, currentFilter: string): boolean => {
-    if (currentFilter === "all") {
+    if (currentFilter === "ALL") {
       return true;
     }
     
-    // Check if filter is one of our special region groups
-    if (regionToCountryMap[currentFilter]) {
-      return regionToCountryMap[currentFilter].includes(index.region);
-    }
-    
-    // Otherwise filter by exact region match
-    return index.region === currentFilter;
+    // Check if the index's region is in the selected region group
+    return regionToCountryMap[currentFilter]?.includes(index.region) || false;
   };
   
   /**

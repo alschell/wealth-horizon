@@ -1,8 +1,8 @@
+
 import React from "react";
-import { Star, TrendingUp, TrendingDown, Search, Flag, Globe } from "lucide-react";
+import { Star, TrendingUp, TrendingDown, Search } from "lucide-react";
 import { IndexData } from "../types";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { getCountryFlagCode } from "../data/mockData";
 
 interface IndicesTableProps {
@@ -59,7 +59,7 @@ const IndicesTable: React.FC<IndicesTableProps> = ({
               Volume
             </th>
             <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Region
+              Country
             </th>
             <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
               Actions
@@ -77,15 +77,6 @@ const IndicesTable: React.FC<IndicesTableProps> = ({
             >
               <td className="px-6 py-4 whitespace-nowrap">
                 <div className="flex items-center">
-                  {getCountryFlagCode(index.region) !== "globe" ? (
-                    <img 
-                      src={`https://flagcdn.com/16x12/${getCountryFlagCode(index.region)}.png`} 
-                      alt={index.region} 
-                      className="mr-2 h-3" 
-                    />
-                  ) : (
-                    <Globe className="h-4 w-4 mr-2 text-gray-400" />
-                  )}
                   <div>
                     <div className="text-sm font-medium text-gray-900">{index.name}</div>
                     <div className="text-xs text-gray-500">{index.symbol}</div>
@@ -120,7 +111,16 @@ const IndicesTable: React.FC<IndicesTableProps> = ({
                 }
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
-                {index.region}
+                <div className="flex items-center justify-center space-x-2">
+                  {getCountryFlagCode(index.region) !== "globe" ? (
+                    <img 
+                      src={`https://flagcdn.com/16x12/${getCountryFlagCode(index.region)}.png`} 
+                      alt={index.region} 
+                      className="h-3" 
+                    />
+                  ) : null}
+                  <span>{index.region}</span>
+                </div>
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
                 <Button

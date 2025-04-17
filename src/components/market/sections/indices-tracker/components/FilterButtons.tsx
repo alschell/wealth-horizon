@@ -11,39 +11,32 @@ const FilterButtons: React.FC<FilterButtonsProps> = ({ filter, setFilter }) => {
   return (
     <div className="flex gap-2 flex-wrap">
       <Button 
-        variant={filter === "all" ? "default" : "outline"} 
+        variant={filter === "ALL" ? "default" : "outline"} 
         size="sm"
-        onClick={() => setFilter("all")}
+        onClick={() => setFilter("ALL")}
       >
-        All
+        ALL
       </Button>
       <Button 
-        variant={filter === "North America" ? "default" : "outline"} 
+        variant={filter === "AMER" ? "default" : "outline"} 
         size="sm"
-        onClick={() => setFilter("North America")}
+        onClick={() => setFilter("AMER")}
       >
-        North America
+        AMER
       </Button>
       <Button 
-        variant={filter === "Europe" ? "default" : "outline"} 
+        variant={filter === "APAC" ? "default" : "outline"} 
         size="sm"
-        onClick={() => setFilter("Europe")}
+        onClick={() => setFilter("APAC")}
       >
-        Europe
+        APAC
       </Button>
       <Button 
-        variant={filter === "Asia-Pacific" ? "default" : "outline"} 
+        variant={filter === "EMEA" ? "default" : "outline"} 
         size="sm"
-        onClick={() => setFilter("Asia-Pacific")}
+        onClick={() => setFilter("EMEA")}
       >
-        Asia-Pacific
-      </Button>
-      <Button 
-        variant={filter === "Other" ? "default" : "outline"} 
-        size="sm"
-        onClick={() => setFilter("Other")}
-      >
-        Other
+        EMEA
       </Button>
     </div>
   );

@@ -1,3 +1,4 @@
+
 import { IndexData } from "../types";
 
 // List of all available world indices with detailed information
@@ -119,7 +120,7 @@ export const allWorldIndices: IndexData[] = [
     value: 0,
     change: 0,
     percentChange: 0,
-    region: "Switzerland",
+    region: "Europe",
     description: "The EURO STOXX 50 is a stock market index of Eurozone stocks designed by STOXX.",
     volume: 0
   },
@@ -207,8 +208,8 @@ export const worldIndices: IndexData[] = allWorldIndices.slice(0, 10);
 
 // Map region filters to actual regions in the data
 export const regionToCountryMap: Record<string, string[]> = {
-  "North America": ["United States", "Canada"],
-  "Europe": ["United Kingdom", "Germany", "France", "Switzerland", "Netherlands", "Spain", "Italy", "Sweden", "Belgium", "Norway", "Denmark", "Finland", "Ireland", "Portugal", "Austria", "Greece"],
-  "Asia-Pacific": ["Japan", "China", "Hong Kong", "Australia", "South Korea", "Taiwan", "India", "Singapore", "New Zealand", "Malaysia", "Thailand", "Indonesia", "Philippines"],
-  "Other": ["Brazil", "Mexico", "South Africa", "Russia", "Turkey", "Saudi Arabia", "UAE", "Qatar", "Argentina", "Chile", "Colombia", "Peru", "Egypt", "Nigeria", "Kenya", "Morocco"]
+  "ALL": ["United States", "Canada", "United Kingdom", "Germany", "France", "Switzerland", "Netherlands", "Spain", "Italy", "Japan", "China", "Hong Kong", "Australia", "South Korea", "Taiwan", "India", "Singapore", "Brazil", "Mexico", "South Africa", "Russia", "Turkey", "Europe"],
+  "AMER": ["United States", "Canada", "Brazil", "Mexico", "Argentina", "Chile", "Colombia", "Peru"],
+  "APAC": ["Japan", "China", "Hong Kong", "Australia", "South Korea", "Taiwan", "India", "Singapore", "New Zealand", "Malaysia", "Thailand", "Indonesia", "Philippines"],
+  "EMEA": ["United Kingdom", "Germany", "France", "Switzerland", "Netherlands", "Spain", "Italy", "Sweden", "Belgium", "Norway", "Denmark", "Finland", "Ireland", "Portugal", "Austria", "Greece", "South Africa", "Russia", "Turkey", "Saudi Arabia", "UAE", "Qatar", "Egypt", "Nigeria", "Kenya", "Morocco", "Europe"]
 };

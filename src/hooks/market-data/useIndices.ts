@@ -1,7 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { getIndices } from "@/utils/market-data/api";
-import { marketLogger, DEFAULT_QUERY_CONFIG, MOCK_INDICES_DATA } from "./utils";
+import { marketLogger, DEFAULT_QUERY_CONFIG } from "./utils";
 import { toast } from "sonner";
+import { CACHE_KEYS, CACHE_EXPIRATION, saveToCache, getFromCache } from "@/utils/market-data/cache";
 
 /**
  * Hook for fetching major market indices
@@ -55,10 +56,13 @@ export function useIndices(customSymbols?: string[]) {
           timestamp: new Date().toISOString()
         });
         
-        // Try to fetch from API first
+        // First check if we have cached data
+        const cachedIndices = getFromCache(CACHE_KEYS.INDICES, CACHE_EXPIRATION.INDICES);
+        
+        // Try to fetch fresh data from API
         try {
           const data = await getIndices(symbolsToFetch, {
-            skipCache: true, // Force fresh data
+            skipCache: false, // Use API cache if available
             retries: 3,
             showErrorToast: false // Don't show error toast here, we'll handle it below
           });
@@ -109,71 +113,56 @@ export function useIndices(customSymbols?: string[]) {
               };
             });
             
+            // Save the successful response to cache for future fallback
+            saveToCache(CACHE_KEYS.INDICES, transformedData);
+            
             return transformedData;
           } else {
-            // API returned invalid data, fall back to mock data
-            console.warn("API returned invalid data, using mock data instead");
+            // API returned invalid data, check if we have cached data
+            console.warn("API returned invalid data, trying cached data");
             throw new Error("API returned invalid or empty data");
           }
         } catch (fetchError) {
-          // If the API call fails, fall back to mock data
-          console.warn("Error fetching indices, using mock data instead:", fetchError);
+          console.error("Error fetching indices data:", fetchError);
           
-          // Convert the mock data to the format expected by the component
-          const mockData = MOCK_INDICES_DATA.map(mockIndex => ({
-            symbol: mockIndex.symbol,
-            data: {
-              c: mockIndex.value,  // Current price
-              d: mockIndex.change * mockIndex.value / 100,  // Change
-              dp: mockIndex.change, // Percent change
-              h: mockIndex.value * 1.01,  // High price of the day
-              l: mockIndex.value * 0.99,  // Low price of the day
-              o: mockIndex.value * 0.995, // Open price of the day
-              pc: mockIndex.value - (mockIndex.change * mockIndex.value / 100), // Previous close price
-              t: Math.floor(Date.now() / 1000)  // Timestamp
-            }
-          }));
+          // If the API call fails, fall back to cached data if available
+          if (cachedIndices && Array.isArray(cachedIndices) && cachedIndices.length > 0) {
+            console.log("Using cached indices data as fallback");
+            toast.info("Using cached market data", {
+              description: "We're temporarily using cached data while connecting to the server."
+            });
+            return cachedIndices;
+          }
           
-          toast.warning("Using sample market data - API connection issue", {
-            description: "We're temporarily using sample data while resolving a connection issue."
+          // If no cached data, report the error and return empty array
+          toast.error("Could not fetch market data", {
+            description: "Please check your connection and try again."
           });
           
-          return mockData;
+          // Return an empty array to avoid crashing
+          throw fetchError;
         }
       } catch (error) {
         marketLogger.error(`Failed to fetch indices data`, error);
         console.error("Indices API error details:", error);
         
-        // Provide more context about the error
-        if (error instanceof Error) {
-          console.error(`Error fetching indices data: ${error.message}`, {
-            stack: error.stack,
-            timestamp: new Date().toISOString()
+        // Check for cached data as fallback
+        const cachedIndices = getFromCache(CACHE_KEYS.INDICES, CACHE_EXPIRATION.INDICES);
+        if (cachedIndices && Array.isArray(cachedIndices) && cachedIndices.length > 0) {
+          console.log("Using cached indices data as fallback after error");
+          toast.info("Using cached market data", {
+            description: "We're temporarily using cached data while connecting to the server."
           });
-        } else {
-          console.error("Unknown error type when fetching indices data:", error);
+          return cachedIndices;
         }
         
-        // Convert the mock data to the format expected by the component
-        const mockData = MOCK_INDICES_DATA.map(mockIndex => ({
-          symbol: mockIndex.symbol,
-          data: {
-            c: mockIndex.value,  // Current price
-            d: mockIndex.change * mockIndex.value / 100,  // Change
-            dp: mockIndex.change, // Percent change
-            h: mockIndex.value * 1.01,  // High price of the day
-            l: mockIndex.value * 0.99,  // Low price of the day
-            o: mockIndex.value * 0.995, // Open price of the day
-            pc: mockIndex.value - (mockIndex.change * mockIndex.value / 100), // Previous close price
-            t: Math.floor(Date.now() / 1000)  // Timestamp
-          }
-        }));
-        
-        toast.warning("Using sample market data - API connection issue", {
-          description: "We're temporarily using sample data while resolving a connection issue."
+        // If everything fails, report the error and return empty array
+        toast.error("Could not fetch market data", {
+          description: "Please check your connection and try again."
         });
         
-        return mockData;
+        // Re-throw the error to be handled by React Query's error state
+        throw error;
       }
     },
     ...DEFAULT_QUERY_CONFIG,

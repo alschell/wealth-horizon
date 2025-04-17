@@ -1,9 +1,10 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { getMarketNews, getCompanyNews } from "@/utils/market-data/api";
-import { marketLogger, DEFAULT_QUERY_CONFIG, MOCK_NEWS_DATA } from "./utils";
+import { marketLogger, DEFAULT_QUERY_CONFIG } from "./utils";
 import type { NewsItem } from "@/utils/market-data/types";
 import { toast } from "sonner";
+import { CACHE_KEYS, CACHE_EXPIRATION, saveToCache, getFromCache } from "@/utils/market-data/cache";
 
 /**
  * Hook for fetching general market news
@@ -33,6 +34,10 @@ export function useMarketNews(category: string = "general", count: number = 10) 
       try {
         console.log(`Fetching market news for category: ${category}, count: ${count}`);
         
+        // First check for cached news data
+        const cacheKey = `${CACHE_KEYS.NEWS}_${category}`;
+        const cachedNews = getFromCache<NewsItem[]>(cacheKey, CACHE_EXPIRATION.NEWS);
+        
         // First try fetching from the API
         try {
           const data = await getMarketNews(category, count);
@@ -41,10 +46,14 @@ export function useMarketNews(category: string = "general", count: number = 10) 
           // Debug logging
           console.log(`Market news API response for ${category}:`, data);
           
-          // If we have valid data, return it
+          // If we have valid data, cache it and return it
           if (data && Array.isArray(data) && data.length > 0) {
             marketLogger.debug(`${category} market news fetched in ${(endTime - startTime).toFixed(2)}ms`, 
               { count: data.length });
+            
+            // Cache the successful response
+            saveToCache(cacheKey, data);
+            
             return data;
           } else {
             console.warn(`Empty or invalid news data returned for category: ${category}`);
@@ -53,16 +62,22 @@ export function useMarketNews(category: string = "general", count: number = 10) 
         } catch (fetchError) {
           console.error(`Error fetching news data:`, fetchError);
           
-          // Fall back to mock data
-          const filteredMockNews = MOCK_NEWS_DATA
-            .filter(item => category === "general" || item.category === category)
-            .slice(0, count);
-            
-          toast.warning("Using sample news data - API connection issue", {
-            description: "We're temporarily using sample news while resolving a connection issue."
+          // Fall back to cached data if available
+          if (cachedNews && Array.isArray(cachedNews) && cachedNews.length > 0) {
+            console.log(`Using cached news for category ${category}`);
+            toast.info("Using cached news data", {
+              description: "We're temporarily using cached news while connecting to the server."
+            });
+            return cachedNews;
+          }
+          
+          // If no cached data, report error
+          toast.error("Could not fetch news data", {
+            description: "Please check your connection and try again."
           });
           
-          return filteredMockNews;
+          // Re-throw the error
+          throw fetchError;
         }
       } catch (error) {
         marketLogger.error(`Failed to fetch ${category} market news`, error);
@@ -76,16 +91,25 @@ export function useMarketNews(category: string = "general", count: number = 10) 
           });
         }
         
-        // Fall back to mock data
-        const filteredMockNews = MOCK_NEWS_DATA
-          .filter(item => category === "general" || item.category === category)
-          .slice(0, count);
-          
-        toast.warning("Using sample news data - API connection issue", {
-          description: "We're temporarily using sample news while resolving a connection issue."
+        // Check for cached data as fallback
+        const cacheKey = `${CACHE_KEYS.NEWS}_${category}`;
+        const cachedNews = getFromCache<NewsItem[]>(cacheKey, CACHE_EXPIRATION.NEWS);
+        
+        if (cachedNews && Array.isArray(cachedNews) && cachedNews.length > 0) {
+          console.log(`Using cached news for category ${category} after error`);
+          toast.info("Using cached news data", {
+            description: "We're temporarily using cached news while connecting to the server."
+          });
+          return cachedNews.slice(0, count);
+        }
+        
+        // If no cached data, report error and return empty array
+        toast.error("Could not fetch news data", {
+          description: "Please check your connection and try again."
         });
         
-        return filteredMockNews;
+        // Return empty array to avoid crashing the UI
+        return [];
       }
     },
     ...DEFAULT_QUERY_CONFIG,
@@ -129,6 +153,10 @@ export function useCompanyNews(
       try {
         console.log(`Fetching company news for symbol: ${symbol}, from: ${from}, to: ${to}`);
         
+        // Check for cached company news
+        const cacheKey = `${CACHE_KEYS.NEWS}_company_${symbol}_${from}_${to}`;
+        const cachedNews = getFromCache<NewsItem[]>(cacheKey, CACHE_EXPIRATION.NEWS);
+        
         // First try fetching from the API
         try {
           const data = await getCompanyNews(symbol, from, to);
@@ -137,10 +165,14 @@ export function useCompanyNews(
           // Debug logging
           console.log(`Company news API response for ${symbol}:`, data);
           
-          // If we have valid data, return it
+          // If we have valid data, cache and return it
           if (data && Array.isArray(data) && data.length > 0) {
             marketLogger.debug(`News for ${symbol} fetched in ${(endTime - startTime).toFixed(2)}ms`, 
               { count: data.length });
+            
+            // Cache the successful response
+            saveToCache(cacheKey, data);
+            
             return data;
           } else {
             console.warn(`Empty or invalid company news data returned for symbol: ${symbol}`);
@@ -149,18 +181,22 @@ export function useCompanyNews(
         } catch (fetchError) {
           console.error(`Error fetching company news data:`, fetchError);
           
-          // Fall back to mock data with the company symbol in the headlines
-          const mockCompanyNews = MOCK_NEWS_DATA.map(item => ({
-            ...item,
-            headline: item.headline.includes(symbol) ? item.headline : `${symbol}: ${item.headline}`,
-            related: `${symbol},${item.related}`
-          })).slice(0, 5);
-            
-          toast.warning("Using sample company news - API connection issue", {
-            description: "We're temporarily using sample data while resolving a connection issue."
+          // Fall back to cached data if available
+          if (cachedNews && Array.isArray(cachedNews) && cachedNews.length > 0) {
+            console.log(`Using cached news for company ${symbol}`);
+            toast.info("Using cached company news", {
+              description: "We're temporarily using cached news while connecting to the server."
+            });
+            return cachedNews;
+          }
+          
+          // If no cached data, report error
+          toast.error("Could not fetch company news", {
+            description: "Please check your connection and try again."
           });
           
-          return mockCompanyNews;
+          // Re-throw the error
+          throw fetchError;
         }
       } catch (error) {
         marketLogger.error(`Failed to fetch news for ${symbol}`, error);
@@ -174,18 +210,25 @@ export function useCompanyNews(
           });
         }
         
-        // Fall back to mock data with the company symbol in the headlines
-        const mockCompanyNews = MOCK_NEWS_DATA.map(item => ({
-          ...item,
-          headline: item.headline.includes(symbol) ? item.headline : `${symbol}: ${item.headline}`,
-          related: `${symbol},${item.related}`
-        })).slice(0, 5);
-          
-        toast.warning("Using sample company news - API connection issue", {
-          description: "We're temporarily using sample data while resolving a connection issue."
+        // Check for cached data as fallback
+        const cacheKey = `${CACHE_KEYS.NEWS}_company_${symbol}_${from}_${to}`;
+        const cachedNews = getFromCache<NewsItem[]>(cacheKey, CACHE_EXPIRATION.NEWS);
+        
+        if (cachedNews && Array.isArray(cachedNews) && cachedNews.length > 0) {
+          console.log(`Using cached news for company ${symbol} after error`);
+          toast.info("Using cached company news", {
+            description: "We're temporarily using cached news while connecting to the server."
+          });
+          return cachedNews;
+        }
+        
+        // If no cached data, report error and return empty array
+        toast.error("Could not fetch company news", {
+          description: "Please check your connection and try again."
         });
         
-        return mockCompanyNews;
+        // Return empty array to avoid crashing the UI
+        return [];
       }
     },
     enabled: Boolean(symbol),

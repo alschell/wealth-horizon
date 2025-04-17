@@ -1,3 +1,4 @@
+
 import React, { useEffect } from "react";
 import { ChevronDown, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -28,6 +29,9 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToFeatures }) => {
       whyWHSection.scrollIntoView({ behavior: 'smooth' });
     }
   };
+
+  // Key features that need to be translated individually
+  const keyFeatures = ["AI-native platform", "Real-time analytics", "SOC 2 certified"];
 
   return (
     <section className="relative overflow-hidden">
@@ -65,14 +69,10 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToFeatures }) => {
               </Button>
             </div>
             <div className="mt-10 flex flex-wrap gap-x-8 gap-y-4 items-center text-sm text-gray-600">
-              {[
-                "AI-native platform", 
-                "Real-time analytics", 
-                "SOC 2 certified"
-              ].map((item, index) => (
+              {keyFeatures.map((item, index) => (
                 <div key={index} className="flex items-center gap-2">
                   <CheckCircle size={16} className="text-indigo-600" />
-                  <span><TranslatedText>{item}</TranslatedText></span>
+                  <TranslatedText>{item}</TranslatedText>
                 </div>
               ))}
             </div>

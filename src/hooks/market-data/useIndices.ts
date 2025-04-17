@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { getIndices } from "@/utils/market-data/api";
-import { marketLogger, DEFAULT_QUERY_CONFIG } from "./utils";
+import { marketLogger, ROBUST_QUERY_CONFIG, handleApiError } from "./utils";
 import { toast } from "sonner";
 import { CACHE_KEYS, CACHE_EXPIRATION, saveToCache, getFromCache } from "@/utils/market-data/cache";
 
@@ -49,12 +49,6 @@ export function useIndices(customSymbols?: string[]) {
         const symbolsToFetch = customSymbols || majorIndices;
         
         marketLogger.debug(`About to fetch indices data for symbols: ${symbolsToFetch.join(', ')}`);
-        
-        // Add extra debugging to identify API issues
-        console.log("Fetching indices with config:", {
-          symbols: symbolsToFetch,
-          timestamp: new Date().toISOString()
-        });
         
         // First check if we have cached data
         const cachedIndices = getFromCache(CACHE_KEYS.INDICES, CACHE_EXPIRATION.INDICES);
@@ -134,10 +128,9 @@ export function useIndices(customSymbols?: string[]) {
             return cachedIndices;
           }
           
-          // If no cached data, report the error and return empty array
-          toast.error("Could not fetch market data", {
-            description: "Please check your connection and try again."
-          });
+          // If no cached data, report the error
+          handleApiError(fetchError as Error, CACHE_KEYS.INDICES, 
+            "Could not fetch market indices. Please check your connection.");
           
           // Return an empty array to avoid crashing
           throw fetchError;
@@ -165,9 +158,7 @@ export function useIndices(customSymbols?: string[]) {
         throw error;
       }
     },
-    ...DEFAULT_QUERY_CONFIG,
-    // Increase retries for better resilience
-    retry: 3,
+    ...ROBUST_QUERY_CONFIG,
     // Keep data fresher with more frequent refetching
     refetchInterval: 2 * 60 * 1000, // 2 minutes
     refetchOnWindowFocus: true,

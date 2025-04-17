@@ -9,6 +9,8 @@ const CACHE_KEYS = {
   INDICES: 'indices_cache',
   NEWS: 'news_cache',
   QUOTES: 'quotes_cache',
+  CANDLES: 'candles_cache',  // Added for chart data
+  SEARCH: 'search_cache',    // Added for symbol search
 };
 
 // Cache expiration times (in milliseconds)
@@ -17,6 +19,8 @@ const CACHE_EXPIRATION = {
   INDICES: 5 * 60 * 1000, // 5 minutes
   NEWS: 30 * 60 * 1000, // 30 minutes
   QUOTES: 5 * 60 * 1000, // 5 minutes
+  CANDLES: 15 * 60 * 1000, // 15 minutes
+  SEARCH: 60 * 60 * 1000, // 1 hour
 };
 
 // Cache item interface
@@ -74,6 +78,35 @@ export function getFromCache<T>(key: string, maxAge: number = 60 * 60 * 1000): T
  */
 export function clearCache(key: string): void {
   localStorage.removeItem(key);
+}
+
+/**
+ * Clear all market data caches
+ */
+export function clearAllMarketCaches(): void {
+  Object.values(CACHE_KEYS).forEach(key => {
+    clearCache(key);
+  });
+  console.log("All market data caches cleared");
+}
+
+/**
+ * Get cache age in seconds
+ */
+export function getCacheAge(key: string): number | null {
+  try {
+    const cachedData = localStorage.getItem(key);
+    if (!cachedData) return null;
+    
+    const cacheItem: CacheItem<any> = JSON.parse(cachedData);
+    const now = Date.now();
+    const age = now - cacheItem.timestamp;
+    
+    return Math.floor(age / 1000); // Age in seconds
+  } catch (error) {
+    console.error(`Error reading cache age (${key}):`, error);
+    return null;
+  }
 }
 
 // Export cache constants

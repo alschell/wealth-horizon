@@ -1,4 +1,5 @@
-import React from "react";
+
+import React, { useEffect } from "react";
 import { HelmetProvider } from "react-helmet-async";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -72,20 +73,70 @@ import SupportTicket from "./pages/SupportTicket";
 import CommunityForum from "./pages/CommunityForum";
 
 function App() {
-  // Create a query client inside the component
+  // Create a query client with robust error handling
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
         refetchOnWindowFocus: false,
         staleTime: 1000 * 60 * 5, // 5 minutes
-        retry: 1,
+        retry: 2,
+        retryDelay: attemptIndex => Math.min(1000 * (2 ** attemptIndex), 30000),
+        onError: (error) => {
+          console.error("Query error:", error);
+        }
       },
     }
   });
 
   // Add debugging to identify when App renders
-  React.useEffect(() => {
+  useEffect(() => {
     console.log("App component mounted");
+    
+    // Basic platform health check
+    const checkBrowserCompatibility = () => {
+      const isLocalStorageAvailable = (() => {
+        try {
+          localStorage.setItem('test', 'test');
+          localStorage.removeItem('test');
+          return true;
+        } catch (e) {
+          return false;
+        }
+      })();
+      
+      if (!isLocalStorageAvailable) {
+        console.warn("LocalStorage is not available - caching functionality will be limited");
+      }
+      
+      // Check for other critical browser features
+      if (!window.fetch) {
+        console.error("Fetch API is not available in this browser");
+      }
+      
+      if (!window.requestAnimationFrame) {
+        console.warn("requestAnimationFrame is not available - animations may not work properly");
+      }
+    };
+    
+    checkBrowserCompatibility();
+    
+    // Error handling for uncaught errors
+    const handleGlobalError = (event: ErrorEvent) => {
+      console.error("Global error:", event.error);
+      // Avoid infinite loops of error reporting
+      if (!event.error || event.error._reported) return;
+      
+      // Mark as reported to prevent duplicate reporting
+      if (event.error) {
+        Object.defineProperty(event.error, '_reported', { value: true });
+      }
+    };
+    
+    window.addEventListener('error', handleGlobalError);
+    
+    return () => {
+      window.removeEventListener('error', handleGlobalError);
+    };
   }, []);
 
   return (
@@ -93,78 +144,80 @@ function App() {
       <HelmetProvider>
         <TranslationProvider>
           <OnboardingProvider>
-            <Navigation />
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/reset-password" element={<ResetPassword />} />
-              <Route path="/onboarding/*" element={<Onboarding />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/dashboard/*" element={<Dashboard />} />
-              <Route path="/trading" element={<Trading />} />
-              <Route path="/trading/new" element={<TradingInterface />} />
-              <Route path="/trading/edit/:tradeId" element={<TradingInterface />} />
-              <Route path="/advice" element={<Advice />} />
-              <Route path="/advice/new" element={<NewAdviceInterface />} />
-              <Route path="/market-data" element={<MarketData />} />
-              <Route path="/analyze-wealth" element={<AnalyzeWealth />} />
-              <Route path="/analyze-wealth/asset/:assetId" element={<AssetDetail />} />
-              <Route path="/cashflow-management" element={<CashflowManagement />} />
-              <Route path="/cashflow" element={<CashflowManagement />} />
-              <Route path="/integrations" element={<Integrations />} />
-              <Route path="/integrations/oauth-callback" element={<IntegrationCallback />} />
-              <Route path="/user-management" element={<UserManagement />} />
-              <Route path="/dashboard/users" element={<UserManagement />} />
-              <Route path="/settings" element={<Settings />} />
-              <Route path="/reporting" element={<Reporting />} />
-              <Route path="/notifications" element={<Notifications />} />
-              <Route path="/activity" element={<Activity />} />
-              <Route path="/ai-assistant" element={<AIAssistantPage />} />
-              <Route path="/financial-chat" element={<FinancialChat />} />
-              <Route path="/borrow" element={<Borrow />} />
-              <Route path="/credit-facilities" element={<CreditFacilities />} />
-              <Route path="/esg" element={<ESG />} />
-              <Route path="/client-portal" element={<ClientPortal />} />
-              <Route path="/documents" element={<Documents />} />
-              <Route path="/tax-optimization" element={<TaxOptimization />} />
-              <Route path="/legacy-planning" element={<LegacyPlanning />} />
-              <Route path="/entity-management" element={<EntityManagement />} />
-              <Route path="/compliance-monitoring" element={<ComplianceMonitoring />} />
-              <Route path="/logout" element={<Logout />} />
-              <Route path="/calendar" element={<Calendar />} />
-              
-              {/* New routes for footer links */}
-              <Route path="/about" element={<About />} />
-              <Route path="/portfolio-management" element={<PortfolioManagement />} />
-              <Route path="/careers" element={<Careers />} />
-              <Route path="/careers/:id" element={<JobDetail />} />
-              <Route path="/careers/faq" element={<CareersFAQ />} />
-              <Route path="/blog" element={<Blog />} />
-              <Route path="/press" element={<Press />} />
-              <Route path="/team" element={<Team />} />
-              <Route path="/documentation" element={<Documentation />} />
-              <Route path="/help-center" element={<HelpCenter />} />
-              <Route path="/security" element={<Security />} />
-              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-              <Route path="/terms-of-service" element={<TermsOfService />} />
-              
-              {/* New documentation and developer portal routes */}
-              <Route path="/api-docs" element={<ApiDocumentation />} />
-              <Route path="/api-docs/:docType" element={<ApiDocumentation />} />
-              <Route path="/sdk/download/:sdkName/:version" element={<SDKDownload />} />
-              <Route path="/developer-portal" element={<DeveloperPortal />} />
-              <Route path="/developer-portal/:section" element={<DeveloperPortal />} />
-              
-              {/* New help center related pages */}
-              <Route path="/user-guides" element={<UserGuides />} />
-              <Route path="/support-ticket" element={<SupportTicket />} />
-              <Route path="/community-forum" element={<CommunityForum />} />
-              
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-            <Toaster />
-            <Sonner />
-            <ChatButton />
+            <TooltipProvider>
+              <Navigation />
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/reset-password" element={<ResetPassword />} />
+                <Route path="/onboarding/*" element={<Onboarding />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/dashboard/*" element={<Dashboard />} />
+                <Route path="/trading" element={<Trading />} />
+                <Route path="/trading/new" element={<TradingInterface />} />
+                <Route path="/trading/edit/:tradeId" element={<TradingInterface />} />
+                <Route path="/advice" element={<Advice />} />
+                <Route path="/advice/new" element={<NewAdviceInterface />} />
+                <Route path="/market-data" element={<MarketData />} />
+                <Route path="/analyze-wealth" element={<AnalyzeWealth />} />
+                <Route path="/analyze-wealth/asset/:assetId" element={<AssetDetail />} />
+                <Route path="/cashflow-management" element={<CashflowManagement />} />
+                <Route path="/cashflow" element={<CashflowManagement />} />
+                <Route path="/integrations" element={<Integrations />} />
+                <Route path="/integrations/oauth-callback" element={<IntegrationCallback />} />
+                <Route path="/user-management" element={<UserManagement />} />
+                <Route path="/dashboard/users" element={<UserManagement />} />
+                <Route path="/settings" element={<Settings />} />
+                <Route path="/reporting" element={<Reporting />} />
+                <Route path="/notifications" element={<Notifications />} />
+                <Route path="/activity" element={<Activity />} />
+                <Route path="/ai-assistant" element={<AIAssistantPage />} />
+                <Route path="/financial-chat" element={<FinancialChat />} />
+                <Route path="/borrow" element={<Borrow />} />
+                <Route path="/credit-facilities" element={<CreditFacilities />} />
+                <Route path="/esg" element={<ESG />} />
+                <Route path="/client-portal" element={<ClientPortal />} />
+                <Route path="/documents" element={<Documents />} />
+                <Route path="/tax-optimization" element={<TaxOptimization />} />
+                <Route path="/legacy-planning" element={<LegacyPlanning />} />
+                <Route path="/entity-management" element={<EntityManagement />} />
+                <Route path="/compliance-monitoring" element={<ComplianceMonitoring />} />
+                <Route path="/logout" element={<Logout />} />
+                <Route path="/calendar" element={<Calendar />} />
+                
+                {/* New routes for footer links */}
+                <Route path="/about" element={<About />} />
+                <Route path="/portfolio-management" element={<PortfolioManagement />} />
+                <Route path="/careers" element={<Careers />} />
+                <Route path="/careers/:id" element={<JobDetail />} />
+                <Route path="/careers/faq" element={<CareersFAQ />} />
+                <Route path="/blog" element={<Blog />} />
+                <Route path="/press" element={<Press />} />
+                <Route path="/team" element={<Team />} />
+                <Route path="/documentation" element={<Documentation />} />
+                <Route path="/help-center" element={<HelpCenter />} />
+                <Route path="/security" element={<Security />} />
+                <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+                <Route path="/terms-of-service" element={<TermsOfService />} />
+                
+                {/* New documentation and developer portal routes */}
+                <Route path="/api-docs" element={<ApiDocumentation />} />
+                <Route path="/api-docs/:docType" element={<ApiDocumentation />} />
+                <Route path="/sdk/download/:sdkName/:version" element={<SDKDownload />} />
+                <Route path="/developer-portal" element={<DeveloperPortal />} />
+                <Route path="/developer-portal/:section" element={<DeveloperPortal />} />
+                
+                {/* New help center related pages */}
+                <Route path="/user-guides" element={<UserGuides />} />
+                <Route path="/support-ticket" element={<SupportTicket />} />
+                <Route path="/community-forum" element={<CommunityForum />} />
+                
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+              <Toaster />
+              <Sonner />
+              <ChatButton />
+            </TooltipProvider>
           </OnboardingProvider>
         </TranslationProvider>
       </HelmetProvider>

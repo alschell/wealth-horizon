@@ -59,7 +59,7 @@ const MarketItemsGrid: React.FC<MarketItemsGridProps> = ({ items }) => {
 
   return (
     <>
-      <div className="grid grid-cols-2 gap-3 w-full">
+      <div className="grid grid-cols-3 gap-3 w-full">
         {items.map((item) => (
           <div 
             key={item.id} 

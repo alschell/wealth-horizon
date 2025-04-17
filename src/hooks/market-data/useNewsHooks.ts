@@ -8,33 +8,29 @@ import type { NewsItem } from "@/utils/market-data/types";
  * Hook for fetching market news
  * 
  * @example
- * const { data, isLoading, error, refetch } = useMarketNews("general", 10);
+ * const { data, isLoading, error, refetch } = useMarketNews("general", 5);
  */
 export function useMarketNews(category: string = "general", count: number = 10) {
   return useQuery<NewsItem[], Error>({
-    queryKey: ['market-news', category],
-    queryFn: () => getMarketNews(category, count),
+    queryKey: ['market-news', category, count],
+    queryFn: () => getMarketNews(category, count) as Promise<NewsItem[]>,
     ...DEFAULT_QUERY_CONFIG,
-    staleTime: 15 * 60 * 1000 // 15 minutes
+    staleTime: 5 * 60 * 1000 // 5 minutes
   });
 }
 
 /**
- * Hook for fetching company-specific news
+ * Hook for fetching company news
  * 
  * @example
- * const { data, isLoading, error, refetch } = useCompanyNews("AAPL");
+ * const { data, isLoading, error, refetch } = useCompanyNews("AAPL", 5);
  */
-export function useCompanyNews(
-  symbol: string,
-  from?: string,
-  to?: string
-) {
+export function useCompanyNews(symbol: string, count: number = 10) {
   return useQuery<NewsItem[], Error>({
-    queryKey: ['company-news', symbol, from, to],
-    queryFn: () => getCompanyNews(symbol, from, to),
+    queryKey: ['company-news', symbol, count],
+    queryFn: () => getCompanyNews(symbol, count) as Promise<NewsItem[]>,
     enabled: Boolean(symbol),
     ...DEFAULT_QUERY_CONFIG,
-    staleTime: 10 * 60 * 1000 // 10 minutes
+    staleTime: 5 * 60 * 1000 // 5 minutes
   });
 }

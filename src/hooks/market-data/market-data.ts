@@ -1,14 +1,21 @@
 
-// This file exports all market data hooks
-
-// Export hooks
 export { useQuote } from './useQuote';
+export { formatQuote } from '@/utils/market-data/api';
 export { useMarketNews, useCompanyNews } from './useNewsHooks';
-export { useSymbolSearch } from './useSymbolSearch';
 export { useIndices } from './useIndices';
 export { useCandleData } from './useCandleData';
-export { useMarketDataRefresh } from './useMarketDataRefresh';
 
-// Export utilities
-export { formatQuote } from '@/utils/market-data/api';
-export { refreshMarketData } from '@/utils/market-data/api';
+// Symbol search hook (placeholder implementation)
+export function useSymbolSearch(query: string) {
+  return { data: [], isLoading: false, error: null };
+}
+
+// Market data refresh function (placeholder implementation)
+export function refreshMarketData() {
+  return Promise.resolve();
+}
+
+// Market data refresh hook (placeholder implementation)
+export function useMarketDataRefresh() {
+  return { refresh: refreshMarketData };
+}

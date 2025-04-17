@@ -1,4 +1,3 @@
-
 import React, { useEffect } from "react";
 import { ChevronDown, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -11,7 +10,6 @@ interface HeroSectionProps {
 }
 
 const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToFeatures }) => {
-  // Add debugging
   useEffect(() => {
     console.log("HeroSection component mounted");
     console.log("HeroSection container:", document.querySelector('section.relative'));

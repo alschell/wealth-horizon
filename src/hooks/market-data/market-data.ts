@@ -17,5 +17,6 @@ export function refreshMarketData() {
 
 // Market data refresh hook (placeholder implementation)
 export function useMarketDataRefresh() {
-  return { refresh: refreshMarketData };
+  const refresh = (type?: string, symbols?: string[]) => refreshMarketData();
+  return { refresh, refreshAll: () => refreshMarketData() };
 }

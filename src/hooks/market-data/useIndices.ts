@@ -13,7 +13,10 @@ import type { IndexData } from "@/utils/market-data/types";
 export function useIndices(symbols?: string[]) {
   return useQuery<IndexData[], Error>({
     queryKey: ['indices', symbols ? symbols.join(',') : 'all'],
-    queryFn: () => getIndices(symbols) as Promise<IndexData[]>,
+    queryFn: async () => {
+      const result = await getIndices(symbols);
+      return result as IndexData[];
+    },
     ...DEFAULT_QUERY_CONFIG,
     staleTime: 5 * 60 * 1000 // 5 minutes
   });

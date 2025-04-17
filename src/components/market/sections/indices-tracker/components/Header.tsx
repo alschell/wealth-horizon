@@ -27,7 +27,7 @@ const Header: React.FC<HeaderProps> = ({
           <h2 className="text-2xl font-bold">Global Indices</h2>
           <Badge variant="outline" className="text-xs">Live</Badge>
         </div>
-        <FilterButtons filter={filter} setFilter={setFilter} />
+        <FilterButtons activeFilter={filter} onFilterChange={setFilter} />
       </div>
       <SearchAndFilter searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
     </motion.div>

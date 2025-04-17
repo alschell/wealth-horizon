@@ -14,8 +14,14 @@ jest.mock('@/utils/market-data/api', () => ({
   getIndices: jest.fn(),
   getCandleData: jest.fn(),
   formatQuote: jest.fn((data) => ({ 
-    raw: data, 
-    formatted: { price: '100.00' } 
+    price: '100.00',
+    change: '5.00',
+    percentChange: '5.00',
+    high: '105.00',
+    low: '95.00',
+    open: '98.00',
+    previousClose: '95.00',
+    timestamp: new Date(1234567890 * 1000).toLocaleDateString()
   })),
   refreshMarketData: jest.fn(),
 }));
@@ -65,7 +71,7 @@ describe('Market Data Hooks', () => {
       await waitFor(() => result.current.isSuccess);
 
       // After data load
-      expect(api.getQuote).toHaveBeenCalledWith('AAPL', expect.any(Object));
+      expect(api.getQuote).toHaveBeenCalledWith('AAPL');
       expect(result.current.data).toBeDefined();
       expect(result.current.data?.formatted.price).toBe('100.00');
     });
@@ -81,7 +87,7 @@ describe('Market Data Hooks', () => {
 
       await waitFor(() => result.current.isSuccess);
 
-      expect(api.getMarketNews).toHaveBeenCalledWith('general', 5, expect.any(Object));
+      expect(api.getMarketNews).toHaveBeenCalledWith('general', 5);
       expect(result.current.data).toEqual(mockNews);
     });
   });

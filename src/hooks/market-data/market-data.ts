@@ -13,7 +13,7 @@ export { useMarketDataRefresh } from './useMarketDataRefresh';
 export { formatQuote } from '@/utils/market-data/api';
 
 // Import the MarketDataType for proper typing
-import { MarketDataType } from '@/utils/market-data/types';
+import type { MarketDataType } from '@/utils/market-data/types';
 
 // Export refresh function for direct use outside hooks
 export const refreshMarketData = (types: Array<{ type: MarketDataType; symbol?: string; params?: Record<string, any> }>) => {

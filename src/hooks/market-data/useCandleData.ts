@@ -16,21 +16,19 @@ export function useCandleData(
   from: number = Math.floor(Date.now() / 1000) - 30 * 24 * 60 * 60,
   to: number = Math.floor(Date.now() / 1000)
 ) {
-  return useQuery<CandleData>({
+  return useQuery<CandleData, Error>({
     queryKey: ['candle-data', symbol, resolution, from, to],
     queryFn: async () => {
       marketLogger.info(`Fetching candle data for ${symbol} with resolution ${resolution}`);
       const startTime = performance.now();
-      try {
-        const data = await getCandleData(symbol, resolution, from, to);
-        const endTime = performance.now();
-        marketLogger.debug(`Candle data for ${symbol} fetched in ${(endTime - startTime).toFixed(2)}ms`, 
-          { points: data.t?.length || 0 });
-        return data;
-      } catch (error) {
-        marketLogger.error(`Failed to fetch candle data for ${symbol}`, error);
-        throw error;
-      }
+      
+      const data = await getCandleData(symbol, resolution, from, to);
+      const endTime = performance.now();
+      
+      marketLogger.debug(`Candle data for ${symbol} fetched in ${(endTime - startTime).toFixed(2)}ms`, 
+        { points: data.t?.length || 0 });
+      
+      return data;
     },
     enabled: Boolean(symbol),
     ...DEFAULT_QUERY_CONFIG,

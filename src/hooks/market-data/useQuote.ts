@@ -16,15 +16,13 @@ export function useQuote(symbol: string) {
     queryFn: async () => {
       marketLogger.info(`Fetching quote for ${symbol}`);
       const startTime = performance.now();
-      try {
-        const data = await getQuote(symbol);
-        const endTime = performance.now();
-        marketLogger.debug(`Quote for ${symbol} fetched in ${(endTime - startTime).toFixed(2)}ms`, data);
-        return data;
-      } catch (error) {
-        marketLogger.error(`Failed to fetch quote for ${symbol}`, error);
-        throw error;
-      }
+      
+      const data = await getQuote(symbol);
+      const endTime = performance.now();
+      
+      marketLogger.debug(`Quote for ${symbol} fetched in ${(endTime - startTime).toFixed(2)}ms`, data);
+      
+      return data;
     },
     enabled: Boolean(symbol),
     ...DEFAULT_QUERY_CONFIG,

@@ -11,21 +11,19 @@ import type { IndexData } from "@/utils/market-data/types";
  * const { data, isLoading, error, refetch } = useIndices(["^GSPC", "^DJI"]);
  */
 export function useIndices(symbols?: string[]) {
-  return useQuery<IndexData[]>({
+  return useQuery<IndexData[], Error>({
     queryKey: ['indices', symbols ? symbols.join(',') : 'all'],
     queryFn: async () => {
       marketLogger.info(`Fetching indices ${symbols ? symbols.join(', ') : 'all'}`);
       const startTime = performance.now();
-      try {
-        const data = await getIndices(symbols);
-        const endTime = performance.now();
-        marketLogger.debug(`Indices fetched in ${(endTime - startTime).toFixed(2)}ms`, 
-          { count: data?.length || 0 });
-        return data || [];
-      } catch (error) {
-        marketLogger.error(`Failed to fetch indices`, error);
-        throw error;
-      }
+      
+      const data = await getIndices(symbols);
+      const endTime = performance.now();
+      
+      marketLogger.debug(`Indices fetched in ${(endTime - startTime).toFixed(2)}ms`, 
+        { count: data?.length || 0 });
+      
+      return data || [];
     },
     ...DEFAULT_QUERY_CONFIG,
     staleTime: 5 * 60 * 1000 // 5 minutes

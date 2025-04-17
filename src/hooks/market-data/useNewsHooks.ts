@@ -11,21 +11,19 @@ import type { NewsItem } from "@/utils/market-data/types";
  * const { data, isLoading, error, refetch } = useMarketNews("general", 10);
  */
 export function useMarketNews(category: string = "general", count: number = 10) {
-  return useQuery<NewsItem[]>({
+  return useQuery<NewsItem[], Error>({
     queryKey: ['market-news', category],
     queryFn: async () => {
       marketLogger.info(`Fetching market news for category ${category}`);
       const startTime = performance.now();
-      try {
-        const data = await getMarketNews(category, count);
-        const endTime = performance.now();
-        marketLogger.debug(`Market news fetched in ${(endTime - startTime).toFixed(2)}ms`, 
-          { count: data?.length || 0 });
-        return data || [];
-      } catch (error) {
-        marketLogger.error(`Failed to fetch market news for ${category}`, error);
-        throw error;
-      }
+      
+      const data = await getMarketNews(category, count);
+      const endTime = performance.now();
+      
+      marketLogger.debug(`Market news fetched in ${(endTime - startTime).toFixed(2)}ms`, 
+        { count: data?.length || 0 });
+      
+      return data || [];
     },
     ...DEFAULT_QUERY_CONFIG,
     staleTime: 15 * 60 * 1000 // 15 minutes
@@ -43,21 +41,19 @@ export function useCompanyNews(
   from?: string,
   to?: string
 ) {
-  return useQuery<NewsItem[]>({
+  return useQuery<NewsItem[], Error>({
     queryKey: ['company-news', symbol, from, to],
     queryFn: async () => {
       marketLogger.info(`Fetching news for ${symbol}`);
       const startTime = performance.now();
-      try {
-        const data = await getCompanyNews(symbol, from, to);
-        const endTime = performance.now();
-        marketLogger.debug(`Company news for ${symbol} fetched in ${(endTime - startTime).toFixed(2)}ms`, 
-          { count: data?.length || 0 });
-        return data || [];
-      } catch (error) {
-        marketLogger.error(`Failed to fetch news for ${symbol}`, error);
-        throw error;
-      }
+      
+      const data = await getCompanyNews(symbol, from, to);
+      const endTime = performance.now();
+      
+      marketLogger.debug(`Company news for ${symbol} fetched in ${(endTime - startTime).toFixed(2)}ms`, 
+        { count: data?.length || 0 });
+      
+      return data || [];
     },
     enabled: Boolean(symbol),
     ...DEFAULT_QUERY_CONFIG,

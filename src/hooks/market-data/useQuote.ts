@@ -13,9 +13,7 @@ import type { Quote } from "@/utils/market-data/types";
 export function useQuote(symbol: string) {
   return useQuery<Quote, Error, { raw: Quote; formatted: ReturnType<typeof formatQuote> }>({
     queryKey: ['quote', symbol],
-    queryFn: async (): Promise<Quote> => {
-      return getQuote(symbol);
-    },
+    queryFn: () => getQuote(symbol),
     enabled: Boolean(symbol),
     ...DEFAULT_QUERY_CONFIG,
     select: (data: Quote) => {

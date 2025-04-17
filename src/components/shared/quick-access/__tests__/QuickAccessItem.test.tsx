@@ -48,10 +48,17 @@ describe('QuickAccessItem', () => {
     
     const linkElement = screen.getByText('Test Item').closest('a');
     
-    // Mock window.location.href for testing
-    const originalLocation = window.location;
-    delete window.location;
-    window.location = { ...originalLocation, href: '' };
+    // Mock the window.location for testing
+    const originalHref = window.location.href;
+    
+    // Create a mock implementation for modifying href
+    Object.defineProperty(window, 'location', {
+      value: {
+        ...window.location,
+        href: '',
+      },
+      writable: true,
+    });
     
     // Test Enter key
     fireEvent.keyDown(linkElement as HTMLElement, { key: 'Enter' });
@@ -63,7 +70,13 @@ describe('QuickAccessItem', () => {
     expect(window.location.href).toBe('/test-path');
     
     // Restore original location
-    window.location = originalLocation;
+    Object.defineProperty(window, 'location', {
+      value: {
+        ...window.location,
+        href: originalHref,
+      },
+      writable: true,
+    });
   });
   
   test('applies custom className when provided', () => {

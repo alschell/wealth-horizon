@@ -4,6 +4,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { marketLogger } from "./utils";
 import { clearAllMarketCaches } from "@/utils/market-data/cache";
+import type { RefreshableMarketDataType, UseMarketDataRefreshReturn } from "./types";
 
 /**
  * Hook for refreshing market data across the application
@@ -17,7 +18,7 @@ import { clearAllMarketCaches } from "@/utils/market-data/cache";
  * // Refresh all market data
  * refreshAll();
  */
-export function useMarketDataRefresh() {
+export function useMarketDataRefresh(): UseMarketDataRefreshReturn {
   const queryClient = useQueryClient();
   
   /**
@@ -26,13 +27,20 @@ export function useMarketDataRefresh() {
    * @param additionalParams Additional parameters for the query key
    */
   const refreshMarketData = useCallback((
-    dataType: 'indices' | 'news' | 'quotes' | 'candles' | 'search', 
+    dataType: RefreshableMarketDataType, 
     additionalParams?: string[]
   ) => {
     const queryKey = additionalParams ? [dataType, ...additionalParams] : [dataType];
     
     marketLogger.info(`Manually refreshing market data: ${dataType}`);
-    queryClient.invalidateQueries({ queryKey });
+    
+    // Map the dataType to the correct query key if needed
+    let actualQueryKey = queryKey;
+    if (dataType === 'news') {
+      actualQueryKey = ['market-news'];
+    }
+    
+    queryClient.invalidateQueries({ queryKey: actualQueryKey });
     
     toast.info(`Refreshing ${dataType} data`);
   }, [queryClient]);

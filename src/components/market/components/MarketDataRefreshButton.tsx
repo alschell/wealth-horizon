@@ -47,8 +47,6 @@ const MarketDataRefreshButton: React.FC<MarketDataRefreshButtonProps> = ({
     
     try {
       // Handle each type of market data refresh
-      let success = true;
-      
       if (types.includes('indices')) {
         refreshMarketData('indices');
       }

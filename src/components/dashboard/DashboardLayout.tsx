@@ -14,7 +14,7 @@ interface DashboardLayoutProps {
 const DashboardLayout = ({ 
   children, 
   fullWidth = false,
-  paddingY = "pt-12",
+  paddingY = "pt-6",
   paddingX = "p-4 md:p-6"
 }: DashboardLayoutProps) => {
   const location = useLocation();
@@ -25,7 +25,7 @@ const DashboardLayout = ({
   }, [location.pathname]);
 
   return (
-    <div className="min-h-screen flex flex-col w-full bg-background pt-16"> {/* Added pt-16 for fixed header */}
+    <div className="min-h-screen flex flex-col w-full bg-background pt-16"> {/* pt-16 for fixed header */}
       <div className="flex-1 flex flex-col overflow-hidden">
         <main className="flex-1 overflow-auto">
           <div 

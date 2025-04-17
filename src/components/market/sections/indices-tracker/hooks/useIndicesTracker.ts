@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { IndexData, ChartDataPoint } from "../types";
-import { worldIndices, regionToCountryMap, allWorldIndices } from "../data/worldIndices";
+import { regionToCountryMap, allWorldIndices } from "../data/worldIndices";
 import { useIndices } from "@/hooks/market-data";
 import { toast } from "@/components/ui/use-toast";
 
@@ -19,36 +19,38 @@ export const useIndicesTracker = () => {
   const { data: apiIndices, isLoading, error } = useIndices();
   
   // Combine API indices with our complete list if available
-  const indices = apiIndices?.length ? apiIndices.map(apiIndex => {
-    // Find matching index in our detailed list
-    const matchedIndex = allWorldIndices.find(idx => 
-      idx.symbol === apiIndex.symbol || 
-      idx.name.includes(apiIndex.symbol.replace('^', ''))
-    );
-    
-    if (matchedIndex) {
-      // Update with live data
-      return {
-        ...matchedIndex,
-        value: apiIndex.data.c,
-        change: apiIndex.data.d,
-        percentChange: apiIndex.data.dp
-      };
-    }
-    
-    // Fallback to API data with default values for missing fields
-    return {
-      id: apiIndex.symbol,
-      name: apiIndex.symbol,
-      symbol: apiIndex.symbol,
-      value: apiIndex.data.c,
-      change: apiIndex.data.d,
-      percentChange: apiIndex.data.dp,
-      region: "Unknown",
-      description: `${apiIndex.symbol} index`,
-      volume: 0
-    } as IndexData;
-  }) : allWorldIndices;
+  const indices: IndexData[] = apiIndices?.length 
+    ? apiIndices.map(apiIndex => {
+        // Find matching index in our detailed list
+        const matchedIndex = allWorldIndices.find(idx => 
+          idx.symbol === apiIndex.symbol || 
+          idx.name.includes(apiIndex.symbol.replace('^', ''))
+        );
+        
+        if (matchedIndex) {
+          // Update with live data
+          return {
+            ...matchedIndex,
+            value: apiIndex.data.c,
+            change: apiIndex.data.d,
+            percentChange: apiIndex.data.dp
+          };
+        }
+        
+        // Fallback to API data with default values for missing fields
+        return {
+          id: apiIndex.symbol,
+          name: apiIndex.symbol,
+          symbol: apiIndex.symbol,
+          value: apiIndex.data.c,
+          change: apiIndex.data.d,
+          percentChange: apiIndex.data.dp,
+          region: "Other",
+          description: `${apiIndex.symbol} index`,
+          volume: 0
+        };
+      })
+    : allWorldIndices;
   
   const location = useLocation();
   const navigate = useNavigate();
@@ -66,6 +68,7 @@ export const useIndicesTracker = () => {
         description: "Using cached data. Please check your connection and try again.",
         variant: "destructive"
       });
+      console.error("API Error:", error);
     }
   }, [error]);
   

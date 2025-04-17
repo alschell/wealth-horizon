@@ -21,12 +21,20 @@ export function useIndices(customSymbols?: string[]) {
         const endTime = performance.now();
         marketLogger.debug(`Indices data fetched in ${(endTime - startTime).toFixed(2)}ms`, 
           { count: data.length });
+        
+        if (!data || data.length === 0) {
+          throw new Error("No indices data returned from API");
+        }
+        
         return data;
       } catch (error) {
         marketLogger.error(`Failed to fetch indices data`, error);
+        console.error("Indices API error details:", error);
         throw error;
       }
     },
     ...DEFAULT_QUERY_CONFIG,
+    retry: 2,
+    refetchOnWindowFocus: false,
   });
 }

@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Star, TrendingUp, TrendingDown, Search, Flag, Globe } from "lucide-react";
 import { IndexData } from "../types";
@@ -82,10 +81,10 @@ const IndicesTable: React.FC<IndicesTableProps> = ({
                     <img 
                       src={`https://flagcdn.com/16x12/${getCountryFlagCode(index.region)}.png`} 
                       alt={index.region} 
-                      className="mr-1.5 h-3" 
+                      className="mr-2 h-3" 
                     />
                   ) : (
-                    <Globe className="h-4 w-4 mr-1 text-gray-400" />
+                    <Globe className="h-4 w-4 mr-2 text-gray-400" />
                   )}
                   <div>
                     <div className="text-sm font-medium text-gray-900">{index.name}</div>

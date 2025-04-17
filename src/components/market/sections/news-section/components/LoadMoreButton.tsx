@@ -3,16 +3,24 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 
-const LoadMoreButton: React.FC = () => {
+interface LoadMoreButtonProps {
+  onClick: () => void;
+}
+
+const LoadMoreButton: React.FC<LoadMoreButtonProps> = ({ onClick }) => {
   return (
-    <motion.div 
-      variants={{
-        hidden: { opacity: 0, y: 20 },
-        show: { opacity: 1, y: 0 }
-      }}
-      className="flex justify-center"
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="flex justify-center pt-4"
     >
-      <Button>Load More News</Button>
+      <Button 
+        variant="outline" 
+        onClick={onClick}
+        className="min-w-[200px]"
+      >
+        Load More News
+      </Button>
     </motion.div>
   );
 };

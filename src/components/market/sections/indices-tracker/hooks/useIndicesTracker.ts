@@ -1,8 +1,7 @@
-
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { IndexData } from "../types";
-import { mockIndices } from "../data/mockData";
+import { worldIndices, regionToCountryMap } from "../data/worldIndices";
 
 /**
  * Custom hook for managing the indices tracker state and functionality
@@ -10,7 +9,7 @@ import { mockIndices } from "../data/mockData";
 export const useIndicesTracker = () => {
   const [filter, setFilter] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
-  const [subscribedIndices, setSubscribedIndices] = useState<string[]>(["S&P 500", "NASDAQ"]);
+  const [subscribedIndices, setSubscribedIndices] = useState<string[]>(["S&P 500", "NASDAQ Composite", "Dow Jones", "FTSE 100", "Nikkei 225"]);
   const [selectedIndex, setSelectedIndex] = useState<IndexData | null>(null);
   
   const location = useLocation();
@@ -29,7 +28,7 @@ export const useIndicesTracker = () => {
     const indexName = params.get('index');
     
     if (indexName) {
-      const foundIndex = mockIndices.find(idx => idx.name === indexName);
+      const foundIndex = worldIndices.find(idx => idx.name === indexName);
       if (foundIndex) {
         setSelectedIndex(foundIndex);
       }
@@ -42,14 +41,14 @@ export const useIndicesTracker = () => {
   const filterByRegion = (index: IndexData, currentFilter: string): boolean => {
     if (currentFilter === "all") {
       return true;
-    } else if (currentFilter === "United States") {
-      return index.region === "United States";
-    } else if (currentFilter === "Europe") {
-      return ["United Kingdom", "Germany", "France", "Italy", "Spain", "Netherlands", "Switzerland"].includes(index.region);
-    } else if (currentFilter === "Asia") {
-      return ["Japan", "China", "Hong Kong", "Singapore", "South Korea", "India", "Australia"].includes(index.region);
     }
     
+    // Check if filter is one of our special region groups
+    if (regionToCountryMap[currentFilter]) {
+      return regionToCountryMap[currentFilter].includes(index.region);
+    }
+    
+    // Otherwise filter by exact region match
     return index.region === currentFilter;
   };
   
@@ -58,14 +57,20 @@ export const useIndicesTracker = () => {
    */
   const filterBySearchTerm = (index: IndexData, term: string): boolean => {
     if (!term) return true;
-    return index.name.toLowerCase().includes(term.toLowerCase());
+    
+    const searchLower = term.toLowerCase();
+    return (
+      index.name.toLowerCase().includes(searchLower) || 
+      index.region.toLowerCase().includes(searchLower) ||
+      index.description.toLowerCase().includes(searchLower)
+    );
   };
   
   /**
    * Apply all filters and sorting to indices
    */
   const getFilteredIndices = (): IndexData[] => {
-    return mockIndices
+    return worldIndices
       .filter(index => {
         // Apply search filter
         if (!filterBySearchTerm(index, searchTerm)) {
@@ -100,10 +105,10 @@ export const useIndicesTracker = () => {
   };
 
   /**
-   * Get sorted indices
+   * Get all indices sorted alphabetically
    */
   const getSortedIndices = (): IndexData[] => {
-    return mockIndices.sort((a, b) => a.name.localeCompare(b.name));
+    return [...worldIndices].sort((a, b) => a.name.localeCompare(b.name));
   };
 
   const filteredIndices = getFilteredIndices();

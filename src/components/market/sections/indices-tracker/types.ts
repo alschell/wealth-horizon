@@ -2,13 +2,19 @@
 export interface IndexData {
   id: string;
   name: string;
-  value: string;
+  symbol: string;
+  value: number;
   change: number;
-  volume: string;
+  percentChange: number;
   region: string;
+  description: string;
 }
 
-export interface ChartDataPoint {
-  date: string;
-  value: number;
+export interface IndicesTrackerProps {
+  preselectedIndex?: string;
+}
+
+export interface FilterOption {
+  id: string;
+  name: string;
 }

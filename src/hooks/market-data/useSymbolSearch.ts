@@ -20,7 +20,7 @@ export function useSymbolSearch() {
     refetch
   } = useQuery<SymbolSearchResult, Error>({
     queryKey: ['symbol-search', ''],
-    queryFn: async () => {
+    queryFn: async (): Promise<SymbolSearchResult> => {
       marketLogger.info(`Performing symbol search`);
       const startTime = performance.now();
       

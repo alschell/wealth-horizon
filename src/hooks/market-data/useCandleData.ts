@@ -18,7 +18,7 @@ export function useCandleData(
 ) {
   return useQuery<CandleData, Error>({
     queryKey: ['candle-data', symbol, resolution, from, to],
-    queryFn: async () => {
+    queryFn: async (): Promise<CandleData> => {
       marketLogger.info(`Fetching candle data for ${symbol} with resolution ${resolution}`);
       const startTime = performance.now();
       

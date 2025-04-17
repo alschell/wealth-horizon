@@ -1,4 +1,3 @@
-
 import React, { useEffect } from "react";
 import { HelmetProvider } from "react-helmet-async";
 import { Toaster } from "@/components/ui/toaster";
@@ -81,9 +80,7 @@ function App() {
         staleTime: 1000 * 60 * 5, // 5 minutes
         retry: 2,
         retryDelay: attemptIndex => Math.min(1000 * (2 ** attemptIndex), 30000),
-        onError: (error) => {
-          console.error("Query error:", error);
-        }
+        // Remove the onError property as it's not supported in this context
       },
     }
   });

@@ -20,7 +20,7 @@ export function useSymbolSearch() {
     refetch
   } = useQuery<SymbolSearchResult, Error>({
     queryKey: ['symbol-search', ''],
-    queryFn: () => searchSymbols(''),
+    queryFn: () => searchSymbols('') as Promise<SymbolSearchResult>,
     ...DEFAULT_QUERY_CONFIG,
     enabled: false // Don't run the query automatically
   });

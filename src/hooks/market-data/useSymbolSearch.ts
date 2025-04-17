@@ -15,9 +15,7 @@ import type { SymbolSearchResult } from "@/utils/market-data/types";
 export function useSymbolSearch() {
   const { refetch, data, isLoading, error } = useQuery<SymbolSearchResult, Error>({
     queryKey: ['symbol-search', ''],
-    queryFn: async () => {
-      return await searchSymbols('');
-    },
+    queryFn: () => searchSymbols(''),
     ...DEFAULT_QUERY_CONFIG,
     enabled: false // Don't run the query automatically
   });

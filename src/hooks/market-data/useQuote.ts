@@ -14,9 +14,7 @@ import type { FormattedQuote } from "./types";
 export function useQuote(symbol: string) {
   return useQuery<Quote, Error, { raw: Quote; formatted: FormattedQuote }>({
     queryKey: ['quote', symbol],
-    queryFn: async () => {
-      return await getQuote(symbol);
-    },
+    queryFn: () => getQuote(symbol),
     enabled: Boolean(symbol),
     ...DEFAULT_QUERY_CONFIG,
     staleTime: 5 * 60 * 1000, // 5 minutes

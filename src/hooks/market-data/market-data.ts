@@ -11,14 +11,4 @@ export { useMarketDataRefresh } from './useMarketDataRefresh';
 
 // Export utilities
 export { formatQuote } from '@/utils/market-data/api';
-
-// Import the MarketDataType for proper typing
-import type { MarketDataType } from '@/utils/market-data/types';
-
-// Export refresh function for direct use outside hooks
-export const refreshMarketData = (types: Array<{ type: MarketDataType; symbol?: string; params?: Record<string, any> }>) => {
-  // This is a proxy function that calls the API function
-  return import('@/utils/market-data/api').then(({ refreshMarketData }) => {
-    return refreshMarketData(types);
-  });
-};
+export { refreshMarketData } from '@/utils/market-data/api';

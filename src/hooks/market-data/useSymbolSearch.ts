@@ -1,9 +1,8 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { searchSymbols } from "@/utils/market-data/api";
-import { marketLogger, DEFAULT_QUERY_CONFIG } from "./utils";
+import { DEFAULT_QUERY_CONFIG } from "./utils";
 import { SymbolSearchResult } from "@/utils/market-data/types";
-import { createTypedQuery } from "./createTypedQuery";
 
 /**
  * Hook for searching symbols
@@ -14,9 +13,6 @@ import { createTypedQuery } from "./createTypedQuery";
  * search("Apple");
  */
 export function useSymbolSearch() {
-  // Create a properly typed query function
-  const fetchSymbolsQuery = createTypedQuery<SymbolSearchResult, [string]>(searchSymbols);
-  
   const {
     data: results,
     isLoading,
@@ -24,14 +20,15 @@ export function useSymbolSearch() {
     refetch
   } = useQuery<SymbolSearchResult, Error>({
     queryKey: ['symbol-search', ''],
-    queryFn: fetchSymbolsQuery(''),
+    queryFn: async () => {
+      return searchSymbols('');
+    },
     ...DEFAULT_QUERY_CONFIG,
     enabled: false // Don't run the query automatically
   });
   
   const search = async (query: string) => {
     if (!query || query.length < 2) return;
-    marketLogger.info(`Searching for symbol: ${query}`);
     return refetch();
   };
 

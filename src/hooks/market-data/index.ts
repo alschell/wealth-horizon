@@ -7,7 +7,9 @@ export {
   useSymbolSearch,
   useIndices,
   useCandleData,
-  useMarketDataRefresh,
-  formatQuote,
-  refreshMarketData
+  useMarketDataRefresh
 } from './market-data';
+
+// Re-export utilities
+export { formatQuote } from '@/utils/market-data/api';
+export { refreshMarketData } from '@/utils/market-data/api';

@@ -1,11 +1,14 @@
 
 import React from "react";
 import { Mail, Phone, MapPin, HelpCircle, BriefcaseIcon, NewspaperIcon, UsersIcon, HandshakeIcon } from "lucide-react";
+import TranslatedText from "@/components/ui/translated-text";
 
 const ContactInformation: React.FC = () => {
   return (
     <div className="bg-white rounded-2xl p-8 h-full shadow-sm border border-gray-200">
-      <h3 className="text-xl font-semibold text-gray-900 mb-6">Contact Information</h3>
+      <h3 className="text-xl font-semibold text-gray-900 mb-6">
+        <TranslatedText>Contact Information</TranslatedText>
+      </h3>
       
       <div className="space-y-8">
         {/* Client Support Section - Changed icon from HeadphonesIcon to HelpCircle */}
@@ -15,7 +18,9 @@ const ContactInformation: React.FC = () => {
               <HelpCircle size={20} />
             </div>
             <div>
-              <h4 className="text-gray-900 font-medium mb-1">Client Support</h4>
+              <h4 className="text-gray-900 font-medium mb-1">
+                <TranslatedText>Client Support</TranslatedText>
+              </h4>
               <p className="text-gray-600 text-sm">
                 <a href="mailto:support@wealthhorizon.ai" className="text-indigo-600 hover:text-indigo-800">
                   support@wealthhorizon.ai
@@ -31,7 +36,9 @@ const ContactInformation: React.FC = () => {
             <BriefcaseIcon size={20} />
           </div>
           <div>
-            <h4 className="text-gray-900 font-medium mb-1">Sales</h4>
+            <h4 className="text-gray-900 font-medium mb-1">
+              <TranslatedText>Sales</TranslatedText>
+            </h4>
             <p className="text-gray-600 text-sm">
               <a href="mailto:sales@wealthhorizon.ai" className="text-indigo-600 hover:text-indigo-800">
                 sales@wealthhorizon.ai
@@ -46,7 +53,9 @@ const ContactInformation: React.FC = () => {
             <NewspaperIcon size={20} />
           </div>
           <div>
-            <h4 className="text-gray-900 font-medium mb-1">Press Inquiries</h4>
+            <h4 className="text-gray-900 font-medium mb-1">
+              <TranslatedText>Press Inquiries</TranslatedText>
+            </h4>
             <p className="text-gray-600 text-sm">
               <a href="mailto:media@wealthhorizon.ai" className="text-indigo-600 hover:text-indigo-800">
                 media@wealthhorizon.ai
@@ -61,7 +70,9 @@ const ContactInformation: React.FC = () => {
             <UsersIcon size={20} />
           </div>
           <div>
-            <h4 className="text-gray-900 font-medium mb-1">Marketing Inquiries</h4>
+            <h4 className="text-gray-900 font-medium mb-1">
+              <TranslatedText>Marketing Inquiries</TranslatedText>
+            </h4>
             <p className="text-gray-600 text-sm">
               <a href="mailto:marketing@wealthhorizon.ai" className="text-indigo-600 hover:text-indigo-800">
                 marketing@wealthhorizon.ai
@@ -76,7 +87,9 @@ const ContactInformation: React.FC = () => {
             <HandshakeIcon size={20} />
           </div>
           <div>
-            <h4 className="text-gray-900 font-medium mb-1">Partnerships</h4>
+            <h4 className="text-gray-900 font-medium mb-1">
+              <TranslatedText>Partnerships</TranslatedText>
+            </h4>
             <p className="text-gray-600 text-sm">
               <a href="mailto:partnerships@wealthhorizon.ai" className="text-indigo-600 hover:text-indigo-800">
                 partnerships@wealthhorizon.ai
@@ -91,13 +104,17 @@ const ContactInformation: React.FC = () => {
             <Phone size={20} />
           </div>
           <div>
-            <h4 className="text-gray-900 font-medium mb-1">Phone</h4>
+            <h4 className="text-gray-900 font-medium mb-1">
+              <TranslatedText>Phone</TranslatedText>
+            </h4>
             <p className="text-gray-600 text-sm">
               <a href="tel:+18312731336" className="text-indigo-600 hover:text-indigo-800">
                 +1 (831) 273-1336
               </a>
             </p>
-            <p className="text-gray-600 text-sm">Monday-Friday, 9am-6pm EST</p>
+            <p className="text-gray-600 text-sm">
+              <TranslatedText>Monday-Friday, 9am-6pm EST</TranslatedText>
+            </p>
           </div>
         </div>
         
@@ -107,11 +124,13 @@ const ContactInformation: React.FC = () => {
             <MapPin size={20} />
           </div>
           <div>
-            <h4 className="text-gray-900 font-medium mb-1">Office</h4>
+            <h4 className="text-gray-900 font-medium mb-1">
+              <TranslatedText>Office</TranslatedText>
+            </h4>
             <p className="text-gray-600 text-sm">
               8 The Green STE B<br />
               Dover, DE 19901<br />
-              United States
+              <TranslatedText>United States</TranslatedText>
             </p>
           </div>
         </div>

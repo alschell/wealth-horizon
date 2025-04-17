@@ -1,6 +1,7 @@
 
 import React from "react";
 import { FadeIn } from "@/components/ui/animation";
+import TranslatedText from "@/components/ui/translated-text";
 
 const testimonials = [
   {
@@ -26,9 +27,12 @@ const TestimonialsSection: React.FC = () => {
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-16">
           <FadeIn>
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Trusted by Leading Institutions</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
+              <TranslatedText>Trusted by Leading Institutions</TranslatedText>
+            </h2>
             <p className="mt-4 text-xl text-gray-600 max-w-3xl mx-auto">
-              See what family offices and institutional investors say about <span className="text-indigo-600">Wealth</span><span>Horizon</span>.
+              <TranslatedText>See what family offices and institutional investors say about </TranslatedText>
+              <span className="text-indigo-600">Wealth</span><span>Horizon</span>.
             </p>
           </FadeIn>
         </div>
@@ -42,7 +46,9 @@ const TestimonialsSection: React.FC = () => {
                     <span key={star} className="text-yellow-400">★</span>
                   ))}
                 </div>
-                <p className="text-gray-700 flex-grow italic mb-6">"{testimonial.quote}"</p>
+                <p className="text-gray-700 flex-grow italic mb-6">
+                  "<TranslatedText>{testimonial.quote}</TranslatedText>"
+                </p>
                 <div className="flex items-center">
                   <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 font-semibold">
                     {testimonial.name.charAt(0)}

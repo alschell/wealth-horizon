@@ -1,8 +1,9 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { getMarketNews, getCompanyNews } from "@/utils/market-data/api";
-import { marketLogger, DEFAULT_QUERY_CONFIG } from "./utils";
+import { marketLogger, DEFAULT_QUERY_CONFIG, MOCK_NEWS_DATA } from "./utils";
 import type { NewsItem } from "@/utils/market-data/types";
+import { toast } from "sonner";
 
 /**
  * Hook for fetching general market news
@@ -32,20 +33,37 @@ export function useMarketNews(category: string = "general", count: number = 10) 
       try {
         console.log(`Fetching market news for category: ${category}, count: ${count}`);
         
-        const data = await getMarketNews(category, count);
-        const endTime = performance.now();
-        
-        // Debug logging
-        console.log(`Market news API response for ${category}:`, data);
-        
-        marketLogger.debug(`${category} market news fetched in ${(endTime - startTime).toFixed(2)}ms`, 
-          { count: data.length });
+        // First try fetching from the API
+        try {
+          const data = await getMarketNews(category, count);
+          const endTime = performance.now();
           
-        if (!data || data.length === 0) {
-          console.warn(`No news data returned for category: ${category}`);
+          // Debug logging
+          console.log(`Market news API response for ${category}:`, data);
+          
+          // If we have valid data, return it
+          if (data && Array.isArray(data) && data.length > 0) {
+            marketLogger.debug(`${category} market news fetched in ${(endTime - startTime).toFixed(2)}ms`, 
+              { count: data.length });
+            return data;
+          } else {
+            console.warn(`Empty or invalid news data returned for category: ${category}`);
+            throw new Error("API returned empty or invalid data");
+          }
+        } catch (fetchError) {
+          console.error(`Error fetching news data:`, fetchError);
+          
+          // Fall back to mock data
+          const filteredMockNews = MOCK_NEWS_DATA
+            .filter(item => category === "general" || item.category === category)
+            .slice(0, count);
+            
+          toast.warning("Using sample news data - API connection issue", {
+            description: "We're temporarily using sample news while resolving a connection issue."
+          });
+          
+          return filteredMockNews;
         }
-        
-        return data;
       } catch (error) {
         marketLogger.error(`Failed to fetch ${category} market news`, error);
         
@@ -58,7 +76,16 @@ export function useMarketNews(category: string = "general", count: number = 10) 
           });
         }
         
-        throw error;
+        // Fall back to mock data
+        const filteredMockNews = MOCK_NEWS_DATA
+          .filter(item => category === "general" || item.category === category)
+          .slice(0, count);
+          
+        toast.warning("Using sample news data - API connection issue", {
+          description: "We're temporarily using sample news while resolving a connection issue."
+        });
+        
+        return filteredMockNews;
       }
     },
     ...DEFAULT_QUERY_CONFIG,
@@ -102,20 +129,39 @@ export function useCompanyNews(
       try {
         console.log(`Fetching company news for symbol: ${symbol}, from: ${from}, to: ${to}`);
         
-        const data = await getCompanyNews(symbol, from, to);
-        const endTime = performance.now();
-        
-        // Debug logging
-        console.log(`Company news API response for ${symbol}:`, data);
-        
-        marketLogger.debug(`News for ${symbol} fetched in ${(endTime - startTime).toFixed(2)}ms`, 
-          { count: data.length });
+        // First try fetching from the API
+        try {
+          const data = await getCompanyNews(symbol, from, to);
+          const endTime = performance.now();
           
-        if (!data || data.length === 0) {
-          console.warn(`No company news data returned for symbol: ${symbol}`);
+          // Debug logging
+          console.log(`Company news API response for ${symbol}:`, data);
+          
+          // If we have valid data, return it
+          if (data && Array.isArray(data) && data.length > 0) {
+            marketLogger.debug(`News for ${symbol} fetched in ${(endTime - startTime).toFixed(2)}ms`, 
+              { count: data.length });
+            return data;
+          } else {
+            console.warn(`Empty or invalid company news data returned for symbol: ${symbol}`);
+            throw new Error("API returned empty or invalid data");
+          }
+        } catch (fetchError) {
+          console.error(`Error fetching company news data:`, fetchError);
+          
+          // Fall back to mock data with the company symbol in the headlines
+          const mockCompanyNews = MOCK_NEWS_DATA.map(item => ({
+            ...item,
+            headline: item.headline.includes(symbol) ? item.headline : `${symbol}: ${item.headline}`,
+            related: `${symbol},${item.related}`
+          })).slice(0, 5);
+            
+          toast.warning("Using sample company news - API connection issue", {
+            description: "We're temporarily using sample data while resolving a connection issue."
+          });
+          
+          return mockCompanyNews;
         }
-        
-        return data;
       } catch (error) {
         marketLogger.error(`Failed to fetch news for ${symbol}`, error);
         
@@ -128,7 +174,18 @@ export function useCompanyNews(
           });
         }
         
-        throw error;
+        // Fall back to mock data with the company symbol in the headlines
+        const mockCompanyNews = MOCK_NEWS_DATA.map(item => ({
+          ...item,
+          headline: item.headline.includes(symbol) ? item.headline : `${symbol}: ${item.headline}`,
+          related: `${symbol},${item.related}`
+        })).slice(0, 5);
+          
+        toast.warning("Using sample company news - API connection issue", {
+          description: "We're temporarily using sample data while resolving a connection issue."
+        });
+        
+        return mockCompanyNews;
       }
     },
     enabled: Boolean(symbol),

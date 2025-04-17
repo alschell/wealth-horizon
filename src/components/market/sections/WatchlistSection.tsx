@@ -8,19 +8,29 @@ import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@
 import { TrendingUp, TrendingDown, LineChart, Star, Plus, Search, BellRing, BellOff } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { toast } from "sonner";
 
 const WatchlistSection = () => {
   // State for tabs and watchlists
   const [activeTab, setActiveTab] = useState("stocks");
   const [activeWatchlist, setActiveWatchlist] = useState("default");
   const [searchTerm, setSearchTerm] = useState("");
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const [newWatchlistName, setNewWatchlistName] = useState("");
   
   // Mock watchlist data - would come from API in real app
-  const watchlists = [
+  const [watchlists, setWatchlists] = useState([
     { id: "default", name: "Default Watchlist" },
     { id: "tech", name: "Tech Stocks" },
     { id: "dividends", name: "Dividend Payers" },
-  ];
+  ]);
   
   const watchlistItems = {
     stocks: [
@@ -69,6 +79,26 @@ const WatchlistSection = () => {
   const toggleSubscription = (id: string) => {
     // In a real app, this would update the state through an API call
     console.log(`Toggling subscription for item ${id}`);
+  };
+
+  // Handle create watchlist
+  const handleCreateWatchlist = () => {
+    if (!newWatchlistName.trim()) {
+      toast.error("Please enter a watchlist name");
+      return;
+    }
+    
+    const newId = `watchlist-${Date.now()}`;
+    const newWatchlist = {
+      id: newId,
+      name: newWatchlistName,
+    };
+    
+    setWatchlists(prev => [...prev, newWatchlist]);
+    setActiveWatchlist(newId);
+    setNewWatchlistName("");
+    setIsCreateDialogOpen(false);
+    toast.success(`Watchlist "${newWatchlistName}" created successfully`);
   };
 
   return (
@@ -126,7 +156,11 @@ const WatchlistSection = () => {
               ))}
             </div>
             <div className="mt-4 pt-4 border-t">
-              <Button variant="outline" className="w-full">
+              <Button 
+                variant="outline" 
+                className="w-full"
+                onClick={() => setIsCreateDialogOpen(true)}
+              >
                 <Plus className="h-4 w-4 mr-2" />
                 Create New Watchlist
               </Button>
@@ -270,6 +304,31 @@ const WatchlistSection = () => {
           </CardContent>
         </Card>
       </motion.div>
+
+      {/* Create Watchlist Dialog */}
+      <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Create New Watchlist</DialogTitle>
+          </DialogHeader>
+          <div className="py-4">
+            <Input
+              value={newWatchlistName}
+              onChange={(e) => setNewWatchlistName(e.target.value)}
+              placeholder="Watchlist name"
+              className="w-full"
+            />
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsCreateDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleCreateWatchlist}>
+              Create Watchlist
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </motion.div>
   );
 };

@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { getIndices } from "@/utils/market-data/api";
-import { marketLogger, DEFAULT_QUERY_CONFIG } from "./utils";
+import { marketLogger, DEFAULT_QUERY_CONFIG, MOCK_INDICES_DATA } from "./utils";
+import { toast } from "sonner";
 
 /**
  * Hook for fetching major market indices
@@ -54,70 +55,91 @@ export function useIndices(customSymbols?: string[]) {
           timestamp: new Date().toISOString()
         });
         
-        const data = await getIndices(symbolsToFetch, {
-          skipCache: true, // Force fresh data
-          retries: 3,
-          showErrorToast: true
-        });
-        
-        const endTime = performance.now();
-        
-        marketLogger.debug(`Indices data fetched in ${(endTime - startTime).toFixed(2)}ms`, 
-          { count: data.length, symbols: symbolsToFetch });
-        
-        // Log raw data for troubleshooting
-        console.log("Raw indices API response:", JSON.stringify(data));
-        
-        if (!data || data.length === 0) {
-          console.error("No indices data returned from API");
-          throw new Error("No indices data returned from API");
-        }
-        
-        // Transform the data to ensure we have proper values even if API returns incomplete data
-        const transformedData = data.map(indexItem => {
-          // If the API returned valid data, use it
-          if (indexItem.data && typeof indexItem.data.c === 'number') {
-            return {
-              ...indexItem,
-              data: {
-                ...indexItem.data,
-                // Ensure all values are numbers, not null or undefined
-                c: indexItem.data.c || 0,
-                d: indexItem.data.d || 0,
-                dp: indexItem.data.dp || 0,
-                h: indexItem.data.h || 0,
-                l: indexItem.data.l || 0,
-                o: indexItem.data.o || 0,
-                pc: indexItem.data.pc || 0,
-                t: indexItem.data.t || Math.floor(Date.now() / 1000)
+        // Try to fetch from API first
+        try {
+          const data = await getIndices(symbolsToFetch, {
+            skipCache: true, // Force fresh data
+            retries: 3,
+            showErrorToast: false // Don't show error toast here, we'll handle it below
+          });
+          
+          // If we have valid data, process it
+          if (data && Array.isArray(data) && data.length > 0) {
+            const endTime = performance.now();
+            marketLogger.debug(`Indices data fetched in ${(endTime - startTime).toFixed(2)}ms`, 
+              { count: data.length, symbols: symbolsToFetch });
+            
+            // Transform the data for consistent format
+            const transformedData = data.map(indexItem => {
+              // If the API returned valid data, use it
+              if (indexItem.data && typeof indexItem.data.c === 'number') {
+                return {
+                  ...indexItem,
+                  data: {
+                    ...indexItem.data,
+                    // Ensure all values are numbers, not null or undefined
+                    c: indexItem.data.c || 0,
+                    d: indexItem.data.d || 0,
+                    dp: indexItem.data.dp || 0,
+                    h: indexItem.data.h || 0,
+                    l: indexItem.data.l || 0,
+                    o: indexItem.data.o || 0,
+                    pc: indexItem.data.pc || 0,
+                    t: indexItem.data.t || Math.floor(Date.now() / 1000)
+                  }
+                };
               }
-            };
+              
+              // Log if we received problematic data
+              console.warn(`Incomplete data for index: ${indexItem.symbol}`, indexItem);
+              
+              // If we have incomplete data, provide fallback values
+              return {
+                symbol: indexItem.symbol,
+                data: {
+                  c: 0,  // Current price
+                  d: 0,  // Change
+                  dp: 0, // Percent change
+                  h: 0,  // High price of the day
+                  l: 0,  // Low price of the day
+                  o: 0,  // Open price of the day
+                  pc: 0, // Previous close price
+                  t: Math.floor(Date.now() / 1000)  // Timestamp
+                }
+              };
+            });
+            
+            return transformedData;
+          } else {
+            // API returned invalid data, fall back to mock data
+            console.warn("API returned invalid data, using mock data instead");
+            throw new Error("API returned invalid or empty data");
           }
+        } catch (fetchError) {
+          // If the API call fails, fall back to mock data
+          console.warn("Error fetching indices, using mock data instead:", fetchError);
           
-          // Log if we received problematic data
-          console.warn(`Incomplete data for index: ${indexItem.symbol}`, indexItem);
-          
-          // If we have incomplete data, provide fallback values
-          return {
-            symbol: indexItem.symbol,
+          // Convert the mock data to the format expected by the component
+          const mockData = MOCK_INDICES_DATA.map(mockIndex => ({
+            symbol: mockIndex.symbol,
             data: {
-              c: 0,  // Current price
-              d: 0,  // Change
-              dp: 0, // Percent change
-              h: 0,  // High price of the day
-              l: 0,  // Low price of the day
-              o: 0,  // Open price of the day
-              pc: 0, // Previous close price
+              c: mockIndex.value,  // Current price
+              d: mockIndex.change * mockIndex.value / 100,  // Change
+              dp: mockIndex.change, // Percent change
+              h: mockIndex.value * 1.01,  // High price of the day
+              l: mockIndex.value * 0.99,  // Low price of the day
+              o: mockIndex.value * 0.995, // Open price of the day
+              pc: mockIndex.value - (mockIndex.change * mockIndex.value / 100), // Previous close price
               t: Math.floor(Date.now() / 1000)  // Timestamp
             }
-          };
-        });
-        
-        // Log the transformed data
-        console.log("Transformed indices data:", transformedData);
-        
-        // Return the transformed data
-        return transformedData;
+          }));
+          
+          toast.warning("Using sample market data - API connection issue", {
+            description: "We're temporarily using sample data while resolving a connection issue."
+          });
+          
+          return mockData;
+        }
       } catch (error) {
         marketLogger.error(`Failed to fetch indices data`, error);
         console.error("Indices API error details:", error);
@@ -132,7 +154,26 @@ export function useIndices(customSymbols?: string[]) {
           console.error("Unknown error type when fetching indices data:", error);
         }
         
-        throw error;
+        // Convert the mock data to the format expected by the component
+        const mockData = MOCK_INDICES_DATA.map(mockIndex => ({
+          symbol: mockIndex.symbol,
+          data: {
+            c: mockIndex.value,  // Current price
+            d: mockIndex.change * mockIndex.value / 100,  // Change
+            dp: mockIndex.change, // Percent change
+            h: mockIndex.value * 1.01,  // High price of the day
+            l: mockIndex.value * 0.99,  // Low price of the day
+            o: mockIndex.value * 0.995, // Open price of the day
+            pc: mockIndex.value - (mockIndex.change * mockIndex.value / 100), // Previous close price
+            t: Math.floor(Date.now() / 1000)  // Timestamp
+          }
+        }));
+        
+        toast.warning("Using sample market data - API connection issue", {
+          description: "We're temporarily using sample data while resolving a connection issue."
+        });
+        
+        return mockData;
       }
     },
     ...DEFAULT_QUERY_CONFIG,

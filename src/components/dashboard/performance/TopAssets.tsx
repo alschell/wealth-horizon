@@ -6,9 +6,18 @@ import { useNavigate } from "react-router-dom";
 import SectionHeader from "../SectionHeader";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import AssetPerformanceChart from "./AssetPerformanceChart";
 
 const TopAssets = () => {
   const navigate = useNavigate();
+  const [selectedAsset, setSelectedAsset] = useState(null);
+  const [isChartOpen, setIsChartOpen] = useState(false);
   
   const assets = [
     { id: "tech-fund", name: "US Tech Fund", value: "$1.24B", change: "+4.7%", isPositive: true },
@@ -21,8 +30,9 @@ const TopAssets = () => {
     { id: "emerging-markets", name: "Emerging Markets", value: "$132M", change: "+5.7%", isPositive: true },
   ];
   
-  const handleAssetClick = (assetId: string) => {
-    navigate(`/analyze-wealth/asset/${assetId}`);
+  const handleAssetClick = (asset) => {
+    setSelectedAsset(asset);
+    setIsChartOpen(true);
   };
 
   return (
@@ -37,7 +47,7 @@ const TopAssets = () => {
               <div 
                 key={index} 
                 className="p-3 rounded-md hover:bg-gray-50 transition-colors cursor-pointer"
-                onClick={() => handleAssetClick(asset.id)}
+                onClick={() => handleAssetClick(asset)}
               >
                 <div className="flex justify-between items-center">
                   <p className="text-sm font-medium">{asset.name}</p>
@@ -65,6 +75,20 @@ const TopAssets = () => {
             <ChevronRight className="h-4 w-4 ml-1" />
           </Button>
         </div>
+        
+        {/* Asset Performance Chart Dialog */}
+        <Dialog open={isChartOpen} onOpenChange={setIsChartOpen}>
+          <DialogContent className="sm:max-w-[700px]">
+            <DialogHeader>
+              <DialogTitle>
+                {selectedAsset?.name} Performance
+              </DialogTitle>
+            </DialogHeader>
+            <div className="py-4">
+              <AssetPerformanceChart asset={selectedAsset} />
+            </div>
+          </DialogContent>
+        </Dialog>
       </CardContent>
     </Card>
   );

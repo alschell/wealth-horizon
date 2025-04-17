@@ -1,5 +1,5 @@
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -11,7 +11,7 @@ import TranslatedText from "@/components/ui/translated-text";
 import { useTranslation } from "@/context/TranslationContext";
 
 const ContactForm: React.FC = () => {
-  const { translate } = useTranslation();
+  const { translate, currentLanguage } = useTranslation();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [email, setEmail] = useState("");
   const [fullName, setFullName] = useState("");
@@ -65,22 +65,32 @@ const ContactForm: React.FC = () => {
     "Other"
   ];
 
-  // Translate industry options
-  React.useEffect(() => {
+  // Translate industry options when language changes
+  useEffect(() => {
     const translateOptions = async () => {
-      const translatedIndustries = await Promise.all(
-        industryOptions.map(option => translate(option))
-      );
-      setTranslatedIndustryOptions(translatedIndustries);
+      try {
+        // Clear previous translations first to avoid stale data
+        setTranslatedIndustryOptions([]);
+        setTranslatedInquiryOptions([]);
+        
+        // Translate industry options
+        const translatedIndustries = await Promise.all(
+          industryOptions.map(option => translate(option))
+        );
+        setTranslatedIndustryOptions(translatedIndustries);
 
-      const translatedInquiries = await Promise.all(
-        inquiryOptions.map(option => translate(option))
-      );
-      setTranslatedInquiryOptions(translatedInquiries);
+        // Translate inquiry options
+        const translatedInquiries = await Promise.all(
+          inquiryOptions.map(option => translate(option))
+        );
+        setTranslatedInquiryOptions(translatedInquiries);
+      } catch (error) {
+        console.error("Failed to translate options:", error);
+      }
     };
 
     translateOptions();
-  }, [translate]);
+  }, [translate, currentLanguage]); // Add currentLanguage as a dependency to retrigger translations
 
   return (
     <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-200">

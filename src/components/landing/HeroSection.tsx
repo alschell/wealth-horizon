@@ -40,9 +40,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToFeatures }) => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <FadeIn delay={0.2}>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-gray-900 leading-tight">
-              <TranslatedText>
-                Holistic wealth management for
-              </TranslatedText>{" "}
+              <TranslatedText>Holistic wealth management for</TranslatedText>{" "}
               <span className="text-indigo-600">
                 <TranslatedText>family offices</TranslatedText>
               </span>

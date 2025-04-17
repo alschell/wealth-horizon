@@ -29,8 +29,8 @@ export const useIndicesTracker = () => {
           value: indexData.data.c || 0,
           change: indexData.data.d || 0,
           percentChange: indexData.data.dp || 0,
-          // We don't have volume from the API, but we can add it if it becomes available
-          volume: indexData.data.volume || Math.floor(Math.random() * 10000000) + 1000000 // Placeholder for now
+          // We don't have volume in the API data structure, so we'll add it as a random value for now
+          volume: Math.floor(Math.random() * 10000000) + 1000000 // Placeholder for now
         });
       }
     });

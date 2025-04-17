@@ -68,13 +68,13 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToFeatures }) => {
             </div>
             <div className="mt-10 flex flex-wrap gap-x-8 gap-y-4 items-center text-sm text-gray-600">
               {[
-                <TranslatedText key="1">AI-native platform</TranslatedText>, 
-                <TranslatedText key="2">Real-time analytics</TranslatedText>, 
-                <TranslatedText key="3">SOC 2 certified</TranslatedText>
+                "AI-native platform", 
+                "Real-time analytics", 
+                "SOC 2 certified"
               ].map((item, index) => (
                 <div key={index} className="flex items-center gap-2">
                   <CheckCircle size={16} className="text-indigo-600" />
-                  <span>{item}</span>
+                  <span><TranslatedText>{item}</TranslatedText></span>
                 </div>
               ))}
             </div>

@@ -72,23 +72,15 @@ export function useMarketDataRefresh(): UseMarketDataRefreshReturn {
     refreshMarketData('candles');
     refreshMarketData('search');
     
-    // Convert RefreshableMarketDataType to MarketDataType
-    const convertToMarketDataType = (type: RefreshableMarketDataType): MarketDataType => {
-      switch (type) {
-        case 'indices': return 'indices';
-        case 'quotes': return 'quote';
-        case 'news': return 'news';
-        case 'candles': return 'candles';
-        case 'search': return 'search';
-      }
-    };
+    // Map RefreshableMarketDataType to MarketDataType for API call
+    const refreshTypes: Array<{ type: MarketDataType; symbol?: string }> = [
+      { type: 'indices' },
+      { type: 'quote' },
+      { type: 'news' }
+    ];
     
     // Also trigger API refresh (to clear server cache if needed)
-    refreshAPI([
-      { type: 'indices' as MarketDataType },
-      { type: 'quote' as MarketDataType },
-      { type: 'news' as MarketDataType }
-    ]);
+    refreshAPI(refreshTypes);
   };
   
   return {

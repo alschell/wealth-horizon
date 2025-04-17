@@ -28,7 +28,7 @@ export function useSymbolSearch() {
         const endTime = performance.now();
         marketLogger.debug(`Symbol search completed in ${(endTime - startTime).toFixed(2)}ms`, 
           { count: data.result?.length || 0 });
-        return data as SymbolSearchResult;
+        return data;
       } catch (error) {
         marketLogger.error(`Symbol search failed`, error);
         throw error;

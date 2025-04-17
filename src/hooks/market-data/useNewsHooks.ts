@@ -21,7 +21,7 @@ export function useMarketNews(category: string = "general", count: number = 10) 
         const endTime = performance.now();
         marketLogger.debug(`Market news fetched in ${(endTime - startTime).toFixed(2)}ms`, 
           { count: data?.length || 0 });
-        return data as NewsItem[];
+        return data || [];
       } catch (error) {
         marketLogger.error(`Failed to fetch market news for ${category}`, error);
         throw error;
@@ -53,7 +53,7 @@ export function useCompanyNews(
         const endTime = performance.now();
         marketLogger.debug(`Company news for ${symbol} fetched in ${(endTime - startTime).toFixed(2)}ms`, 
           { count: data?.length || 0 });
-        return data as NewsItem[];
+        return data || [];
       } catch (error) {
         marketLogger.error(`Failed to fetch news for ${symbol}`, error);
         throw error;

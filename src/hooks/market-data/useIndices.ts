@@ -13,7 +13,7 @@ import type { IndexData } from "@/utils/market-data/types";
 export function useIndices(symbols?: string[]) {
   return useQuery<IndexData[]>({
     queryKey: ['indices', symbols ? symbols.join(',') : 'all'],
-    queryFn: async () => {
+    queryFn: async (): Promise<IndexData[]> => {
       marketLogger.info(`Fetching indices ${symbols ? symbols.join(', ') : 'all'}`);
       const startTime = performance.now();
       try {
@@ -21,7 +21,7 @@ export function useIndices(symbols?: string[]) {
         const endTime = performance.now();
         marketLogger.debug(`Indices fetched in ${(endTime - startTime).toFixed(2)}ms`, 
           { count: data?.length || 0 });
-        return data as IndexData[];
+        return data || [];
       } catch (error) {
         marketLogger.error(`Failed to fetch indices`, error);
         throw error;

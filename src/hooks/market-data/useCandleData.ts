@@ -26,7 +26,7 @@ export function useCandleData(
         const endTime = performance.now();
         marketLogger.debug(`Candle data for ${symbol} fetched in ${(endTime - startTime).toFixed(2)}ms`, 
           { points: data.t?.length || 0 });
-        return data as CandleData;
+        return data;
       } catch (error) {
         marketLogger.error(`Failed to fetch candle data for ${symbol}`, error);
         throw error;

@@ -25,7 +25,7 @@ const DashboardLayout = ({
   }, [location.pathname]);
 
   return (
-    <div className="min-h-screen flex flex-col w-full bg-background">
+    <div className="min-h-screen flex flex-col w-full bg-background pt-16"> {/* Added pt-16 for fixed header */}
       <div className="flex-1 flex flex-col overflow-hidden">
         <main className="flex-1 overflow-auto">
           <div 

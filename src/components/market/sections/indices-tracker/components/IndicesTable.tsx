@@ -106,7 +106,7 @@ const IndicesTable: React.FC<IndicesTableProps> = ({
                         : index.volume >= 1000000 
                           ? `${(index.volume / 1000000).toFixed(1)}M` 
                           : index.volume.toLocaleString()
-                      : index.volume
+                      : index.volume || 'N/A'
                     }
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">

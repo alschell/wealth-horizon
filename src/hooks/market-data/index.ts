@@ -22,7 +22,8 @@ export const formatQuote = (quote: any) => {
   };
 };
 
-// Market data refresh function
+// Market data refresh function for legacy code support
+// This will be deprecated in favor of the useMarketDataRefresh hook
 export const refreshMarketData = (queryClient: any) => {
   queryClient.invalidateQueries({ queryKey: ['indices'] });
   queryClient.invalidateQueries({ queryKey: ['market-news'] });

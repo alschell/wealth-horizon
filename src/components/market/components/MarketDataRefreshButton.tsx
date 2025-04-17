@@ -46,7 +46,11 @@ const MarketDataRefreshButton: React.FC<MarketDataRefreshButtonProps> = ({
     setIsRefreshing(true);
     
     try {
-      const success = await refreshMarketData(types, { symbol });
+      // Call the refresh function directly with the types array and options
+      const success = await refreshMarketData(types, { 
+        symbol,
+        showToast: false // We'll handle our own toast
+      });
       
       if (success) {
         toast({

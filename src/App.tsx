@@ -81,8 +81,11 @@ function App() {
         staleTime: 1000 * 60 * 5, // 5 minutes
         retry: 2,
         retryDelay: attemptIndex => Math.min(1000 * (2 ** attemptIndex), 30000),
-        onError: (error) => {
-          console.error("Query error:", error);
+        // Updated to use meta object for onError in React Query v5
+        meta: {
+          onError: (error: Error) => {
+            console.error("Query error:", error);
+          }
         }
       },
     }

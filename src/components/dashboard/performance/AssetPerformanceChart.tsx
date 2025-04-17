@@ -1,7 +1,10 @@
 
-import React, { useState } from "react";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
-import { Button } from "@/components/ui/button";
+import React, { useState } from 'react';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, TooltipProps } from 'recharts';
+import { NameType, ValueType } from 'recharts/types/component/DefaultTooltipContent';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { formatCurrency } from '@/lib/utils';
 
 interface AssetPerformanceChartProps {
   asset: {
@@ -13,163 +16,205 @@ interface AssetPerformanceChartProps {
   } | null;
 }
 
-// Helper function to generate random historical data
-const generateHistoricalData = (days: number, startValue: number, volatility: number = 0.02) => {
-  const data = [];
-  let value = startValue;
-  
-  for (let i = days; i >= 0; i--) {
-    const date = new Date();
-    date.setDate(date.getDate() - i);
-    
-    // Add some random variation
-    const change = (Math.random() - 0.5) * 2 * volatility;
-    value = value * (1 + change);
-    
-    data.push({
-      date: date.toISOString().split('T')[0],
-      value: value.toFixed(2),
-    });
-  }
-  
-  return data;
-};
+type TimeRange = '1D' | '1W' | '1M' | '3M' | '1Y' | '5Y';
 
 const AssetPerformanceChart: React.FC<AssetPerformanceChartProps> = ({ asset }) => {
-  const [timeRange, setTimeRange] = useState<'1w' | '1m' | '3m' | '6m' | '1y' | 'all'>('1m');
-  
-  if (!asset) return null;
-  
-  // Extract numeric value from string for chart
-  const valueNumber = parseFloat(asset.value.replace(/[^0-9.-]+/g, ""));
-  
-  // Generate different data sets based on time range
-  const getDaysForRange = () => {
-    switch (timeRange) {
-      case '1w': return 7;
-      case '1m': return 30;
-      case '3m': return 90;
-      case '6m': return 180;
-      case '1y': return 365;
-      case 'all': return 1825; // 5 years
+  const [timeRange, setTimeRange] = useState<TimeRange>('1M');
+
+  // Generate mock data based on asset and time range
+  const generateMockData = () => {
+    if (!asset) return [];
+
+    const numPoints = timeRangeToPoints(timeRange);
+    const baseValue = parseFloat(asset.value.replace(/[$B,M]/g, '')) * (asset.value.includes('B') ? 1000000000 : asset.value.includes('M') ? 1000000 : 1);
+    const volatility = baseValue * 0.05; // 5% volatility
+
+    const startDate = getStartDate(timeRange);
+    const data = [];
+
+    for (let i = 0; i <= numPoints; i++) {
+      const date = new Date(startDate);
+      date.setDate(startDate.getDate() + (i * getDaysIncrement(timeRange)));
+
+      // Create some random but trending data
+      const changeDirection = asset.isPositive ? 1 : -1;
+      const trend = (i / numPoints) * baseValue * (asset.isPositive ? 0.08 : -0.05);
+      const randomFactor = (Math.random() - 0.5) * volatility;
+      
+      const value = baseValue + trend + randomFactor;
+      
+      data.push({
+        date: formatDate(date, timeRange),
+        value: Math.max(value, baseValue * 0.7) // Don't let it go too low
+      });
+    }
+
+    return data;
+  };
+
+  const timeRangeToPoints = (range: TimeRange): number => {
+    switch (range) {
+      case '1D': return 24; // Hourly
+      case '1W': return 7; // Daily
+      case '1M': return 30; // Daily
+      case '3M': return 12; // Weekly
+      case '1Y': return 12; // Monthly
+      case '5Y': return 20; // Quarterly
       default: return 30;
     }
   };
-  
-  const chartData = generateHistoricalData(getDaysForRange(), valueNumber);
-  
-  // Create tick values for x-axis based on time range
-  const getTickInterval = () => {
-    switch (timeRange) {
-      case '1w': return 1; // show every day
-      case '1m': return 5; // show every 5 days
-      case '3m': return 15; // show every 15 days
-      case '6m': return 30; // show every month
-      case '1y': return 60; // show every 2 months
-      case 'all': return 365; // show every year
-      default: return 5;
+
+  const getDaysIncrement = (range: TimeRange): number => {
+    switch (range) {
+      case '1D': return 0; // Hours, not days
+      case '1W': return 1;
+      case '1M': return 1;
+      case '3M': return 7;
+      case '1Y': return 30;
+      case '5Y': return 90;
+      default: return 1;
     }
   };
-  
-  const formatXAxis = (tickItem: string) => {
-    const date = new Date(tickItem);
-    
-    if (timeRange === '1w' || timeRange === '1m') {
-      return date.getDate() + '/' + (date.getMonth() + 1);
-    } else if (timeRange === '3m' || timeRange === '6m') {
-      return (date.getMonth() + 1) + '/' + date.getDate();
+
+  const getStartDate = (range: TimeRange): Date => {
+    const today = new Date();
+    switch (range) {
+      case '1D':
+        return new Date(today.setHours(today.getHours() - 24));
+      case '1W':
+        return new Date(today.setDate(today.getDate() - 7));
+      case '1M':
+        return new Date(today.setMonth(today.getMonth() - 1));
+      case '3M':
+        return new Date(today.setMonth(today.getMonth() - 3));
+      case '1Y':
+        return new Date(today.setFullYear(today.getFullYear() - 1));
+      case '5Y':
+        return new Date(today.setFullYear(today.getFullYear() - 5));
+      default:
+        return new Date(today.setMonth(today.getMonth() - 1));
+    }
+  };
+
+  const formatDate = (date: Date, range: TimeRange): string => {
+    if (range === '1D') {
+      return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    } else if (range === '1W' || range === '1M') {
+      return date.toLocaleDateString([], { month: 'short', day: 'numeric' });
+    } else if (range === '3M' || range === '1Y') {
+      return date.toLocaleDateString([], { month: 'short', day: 'numeric' });
     } else {
-      return date.toLocaleDateString(undefined, { month: 'short', year: '2-digit' });
+      return date.toLocaleDateString([], { year: 'numeric', month: 'short' });
     }
   };
-  
-  const chartColor = asset.isPositive ? "#10b981" : "#ef4444";
-  
+
+  const chartData = generateMockData();
+
+  const CustomTooltip = ({ active, payload, label }: TooltipProps<ValueType, NameType>) => {
+    if (active && payload && payload.length) {
+      // Use Number() to convert ValueType to number
+      const value = Number(payload[0].value);
+      
+      return (
+        <div className="bg-white p-2 shadow rounded border border-gray-100">
+          <p className="text-xs text-gray-500">{label}</p>
+          <p className="text-sm font-bold">{formatCurrency(value)}</p>
+        </div>
+      );
+    }
+    return null;
+  };
+
+  if (!asset) {
+    return (
+      <Card>
+        <CardContent className="py-8 text-center">
+          <p className="text-gray-500">Select an asset to view performance</p>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  // Extract numeric value
+  const valueNumber = parseFloat(asset.value.replace(/[$B,M]/g, ''));
+  // Process multiplier based on suffix
+  const multiplier = asset.value.includes('B') ? 1000000000 : asset.value.includes('M') ? 1000000 : 1;
+  // Calculate min and max for YAxis
+  const minValue = Math.min(...chartData.map(d => Number(d.value))) * 0.98;
+  const maxValue = Math.max(...chartData.map(d => Number(d.value))) * 1.02;
+
   return (
-    <div className="space-y-4">
-      <div className="flex justify-between items-center">
-        <div>
-          <h3 className="font-medium">{asset.name}</h3>
-          <div className="flex items-center mt-1">
-            <span className="font-bold text-lg mr-2">{asset.value}</span>
-            <span className={`text-sm ${asset.isPositive ? 'text-emerald-600' : 'text-red-500'}`}>
+    <Card className="w-full">
+      <CardHeader className="pb-0">
+        <div className="flex justify-between items-start mb-2">
+          <CardTitle className="text-lg">{asset.name}</CardTitle>
+          <div className="text-right">
+            <p className="text-xl font-bold">{asset.value}</p>
+            <p className={`text-sm ${asset.isPositive ? 'text-green-600' : 'text-red-500'}`}>
               {asset.change}
-            </span>
+            </p>
           </div>
         </div>
-        
-        <div className="flex space-x-1">
-          {(['1w', '1m', '3m', '6m', '1y', 'all'] as const).map((range) => (
-            <Button 
-              key={range}
-              variant={timeRange === range ? "default" : "outline"} 
-              size="sm"
-              className="text-xs h-7 px-2"
-              onClick={() => setTimeRange(range)}
+        <Tabs defaultValue={timeRange} onValueChange={(value) => setTimeRange(value as TimeRange)} className="mt-2">
+          <TabsList className="grid grid-cols-6 w-full">
+            <TabsTrigger value="1D">1D</TabsTrigger>
+            <TabsTrigger value="1W">1W</TabsTrigger>
+            <TabsTrigger value="1M">1M</TabsTrigger>
+            <TabsTrigger value="3M">3M</TabsTrigger>
+            <TabsTrigger value="1Y">1Y</TabsTrigger>
+            <TabsTrigger value="5Y">5Y</TabsTrigger>
+          </TabsList>
+        </Tabs>
+      </CardHeader>
+      <CardContent className="pt-6">
+        <div className="h-[250px] w-full">
+          <ResponsiveContainer width="100%" height="100%">
+            <AreaChart
+              data={chartData}
+              margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
             >
-              {range === 'all' ? 'All' : range}
-            </Button>
-          ))}
+              <defs>
+                <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
+                  <stop 
+                    offset="5%" 
+                    stopColor={asset.isPositive ? "#10b981" : "#ef4444"} 
+                    stopOpacity={0.2}
+                  />
+                  <stop 
+                    offset="95%" 
+                    stopColor={asset.isPositive ? "#10b981" : "#ef4444"} 
+                    stopOpacity={0}
+                  />
+                </linearGradient>
+              </defs>
+              <XAxis 
+                dataKey="date" 
+                tick={{ fontSize: 12 }} 
+                axisLine={false}
+                tickLine={false}
+              />
+              <YAxis 
+                domain={[minValue, maxValue]}
+                tick={{ fontSize: 12 }}
+                axisLine={false}
+                tickLine={false}
+                tickFormatter={(value) => formatCurrency(Number(value), 'USD', 'en-US').split('.')[0]}
+              />
+              <CartesianGrid strokeDasharray="3 3" vertical={false} />
+              <Tooltip content={<CustomTooltip />} />
+              <Area 
+                type="monotone" 
+                dataKey="value" 
+                stroke={asset.isPositive ? "#10b981" : "#ef4444"} 
+                fillOpacity={1}
+                fill="url(#colorValue)"
+                strokeWidth={2}
+              />
+            </AreaChart>
+          </ResponsiveContainer>
         </div>
-      </div>
-      
-      <div className="h-[300px] w-full">
-        <ResponsiveContainer width="100%" height="100%">
-          <LineChart
-            data={chartData}
-            margin={{ top: 5, right: 5, left: 5, bottom: 5 }}
-          >
-            <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-            <XAxis 
-              dataKey="date" 
-              tickFormatter={formatXAxis} 
-              tick={{ fontSize: 12 }} 
-              tickMargin={10}
-              interval={getTickInterval()}
-            />
-            <YAxis 
-              type="number" 
-              domain={['auto', 'auto']} 
-              tick={{ fontSize: 12 }} 
-              tickMargin={10}
-              tickFormatter={(value) => {
-                const numValue = Number(value);
-                if (numValue >= 1000000000) {
-                  return `$${(numValue / 1000000000).toFixed(1)}B`;
-                } else if (numValue >= 1000000) {
-                  return `$${(numValue / 1000000).toFixed(1)}M`;
-                } else if (numValue >= 1000) {
-                  return `$${(numValue / 1000).toFixed(1)}K`;
-                }
-                return `$${value}`;
-              }} 
-            />
-            <Tooltip 
-              formatter={(value) => {
-                const numValue = Number(value);
-                if (numValue >= 1000000000) {
-                  return [`$${(numValue / 1000000000).toFixed(2)}B`, "Value"];
-                } else if (numValue >= 1000000) {
-                  return [`$${(numValue / 1000000).toFixed(2)}M`, "Value"];
-                } else if (numValue >= 1000) {
-                  return [`$${(numValue / 1000).toFixed(2)}K`, "Value"];
-                }
-                return [`$${value}`, "Value"];
-              }}
-              labelFormatter={(label) => new Date(label).toLocaleDateString()}
-            />
-            <Line 
-              type="monotone" 
-              dataKey="value" 
-              stroke={chartColor} 
-              strokeWidth={2} 
-              dot={false}
-              activeDot={{ r: 5 }}
-            />
-          </LineChart>
-        </ResponsiveContainer>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 };
 

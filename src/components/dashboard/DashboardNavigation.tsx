@@ -3,21 +3,21 @@ import React from 'react';
 import { useLocation, NavLink } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import {
-  House,
+  Home,
   LineChart,
   Settings,
-  PresentationChart,
+  PieChart,
   Calculator,
   CreditCard,
   Calendar,
   MessageSquare,
   Activity,
   HeartHandshake,
-  UsersFour,
-  ChatCenteredText,
+  Users,
+  FileText,
   Database,
-  CurrencyCircleDollar
-} from '@phosphor-icons/react';
+  DollarSign
+} from 'lucide-react';
 
 type NavItemProps = {
   href: string;
@@ -41,7 +41,7 @@ const NavItem = ({ href, icon: Icon, children, onClick }: NavItemProps) => {
           : 'text-gray-600 hover:text-black hover:bg-gray-100 dark:text-gray-300 dark:hover:text-white dark:hover:bg-gray-800'
       )}
     >
-      <Icon className="h-5 w-5 mr-2" weight={isActive ? "fill" : "regular"} />
+      <Icon className="h-5 w-5 mr-2" />
       <span>{children}</span>
     </NavLink>
   );
@@ -51,16 +51,16 @@ const DashboardNavigation = ({ onClose }: { onClose?: () => void }) => {
   return (
     <div className="p-4 space-y-6">
       <nav className="space-y-1">
-        <NavItem href="/dashboard" icon={House} onClick={onClose}>
+        <NavItem href="/dashboard" icon={Home} onClick={onClose}>
           Dashboard
         </NavItem>
         <NavItem href="/market-data" icon={LineChart} onClick={onClose}>
           Market Data
         </NavItem>
-        <NavItem href="/wealth-analysis" icon={PresentationChart} onClick={onClose}>
+        <NavItem href="/wealth-analysis" icon={PieChart} onClick={onClose}>
           Wealth Analysis
         </NavItem>
-        <NavItem href="/cashflow" icon={CurrencyCircleDollar} onClick={onClose}>
+        <NavItem href="/cashflow" icon={DollarSign} onClick={onClose}>
           Cashflow
         </NavItem>
         <NavItem href="/planning" icon={Calculator} onClick={onClose}>
@@ -96,10 +96,10 @@ const DashboardNavigation = ({ onClose }: { onClose?: () => void }) => {
           Admin
         </h4>
         <nav className="space-y-1">
-          <NavItem href="/client-portal" icon={UsersFour} onClick={onClose}>
+          <NavItem href="/client-portal" icon={Users} onClick={onClose}>
             Client Portal
           </NavItem>
-          <NavItem href="/documents" icon={ChatCenteredText} onClick={onClose}>
+          <NavItem href="/documents" icon={FileText} onClick={onClose}>
             Documents
           </NavItem>
           <NavItem href="/data-management" icon={Database} onClick={onClose}>

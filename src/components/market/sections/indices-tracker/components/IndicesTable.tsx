@@ -10,28 +10,18 @@ import { AnimationItemProp } from "../types/animationTypes";
 import { motion } from "framer-motion";
 import { IndexData } from "../types";
 
-export interface IndexItem {
-  symbol: string;
-  name: string;
-  country: string;
-  region: string;
-  exchange: string;
-  value: number;
-  change: number;
-  volume: number;
-  isUp?: boolean;
-}
-
 interface IndicesTableProps extends AnimationItemProp {
   indices: IndexData[];
   isLoading: boolean;
   onOpenChart: (index: IndexData) => void;
+  selectedIndex?: IndexData | null;  // Make this optional
 }
 
 const IndicesTable: React.FC<IndicesTableProps> = ({ 
   indices, 
   isLoading, 
   onOpenChart,
+  selectedIndex,
   item 
 }) => {
   if (isLoading) {
@@ -96,7 +86,7 @@ const IndicesTable: React.FC<IndicesTableProps> = ({
           {indices.map((index) => (
             <TableRow 
               key={index.symbol} 
-              className="cursor-pointer hover:bg-gray-50"
+              className={`cursor-pointer hover:bg-gray-50 ${selectedIndex?.id === index.id ? 'bg-gray-50' : ''}`}
               onClick={() => onOpenChart(index)}
             >
               <TableCell>

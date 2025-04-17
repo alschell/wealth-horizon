@@ -8,6 +8,7 @@ export interface IndexData {
   percentChange: number;
   region: string;
   description: string;
+  exchange?: string;  // Added exchange property
   volume?: number;
 }
 

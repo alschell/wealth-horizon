@@ -10,10 +10,11 @@ interface SettingsTabProps {
 const SettingsTabs = ({ children, defaultValue }: SettingsTabProps) => {
   return (
     <Tabs defaultValue={defaultValue} className="w-full">
-      <TabsList className="grid grid-cols-4 max-w-md mb-6">
+      <TabsList className="grid grid-cols-5 max-w-2xl mb-6">
         <TabsTrigger value="profile" className="text-sm">Profile</TabsTrigger>
         <TabsTrigger value="security" className="text-sm">Security</TabsTrigger>
         <TabsTrigger value="notifications" className="text-sm">Notifications</TabsTrigger>
+        <TabsTrigger value="preferences" className="text-sm">Preferences</TabsTrigger>
         <TabsTrigger value="appearance" className="text-sm">Appearance</TabsTrigger>
       </TabsList>
       {children}

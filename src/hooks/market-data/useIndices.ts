@@ -1,4 +1,3 @@
-
 import { useQuery } from "@tanstack/react-query";
 import { getIndices } from "@/utils/market-data/api";
 import { marketLogger, DEFAULT_QUERY_CONFIG } from "./utils";
@@ -48,22 +47,31 @@ export function useIndices(customSymbols?: string[]) {
         const symbolsToFetch = customSymbols || majorIndices;
         
         marketLogger.debug(`About to fetch indices data for symbols: ${symbolsToFetch.join(', ')}`);
+        
+        // Add extra debugging to identify API issues
+        console.log("Fetching indices with config:", {
+          symbols: symbolsToFetch,
+          timestamp: new Date().toISOString()
+        });
+        
         const data = await getIndices(symbolsToFetch, {
-          skipCache: false,
+          skipCache: true, // Force fresh data
           retries: 3,
           showErrorToast: true
         });
         
         const endTime = performance.now();
+        
         marketLogger.debug(`Indices data fetched in ${(endTime - startTime).toFixed(2)}ms`, 
           { count: data.length, symbols: symbolsToFetch });
         
+        // Log raw data for troubleshooting
+        console.log("Raw indices API response:", JSON.stringify(data));
+        
         if (!data || data.length === 0) {
+          console.error("No indices data returned from API");
           throw new Error("No indices data returned from API");
         }
-        
-        // Log the actual received data for debugging
-        console.log("Received indices data:", data);
         
         // Transform the data to ensure we have proper values even if API returns incomplete data
         const transformedData = data.map(indexItem => {
@@ -86,6 +94,9 @@ export function useIndices(customSymbols?: string[]) {
             };
           }
           
+          // Log if we received problematic data
+          console.warn(`Incomplete data for index: ${indexItem.symbol}`, indexItem);
+          
           // If we have incomplete data, provide fallback values
           return {
             symbol: indexItem.symbol,
@@ -102,20 +113,34 @@ export function useIndices(customSymbols?: string[]) {
           };
         });
         
-        marketLogger.debug(`Transformed indices data: ${transformedData.length} items`);
+        // Log the transformed data
+        console.log("Transformed indices data:", transformedData);
+        
+        // Return the transformed data
         return transformedData;
       } catch (error) {
         marketLogger.error(`Failed to fetch indices data`, error);
         console.error("Indices API error details:", error);
+        
+        // Provide more context about the error
+        if (error instanceof Error) {
+          console.error(`Error fetching indices data: ${error.message}`, {
+            stack: error.stack,
+            timestamp: new Date().toISOString()
+          });
+        } else {
+          console.error("Unknown error type when fetching indices data:", error);
+        }
+        
         throw error;
       }
     },
     ...DEFAULT_QUERY_CONFIG,
     // Increase retries for better resilience
     retry: 3,
-    // Keep data fresher
-    refetchInterval: 5 * 60 * 1000, // 5 minutes
+    // Keep data fresher with more frequent refetching
+    refetchInterval: 2 * 60 * 1000, // 2 minutes
     refetchOnWindowFocus: true,
-    staleTime: 2 * 60 * 1000, // 2 minutes
+    staleTime: 60 * 1000, // 1 minute
   });
 }

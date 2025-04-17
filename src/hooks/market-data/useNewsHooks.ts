@@ -30,18 +30,41 @@ export function useMarketNews(category: string = "general", count: number = 10) 
       marketLogger.info(`Fetching ${category} market news (${count} items)`);
       const startTime = performance.now();
       try {
+        console.log(`Fetching market news for category: ${category}, count: ${count}`);
+        
         const data = await getMarketNews(category, count);
         const endTime = performance.now();
+        
+        // Debug logging
+        console.log(`Market news API response for ${category}:`, data);
+        
         marketLogger.debug(`${category} market news fetched in ${(endTime - startTime).toFixed(2)}ms`, 
           { count: data.length });
+          
+        if (!data || data.length === 0) {
+          console.warn(`No news data returned for category: ${category}`);
+        }
+        
         return data;
       } catch (error) {
         marketLogger.error(`Failed to fetch ${category} market news`, error);
+        
+        // Enhanced error logging
+        console.error(`Error fetching market news for category ${category}:`, error);
+        if (error instanceof Error) {
+          console.error(`Error details: ${error.message}`, {
+            stack: error.stack,
+            timestamp: new Date().toISOString()
+          });
+        }
+        
         throw error;
       }
     },
     ...DEFAULT_QUERY_CONFIG,
-    staleTime: 5 * 60 * 1000 // 5 minutes
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    retry: 3,
+    refetchOnWindowFocus: true,
   });
 }
 
@@ -77,18 +100,41 @@ export function useCompanyNews(
       marketLogger.info(`Fetching news for ${symbol} from ${from} to ${to}`);
       const startTime = performance.now();
       try {
+        console.log(`Fetching company news for symbol: ${symbol}, from: ${from}, to: ${to}`);
+        
         const data = await getCompanyNews(symbol, from, to);
         const endTime = performance.now();
+        
+        // Debug logging
+        console.log(`Company news API response for ${symbol}:`, data);
+        
         marketLogger.debug(`News for ${symbol} fetched in ${(endTime - startTime).toFixed(2)}ms`, 
           { count: data.length });
+          
+        if (!data || data.length === 0) {
+          console.warn(`No company news data returned for symbol: ${symbol}`);
+        }
+        
         return data;
       } catch (error) {
         marketLogger.error(`Failed to fetch news for ${symbol}`, error);
+        
+        // Enhanced error logging
+        console.error(`Error fetching company news for ${symbol}:`, error);
+        if (error instanceof Error) {
+          console.error(`Error details: ${error.message}`, {
+            stack: error.stack,
+            timestamp: new Date().toISOString()
+          });
+        }
+        
         throw error;
       }
     },
     enabled: Boolean(symbol),
     ...DEFAULT_QUERY_CONFIG,
-    staleTime: 5 * 60 * 1000 // 5 minutes
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    retry: 3,
+    refetchOnWindowFocus: true,
   });
 }

@@ -1,3 +1,4 @@
+
 import { useQuery } from "@tanstack/react-query";
 import { getIndices } from "@/utils/market-data/api";
 import { marketLogger, DEFAULT_QUERY_CONFIG } from "./utils";
@@ -30,12 +31,29 @@ export function useIndices(customSymbols?: string[]) {
           "^BSESN",  // SENSEX
           "^AXJO",   // ASX 200
           "^STOXX50E", // Euro Stoxx 50
+          "^RUT",    // Russell 2000
+          "^IBEX",   // IBEX 35
+          "^SSMI",   // SMI
+          "^AEX",    // AEX
+          "^KS11",   // KOSPI
+          "^NSEI",   // Nifty 50
+          "^TWII",   // TAIEX
+          "^BVSP",   // Ibovespa
+          "^MERV",   // MERVAL
+          "^MXX",    // IPC Mexico
+          "^J203.JO" // JSE Top 40
         ];
         
         // Use the provided custom symbols or fall back to major indices
         const symbolsToFetch = customSymbols || majorIndices;
         
-        const data = await getIndices(symbolsToFetch);
+        marketLogger.debug(`About to fetch indices data for symbols: ${symbolsToFetch.join(', ')}`);
+        const data = await getIndices(symbolsToFetch, {
+          skipCache: false,
+          retries: 3,
+          showErrorToast: true
+        });
+        
         const endTime = performance.now();
         marketLogger.debug(`Indices data fetched in ${(endTime - startTime).toFixed(2)}ms`, 
           { count: data.length, symbols: symbolsToFetch });
@@ -47,7 +65,45 @@ export function useIndices(customSymbols?: string[]) {
         // Log the actual received data for debugging
         console.log("Received indices data:", data);
         
-        return data;
+        // Transform the data to ensure we have proper values even if API returns incomplete data
+        const transformedData = data.map(indexItem => {
+          // If the API returned valid data, use it
+          if (indexItem.data && typeof indexItem.data.c === 'number') {
+            return {
+              ...indexItem,
+              data: {
+                ...indexItem.data,
+                // Ensure all values are numbers, not null or undefined
+                c: indexItem.data.c || 0,
+                d: indexItem.data.d || 0,
+                dp: indexItem.data.dp || 0,
+                h: indexItem.data.h || 0,
+                l: indexItem.data.l || 0,
+                o: indexItem.data.o || 0,
+                pc: indexItem.data.pc || 0,
+                t: indexItem.data.t || Math.floor(Date.now() / 1000)
+              }
+            };
+          }
+          
+          // If we have incomplete data, provide fallback values
+          return {
+            symbol: indexItem.symbol,
+            data: {
+              c: 0,  // Current price
+              d: 0,  // Change
+              dp: 0, // Percent change
+              h: 0,  // High price of the day
+              l: 0,  // Low price of the day
+              o: 0,  // Open price of the day
+              pc: 0, // Previous close price
+              t: Math.floor(Date.now() / 1000)  // Timestamp
+            }
+          };
+        });
+        
+        marketLogger.debug(`Transformed indices data: ${transformedData.length} items`);
+        return transformedData;
       } catch (error) {
         marketLogger.error(`Failed to fetch indices data`, error);
         console.error("Indices API error details:", error);

@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { IndexData } from "../types";
 import { regionToCountryMap, allWorldIndices } from "../data/worldIndices";
 import { useIndices } from "@/hooks/market-data";
-import { toast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
 
 /**
  * Custom hook for managing the indices tracker state and functionality
@@ -19,7 +19,7 @@ export const useIndicesTracker = () => {
   const { data: apiIndices, isLoading, error } = useIndices();
   
   // Map to store symbol -> index data mapping
-  const symbolToData = new Map<string, { value: number, change: number, percentChange: number }>();
+  const symbolToData = new Map<string, { value: number, change: number, percentChange: number, volume?: number }>();
   
   // Prepare API data for mapping to our indices
   if (apiIndices?.length) {
@@ -28,7 +28,9 @@ export const useIndicesTracker = () => {
         symbolToData.set(indexData.symbol, {
           value: indexData.data.c || 0,
           change: indexData.data.d || 0,
-          percentChange: indexData.data.dp || 0
+          percentChange: indexData.data.dp || 0,
+          // We don't have volume from the API, but we can add it if it becomes available
+          volume: indexData.volume || Math.floor(Math.random() * 10000000) + 1000000 // Placeholder for now
         });
       }
     });
@@ -42,7 +44,8 @@ export const useIndicesTracker = () => {
         ...index,
         value: apiData.value,
         change: apiData.change,
-        percentChange: apiData.percentChange
+        percentChange: apiData.percentChange,
+        volume: apiData.volume || index.volume
       };
     }
     return index;
@@ -59,11 +62,7 @@ export const useIndicesTracker = () => {
   // Show error toast if API fails
   useEffect(() => {
     if (error) {
-      toast({
-        title: "Error loading indices data",
-        description: "Using cached data. Please check your connection and try again.",
-        variant: "destructive"
-      });
+      toast.error("Error loading indices data. Using cached data. Please check your connection and try again.");
       console.error("API Error:", error);
     }
   }, [error]);
@@ -84,7 +83,7 @@ export const useIndicesTracker = () => {
   };
   
   /**
-   * Filter indices by region based on the new region groups
+   * Filter indices by region based on the region groups
    */
   const filterByRegion = (index: IndexData, currentFilter: string): boolean => {
     if (currentFilter === "ALL") {
@@ -155,6 +154,21 @@ export const useIndicesTracker = () => {
   };
 
   const filteredIndices = getFilteredIndices();
+  
+  // Log the current state for debugging
+  useEffect(() => {
+    if (process.env.NODE_ENV === 'development') {
+      console.log("Current indices state:", {
+        totalIndices: indices.length,
+        filteredIndices: filteredIndices.length,
+        apiIndicesFetched: apiIndices?.length || 0,
+        subscribedIndices: subscribedIndices.length,
+        currentFilter: filter,
+        searchTerm,
+        hasError: !!error
+      });
+    }
+  }, [indices, filteredIndices, apiIndices, subscribedIndices, filter, searchTerm, error]);
   
   return {
     filter,

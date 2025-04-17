@@ -13,18 +13,7 @@ import type { NewsItem } from "@/utils/market-data/types";
 export function useMarketNews(category: string = "general", count: number = 10) {
   return useQuery<NewsItem[], Error>({
     queryKey: ['market-news', category],
-    queryFn: async (): Promise<NewsItem[]> => {
-      marketLogger.info(`Fetching market news for category ${category}`);
-      const startTime = performance.now();
-      
-      const data = await getMarketNews(category, count);
-      const endTime = performance.now();
-      
-      marketLogger.debug(`Market news fetched in ${(endTime - startTime).toFixed(2)}ms`, 
-        { count: data?.length || 0 });
-      
-      return data || [];
-    },
+    queryFn: () => getMarketNews(category, count),
     ...DEFAULT_QUERY_CONFIG,
     staleTime: 15 * 60 * 1000 // 15 minutes
   });
@@ -43,18 +32,7 @@ export function useCompanyNews(
 ) {
   return useQuery<NewsItem[], Error>({
     queryKey: ['company-news', symbol, from, to],
-    queryFn: async (): Promise<NewsItem[]> => {
-      marketLogger.info(`Fetching news for ${symbol}`);
-      const startTime = performance.now();
-      
-      const data = await getCompanyNews(symbol, from, to);
-      const endTime = performance.now();
-      
-      marketLogger.debug(`Company news for ${symbol} fetched in ${(endTime - startTime).toFixed(2)}ms`, 
-        { count: data?.length || 0 });
-      
-      return data || [];
-    },
+    queryFn: () => getCompanyNews(symbol, from, to),
     enabled: Boolean(symbol),
     ...DEFAULT_QUERY_CONFIG,
     staleTime: 10 * 60 * 1000 // 10 minutes

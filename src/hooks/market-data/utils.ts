@@ -10,7 +10,7 @@ export const marketLogger = createLogger("market-data");
 /**
  * Default configuration for React Query
  */
-export const DEFAULT_QUERY_CONFIG: Partial<QueryObserverOptions> = {
+export const DEFAULT_QUERY_CONFIG: Partial<QueryObserverOptions<unknown, Error, unknown>> = {
   retry: 1,
   refetchOnWindowFocus: false,
   refetchOnMount: true,

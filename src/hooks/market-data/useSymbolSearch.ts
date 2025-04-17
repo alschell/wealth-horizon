@@ -20,18 +20,7 @@ export function useSymbolSearch() {
     refetch
   } = useQuery<SymbolSearchResult, Error>({
     queryKey: ['symbol-search', ''],
-    queryFn: async (): Promise<SymbolSearchResult> => {
-      marketLogger.info(`Performing symbol search`);
-      const startTime = performance.now();
-      
-      const data = await searchSymbols('');
-      const endTime = performance.now();
-      
-      marketLogger.debug(`Symbol search completed in ${(endTime - startTime).toFixed(2)}ms`, 
-        { count: data.result?.length || 0 });
-      
-      return data;
-    },
+    queryFn: () => searchSymbols(''),
     ...DEFAULT_QUERY_CONFIG,
     enabled: false // Don't run the query automatically
   });

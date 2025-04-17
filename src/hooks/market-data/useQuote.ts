@@ -13,17 +13,7 @@ import type { Quote } from "@/utils/market-data/types";
 export function useQuote(symbol: string) {
   return useQuery<Quote, Error, { raw: Quote; formatted: ReturnType<typeof formatQuote> }>({
     queryKey: ['quote', symbol],
-    queryFn: async (): Promise<Quote> => {
-      marketLogger.info(`Fetching quote for ${symbol}`);
-      const startTime = performance.now();
-      
-      const data = await getQuote(symbol);
-      const endTime = performance.now();
-      
-      marketLogger.debug(`Quote for ${symbol} fetched in ${(endTime - startTime).toFixed(2)}ms`, data);
-      
-      return data;
-    },
+    queryFn: () => getQuote(symbol),
     enabled: Boolean(symbol),
     ...DEFAULT_QUERY_CONFIG,
     select: (data: Quote) => {

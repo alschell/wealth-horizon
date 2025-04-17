@@ -3,6 +3,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { refreshMarketData as refreshAPI } from "@/utils/market-data/api";
 import { marketLogger } from "./utils";
 import type { UseMarketDataRefreshReturn, RefreshableMarketDataType } from "./types";
+import type { MarketDataType } from "@/utils/market-data/types";
 
 /**
  * Hook for refreshing market data
@@ -71,11 +72,22 @@ export function useMarketDataRefresh(): UseMarketDataRefreshReturn {
     refreshMarketData('candles');
     refreshMarketData('search');
     
+    // Convert RefreshableMarketDataType to MarketDataType
+    const convertToMarketDataType = (type: RefreshableMarketDataType): MarketDataType => {
+      switch (type) {
+        case 'indices': return 'indices';
+        case 'quotes': return 'quote';
+        case 'news': return 'news';
+        case 'candles': return 'candles';
+        case 'search': return 'search';
+      }
+    };
+    
     // Also trigger API refresh (to clear server cache if needed)
     refreshAPI([
-      { type: 'indices' },
-      { type: 'quote' },
-      { type: 'news' }
+      { type: 'indices' as MarketDataType },
+      { type: 'quote' as MarketDataType },
+      { type: 'news' as MarketDataType }
     ]);
   };
   

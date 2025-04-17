@@ -20,7 +20,7 @@ export function useQuote(symbol: string) {
         const data = await getQuote(symbol);
         const endTime = performance.now();
         marketLogger.debug(`Quote for ${symbol} fetched in ${(endTime - startTime).toFixed(2)}ms`, data);
-        return data;
+        return data as Quote;
       } catch (error) {
         marketLogger.error(`Failed to fetch quote for ${symbol}`, error);
         throw error;

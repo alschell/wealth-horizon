@@ -2,6 +2,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { searchSymbols } from "@/utils/market-data/api";
 import { marketLogger, DEFAULT_QUERY_CONFIG } from "./utils";
+import { SymbolSearchResult } from "@/utils/market-data/types";
 
 /**
  * Hook for searching symbols
@@ -17,9 +18,9 @@ export function useSymbolSearch() {
     isLoading,
     error,
     refetch
-  } = useQuery({
+  } = useQuery<SymbolSearchResult>({
     queryKey: ['symbol-search', ''],
-    queryFn: async () => {
+    queryFn: async (): Promise<SymbolSearchResult> => {
       marketLogger.info(`Performing symbol search`);
       const startTime = performance.now();
       try {
@@ -27,7 +28,7 @@ export function useSymbolSearch() {
         const endTime = performance.now();
         marketLogger.debug(`Symbol search completed in ${(endTime - startTime).toFixed(2)}ms`, 
           { count: data.result?.length || 0 });
-        return data;
+        return data as SymbolSearchResult;
       } catch (error) {
         marketLogger.error(`Symbol search failed`, error);
         throw error;

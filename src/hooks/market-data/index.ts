@@ -8,8 +8,6 @@ export {
   useIndices,
   useCandleData,
   useMarketDataRefresh,
-  formatQuote
+  formatQuote,
+  refreshMarketData
 } from './market-data';
-
-// Export the refreshMarketData function from the API utils
-export { refreshMarketData } from '@/utils/market-data/api';

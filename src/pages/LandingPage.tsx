@@ -12,15 +12,36 @@ const LandingPage: React.FC = () => {
   const [title, setTitle] = useState("Wealth Horizon | Intelligent Wealth Management");
   const [description, setDescription] = useState("Wealth Horizon provides comprehensive wealth management solutions for family offices and high-net-worth individuals.");
   const [keywords, setKeywords] = useState("wealth management, family office, financial planning, investment");
+  const [isLoading, setIsLoading] = useState(true);
   
   useEffect(() => {
+    let isMounted = true;
+    
     const updateSEO = async () => {
-      setTitle(await translate("Wealth Horizon | Intelligent Wealth Management"));
-      setDescription(await translate("Wealth Horizon provides comprehensive wealth management solutions for family offices and high-net-worth individuals."));
-      setKeywords(await translate("wealth management, family office, financial planning, investment"));
+      try {
+        const translatedTitle = await translate("Wealth Horizon | Intelligent Wealth Management");
+        const translatedDescription = await translate("Wealth Horizon provides comprehensive wealth management solutions for family offices and high-net-worth individuals.");
+        const translatedKeywords = await translate("wealth management, family office, financial planning, investment");
+        
+        if (isMounted) {
+          setTitle(translatedTitle);
+          setDescription(translatedDescription);
+          setKeywords(translatedKeywords);
+          setIsLoading(false);
+        }
+      } catch (error) {
+        console.error("Error translating SEO content:", error);
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }
     };
     
     updateSEO();
+    
+    return () => {
+      isMounted = false;
+    };
   }, [translate, currentLanguage]);
 
   // Structured data for rich search results
@@ -50,6 +71,12 @@ const LandingPage: React.FC = () => {
     "areaServed": ["Global", "United States", "Europe", "Asia"],
     "keywords": keywords
   };
+
+  if (isLoading) {
+    return <div className="min-h-screen flex items-center justify-center">
+      <div className="animate-pulse h-8 w-8 rounded-full bg-indigo-600"></div>
+    </div>;
+  }
 
   return (
     <>

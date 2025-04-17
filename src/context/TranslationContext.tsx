@@ -192,7 +192,12 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
       
       if (error) {
         console.error('Translation error:', error);
-        return text;
+        return text; // Return original text on error
+      }
+      
+      if (!data || !data.translatedText) {
+        console.error('Invalid translation response:', data);
+        return text; // Return original text if response is invalid
       }
       
       // Restore protected terms in the translated text
@@ -210,7 +215,7 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
       return finalTranslation;
     } catch (error) {
       console.error('Translation failed:', error);
-      return text;
+      return text; // Return original text on any error
     } finally {
       setIsLoading(false);
     }

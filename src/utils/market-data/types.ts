@@ -47,6 +47,11 @@ export interface CandleData {
 export interface IndexData {
   symbol: string;
   data: Quote;
+  name?: string; // Optional property for display name
+  id?: string;   // Optional property for unique identifier
+  region?: string; // Optional property for region
+  description?: string; // Optional property for description
+  volume?: number; // Optional property for volume
 }
 
 export type MarketDataType = 'quote' | 'news' | 'search' | 'indices' | 'candles';

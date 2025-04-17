@@ -77,8 +77,21 @@ const IndicesTable: React.FC<IndicesTableProps> = ({
               }`}
             >
               <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm font-medium text-gray-900">{index.name}</div>
-                <div className="text-xs text-gray-500">{index.symbol}</div>
+                <div className="flex items-center">
+                  {getCountryFlagCode(index.region) !== "globe" ? (
+                    <img 
+                      src={`https://flagcdn.com/16x12/${getCountryFlagCode(index.region)}.png`} 
+                      alt={index.region} 
+                      className="mr-1.5 h-3" 
+                    />
+                  ) : (
+                    <Globe className="h-4 w-4 mr-1 text-gray-400" />
+                  )}
+                  <div>
+                    <div className="text-sm font-medium text-gray-900">{index.name}</div>
+                    <div className="text-xs text-gray-500">{index.symbol}</div>
+                  </div>
+                </div>
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-right">
                 {formatValue(index.value)}
@@ -108,18 +121,7 @@ const IndicesTable: React.FC<IndicesTableProps> = ({
                 }
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
-                <div className="flex items-center justify-center">
-                  {getCountryFlagCode(index.region) !== "globe" ? (
-                    <img 
-                      src={`https://flagcdn.com/16x12/${getCountryFlagCode(index.region)}.png`} 
-                      alt={index.region} 
-                      className="mr-1.5 h-3" 
-                    />
-                  ) : (
-                    <Globe className="h-4 w-4 mr-1 text-gray-400" />
-                  )}
-                  <span>{index.region}</span>
-                </div>
+                {index.region}
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
                 <Button

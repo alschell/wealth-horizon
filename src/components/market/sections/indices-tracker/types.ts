@@ -8,7 +8,7 @@ export interface IndexData {
   percentChange: number;
   region: string;
   description: string;
-  volume?: number; // Changed from string to number to match actual data
+  volume?: number;
 }
 
 export interface IndicesTrackerProps {

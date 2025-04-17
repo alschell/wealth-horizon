@@ -1,3 +1,4 @@
+
 import React, { useEffect } from "react";
 import { ChevronDown, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -40,8 +41,8 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToFeatures }) => {
           <FadeIn delay={0.2}>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-gray-900 leading-tight">
               <TranslatedText>
-                Holistic wealth management for{" "}
-              </TranslatedText>
+                Holistic wealth management for
+              </TranslatedText>{" "}
               <span className="text-indigo-600">
                 <TranslatedText>family offices</TranslatedText>
               </span>

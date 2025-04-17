@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+
+import React, { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -7,8 +8,10 @@ import CustomSearchableSelect from "@/components/ui/custom-searchable-select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { CheckCheck } from "lucide-react";
 import TranslatedText from "@/components/ui/translated-text";
+import { useTranslation } from "@/context/TranslationContext";
 
 const ContactForm: React.FC = () => {
+  const { translate } = useTranslation();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [email, setEmail] = useState("");
   const [fullName, setFullName] = useState("");
@@ -17,6 +20,8 @@ const ContactForm: React.FC = () => {
   const [inquiry, setInquiry] = useState("");
   const [message, setMessage] = useState("");
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [translatedIndustryOptions, setTranslatedIndustryOptions] = useState<string[]>([]);
+  const [translatedInquiryOptions, setTranslatedInquiryOptions] = useState<string[]>([]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -59,6 +64,23 @@ const ContactForm: React.FC = () => {
     "Get information on our partnership program",
     "Other"
   ];
+
+  // Translate industry options
+  React.useEffect(() => {
+    const translateOptions = async () => {
+      const translatedIndustries = await Promise.all(
+        industryOptions.map(option => translate(option))
+      );
+      setTranslatedIndustryOptions(translatedIndustries);
+
+      const translatedInquiries = await Promise.all(
+        inquiryOptions.map(option => translate(option))
+      );
+      setTranslatedInquiryOptions(translatedInquiries);
+    };
+
+    translateOptions();
+  }, [translate]);
 
   return (
     <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-200">
@@ -117,7 +139,7 @@ const ContactForm: React.FC = () => {
               label=""
               value={industry}
               placeholder="Select your industry"
-              options={industryOptions}
+              options={translatedIndustryOptions.length > 0 ? translatedIndustryOptions : industryOptions}
               onChange={(value) => setIndustry(value)}
               required={true}
               allowCustomValue
@@ -133,7 +155,7 @@ const ContactForm: React.FC = () => {
               label=""
               value={inquiry}
               placeholder="Select inquiry type"
-              options={inquiryOptions}
+              options={translatedInquiryOptions.length > 0 ? translatedInquiryOptions : inquiryOptions}
               onChange={(value) => setInquiry(value)}
               required={true}
               allowCustomValue

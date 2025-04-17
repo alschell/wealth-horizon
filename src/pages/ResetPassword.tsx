@@ -17,15 +17,18 @@ const ResetPassword = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const { translate } = useTranslation();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    
+    // Get the translated string before showing the toast
+    const successMessage = await translate("Password reset instructions sent to your email");
     
     // Simulate loading state and API call
     setTimeout(() => {
       setIsLoading(false);
       setIsSubmitted(true);
-      toast.success(translate("Password reset instructions sent to your email"));
+      toast.success(successMessage);
     }, 1000);
   };
 

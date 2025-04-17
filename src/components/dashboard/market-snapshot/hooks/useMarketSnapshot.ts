@@ -43,7 +43,7 @@ export function useMarketSnapshot() {
         let newMarketItems: MarketItem[] = [];
         
         // If we have indices data from the API
-        if (indicesData && indicesData.length > 0) {
+        if (indicesData && Array.isArray(indicesData) && indicesData.length > 0) {
           // Map indices to market items
           const indicesItems = indicesData.map((index: IndexData) => {
             if (!index.data) return null;

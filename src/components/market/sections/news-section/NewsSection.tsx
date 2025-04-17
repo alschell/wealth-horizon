@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { NewsSectionProps, NewsItem } from "./types";
@@ -23,7 +22,7 @@ const NewsSection: React.FC<NewsSectionProps> = ({ articleId }) => {
   
   // Map API news items to our component's NewsItem format
   const newsItems: NewsItem[] = React.useMemo(() => {
-    if (!apiNewsItems) return [];
+    if (!apiNewsItems || !Array.isArray(apiNewsItems)) return [];
     
     return apiNewsItems.map((item: APINewsItem): NewsItem => ({
       id: item.id.toString(),

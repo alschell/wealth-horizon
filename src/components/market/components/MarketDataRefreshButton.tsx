@@ -25,7 +25,7 @@ interface MarketDataRefreshButtonProps {
  * @example
  * ```tsx
  * <MarketDataRefreshButton 
- *   types={['quote', 'indices']} 
+ *   types={['quotes', 'indices']} 
  *   symbol="AAPL" 
  * />
  * ```

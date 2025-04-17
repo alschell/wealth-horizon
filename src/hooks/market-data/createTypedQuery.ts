@@ -13,6 +13,9 @@ export function createTypedQuery<TData, TParams extends any[]>(
   fetchFn: (...args: TParams) => Promise<TData>
 ): (...args: TParams) => QueryFunction<TData, QueryKey> {
   return (...args: TParams) => {
-    return () => fetchFn(...args);
+    // Return a function that react-query can use as queryFn
+    return async () => {
+      return fetchFn(...args);
+    };
   };
 }

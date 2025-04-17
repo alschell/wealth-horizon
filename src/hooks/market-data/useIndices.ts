@@ -14,8 +14,7 @@ export function useIndices(symbols?: string[]) {
   return useQuery<IndexData[], Error>({
     queryKey: ['indices', symbols ? symbols.join(',') : 'all'],
     queryFn: async () => {
-      const result = await getIndices(symbols);
-      return result as IndexData[];
+      return await getIndices(symbols);
     },
     ...DEFAULT_QUERY_CONFIG,
     staleTime: 5 * 60 * 1000 // 5 minutes

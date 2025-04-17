@@ -4,19 +4,8 @@ export { formatQuote } from '@/utils/market-data/api';
 export { useMarketNews, useCompanyNews } from './useNewsHooks';
 export { useIndices } from './useIndices';
 export { useCandleData } from './useCandleData';
+export { useSymbolSearch } from './useSymbolSearch';
+export { useMarketDataRefresh } from './useMarketDataRefresh';
 
-// Symbol search hook (placeholder implementation)
-export function useSymbolSearch(query: string) {
-  return { data: [], isLoading: false, error: null };
-}
-
-// Market data refresh function (placeholder implementation)
-export function refreshMarketData() {
-  return Promise.resolve();
-}
-
-// Market data refresh hook (placeholder implementation)
-export function useMarketDataRefresh() {
-  const refresh = (type?: string, symbols?: string[]) => refreshMarketData();
-  return { refresh, refreshAll: () => refreshMarketData() };
-}
+// Market data refresh function from API
+export { refreshMarketData } from '@/utils/market-data/api';

@@ -38,7 +38,7 @@ const MarketDataRefreshButton: React.FC<MarketDataRefreshButtonProps> = ({
   className
 }) => {
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const { refresh } = useMarketDataRefresh();
+  const { refreshMarketData } = useMarketDataRefresh();
   
   const handleRefresh = async () => {
     if (isRefreshing) return;
@@ -47,25 +47,14 @@ const MarketDataRefreshButton: React.FC<MarketDataRefreshButtonProps> = ({
     
     try {
       // Handle each type of market data refresh
-      if (types.includes('indices')) {
-        refresh('indices');
-      }
+      const refreshPromises = types.map(type => {
+        if (type === 'quotes' || type === 'candles' || type === 'search') {
+          return refreshMarketData(type, symbol ? [symbol] : []);
+        }
+        return refreshMarketData(type);
+      });
       
-      if (types.includes('quotes') && symbol) {
-        refresh('quotes', [symbol]);
-      }
-      
-      if (types.includes('news')) {
-        refresh('news');
-      }
-      
-      if (types.includes('candles') && symbol) {
-        refresh('candles', [symbol]);
-      }
-      
-      if (types.includes('search') && symbol) {
-        refresh('search', [symbol]);
-      }
+      await Promise.all(refreshPromises);
       
       toast.success("Data refreshed", {
         description: "Latest market data has been loaded",

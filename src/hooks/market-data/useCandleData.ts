@@ -19,8 +19,7 @@ export function useCandleData(
   return useQuery<CandleData, Error>({
     queryKey: ['candle-data', symbol, resolution, from, to],
     queryFn: async () => {
-      const result = await getCandleData(symbol, resolution, from, to);
-      return result as CandleData;
+      return await getCandleData(symbol, resolution, from, to);
     },
     enabled: Boolean(symbol),
     ...DEFAULT_QUERY_CONFIG,

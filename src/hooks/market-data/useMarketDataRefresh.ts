@@ -2,7 +2,7 @@
 import { useCallback } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { refreshMarketData } from '@/utils/market-data/api';
-import { RefreshableMarketDataType, MarketDataRefreshOptions, UseMarketDataRefreshReturn } from './types';
+import { RefreshableMarketDataType, UseMarketDataRefreshReturn } from './types';
 import { toast } from "@/hooks/use-toast";
 
 /**

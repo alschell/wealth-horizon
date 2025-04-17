@@ -1,7 +1,10 @@
+
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { IndexData } from "../types";
-import { worldIndices, regionToCountryMap } from "../data/worldIndices";
+import { worldIndices, regionToCountryMap, allWorldIndices } from "../data/worldIndices";
+import { useIndices } from "@/hooks/market-data";
+import { toast } from "@/components/ui/use-toast";
 
 /**
  * Custom hook for managing the indices tracker state and functionality
@@ -12,13 +15,49 @@ export const useIndicesTracker = () => {
   const [subscribedIndices, setSubscribedIndices] = useState<string[]>(["S&P 500", "NASDAQ Composite", "Dow Jones", "FTSE 100", "Nikkei 225"]);
   const [selectedIndex, setSelectedIndex] = useState<IndexData | null>(null);
   
+  // Fetch indices data from API
+  const { data: apiIndices, isLoading, error } = useIndices();
+  
+  // Combine API indices with our complete list if available
+  const indices = apiIndices?.length ? apiIndices.map(apiIndex => {
+    // Find matching index in our detailed list
+    const matchedIndex = allWorldIndices.find(idx => 
+      idx.symbol === apiIndex.symbol || 
+      idx.name.includes(apiIndex.symbol.replace('^', ''))
+    );
+    
+    if (matchedIndex) {
+      // Update with live data
+      return {
+        ...matchedIndex,
+        value: apiIndex.data.c,
+        change: apiIndex.data.d,
+        percentChange: apiIndex.data.dp
+      };
+    }
+    
+    // Fallback to API data
+    return apiIndex;
+  }) : allWorldIndices;
+  
   const location = useLocation();
   const navigate = useNavigate();
   
   // Parse the query parameters to get the selected index
   useEffect(() => {
     parseQueryParams();
-  }, [location]);
+  }, [location, indices]);
+  
+  // Show error toast if API fails
+  useEffect(() => {
+    if (error) {
+      toast({
+        title: "Error loading indices data",
+        description: "Using cached data. Please check your connection and try again.",
+        variant: "destructive"
+      });
+    }
+  }, [error]);
   
   /**
    * Parse URL query parameters and set selected index if present
@@ -27,8 +66,8 @@ export const useIndicesTracker = () => {
     const params = new URLSearchParams(location.search);
     const indexName = params.get('index');
     
-    if (indexName) {
-      const foundIndex = worldIndices.find(idx => idx.name === indexName);
+    if (indexName && indices.length > 0) {
+      const foundIndex = indices.find(idx => idx.name === indexName);
       if (foundIndex) {
         setSelectedIndex(foundIndex);
       }
@@ -62,7 +101,7 @@ export const useIndicesTracker = () => {
     return (
       index.name.toLowerCase().includes(searchLower) || 
       index.region.toLowerCase().includes(searchLower) ||
-      index.description.toLowerCase().includes(searchLower)
+      (index.description && index.description.toLowerCase().includes(searchLower))
     );
   };
   
@@ -70,7 +109,7 @@ export const useIndicesTracker = () => {
    * Apply all filters and sorting to indices
    */
   const getFilteredIndices = (): IndexData[] => {
-    return worldIndices
+    return indices
       .filter(index => {
         // Apply search filter
         if (!filterBySearchTerm(index, searchTerm)) {
@@ -108,7 +147,7 @@ export const useIndicesTracker = () => {
    * Get all indices sorted alphabetically
    */
   const getSortedIndices = (): IndexData[] => {
-    return [...worldIndices].sort((a, b) => a.name.localeCompare(b.name));
+    return [...indices].sort((a, b) => a.name.localeCompare(b.name));
   };
 
   const filteredIndices = getFilteredIndices();
@@ -124,6 +163,7 @@ export const useIndicesTracker = () => {
     filteredIndices,
     toggleSubscription,
     handleSelectIndex,
-    indices: getSortedIndices()
+    indices: getSortedIndices(),
+    isLoading
   };
 };

@@ -1,444 +1,447 @@
-
 import { IndexData } from "../types";
 
-// Comprehensive list of stock market indices from around the world
 export const worldIndices: IndexData[] = [
-  // North America
-  { 
-    id: "sp500", 
-    name: "S&P 500", 
-    symbol: "^GSPC", 
-    value: 5280.12, 
-    change: 0.75, 
-    percentChange: 1.42, 
+  {
+    id: "sp500",
+    name: "S&P 500",
+    symbol: "^GSPC",
+    value: 4587.20,
+    change: 0.85,
+    percentChange: 0.85,
+    volume: 2500000000,
     region: "United States",
-    description: "Standard & Poor's 500 - 500 largest US publicly traded companies"
+    description: "Standard & Poor's 500 Index of 500 large US companies"
   },
-  { 
-    id: "dow", 
-    name: "Dow Jones", 
-    symbol: "^DJI", 
-    value: 38250.42, 
-    change: 125.30, 
-    percentChange: 0.33, 
+  {
+    id: "nasdaq",
+    name: "NASDAQ Composite",
+    symbol: "^IXIC",
+    value: 14346.30,
+    change: 1.2,
+    percentChange: 1.2,
+    volume: 1800000000,
     region: "United States",
-    description: "Dow Jones Industrial Average - 30 large US companies"
+    description: "NASDAQ Composite Index of securities listed on NASDAQ"
   },
-  { 
-    id: "nasdaq", 
-    name: "NASDAQ Composite", 
-    symbol: "^IXIC", 
-    value: 16720.54, 
-    change: 184.09, 
-    percentChange: 1.12, 
+  {
+    id: "dowjones",
+    name: "Dow Jones",
+    symbol: "^DJI",
+    value: 36124.56,
+    change: 0.32,
+    percentChange: 0.32,
+    volume: 850000000,
     region: "United States",
-    description: "NASDAQ Composite - All companies listed on the NASDAQ stock exchange"
+    description: "Dow Jones Industrial Average of 30 large US companies"
   },
-  { 
-    id: "russell2000", 
-    name: "Russell 2000", 
-    symbol: "^RUT", 
-    value: 2080.78, 
-    change: 17.24, 
-    percentChange: 0.84, 
-    region: "United States",
-    description: "Russell 2000 - 2000 small-cap US companies"
-  },
-  { 
-    id: "tsx", 
-    name: "S&P/TSX Composite", 
-    symbol: "^GSPTSE", 
-    value: 21924.98, 
-    change: -47.35, 
-    percentChange: -0.22, 
-    region: "Canada",
-    description: "S&P/Toronto Stock Exchange Composite - Largest companies on Toronto Stock Exchange"
-  },
-  { 
-    id: "ipc", 
-    name: "IPC Mexico", 
-    symbol: "^MXX", 
-    value: 52872.34, 
-    change: 321.54, 
-    percentChange: 0.61, 
-    region: "Mexico",
-    description: "Índice de Precios y Cotizaciones - Main index of the Mexican Stock Exchange"
-  },
-
-  // Europe
-  { 
-    id: "ftse100", 
-    name: "FTSE 100", 
-    symbol: "^FTSE", 
-    value: 7860.35, 
-    change: -12.45, 
-    percentChange: -0.16, 
+  {
+    id: "ftse",
+    name: "FTSE 100",
+    symbol: "^FTSE",
+    value: 7582.10,
+    change: -0.32,
+    percentChange: -0.32,
+    volume: 620000000,
     region: "United Kingdom",
-    description: "Financial Times Stock Exchange 100 - 100 companies on the London Stock Exchange"
+    description: "Financial Times Stock Exchange 100 Index of UK companies"
   },
-  { 
-    id: "dax", 
-    name: "DAX", 
-    symbol: "^GDAXI", 
-    value: 17980.28, 
-    change: 87.35, 
-    percentChange: 0.49, 
+  {
+    id: "dax",
+    name: "DAX",
+    symbol: "^GDAXI",
+    value: 15947.80,
+    change: -0.15,
+    percentChange: -0.15,
+    volume: 720000000,
     region: "Germany",
-    description: "Deutscher Aktienindex - 40 largest German companies trading on Frankfurt Stock Exchange"
+    description: "Deutscher Aktienindex of 40 major German companies"
   },
-  { 
-    id: "cac40", 
-    name: "CAC 40", 
-    symbol: "^FCHI", 
-    value: 7592.31, 
-    change: 34.86, 
-    percentChange: 0.46, 
+  {
+    id: "nikkei",
+    name: "Nikkei 225",
+    symbol: "^N225",
+    value: 37156.45,
+    change: 1.45,
+    percentChange: 1.45,
+    volume: 1200000000,
+    region: "Japan",
+    description: "Nikkei 225 Index of Japanese companies"
+  },
+  {
+    id: "shanghai",
+    name: "Shanghai Composite",
+    symbol: "000001.SS",
+    value: 3210.40,
+    change: -0.30,
+    percentChange: -0.30,
+    volume: 950000000,
+    region: "China",
+    description: "Shanghai Stock Exchange Composite Index"
+  },
+  {
+    id: "cac",
+    name: "CAC 40",
+    symbol: "^FCHI",
+    value: 7125.80,
+    change: 0.42,
+    percentChange: 0.42,
+    volume: 580000000,
     region: "France",
-    description: "Cotation Assistée en Continu - 40 most significant companies on Euronext Paris"
-  },
-  { 
-    id: "ibex35", 
-    name: "IBEX 35", 
-    symbol: "^IBEX", 
-    value: 10124.70, 
-    change: -28.90, 
-    percentChange: -0.28, 
-    region: "Spain",
-    description: "Iberia Index - 35 most liquid Spanish companies listed on Madrid Stock Exchange"
-  },
-  { 
-    id: "ftse-mib", 
-    name: "FTSE MIB", 
-    symbol: "FTSEMIB.MI", 
-    value: 33185.34, 
-    change: 122.65, 
-    percentChange: 0.37, 
-    region: "Italy",
-    description: "FTSE Milano Italia Borsa - 40 most-traded stock classes on Borsa Italiana"
-  },
-  { 
-    id: "aex", 
-    name: "AEX", 
-    symbol: "^AEX", 
-    value: 887.37, 
-    change: 5.12, 
-    percentChange: 0.58, 
-    region: "Netherlands",
-    description: "Amsterdam Exchange Index - 25 Dutch companies listed on Euronext Amsterdam"
-  },
-  { 
-    id: "smi", 
-    name: "SMI", 
-    symbol: "^SSMI", 
-    value: 11642.81, 
-    change: 32.55, 
-    percentChange: 0.28, 
-    region: "Switzerland",
-    description: "Swiss Market Index - 20 largest Swiss companies on SIX Swiss Exchange"
+    description: "Cotation Assistée en Continu 40 Index of French companies"
   },
   {
-    id: "omx-stockholm", 
-    name: "OMX Stockholm 30", 
-    symbol: "^OMX", 
-    value: 2415.67, 
-    change: 12.34, 
-    percentChange: 0.51, 
-    region: "Sweden",
-    description: "OMX Stockholm 30 - 30 most-traded stocks on Stockholm Stock Exchange"
-  },
-  {
-    id: "osebx", 
-    name: "Oslo Børs", 
-    symbol: "OSEBX.OL", 
-    value: 1295.32, 
-    change: -5.80, 
-    percentChange: -0.45, 
-    region: "Norway",
-    description: "Oslo Stock Exchange Benchmark Index - Main index on Oslo Stock Exchange"
-  },
-
-  // Asia Pacific
-  { 
-    id: "nikkei", 
-    name: "Nikkei 225", 
-    symbol: "^N225", 
-    value: 38360.65, 
-    change: 481.20, 
-    percentChange: 1.27, 
-    region: "Japan",
-    description: "Nikkei 225 - 225 largest companies listed on Tokyo Stock Exchange"
-  },
-  { 
-    id: "topix", 
-    name: "TOPIX", 
-    symbol: "^TOPX", 
-    value: 2664.84, 
-    change: 15.42, 
-    percentChange: 0.58, 
-    region: "Japan",
-    description: "Tokyo Price Index - All companies in the First Section of Tokyo Stock Exchange"
-  },
-  { 
-    id: "shanghai", 
-    name: "Shanghai Composite", 
-    symbol: "000001.SS", 
-    value: 3184.22, 
-    change: 18.75, 
-    percentChange: 0.59, 
-    region: "China",
-    description: "Shanghai Stock Exchange Composite Index - All stocks on Shanghai Stock Exchange"
-  },
-  { 
-    id: "shenzhen", 
-    name: "Shenzhen Component", 
-    symbol: "399001.SZ", 
-    value: 10126.82, 
-    change: 58.30, 
-    percentChange: 0.58, 
-    region: "China",
-    description: "Shenzhen Stock Exchange Component Index - 500 stocks on Shenzhen Stock Exchange"
-  },
-  { 
-    id: "hang-seng", 
-    name: "Hang Seng", 
-    symbol: "^HSI", 
-    value: 18077.69, 
-    change: -120.31, 
-    percentChange: -0.66, 
-    region: "Hong Kong",
-    description: "Hang Seng Index - Largest companies of Hong Kong stock market"
-  },
-  { 
-    id: "kospi", 
-    name: "KOSPI", 
-    symbol: "^KS11", 
-    value: 2691.28, 
-    change: 10.54, 
-    percentChange: 0.39, 
-    region: "South Korea",
-    description: "Korea Composite Stock Price Index - All common stocks on Korean Stock Exchange"
-  },
-  { 
-    id: "sensex", 
-    name: "BSE SENSEX", 
-    symbol: "^BSESN", 
-    value: 73354.85, 
-    change: 181.33, 
-    percentChange: 0.25, 
-    region: "India",
-    description: "Bombay Stock Exchange Sensitive Index - 30 largest companies on Bombay Stock Exchange"
-  },
-  { 
-    id: "nifty", 
-    name: "NIFTY 50", 
-    symbol: "^NSEI", 
-    value: 22347.60, 
-    change: 67.65, 
-    percentChange: 0.30, 
-    region: "India",
-    description: "National Stock Exchange Fifty - 50 largest companies on National Stock Exchange of India"
-  },
-  { 
-    id: "asx", 
-    name: "S&P/ASX 200", 
-    symbol: "^AXJO", 
-    value: 7742.80, 
-    change: -18.62, 
-    percentChange: -0.24, 
+    id: "asx",
+    name: "ASX 200",
+    symbol: "^AXJO",
+    value: 7648.25,
+    change: 0.85,
+    percentChange: 0.85,
+    volume: 490000000,
     region: "Australia",
-    description: "Standard & Poor's/ASX 200 - 200 largest index-eligible stocks on Australian Securities Exchange"
+    description: "S&P/ASX 200 Index of Australian companies"
   },
-  { 
-    id: "nzx50", 
-    name: "NZX 50", 
-    symbol: "^NZ50", 
-    value: 11742.32, 
-    change: 28.92, 
-    percentChange: 0.25, 
-    region: "New Zealand",
-    description: "New Zealand Exchange 50 Index - 50 largest stocks on New Zealand Stock Exchange"
+  {
+    id: "hangseng",
+    name: "Hang Seng",
+    symbol: "^HSI",
+    value: 18125.45,
+    change: -1.20,
+    percentChange: -1.20,
+    volume: 1100000000,
+    region: "Hong Kong",
+    description: "Hang Seng Index of Hong Kong companies"
   },
-  { 
-    id: "sti", 
-    name: "Straits Times Index", 
-    symbol: "^STI", 
-    value: 3382.54, 
-    change: 12.80, 
-    percentChange: 0.38, 
-    region: "Singapore",
-    description: "Straits Times Index - 30 representative companies on Singapore Exchange"
+  {
+    id: "kospi",
+    name: "KOSPI",
+    symbol: "^KS11",
+    value: 2617.75,
+    change: 0.68,
+    percentChange: 0.68,
+    volume: 750000000,
+    region: "South Korea",
+    description: "Korea Composite Stock Price Index"
   },
-  { 
-    id: "jkse", 
-    name: "Jakarta Composite", 
-    symbol: "^JKSE", 
-    value: 7287.42, 
-    change: 28.14, 
-    percentChange: 0.39, 
-    region: "Indonesia",
-    description: "Jakarta Composite Index - All stocks on Indonesia Stock Exchange"
+  {
+    id: "tsx",
+    name: "S&P/TSX Composite",
+    symbol: "^GSPTSE",
+    value: 22143.25,
+    change: 0.54,
+    percentChange: 0.54,
+    volume: 420000000,
+    region: "Canada",
+    description: "Standard & Poor's/Toronto Stock Exchange Composite Index"
   },
-  { 
-    id: "klci", 
-    name: "FTSE Bursa Malaysia KLCI", 
-    symbol: "^KLSE", 
-    value: 1582.64, 
-    change: -4.21, 
-    percentChange: -0.27, 
-    region: "Malaysia",
-    description: "FTSE Bursa Malaysia Kuala Lumpur Composite Index - 30 largest companies on Bursa Malaysia"
+  {
+    id: "sensex",
+    name: "BSE SENSEX",
+    symbol: "^BSESN",
+    value: 72485.15,
+    change: 1.05,
+    percentChange: 1.05,
+    volume: 860000000,
+    region: "India",
+    description: "Bombay Stock Exchange Sensitive Index"
   },
-
-  // Middle East & Africa
-  { 
-    id: "tasi", 
-    name: "Tadawul All Share", 
-    symbol: "^TASI", 
-    value: 11685.47, 
-    change: 65.32, 
-    percentChange: 0.56, 
-    region: "Saudi Arabia",
-    description: "Tadawul All Share Index - Main index of Saudi Stock Exchange"
+  {
+    id: "nifty",
+    name: "NIFTY 50",
+    symbol: "^NSEI",
+    value: 21957.30,
+    change: 0.95,
+    percentChange: 0.95,
+    volume: 820000000,
+    region: "India",
+    description: "National Stock Exchange of India 50 Index"
   },
-  { 
-    id: "dfmgi", 
-    name: "Dubai Financial Market", 
-    symbol: "^DFMGI", 
-    value: 4124.08, 
-    change: 18.45, 
-    percentChange: 0.45, 
-    region: "UAE",
-    description: "Dubai Financial Market General Index - Main index of Dubai Financial Market"
-  },
-  { 
-    id: "adx", 
-    name: "Abu Dhabi Securities", 
-    symbol: "^ADI", 
-    value: 9212.34, 
-    change: 38.67, 
-    percentChange: 0.42, 
-    region: "UAE",
-    description: "Abu Dhabi Securities Market General Index - Main index of Abu Dhabi Securities Exchange"
-  },
-  { 
-    id: "qe", 
-    name: "Qatar Exchange", 
-    symbol: "^QSI", 
-    value: 10287.55, 
-    change: -32.45, 
-    percentChange: -0.31, 
-    region: "Qatar",
-    description: "Qatar Stock Exchange Index - Main index of Qatar Stock Exchange"
-  },
-  { 
-    id: "tase", 
-    name: "Tel Aviv 35", 
-    symbol: "^TA35", 
-    value: 1942.68, 
-    change: 12.25, 
-    percentChange: 0.63, 
-    region: "Israel",
-    description: "Tel Aviv Stock Exchange's flagship index - 35 stocks with highest market cap on TASE"
-  },
-  { 
-    id: "egx30", 
-    name: "EGX 30", 
-    symbol: "^CASE", 
-    value: 28112.54, 
-    change: 142.65, 
-    percentChange: 0.51, 
-    region: "Egypt",
-    description: "Egyptian Exchange 30 - 30 most highly capitalized and liquid stocks on Egyptian Exchange"
-  },
-  { 
-    id: "jse", 
-    name: "JSE Top 40", 
-    symbol: "^JTOPI", 
-    value: 69548.32, 
-    change: 215.67, 
-    percentChange: 0.31, 
-    region: "South Africa",
-    description: "Johannesburg Stock Exchange Top 40 - 40 largest companies on JSE"
-  },
-  { 
-    id: "nse", 
-    name: "NSE All Share", 
-    symbol: "^NGSEINDX", 
-    value: 65487.35, 
-    change: 342.52, 
-    percentChange: 0.53, 
-    region: "Nigeria",
-    description: "Nigerian Stock Exchange All Share Index - All common stocks on Nigerian Stock Exchange"
-  },
-
-  // Latin America
-  { 
-    id: "bovespa", 
-    name: "Bovespa", 
-    symbol: "^BVSP", 
-    value: 124758.42, 
-    change: 854.32, 
-    percentChange: 0.69, 
+  {
+    id: "bovespa",
+    name: "IBOVESPA",
+    symbol: "^BVSP",
+    value: 125784.65,
+    change: -0.22,
+    percentChange: -0.22,
+    volume: 670000000,
     region: "Brazil",
-    description: "Brasil Bolsa Balcão - About 60 stocks traded on the B3 exchange"
+    description: "Brasil Bolsa Balcão Index of top Brazilian companies"
   },
-  { 
-    id: "ipsa", 
-    name: "S&P/CLX IPSA", 
-    symbol: "^IPSA", 
-    value: 5982.47, 
-    change: 24.78, 
-    percentChange: 0.42, 
-    region: "Chile",
-    description: "Índice de Precio Selectivo de Acciones - 30 most significant stocks on Santiago Stock Exchange"
+  {
+    id: "mexbol",
+    name: "IPC Mexico",
+    symbol: "^MXX",
+    value: 53216.30,
+    change: 0.38,
+    percentChange: 0.38,
+    volume: 310000000,
+    region: "Mexico",
+    description: "Índice de Precios y Cotizaciones, Mexican Stock Exchange Index"
   },
-  { 
-    id: "merval", 
-    name: "MERVAL", 
-    symbol: "^MERV", 
-    value: 1008537.85, 
-    change: 5023.54, 
-    percentChange: 0.50, 
-    region: "Argentina",
-    description: "Mercado de Valores - Leading stocks on Buenos Aires Stock Exchange"
+  {
+    id: "sti",
+    name: "Straits Times Index",
+    symbol: "^STI",
+    value: 3317.45,
+    change: 0.25,
+    percentChange: 0.25,
+    volume: 280000000,
+    region: "Singapore",
+    description: "Straits Times Index of Singapore Exchange"
   },
-  { 
-    id: "colcap", 
-    name: "COLCAP", 
-    symbol: "^COLCAP", 
-    value: 1384.21, 
-    change: -5.32, 
-    percentChange: -0.38, 
-    region: "Colombia",
-    description: "Capitalization Index - 20 most liquid stocks on Colombia Stock Exchange"
+  {
+    id: "jse",
+    name: "JSE All-Share",
+    symbol: "J203.JO",
+    value: 75412.85,
+    change: -0.45,
+    percentChange: -0.45,
+    volume: 350000000,
+    region: "South Africa",
+    description: "Johannesburg Stock Exchange All-Share Index"
   },
-  { 
-    id: "lima", 
-    name: "S&P/BVL Peru", 
-    symbol: "^SPBLPGPT", 
-    value: 22478.56, 
-    change: 92.41, 
-    percentChange: 0.41, 
-    region: "Peru",
-    description: "S&P/BVL Peru General Index - Most liquid stocks on Lima Stock Exchange"
+  {
+    id: "omxs30",
+    name: "OMX Stockholm 30",
+    symbol: "^OMX",
+    value: 2410.62,
+    change: 0.52,
+    percentChange: 0.52,
+    volume: 230000000,
+    region: "Sweden",
+    description: "Stockholm Stock Exchange 30 Index"
+  },
+  {
+    id: "smi",
+    name: "SMI",
+    symbol: "^SSMI",
+    value: 11684.35,
+    change: 0.15,
+    percentChange: 0.15,
+    volume: 320000000,
+    region: "Switzerland",
+    description: "Swiss Market Index of top Swiss companies"
+  },
+  {
+    id: "atx",
+    name: "ATX",
+    symbol: "^ATX",
+    value: 3428.90,
+    change: -0.18,
+    percentChange: -0.18,
+    volume: 180000000,
+    region: "Austria",
+    description: "Austrian Traded Index of Wiener Börse"
+  },
+  {
+    id: "bel20",
+    name: "BEL 20",
+    symbol: "^BFX",
+    value: 3742.65,
+    change: 0.28,
+    percentChange: 0.28,
+    volume: 160000000,
+    region: "Belgium",
+    description: "Euronext Brussels BEL 20 Index"
+  },
+  {
+    id: "omxc25",
+    name: "OMX Copenhagen 25",
+    symbol: "^OMXC25",
+    value: 2137.85,
+    change: 0.35,
+    percentChange: 0.35,
+    volume: 140000000,
+    region: "Denmark",
+    description: "Copenhagen Stock Exchange 25 Index"
+  },
+  {
+    id: "hex25",
+    name: "OMX Helsinki 25",
+    symbol: "^OMXH25",
+    value: 4852.30,
+    change: 0.48,
+    percentChange: 0.48,
+    volume: 170000000,
+    region: "Finland",
+    description: "Helsinki Stock Exchange 25 Index"
+  },
+  {
+    id: "ase",
+    name: "Athens General",
+    symbol: "^ATH",
+    value: 1274.50,
+    change: -0.65,
+    percentChange: -0.65,
+    volume: 85000000,
+    region: "Greece",
+    description: "Athens Stock Exchange General Index"
+  },
+  {
+    id: "iseq",
+    name: "ISEQ Overall",
+    symbol: "^ISEQ",
+    value: 9485.70,
+    change: 0.21,
+    percentChange: 0.21,
+    volume: 95000000,
+    region: "Ireland",
+    description: "Irish Stock Exchange Overall Index"
+  },
+  {
+    id: "mib",
+    name: "FTSE MIB",
+    symbol: "FTSEMIB.MI",
+    value: 31247.80,
+    change: 0.33,
+    percentChange: 0.33,
+    volume: 425000000,
+    region: "Italy",
+    description: "FTSE Milano Italia Borsa Index"
+  },
+  {
+    id: "osebx",
+    name: "Oslo Børs",
+    symbol: "^OSEAX",
+    value: 1442.15,
+    change: 0.42,
+    percentChange: 0.42,
+    volume: 125000000,
+    region: "Norway",
+    description: "Oslo Stock Exchange Benchmark Index"
+  },
+  {
+    id: "wig20",
+    name: "WIG20",
+    symbol: "^WIG20",
+    value: 2352.40,
+    change: -0.25,
+    percentChange: -0.25,
+    volume: 210000000,
+    region: "Poland",
+    description: "Warsaw Stock Exchange WIG 20 Index"
+  },
+  {
+    id: "psi20",
+    name: "PSI 20",
+    symbol: "^PSI20",
+    value: 6387.25,
+    change: 0.18,
+    percentChange: 0.18,
+    volume: 115000000,
+    region: "Portugal",
+    description: "Portuguese Stock Index of 20 companies"
+  },
+  {
+    id: "ibex",
+    name: "IBEX 35",
+    symbol: "^IBEX",
+    value: 10124.30,
+    change: 0.52,
+    percentChange: 0.52,
+    volume: 385000000,
+    region: "Spain",
+    description: "Índice Bursátil Español of 35 Spanish companies"
+  },
+  {
+    id: "moex",
+    name: "MOEX Russia",
+    symbol: "IMOEX.ME",
+    value: 3120.45,
+    change: 0.38,
+    percentChange: 0.38,
+    volume: 290000000,
+    region: "Russia",
+    description: "Moscow Exchange Russia Index"
+  },
+  {
+    id: "tasi",
+    name: "Tadawul All Share",
+    symbol: "^TASI",
+    value: 11827.65,
+    change: 0.15,
+    percentChange: 0.15,
+    volume: 260000000,
+    region: "Saudi Arabia",
+    description: "Tadawul All Share Index of Saudi Stock Exchange"
+  },
+  {
+    id: "nz50",
+    name: "NZX 50",
+    symbol: "^NZ50",
+    value: 11684.75,
+    change: 0.22,
+    percentChange: 0.22,
+    volume: 175000000,
+    region: "New Zealand",
+    description: "New Zealand Exchange 50 Index"
+  },
+  {
+    id: "twii",
+    name: "TAIEX",
+    symbol: "^TWII",
+    value: 19784.30,
+    change: 1.85,
+    percentChange: 1.85,
+    volume: 630000000,
+    region: "Taiwan",
+    description: "Taiwan Stock Exchange Weighted Index"
+  },
+  {
+    id: "set",
+    name: "SET Index",
+    symbol: "^SET.BK",
+    value: 1412.85,
+    change: -0.35,
+    percentChange: -0.35,
+    volume: 320000000,
+    region: "Thailand",
+    description: "Stock Exchange of Thailand Index"
+  },
+  {
+    id: "klci",
+    name: "FTSE Bursa Malaysia KLCI",
+    symbol: "^KLSE",
+    value: 1542.10,
+    change: 0.28,
+    percentChange: 0.28,
+    volume: 240000000,
+    region: "Malaysia",
+    description: "Kuala Lumpur Composite Index"
+  },
+  {
+    id: "psei",
+    name: "PSEi Composite",
+    symbol: "^PSI",
+    value: 6548.20,
+    change: -0.45,
+    percentChange: -0.45,
+    volume: 185000000,
+    region: "Philippines",
+    description: "Philippine Stock Exchange PSEi Composite Index"
+  },
+  {
+    id: "jkse",
+    name: "Jakarta Composite",
+    symbol: "^JKSE",
+    value: 7215.45,
+    change: 0.32,
+    percentChange: 0.32,
+    volume: 275000000,
+    region: "Indonesia",
+    description: "Jakarta Stock Exchange Composite Index"
   }
 ];
 
-// Create regional groupings
-export const regions = [
-  { id: "all", name: "All" },
-  { id: "north-america", name: "North America" },
-  { id: "europe", name: "Europe" },
-  { id: "asia-pacific", name: "Asia Pacific" },
-  { id: "middle-east-africa", name: "Middle East & Africa" },
-  { id: "latin-america", name: "Latin America" }
-];
-
-// Map regions to countries for filtering
+// Define region to country mapping for filter functionality
 export const regionToCountryMap: Record<string, string[]> = {
-  "North America": ["United States", "Canada", "Mexico"],
-  "Europe": ["United Kingdom", "Germany", "France", "Spain", "Italy", "Netherlands", "Switzerland", "Sweden", "Norway"],
-  "Asia Pacific": ["Japan", "China", "Hong Kong", "South Korea", "India", "Australia", "New Zealand", "Singapore", "Indonesia", "Malaysia"],
-  "Middle East & Africa": ["Saudi Arabia", "UAE", "Qatar", "Israel", "Egypt", "South Africa", "Nigeria"],
-  "Latin America": ["Brazil", "Chile", "Argentina", "Colombia", "Peru"]
+  "americas": ["United States", "Canada", "Brazil", "Mexico"],
+  "emea": ["United Kingdom", "Germany", "France", "Switzerland", "Italy", "Spain", "Netherlands", 
+           "Austria", "Belgium", "Denmark", "Finland", "Greece", "Ireland", "Norway", "Poland", 
+           "Portugal", "Russia", "Saudi Arabia", "South Africa", "Sweden"],
+  "apac": ["Japan", "China", "Hong Kong", "Australia", "Singapore", "South Korea", "India", 
+           "New Zealand", "Taiwan", "Thailand", "Malaysia", "Philippines", "Indonesia"]
 };
+
+// Add all indices from the mockData (complete list of 40+ indices)
+import { mockIndices } from "./mockData";
+export const allWorldIndices = mockIndices;

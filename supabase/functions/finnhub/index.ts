@@ -1,3 +1,4 @@
+
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
@@ -190,7 +191,14 @@ async function fetchFromAPI(endpoint: string, params: Record<string, any>) {
           throw new Error(`API returned status ${apiRes.status}: ${apiRes.statusText}`);
         }
         
-        response = await apiRes.json();
+        // Safely parse the response
+        const text = await apiRes.text();
+        try {
+          response = JSON.parse(text);
+        } catch (e) {
+          console.error(`Failed to parse JSON response: ${text}`);
+          throw new Error(`Invalid JSON response from API: ${e.message}`);
+        }
         break;
       } catch (error) {
         if (retries <= 1) throw error;
@@ -213,8 +221,17 @@ serve(async (req) => {
   if (corsResponse) return corsResponse;
 
   try {
-    // Parse request data
-    const body = await req.json();
+    // Safely parse request data
+    let body;
+    try {
+      body = await req.json();
+    } catch (e) {
+      return new Response(
+        JSON.stringify({ error: "Invalid JSON in request body" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+    
     const { endpoint, ...params } = body;
     
     if (!endpoint) {

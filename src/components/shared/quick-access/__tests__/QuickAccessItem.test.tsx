@@ -48,31 +48,22 @@ describe('QuickAccessItem', () => {
     
     const linkElement = screen.getByText('Test Item').closest('a');
     
-    // Create a mock location object for testing
-    const mockLocation = { href: '' };
-    
-    // Replace window.location with our mock
+    // Mock window.location.href for testing
     const originalLocation = window.location;
-    // Fix type issue by using type assertion
-    Object.defineProperty(window, 'location', {
-      writable: true,
-      value: mockLocation as unknown as Location
-    });
+    delete window.location;
+    window.location = { ...originalLocation, href: '' };
     
     // Test Enter key
     fireEvent.keyDown(linkElement as HTMLElement, { key: 'Enter' });
-    expect(mockLocation.href).toBe('/test-path');
+    expect(window.location.href).toBe('/test-path');
     
     // Reset and test Space key
-    mockLocation.href = '';
+    window.location.href = '';
     fireEvent.keyDown(linkElement as HTMLElement, { key: ' ' });
-    expect(mockLocation.href).toBe('/test-path');
+    expect(window.location.href).toBe('/test-path');
     
     // Restore original location
-    Object.defineProperty(window, 'location', {
-      writable: true,
-      value: originalLocation
-    });
+    window.location = originalLocation;
   });
   
   test('applies custom className when provided', () => {

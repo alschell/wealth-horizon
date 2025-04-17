@@ -1,3 +1,3 @@
 
-import FileUploader from "./file-uploader/FileUploader";
+import FileUploader from "./file-uploader";
 export default FileUploader;

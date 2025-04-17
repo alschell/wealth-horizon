@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Upload, X } from "lucide-react";
 import { DeleteButton } from "@/components/ui/action-buttons";
 import { cn } from "@/lib/utils";
-import FileUploader from "@/components/file-uploader";
 
 interface FileFieldProps {
   id?: string;
@@ -38,27 +37,32 @@ const FileField = ({
   hint,
   className,
   files = [],
-  onFilesSelected,
   disabled = false,
   onFileDelete,
   customDeleteButton = false
 }: FileFieldProps) => {
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [localFiles, setLocalFiles] = useState<File[]>(files);
 
-  const handleFilesChange = (updatedFiles: File[]) => {
+  const handleClick = () => {
+    if (!disabled && fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFiles = Array.from(e.target.files || []);
+    const updatedFiles = multiple ? [...localFiles, ...selectedFiles] : selectedFiles;
+    
     setLocalFiles(updatedFiles);
     
     if (onFilesChange) {
       onFilesChange(updatedFiles);
     }
-    
-    if (onFilesSelected) {
-      onFilesSelected(updatedFiles);
-    }
   };
 
   const handleDelete = (index: number) => {
-    if (onFileDelete) {
+    if (onFileDelete && customDeleteButton) {
       onFileDelete(index, localFiles[index]);
       return;
     }
@@ -66,14 +70,12 @@ const FileField = ({
     const updatedFiles = [...localFiles];
     updatedFiles.splice(index, 1);
     
-    handleFilesChange(updatedFiles);
+    setLocalFiles(updatedFiles);
+    
+    if (onFilesChange) {
+      onFilesChange(updatedFiles);
+    }
   };
-
-  const customDeleteButtonFn = customDeleteButton 
-    ? (file: File, index: number) => (
-        <DeleteButton onClick={() => handleDelete(index)} />
-      )
-    : undefined;
 
   // Use files prop if provided, otherwise use localFiles
   const displayFiles = files.length > 0 ? files : localFiles;
@@ -86,15 +88,52 @@ const FileField = ({
         </Label>
       </div>
       
-      <FileUploader
-        onFilesSelected={handleFilesChange}
-        files={displayFiles}
-        multiple={multiple}
-        accept={accept}
-        label={hint || `${accept.replace(/,/g, ', ')} ${multiple ? '(multiple)' : ''}`}
-        maxSizeMB={5}
-        disabled={disabled}
-      />
+      <div 
+        className={cn(
+          "border-2 border-dashed rounded-lg p-4 transition-colors cursor-pointer",
+          error ? "border-red-500" : "border-gray-300 hover:border-gray-400",
+          disabled && "opacity-50 cursor-not-allowed"
+        )}
+        onClick={handleClick}
+      >
+        <div className="flex flex-col items-center justify-center py-4">
+          <Upload className="h-8 w-8 text-gray-400 mb-2" />
+          <p className="text-sm font-medium text-black">Click to upload or drag and drop</p>
+          <p className="text-xs text-gray-500 mt-1">{hint || `${accept.replace(/,/g, ', ')} ${multiple ? '(multiple)' : ''}`}</p>
+        </div>
+        
+        <input
+          ref={fileInputRef}
+          id={id}
+          type="file"
+          accept={accept}
+          multiple={multiple}
+          className="hidden"
+          onChange={handleChange}
+          disabled={disabled}
+        />
+      </div>
+      
+      {displayFiles.length > 0 && (
+        <div className="mt-2 space-y-2">
+          {displayFiles.map((file, index) => (
+            <div key={index} className="flex items-center justify-between bg-gray-50 p-2 rounded-lg">
+              <div className="flex items-center space-x-2 flex-1 mr-2 truncate">
+                <div className="w-8 h-8 bg-gray-200 rounded-md flex items-center justify-center">
+                  <span className="text-xs font-medium text-gray-600">
+                    {file.name.split('.').pop()?.toUpperCase()}
+                  </span>
+                </div>
+                <div className="truncate flex-1">
+                  <p className="text-sm font-medium truncate">{file.name}</p>
+                  <p className="text-xs text-gray-500">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
+                </div>
+              </div>
+              <DeleteButton onClick={() => handleDelete(index)} />
+            </div>
+          ))}
+        </div>
+      )}
       
       {error && (
         <p className="text-sm text-red-500 mt-1">{error}</p>

@@ -1,103 +1,182 @@
 
-import { useState, useCallback } from 'react';
-import { validateFileSize, validateFileType } from '@/utils/validation/fileValidation';
+import { useState, useCallback } from "react";
+import { toast } from "sonner";
+import { validateFileSize, validateFileType } from "@/utils/validation";
 
-interface UseFileUploaderOptions {
-  maxFiles?: number;
-  maxSizeMB?: number;
-  acceptedTypes?: string[];
-  initialFiles?: File[];
-  onFilesChange?: (files: File[]) => void;
+interface UseFileUploaderProps {
+  accept: string;
+  multiple: boolean;
+  maxSize: number;
+  onFilesSelected: (files: File[]) => void;
+  existingFiles?: File[];
+  onFileDelete?: (index: number) => void;
+  disabled?: boolean;
 }
 
 export const useFileUploader = ({
-  maxFiles = 5,
-  maxSizeMB = 5,
-  acceptedTypes = [],
-  initialFiles = [],
-  onFilesChange
-}: UseFileUploaderOptions = {}) => {
-  const [files, setFiles] = useState<File[]>(initialFiles);
-  const [errors, setErrors] = useState<string[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  accept,
+  multiple,
+  maxSize,
+  onFilesSelected,
+  existingFiles = [],
+  onFileDelete,
+  disabled = false,
+}: UseFileUploaderProps) => {
+  const [files, setFiles] = useState<File[]>(existingFiles);
+  const [isDragging, setIsDragging] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [fileToDeleteIndex, setFileToDeleteIndex] = useState<number | null>(null);
 
-  const validateFiles = useCallback((newFiles: File[]): { valid: File[], errors: string[] } => {
-    const validFiles: File[] = [];
-    const newErrors: string[] = [];
-    
-    // Check if adding new files would exceed maxFiles limit
-    if (files.length + newFiles.length > maxFiles) {
-      newErrors.push(`Maximum ${maxFiles} files allowed`);
-      // Only process files up to the limit
-      newFiles = newFiles.slice(0, maxFiles - files.length);
-    }
-    
-    // Validate each file
-    for (const file of newFiles) {
-      // Validate file size
-      const sizeValidation = validateFileSize(file, maxSizeMB);
-      if (!sizeValidation.valid) {
-        newErrors.push(sizeValidation.message || `File ${file.name} exceeds size limit`);
-        continue;
-      }
+  // Validates a single file
+  const validateFile = useCallback(
+    (file: File): string | null => {
+      // Check file size
+      const sizeError = validateFileSize(file, maxSize);
+      if (sizeError) return sizeError;
+
+      // Convert accept string to an array of file extensions
+      const acceptedTypes = accept
+        .split(",")
+        .map((type) => {
+          if (type.startsWith(".")) return type;
+          if (type.includes("/*")) return `.${type.split("/")[0]}`;
+          return `.${type.split("/").pop()}`;
+        })
+        .filter(Boolean);
+
+      // Check file type
+      return validateFileType(file, acceptedTypes);
+    },
+    [accept, maxSize]
+  );
+
+  // Handles file input change
+  const handleFileChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (disabled) return;
       
-      // Validate file type if acceptedTypes provided
-      if (acceptedTypes.length > 0) {
-        const typeValidation = validateFileType(file, acceptedTypes);
-        if (!typeValidation.valid) {
-          newErrors.push(typeValidation.message || `File ${file.name} type not allowed`);
-          continue;
+      const selectedFiles = Array.from(e.target.files || []);
+      let validFiles: File[] = [];
+      let hasErrors = false;
+
+      selectedFiles.forEach((file) => {
+        const error = validateFile(file);
+        if (error) {
+          toast.error(error);
+          hasErrors = true;
+        } else {
+          validFiles.push(file);
         }
+      });
+
+      if (validFiles.length > 0) {
+        const newFiles = multiple ? [...files, ...validFiles] : validFiles;
+        setFiles(newFiles);
+        onFilesSelected(newFiles);
+        
+        // Clear the input value to allow uploading the same file again
+        e.target.value = '';
+      } else if (!hasErrors && selectedFiles.length > 0) {
+        toast.error("No valid files were selected");
       }
-      
-      validFiles.push(file);
-    }
-    
-    return { valid: validFiles, errors: newErrors };
-  }, [files.length, maxFiles, maxSizeMB, acceptedTypes]);
+    },
+    [files, multiple, onFilesSelected, validateFile, disabled]
+  );
 
-  const addFiles = useCallback((newFiles: File[]) => {
-    const { valid, errors: newErrors } = validateFiles(newFiles);
-    
-    if (valid.length > 0) {
-      const updatedFiles = [...files, ...valid];
-      setFiles(updatedFiles);
+  // Handles drag over event
+  const handleDragOver = useCallback(
+    (e: React.DragEvent<HTMLDivElement>) => {
+      if (disabled) return;
       
-      if (onFilesChange) {
-        onFilesChange(updatedFiles);
+      e.preventDefault();
+      setIsDragging(true);
+    },
+    [disabled]
+  );
+
+  // Handles drag leave event
+  const handleDragLeave = useCallback(
+    () => {
+      if (disabled) return;
+      
+      setIsDragging(false);
+    },
+    [disabled]
+  );
+
+  // Handles drop event
+  const handleDrop = useCallback(
+    (e: React.DragEvent<HTMLDivElement>) => {
+      if (disabled) return;
+      
+      e.preventDefault();
+      setIsDragging(false);
+
+      const droppedFiles = Array.from(e.dataTransfer.files);
+      let validFiles: File[] = [];
+      let hasErrors = false;
+
+      droppedFiles.forEach((file) => {
+        const error = validateFile(file);
+        if (error) {
+          toast.error(error);
+          hasErrors = true;
+        } else {
+          validFiles.push(file);
+        }
+      });
+
+      if (validFiles.length > 0) {
+        const newFiles = multiple ? [...files, ...validFiles] : validFiles;
+        setFiles(newFiles);
+        onFilesSelected(newFiles);
+      } else if (!hasErrors && droppedFiles.length > 0) {
+        toast.error("No valid files were dropped");
       }
-    }
-    
-    setErrors(newErrors);
-    return valid.length > 0;
-  }, [files, validateFiles, onFilesChange]);
+    },
+    [files, multiple, onFilesSelected, validateFile, disabled]
+  );
 
-  const removeFile = useCallback((indexToRemove: number) => {
-    const updatedFiles = files.filter((_, index) => index !== indexToRemove);
-    setFiles(updatedFiles);
-    
-    if (onFilesChange) {
-      onFilesChange(updatedFiles);
-    }
-    
-    return true;
-  }, [files, onFilesChange]);
+  // Handles delete button click
+  const handleDeleteClick = useCallback(
+    (index: number) => {
+      if (disabled) return;
+      
+      setFileToDeleteIndex(index);
+      setIsDeleteDialogOpen(true);
+    },
+    [disabled]
+  );
 
-  const clearFiles = useCallback(() => {
-    setFiles([]);
-    setErrors([]);
-    
-    if (onFilesChange) {
-      onFilesChange([]);
+  // Confirms file deletion
+  const confirmDelete = useCallback(() => {
+    if (fileToDeleteIndex === null) return;
+
+    if (onFileDelete) {
+      onFileDelete(fileToDeleteIndex);
+    } else {
+      const newFiles = [...files];
+      newFiles.splice(fileToDeleteIndex, 1);
+      setFiles(newFiles);
+      onFilesSelected(newFiles);
     }
-  }, [onFilesChange]);
+
+    setIsDeleteDialogOpen(false);
+    setFileToDeleteIndex(null);
+
+    toast.success("File removed successfully");
+  }, [fileToDeleteIndex, files, onFileDelete, onFilesSelected]);
 
   return {
     files,
-    errors,
-    isLoading,
-    addFiles,
-    removeFile,
-    clearFiles
+    isDragging,
+    isDeleteDialogOpen,
+    handleFileChange,
+    handleDragOver,
+    handleDragLeave,
+    handleDrop,
+    handleDeleteClick,
+    confirmDelete,
+    setIsDeleteDialogOpen,
   };
 };

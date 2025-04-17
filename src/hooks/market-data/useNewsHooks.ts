@@ -12,11 +12,12 @@ import { createTypedQuery } from "./createTypedQuery";
  * const { data, isLoading, error, refetch } = useMarketNews("general", 10);
  */
 export function useMarketNews(category: string = "general", count: number = 10) {
-  const fetchMarketNews = createTypedQuery<NewsItem[], [string, number]>(getMarketNews);
+  // Create a properly typed query function
+  const fetchMarketNewsQuery = createTypedQuery<NewsItem[], [string, number]>(getMarketNews);
   
   return useQuery<NewsItem[], Error>({
     queryKey: ['market-news', category],
-    queryFn: fetchMarketNews(category, count),
+    queryFn: fetchMarketNewsQuery(category, count),
     ...DEFAULT_QUERY_CONFIG,
     staleTime: 15 * 60 * 1000 // 15 minutes
   });
@@ -33,11 +34,12 @@ export function useCompanyNews(
   from?: string,
   to?: string
 ) {
-  const fetchCompanyNews = createTypedQuery<NewsItem[], [string, string | undefined, string | undefined]>(getCompanyNews);
+  // Create a properly typed query function
+  const fetchCompanyNewsQuery = createTypedQuery<NewsItem[], [string, string | undefined, string | undefined]>(getCompanyNews);
   
   return useQuery<NewsItem[], Error>({
     queryKey: ['company-news', symbol, from, to],
-    queryFn: fetchCompanyNews(symbol, from, to),
+    queryFn: fetchCompanyNewsQuery(symbol, from, to),
     enabled: Boolean(symbol),
     ...DEFAULT_QUERY_CONFIG,
     staleTime: 10 * 60 * 1000 // 10 minutes

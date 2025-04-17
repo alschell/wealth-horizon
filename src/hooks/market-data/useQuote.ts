@@ -12,11 +12,12 @@ import { createTypedQuery } from "./createTypedQuery";
  * const { data, isLoading, error, refetch } = useQuote("AAPL");
  */
 export function useQuote(symbol: string) {
-  const fetchQuote = createTypedQuery<Quote, [string]>(getQuote);
+  // Create a properly typed query function
+  const fetchQuoteQuery = createTypedQuery<Quote, [string]>(getQuote);
   
   return useQuery<Quote, Error, { raw: Quote; formatted: ReturnType<typeof formatQuote> }>({
     queryKey: ['quote', symbol],
-    queryFn: fetchQuote(symbol),
+    queryFn: fetchQuoteQuery(symbol),
     enabled: Boolean(symbol),
     ...DEFAULT_QUERY_CONFIG,
     select: (data: Quote) => {

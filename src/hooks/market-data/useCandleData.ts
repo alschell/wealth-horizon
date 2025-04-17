@@ -17,11 +17,12 @@ export function useCandleData(
   from: number = Math.floor(Date.now() / 1000) - 30 * 24 * 60 * 60,
   to: number = Math.floor(Date.now() / 1000)
 ) {
-  const fetchCandleData = createTypedQuery<CandleData, [string, string, number, number]>(getCandleData);
+  // Create a properly typed query function
+  const fetchCandleDataQuery = createTypedQuery<CandleData, [string, string, number, number]>(getCandleData);
   
   return useQuery<CandleData, Error>({
     queryKey: ['candle-data', symbol, resolution, from, to],
-    queryFn: fetchCandleData(symbol, resolution, from, to),
+    queryFn: fetchCandleDataQuery(symbol, resolution, from, to),
     enabled: Boolean(symbol),
     ...DEFAULT_QUERY_CONFIG,
     staleTime: 5 * 60 * 1000 // 5 minutes

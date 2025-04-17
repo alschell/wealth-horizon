@@ -14,7 +14,8 @@ import { createTypedQuery } from "./createTypedQuery";
  * search("Apple");
  */
 export function useSymbolSearch() {
-  const fetchSymbols = createTypedQuery<SymbolSearchResult, [string]>(searchSymbols);
+  // Create a properly typed query function
+  const fetchSymbolsQuery = createTypedQuery<SymbolSearchResult, [string]>(searchSymbols);
   
   const {
     data: results,
@@ -23,7 +24,7 @@ export function useSymbolSearch() {
     refetch
   } = useQuery<SymbolSearchResult, Error>({
     queryKey: ['symbol-search', ''],
-    queryFn: fetchSymbols(''),
+    queryFn: fetchSymbolsQuery(''),
     ...DEFAULT_QUERY_CONFIG,
     enabled: false // Don't run the query automatically
   });

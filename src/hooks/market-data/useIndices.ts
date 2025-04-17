@@ -12,11 +12,12 @@ import { createTypedQuery } from "./createTypedQuery";
  * const { data, isLoading, error, refetch } = useIndices(["^GSPC", "^DJI"]);
  */
 export function useIndices(symbols?: string[]) {
-  const fetchIndices = createTypedQuery<IndexData[], [string[] | undefined]>(getIndices);
+  // Create a properly typed query function
+  const fetchIndicesQuery = createTypedQuery<IndexData[], [string[] | undefined]>(getIndices);
   
   return useQuery<IndexData[], Error>({
     queryKey: ['indices', symbols ? symbols.join(',') : 'all'],
-    queryFn: fetchIndices(symbols),
+    queryFn: fetchIndicesQuery(symbols),
     ...DEFAULT_QUERY_CONFIG,
     staleTime: 5 * 60 * 1000 // 5 minutes
   });

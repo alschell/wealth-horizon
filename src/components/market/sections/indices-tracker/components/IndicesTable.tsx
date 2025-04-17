@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AnimationItemProp } from "../types/animationTypes";
 import { motion } from "framer-motion";
+import { IndexData } from "../types";
 
 export interface IndexItem {
   symbol: string;
@@ -22,9 +23,9 @@ export interface IndexItem {
 }
 
 interface IndicesTableProps extends AnimationItemProp {
-  indices: IndexItem[];
+  indices: IndexData[];
   isLoading: boolean;
-  onOpenChart: (index: IndexItem) => void;
+  onOpenChart: (index: IndexData) => void;
 }
 
 const IndicesTable: React.FC<IndicesTableProps> = ({ 
@@ -118,14 +119,14 @@ const IndicesTable: React.FC<IndicesTableProps> = ({
                 </div>
               </TableCell>
               <TableCell className="hidden md:table-cell">
-                {index.country}
+                {index.region}
               </TableCell>
               <TableCell className="hidden lg:table-cell">
-                {index.exchange}
+                {index.exchange || "N/A"}
               </TableCell>
               <TableCell className="hidden lg:table-cell">
                 {index.volume ? (
-                  `${index.volume.toFixed(1)}M`
+                  `${(index.volume / 1000000).toFixed(1)}M`
                 ) : (
                   <Badge variant="outline" className="text-xs">N/A</Badge>
                 )}

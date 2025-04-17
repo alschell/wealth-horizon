@@ -30,6 +30,25 @@ export function formatCurrency(
 }
 
 /**
+ * Formats a number with commas for thousands separator
+ * @param value - The number to format
+ * @returns Formatted number string
+ */
+export function formatNumberWithCommas(value: number): string {
+  return new Intl.NumberFormat().format(value);
+}
+
+/**
+ * Formats a percentage value
+ * @param value - The percentage value to format
+ * @param decimals - Number of decimal places
+ * @returns Formatted percentage string without the % sign
+ */
+export function formatPercentage(value: number, decimals: number = 2): string {
+  return value.toFixed(decimals);
+}
+
+/**
  * Truncates a string to a specified length
  * @param str - The string to truncate
  * @param maxLength - Maximum length before truncation

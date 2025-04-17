@@ -71,7 +71,7 @@ const AssetPerformanceChart: React.FC<AssetPerformanceChartProps> = ({ asset }) 
     }
   };
   
-  const formatXAxis = (tickItem) => {
+  const formatXAxis = (tickItem: string) => {
     const date = new Date(tickItem);
     
     if (timeRange === '1w' || timeRange === '1m') {
@@ -133,24 +133,26 @@ const AssetPerformanceChart: React.FC<AssetPerformanceChartProps> = ({ asset }) 
               tick={{ fontSize: 12 }} 
               tickMargin={10}
               tickFormatter={(value) => {
-                if (value >= 1000000000) {
-                  return `$${(value / 1000000000).toFixed(1)}B`;
-                } else if (value >= 1000000) {
-                  return `$${(value / 1000000).toFixed(1)}M`;
-                } else if (value >= 1000) {
-                  return `$${(value / 1000).toFixed(1)}K`;
+                const numValue = Number(value);
+                if (numValue >= 1000000000) {
+                  return `$${(numValue / 1000000000).toFixed(1)}B`;
+                } else if (numValue >= 1000000) {
+                  return `$${(numValue / 1000000).toFixed(1)}M`;
+                } else if (numValue >= 1000) {
+                  return `$${(numValue / 1000).toFixed(1)}K`;
                 }
                 return `$${value}`;
               }} 
             />
             <Tooltip 
               formatter={(value) => {
-                if (value >= 1000000000) {
-                  return [`$${(Number(value) / 1000000000).toFixed(2)}B`, "Value"];
-                } else if (value >= 1000000) {
-                  return [`$${(Number(value) / 1000000).toFixed(2)}M`, "Value"];
-                } else if (value >= 1000) {
-                  return [`$${(Number(value) / 1000).toFixed(2)}K`, "Value"];
+                const numValue = Number(value);
+                if (numValue >= 1000000000) {
+                  return [`$${(numValue / 1000000000).toFixed(2)}B`, "Value"];
+                } else if (numValue >= 1000000) {
+                  return [`$${(numValue / 1000000).toFixed(2)}M`, "Value"];
+                } else if (numValue >= 1000) {
+                  return [`$${(numValue / 1000).toFixed(2)}K`, "Value"];
                 }
                 return [`$${value}`, "Value"];
               }}

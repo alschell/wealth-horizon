@@ -22,6 +22,10 @@ const TableSection: React.FC<TableSectionProps> = ({
   toggleSubscription,
   item
 }) => {
+  // Add isLoading and onOpenChart props
+  const isLoading = false;
+  const onOpenChart = handleSelectIndex;
+
   return (
     <motion.div variants={item as Variants}>
       <Card>
@@ -29,9 +33,8 @@ const TableSection: React.FC<TableSectionProps> = ({
           <IndicesTable 
             indices={filteredIndices} 
             selectedIndex={selectedIndex}
-            subscribedIndices={subscribedIndices}
-            handleSelectIndex={handleSelectIndex}
-            toggleSubscription={toggleSubscription}
+            isLoading={isLoading}
+            onOpenChart={onOpenChart}
           />
         </CardContent>
       </Card>

@@ -13,7 +13,7 @@ import type { NewsItem } from "@/utils/market-data/types";
 export function useMarketNews(category: string = "general", count: number = 10) {
   return useQuery<NewsItem[]>({
     queryKey: ['market-news', category],
-    queryFn: async (): Promise<NewsItem[]> => {
+    queryFn: async () => {
       marketLogger.info(`Fetching market news for category ${category}`);
       const startTime = performance.now();
       try {
@@ -45,7 +45,7 @@ export function useCompanyNews(
 ) {
   return useQuery<NewsItem[]>({
     queryKey: ['company-news', symbol, from, to],
-    queryFn: async (): Promise<NewsItem[]> => {
+    queryFn: async () => {
       marketLogger.info(`Fetching news for ${symbol}`);
       const startTime = performance.now();
       try {

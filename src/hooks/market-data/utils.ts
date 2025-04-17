@@ -1,27 +1,19 @@
 
 import { QueryObserverOptions } from "@tanstack/react-query";
+import { createLogger } from "@/utils/logger";
 
-// Create a logger for market data operations
-export const marketLogger = {
-  info: (message: string, data?: any) => {
-    console.info(`[Market Data] ${message}`, data || '');
-  },
-  debug: (message: string, data?: any) => {
-    console.debug(`[Market Data] ${message}`, data || '');
-  },
-  error: (message: string, error?: any) => {
-    console.error(`[Market Data] ${message}`, error || '');
-  },
-  warn: (message: string, data?: any) => {
-    console.warn(`[Market Data] ${message}`, data || '');
-  }
-};
+/**
+ * Logger for market data operations
+ */
+export const marketLogger = createLogger("market-data");
 
-// Default configuration for market data queries
+/**
+ * Default configuration for React Query
+ */
 export const DEFAULT_QUERY_CONFIG: Partial<QueryObserverOptions> = {
+  retry: 1,
   refetchOnWindowFocus: false,
   refetchOnMount: true,
-  retry: 2,
-  staleTime: 5 * 60 * 1000, // 5 minutes default
-  gcTime: 15 * 60 * 1000, // 15 minutes default
+  refetchOnReconnect: true,
+  staleTime: 60 * 1000 // 1 minute default stale time
 };

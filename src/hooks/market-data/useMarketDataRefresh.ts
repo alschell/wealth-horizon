@@ -1,71 +1,111 @@
 
+import { useState, useCallback } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { refreshMarketData as refreshAPI } from "@/utils/market-data/api";
 import { marketLogger } from "./utils";
-import type { UseMarketDataRefreshReturn, RefreshableMarketDataType } from "./types";
 import type { MarketDataType } from "@/utils/market-data/types";
+import type { RefreshableMarketDataType, MarketDataRefreshOptions, UseMarketDataRefreshReturn } from "./types";
 
 /**
- * Hook for refreshing market data
+ * Mapping from RefreshableMarketDataType to MarketDataType
+ */
+const dataTypeMapping: Record<RefreshableMarketDataType, MarketDataType> = {
+  indices: 'indices',
+  quotes: 'quote',
+  news: 'news',
+  candles: 'candles',
+  search: 'search'
+};
+
+/**
+ * Hook to refresh market data
  * 
  * @example
  * const { refreshMarketData, refreshAll } = useMarketDataRefresh();
- * // Refresh specific data types
+ * 
+ * // Refresh indices
  * refreshMarketData('indices');
- * // Refresh all market data
+ * 
+ * // Refresh a specific symbol
+ * refreshMarketData('quotes', ['AAPL']);
+ * 
+ * // Refresh all data
  * refreshAll();
  */
 export function useMarketDataRefresh(): UseMarketDataRefreshReturn {
   const queryClient = useQueryClient();
+  const [isRefreshing, setIsRefreshing] = useState(false);
   
   /**
-   * Refresh market data for a specific type
-   * @param dataType Type of market data to refresh
-   * @param additionalParams Optional parameters (e.g., symbols)
+   * Refresh a specific type of market data
    */
-  const refreshMarketData = (dataType: RefreshableMarketDataType, additionalParams?: string[]) => {
-    marketLogger.info(`Refreshing ${dataType} market data`, additionalParams);
+  const refreshMarketData = useCallback((
+    dataType: RefreshableMarketDataType,
+    additionalParams?: string[],
+    options?: MarketDataRefreshOptions
+  ) => {
+    const { clearCache = false } = options || {};
     
+    marketLogger.info(`Refreshing ${dataType} data${additionalParams ? ` for ${additionalParams.join(', ')}` : ''}`);
+    
+    // Map the dataType to the appropriate query key pattern
+    let queryKeysToInvalidate: string[] = [];
     switch (dataType) {
       case 'indices':
-        queryClient.invalidateQueries({ queryKey: ['indices'] });
+        queryKeysToInvalidate = ['indices'];
         break;
       case 'quotes':
-        if (additionalParams?.length) {
+        if (additionalParams && additionalParams.length > 0) {
+          // Invalidate specific quotes
           additionalParams.forEach(symbol => {
             queryClient.invalidateQueries({ queryKey: ['quote', symbol] });
           });
         } else {
+          // Invalidate all quotes
           queryClient.invalidateQueries({ queryKey: ['quote'] });
         }
         break;
       case 'news':
-        queryClient.invalidateQueries({ queryKey: ['market-news'] });
-        queryClient.invalidateQueries({ queryKey: ['company-news'] });
+        queryKeysToInvalidate = ['market-news', 'company-news'];
         break;
       case 'candles':
-        if (additionalParams?.length) {
+        if (additionalParams && additionalParams.length > 0) {
+          // Invalidate specific candle data
           additionalParams.forEach(symbol => {
             queryClient.invalidateQueries({ queryKey: ['candle-data', symbol] });
           });
         } else {
+          // Invalidate all candle data
           queryClient.invalidateQueries({ queryKey: ['candle-data'] });
         }
         break;
       case 'search':
-        queryClient.invalidateQueries({ queryKey: ['symbol-search'] });
+        queryKeysToInvalidate = ['symbol-search'];
         break;
     }
-  };
+    
+    // Invalidate the query keys
+    queryKeysToInvalidate.forEach(key => {
+      queryClient.invalidateQueries({ queryKey: [key] });
+    });
+    
+    // If we want to clear server cache, trigger an API refresh
+    if (clearCache && dataType !== 'search') {
+      const apiType = dataTypeMapping[dataType];
+      const symbol = additionalParams?.[0];
+      
+      refreshAPI([{ type: apiType, symbol }]);
+    }
+  }, [queryClient]);
   
   /**
    * Refresh all market data
-   * @param clearCache Whether to clear the cache
    */
-  const refreshAll = (clearCache = false) => {
-    marketLogger.info(`Refreshing all market data${clearCache ? ' and clearing cache' : ''}`);
+  const refreshAll = useCallback((clearCache: boolean = false) => {
+    marketLogger.info(`Refreshing all market data${clearCache ? ' with cache clearing' : ''}`);
+    setIsRefreshing(true);
     
-    // Invalidate all market data queries
+    // Invalidate all relevant queries
     refreshMarketData('indices');
     refreshMarketData('quotes');
     refreshMarketData('news');
@@ -81,7 +121,7 @@ export function useMarketDataRefresh(): UseMarketDataRefreshReturn {
     
     // Also trigger API refresh (to clear server cache if needed)
     refreshAPI(refreshTypes);
-  };
+  }, [refreshMarketData]);
   
   return {
     refreshMarketData,

@@ -71,7 +71,7 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
   const [currentLanguage, setCurrentLanguage] = useState<LanguageCode>('en');
   const [translationCache, setTranslationCache] = useState<Record<string, Record<string, string>>>({});
   const [isLoading, setIsLoading] = useState(false);
-  const [key, setKey] = useState(0); // Added key for force re-render
+  const [key, setKey] = useState(0); // Force component tree re-render with key
   
   // Load language preference from local storage on initial load
   useEffect(() => {
@@ -112,7 +112,7 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
     if (currentLanguage) {
       saveLanguagePreference();
       
-      // Trigger a re-render of the entire application
+      // Update HTML lang attribute and direction
       document.documentElement.lang = currentLanguage;
       document.documentElement.dir = ['ar', 'he', 'fa'].includes(currentLanguage) ? 'rtl' : 'ltr';
       
@@ -123,11 +123,15 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
   // Function to set the language with more robust update mechanism
   const setLanguage = useCallback(async (language: LanguageCode) => {
-    // Clear existing translation cache to force re-translation
+    console.log(`Changing language to: ${language}`);
+    
+    // Clear existing translation cache completely to force re-translation
     setTranslationCache({});
     
     // Update the current language
     setCurrentLanguage(language);
+    
+    // This will trigger the effect above that updates document lang/dir and forces re-render
   }, []);
 
   // Process text before translation to protect non-translatable terms
@@ -214,7 +218,7 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
   return (
     <TranslationContext.Provider
-      key={key} // Add key to force re-render
+      key={key} // Key to force re-render of all children when language changes
       value={{
         currentLanguage,
         setLanguage,

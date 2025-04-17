@@ -1,13 +1,14 @@
 
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { NewsSectionProps } from "./types";
+import { NewsSectionProps, NewsItem } from "./types";
 import NewsHeader from "./components/NewsHeader";
 import NewsGrid from "./components/NewsGrid";
 import LoadMoreButton from "./components/LoadMoreButton";
 import { useMarketNews } from "@/hooks/market-data";
 import { Loader2 } from "lucide-react";
 import ErrorFallback from "@/components/shared/ErrorFallback";
+import { NewsItem as APINewsItem } from "@/utils/market-data/types";
 
 const NewsSection: React.FC<NewsSectionProps> = ({ articleId }) => {
   const [category, setCategory] = useState("all");
@@ -15,10 +16,29 @@ const NewsSection: React.FC<NewsSectionProps> = ({ articleId }) => {
   const [displayCount, setDisplayCount] = useState(12);
   
   // Fetch market news using the API hook
-  const { data: newsItems, isLoading, error } = useMarketNews(
+  const { data: apiNewsItems, isLoading, error } = useMarketNews(
     category !== "all" ? category : "general", 
     50 // Fetch more than we display initially so we can filter
   );
+  
+  // Map API news items to our component's NewsItem format
+  const newsItems: NewsItem[] = React.useMemo(() => {
+    if (!apiNewsItems) return [];
+    
+    return apiNewsItems.map((item: APINewsItem): NewsItem => ({
+      id: item.id.toString(),
+      title: item.headline,
+      summary: item.summary,
+      imageUrl: item.image,
+      source: item.source,
+      date: new Date(item.datetime * 1000).toLocaleDateString(),
+      url: item.url,
+      category: item.category,
+      headline: item.headline,
+      datetime: item.datetime,
+      image: item.image
+    }));
+  }, [apiNewsItems]);
   
   // Effect to scroll to specific article if articleId is provided
   useEffect(() => {
@@ -50,7 +70,7 @@ const NewsSection: React.FC<NewsSectionProps> = ({ articleId }) => {
       if (searchTerm) {
         const searchLower = searchTerm.toLowerCase();
         return (
-          item.headline.toLowerCase().includes(searchLower) ||
+          item.title.toLowerCase().includes(searchLower) ||
           item.summary.toLowerCase().includes(searchLower) ||
           item.source.toLowerCase().includes(searchLower)
         );

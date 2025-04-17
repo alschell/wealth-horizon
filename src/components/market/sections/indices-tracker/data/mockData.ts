@@ -5,82 +5,112 @@ export const mockIndices: IndexData[] = [
   {
     id: "sp500",
     name: "S&P 500",
-    value: 4587.20, // Changed from string to number
+    symbol: "^GSPC",
+    value: 4587.20,
     change: 0.85,
+    percentChange: 0.85,
     volume: "2.5B",
-    region: "United States"
+    region: "United States",
+    description: "Standard & Poor's 500 Index of 500 large US companies"
   },
   {
     id: "nasdaq",
     name: "NASDAQ",
-    value: 14346.30, // Changed from string to number
+    symbol: "^IXIC",
+    value: 14346.30,
     change: 1.2,
+    percentChange: 1.2,
     volume: "1.8B",
-    region: "United States"
+    region: "United States",
+    description: "NASDAQ Composite Index of securities listed on NASDAQ"
   },
   {
     id: "dowjones",
     name: "Dow Jones",
-    value: 36124.56, // Changed from string to number
+    symbol: "^DJI",
+    value: 36124.56,
     change: 0.32,
+    percentChange: 0.32,
     volume: "850M",
-    region: "United States"
+    region: "United States",
+    description: "Dow Jones Industrial Average of 30 large US companies"
   },
   {
     id: "ftse",
     name: "FTSE 100",
-    value: 7582.10, // Changed from string to number
+    symbol: "^FTSE",
+    value: 7582.10,
     change: -0.32,
+    percentChange: -0.32,
     volume: "620M",
-    region: "United Kingdom"
+    region: "United Kingdom",
+    description: "Financial Times Stock Exchange 100 Index of UK companies"
   },
   {
     id: "dax",
     name: "DAX",
-    value: 15947.80, // Changed from string to number
+    symbol: "^GDAXI",
+    value: 15947.80,
     change: -0.15,
+    percentChange: -0.15,
     volume: "720M",
-    region: "Germany"
+    region: "Germany",
+    description: "Deutscher Aktienindex of 40 major German companies"
   },
   {
     id: "nikkei",
     name: "Nikkei 225",
-    value: 37156.45, // Changed from string to number
+    symbol: "^N225",
+    value: 37156.45,
     change: 1.45,
+    percentChange: 1.45,
     volume: "1.2B",
-    region: "Japan"
+    region: "Japan",
+    description: "Nikkei 225 Index of Japanese companies"
   },
   {
     id: "shanghai",
     name: "Shanghai Composite",
-    value: 3210.40, // Changed from string to number
+    symbol: "000001.SS",
+    value: 3210.40,
     change: -0.30,
+    percentChange: -0.30,
     volume: "950M",
-    region: "China"
+    region: "China",
+    description: "Shanghai Stock Exchange Composite Index"
   },
   {
     id: "cac",
     name: "CAC 40",
-    value: 7125.80, // Changed from string to number
+    symbol: "^FCHI",
+    value: 7125.80,
     change: 0.42,
+    percentChange: 0.42,
     volume: "580M",
-    region: "France"
+    region: "France",
+    description: "Cotation Assistée en Continu 40 Index of French companies"
   },
   {
     id: "asx",
     name: "ASX 200",
-    value: 7648.25, // Changed from string to number
+    symbol: "^AXJO",
+    value: 7648.25,
     change: 0.85,
+    percentChange: 0.85,
     volume: "490M",
-    region: "Australia"
+    region: "Australia",
+    description: "S&P/ASX 200 Index of Australian companies"
   },
   {
     id: "hangseng",
     name: "Hang Seng",
-    value: 18125.45, // Changed from string to number
+    symbol: "^HSI",
+    value: 18125.45,
     change: -1.20,
+    percentChange: -1.20,
     volume: "1.1B",
-    region: "Hong Kong"
+    region: "Hong Kong",
+    description: "Hang Seng Index of Hong Kong companies"
   }
 ];
 

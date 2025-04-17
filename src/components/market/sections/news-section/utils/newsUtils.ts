@@ -1,4 +1,3 @@
-
 import { NewsItem } from "../types";
 
 // Filter news items based on category and search term
@@ -23,10 +22,13 @@ export const getNewsItems = (): NewsItem[] => {
       summary: "Federal Reserve officials indicated they're getting closer to cutting interest rates as inflation shows signs of returning to their 2% target.",
       source: "Financial Times",
       image: "https://placehold.co/600x400/e2e8f0/64748b?text=FT",
+      imageUrl: "https://placehold.co/600x400/e2e8f0/64748b?text=FT",
       category: "markets",
+      date: "2h ago",
       datePublished: "2h ago",
-      isBreaking: true,
-      url: "#"
+      url: "#",
+      headline: "Fed signals potential rate cuts later this year as inflation cools",
+      datetime: new Date().getTime()
     },
     {
       id: "2",

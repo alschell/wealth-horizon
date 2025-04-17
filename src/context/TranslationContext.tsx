@@ -216,6 +216,11 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
     }
   };
 
+  // Clear translation cache when language changes
+  useEffect(() => {
+    setTranslationCache({});
+  }, [currentLanguage]);
+
   return (
     <TranslationContext.Provider
       key={key} // Key to force re-render of all children when language changes

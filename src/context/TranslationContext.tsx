@@ -1,5 +1,4 @@
-
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/utils/supabaseClient';
 
 // Define available languages
@@ -113,13 +112,21 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
     
     if (currentLanguage) {
       saveLanguagePreference();
+      
+      // Trigger a re-render of the entire application
+      document.documentElement.lang = currentLanguage;
+      document.documentElement.dir = ['ar', 'he', 'fa'].includes(currentLanguage) ? 'rtl' : 'ltr';
     }
   }, [currentLanguage]);
 
-  // Function to set the language
-  const setLanguage = async (language: LanguageCode) => {
+  // Function to set the language with more robust update mechanism
+  const setLanguage = useCallback(async (language: LanguageCode) => {
+    // Clear existing translation cache to force re-translation
+    setTranslationCache({});
+    
+    // Update the current language
     setCurrentLanguage(language);
-  };
+  }, []);
 
   // Process text before translation to protect non-translatable terms
   const protectSpecialTerms = (text: string): { processedText: string, placeholders: Record<string, string> } => {

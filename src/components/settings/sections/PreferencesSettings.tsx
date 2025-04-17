@@ -3,12 +3,14 @@ import React, { useState, useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { Globe, Calendar, Clock } from "lucide-react";
+import { Globe, Calendar, Clock, DollarSign } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 import { useTranslation, LANGUAGES } from "@/context/TranslationContext";
+import { useCurrency } from "@/hooks/use-currency";
+import { CURRENCIES } from "@/utils/constants/currencies";
 
 const dateFormats = [
   { id: "MM/DD/YYYY", label: "MM/DD/YYYY (US)" },
@@ -109,12 +111,15 @@ const preferencesFormSchema = z.object({
   language: z.string(),
   dateFormat: z.string(),
   timeZone: z.string(),
+  baseCurrency: z.string(),
+  numberFormat: z.enum(["standard", "compact"]),
 });
 
 type PreferencesFormValues = z.infer<typeof preferencesFormSchema>;
 
 const PreferencesSettings = () => {
   const { currentLanguage, setLanguage } = useTranslation();
+  const { activeCurrency, setActiveCurrency, currencies } = useCurrency();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Get saved preferences from localStorage or use defaults
@@ -123,6 +128,8 @@ const PreferencesSettings = () => {
       language: localStorage.getItem("preferredLanguage") || currentLanguage || "en",
       dateFormat: localStorage.getItem("dateFormat") || "MM/DD/YYYY",
       timeZone: localStorage.getItem("timeZone") || Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC",
+      baseCurrency: localStorage.getItem("baseCurrency") || activeCurrency.code || "USD",
+      numberFormat: (localStorage.getItem("numberFormat") as "standard" | "compact") || "standard",
     };
   };
 
@@ -138,10 +145,18 @@ const PreferencesSettings = () => {
       localStorage.setItem("preferredLanguage", data.language);
       localStorage.setItem("dateFormat", data.dateFormat);
       localStorage.setItem("timeZone", data.timeZone);
+      localStorage.setItem("baseCurrency", data.baseCurrency);
+      localStorage.setItem("numberFormat", data.numberFormat);
       
       // Update language in context if changed
       if (data.language !== currentLanguage) {
         await setLanguage(data.language as any);
+      }
+      
+      // Update currency if changed
+      if (data.baseCurrency !== activeCurrency.code) {
+        const newCurrency = currencies.find(c => c.code === data.baseCurrency) || currencies[0];
+        setActiveCurrency(newCurrency);
       }
       
       toast.success("Preferences saved successfully");
@@ -188,6 +203,70 @@ const PreferencesSettings = () => {
                 </div>
                 <FormDescription>
                   Choose your preferred language for the interface
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="baseCurrency"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Base Currency</FormLabel>
+                <div className="flex items-center gap-2">
+                  <DollarSign className="h-4 w-4 text-gray-500" />
+                  <FormControl>
+                    <Select 
+                      onValueChange={field.onChange} 
+                      defaultValue={field.value}
+                    >
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Select base currency" />
+                      </SelectTrigger>
+                      <SelectContent className="max-h-[300px] overflow-y-auto">
+                        {CURRENCIES.map((currency) => (
+                          <SelectItem key={currency.code} value={currency.code}>
+                            {currency.code} - {currency.name} {currency.symbol && `(${currency.symbol})`}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                </div>
+                <FormDescription>
+                  Select your preferred currency for displaying asset values
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="numberFormat"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Number Format</FormLabel>
+                <div className="flex items-center gap-2">
+                  <FormControl>
+                    <Select 
+                      onValueChange={field.onChange} 
+                      defaultValue={field.value}
+                    >
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Select number format" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="standard">Standard (1,234,567.89)</SelectItem>
+                        <SelectItem value="compact">Compact (1.2M)</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                </div>
+                <FormDescription>
+                  Choose how numbers are displayed across the application
                 </FormDescription>
                 <FormMessage />
               </FormItem>

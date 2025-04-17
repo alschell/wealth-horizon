@@ -3,6 +3,7 @@ import React from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Sliders, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import SectionHeader from "../SectionHeader";
 import { Link } from "react-router-dom";
 import { useMarketSnapshot } from "./hooks/useMarketSnapshot";
@@ -39,7 +40,26 @@ const MarketSnapshot = () => {
         </div>
       </CardHeader>
       <CardContent className="p-6 pt-0 h-[calc(350px-80px)] flex flex-col">
-        <MarketItemsGrid items={filteredAndOrderedItems} />
+        <ScrollArea className="flex-1 -mr-4 pr-4">
+          <div className="grid grid-cols-2 gap-3">
+            {filteredAndOrderedItems.map(item => (
+              <div 
+                key={item.id}
+                className="p-3 border border-gray-100 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                <div className="flex flex-col">
+                  <span className="text-sm font-medium">{item.name}</span>
+                  <div className="flex justify-between mt-1">
+                    <span className="text-sm">{item.value}</span>
+                    <span className={`text-xs flex items-center ${item.change >= 0 ? 'text-green-600' : 'text-red-500'}`}>
+                      {item.change >= 0 ? '+' : ''}{item.change}%
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </ScrollArea>
         
         <div className="pt-4 mt-auto">
           <Link to="/market-data">

@@ -23,6 +23,13 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToFeatures }) => {
     }
   };
 
+  const scrollToWhyWH = () => {
+    const whyWHSection = document.getElementById('why-wh');
+    if (whyWHSection) {
+      whyWHSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <section className="relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-br from-indigo-50 to-white -z-10"></div>
@@ -46,7 +53,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToFeatures }) => {
                 variant="outline"
                 size="lg"
                 className="text-md px-8"
-                onClick={onScrollToFeatures}
+                onClick={scrollToWhyWH}
               >
                 Learn More
               </Button>

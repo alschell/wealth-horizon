@@ -12,6 +12,12 @@ import { useNewsFilters } from "./news/useNewsFilters";
 import { useNewsFiltering } from "./news/useNewsFiltering";
 import { defaultSources, defaultCategories } from "./news/NewsConstants";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 type NewsItem = {
   title: string;
@@ -19,6 +25,8 @@ type NewsItem = {
   id?: string;
   source?: string;
   category?: string;
+  summary?: string;
+  url?: string;
 };
 
 type RecentNewsListProps = {
@@ -28,6 +36,8 @@ type RecentNewsListProps = {
 const RecentNewsList = ({ newsData }: RecentNewsListProps) => {
   const navigate = useNavigate();
   const [isCustomizing, setIsCustomizing] = React.useState(false);
+  const [selectedNews, setSelectedNews] = React.useState<NewsItem | null>(null);
+  const [isNewsDialogOpen, setIsNewsDialogOpen] = React.useState(false);
   
   const {
     selectedSources,
@@ -40,14 +50,14 @@ const RecentNewsList = ({ newsData }: RecentNewsListProps) => {
   // Filter news based on selected sources and categories
   const filteredNews = useNewsFiltering(newsData, selectedSources, selectedCategories);
 
-  const handleNewsClick = (newsItem: any, index: number) => {
-    // Navigate to market data with news tab active and the specific article id
-    navigate("/market-data", { 
-      state: { 
-        activeTab: "news",
-        articleId: newsItem.id || `news-${index}` 
-      } 
-    });
+  const handleNewsClick = (newsItem: NewsItem) => {
+    setSelectedNews(newsItem);
+    setIsNewsDialogOpen(true);
+    
+    // If the news has an external URL, you could also open it in a new tab
+    if (newsItem.url) {
+      window.open(newsItem.url, '_blank');
+    }
   };
 
   const handleViewAllClick = () => {
@@ -87,7 +97,7 @@ const RecentNewsList = ({ newsData }: RecentNewsListProps) => {
                   time={news.time}
                   source={news.source}
                   category={news.category}
-                  onClick={() => handleNewsClick(news, index)}
+                  onClick={() => handleNewsClick(news)}
                 />
               ))
             ) : (
@@ -119,6 +129,33 @@ const RecentNewsList = ({ newsData }: RecentNewsListProps) => {
           onCategoryToggle={toggleCategory}
           onSave={handleSaveCustomization}
         />
+        
+        {/* News Detail Dialog */}
+        <Dialog open={isNewsDialogOpen} onOpenChange={setIsNewsDialogOpen}>
+          <DialogContent className="sm:max-w-[600px]">
+            <DialogHeader>
+              <DialogTitle>
+                {selectedNews?.title}
+              </DialogTitle>
+            </DialogHeader>
+            <div className="py-4">
+              <div className="flex justify-between text-sm text-gray-500 mb-4">
+                <span>{selectedNews?.source}</span>
+                <span>{selectedNews?.time}</span>
+              </div>
+              <p className="text-gray-700">{selectedNews?.summary || "No summary available."}</p>
+              {selectedNews?.url && (
+                <Button 
+                  variant="outline" 
+                  className="mt-4"
+                  onClick={() => window.open(selectedNews.url, '_blank')}
+                >
+                  Read Full Article
+                </Button>
+              )}
+            </div>
+          </DialogContent>
+        </Dialog>
       </CardContent>
     </Card>
   );

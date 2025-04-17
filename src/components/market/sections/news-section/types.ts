@@ -29,3 +29,20 @@ export interface NewsArticle {
   url: string;
   category: string;
 }
+
+// Add the NewsItem interface that was referenced
+export interface NewsItem {
+  id: string;
+  title: string;
+  summary: string;
+  imageUrl?: string;
+  image?: string;
+  source: string;
+  date?: string;
+  datePublished?: string;
+  url: string;
+  category: string;
+  headline?: string;
+  datetime?: number;
+  isBreaking?: boolean;
+}

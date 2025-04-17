@@ -17,4 +17,13 @@ export interface ErrorFallbackProps {
   
   /** Custom text for the reset button */
   resetText?: string;
+  
+  /** Custom error message */
+  message?: string;
+  
+  /** Whether to show detailed error information */
+  showDetails?: boolean;
+  
+  /** Additional error info from React */
+  errorInfo?: React.ErrorInfo;
 }

@@ -3,7 +3,7 @@ import React from "react";
 import { Grid } from "@/components/ui/grid";
 import NewsCard from "./NewsCard";
 import { motion } from "framer-motion";
-import { NewsItem } from "@/types/market";
+import { NewsItem } from "../types";
 
 interface NewsGridProps {
   news: NewsItem[];

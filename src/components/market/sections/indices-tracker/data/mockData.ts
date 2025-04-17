@@ -5,7 +5,7 @@ export const mockIndices: IndexData[] = [
   {
     id: "sp500",
     name: "S&P 500",
-    value: "4,587.20",
+    value: 4587.20, // Changed from string to number
     change: 0.85,
     volume: "2.5B",
     region: "United States"
@@ -13,7 +13,7 @@ export const mockIndices: IndexData[] = [
   {
     id: "nasdaq",
     name: "NASDAQ",
-    value: "14,346.30",
+    value: 14346.30, // Changed from string to number
     change: 1.2,
     volume: "1.8B",
     region: "United States"
@@ -21,7 +21,7 @@ export const mockIndices: IndexData[] = [
   {
     id: "dowjones",
     name: "Dow Jones",
-    value: "36,124.56",
+    value: 36124.56, // Changed from string to number
     change: 0.32,
     volume: "850M",
     region: "United States"
@@ -29,7 +29,7 @@ export const mockIndices: IndexData[] = [
   {
     id: "ftse",
     name: "FTSE 100",
-    value: "7,582.10",
+    value: 7582.10, // Changed from string to number
     change: -0.32,
     volume: "620M",
     region: "United Kingdom"
@@ -37,7 +37,7 @@ export const mockIndices: IndexData[] = [
   {
     id: "dax",
     name: "DAX",
-    value: "15,947.80",
+    value: 15947.80, // Changed from string to number
     change: -0.15,
     volume: "720M",
     region: "Germany"
@@ -45,7 +45,7 @@ export const mockIndices: IndexData[] = [
   {
     id: "nikkei",
     name: "Nikkei 225",
-    value: "37,156.45",
+    value: 37156.45, // Changed from string to number
     change: 1.45,
     volume: "1.2B",
     region: "Japan"
@@ -53,7 +53,7 @@ export const mockIndices: IndexData[] = [
   {
     id: "shanghai",
     name: "Shanghai Composite",
-    value: "3,210.40",
+    value: 3210.40, // Changed from string to number
     change: -0.30,
     volume: "950M",
     region: "China"
@@ -61,7 +61,7 @@ export const mockIndices: IndexData[] = [
   {
     id: "cac",
     name: "CAC 40",
-    value: "7,125.80",
+    value: 7125.80, // Changed from string to number
     change: 0.42,
     volume: "580M",
     region: "France"
@@ -69,7 +69,7 @@ export const mockIndices: IndexData[] = [
   {
     id: "asx",
     name: "ASX 200",
-    value: "7,648.25",
+    value: 7648.25, // Changed from string to number
     change: 0.85,
     volume: "490M",
     region: "Australia"
@@ -77,7 +77,7 @@ export const mockIndices: IndexData[] = [
   {
     id: "hangseng",
     name: "Hang Seng",
-    value: "18,125.45",
+    value: 18125.45, // Changed from string to number
     change: -1.20,
     volume: "1.1B",
     region: "Hong Kong"

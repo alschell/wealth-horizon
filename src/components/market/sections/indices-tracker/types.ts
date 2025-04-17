@@ -8,6 +8,7 @@ export interface IndexData {
   percentChange: number;
   region: string;
   description: string;
+  volume?: string; // Make volume optional since it's used in IndicesTable
 }
 
 export interface IndicesTrackerProps {
@@ -17,4 +18,10 @@ export interface IndicesTrackerProps {
 export interface FilterOption {
   id: string;
   name: string;
+}
+
+// Add the missing ChartDataPoint interface
+export interface ChartDataPoint {
+  date: string;
+  value: number;
 }

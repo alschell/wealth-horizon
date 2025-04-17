@@ -4,10 +4,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { LanguageSelector } from '@/components/ui/language-selector';
 import { TranslatedText } from '@/components/ui/translated-text';
+import { useTranslation } from '@/context/TranslationContext';
 
 const HomeNavigation: React.FC = () => {
   const navigate = useNavigate();
   const [scrolled, setScrolled] = useState(false);
+  const { translate } = useTranslation();
 
   useEffect(() => {
     const handleScroll = () => {

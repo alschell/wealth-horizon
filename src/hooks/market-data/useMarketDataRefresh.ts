@@ -120,7 +120,13 @@ export function useMarketDataRefresh(): UseMarketDataRefreshReturn {
     ];
     
     // Also trigger API refresh (to clear server cache if needed)
-    refreshAPI(refreshTypes);
+    if (clearCache) {
+      refreshAPI(refreshTypes);
+    }
+    
+    setIsRefreshing(false);
+    
+    return true;
   }, [refreshMarketData]);
   
   return {

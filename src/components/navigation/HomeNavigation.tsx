@@ -50,7 +50,16 @@ const HomeNavigation: React.FC = () => {
 };
 
 const NavigationBrand: React.FC = () => (
-  <Link to="/" className="font-bold text-xl flex items-center">
+  <Link 
+    to="/" 
+    className="font-bold text-xl flex items-center"
+    onClick={(e) => {
+      // Prevent default behavior and handle navigation manually to avoid errors
+      e.preventDefault();
+      // Use window.location.href to force a full page reload which avoids translation errors
+      window.location.href = '/';
+    }}
+  >
     <span className="text-indigo-600">Wealth</span>
     <span className="text-gray-900">Horizon</span>
   </Link>

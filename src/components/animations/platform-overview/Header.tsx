@@ -2,7 +2,6 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { headerVariants } from "./AnimationVariants";
-import { Link } from "react-router-dom";
 
 const Header: React.FC = () => {
   return (
@@ -13,10 +12,17 @@ const Header: React.FC = () => {
       variants={headerVariants}
     >
       <div className="flex items-center">
-        <Link to="/" className="font-bold text-xl">
+        <a
+          href="/"
+          className="font-bold text-xl"
+          onClick={(e) => {
+            e.preventDefault();
+            window.location.href = '/';
+          }}
+        >
           <span className="text-indigo-600">Wealth</span>
           <span className="text-gray-900">Horizon</span>
-        </Link>
+        </a>
       </div>
     </motion.div>
   );

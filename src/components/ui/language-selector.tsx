@@ -26,20 +26,22 @@ export function LanguageSelector() {
     setIsChanging(true);
     try {
       console.log(`Starting language change to ${langCode}`);
-      await setLanguage(langCode as any);
-      console.log(`Language changed to ${langCode}`);
       
-      // Force a hard refresh to avoid stale translations
-      window.location.reload();
+      // Store the selected language in localStorage before reload
+      localStorage.setItem('preferredLanguage', langCode);
+      
+      // Force a complete page reload to reset all components and translation states
+      window.location.href = window.location.pathname;
     } catch (error) {
       console.error("Failed to change language:", error);
-    } finally {
       setIsChanging(false);
-      setIsOpen(false);
     }
   }, [setLanguage, currentLanguage, isChanging, isLoading]);
 
-  const currentLang = LANGUAGES.find(lang => lang.code === currentLanguage);
+  // Safely find the current language
+  const currentLang = Array.isArray(LANGUAGES) 
+    ? LANGUAGES.find(lang => lang.code === currentLanguage) 
+    : undefined;
 
   return (
     <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
@@ -57,7 +59,7 @@ export function LanguageSelector() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-48" align="end">
-        {LANGUAGES.map((language) => (
+        {Array.isArray(LANGUAGES) && LANGUAGES.map((language) => (
           <DropdownMenuItem
             key={language.code}
             onClick={() => handleLanguageChange(language.code)}

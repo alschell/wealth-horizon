@@ -17,22 +17,26 @@ export const TranslatedText: React.FC<TranslatedTextProps> = ({
   ...rest
 }) => {
   const { translate, currentLanguage } = useTranslation();
-  const [translatedContent, setTranslatedContent] = useState(children);
+  const [translatedContent, setTranslatedContent] = useState<string>(children || '');
 
   useEffect(() => {
     let isMounted = true;
     
     const translateText = async () => {
+      if (!children) {
+        return;
+      }
+      
       try {
         const translated = await translate(children);
-        if (isMounted) {
+        if (isMounted && translated) {
           setTranslatedContent(translated);
         }
       } catch (error) {
         console.error("Translation error:", error);
         // If translation fails, fall back to original text
         if (isMounted) {
-          setTranslatedContent(children);
+          setTranslatedContent(children || '');
         }
       }
     };
@@ -47,7 +51,7 @@ export const TranslatedText: React.FC<TranslatedTextProps> = ({
 
   return (
     <Component className={className} {...rest}>
-      {translatedContent}
+      {translatedContent || children || ''}
     </Component>
   );
 };

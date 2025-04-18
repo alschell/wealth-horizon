@@ -8,7 +8,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useTranslation, LANGUAGES } from '@/context/TranslationContext';
+import { useTranslation, LANGUAGES, LanguageCode } from '@/context/TranslationContext';
 import TranslatedText from './translated-text';
 import { toast } from 'sonner';
 
@@ -33,8 +33,13 @@ export function LanguageSelector() {
       // First close the dropdown to avoid UI glitches
       setIsOpen(false);
       
-      // Change the language
-      await setLanguage(langCode);
+      // Change the language - cast to LanguageCode since we validate it's in LANGUAGES
+      const validLangCode = LANGUAGES.find(l => l.code === langCode)?.code;
+      if (!validLangCode) {
+        throw new Error(`Invalid language code: ${langCode}`);
+      }
+      
+      await setLanguage(validLangCode as LanguageCode);
       console.log(`Language successfully changed to ${langCode}`);
       
       // Notify user after successful change

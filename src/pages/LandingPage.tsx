@@ -1,10 +1,11 @@
+
 import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async"; 
 import { LandingLayout } from "@/components/landing";
 import { useTranslation } from "@/context/TranslationContext";
 import ErrorBoundary from "@/components/common/ErrorBoundary";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
-import Loader2 from "@/components/common/Loader2";
+import { Loader2 } from "lucide-react";
 
 /**
  * Main landing page with SEO optimization and structured data

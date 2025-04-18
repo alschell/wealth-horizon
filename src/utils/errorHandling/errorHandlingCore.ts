@@ -1,4 +1,3 @@
-
 /**
  * Core error handling utilities for the application
  */
@@ -37,6 +36,8 @@ export interface ErrorHandlerOptions {
   includeStack?: boolean;
   /** Additional error context */
   context?: Record<string, any>;
+  /** Function to call when an error occurs */
+  onError?: (error: unknown) => void;
 }
 
 /**
@@ -117,6 +118,52 @@ export function parseError(
 }
 
 /**
+ * Extract a readable message from various error types
+ * @param error - The error to extract a message from
+ * @param fallbackMessage - Fallback message if one can't be extracted
+ * @returns Human-readable error message
+ */
+export function getErrorMessage(error: unknown, fallbackMessage: string = "An unexpected error occurred"): string {
+  if (error instanceof Error) {
+    return error.message;
+  }
+  
+  if (typeof error === 'string') {
+    return error;
+  }
+  
+  if (error && typeof error === 'object' && 'message' in error) {
+    return String((error as {message: unknown}).message);
+  }
+  
+  return fallbackMessage;
+}
+
+/**
+ * Log error details to the console
+ * @param error - The error to log
+ * @param componentName - Optional component name for context
+ */
+export function logError(error: unknown, componentName?: string): void {
+  console.error(`Error${componentName ? ` in ${componentName}` : ''}:`, error);
+  
+  if (error instanceof Error && error.stack) {
+    console.error('Stack trace:', error.stack);
+  }
+}
+
+/**
+ * Creates a descriptive error with component context
+ * @param message - Error message
+ * @param componentName - Component name for context
+ * @returns Error with context in message
+ */
+export function createContextualError(message: string, componentName: string): Error {
+  const error = new Error(`[${componentName}] ${message}`);
+  return error;
+}
+
+/**
  * Handle an error with standardized approach
  * @param error - The error to handle
  * @param options - Error handling options
@@ -152,6 +199,42 @@ export function handleError(
   }
   
   return errorDetails;
+}
+
+/**
+ * Wrap an async function with error handling
+ * @param fn - The function to wrap
+ * @param options - Error handling options
+ * @returns A function that handles errors
+ */
+export function withErrorHandling<T extends (...args: any[]) => Promise<any>>(
+  fn: T,
+  options: ErrorHandlerOptions = {}
+) {
+  return async function(...args: Parameters<T>): Promise<ReturnType<T> | undefined> {
+    try {
+      return await fn(...args);
+    } catch (error) {
+      handleError(error, options);
+      return undefined;
+    }
+  };
+}
+
+/**
+ * Try-catch wrapper for async operations
+ * @param fn - The function to execute
+ * @param options - Error handling options
+ * @returns Result of the function or undefined on error
+ */
+export function tryCatch<T>(
+  fn: () => Promise<T> | T,
+  options: ErrorHandlerOptions = {}
+): Promise<T | undefined> {
+  return Promise.resolve().then(() => fn()).catch(error => {
+    handleError(error, options);
+    return undefined;
+  });
 }
 
 /**

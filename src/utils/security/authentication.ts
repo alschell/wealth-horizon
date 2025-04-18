@@ -1,4 +1,3 @@
-
 /**
  * Security utilities for authentication and token management
  */
@@ -45,6 +44,16 @@ export const generateCspNonce = (): string => {
 };
 
 /**
+ * Strong password validation result
+ */
+export interface PasswordValidationResult {
+  valid: boolean;
+  message: string;
+  strength?: number;
+  errors?: string[];
+}
+
+/**
  * Strong password validation
  * @param password - Password to validate
  * @param options - Validation options
@@ -60,7 +69,7 @@ export const validatePasswordStrength = (
     requireSpecialChars?: boolean,
     maxLength?: number
   } = {}
-): { valid: boolean, message: string } => {
+): PasswordValidationResult => {
   const {
     minLength = 12,
     requireUppercase = true,
@@ -70,48 +79,74 @@ export const validatePasswordStrength = (
     maxLength = 128
   } = options;
   
+  const errors: string[] = [];
+  
   if (!password) {
-    return { valid: false, message: 'Password is required' };
+    return { valid: false, message: 'Password is required', errors: ['Password is required'] };
   }
   
   if (password.length < minLength) {
-    return { valid: false, message: `Password must be at least ${minLength} characters long` };
+    errors.push(`Password must be at least ${minLength} characters long`);
   }
   
   if (password.length > maxLength) {
-    return { valid: false, message: `Password cannot exceed ${maxLength} characters` };
+    errors.push(`Password cannot exceed ${maxLength} characters`);
   }
   
   if (requireUppercase && !/[A-Z]/.test(password)) {
-    return { valid: false, message: 'Password must include at least one uppercase letter' };
+    errors.push('Password must include at least one uppercase letter');
   }
   
   if (requireLowercase && !/[a-z]/.test(password)) {
-    return { valid: false, message: 'Password must include at least one lowercase letter' };
+    errors.push('Password must include at least one lowercase letter');
   }
   
   if (requireNumbers && !/[0-9]/.test(password)) {
-    return { valid: false, message: 'Password must include at least one number' };
+    errors.push('Password must include at least one number');
   }
   
   if (requireSpecialChars && !/[^A-Za-z0-9]/.test(password)) {
-    return { valid: false, message: 'Password must include at least one special character' };
+    errors.push('Password must include at least one special character');
   }
   
   // Check for common patterns and dictionary words
   if (/^123456|password|admin|qwerty|welcome|123123/i.test(password)) {
-    return { valid: false, message: 'Password is too common and easily guessable' };
+    errors.push('Password is too common and easily guessable');
   }
   
   // Check for repetitive patterns
   if (/(.)\1{2,}/.test(password)) {
-    return { valid: false, message: 'Password contains repetitive patterns' };
+    errors.push('Password contains repetitive patterns');
   }
   
   // Check for sequential characters
   if (/abcdef|bcdefg|cdefgh|defghi|qwerty|asdfgh/i.test(password)) {
-    return { valid: false, message: 'Password contains sequential characters' };
+    errors.push('Password contains sequential characters');
   }
+
+  // Calculate password strength (0-100)
+  let strength = 0;
   
-  return { valid: true, message: 'Password meets all requirements' };
+  // Base score based on length
+  strength += Math.min(password.length * 4, 40);
+  
+  // Add points for variety
+  if (/[A-Z]/.test(password)) strength += 10;
+  if (/[a-z]/.test(password)) strength += 10;
+  if (/[0-9]/.test(password)) strength += 10;
+  if (/[^A-Za-z0-9]/.test(password)) strength += 15;
+  
+  // Subtract for patterns
+  if (/(.)\1{2,}/.test(password)) strength -= 10;
+  if (/^123456|password|admin|qwerty|welcome|123123/i.test(password)) strength -= 20;
+  
+  // Ensure strength is within bounds
+  strength = Math.max(0, Math.min(100, strength));
+  
+  const valid = errors.length === 0;
+  const message = valid ? 
+    'Password meets all requirements' : 
+    errors[0]; // Return the first error message
+  
+  return { valid, message, strength, errors };
 };

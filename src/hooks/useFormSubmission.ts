@@ -53,12 +53,9 @@ export function useFormSubmission<T>() {
       return true;
     } catch (error) {
       const errorHandlerOptions: ErrorHandlerOptions = {
-        fallbackMessage: errorMessage
+        fallbackMessage: errorMessage,
+        onError: onError
       };
-      
-      if (onError) {
-        errorHandlerOptions.onError = onError;
-      }
       
       handleError(error, errorHandlerOptions);
       

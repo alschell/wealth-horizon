@@ -1,4 +1,3 @@
-
 import { useState, useCallback } from 'react';
 import { handleError, ErrorHandlerOptions } from '@/utils/errorHandling';
 import { showSuccess } from '@/utils/toast';
@@ -133,12 +132,9 @@ export function useUnifiedForm<T extends Record<string, any>>(initialData: T) {
       
       const errorHandlerOptions: ErrorHandlerOptions = {
         fallbackMessage: errorMessage,
-        logError: logToConsole
+        logError: logToConsole,
+        onError: onError
       };
-      
-      if (onError) {
-        errorHandlerOptions.onError = onError;
-      }
       
       handleError(error, errorHandlerOptions);
       

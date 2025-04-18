@@ -32,6 +32,9 @@ export const TranslatedText: React.FC<TranslatedTextProps> = ({
       try {
         if (typeof translate !== 'function') {
           console.error("Translate function is not available");
+          if (isMounted) {
+            setTranslatedContent(children);
+          }
           return;
         }
         

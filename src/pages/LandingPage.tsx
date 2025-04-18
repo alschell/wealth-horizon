@@ -3,6 +3,8 @@ import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async"; 
 import { LandingLayout } from "@/components/landing";
 import { useTranslation } from "@/context/TranslationContext";
+import ErrorBoundary from "@/components/common/ErrorBoundary";
+import ErrorFallback from "@/components/common/ErrorFallback";
 
 /**
  * Main landing page with SEO optimization and structured data
@@ -14,10 +16,18 @@ const LandingPage: React.FC = () => {
   const [keywords, setKeywords] = useState("wealth management, family office, financial planning, investment");
   
   useEffect(() => {
+    console.log("LandingPage mounted, currentLanguage:", currentLanguage);
+    
     const updateSEO = async () => {
-      setTitle(await translate("Wealth Horizon | Intelligent Wealth Management"));
-      setDescription(await translate("Wealth Horizon provides comprehensive wealth management solutions for family offices and high-net-worth individuals."));
-      setKeywords(await translate("wealth management, family office, financial planning, investment"));
+      try {
+        if (typeof translate === 'function') {
+          setTitle(await translate("Wealth Horizon | Intelligent Wealth Management"));
+          setDescription(await translate("Wealth Horizon provides comprehensive wealth management solutions for family offices and high-net-worth individuals."));
+          setKeywords(await translate("wealth management, family office, financial planning, investment"));
+        }
+      } catch (error) {
+        console.error("Error updating SEO:", error);
+      }
     };
     
     updateSEO();
@@ -52,7 +62,7 @@ const LandingPage: React.FC = () => {
   };
 
   return (
-    <>
+    <ErrorBoundary>
       <Helmet>
         <title>{title}</title>
         <meta name="description" content={description} />
@@ -77,7 +87,7 @@ const LandingPage: React.FC = () => {
         </script>
       </Helmet>
       <LandingLayout />
-    </>
+    </ErrorBoundary>
   );
 };
 

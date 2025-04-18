@@ -1,15 +1,10 @@
 
 import React from "react";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import { headerVariants } from "./AnimationVariants";
 
 const Header: React.FC = () => {
-  const handleHomeClick = () => {
-    // Use Link or navigate instead of direct location change
-    console.log("Navigating to home");
-    window.location.href = '/';
-  };
-
   return (
     <motion.div 
       className="bg-gray-50 border-b border-gray-200 p-4"
@@ -18,10 +13,10 @@ const Header: React.FC = () => {
       variants={headerVariants}
     >
       <div className="flex items-center">
-        <button onClick={handleHomeClick} className="font-bold text-xl focus:outline-none">
+        <Link to="/" className="font-bold text-xl focus:outline-none">
           <span className="text-indigo-600">Wealth</span>
           <span className="text-gray-900">Horizon</span>
-        </button>
+        </Link>
       </div>
     </motion.div>
   );

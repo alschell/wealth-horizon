@@ -33,14 +33,11 @@ export function LanguageSelector() {
     try {
       await setLanguage(langCode as any);
       console.log(`Language changed to ${langCode}`);
-      
-      // Instead of reloading the page, just close the dropdown
-      // window.location.reload();
+      setIsOpen(false);
     } catch (error) {
       console.error("Failed to change language:", error);
     } finally {
       setIsChanging(false);
-      setIsOpen(false);
     }
   }, [setLanguage]);
 

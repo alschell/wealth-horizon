@@ -1,12 +1,20 @@
 
 /**
- * Security utilities for secure storage
+ * Security utilities for secure storage operations
  */
+
+import { generateCsrfToken } from './authentication';
 
 /**
  * Secure storage with expiration and domain binding
  */
 export const secureStore = {
+  /**
+   * Set item in secure storage
+   * @param key - Storage key
+   * @param value - Storage value
+   * @param options - Storage options
+   */
   set: (
     key: string, 
     value: string, 
@@ -50,6 +58,11 @@ export const secureStore = {
     }
   },
   
+  /**
+   * Get item from secure storage
+   * @param key - Storage key
+   * @returns Storage value or null if not found
+   */
   get: (key: string): string | null => {
     // Try to get from cookie first
     const cookieMatch = document.cookie.match(new RegExp(`(^| )${key}=([^;]+)`));
@@ -75,6 +88,11 @@ export const secureStore = {
     }
   },
   
+  /**
+   * Remove item from secure storage
+   * @param key - Storage key
+   * @param path - Cookie path
+   */
   remove: (key: string, path: string = '/'): void => {
     // Remove from cookies
     document.cookie = `${key}=; path=${path}; expires=Thu, 01 Jan 1970 00:00:00 GMT; Secure; SameSite=Strict`;
@@ -90,6 +108,7 @@ export const secureStore = {
 
 /**
  * Set CSRF token using secure storage
+ * @param token - CSRF token
  */
 export const storeCsrfToken = (token: string): void => {
   secureStore.set('csrf_token', token, {
@@ -101,6 +120,7 @@ export const storeCsrfToken = (token: string): void => {
 
 /**
  * Get stored CSRF token
+ * @returns CSRF token
  */
 export const getCsrfToken = (): string => {
   const token = secureStore.get('csrf_token');
@@ -112,7 +132,3 @@ export const getCsrfToken = (): string => {
   storeCsrfToken(newToken);
   return newToken;
 };
-
-// Import this function from authentication to avoid duplication
-import { generateCsrfToken } from './authentication';
-

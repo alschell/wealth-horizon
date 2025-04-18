@@ -1,10 +1,7 @@
 
 /**
- * Core error handling utilities
- * This centralizes error handling logic for consistent error management
+ * Core error handling utilities for the application
  */
-
-import { toast } from '@/hooks/use-toast';
 
 /**
  * Standard error response format
@@ -13,166 +10,178 @@ export interface ErrorResponse {
   message: string;
   code?: string;
   details?: Record<string, any>;
+  stack?: string;
+  timestamp?: number;
+  source?: string;
 }
 
 /**
  * Options for error handling
  */
 export interface ErrorHandlerOptions {
-  componentName?: string;
-  showToast?: boolean;
-  logError?: boolean;
-  rethrow?: boolean;
-  fallbackMessage?: string;
+  /** Whether to suppress error notifications */
   silent?: boolean;
-  logToConsole?: boolean;
-  toastTitle?: string;
-  onError?: (error: unknown) => void;
+  /** Text for action button in error notification */
+  actionText?: string;
+  /** Function to call when action button is clicked */
+  action?: () => void;
+  /** Fallback message when error details can't be extracted */
+  fallbackMessage?: string;
+  /** Component or feature name where error occurred */
+  componentName?: string;
+  /** Whether to log error to console */
+  logError?: boolean;
+  /** Whether to show error toast */
+  showToast?: boolean;
+  /** Whether to include stack trace in error details */
+  includeStack?: boolean;
+  /** Additional error context */
+  context?: Record<string, any>;
 }
 
 /**
- * Extract a readable message from various error types
+ * Parse any error into a standardized error response
+ * @param error - The error to parse
+ * @param options - Additional parsing options
+ * @returns Standardized error response
  */
-export function getErrorMessage(error: unknown, fallbackMessage: string = "An unexpected error occurred"): string {
-  if (error instanceof Error) {
-    return error.message;
-  }
+export function parseError(
+  error: unknown, 
+  options: { includeStack?: boolean, context?: Record<string, any> } = {}
+): ErrorResponse {
+  const { includeStack = false, context } = options;
+  const timestamp = Date.now();
   
-  if (typeof error === 'string') {
-    return error;
-  }
-  
-  if (error && typeof error === 'object' && 'message' in error) {
-    return String((error as {message: unknown}).message);
-  }
-  
-  return fallbackMessage;
-}
-
-/**
- * Parse an error into a standardized format
- */
-export function parseError(error: unknown): ErrorResponse {
+  // Handle Error instances
   if (error instanceof Error) {
     return {
       message: error.message,
-      code: error.name
+      code: error.name,
+      stack: includeStack ? error.stack : undefined,
+      timestamp,
+      details: context
     };
   }
   
+  // Handle string errors
   if (typeof error === 'string') {
     return {
       message: error,
-      code: 'ERROR'
+      code: 'ERROR',
+      timestamp,
+      details: context
     };
   }
   
+  // Handle error-like objects with message property
   if (error && typeof error === 'object') {
     if ('message' in error) {
+      const errorObj = error as Record<string, any>;
       return {
-        message: String((error as ErrorResponse).message),
-        code: (error as ErrorResponse).code || 'ERROR',
-        details: (error as ErrorResponse).details
+        message: String(errorObj.message),
+        code: 'code' in errorObj ? String(errorObj.code) : 'ERROR',
+        details: {
+          ...('details' in errorObj ? errorObj.details : {}),
+          ...context
+        },
+        stack: includeStack && 'stack' in errorObj ? String(errorObj.stack) : undefined,
+        timestamp
+      };
+    }
+    
+    // Handle unknown object errors by converting to string
+    try {
+      return {
+        message: JSON.stringify(error),
+        code: 'UNKNOWN_ERROR',
+        timestamp,
+        details: context
+      };
+    } catch {
+      return {
+        message: 'Unknown error object (cannot stringify)',
+        code: 'UNKNOWN_ERROR',
+        timestamp,
+        details: context
       };
     }
   }
   
+  // Handle all other cases
   return {
-    message: 'An unexpected error occurred',
-    code: 'UNKNOWN_ERROR'
+    message: 'An unknown error occurred',
+    code: 'UNKNOWN_ERROR',
+    timestamp,
+    details: context
   };
 }
 
 /**
- * Log error details to the console
+ * Handle an error with standardized approach
+ * @param error - The error to handle
+ * @param options - Error handling options
+ * @returns Parsed error details
  */
-export function logError(error: unknown, componentName?: string): void {
-  console.error(`Error${componentName ? ` in ${componentName}` : ''}:`, error);
-  
-  if (error instanceof Error && error.stack) {
-    console.error('Stack trace:', error.stack);
-  }
-}
-
-/**
- * Create a descriptive error with component context
- */
-export function createContextualError(message: string, componentName: string): Error {
-  const error = new Error(`[${componentName}] ${message}`);
-  return error;
-}
-
-/**
- * Handle an error with consistent approach
- */
-export function handleError(error: unknown, options: ErrorHandlerOptions = {}): ErrorResponse {
-  const { 
-    componentName, 
-    showToast = true, 
-    logError: shouldLogError = true,
-    rethrow = false,
-    fallbackMessage = "An unexpected error occurred",
-    onError
+export function handleError(
+  error: unknown, 
+  options: ErrorHandlerOptions = {}
+): ErrorResponse {
+  const {
+    silent = false,
+    logError = true,
+    componentName,
+    includeStack = false,
+    context
   } = options;
   
-  // Parse error into standardized format
-  const errorDetails = parseError(error);
+  // Parse error into standard format
+  const errorDetails = parseError(error, { includeStack, context });
   
-  // Log error if requested
-  if (shouldLogError) {
-    logError(error, componentName);
+  // Add source information if provided
+  if (componentName) {
+    errorDetails.source = componentName;
   }
   
-  // Show toast if requested
-  if (showToast) {
-    toast({
-      title: "Error",
-      description: errorDetails.message || fallbackMessage,
-      variant: "destructive"
-    });
-  }
-  
-  // Call onError if provided
-  if (onError) {
-    onError(error);
-  }
-  
-  // Rethrow if requested
-  if (rethrow && error instanceof Error) {
-    throw error;
+  // Log error to console if not silenced
+  if (logError && !silent) {
+    console.error(
+      `Error${componentName ? ` in ${componentName}` : ''}:`,
+      errorDetails.message,
+      errorDetails
+    );
   }
   
   return errorDetails;
 }
 
 /**
- * HOC to wrap a function with error handling
+ * Create a function that handles errors in a standardized way
+ * @param defaultOptions - Default error handling options
+ * @returns Error handler function
  */
-export function withErrorHandling<T extends (...args: any[]) => Promise<any>>(
-  fn: T,
-  options: ErrorHandlerOptions = {}
-): (...args: Parameters<T>) => Promise<ReturnType<T> | undefined> {
-  return async (...args: Parameters<T>): Promise<ReturnType<T> | undefined> => {
-    try {
-      return await fn(...args);
-    } catch (error) {
-      handleError(error, options);
-      return undefined;
-    }
+export function createErrorHandler(defaultOptions: ErrorHandlerOptions = {}) {
+  return (error: unknown, options: ErrorHandlerOptions = {}) => {
+    return handleError(error, { ...defaultOptions, ...options });
   };
 }
 
 /**
- * Try-catch wrapper with standardized error handling
+ * Create a wrapper that handles errors for async functions
+ * @param errorHandler - Error handler function
+ * @returns Function wrapper
  */
-export async function tryCatch<T>(
-  fn: () => Promise<T> | T,
-  options: ErrorHandlerOptions = {}
-): Promise<T | undefined> {
-  try {
-    return await fn();
-  } catch (error) {
-    handleError(error, options);
-    return undefined;
-  }
+export function createErrorHandlerWrapper(errorHandler: typeof handleError) {
+  return function withErrorHandling<T extends (...args: any[]) => Promise<any>>(
+    fn: T,
+    options: ErrorHandlerOptions = {}
+  ) {
+    return async function(...args: Parameters<T>): Promise<ReturnType<T> | undefined> {
+      try {
+        return await fn(...args);
+      } catch (error) {
+        errorHandler(error, options);
+        return undefined;
+      }
+    };
+  };
 }

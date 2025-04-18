@@ -1,56 +1,46 @@
 
-import { FormValidationRules } from './types';
+/**
+ * Utility functions for form handling
+ */
 
 /**
- * Validates that required fields have values
+ * Validates required fields in a form
+ * @param values - Form values
+ * @param requiredFields - Array of field names that are required
+ * @returns Object with validation errors
  */
-export const validateRequiredFields = <T>(
-  values: T,
-  requiredFields: (keyof T)[] = []
-): Record<string, string> => {
+export const validateRequiredFields = <T>(values: T, requiredFields: (keyof T)[]): Record<string, string> => {
   const errors: Record<string, string> = {};
-
+  
   requiredFields.forEach(field => {
     const value = values[field];
-    if (value === undefined || value === null || value === '') {
+    // Check for undefined, null, empty string, or empty array
+    if (
+      value === undefined || 
+      value === null || 
+      value === '' || 
+      (Array.isArray(value) && value.length === 0)
+    ) {
       errors[field as string] = 'This field is required';
     }
   });
-
+  
   return errors;
 };
 
 /**
- * Creates a function that clears a specific field error
+ * Creates a function to clear errors by field name
+ * @param setErrors - Function to set errors state
+ * @returns Function that clears error for a specific field
  */
-export const createErrorClearer = (
+export const createErrorClearer = <T>(
   setErrors: React.Dispatch<React.SetStateAction<Record<string, string>>>
 ) => {
-  return <T>(field: keyof T) => {
+  return (field: keyof T) => {
     setErrors(prev => {
       const newErrors = { ...prev };
       delete newErrors[field as string];
       return newErrors;
     });
-  };
-};
-
-/**
- * Creates validation rules for form fields
- */
-export const createValidationRules = <T>(rules: FormValidationRules<T>) => {
-  return (values: T): Record<string, string> => {
-    const errors: Record<string, string> = {};
-
-    Object.entries(rules).forEach(([field, validateFn]) => {
-      if (validateFn) {
-        const error = validateFn(values[field as keyof T]);
-        if (error) {
-          errors[field] = error;
-        }
-      }
-    });
-
-    return errors;
   };
 };

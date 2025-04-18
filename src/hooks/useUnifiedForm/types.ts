@@ -1,9 +1,16 @@
+
 import { ReactNode } from 'react';
 
+/**
+ * Form validation rules mapping field names to validation functions
+ */
 export interface FormValidationRules<T> {
   [key: string]: ((value: any) => string | null) | undefined;
 }
 
+/**
+ * Form state containing values, errors, and metadata
+ */
 export interface FormState<T> {
   values: T;
   errors: Record<string, string>;
@@ -13,6 +20,9 @@ export interface FormState<T> {
   isSuccess: boolean;
 }
 
+/**
+ * Form actions for manipulation and submission
+ */
 export interface FormActions<T> {
   handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void;
   handleBlur: (field: keyof T) => void;
@@ -25,11 +35,17 @@ export interface FormActions<T> {
   resetForm: () => void;
 }
 
+/**
+ * Form helpers for checking state
+ */
 export interface FormHelpers<T> {
   hasError: (field: keyof T) => boolean;
   getErrorMessage: (field: keyof T) => string;
 }
 
+/**
+ * Options for form submission
+ */
 export interface FormSubmissionOptions<T> {
   onSuccess?: (data: T) => void;
   onError?: (error: unknown) => void;
@@ -38,10 +54,16 @@ export interface FormSubmissionOptions<T> {
   resetAfterSubmit?: boolean;
 }
 
+/**
+ * Return value of useUnifiedForm hook
+ */
 export interface UseUnifiedFormReturn<T> extends FormActions<T>, FormHelpers<T> {
   formState: FormState<T>;
 }
 
+/**
+ * Props for useUnifiedForm hook
+ */
 export interface UseUnifiedFormProps<T> {
   initialValues: T;
   validate?: (values: T) => Record<string, string>;

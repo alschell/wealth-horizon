@@ -5,13 +5,14 @@ import { showSuccess, showError } from '@/utils/toast';
 import { 
   UseUnifiedFormProps, 
   UseUnifiedFormReturn,
-  FormState,
-  FormSubmissionOptions
+  FormState
 } from './types';
 import { validateRequiredFields, createErrorClearer } from './utils';
 
 /**
  * Unified form hook for handling form state, validation, and submission
+ * @param props - Form configuration
+ * @returns Form state, actions, and helpers
  */
 export function useUnifiedForm<T extends Record<string, any>>(props: UseUnifiedFormProps<T>): UseUnifiedFormReturn<T> {
   const {
@@ -37,6 +38,7 @@ export function useUnifiedForm<T extends Record<string, any>>(props: UseUnifiedF
     isSuccess: false
   });
 
+  // Create a function to clear field errors
   const clearError = useCallback((field: keyof T) => {
     setFormState(prev => {
       const newErrors = { ...prev.errors };
@@ -111,14 +113,10 @@ export function useUnifiedForm<T extends Record<string, any>>(props: UseUnifiedF
 
   // Set a field error
   const setFieldError = useCallback((field: keyof T, message: string) => {
-    setFormState(prev => {
-      const updatedErrors = { ...prev.errors };
-      updatedErrors[field as string] = message;
-      return {
-        ...prev,
-        errors: updatedErrors
-      };
-    });
+    setFormState(prev => ({
+      ...prev,
+      errors: { ...prev.errors, [field as string]: message }
+    }));
   }, []);
 
   // Clear a field error
@@ -137,22 +135,98 @@ export function useUnifiedForm<T extends Record<string, any>>(props: UseUnifiedF
     // Combine errors
     const combinedErrors = { ...requiredErrors, ...customErrors };
     
-    // Mark fields with errors as touched
-    const touchedFields = Object.keys(combinedErrors).reduce((acc, key) => {
-      acc[key] = true;
-      return acc;
-    }, {} as Record<string, boolean>);
-    
+    // Update form errors
     setFormState(prev => ({
       ...prev,
-      errors: combinedErrors,
-      touched: { ...prev.touched, ...touchedFields }
+      errors: combinedErrors
     }));
     
+    // Return whether form is valid
     return Object.keys(combinedErrors).length === 0;
   }, [formState.values, requiredFields, validate]);
 
-  // Reset the form
+  // Handle form submission
+  const handleSubmit = useCallback(async (e?: React.FormEvent) => {
+    // Prevent default form submission
+    if (e) {
+      e.preventDefault();
+    }
+    
+    // Mark all fields as touched
+    setFormState(prev => ({
+      ...prev,
+      touched: Object.keys(prev.values).reduce((acc, key) => {
+        acc[key] = true;
+        return acc;
+      }, {} as Record<string, boolean>)
+    }));
+    
+    // Validate form before submission
+    const isValid = validateForm();
+    if (!isValid) {
+      showError('Validation Error', errorMessage);
+      return false;
+    }
+    
+    // No submit handler provided
+    if (!onSubmit) {
+      return true;
+    }
+    
+    // Set submitting state
+    setFormState(prev => ({
+      ...prev,
+      isSubmitting: true,
+      isSuccess: false
+    }));
+    
+    try {
+      // Call submit handler
+      await onSubmit(formState.values);
+      
+      // Update state if component is still mounted
+      if (isMounted()) {
+        setFormState(prev => ({
+          ...prev,
+          isSuccess: true,
+          isSubmitting: false
+        }));
+        
+        // Show success message
+        showSuccess('Success', successMessage);
+        
+        // Call success callback if provided
+        if (onSuccess) {
+          onSuccess();
+        }
+      }
+      
+      return true;
+    } catch (error) {
+      // Only update state if component is still mounted
+      if (isMounted()) {
+        console.error('Form submission error:', error);
+        
+        setFormState(prev => ({
+          ...prev,
+          isSubmitting: false,
+          isSuccess: false
+        }));
+        
+        // Show error message
+        showError('Error', error instanceof Error ? error.message : errorMessage);
+        
+        // Call error callback if provided
+        if (onError) {
+          onError(error);
+        }
+      }
+      
+      return false;
+    }
+  }, [formState.values, validateForm, onSubmit, isMounted, onSuccess, onError, successMessage, errorMessage]);
+
+  // Reset form to initial state
   const resetForm = useCallback(() => {
     setFormState({
       values: initialValues,
@@ -164,76 +238,15 @@ export function useUnifiedForm<T extends Record<string, any>>(props: UseUnifiedF
     });
   }, [initialValues]);
 
-  // Handle form submission
-  const handleSubmit = useCallback(async (e?: React.FormEvent) => {
-    if (e) {
-      e.preventDefault();
-    }
-    
-    // Mark all fields as touched
-    const allTouched = Object.keys(formState.values).reduce((acc, key) => {
-      acc[key] = true;
-      return acc;
-    }, {} as Record<string, boolean>);
-    
-    setFormState(prev => ({
-      ...prev,
-      touched: { ...prev.touched, ...allTouched }
-    }));
-    
-    // Validate form
-    if (!validateForm()) {
-      showError('Validation Error', errorMessage);
-      return false;
-    }
-    
-    if (!onSubmit) {
-      return true;
-    }
-    
-    setFormState(prev => ({ ...prev, isSubmitting: true }));
-    
-    try {
-      await onSubmit(formState.values);
-      
-      // Only update state if component is still mounted
-      if (isMounted()) {
-        setFormState(prev => ({ ...prev, isSuccess: true, isSubmitting: false }));
-        showSuccess('Success', successMessage);
-        
-        if (onSuccess) {
-          onSuccess();
-        }
-      }
-      
-      return true;
-    } catch (error) {
-      // Only update state if component is still mounted
-      if (isMounted()) {
-        console.error('Form submission error:', error);
-        setFormState(prev => ({ ...prev, isSubmitting: false }));
-        
-        const errorMsg = error instanceof Error ? error.message : errorMessage;
-        showError('Error', errorMsg);
-        
-        if (onError) {
-          onError(error);
-        }
-      }
-      
-      return false;
-    }
-  }, [formState.values, validateForm, onSubmit, isMounted, successMessage, errorMessage, onSuccess, onError]);
-
-  // Helper for checking if a field has been touched and has an error
+  // Helper to check if field has error
   const hasError = useCallback((field: keyof T) => {
-    return formState.touched[field as string] && Boolean(formState.errors[field as string]);
-  }, [formState.touched, formState.errors]);
+    return Boolean(formState.errors[field as string]);
+  }, [formState.errors]);
 
-  // Helper for getting error message
+  // Helper to get error message for field
   const getErrorMessage = useCallback((field: keyof T) => {
-    return hasError(field) ? formState.errors[field as string] || '' : '';
-  }, [formState.errors, hasError]);
+    return formState.errors[field as string] || '';
+  }, [formState.errors]);
 
   return {
     formState,
@@ -253,4 +266,3 @@ export function useUnifiedForm<T extends Record<string, any>>(props: UseUnifiedF
 
 export * from './types';
 export * from './utils';
-

@@ -1,7 +1,7 @@
 
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { Mail, Lock, ArrowRight, Eye, EyeOff, Shield } from "lucide-react";
+import { Mail, Lock, ArrowRight, Eye, EyeOff, Shield, Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -30,9 +30,18 @@ const Login = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-white">
       <div className="w-full max-w-md px-8 py-12">
+        <div className="absolute top-4 left-4">
+          <Link 
+            to="/" 
+            className="inline-flex items-center text-gray-600 hover:text-indigo-600 font-medium transition-colors"
+          >
+            <Home className="mr-2 h-5 w-5" /> Back to Home
+          </Link>
+        </div>
+
         <FadeIn>
           {/* Logo and heading */}
-          <div className="mb-10">
+          <div className="mb-10 text-center">
             <Link to="/" className="inline-block mb-8">
               <h1 className="text-3xl font-bold">
                 <span className="text-indigo-600">Wealth</span>

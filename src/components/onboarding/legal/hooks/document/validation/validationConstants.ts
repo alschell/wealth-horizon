@@ -20,4 +20,3 @@ export const DOCUMENT_VALIDATION = {
     FUTURE_DATE: 'Date cannot be in the future'
   }
 } as const;
-

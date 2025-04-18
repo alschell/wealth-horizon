@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Mail, Lock, ArrowRight, Eye, EyeOff, Shield } from "lucide-react";
@@ -52,7 +53,7 @@ const Login = () => {
             <div className="space-y-5">
               <div className="space-y-2.5">
                 <Label htmlFor="email" className="text-gray-700 font-medium text-base">
-                  Email Address <span className="text-red-500">*</span>
+                  Email Address <span className="text-red-500" style={{color: '#DC2626'}}>*</span>
                 </Label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
@@ -73,7 +74,7 @@ const Login = () => {
               <div className="space-y-2.5">
                 <div className="flex items-center justify-between">
                   <Label htmlFor="password" className="text-gray-700 font-medium text-base">
-                    Password <span className="text-red-500">*</span>
+                    Password <span className="text-red-500" style={{color: '#DC2626'}}>*</span>
                   </Label>
                   <Link to="/reset-password" className="text-sm text-indigo-600 hover:text-indigo-500 font-medium transition-colors">
                     Forgot password?

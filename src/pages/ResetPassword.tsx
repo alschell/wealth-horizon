@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Mail, ArrowRight } from "lucide-react";
@@ -49,7 +50,7 @@ const ResetPassword = () => {
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-2.5">
                 <Label htmlFor="email" className="text-gray-700 font-medium text-base">
-                  Email Address <span className="text-red-500">*</span>
+                  Email Address <span className="text-red-500" style={{color: '#DC2626'}}>*</span>
                 </Label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">

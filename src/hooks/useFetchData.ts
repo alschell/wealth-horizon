@@ -84,14 +84,7 @@ export function useFetchData<TData, TError = Error>(
   }, []);
   
   // Configure and execute the query
-  const {
-    data,
-    error,
-    isLoading,
-    isError,
-    refetch,
-    ...rest
-  } = useQuery<TData, TError>({
+  const result = useQuery<TData, TError>({
     queryKey: normalizedQueryKey,
     queryFn: handleFetchWithErrorHandling,
     retry: autoRetry ? maxRetries : false,
@@ -101,16 +94,20 @@ export function useFetchData<TData, TError = Error>(
     }
   });
   
-  // Return combined result with our extended properties
-  return {
+  const {
     data,
     error,
     isLoading,
     isError,
     refetch,
-    isRefetching,
-    refetchWithState: handleRefetch,
     ...rest
+  } = result;
+  
+  // Return combined result with our extended properties
+  return {
+    ...result,
+    isRefetching,
+    refetchWithState: handleRefetch
   };
 }
 

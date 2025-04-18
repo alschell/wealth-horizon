@@ -22,30 +22,42 @@ const AdviceInterface: React.FC = () => {
     <div className="p-6 space-y-6">
       <AdviceHeader onNewAdvice={handleNewAdvice} />
 
-      <Tabs defaultValue="overview" value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="active">Active Mandates</TabsTrigger>
-          <TabsTrigger value="pending">Pending Approval</TabsTrigger>
-          <TabsTrigger value="benchmarking">Performance Benchmarking</TabsTrigger>
-        </TabsList>
+      <div>
+        <Tabs defaultValue="overview" value={activeTab} onValueChange={setActiveTab} className="space-y-4">
+          <div>
+            <TabsList>
+              <TabsTrigger value="overview">Overview</TabsTrigger>
+              <TabsTrigger value="active">Active Mandates</TabsTrigger>
+              <TabsTrigger value="pending">Pending Approval</TabsTrigger>
+              <TabsTrigger value="benchmarking">Performance Benchmarking</TabsTrigger>
+            </TabsList>
+          </div>
 
-        <TabsContent value="overview" className="space-y-4">
-          <OverviewTab />
-        </TabsContent>
+          <div>
+            <TabsContent value="overview" className="space-y-4">
+              <OverviewTab />
+            </TabsContent>
+          </div>
 
-        <TabsContent value="active" className="space-y-4">
-          <ActiveMandatesTab />
-        </TabsContent>
+          <div>
+            <TabsContent value="active" className="space-y-4">
+              <ActiveMandatesTab />
+            </TabsContent>
+          </div>
 
-        <TabsContent value="pending" className="space-y-4">
-          <PendingMandatesTab />
-        </TabsContent>
+          <div>
+            <TabsContent value="pending" className="space-y-4">
+              <PendingMandatesTab />
+            </TabsContent>
+          </div>
 
-        <TabsContent value="benchmarking" className="space-y-4">
-          <BenchmarkingTab />
-        </TabsContent>
-      </Tabs>
+          <div>
+            <TabsContent value="benchmarking" className="space-y-4">
+              <BenchmarkingTab />
+            </TabsContent>
+          </div>
+        </Tabs>
+      </div>
     </div>
   );
 };

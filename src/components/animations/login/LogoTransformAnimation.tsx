@@ -3,27 +3,25 @@ import React from "react";
 import { motion } from "framer-motion";
 
 const LogoTransformAnimation = () => {
-  // Create array for the full WealthHorizon text animation
+  // SVG paths for "Wealth" - first row
   const wealthPaths = [
-    { id: 'w1', d: "M10,50 25,10 40,50", color: "rgba(255,255,255,0.8)" },
-    { id: 'w2', d: "M40,50 55,10 70,50", color: "rgba(255,255,255,0.8)" },
-    { id: 'e', d: "M80,10 80,50 100,50 100,40 90,40 90,35 100,35 100,25 90,25 90,20 100,20 100,10 80,10", color: "rgba(255,255,255,0.8)" },
-    { id: 'a', d: "M110,50 110,20 130,20 130,50 M110,35 130,35 M110,20 120,10 130,20", color: "rgba(255,255,255,0.8)" },
-    { id: 'l', d: "M140,10 140,50 160,50", color: "rgba(255,255,255,0.8)" },
-    { id: 't', d: "M170,10 170,50 M160,20 180,20", color: "rgba(255,255,255,0.8)" },
-    { id: 'h1', d: "M190,10 190,50", color: "rgba(255,255,255,0.8)" },
-    { id: 'h2', d: "M190,30 210,30 210,50", color: "rgba(255,255,255,0.8)" },
-    { id: 'h3', d: "M210,10 210,30", color: "rgba(255,255,255,0.8)" },
+    { id: 'W1', d: "M10,30 L20,10 L30,30 L40,10 L50,30", color: "rgba(255,255,255,0.9)" },
+    { id: 'E', d: "M60,10 L60,30 L80,30 L80,25 L65,25 L65,22 L75,22 L75,17 L65,17 L65,15 L80,15 L80,10 L60,10", color: "rgba(255,255,255,0.9)" },
+    { id: 'A', d: "M90,30 L95,10 L105,10 L110,30 M92,22 L108,22", color: "rgba(255,255,255,0.9)" },
+    { id: 'L', d: "M120,10 L120,30 L140,30 L140,25 L125,25 L125,10 L120,10", color: "rgba(255,255,255,0.9)" },
+    { id: 'T', d: "M150,10 L170,10 L170,15 L165,15 L165,30 L155,30 L155,15 L150,15 L150,10", color: "rgba(255,255,255,0.9)" },
+    { id: 'H', d: "M180,10 L180,30 L185,30 L185,22 L195,22 L195,30 L200,30 L200,10 L195,10 L195,18 L185,18 L185,10 L180,10", color: "rgba(255,255,255,0.9)" },
   ];
 
+  // SVG paths for "Horizon" - second row
   const horizonPaths = [
-    { id: 'h4', d: "M10,80 10,120", color: "rgba(255,255,255,0.8)" },
-    { id: 'o', d: "M25,80 25,120 45,120 45,80 25,80", color: "rgba(255,255,255,0.8)" },
-    { id: 'r', d: "M55,80 55,120 M55,90 70,90 70,80 55,80", color: "rgba(255,255,255,0.8)" },
-    { id: 'i', d: "M80,80 80,120 M80,70 80,75", color: "rgba(255,255,255,0.8)" },
-    { id: 'z', d: "M90,80 110,80 90,120 110,120", color: "rgba(255,255,255,0.8)" },
-    { id: 'o2', d: "M120,80 120,120 140,120 140,80 120,80", color: "rgba(255,255,255,0.8)" },
-    { id: 'n', d: "M150,80 150,120 M150,80 170,120 M170,80 170,120", color: "rgba(255,255,255,0.8)" },
+    { id: 'H2', d: "M10,40 L10,60 L15,60 L15,52 L25,52 L25,60 L30,60 L30,40 L25,40 L25,48 L15,48 L15,40 L10,40", color: "rgba(255,255,255,0.9)" },
+    { id: 'O', d: "M40,40 C35,40 35,45 35,50 C35,55 35,60 40,60 L50,60 C55,60 55,55 55,50 C55,45 55,40 50,40 L40,40 M40,45 L50,45 L50,55 L40,55 L40,45", color: "rgba(255,255,255,0.9)" },
+    { id: 'R', d: "M65,40 L65,60 L70,60 L70,52 L75,52 L80,60 L85,60 L80,50 C82,50 85,48 85,45 C85,42 82,40 80,40 L65,40 M70,45 L75,45 C77,45 77,47 77,47 C77,47 77,49 75,49 L70,49 L70,45", color: "rgba(255,255,255,0.9)" },
+    { id: 'I', d: "M95,40 L95,60 L100,60 L100,40 L95,40", color: "rgba(255,255,255,0.9)" },
+    { id: 'Z', d: "M110,40 L110,45 L125,55 L110,55 L110,60 L130,60 L130,55 L115,45 L130,45 L130,40 L110,40", color: "rgba(255,255,255,0.9)" },
+    { id: 'O2', d: "M140,40 C135,40 135,45 135,50 C135,55 135,60 140,60 L150,60 C155,60 155,55 155,50 C155,45 155,40 150,40 L140,40 M140,45 L150,45 L150,55 L140,55 L140,45", color: "rgba(255,255,255,0.9)" },
+    { id: 'N', d: "M165,40 L165,60 L170,60 L170,45 L180,60 L185,60 L185,40 L180,40 L180,55 L170,40 L165,40", color: "rgba(255,255,255,0.9)" },
   ];
 
   // Combine all paths
@@ -49,8 +47,8 @@ const LogoTransformAnimation = () => {
           }}
         />
 
-        {/* Logo shapes container */}
-        <svg viewBox="0 0 220 140" className="w-full h-64 mx-auto">
+        {/* Logo text container */}
+        <svg viewBox="0 0 220 80" className="w-full h-64 mx-auto">
           {/* All paths for WealthHorizon */}
           {allPaths.map((path, index) => (
             <motion.path
@@ -61,8 +59,8 @@ const LogoTransformAnimation = () => {
               fill="none"
               initial={{ 
                 pathLength: 0,
-                x: Math.random() * 200 - 100,
-                y: Math.random() * 200 - 100,
+                x: Math.random() * 20 - 10,
+                y: Math.random() * 20 - 10,
                 opacity: 0
               }}
               animate={{ 
@@ -72,12 +70,12 @@ const LogoTransformAnimation = () => {
                 opacity: 1
               }}
               transition={{
-                duration: 1.5,
+                duration: 1.2,
                 ease: "easeInOut",
-                delay: index * 0.05 + (Math.random() * 0.3),
+                delay: index * 0.05,
                 repeat: Infinity,
                 repeatType: "reverse",
-                repeatDelay: 3
+                repeatDelay: 5
               }}
             />
           ))}

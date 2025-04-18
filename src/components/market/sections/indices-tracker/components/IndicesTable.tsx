@@ -1,82 +1,70 @@
-
 import React from "react";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { LineChart, TrendingUp, TrendingDown } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { formatNumberWithCommas, formatPercentage } from "@/lib/utils";
-import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
-import { AnimationItemProp } from "../types/animationTypes";
 import { motion } from "framer-motion";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { IndexData } from "../types";
+import { Button } from "@/components/ui/button";
+import { ChevronUp, ChevronDown, BarChart2 } from "lucide-react";
+import { AnimationItemProp } from "../types/animationTypes";
 
-interface IndicesTableProps extends AnimationItemProp {
+export interface IndicesTableProps extends AnimationItemProp {
   indices: IndexData[];
+  selectedIndex: IndexData;
   isLoading: boolean;
   onOpenChart: (index: IndexData) => void;
-  selectedIndex?: IndexData | null;  // Make this optional
 }
 
-const IndicesTable: React.FC<IndicesTableProps> = ({ 
-  indices, 
-  isLoading, 
-  onOpenChart,
+const IndicesTable: React.FC<IndicesTableProps> = ({
+  indices,
   selectedIndex,
-  item 
+  isLoading,
+  onOpenChart,
+  item
 }) => {
   if (isLoading) {
-    return (
-      <div className="w-full">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Index</TableHead>
-              <TableHead>Value</TableHead>
-              <TableHead>Change</TableHead>
-              <TableHead className="hidden md:table-cell">Country/Region</TableHead>
-              <TableHead className="hidden lg:table-cell">Exchange</TableHead>
-              <TableHead className="hidden lg:table-cell">Volume</TableHead>
-              <TableHead className="text-right">Chart</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {Array.from({ length: 5 }).map((_, index) => (
-              <TableRow key={index}>
-                <TableCell><Skeleton className="h-5 w-32" /></TableCell>
-                <TableCell><Skeleton className="h-5 w-24" /></TableCell>
-                <TableCell><Skeleton className="h-5 w-20" /></TableCell>
-                <TableCell className="hidden md:table-cell"><Skeleton className="h-5 w-28" /></TableCell>
-                <TableCell className="hidden lg:table-cell"><Skeleton className="h-5 w-24" /></TableCell>
-                <TableCell className="hidden lg:table-cell"><Skeleton className="h-5 w-20" /></TableCell>
-                <TableCell className="text-right"><Skeleton className="h-9 w-9 rounded-md ml-auto" /></TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
-    );
+    return <div className="p-4 text-center text-gray-500">Loading indices...</div>;
   }
 
-  if (!indices.length) {
-    return (
-      <div className="w-full h-64 flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-gray-500">No indices found</p>
-          <p className="text-sm text-gray-400 mt-1">Try changing your filter criteria</p>
-        </div>
-      </div>
-    );
+  if (indices.length === 0) {
+    return <div className="p-4 text-center text-gray-500">No indices found</div>;
   }
+
+  const getChangeIndicator = (change: number) => {
+    if (change > 0) {
+      return <ChevronUp className="w-4 h-4 text-green-500" />;
+    }
+    if (change < 0) {
+      return <ChevronDown className="w-4 h-4 text-red-500" />;
+    }
+    return null;
+  };
+
+  const getChangeColor = (change: number) => {
+    if (change > 0) return "text-green-500";
+    if (change < 0) return "text-red-500";
+    return "text-gray-600";
+  };
+
+  const formatChange = (change: number) => {
+    const sign = change > 0 ? "+" : "";
+    return `${sign}${change.toFixed(2)}%`;
+  };
 
   return (
-    <motion.div variants={item} className="w-full overflow-auto">
-      <Table className="min-w-full">
+    <div className="overflow-auto max-h-[400px]">
+      <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Index</TableHead>
-            <TableHead>Value</TableHead>
+            <TableHead>Symbol</TableHead>
+            <TableHead>Price</TableHead>
             <TableHead>Change</TableHead>
-            <TableHead className="hidden md:table-cell">Country/Region</TableHead>
+            <TableHead className="hidden md:table-cell">Region</TableHead>
             <TableHead className="hidden lg:table-cell">Exchange</TableHead>
             <TableHead className="hidden lg:table-cell">Volume</TableHead>
             <TableHead className="text-right">Chart</TableHead>
@@ -84,62 +72,46 @@ const IndicesTable: React.FC<IndicesTableProps> = ({
         </TableHeader>
         <TableBody>
           {indices.map((index) => (
-            <TableRow 
-              key={index.symbol} 
-              className={`cursor-pointer hover:bg-gray-50 ${selectedIndex?.id === index.id ? 'bg-gray-50' : ''}`}
-              onClick={() => onOpenChart(index)}
+            <TableRow
+              key={index.id}
+              className={`${
+                selectedIndex.id === index.id ? "bg-gray-100" : ""
+              }`}
             >
+              <TableCell className="font-medium">{index.symbol}</TableCell>
               <TableCell>
-                <div className="font-medium">{index.name}</div>
-                <div className="text-xs text-gray-500">{index.symbol}</div>
+                {index.data?.c?.toFixed(2) || "N/A"}
               </TableCell>
-              <TableCell className="font-mono">
-                {formatNumberWithCommas(index.value)}
-              </TableCell>
-              <TableCell>
-                <div className={`flex items-center ${
-                  index.change >= 0 ? "text-green-500" : "text-red-500"
-                }`}>
-                  {index.change >= 0 ? (
-                    <TrendingUp className="h-4 w-4 mr-1" />
-                  ) : (
-                    <TrendingDown className="h-4 w-4 mr-1" />
-                  )}
-                  <span>{formatPercentage(index.change)}%</span>
+              <TableCell className={getChangeColor(index.data?.dp || 0)}>
+                <div className="flex items-center gap-1">
+                  {getChangeIndicator(index.data?.dp || 0)}
+                  {formatChange(index.data?.dp || 0)}
                 </div>
               </TableCell>
               <TableCell className="hidden md:table-cell">
-                {index.region}
+                {index.region || "Global"}
               </TableCell>
               <TableCell className="hidden lg:table-cell">
                 {index.exchange || "N/A"}
               </TableCell>
               <TableCell className="hidden lg:table-cell">
-                {index.volume ? (
-                  `${(index.volume / 1000000).toFixed(1)}M`
-                ) : (
-                  <Badge variant="outline" className="text-xs">N/A</Badge>
-                )}
+                {index.volume ? `${(index.volume / 1000000).toFixed(1)}M` : "N/A"}
               </TableCell>
               <TableCell className="text-right">
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  className="h-9 w-9 p-0"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onOpenChart(index);
-                  }}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => onOpenChart(index)}
                 >
-                  <LineChart className="h-4 w-4" />
-                  <span className="sr-only">View chart</span>
+                  <BarChart2 className="w-4 h-4" />
+                  <span className="sr-only">View Chart</span>
                 </Button>
               </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
-    </motion.div>
+    </div>
   );
 };
 

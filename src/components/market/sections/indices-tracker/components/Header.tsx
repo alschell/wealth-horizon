@@ -29,7 +29,13 @@ const Header: React.FC<HeaderProps> = ({
         </div>
         <FilterButtons activeFilter={filter} onFilterChange={setFilter} />
       </div>
-      <SearchAndFilter searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+      <SearchAndFilter 
+        filter={filter}
+        setFilter={setFilter}
+        searchTerm={searchTerm} 
+        setSearchTerm={setSearchTerm}
+        item={item}
+      />
     </motion.div>
   );
 };

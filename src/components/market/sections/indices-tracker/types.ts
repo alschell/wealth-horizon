@@ -1,23 +1,21 @@
 
+import { Quote } from "@/types/market";
+
 export interface IndexData {
   id: string;
   name: string;
-  value: number;
-  change: number;
-  percentChange: number;
-  // Add additional properties that are being used throughout the application
-  symbol?: string;
+  symbol: string;
+  data: Quote;
+  // Additional properties used in the components
   region?: string;
   exchange?: string;
   volume?: number;
-  description?: string;
 }
 
 export interface IndicesTrackerProps {
-  indices: IndexData[];
+  indices?: IndexData[];
 }
 
-// Add chart data point type that's used in IndexPerformanceChart
 export interface ChartDataPoint {
   date: string;
   value: number;

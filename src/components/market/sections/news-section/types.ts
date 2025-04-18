@@ -6,7 +6,7 @@ export interface NewsItem {
   source: string;
   date: string;
   url: string;
-  // Add properties used in NewsGrid and newsUtils
+  // Additional properties used in NewsGrid and newsUtils
   image?: string;
   imageUrl?: string;
   category?: string;

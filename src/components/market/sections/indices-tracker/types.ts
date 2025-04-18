@@ -5,7 +5,6 @@ export interface IndexData {
   id: string;
   name: string;
   symbol: string;
-  data?: Quote;
   value?: number;
   change?: number;
   percentChange?: number;
@@ -13,6 +12,7 @@ export interface IndexData {
   exchange?: string;
   volume?: number;
   description?: string;
+  data?: Quote;
 }
 
 export interface IndicesTrackerProps {

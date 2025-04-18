@@ -27,33 +27,25 @@ export function LanguageSelector() {
     setIsChanging(true);
     
     try {
-      // Store language in localStorage before the async operation
+      // Store language in localStorage
       localStorage.setItem('preferredLanguage', langCode);
       
-      // Give UI time to update between state changes
-      setTimeout(async () => {
-        try {
-          await setLanguage(langCode as any);
-          console.log(`Language successfully changed to ${langCode}`);
-          
-          // Short delay before showing success message to ensure UI has updated
-          setTimeout(() => {
-            toast.success(`Language changed to ${LANGUAGES.find(l => l.code === langCode)?.name || langCode}`);
-          }, 300);
-        } catch (error) {
-          console.error("Failed to change language:", error);
-          toast.error("Failed to change language");
-          // Remove from localStorage if it failed
-          localStorage.removeItem('preferredLanguage');
-        } finally {
-          setIsChanging(false);
-          setIsOpen(false);
-        }
-      }, 100);
+      // First close the dropdown to avoid UI glitches
+      setIsOpen(false);
+      
+      // Change the language
+      await setLanguage(langCode as any);
+      console.log(`Language successfully changed to ${langCode}`);
+      
+      // Notify user after successful change
+      toast.success(`Language changed to ${LANGUAGES.find(l => l.code === langCode)?.name || langCode}`);
     } catch (error) {
-      console.error("Error in language change handler:", error);
-      setIsChanging(false);
+      console.error("Failed to change language:", error);
       toast.error("Failed to change language");
+      // Remove from localStorage if it failed
+      localStorage.removeItem('preferredLanguage');
+    } finally {
+      setIsChanging(false);
     }
   };
 

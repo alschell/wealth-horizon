@@ -19,9 +19,7 @@ const Index = () => {
     window.scrollTo(0, 0);
   }, [location, currentLanguage]);
 
-  console.log("Index rendering LandingPage with language:", currentLanguage);
-  
-  // Always render the LandingPage component, no conditions
+  // Always render the LandingPage component, regardless of language state
   return <LandingPage />;
 };
 

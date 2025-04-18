@@ -65,7 +65,7 @@ export const TranslatedText: React.FC<TranslatedTextProps> = ({
       }
     };
 
-    // Only translate if we're not in English
+    // Only translate if we have a language and it's not English
     if (currentLanguage && currentLanguage !== 'en') {
       translateText();
     }

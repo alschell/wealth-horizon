@@ -29,3 +29,28 @@ export const searchIndices = (indices: IndexData[], searchTerm: string): IndexDa
     index.region?.toLowerCase().includes(term)
   );
 };
+
+// This function was missing, causing the error
+export const createIndexData = (
+  id: string,
+  name: string,
+  symbol: string,
+  value: number,
+  change: number,
+  percentChange: number,
+  region: string,
+  description: string,
+  volume: number
+): IndexData => {
+  return {
+    id,
+    name,
+    symbol,
+    value,
+    change,
+    percentChange,
+    region,
+    description,
+    volume
+  };
+};

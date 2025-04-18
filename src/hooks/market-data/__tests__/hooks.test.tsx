@@ -1,8 +1,8 @@
-
 import { renderHook } from '@testing-library/react-hooks';
 import { useQuote, useMarketNews, useCompanyNews, useSymbolSearch, useIndices, useCandleData } from '../index';
 import * as api from '@/utils/market-data/api';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { createQueryClient } from '@/utils/queryClient';
 import React from 'react';
 
 // Mock the API functions
@@ -20,13 +20,7 @@ jest.mock('@/utils/market-data/api', () => ({
   refreshMarketData: jest.fn(),
 }));
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: false,
-    },
-  },
-});
+const queryClient = createQueryClient();
 
 // Wrapper for testing hooks with react-query
 const wrapper = ({ children }: { children: React.ReactNode }) => (
@@ -71,7 +65,6 @@ describe('Market Data Hooks', () => {
     });
   });
 
-  // Additional tests for other hooks
   describe('useMarketNews', () => {
     it('fetches market news', async () => {
       const mockNews = [{ id: 1, headline: 'Test News', summary: 'Test Summary' }];

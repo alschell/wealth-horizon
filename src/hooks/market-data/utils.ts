@@ -1,5 +1,4 @@
 
-import { QueryClient } from "@tanstack/react-query";
 import { Logger } from "@/utils/logger";
 import { toast } from "sonner";
 
@@ -23,13 +22,6 @@ export const ROBUST_QUERY_CONFIG = {
     console.error("Market data query error details:", error);
   }
 };
-
-// Create a query client for market data
-export const marketQueryClient = new QueryClient({
-  defaultOptions: {
-    queries: DEFAULT_QUERY_CONFIG,
-  },
-});
 
 // Utility to handle API errors with fallback to cache
 export const handleApiError = (error: Error, cacheKey: string, fallbackMessage: string) => {

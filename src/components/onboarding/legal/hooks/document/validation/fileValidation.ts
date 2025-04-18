@@ -1,6 +1,6 @@
 
 import { FileValidationResult } from './types';
-import { MAX_FILE_SIZE, ALLOWED_FILE_TYPES, ERROR_MESSAGES } from './constants';
+import { FILE_VALIDATION } from './constants';
 
 /**
  * Validates a file for document upload
@@ -15,18 +15,18 @@ export const validateFile = (file: File): FileValidationResult => {
   }
 
   // Check file size
-  if (file.size > MAX_FILE_SIZE) {
+  if (file.size > FILE_VALIDATION.MAX_SIZE) {
     return {
       isValid: false,
-      error: ERROR_MESSAGES.FILE_SIZE
+      error: FILE_VALIDATION.MESSAGES.FILE_SIZE
     };
   }
 
   // Check file type
-  if (!ALLOWED_FILE_TYPES.includes(file.type)) {
+  if (!FILE_VALIDATION.ALLOWED_TYPES.includes(file.type as any)) {
     return {
       isValid: false,
-      error: ERROR_MESSAGES.FILE_TYPE
+      error: FILE_VALIDATION.MESSAGES.FILE_TYPE
     };
   }
 

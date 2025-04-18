@@ -17,7 +17,7 @@ export const validateDocumentFile = (file: File): FileValidationResult => {
     };
   }
 
-  if (!FILE_VALIDATION.ALLOWED_TYPES.includes(file.type)) {
+  if (!FILE_VALIDATION.ALLOWED_TYPES.includes(file.type as any)) {
     return {
       isValid: false,
       error: FILE_VALIDATION.MESSAGES.FILE_TYPE
@@ -50,4 +50,8 @@ export const validateDocumentFields = (
   }
 
   return errors;
+};
+
+export const hasValidationErrors = (errors: DocumentValidationErrors): boolean => {
+  return Object.values(errors).some(Boolean);
 };

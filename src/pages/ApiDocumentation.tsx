@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import PageTemplate from "@/components/shared/PageTemplate";
@@ -14,6 +13,7 @@ import {
   DefaultDocContent,
   DocumentationLink
 } from "@/components/api-documentation";
+import { TranslatedText } from "@/components/shared/TranslatedText";
 
 const ApiDocumentation = () => {
   const { docType } = useParams();
@@ -63,8 +63,8 @@ const ApiDocumentation = () => {
 
   return (
     <PageTemplate
-      title={title}
-      description="Comprehensive documentation and resources for the WealthHorizon API and platform integration."
+      title={<TranslatedText>{title}</TranslatedText>}
+      description={<TranslatedText>Comprehensive documentation and resources for the WealthHorizon API and platform integration.</TranslatedText>}
       icon={FileText}
     >
       <div className="flex flex-col lg:flex-row gap-8">

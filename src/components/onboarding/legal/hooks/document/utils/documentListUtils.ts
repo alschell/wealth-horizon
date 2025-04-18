@@ -1,5 +1,5 @@
 
-import { DocumentFileWithMetadata } from '../../types';
+import { DocumentFileWithMetadata } from '../../../types';
 
 export const documentListOperations = {
   addDocument: (

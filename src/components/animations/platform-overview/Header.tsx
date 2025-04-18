@@ -12,7 +12,9 @@ const Header: React.FC = () => {
       variants={headerVariants}
     >
       <div className="flex items-center">
-        <span className="font-bold text-xl">
+        <span 
+          className="font-bold text-xl cursor-default"
+        >
           <span className="text-indigo-600">Wealth</span>
           <span className="text-gray-900">Horizon</span>
         </span>

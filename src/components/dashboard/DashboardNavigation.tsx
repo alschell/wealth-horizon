@@ -1,7 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { LogOut, Settings, Search } from 'lucide-react';
+import { Settings, Search, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import NotificationsPopover from '@/components/dashboard/notifications/NotificationsPopover';
@@ -10,7 +9,6 @@ import { toast } from 'sonner';
 import { useTranslation } from '@/context/TranslationContext';
 
 const DashboardNavigation: React.FC = () => {
-  const navigate = useNavigate();
   const { translate, currentLanguage } = useTranslation();
   const [searchPlaceholder, setSearchPlaceholder] = useState("Search...");
 
@@ -29,17 +27,17 @@ const DashboardNavigation: React.FC = () => {
     
     toast.success("You have been successfully logged out");
     
-    navigate('/logout');
+    window.location.href = '/logout';
   };
 
   return (
     <header className="fixed top-0 z-50 w-full border-b bg-white shadow-sm">
       <div className="flex h-16 items-center justify-between mx-auto max-w-7xl px-6 sticky top-0">
         <div className="flex items-center">
-          <Link to="/" className="font-bold text-xl flex items-center">
+          <span className="font-bold text-xl flex items-center cursor-default">
             <span className="text-indigo-500">Wealth</span>
             <span>Horizon</span>
-          </Link>
+          </span>
         </div>
         
         <div className="flex items-center gap-3">
@@ -51,12 +49,10 @@ const DashboardNavigation: React.FC = () => {
           <Button 
             variant="ghost" 
             size="icon"
-            asChild
+            onClick={() => window.location.href = '/settings'}
           >
-            <Link to="/settings">
-              <Settings className="h-5 w-5" />
-              <span className="sr-only"><TranslatedText>Settings</TranslatedText></span>
-            </Link>
+            <Settings className="h-5 w-5" />
+            <span className="sr-only"><TranslatedText>Settings</TranslatedText></span>
           </Button>
           <Button 
             variant="ghost" 

@@ -1,6 +1,7 @@
 
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/utils/supabaseClient';
+import { toast } from 'sonner';
 
 // Define available languages
 export type LanguageCode = 
@@ -73,66 +74,127 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
   const [isLoading, setIsLoading] = useState(false);
   const [key, setKey] = useState(0); // Force component tree re-render with key
   
+  // Debug helper
+  const logDebug = (message: string, data?: any) => {
+    console.log(`TranslationProvider - ${message}`, data || '');
+  };
+
   // Load language preference from local storage on initial load
   useEffect(() => {
-    const savedLanguage = localStorage.getItem('preferredLanguage') as LanguageCode;
-    if (savedLanguage && LANGUAGES.some(lang => lang.code === savedLanguage)) {
-      setCurrentLanguage(savedLanguage);
-    } else {
-      const browserLang = navigator.language.split('-')[0] as LanguageCode;
-      if (LANGUAGES.some(lang => lang.code === browserLang)) {
-        setCurrentLanguage(browserLang);
-      }
-    }
-  }, []);
-
-  // Save user language preference to database if logged in
-  useEffect(() => {
-    const saveLanguagePreference = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      if (user) {
-        const { error } = await supabase
-          .from('user_language_preferences')
-          .upsert({ 
-            user_id: user.id, 
-            language_code: currentLanguage 
-          }, { 
-            onConflict: 'user_id' 
-          });
-          
-        if (error) {
-          console.error('Failed to save language preference:', error);
+    const loadLanguage = async () => {
+      try {
+        logDebug("Loading language preferences...");
+        const savedLanguage = localStorage.getItem('preferredLanguage');
+        
+        if (savedLanguage && LANGUAGES.some(lang => lang.code === savedLanguage)) {
+          logDebug(`Loading saved language preference: ${savedLanguage}`);
+          setCurrentLanguage(savedLanguage as LanguageCode);
+          return;
         }
+      } catch (error) {
+        console.error("Error loading language from localStorage:", error);
       }
       
-      localStorage.setItem('preferredLanguage', currentLanguage);
+      // Always default to English if no valid saved preference
+      logDebug("Defaulting to English");
+      setCurrentLanguage('en');
     };
     
+    loadLanguage();
+  }, []);
+
+  // Apply language changes to document
+  useEffect(() => {
     if (currentLanguage) {
-      saveLanguagePreference();
+      logDebug(`Applying language changes to document: ${currentLanguage}`);
       
       // Update HTML lang attribute and direction
       document.documentElement.lang = currentLanguage;
       document.documentElement.dir = ['ar', 'he', 'fa'].includes(currentLanguage) ? 'rtl' : 'ltr';
+    }
+  }, [currentLanguage]);
+
+  // Save user language preference to database if logged in and to localStorage
+  useEffect(() => {
+    const saveLanguagePreference = async () => {
+      if (!currentLanguage) return;
       
-      // Force re-render by updating key
-      setKey(prevKey => prevKey + 1);
+      try {
+        // Save to localStorage first (more reliable)
+        localStorage.setItem('preferredLanguage', currentLanguage);
+        logDebug(`Saved language preference to localStorage: ${currentLanguage}`);
+        
+        // Try to save to database if user is logged in
+        try {
+          const { data: { user } } = await supabase.auth.getUser();
+          
+          if (user) {
+            const { error } = await supabase
+              .from('user_language_preferences')
+              .upsert({ 
+                user_id: user.id, 
+                language_code: currentLanguage 
+              }, { 
+                onConflict: 'user_id' 
+              });
+              
+            if (error) {
+              console.error('Failed to save language preference to database:', error);
+            } else {
+              logDebug(`Saved language preference to database for user ${user.id}: ${currentLanguage}`);
+            }
+          }
+        } catch (dbError) {
+          console.error('Database error when saving language preference:', dbError);
+          // Continue execution even if database save fails
+        }
+      } catch (error) {
+        console.error("Error saving language preference:", error);
+      }
+    };
+    
+    if (currentLanguage) {
+      saveLanguagePreference();
     }
   }, [currentLanguage]);
 
   // Function to set the language with more robust update mechanism
   const setLanguage = useCallback(async (language: LanguageCode) => {
-    console.log(`Changing language to: ${language}`);
+    logDebug(`Changing language to: ${language}`);
     
-    // Clear existing translation cache completely to force re-translation
-    setTranslationCache({});
-    
-    // Update the current language
-    setCurrentLanguage(language);
-    
-    // This will trigger the effect above that updates document lang/dir and forces re-render
-  }, []);
+    try {
+      if (language === currentLanguage) {
+        logDebug("Language already set to", language);
+        return Promise.resolve();
+      }
+      
+      setIsLoading(true);
+      
+      // Clear existing translation cache for the new language
+      setTranslationCache(prevCache => {
+        const newCache = { ...prevCache };
+        // Only clear the target language cache to force fresh translations
+        delete newCache[language];
+        return newCache;
+      });
+      
+      // Update the current language
+      setCurrentLanguage(language);
+      
+      // Force re-render of all components using the context
+      setTimeout(() => {
+        logDebug("Triggering re-render with new key");
+        setKey(prevKey => prevKey + 1);
+        setIsLoading(false);
+      }, 50);
+      
+      return Promise.resolve();
+    } catch (error) {
+      console.error(`Error setting language to ${language}:`, error);
+      setIsLoading(false);
+      return Promise.reject(error);
+    }
+  }, [currentLanguage]);
 
   // Process text before translation to protect non-translatable terms
   const protectSpecialTerms = (text: string): { processedText: string, placeholders: Record<string, string> } => {
@@ -173,6 +235,7 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
     
     // Check if translation is already in cache
     if (translationCache[currentLanguage]?.[text]) {
+      logDebug(`Found cached translation for: "${text}"`);
       return translationCache[currentLanguage][text];
     }
     
@@ -181,6 +244,8 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
       
       // Process text to protect special terms
       const { processedText, placeholders } = protectSpecialTerms(text);
+      
+      logDebug(`Calling translation API for: "${processedText}" to ${currentLanguage}`);
       
       // Call translation edge function
       const { data, error } = await supabase.functions.invoke('translate', {
@@ -192,11 +257,14 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
       
       if (error) {
         console.error('Translation error:', error);
+        setIsLoading(false);
         return text;
       }
       
       // Restore protected terms in the translated text
       const finalTranslation = restoreSpecialTerms(data.translatedText, placeholders);
+      
+      logDebug(`Translation result: "${finalTranslation}"`);
       
       // Cache the translation
       setTranslationCache(prevCache => ({
@@ -207,19 +275,14 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
         }
       }));
       
+      setIsLoading(false);
       return finalTranslation;
     } catch (error) {
       console.error('Translation failed:', error);
-      return text;
-    } finally {
       setIsLoading(false);
+      return text;
     }
   };
-
-  // Clear translation cache when language changes
-  useEffect(() => {
-    setTranslationCache({});
-  }, [currentLanguage]);
 
   return (
     <TranslationContext.Provider

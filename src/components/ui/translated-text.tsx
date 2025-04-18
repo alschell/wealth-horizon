@@ -17,12 +17,20 @@ export const TranslatedText: React.FC<TranslatedTextProps> = ({
   ...rest
 }) => {
   const { translate, currentLanguage, isLoading } = useTranslation();
-  const [translatedContent, setTranslatedContent] = useState(children);
+  const [translatedContent, setTranslatedContent] = useState<string>(children);
+  const [isTranslating, setIsTranslating] = useState<boolean>(false);
 
   useEffect(() => {
     let isMounted = true;
     
     const translateText = async () => {
+      // Skip translation for empty strings
+      if (!children || children.trim() === '') {
+        return;
+      }
+      
+      setIsTranslating(true);
+      
       try {
         const translated = await translate(children);
         if (isMounted) {
@@ -34,20 +42,33 @@ export const TranslatedText: React.FC<TranslatedTextProps> = ({
         if (isMounted) {
           setTranslatedContent(children);
         }
+      } finally {
+        if (isMounted) {
+          setIsTranslating(false);
+        }
       }
     };
 
-    // Always run translation when language changes or text changes
-    translateText();
+    // Reset to original text when language changes before translating
+    setTranslatedContent(children);
+    
+    // Only translate when needed
+    if (currentLanguage !== 'en') {
+      translateText();
+    }
     
     return () => {
       isMounted = false;
     };
   }, [children, currentLanguage, translate]);
 
-  if (withLoading && isLoading) {
+  // Show loading state if requested
+  if ((withLoading && isLoading) || isTranslating) {
     return (
-      <Component className={`animate-pulse ${className}`} {...rest}>
+      <Component 
+        className={`animate-pulse ${className}`} 
+        {...rest}
+      >
         {translatedContent}
       </Component>
     );

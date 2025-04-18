@@ -10,19 +10,26 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useTranslation, LANGUAGES } from '@/context/TranslationContext';
 import TranslatedText from './translated-text';
+import { toast } from 'sonner';
 
 export function LanguageSelector() {
-  const { currentLanguage, setLanguage } = useTranslation();
+  const { currentLanguage, setLanguage, isLoading } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [isChanging, setIsChanging] = useState(false);
 
   const handleLanguageChange = async (langCode: string) => {
+    if (langCode === currentLanguage) {
+      setIsOpen(false);
+      return;
+    }
+    
     setIsChanging(true);
     try {
       await setLanguage(langCode as any);
-      console.log(`Language changed to ${langCode}`);
+      toast.success(`Language changed to ${LANGUAGES.find(lang => lang.code === langCode)?.name || langCode}`);
     } catch (error) {
       console.error("Failed to change language:", error);
+      toast.error("Failed to change language. Please try again.");
     } finally {
       setIsChanging(false);
       setIsOpen(false);
@@ -38,9 +45,10 @@ export function LanguageSelector() {
           variant="ghost" 
           size="icon"
           title={`Language: ${currentLang?.name || 'English'}`}
-          disabled={isChanging}
+          disabled={isChanging || isLoading}
+          className={isChanging || isLoading ? 'opacity-70' : ''}
         >
-          <Globe className={`h-5 w-5 ${isChanging ? 'animate-spin' : ''}`} />
+          <Globe className={`h-5 w-5 ${isChanging || isLoading ? 'animate-spin' : ''}`} />
           <span className="sr-only">
             <TranslatedText>Change Language</TranslatedText>
           </span>
@@ -52,7 +60,7 @@ export function LanguageSelector() {
             key={language.code}
             onClick={() => handleLanguageChange(language.code)}
             className={`cursor-pointer ${currentLanguage === language.code ? 'bg-slate-100 font-medium' : ''}`}
-            disabled={isChanging}
+            disabled={isChanging || isLoading}
           >
             <span>{language.name} ({language.nativeName})</span>
           </DropdownMenuItem>

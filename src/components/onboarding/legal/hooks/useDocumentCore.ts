@@ -1,3 +1,4 @@
+
 import { useState, useCallback } from 'react';
 import { DocumentFileWithMetadata } from '../types';
 import { toast } from '@/components/ui/use-toast';
@@ -28,7 +29,7 @@ export const useDocumentCore = ({
   const [fileError, setFileError] = useState<string | null>(null);
   
   // Editing state
-  const [isEditing, setIsEditing] = useState<boolean>(isEditing>(false);
+  const [isEditing, setIsEditing] = useState<boolean>(false);
   const [editingDocumentId, setEditingDocumentId] = useState<string | null>(null);
   
   // Get document factory functions
@@ -233,7 +234,7 @@ export const useDocumentCore = ({
     
     // Event handlers
     handleFileSelected,
-    handleFileClear,
+    handleFileClear: () => form.setFieldValue('selectedFile', null),
     handleDateChange,
     handleDocumentTypeChange,
     handleAddDocument,

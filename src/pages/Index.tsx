@@ -1,19 +1,18 @@
 
-import React, { useEffect } from "react";
+import React from "react";
 import { useLocation } from "react-router-dom";
 import LandingPage from "./LandingPage";
 
 const Index = () => {
   const location = useLocation();
   
-  useEffect(() => {
-    // Log when the Index component mounts for debugging
+  // Ensure we scroll to top when this component mounts
+  React.useEffect(() => {
     console.log("Index component mounted", { pathname: location.pathname });
-    
-    // Ensure we scroll to top on initial page load
     window.scrollTo(0, 0);
-  }, [location.pathname]);
+  }, []);
 
+  // Directly render the LandingPage component
   return <LandingPage />;
 };
 

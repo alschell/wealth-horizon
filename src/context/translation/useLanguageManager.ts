@@ -4,13 +4,11 @@ import { supabase } from '@/utils/supabaseClient';
 import { LanguageCode } from './types';
 import { LANGUAGES } from './constants';
 import { updateHtmlLangAttributes } from './utils';
-import { DEFAULT_LOADING_DELAY } from './constants';
 
 export function useLanguageManager(clearTranslationCache: () => void) {
   const [currentLanguage, setCurrentLanguage] = useState<LanguageCode>('en');
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [isInitialized, setIsInitialized] = useState(false);
-  const [languageChangeInProgress, setLanguageChangeInProgress] = useState(false);
   const [key, setKey] = useState(0); // Force component tree re-render with key
 
   // Load language preference from local storage on initial load
@@ -27,16 +25,10 @@ export function useLanguageManager(clearTranslationCache: () => void) {
         }
       }
       
-      // Add a delay to ensure initialization is smooth
-      setTimeout(() => {
-        setIsInitialized(true);
-        setIsLoading(false);
-        console.log("LanguageManager: Language initialized successfully");
-      }, DEFAULT_LOADING_DELAY);
+      setIsInitialized(true);
     } catch (error) {
       console.error("LanguageManager: Error initializing language:", error);
       setIsInitialized(true); // Still mark as initialized to prevent hanging
-      setIsLoading(false);
     }
   }, []);
 
@@ -45,11 +37,6 @@ export function useLanguageManager(clearTranslationCache: () => void) {
     if (!currentLanguage || !isInitialized) return;
     
     const saveLanguagePreference = async () => {
-      // Only set loading if language change is in progress
-      if (languageChangeInProgress) {
-        setIsLoading(true);
-      }
-      
       try {
         const { data: { user } } = await supabase.auth.getUser();
         
@@ -75,24 +62,13 @@ export function useLanguageManager(clearTranslationCache: () => void) {
         
         // Force re-render by updating key
         setKey(prevKey => prevKey + 1);
-        
-        // Add a delay before turning off loading state to avoid flickering
-        if (languageChangeInProgress) {
-          setTimeout(() => {
-            setIsLoading(false);
-            setLanguageChangeInProgress(false);
-            console.log("Language change completed:", currentLanguage);
-          }, DEFAULT_LOADING_DELAY);
-        }
       } catch (error) {
         console.error("Error saving language preference:", error);
-        setIsLoading(false);
-        setLanguageChangeInProgress(false);
       }
     };
     
     saveLanguagePreference();
-  }, [currentLanguage, isInitialized, languageChangeInProgress]);
+  }, [currentLanguage, isInitialized]);
 
   // Function to set the language with more robust update mechanism
   const setLanguage = useCallback(async (language: LanguageCode) => {
@@ -105,26 +81,21 @@ export function useLanguageManager(clearTranslationCache: () => void) {
     
     try {
       // Start language change process
-      setLanguageChangeInProgress(true);
-      
-      // Show loading state immediately
       setIsLoading(true);
       
       // Clear existing translation cache completely to force re-translation
       clearTranslationCache();
       
-      // Update the current language after a small delay
-      setTimeout(() => {
-        setCurrentLanguage(language);
-      }, 100);
+      // Update the current language
+      setCurrentLanguage(language);
       
-      // This will trigger the effect above that updates document lang/dir and forces re-render
       return Promise.resolve();
     } catch (error) {
       console.error("Failed to set language:", error);
       setIsLoading(false);
-      setLanguageChangeInProgress(false);
       return Promise.reject(error);
+    } finally {
+      setIsLoading(false);
     }
   }, [clearTranslationCache, currentLanguage]);
 

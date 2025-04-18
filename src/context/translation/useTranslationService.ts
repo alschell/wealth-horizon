@@ -8,7 +8,6 @@ import { DEFAULT_TRANSLATION_TIMEOUT } from './constants';
 export function useTranslationService() {
   const [translationCache, setTranslationCache] = useState<Record<string, Record<string, string>>>({});
   const [isLoading, setIsLoading] = useState(false);
-  const [translationQueue, setTranslationQueue] = useState<number>(0);
 
   // Function to translate text with enhanced error handling
   const translate = async (text: string, targetLanguage: LanguageCode): Promise<string> => {
@@ -29,22 +28,9 @@ export function useTranslationService() {
     }
     
     try {
-      // Increment the queue counter to track active translations
-      setTranslationQueue(prev => prev + 1);
-      setIsLoading(true);
-      
       // Return original text immediately if translation service is unavailable
       if (!supabase) {
         console.error("Translation service unavailable: Supabase client not initialized");
-        setTimeout(() => {
-          setTranslationQueue(prev => {
-            const newCount = prev - 1;
-            if (newCount <= 0) {
-              setIsLoading(false);
-            }
-            return newCount;
-          });
-        }, 400);
         return text;
       }
       
@@ -74,25 +60,11 @@ export function useTranslationService() {
       
       if (error) {
         console.error('Translation error:', error);
-        setTranslationQueue(prev => {
-          const newCount = prev - 1;
-          if (newCount <= 0) {
-            setIsLoading(false);
-          }
-          return newCount;
-        });
         return text; // Return original text on error
       }
       
       if (!data || !data.translatedText) {
         console.error('Invalid translation response:', data);
-        setTranslationQueue(prev => {
-          const newCount = prev - 1;
-          if (newCount <= 0) {
-            setIsLoading(false);
-          }
-          return newCount;
-        });
         return text; // Return original text if response is invalid
       }
       
@@ -108,28 +80,9 @@ export function useTranslationService() {
         }
       }));
       
-      // Decrement the queue counter and update loading state if all translations are complete
-      setTranslationQueue(prev => {
-        const newCount = prev - 1;
-        if (newCount <= 0) {
-          setTimeout(() => setIsLoading(false), 400);
-        }
-        return newCount;
-      });
-      
       return finalTranslation;
     } catch (error) {
       console.error('Translation failed:', error);
-      
-      // Decrement the queue counter and update loading state if all translations are complete
-      setTranslationQueue(prev => {
-        const newCount = prev - 1;
-        if (newCount <= 0) {
-          setTimeout(() => setIsLoading(false), 400);
-        }
-        return newCount;
-      });
-      
       return text; // Return original text on any error
     }
   };

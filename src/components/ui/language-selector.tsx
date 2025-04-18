@@ -20,7 +20,6 @@ export function LanguageSelector() {
     if (isChanging || isLoading) return;
     
     if (langCode === currentLanguage) {
-      console.log("Language is already set to:", langCode);
       return;
     }
     
@@ -29,13 +28,19 @@ export function LanguageSelector() {
       console.log(`Starting language change to ${langCode}`);
       await setLanguage(langCode as any);
       console.log(`Language changed to ${langCode}`);
+      
+      // Force a hard refresh after language change
+      if (langCode !== 'en') {
+        // Use setTimeout to ensure the language is set before refreshing
+        setTimeout(() => {
+          window.location.reload();
+        }, 100);
+      }
     } catch (error) {
       console.error("Failed to change language:", error);
     } finally {
-      setTimeout(() => {
-        setIsChanging(false);
-        setIsOpen(false);
-      }, 500);
+      setIsChanging(false);
+      setIsOpen(false);
     }
   }, [setLanguage, currentLanguage, isChanging, isLoading]);
 
@@ -48,9 +53,9 @@ export function LanguageSelector() {
           variant="ghost" 
           size="icon"
           title={`Language: ${currentLang?.name || 'English'}`}
-          disabled={isChanging || isLoading}
+          disabled={isChanging}
         >
-          <Globe className={`h-5 w-5 ${isChanging || isLoading ? 'animate-spin text-[#4E46DC]' : ''}`} />
+          <Globe className={`h-5 w-5 ${isChanging ? 'animate-spin text-[#4E46DC]' : ''}`} />
           <span className="sr-only">
             <TranslatedText>Change Language</TranslatedText>
           </span>
@@ -62,7 +67,7 @@ export function LanguageSelector() {
             key={language.code}
             onClick={() => handleLanguageChange(language.code)}
             className={`cursor-pointer ${currentLanguage === language.code ? 'bg-slate-100 font-medium' : ''}`}
-            disabled={isChanging || isLoading}
+            disabled={isChanging}
           >
             <span>{language.name} ({language.nativeName})</span>
           </DropdownMenuItem>

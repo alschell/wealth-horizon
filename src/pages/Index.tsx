@@ -1,54 +1,14 @@
 
-import React, { Suspense, useState, useEffect } from "react";
+import React, { Suspense } from "react";
 import { useLocation } from "react-router-dom";
 import LandingPage from "./LandingPage";
 import { withErrorBoundary } from "@/utils/withErrorBoundary";
-import EnhancedLoadingSpinner from "@/components/common/EnhancedLoadingSpinner";
-import { useTranslation } from "@/context/TranslationContext";
 
 const Index = () => {
   const location = useLocation();
-  const { isLoading: translationLoading } = useTranslation();
-  const [isInitialLoad, setIsInitialLoad] = useState(true);
-  
-  // Ensure we have a minimum loading time to avoid flickering
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsInitialLoad(false);
-    }, 800); // Set a good minimum time for initial load
-    
-    return () => clearTimeout(timer);
-  }, []);
-  
-  // Show loading spinner during initial load or when translation is loading
-  if (isInitialLoad || translationLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <EnhancedLoadingSpinner 
-          size="md" 
-          color="text-[#4E46DC]" 
-          centered={true}
-          showDelay={0}
-          text="Loading..."
-          textPosition="bottom"
-        />
-      </div>
-    );
-  }
   
   return (
-    <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center">
-        <EnhancedLoadingSpinner 
-          size="md" 
-          color="text-[#4E46DC]" 
-          centered={true}
-          showDelay={0}
-          text="Loading..."
-          textPosition="bottom"
-        />
-      </div>
-    }>
+    <Suspense fallback={<div>Loading...</div>}>
       <LandingPage />
     </Suspense>
   );

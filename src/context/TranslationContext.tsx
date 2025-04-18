@@ -1,6 +1,5 @@
 
 import React, { createContext, useContext } from 'react';
-import EnhancedLoadingSpinner from '@/components/common/EnhancedLoadingSpinner';
 import { useLanguageManager } from './translation/useLanguageManager';
 import { useTranslationService } from './translation/useTranslationService';
 import { TranslationContextType, LanguageCode } from './translation/types';
@@ -29,7 +28,6 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
     clearCache, 
     translationCache,
     isLoading: translationLoading,
-    setIsLoading: setTranslationLoading 
   } = useTranslationService();
 
   // Get language management functionality
@@ -49,21 +47,7 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
     return translateService(text, currentLanguage);
   };
 
-  // Don't render children until we've initialized language settings
-  if (!isInitialized) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <EnhancedLoadingSpinner 
-          size="md" 
-          color="text-[#4E46DC]" 
-          centered={true} 
-          text="Initializing..." 
-          showDelay={0}
-        />
-      </div>
-    );
-  }
-
+  // Render the content directly, without any loading screens
   return (
     <TranslationContext.Provider
       key={key}
@@ -75,20 +59,7 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
         isLoading
       }}
     >
-      {isLoading ? (
-        <div className="min-h-screen flex items-center justify-center">
-          <EnhancedLoadingSpinner 
-            size="md" 
-            color="text-[#4E46DC]" 
-            centered={true}
-            showDelay={0}
-            text="Loading content..."
-            textPosition="bottom"
-          />
-        </div>
-      ) : (
-        children
-      )}
+      {children}
     </TranslationContext.Provider>
   );
 };

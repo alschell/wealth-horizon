@@ -16,16 +16,14 @@ export const TranslatedText: React.FC<TranslatedTextProps> = ({
   withLoading = false,
   ...rest
 }) => {
-  const { translate, currentLanguage, isLoading } = useTranslation();
+  const { translate, currentLanguage } = useTranslation();
   const [translatedContent, setTranslatedContent] = useState(children);
-  const [isTranslating, setIsTranslating] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
     
     const translateText = async () => {
       try {
-        setIsTranslating(true);
         const translated = await translate(children);
         if (isMounted) {
           setTranslatedContent(translated);
@@ -35,10 +33,6 @@ export const TranslatedText: React.FC<TranslatedTextProps> = ({
         // If translation fails, fall back to original text
         if (isMounted) {
           setTranslatedContent(children);
-        }
-      } finally {
-        if (isMounted) {
-          setIsTranslating(false);
         }
       }
     };
@@ -50,14 +44,6 @@ export const TranslatedText: React.FC<TranslatedTextProps> = ({
       isMounted = false;
     };
   }, [children, currentLanguage, translate]);
-
-  if (withLoading && (isLoading || isTranslating)) {
-    return (
-      <Component className={`animate-pulse ${className}`} {...rest}>
-        {translatedContent}
-      </Component>
-    );
-  }
 
   return (
     <Component className={className} {...rest}>

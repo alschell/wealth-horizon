@@ -39,7 +39,7 @@ export function useFetchData<TData, TError = Error>(
   queryKey: string | string[],
   fetchFn: () => Promise<TData>,
   options: FetchDataOptions<TData, TError> = {}
-): UseQueryResult<TData, TError> & { isRefetching: boolean } {
+): UseQueryResult<TData, TError> & { isRefetching: boolean; refetchWithState: () => Promise<void> } {
   const { 
     errorMessage = 'Failed to fetch data',
     showErrorToast = true,
@@ -97,13 +97,7 @@ export function useFetchData<TData, TError = Error>(
     retry: autoRetry ? maxRetries : false,
     ...queryOptions,
     meta: {
-      ...queryOptions.meta,
-      errorHandler: (err: TError) => {
-        // Call custom error handler if provided in options
-        if (options.onError) {
-          options.onError(err);
-        }
-      }
+      ...queryOptions.meta
     }
   });
   

@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import PageTemplate from "@/components/shared/PageTemplate";
@@ -13,7 +14,7 @@ import {
   DefaultDocContent,
   DocumentationLink
 } from "@/components/api-documentation";
-import { TranslatedText } from "@/components/shared/TranslatedText";
+import TranslatedText from "@/components/ui/translated-text";
 
 const ApiDocumentation = () => {
   const { docType } = useParams();

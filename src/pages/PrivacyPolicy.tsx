@@ -6,8 +6,8 @@ import TranslatedText from "@/components/ui/translated-text";
 const PrivacyPolicy = () => {
   return (
     <LegalPageTemplate
-      title="Privacy Policy"
-      description="Learn about how we handle and protect your personal information."
+      title={<TranslatedText>Privacy Policy</TranslatedText>}
+      description={<TranslatedText>Learn about how we handle and protect your personal information.</TranslatedText>}
     >
       <TranslatedText>
         At WealthHorizon, we take your privacy seriously...

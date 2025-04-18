@@ -5,8 +5,8 @@ import { FileText } from "lucide-react";
 import TranslatedText from "@/components/ui/translated-text";
 
 interface LegalPageTemplateProps {
-  title: string;
-  description: string;
+  title: React.ReactNode;
+  description: React.ReactNode;
   children: React.ReactNode;
 }
 
@@ -17,8 +17,8 @@ const LegalPageTemplate: React.FC<LegalPageTemplateProps> = ({
 }) => {
   return (
     <PageTemplate
-      title={<TranslatedText>{title}</TranslatedText>}
-      description={<TranslatedText>{description}</TranslatedText>}
+      title={title}
+      description={description}
       icon={FileText}
     >
       <div className="prose prose-gray max-w-none">

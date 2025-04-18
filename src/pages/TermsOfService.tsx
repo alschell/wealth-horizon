@@ -6,8 +6,8 @@ import TranslatedText from "@/components/ui/translated-text";
 const TermsOfService = () => {
   return (
     <LegalPageTemplate
-      title="Terms of Service"
-      description="Review our terms of service and usage conditions."
+      title={<TranslatedText>Terms of Service</TranslatedText>}
+      description={<TranslatedText>Review our terms of service and usage conditions.</TranslatedText>}
     >
       <TranslatedText>
         By using WealthHorizon's services, you agree to these terms...

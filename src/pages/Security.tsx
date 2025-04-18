@@ -6,8 +6,8 @@ import TranslatedText from "@/components/ui/translated-text";
 const Security = () => {
   return (
     <LegalPageTemplate
-      title="Security"
-      description="Learn about our security practices and data protection measures."
+      title={<TranslatedText>Security</TranslatedText>}
+      description={<TranslatedText>Learn about our security practices and data protection measures.</TranslatedText>}
     >
       <TranslatedText>
         Our platform employs industry-leading security measures to protect your sensitive financial data...

@@ -1,3 +1,4 @@
+
 import { Quote } from "@/types/market";
 
 export interface IndexData {

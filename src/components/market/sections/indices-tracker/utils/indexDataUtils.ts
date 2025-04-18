@@ -1,5 +1,6 @@
 
-import { Quote, IndexData } from "@/types/market";
+import { Quote } from "@/types/market";
+import { IndexData } from "../types";
 
 export const createIndexData = (
   id: string,
@@ -14,7 +15,15 @@ export const createIndexData = (
   quoteData?: Quote
 ): IndexData => {
   return {
+    id,
+    name,
     symbol,
+    value,
+    change,
+    percentChange,
+    region,
+    description,
+    volume,
     data: quoteData || {
       c: value,
       d: change,
@@ -24,10 +33,6 @@ export const createIndexData = (
       o: value,
       pc: value - change,
       t: Date.now()
-    },
-    id,
-    name,
-    region,
-    description
+    }
   };
 };

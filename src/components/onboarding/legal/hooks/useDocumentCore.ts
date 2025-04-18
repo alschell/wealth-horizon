@@ -1,67 +1,38 @@
-
-import { useState, useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { DocumentFileWithMetadata } from '../types';
 import { toast } from '@/components/ui/use-toast';
 import { useUnifiedForm } from '@/hooks/form/useUnifiedForm';
-import DocumentValidationUtil from './document/useDocumentValidationUtil';
+import { useDocumentValidationUtil } from './document/useDocumentValidationUtil';
+import { useDocumentFormState, createInitialFormValues } from './document/useDocumentFormState';
+import { UseDocumentCoreProps, DocumentFormValues } from './document/types';
 import { useDocumentFactory } from './document/useDocumentFactory';
-
-export interface UseDocumentCoreProps {
-  onSave: (documents: DocumentFileWithMetadata[]) => void;
-  initialDocuments?: DocumentFileWithMetadata[];
-}
-
-export interface DocumentFormValues {
-  documentType: string;
-  issueDate: string;
-  expiryDate: string;
-  selectedFile: File | null;
-}
 
 export const useDocumentCore = ({
   onSave,
   initialDocuments = []
 }: UseDocumentCoreProps) => {
-  // State for the list of documents
-  const [documentFiles, setDocumentFiles] = useState<DocumentFileWithMetadata[]>(initialDocuments);
-  
-  // State for file validation errors
+  const formState = useDocumentFormState(initialDocuments);
+  const { validateFile } = useDocumentValidationUtil();
+  const { createDocument, updateDocumentInList, removeDocumentFromList } = useDocumentFactory();
+
+  const form = useUnifiedForm<DocumentFormValues>({
+    initialValues: createInitialFormValues(),
+    onSubmit: async () => {
+      // Implementation stays the same
+    }
+  });
+
   const [fileError, setFileError] = useState<string | null>(null);
   
   // Editing state
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [editingDocumentId, setEditingDocumentId] = useState<string | null>(null);
-  
-  // Get document factory functions
-  const { createDocument, updateDocumentInList, removeDocumentFromList } = useDocumentFactory();
-  
-  // Use unified form for document form
-  const form = useUnifiedForm<DocumentFormValues>({
-    initialValues: {
-      documentType: '',
-      issueDate: '',
-      expiryDate: '',
-      selectedFile: null
-    },
-    validate: (values) => {
-      const errors: Record<string, string> = {};
-      
-      if (!values.documentType) errors.documentType = 'Document type is required';
-      if (!values.issueDate) errors.issueDate = 'Issue date is required';
-      if (!values.selectedFile) errors.selectedFile = 'A document file is required';
-      
-      return errors;
-    },
-    onSubmit: async (values) => {
-      // Submit logic here
-    }
-  });
 
   const handleFileSelected = useCallback((files: File[]) => {
     if (files.length === 0) return;
     
     const file = files[0];
-    const error = DocumentValidationUtil.validateFile(file);
+    const error = validateFile(file);
     
     if (error) {
       setFileError(error);
@@ -75,7 +46,7 @@ export const useDocumentCore = ({
       title: "File uploaded",
       description: "Document has been successfully uploaded.",
     });
-  }, [form]);
+  }, [form, validateFile]);
 
   // Update other handlers to use form.setFieldValue instead of setValue
   const handleDateChange = useCallback((field: 'issueDate' | 'expiryDate', date?: Date) => {
@@ -108,7 +79,7 @@ export const useDocumentCore = ({
     );
     
     // Add to list
-    setDocumentFiles(prev => [...prev, newDocument]);
+    formState.setDocumentFiles(prev => [...prev, newDocument]);
     
     // Reset form
     form.resetForm();
@@ -117,11 +88,11 @@ export const useDocumentCore = ({
       title: "Document added",
       description: "The document has been added successfully.",
     });
-  }, [form, createDocument]);
+  }, [form, createDocument, formState]);
   
   // Edit an existing document
   const handleEditDocument = useCallback((documentId: string) => {
-    const documentToEdit = documentFiles.find(doc => doc.id === documentId);
+    const documentToEdit = formState.documentFiles.find(doc => doc.id === documentId);
     
     if (documentToEdit) {
       form.setFieldValue('documentType', documentToEdit.documentType);
@@ -132,7 +103,7 @@ export const useDocumentCore = ({
       setIsEditing(true);
       setEditingDocumentId(documentId);
     }
-  }, [documentFiles, form]);
+  }, [formState.documentFiles, form]);
   
   // Update an existing document
   const handleUpdateDocument = useCallback(() => {
@@ -146,7 +117,7 @@ export const useDocumentCore = ({
     }
     
     // Update document
-    setDocumentFiles(prev => 
+    formState.setDocumentFiles(prev => 
       updateDocumentInList(
         prev,
         editingDocumentId,
@@ -166,7 +137,7 @@ export const useDocumentCore = ({
       title: "Document updated",
       description: "The document has been updated successfully.",
     });
-  }, [editingDocumentId, form, updateDocumentInList]);
+  }, [editingDocumentId, form, updateDocumentInList, formState]);
   
   // Cancel edit operation
   const handleCancelEdit = useCallback(() => {
@@ -177,17 +148,17 @@ export const useDocumentCore = ({
   
   // Remove a document
   const handleRemoveDocument = useCallback((documentId: string) => {
-    setDocumentFiles(prev => removeDocumentFromList(prev, documentId));
+    formState.setDocumentFiles(prev => removeDocumentFromList(prev, documentId));
     
     toast({
       title: "Document removed",
       description: "The document has been removed successfully.",
     });
-  }, [removeDocumentFromList]);
+  }, [removeDocumentFromList, formState]);
   
   // Submit all documents
   const handleSubmit = useCallback(() => {
-    if (documentFiles.length === 0) {
+    if (formState.documentFiles.length === 0) {
       toast({
         title: "No documents",
         description: "Please add at least one document.",
@@ -197,7 +168,7 @@ export const useDocumentCore = ({
     }
     
     try {
-      onSave(documentFiles);
+      onSave(formState.documentFiles);
       
       toast({
         title: "Documents saved",
@@ -211,26 +182,16 @@ export const useDocumentCore = ({
         variant: "destructive"
       });
     }
-  }, [documentFiles, onSave]);
+  }, [formState.documentFiles, onSave]);
 
   return {
-    // Form values from unified form
-    documentType: form.values.documentType,
-    issueDate: form.values.issueDate,
-    expiryDate: form.values.expiryDate,
-    selectedFile: form.values.selectedFile,
-    
-    // Lists and errors
-    documentFiles,
-    errors: form.errors,
-    fileError,
-    
-    // State flags
-    isSubmitting: form.isSubmitting,
-    isEditing,
-    editingDocumentId,
-    
-    // Event handlers
+    ...form.formState.values,
+    documentFiles: formState.documentFiles,
+    errors: form.formState.errors,
+    fileError: fileError,
+    isSubmitting: form.formState.isSubmitting,
+    isEditing: isEditing,
+    editingDocumentId: editingDocumentId,
     handleFileSelected,
     handleFileClear: () => form.setFieldValue('selectedFile', null),
     handleDateChange,
@@ -241,9 +202,7 @@ export const useDocumentCore = ({
     handleCancelEdit,
     handleRemoveDocument,
     handleSubmit,
-    
-    // Form methods
     resetForm: form.resetForm,
-    setDocumentFiles
+    setDocumentFiles: formState.setDocumentFiles
   };
 };

@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState, useRef } from 'react';
 import { useTranslation } from '@/context/TranslationContext';
 
@@ -47,6 +46,13 @@ export const TranslatedText: React.FC<TranslatedTextProps> = ({
     if (currentLanguage === 'en') {
       setTranslatedContent(children);
       return;
+    }
+    
+    // Always display original content while translation is in progress
+    // This ensures something is always visible
+    if (currentLanguage !== 'en') {
+      // Keep original text visible during translation
+      setTranslatedContent(children);
     }
     
     const translateText = async () => {

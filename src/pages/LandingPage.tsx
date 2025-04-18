@@ -38,6 +38,7 @@ const LandingPage: React.FC = () => {
     "keywords": "wealth management, family office, financial planning, investment, portfolio optimization"
   };
 
+  // Always render the full page content regardless of language state
   return (
     <>
       <Helmet>

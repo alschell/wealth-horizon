@@ -18,9 +18,9 @@ export function LanguageSelector() {
   const [isChanging, setIsChanging] = useState(false);
 
   const handleLanguageChange = async (langCode: string) => {
-    if (langCode === currentLanguage) {
+    if (langCode === currentLanguage || isChanging) {
       setIsOpen(false);
-      return; // Don't change if it's the same language
+      return; // Don't change if it's the same language or already changing
     }
 
     console.log(`Starting language change to ${langCode} from ${currentLanguage}`);
@@ -30,12 +30,16 @@ export function LanguageSelector() {
       // Store language in localStorage before the async operation
       localStorage.setItem('preferredLanguage', langCode);
       
-      // Set a timeout to ensure UI updates before the language change process
+      // Give UI time to update between state changes
       setTimeout(async () => {
         try {
           await setLanguage(langCode as any);
           console.log(`Language successfully changed to ${langCode}`);
-          toast.success(`Language changed to ${LANGUAGES.find(l => l.code === langCode)?.name || langCode}`);
+          
+          // Short delay before showing success message to ensure UI has updated
+          setTimeout(() => {
+            toast.success(`Language changed to ${LANGUAGES.find(l => l.code === langCode)?.name || langCode}`);
+          }, 300);
         } catch (error) {
           console.error("Failed to change language:", error);
           toast.error("Failed to change language");

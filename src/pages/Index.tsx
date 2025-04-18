@@ -21,7 +21,7 @@ const Index = () => {
 
   console.log("Index rendering LandingPage with language:", currentLanguage);
   
-  // Always render the LandingPage component
+  // Always render the LandingPage component, no conditions
   return <LandingPage />;
 };
 

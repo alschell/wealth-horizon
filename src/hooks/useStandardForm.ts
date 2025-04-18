@@ -3,8 +3,10 @@ import { useState, useCallback } from 'react';
 import { useIsComponentMounted } from './useIsComponentMounted';
 import { showSuccess, showError } from '@/utils/toast';
 
+// Define the type for validation functions
 type ValidationFunction<T> = (value: any) => string | undefined;
 
+// Define the interface for validation rules
 interface FormValidationRules<T extends Record<string, any>> {
   [K in keyof T]?: ValidationFunction<T[K]>;
 }

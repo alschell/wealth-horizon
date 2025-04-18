@@ -12,11 +12,11 @@ export const americasIndices: IndexData[] = [
   },
   {
     id: "nasdaq",
-    name: "NASDAQ Composite",
+    name: "NASDAQ",
     symbol: "^IXIC",
     region: "United States",
     description: "NASDAQ Composite Index",
-    volume: 3800000
+    volume: 2000000
   },
   {
     id: "dowjones",
@@ -24,6 +24,6 @@ export const americasIndices: IndexData[] = [
     symbol: "^DJI",
     region: "United States",
     description: "Dow Jones Industrial Average",
-    volume: 2000000
+    volume: 1800000
   }
 ];

@@ -1,17 +1,16 @@
 
-import { useNavigate } from "react-router-dom";
-import { IndexData } from "../types";
+import { useCallback } from 'react';
+import { IndexData } from '../types';
 
 export const useIndexActions = () => {
-  const navigate = useNavigate();
+  const handleSelectIndex = useCallback((index: IndexData) => {
+    // Selected index handling logic
+    console.log('Selected index:', index.name);
+  }, []);
 
-  const handleSelectIndex = (index: IndexData) => {
-    navigate(`/market-data?index=${encodeURIComponent(index.name)}`);
-  };
-
-  const toggleSubscription = (
-    indexName: string, 
-    subscribedIndices: string[], 
+  const toggleSubscription = useCallback((
+    indexName: string,
+    subscribedIndices: string[],
     setSubscribedIndices: (indices: string[]) => void
   ) => {
     if (subscribedIndices.includes(indexName)) {
@@ -19,7 +18,7 @@ export const useIndexActions = () => {
     } else {
       setSubscribedIndices([...subscribedIndices, indexName]);
     }
-  };
+  }, []);
 
   return {
     handleSelectIndex,

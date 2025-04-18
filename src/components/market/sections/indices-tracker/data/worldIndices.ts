@@ -1,17 +1,11 @@
 
-import { americasIndices } from './regions/americas';
-import { emeaIndices } from './regions/emea';
-import { apacIndices } from './regions/apac';
+import { IndexData } from "../types";
+import { americasIndices } from "./regions/americas";
+import { apacIndices } from "./regions/apac";
+import { emeaIndices } from "./regions/emea";
 
-export const regionToCountryMap: Record<string, string[]> = {
-  "ALL": ["All Regions"],
-  "AMER": ["United States", "Canada", "Brazil", "Mexico", "Argentina"],
-  "EMEA": ["United Kingdom", "Germany", "France", "Switzerland", "Spain", "Italy", "Netherlands", "Belgium", "Sweden", "Norway", "Russia", "South Africa", "Turkey", "Israel"],
-  "APAC": ["Japan", "China", "Hong Kong", "South Korea", "Australia", "India", "Singapore", "Taiwan", "Indonesia", "Malaysia", "Thailand", "New Zealand"],
-};
-
-export const allWorldIndices = [
+export const allWorldIndices: IndexData[] = [
   ...americasIndices,
-  ...emeaIndices,
-  ...apacIndices
+  ...apacIndices,
+  ...emeaIndices
 ];

@@ -1,230 +1,127 @@
 
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { supabase } from '@/utils/supabaseClient';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
-// Define available languages
-export type LanguageCode = 
-  | 'en' // English
-  | 'zh' // Chinese
-  | 'es' // Spanish
-  | 'ar' // Arabic
-  | 'pt' // Portuguese
-  | 'ru' // Russian
-  | 'ja' // Japanese
-  | 'fr' // French
-  | 'de' // German
-  | 'ko'; // Korean
+// Available languages
+export type Language = 'en' | 'fr' | 'es' | 'de' | 'zh';
 
-export interface Language {
-  code: LanguageCode;
-  name: string;
-  nativeName: string;
-}
-
-export const LANGUAGES: Language[] = [
-  { code: 'en', name: 'English', nativeName: 'English' },
-  { code: 'zh', name: 'Chinese', nativeName: '中文' },
-  { code: 'es', name: 'Spanish', nativeName: 'Español' },
-  { code: 'ar', name: 'Arabic', nativeName: 'العربية' },
-  { code: 'pt', name: 'Portuguese', nativeName: 'Português' },
-  { code: 'ru', name: 'Russian', nativeName: 'Русский' },
-  { code: 'ja', name: 'Japanese', nativeName: '日本語' },
-  { code: 'fr', name: 'French', nativeName: 'Français' },
-  { code: 'de', name: 'German', nativeName: 'Deutsch' },
-  { code: 'ko', name: 'Korean', nativeName: '한국어' },
-];
-
-// Terms that should not be translated
-export const NON_TRANSLATABLE_TERMS = [
-  'WealthHorizon',
-  'GDPR',
-  'SOC',
-  'API',
-  'SQL',
-  'HTML',
-  'CSS',
-  'JavaScript',
-  'TypeScript',
-  'React',
-  'Supabase',
-];
-
+// Translation context state
 interface TranslationContextType {
-  currentLanguage: LanguageCode;
-  setLanguage: (language: LanguageCode) => Promise<void>;
-  translate: (text: string) => Promise<string>;
-  translationCache: Record<string, Record<string, string>>;
-  isLoading: boolean;
+  language: Language;
+  setLanguage: (lang: Language) => void;
+  t: (key: string, params?: Record<string, string>) => string;
+  isRTL: boolean;
+  languageName: string;
 }
 
-const defaultContext: TranslationContextType = {
-  currentLanguage: 'en',
-  setLanguage: async () => {},
-  translate: async (text) => text,
-  translationCache: {},
-  isLoading: false,
+// Default language
+const DEFAULT_LANGUAGE: Language = 'en';
+
+// RTL languages
+const RTL_LANGUAGES: Language[] = [];
+
+// Language display names
+const LANGUAGE_NAMES: Record<Language, string> = {
+  en: 'English',
+  fr: 'Français',
+  es: 'Español',
+  de: 'Deutsch',
+  zh: '中文',
 };
 
-const TranslationContext = createContext<TranslationContextType>(defaultContext);
+// Create the context
+const TranslationContext = createContext<TranslationContextType | undefined>(undefined);
 
-export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [currentLanguage, setCurrentLanguage] = useState<LanguageCode>('en');
-  const [translationCache, setTranslationCache] = useState<Record<string, Record<string, string>>>({});
-  const [isLoading, setIsLoading] = useState(false);
-  const [key, setKey] = useState(0); // Force component tree re-render with key
-  
-  // Load language preference from local storage on initial load
-  useEffect(() => {
-    const savedLanguage = localStorage.getItem('preferredLanguage') as LanguageCode;
-    if (savedLanguage && LANGUAGES.some(lang => lang.code === savedLanguage)) {
-      setCurrentLanguage(savedLanguage);
-    } else {
-      const browserLang = navigator.language.split('-')[0] as LanguageCode;
-      if (LANGUAGES.some(lang => lang.code === browserLang)) {
-        setCurrentLanguage(browserLang);
-      }
+// Translations storage
+const translations: Record<Language, Record<string, string>> = {
+  en: {},
+  fr: {},
+  es: {},
+  de: {},
+  zh: {},
+};
+
+// Translation provider component
+export const TranslationProvider: React.FC<{
+  children: React.ReactNode;
+  initialLanguage?: Language;
+}> = ({ children, initialLanguage }) => {
+  // Detect browser language or use provided initial language
+  const detectLanguage = (): Language => {
+    if (initialLanguage) return initialLanguage;
+    
+    // Check localStorage first for returning users
+    const savedLanguage = localStorage.getItem('preferred-language') as Language;
+    if (savedLanguage && Object.keys(translations).includes(savedLanguage)) {
+      return savedLanguage;
     }
-  }, []);
+    
+    // Detect from browser
+    const browserLang = navigator.language.split('-')[0] as Language;
+    return Object.keys(translations).includes(browserLang) 
+      ? browserLang 
+      : DEFAULT_LANGUAGE;
+  };
 
-  // Save user language preference to database if logged in
+  const [language, setLanguageState] = useState<Language>(detectLanguage());
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  // Set language with side effects
+  const setLanguage = (lang: Language) => {
+    if (lang === language) return;
+    
+    setIsLoading(true);
+    setLanguageState(lang);
+    localStorage.setItem('preferred-language', lang);
+    
+    // Update document direction for RTL support
+    document.documentElement.dir = RTL_LANGUAGES.includes(lang) ? 'rtl' : 'ltr';
+    document.documentElement.lang = lang;
+  };
+
+  // Translate function
+  const t = (key: string, params?: Record<string, string>): string => {
+    // Get translation or fallback to key
+    let translated = translations[language][key] || translations[DEFAULT_LANGUAGE][key] || key;
+    
+    // Replace parameters if provided
+    if (params) {
+      Object.entries(params).forEach(([paramKey, value]) => {
+        translated = translated.replace(`{{${paramKey}}}`, value);
+      });
+    }
+    
+    return translated;
+  };
+
+  // Load translations for current language
   useEffect(() => {
-    const saveLanguagePreference = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      if (user) {
-        const { error } = await supabase
-          .from('user_language_preferences')
-          .upsert({ 
-            user_id: user.id, 
-            language_code: currentLanguage 
-          }, { 
-            onConflict: 'user_id' 
-          });
-          
-        if (error) {
-          console.error('Failed to save language preference:', error);
-        }
+    const loadTranslations = async () => {
+      try {
+        // In a real app, you would load translations from JSON files or API
+        // For simplicity, we're just simulating the loading for now
+        await new Promise(resolve => setTimeout(resolve, 100));
+        setIsLoading(false);
+      } catch (error) {
+        console.error('Failed to load translations:', error);
+        setIsLoading(false);
       }
-      
-      localStorage.setItem('preferredLanguage', currentLanguage);
     };
     
-    if (currentLanguage) {
-      saveLanguagePreference();
-      
-      // Update HTML lang attribute and direction
-      document.documentElement.lang = currentLanguage;
-      document.documentElement.dir = ['ar', 'he', 'fa'].includes(currentLanguage) ? 'rtl' : 'ltr';
-      
-      // Force re-render by updating key
-      setKey(prevKey => prevKey + 1);
-    }
-  }, [currentLanguage]);
-
-  // Function to set the language with more robust update mechanism
-  const setLanguage = useCallback(async (language: LanguageCode) => {
-    console.log(`Changing language to: ${language}`);
+    loadTranslations();
     
-    // Clear existing translation cache completely to force re-translation
-    setTranslationCache({});
-    
-    // Update the current language
-    setCurrentLanguage(language);
-    
-    // This will trigger the effect above that updates document lang/dir and forces re-render
-  }, []);
-
-  // Process text before translation to protect non-translatable terms
-  const protectSpecialTerms = (text: string): { processedText: string, placeholders: Record<string, string> } => {
-    let processedText = text;
-    const placeholders: Record<string, string> = {};
-    
-    NON_TRANSLATABLE_TERMS.forEach((term, index) => {
-      const placeholder = `___PLACEHOLDER_${index}___`;
-      const regex = new RegExp(term, 'g');
-      
-      if (processedText.match(regex)) {
-        processedText = processedText.replace(regex, placeholder);
-        placeholders[placeholder] = term;
-      }
-    });
-    
-    return { processedText, placeholders };
-  };
-
-  // Restore protected terms after translation
-  const restoreSpecialTerms = (translatedText: string, placeholders: Record<string, string>): string => {
-    let result = translatedText;
-    
-    Object.entries(placeholders).forEach(([placeholder, originalTerm]) => {
-      const regex = new RegExp(placeholder, 'g');
-      result = result.replace(regex, originalTerm);
-    });
-    
-    return result;
-  };
-
-  // Function to translate text
-  const translate = async (text: string): Promise<string> => {
-    // If the language is English or text is empty, return the original text
-    if (currentLanguage === 'en' || !text || text.trim() === '') {
-      return text;
-    }
-    
-    // Check if translation is already in cache
-    if (translationCache[currentLanguage]?.[text]) {
-      return translationCache[currentLanguage][text];
-    }
-    
-    try {
-      setIsLoading(true);
-      
-      // Process text to protect special terms
-      const { processedText, placeholders } = protectSpecialTerms(text);
-      
-      // Call translation edge function
-      const { data, error } = await supabase.functions.invoke('translate', {
-        body: { 
-          text: processedText, 
-          targetLanguage: currentLanguage 
-        }
-      });
-      
-      if (error) {
-        console.error('Translation error:', error);
-        return text;
-      }
-      
-      // Restore protected terms in the translated text
-      const finalTranslation = restoreSpecialTerms(data.translatedText, placeholders);
-      
-      // Cache the translation
-      setTranslationCache(prevCache => ({
-        ...prevCache,
-        [currentLanguage]: {
-          ...(prevCache[currentLanguage] || {}),
-          [text]: finalTranslation
-        }
-      }));
-      
-      return finalTranslation;
-    } catch (error) {
-      console.error('Translation failed:', error);
-      return text;
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    // Set document direction on initial load
+    document.documentElement.dir = RTL_LANGUAGES.includes(language) ? 'rtl' : 'ltr';
+    document.documentElement.lang = language;
+  }, [language]);
 
   return (
-    <TranslationContext.Provider
-      key={key} // Key to force re-render of all children when language changes
-      value={{
-        currentLanguage,
-        setLanguage,
-        translate,
-        translationCache,
-        isLoading
+    <TranslationContext.Provider 
+      value={{ 
+        language, 
+        setLanguage, 
+        t, 
+        isRTL: RTL_LANGUAGES.includes(language),
+        languageName: LANGUAGE_NAMES[language]
       }}
     >
       {children}
@@ -232,4 +129,11 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
   );
 };
 
-export const useTranslation = () => useContext(TranslationContext);
+// Hook for consuming the translation context
+export const useTranslation = () => {
+  const context = useContext(TranslationContext);
+  if (context === undefined) {
+    throw new Error('useTranslation must be used within a TranslationProvider');
+  }
+  return context;
+};

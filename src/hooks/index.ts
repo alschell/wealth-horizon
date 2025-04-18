@@ -13,6 +13,8 @@ export { useErrorHandler } from './useErrorHandler';
 export { useErrorBoundary } from './useErrorBoundary';
 export { useDocumentManager } from '@/context/DocumentContext';
 export { useSecurityProtection } from './useSecurityProtection';
+export { useMobile, Responsive } from './use-mobile';
+export { useTranslation } from '@/context/TranslationContext';
 
 // Using withErrorHandling from useErrorBoundary
 export { withErrorHandling } from './useErrorBoundary';

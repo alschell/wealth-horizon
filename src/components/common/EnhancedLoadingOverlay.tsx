@@ -1,89 +1,70 @@
 
 import React from 'react';
-import EnhancedLoadingSpinner from './EnhancedLoadingSpinner';
 import { cn } from '@/lib/utils';
+import EnhancedLoadingSpinner from './EnhancedLoadingSpinner';
 
-export interface EnhancedLoadingOverlayProps {
+interface EnhancedLoadingOverlayProps {
   isLoading: boolean;
   children: React.ReactNode;
-  text?: string;
-  opacity?: 'light' | 'medium' | 'dark' | 'transparent';
-  blur?: boolean;
-  className?: string;
   spinnerSize?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
-  spinnerColor?: string;
-  spinnerVariant?: 'primary' | 'secondary' | 'accent' | 'muted';
-  zIndex?: number;
-  showSpinnerAfterDelay?: number;
-  backdropColor?: string;
-  showBackdrop?: boolean;
-  preventScroll?: boolean;
+  spinnerVariant?: 'default' | 'primary' | 'secondary' | 'muted';
+  loadingText?: string;
+  className?: string;
+  overlayClassName?: string;
+  spinnerClassName?: string;
+  blur?: boolean;
+  fullScreen?: boolean;
 }
 
-/**
- * Enhanced loading overlay with more customization options
- */
-export const EnhancedLoadingOverlay = React.forwardRef<HTMLDivElement, EnhancedLoadingOverlayProps>(({
+export const EnhancedLoadingOverlay: React.FC<EnhancedLoadingOverlayProps> = ({
   isLoading,
   children,
-  text,
-  opacity = 'medium',
-  blur = true,
-  className,
-  spinnerSize = 'lg',
-  spinnerColor,
+  spinnerSize = 'md',
   spinnerVariant = 'primary',
-  zIndex = 50,
-  showSpinnerAfterDelay = 0,
-  backdropColor,
-  showBackdrop = true,
-  preventScroll = false
-}, ref) => {
-  const opacityClass = {
-    light: 'bg-white/30',
-    medium: 'bg-white/50',
-    dark: 'bg-white/80',
-    transparent: 'bg-transparent'
-  };
-
-  // Handle scroll prevention
-  React.useEffect(() => {
-    if (preventScroll && isLoading) {
-      document.body.style.overflow = 'hidden';
-      
-      return () => {
-        document.body.style.overflow = '';
-      };
-    }
-  }, [preventScroll, isLoading]);
-
+  loadingText,
+  className,
+  overlayClassName,
+  spinnerClassName,
+  blur = true,
+  fullScreen = false,
+}) => {
+  const containerClasses = cn(
+    'relative',
+    fullScreen ? 'min-h-screen w-full' : 'w-full h-full',
+    className
+  );
+  
+  const overlayClasses = cn(
+    'absolute inset-0 flex items-center justify-center z-50 transition-opacity duration-200',
+    blur ? 'backdrop-blur-sm' : 'bg-background/80',
+    isLoading ? 'opacity-100' : 'opacity-0 pointer-events-none',
+    overlayClassName
+  );
+  
+  const contentClasses = cn(
+    'transition-opacity duration-200',
+    isLoading && 'opacity-50'
+  );
+  
   return (
-    <div ref={ref} className={cn("relative", className)}>
-      {children}
+    <div className={containerClasses}>
+      <div className={contentClasses}>{children}</div>
       
-      {isLoading && showBackdrop && (
-        <div 
-          className={cn(
-            "absolute inset-0 flex flex-col items-center justify-center",
-            `z-[${zIndex}]`,
-            backdropColor ? '' : opacityClass[opacity],
-            blur && "backdrop-blur-sm"
-          )}
-          style={backdropColor ? { backgroundColor: backdropColor } : undefined}
-        >
-          <EnhancedLoadingSpinner 
-            size={spinnerSize} 
-            text={text} 
-            color={spinnerColor}
-            variant={spinnerVariant}
-            showDelay={showSpinnerAfterDelay}
-          />
+      {isLoading && (
+        <div className={overlayClasses}>
+          <div className="flex flex-col items-center gap-3">
+            <EnhancedLoadingSpinner 
+              size={spinnerSize} 
+              variant={spinnerVariant} 
+              className={spinnerClassName}
+              label={loadingText}
+              labelPosition="bottom"
+            />
+          </div>
         </div>
       )}
     </div>
   );
-});
-
-EnhancedLoadingOverlay.displayName = 'EnhancedLoadingOverlay';
+};
 
 export default EnhancedLoadingOverlay;

@@ -4,6 +4,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { publicRoutes, dashboardRoutes } from './routes';
 import { RouteErrorBoundary } from '@/components/error-boundary/RouteErrorBoundary';
 import { GlobalErrorBoundary } from '@/components/error-boundary/GlobalErrorBoundary';
+import { TranslationProvider } from '@/context/TranslationContext';
 
 const router = createBrowserRouter([
   ...publicRoutes,
@@ -16,7 +17,9 @@ const router = createBrowserRouter([
 function App() {
   return (
     <GlobalErrorBoundary>
-      <RouterProvider router={router} />
+      <TranslationProvider>
+        <RouterProvider router={router} />
+      </TranslationProvider>
     </GlobalErrorBoundary>
   );
 }

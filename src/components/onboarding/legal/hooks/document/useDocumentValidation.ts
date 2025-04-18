@@ -1,19 +1,22 @@
 
 import { useCallback } from 'react';
-import { validateFile as validateFileUtil } from './validation/fileValidation';
-import { validateRequiredFields, hasValidationErrors } from './validation/fieldValidation';
 import { DocumentValidationErrors, FileValidationResult } from './validation/types';
+import {
+  validateDocumentFields as validateFields,
+  validateDocumentFile as validateFile,
+  hasValidationErrors
+} from './validation/documentValidationUtils';
 
 export function useDocumentValidation() {
   const validateDocumentFields = useCallback(
     (documentType: string, issueDate: string, selectedFile: File | null): DocumentValidationErrors => {
-      return validateRequiredFields(documentType, issueDate, selectedFile);
+      return validateFields(documentType, issueDate, selectedFile);
     },
     []
   );
 
   const validateDocumentFile = useCallback((file: File): FileValidationResult => {
-    return validateFileUtil(file);
+    return validateFile(file);
   }, []);
 
   const hasErrors = useCallback((errors: DocumentValidationErrors): boolean => {

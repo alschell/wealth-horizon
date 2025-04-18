@@ -1,46 +1,58 @@
 
-import { toast } from '@/hooks/use-toast';
+/**
+ * Utility functions for displaying toast notifications
+ */
+
+import { toast } from "sonner";
 
 /**
- * Show a success toast notification
+ * Display a success toast notification
+ * 
+ * @param title - The title of the toast notification
+ * @param message - The message to display
  */
-export function showSuccess(title: string, message?: string) {
-  toast({
-    title,
+export const showSuccess = (title: string, message: string) => {
+  toast.success(title, {
     description: message,
-    variant: 'default'
+    duration: 5000,
   });
-}
+};
 
 /**
- * Show an error toast notification
+ * Display an error toast notification
+ * 
+ * @param title - The title of the toast notification
+ * @param message - The message to display
  */
-export function showError(title: string, message?: string) {
-  toast({
-    title,
+export const showError = (title: string, message: string) => {
+  toast.error(title, {
     description: message,
-    variant: 'destructive'
+    duration: 5000,
   });
-}
+};
 
 /**
- * Show an info toast notification
+ * Display an info toast notification
+ * 
+ * @param title - The title of the toast notification
+ * @param message - The message to display
  */
-export function showInfo(title: string, message?: string) {
-  toast({
-    title,
-    description: message
-  });
-}
-
-/**
- * Show a warning toast notification
- */
-export function showWarning(title: string, message?: string) {
-  toast({
-    title,
+export const showInfo = (title: string, message: string) => {
+  toast.info(title, {
     description: message,
-    variant: 'destructive',
-    className: 'bg-amber-500'
+    duration: 5000,
   });
-}
+};
+
+/**
+ * Display a warning toast notification
+ * 
+ * @param title - The title of the toast notification
+ * @param message - The message to display
+ */
+export const showWarning = (title: string, message: string) => {
+  toast.warning(title, {
+    description: message,
+    duration: 5000,
+  });
+};

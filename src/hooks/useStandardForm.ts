@@ -155,7 +155,9 @@ export function useStandardForm<T extends Record<string, any>>({
       
       // Only update state if component is still mounted
       if (isMounted()) {
-        showSuccess("Success", successMessage);
+        if (successMessage) {
+          showSuccess("Success", successMessage);
+        }
         
         if (resetAfterSubmit) {
           resetForm();
@@ -198,16 +200,4 @@ export function useStandardForm<T extends Record<string, any>>({
     handleSubmit,
     validateForm
   };
-}
-
-export function useIsComponentMounted() {
-  const mountedRef = React.useRef(true);
-  
-  React.useEffect(() => {
-    return () => {
-      mountedRef.current = false;
-    };
-  }, []);
-  
-  return React.useCallback(() => mountedRef.current, []);
 }

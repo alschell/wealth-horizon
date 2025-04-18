@@ -44,12 +44,12 @@ const LandingPage: React.FC = () => {
           setKeywords(translatedKeywords);
           setHasError(false);
           
-          // Add a small delay before removing loading state to prevent flickering
+          // Add a longer delay to prevent flickering
           setTimeout(() => {
             if (isMounted()) {
               setIsLoading(false);
             }
-          }, 300);
+          }, 500); // Increased from 300ms to 500ms
         }
       } catch (error) {
         console.error("Error translating SEO content:", error);
@@ -102,7 +102,7 @@ const LandingPage: React.FC = () => {
       <div className="min-h-screen flex items-center justify-center">
         <EnhancedLoadingSpinner 
           size="md" 
-          color="text-indigo-500" 
+          color="text-[#4E46DC]" 
           centered={true}
           showDelay={0}
           text="Loading content..."

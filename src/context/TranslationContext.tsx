@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/utils/supabaseClient';
 import EnhancedLoadingSpinner from '@/components/common/EnhancedLoadingSpinner';
@@ -72,6 +73,7 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
   const [isLoading, setIsLoading] = useState(true); // Start with loading state
   const [key, setKey] = useState(0); // Force component tree re-render with key
   const [isInitialized, setIsInitialized] = useState(false);
+  const [languageChangeInProgress, setLanguageChangeInProgress] = useState(false);
   
   // Load language preference from local storage on initial load
   useEffect(() => {
@@ -91,7 +93,7 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
         setIsInitialized(true);
         setIsLoading(false);
         console.log("TranslationProvider: Language initialized successfully");
-      }, 200);
+      }, 500); // Increased from 200ms
     } catch (error) {
       console.error("TranslationProvider: Error initializing language:", error);
       setIsInitialized(true); // Still mark as initialized to prevent hanging
@@ -101,7 +103,7 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
   // Save user language preference to database if logged in
   useEffect(() => {
-    if (!currentLanguage) return;
+    if (!currentLanguage || languageChangeInProgress) return;
     
     const saveLanguagePreference = async () => {
       // Set loading state at the beginning of language change
@@ -136,31 +138,38 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
       // Keep loading state for a moment to avoid flickering
       setTimeout(() => {
         setIsLoading(false);
-      }, 300);
+        setLanguageChangeInProgress(false);
+      }, 800); // Increased from 300ms to 800ms
     };
     
     saveLanguagePreference();
-  }, [currentLanguage]);
+  }, [currentLanguage, languageChangeInProgress]);
 
   // Function to set the language with more robust update mechanism
   const setLanguage = useCallback(async (language: LanguageCode) => {
     console.log(`Changing language to: ${language}`);
     
     try {
+      // Start language change process
+      setLanguageChangeInProgress(true);
+      
       // Show loading state immediately
       setIsLoading(true);
       
       // Clear existing translation cache completely to force re-translation
       setTranslationCache({});
       
-      // Update the current language
-      setCurrentLanguage(language);
+      // Update the current language after a small delay
+      setTimeout(() => {
+        setCurrentLanguage(language);
+      }, 100);
       
       // This will trigger the effect above that updates document lang/dir and forces re-render
       return Promise.resolve();
     } catch (error) {
       console.error("Failed to set language:", error);
       setIsLoading(false);
+      setLanguageChangeInProgress(false);
       return Promise.reject(error);
     }
   }, []);
@@ -219,7 +228,7 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
       // Return original text immediately if translation service is unavailable
       if (!supabase) {
         console.error("Translation service unavailable: Supabase client not initialized");
-        setTimeout(() => setIsLoading(false), 200);
+        setTimeout(() => setIsLoading(false), 400); // Increased from 200ms
         return text;
       }
       
@@ -249,13 +258,13 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
       
       if (error) {
         console.error('Translation error:', error);
-        setTimeout(() => setIsLoading(false), 200);
+        setTimeout(() => setIsLoading(false), 400); // Increased from 200ms
         return text; // Return original text on error
       }
       
       if (!data || !data.translatedText) {
         console.error('Invalid translation response:', data);
-        setTimeout(() => setIsLoading(false), 200);
+        setTimeout(() => setIsLoading(false), 400); // Increased from 200ms
         return text; // Return original text if response is invalid
       }
       
@@ -271,13 +280,13 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
         }
       }));
       
-      // Delay turning off loading slightly to avoid flickering
-      setTimeout(() => setIsLoading(false), 200);
+      // Delay turning off loading to avoid flickering
+      setTimeout(() => setIsLoading(false), 400); // Increased from 200ms
       
       return finalTranslation;
     } catch (error) {
       console.error('Translation failed:', error);
-      setTimeout(() => setIsLoading(false), 200);
+      setTimeout(() => setIsLoading(false), 400); // Increased from 200ms
       return text; // Return original text on any error
     }
   };
@@ -293,7 +302,7 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
       <div className="min-h-screen flex items-center justify-center">
         <EnhancedLoadingSpinner 
           size="md" 
-          color="text-indigo-500" 
+          color="text-[#4E46DC]" 
           centered={true} 
           text="Initializing..." 
           showDelay={0}
@@ -313,7 +322,20 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
         isLoading
       }}
     >
-      {children}
+      {isLoading ? (
+        <div className="min-h-screen flex items-center justify-center">
+          <EnhancedLoadingSpinner 
+            size="md" 
+            color="text-[#4E46DC]" 
+            centered={true}
+            showDelay={0}
+            text="Loading content..."
+            textPosition="bottom"
+          />
+        </div>
+      ) : (
+        children
+      )}
     </TranslationContext.Provider>
   );
 };

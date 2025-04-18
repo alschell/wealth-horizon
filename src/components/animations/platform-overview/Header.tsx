@@ -5,6 +5,8 @@ import { headerVariants } from "./AnimationVariants";
 
 const Header: React.FC = () => {
   const handleHomeClick = () => {
+    // Use Link or navigate instead of direct location change
+    console.log("Navigating to home");
     window.location.href = '/';
   };
 

@@ -24,13 +24,18 @@ export function LanguageSelector() {
       return;
     }
     
+    if (typeof setLanguage !== 'function') {
+      console.error("setLanguage function is not available");
+      return;
+    }
+    
     setIsChanging(true);
     try {
       await setLanguage(langCode as any);
       console.log(`Language changed to ${langCode}`);
       
-      // Reload the page to ensure all translated components are refreshed
-      window.location.reload();
+      // Instead of reloading the page, just close the dropdown
+      // window.location.reload();
     } catch (error) {
       console.error("Failed to change language:", error);
     } finally {
@@ -55,7 +60,7 @@ export function LanguageSelector() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-48" align="end">
-        {availableLanguages.length > 0 ? (
+        {availableLanguages && availableLanguages.length > 0 ? (
           availableLanguages.map((language) => (
             <DropdownMenuItem
               key={language.code}

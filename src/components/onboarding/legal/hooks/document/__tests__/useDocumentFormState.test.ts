@@ -1,4 +1,3 @@
-
 import { renderHook, act } from '@testing-library/react';
 import { useDocumentFormState } from '../useDocumentFormState';
 import { mockDocuments, mockFile } from './mockData';
@@ -21,7 +20,6 @@ describe('useDocumentFormState', () => {
   
   it('should initialize with provided documents', () => {
     const { result } = renderHook(() => useDocumentFormState({ initialDocuments: mockDocuments }));
-    
     expect(result.current.documentFiles).toEqual(mockDocuments);
   });
   

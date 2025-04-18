@@ -1,12 +1,13 @@
 
 import { useCallback } from 'react';
+import { generateDocumentId } from './utils/documentIdGenerator';
 
 export function useDocumentId() {
-  const generateDocumentId = useCallback(() => {
-    return `doc-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+  const generateNewDocumentId = useCallback(() => {
+    return generateDocumentId();
   }, []);
 
   return {
-    generateDocumentId
+    generateDocumentId: generateNewDocumentId
   };
 }

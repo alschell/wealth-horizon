@@ -1,4 +1,3 @@
-
 /**
  * Central export point for all security utilities
  * 
@@ -14,6 +13,8 @@ import * as store from './storage';
 import * as validate from './validation';
 import * as encrypt from './encryption';
 import * as audit from './securityAuditor';
+import { SessionManager, sessionManager } from './session';
+import { CsrfProtection } from './csrf';
 
 // Re-export with namespaces to avoid duplication and collisions
 export const sanitize = sanitation;
@@ -65,3 +66,10 @@ export const {
   auditSecurity,
   auditUserInput
 } = audit;
+
+// Export new security modules
+export {
+  SessionManager,
+  sessionManager,
+  CsrfProtection
+};

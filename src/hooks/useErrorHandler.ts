@@ -18,7 +18,8 @@ export function withErrorHandling<P extends object>(
 ): React.FC<P> {
   const WithErrorHandling: React.FC<P> = (props) => {
     const errorHandler = useErrorHandler(options);
-    return <Component {...props} errorHandler={errorHandler} />;
+    // Use React.createElement instead of JSX
+    return React.createElement(Component, { ...props, errorHandler });
   };
 
   WithErrorHandling.displayName = `withErrorHandling(${Component.displayName || Component.name || 'Component'})`;

@@ -8,14 +8,21 @@
  * @component
  */
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Helmet } from "react-helmet-async"; 
 import { LandingLayout } from "@/components/landing";
+import { useTranslation } from "@/context/TranslationContext";
 
 /**
  * Main landing page with SEO optimization and structured data
  */
 const LandingPage: React.FC = () => {
+  const { currentLanguage } = useTranslation();
+  
+  useEffect(() => {
+    console.log("LandingPage mounted", { language: currentLanguage });
+  }, [currentLanguage]);
+  
   // Structured data for rich search results
   const structuredData = {
     "@context": "https://schema.org",
@@ -62,7 +69,7 @@ const LandingPage: React.FC = () => {
         <link rel="canonical" href="https://wealthhorizon.com/" />
         
         {/* Add language and direction */}
-        <html lang="en" dir="ltr" />
+        <html lang={currentLanguage} dir={['ar', 'he', 'fa'].includes(currentLanguage) ? 'rtl' : 'ltr'} />
         
         {/* Add structured data for rich search results */}
         <script type="application/ld+json">

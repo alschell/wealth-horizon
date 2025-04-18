@@ -1,6 +1,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import { headerVariants } from "./AnimationVariants";
 
 const Header: React.FC = () => {
@@ -12,10 +13,10 @@ const Header: React.FC = () => {
       variants={headerVariants}
     >
       <div className="flex items-center">
-        <span className="font-bold text-xl">
+        <Link to="/" className="font-bold text-xl">
           <span className="text-indigo-600">Wealth</span>
           <span className="text-gray-900">Horizon</span>
-        </span>
+        </Link>
       </div>
     </motion.div>
   );

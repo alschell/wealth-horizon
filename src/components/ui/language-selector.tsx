@@ -21,6 +21,14 @@ export function LanguageSelector() {
     try {
       await setLanguage(langCode as any);
       console.log(`Language changed to ${langCode}`);
+      
+      // Force reload page content by adding a timestamp parameter to the URL
+      // This helps ensure all content refreshes with the new language
+      if (window.location.href.includes('?')) {
+        window.location.href = window.location.href + '&t=' + Date.now();
+      } else {
+        window.location.href = window.location.href + '?t=' + Date.now();
+      }
     } catch (error) {
       console.error("Failed to change language:", error);
     } finally {
@@ -29,7 +37,7 @@ export function LanguageSelector() {
     }
   };
 
-  const currentLang = LANGUAGES.find(lang => lang.code === currentLanguage);
+  const currentLang = LANGUAGES.find(lang => lang.code === currentLanguage) || LANGUAGES[0];
 
   return (
     <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>

@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useTranslation } from '@/context/TranslationContext';
 
 interface TranslatedTextProps {
@@ -17,45 +17,78 @@ export const TranslatedText: React.FC<TranslatedTextProps> = ({
   ...rest
 }) => {
   const { translate, currentLanguage, isLoading } = useTranslation();
-  const [translatedContent, setTranslatedContent] = useState(children);
+  const [translatedContent, setTranslatedContent] = useState<string>(children);
+  const [isTranslating, setIsTranslating] = useState(false);
+  const isMounted = useRef(true);
+  const originalText = useRef(children);
 
   useEffect(() => {
-    let isMounted = true;
+    isMounted.current = true;
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    // If the original text changes, update our reference to it
+    if (children !== originalText.current) {
+      originalText.current = children;
+    }
+    
+    // Check if we should proceed with translation
+    if (!children || children.trim() === '') {
+      setTranslatedContent(children);
+      return;
+    }
+
+    let timeoutId: NodeJS.Timeout;
     
     const translateText = async () => {
+      if (!currentLanguage) return;
+      
+      setIsTranslating(true);
       try {
+        console.log(`Translating: "${children}" to ${currentLanguage}`);
         const translated = await translate(children);
-        if (isMounted) {
+        
+        if (isMounted.current) {
           setTranslatedContent(translated);
         }
       } catch (error) {
         console.error("Translation error:", error);
         // If translation fails, fall back to original text
-        if (isMounted) {
+        if (isMounted.current) {
           setTranslatedContent(children);
+        }
+      } finally {
+        if (isMounted.current) {
+          setIsTranslating(false);
         }
       }
     };
 
-    // Always run translation when language changes or text changes
-    translateText();
+    // Small delay to avoid too many translation requests at once
+    timeoutId = setTimeout(() => {
+      translateText();
+    }, 10);
     
     return () => {
-      isMounted = false;
+      clearTimeout(timeoutId);
     };
   }, [children, currentLanguage, translate]);
 
-  if (withLoading && isLoading) {
+  // Show loading state if requested and translation is in progress
+  if (withLoading && (isLoading || isTranslating)) {
     return (
       <Component className={`animate-pulse ${className}`} {...rest}>
-        {translatedContent}
+        {translatedContent || children}
       </Component>
     );
   }
 
   return (
     <Component className={className} {...rest}>
-      {translatedContent}
+      {translatedContent || children}
     </Component>
   );
 };

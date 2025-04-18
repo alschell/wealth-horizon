@@ -75,49 +75,81 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
   
   // Load language preference from local storage on initial load
   useEffect(() => {
-    const savedLanguage = localStorage.getItem('preferredLanguage') as LanguageCode;
-    if (savedLanguage && LANGUAGES.some(lang => lang.code === savedLanguage)) {
-      setCurrentLanguage(savedLanguage);
-    } else {
-      const browserLang = navigator.language.split('-')[0] as LanguageCode;
-      if (LANGUAGES.some(lang => lang.code === browserLang)) {
-        setCurrentLanguage(browserLang);
+    const loadLanguage = () => {
+      try {
+        const savedLanguage = localStorage.getItem('preferredLanguage') as LanguageCode;
+        if (savedLanguage && LANGUAGES.some(lang => lang.code === savedLanguage)) {
+          console.log(`Loading saved language preference: ${savedLanguage}`);
+          setCurrentLanguage(savedLanguage);
+          return;
+        }
+      } catch (error) {
+        console.error("Error loading language from localStorage:", error);
       }
-    }
+      
+      // Fallback to browser language if no saved preference
+      try {
+        const browserLang = navigator.language.split('-')[0] as LanguageCode;
+        if (LANGUAGES.some(lang => lang.code === browserLang)) {
+          console.log(`Using browser language: ${browserLang}`);
+          setCurrentLanguage(browserLang);
+        }
+      } catch (error) {
+        console.error("Error detecting browser language:", error);
+      }
+    };
+    
+    loadLanguage();
   }, []);
 
-  // Save user language preference to database if logged in
+  // Save user language preference to database if logged in and to localStorage
   useEffect(() => {
     const saveLanguagePreference = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
+      if (!currentLanguage) return;
       
-      if (user) {
-        const { error } = await supabase
-          .from('user_language_preferences')
-          .upsert({ 
-            user_id: user.id, 
-            language_code: currentLanguage 
-          }, { 
-            onConflict: 'user_id' 
-          });
+      try {
+        // Save to localStorage first (more reliable)
+        localStorage.setItem('preferredLanguage', currentLanguage);
+        console.log(`Saved language preference to localStorage: ${currentLanguage}`);
+        
+        // Try to save to database if user is logged in
+        try {
+          const { data: { user } } = await supabase.auth.getUser();
           
-        if (error) {
-          console.error('Failed to save language preference:', error);
+          if (user) {
+            const { error } = await supabase
+              .from('user_language_preferences')
+              .upsert({ 
+                user_id: user.id, 
+                language_code: currentLanguage 
+              }, { 
+                onConflict: 'user_id' 
+              });
+              
+            if (error) {
+              console.error('Failed to save language preference to database:', error);
+            } else {
+              console.log(`Saved language preference to database for user ${user.id}: ${currentLanguage}`);
+            }
+          }
+        } catch (dbError) {
+          console.error('Database error when saving language preference:', dbError);
+          // Continue execution even if database save fails
         }
+        
+        // Update HTML lang attribute and direction
+        document.documentElement.lang = currentLanguage;
+        document.documentElement.dir = ['ar', 'he', 'fa'].includes(currentLanguage) ? 'rtl' : 'ltr';
+        
+        // Force re-render by updating key
+        setKey(prevKey => prevKey + 1);
+      } catch (error) {
+        console.error("Error saving language preference:", error);
       }
-      
-      localStorage.setItem('preferredLanguage', currentLanguage);
     };
     
     if (currentLanguage) {
       saveLanguagePreference();
-      
-      // Update HTML lang attribute and direction
-      document.documentElement.lang = currentLanguage;
-      document.documentElement.dir = ['ar', 'he', 'fa'].includes(currentLanguage) ? 'rtl' : 'ltr';
-      
-      // Force re-render by updating key
-      setKey(prevKey => prevKey + 1);
     }
   }, [currentLanguage]);
 
@@ -125,13 +157,22 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
   const setLanguage = useCallback(async (language: LanguageCode) => {
     console.log(`Changing language to: ${language}`);
     
-    // Clear existing translation cache completely to force re-translation
-    setTranslationCache({});
-    
-    // Update the current language
-    setCurrentLanguage(language);
-    
-    // This will trigger the effect above that updates document lang/dir and forces re-render
+    try {
+      // Clear existing translation cache completely to force re-translation
+      setTranslationCache({});
+      
+      // Update the current language
+      setCurrentLanguage(language);
+      
+      // Update localStorage immediately for better persistence across pages
+      localStorage.setItem('preferredLanguage', language);
+      
+      // This will trigger the effect above that updates document lang/dir and forces re-render
+      return Promise.resolve();
+    } catch (error) {
+      console.error(`Error setting language to ${language}:`, error);
+      return Promise.reject(error);
+    }
   }, []);
 
   // Process text before translation to protect non-translatable terms

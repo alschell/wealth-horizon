@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { BookOpen, Download, FileText } from "lucide-react";
 import { showDownloadToast, showDocumentationToast } from "@/utils/toast/documentationToasts";
+import { TranslatedText } from "@/components/ui/translated-text";
 
 export const DocumentationHeader: React.FC = () => {
   const [downloadingSDK, setDownloadingSDK] = useState<string | null>(null);
@@ -32,9 +33,13 @@ export const DocumentationHeader: React.FC = () => {
       <div className="bg-indigo-50 rounded-xl p-8">
         <div className="flex flex-col md:flex-row items-center justify-between">
           <div className="mb-6 md:mb-0 md:mr-8">
-            <h2 className="text-2xl font-semibold text-gray-800 mb-2">WealthHorizon API Documentation</h2>
+            <h2 className="text-2xl font-semibold text-gray-800 mb-2">
+              <TranslatedText>WealthHorizon API Documentation</TranslatedText>
+            </h2>
             <p className="text-gray-600 max-w-2xl">
-              Complete technical documentation for integrating with the WealthHorizon platform, including API references, code examples, and integration guides.
+              <TranslatedText>
+                Complete technical documentation for integrating with the WealthHorizon platform, including API references, code examples, and integration guides.
+              </TranslatedText>
             </p>
           </div>
           <div className="flex flex-col sm:flex-row gap-3">
@@ -46,9 +51,13 @@ export const DocumentationHeader: React.FC = () => {
             >
               <Link to="/api-docs/api-reference">
                 {openingDocs === "API Reference" ? (
-                  <>Loading... <span className="animate-spin ml-1">⟳</span></>
+                  <>
+                    <TranslatedText>Loading...</TranslatedText> <span className="animate-spin ml-1">⟳</span>
+                  </>
                 ) : (
-                  <><FileText size={16} /> API Reference</>
+                  <>
+                    <FileText size={16} /> <TranslatedText>API Reference</TranslatedText>
+                  </>
                 )}
               </Link>
             </Button>
@@ -59,9 +68,13 @@ export const DocumentationHeader: React.FC = () => {
               disabled={downloadingSDK === "WealthHorizon"}
             >
               {downloadingSDK === "WealthHorizon" ? (
-                <>Downloading... <span className="animate-spin ml-1">⟳</span></>
+                <>
+                  <TranslatedText>Downloading...</TranslatedText> <span className="animate-spin ml-1">⟳</span>
+                </>
               ) : (
-                <><Download size={16} /> Download SDK</>
+                <>
+                  <Download size={16} /> <TranslatedText>Download SDK</TranslatedText>
+                </>
               )}
             </Button>
           </div>

@@ -4,6 +4,7 @@ import { MessageCircle, FileText, BookOpen, ExternalLink, Download } from "lucid
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useNotifications } from "@/hooks/use-notifications";
+import { TranslatedText } from "@/components/ui/translated-text";
 
 export const SupportSection: React.FC = () => {
   const navigate = useNavigate();
@@ -37,38 +38,48 @@ export const SupportSection: React.FC = () => {
         <div className="bg-indigo-600 rounded-xl p-8 text-white">
           <div className="flex items-center mb-4">
             <MessageCircle size={24} className="mr-3" />
-            <h2 className="text-xl font-semibold text-white">Chat with Support</h2>
+            <h2 className="text-xl font-semibold text-white">
+              <TranslatedText>Chat with Support</TranslatedText>
+            </h2>
           </div>
           <p className="mb-6">
-            Get immediate assistance from our team of wealth management and technical experts through our chat support.
+            <TranslatedText>
+              Get immediate assistance from our team of wealth management and technical experts through our chat support.
+            </TranslatedText>
           </p>
           <Button 
             className="bg-white text-indigo-600 hover:bg-gray-100"
             onClick={startChat}
           >
-            Start a Chat
+            <TranslatedText>Start a Chat</TranslatedText>
           </Button>
         </div>
         
         <div className="bg-indigo-600 rounded-xl p-8 text-white">
           <div className="flex items-center mb-4">
             <FileText size={24} className="mr-3" />
-            <h2 className="text-xl font-semibold text-white">Contact Support</h2>
+            <h2 className="text-xl font-semibold text-white">
+              <TranslatedText>Contact Support</TranslatedText>
+            </h2>
           </div>
           <p className="mb-6">
-            Need additional help? Submit a support ticket and our team will get back to you as soon as possible.
+            <TranslatedText>
+              Need additional help? Submit a support ticket and our team will get back to you as soon as possible.
+            </TranslatedText>
           </p>
           <Button 
             className="bg-white text-indigo-600 hover:bg-gray-100"
             onClick={submitTicket}
           >
-            Submit a Ticket
+            <TranslatedText>Submit a Ticket</TranslatedText>
           </Button>
         </div>
       </section>
       
       <section className="bg-gray-50 rounded-xl p-8 mt-12">
-        <h2 className="text-2xl font-semibold text-gray-800 mb-4">Additional Resources</h2>
+        <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+          <TranslatedText>Additional Resources</TranslatedText>
+        </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           <Button 
             variant="outline" 
@@ -77,7 +88,7 @@ export const SupportSection: React.FC = () => {
           >
             <div className="flex items-center cursor-pointer">
               <BookOpen size={20} className="mr-3 text-indigo-600" />
-              <span>API Documentation</span>
+              <span><TranslatedText>API Documentation</TranslatedText></span>
             </div>
           </Button>
           <Button 
@@ -87,7 +98,7 @@ export const SupportSection: React.FC = () => {
           >
             <div className="flex items-center cursor-pointer">
               <Download size={20} className="mr-3 text-indigo-600" />
-              <span>User Guides</span>
+              <span><TranslatedText>User Guides</TranslatedText></span>
             </div>
           </Button>
           <Button 
@@ -97,7 +108,7 @@ export const SupportSection: React.FC = () => {
           >
             <div className="flex items-center cursor-pointer">
               <ExternalLink size={20} className="mr-3 text-indigo-600" />
-              <span>Video Tutorials</span>
+              <span><TranslatedText>Video Tutorials</TranslatedText></span>
             </div>
           </Button>
           <Button 
@@ -107,7 +118,7 @@ export const SupportSection: React.FC = () => {
           >
             <div className="flex items-center cursor-pointer">
               <MessageCircle size={20} className="mr-3 text-indigo-600" />
-              <span>Community Forum</span>
+              <span><TranslatedText>Community Forum</TranslatedText></span>
             </div>
           </Button>
         </div>

@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Article } from "@/types/help-center";
 import { helpArticles } from "@/data/help-articles";
 import { useNotifications } from "@/hooks/use-notifications";
+import { TranslatedText } from "@/components/ui/translated-text";
 
 interface ArticleViewProps {
   article: Article;
@@ -30,7 +31,9 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
     });
 
     showSuccess(
-      isHelpful ? "Thank you for your feedback!" : "We'll try to improve this article",
+      isHelpful ? 
+        "Thank you for your feedback!" : 
+        "We'll try to improve this article",
       isHelpful 
         ? "We're glad this article was helpful." 
         : "Thank you for letting us know. We'll work on making this article more helpful."
@@ -49,15 +52,16 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
   return (
     <section>
       <Button variant="outline" className="mb-6" onClick={goBack}>
-        <ArrowLeft className="mr-2 h-4 w-4" /> Back to Help Center
+        <ArrowLeft className="mr-2 h-4 w-4" /> <TranslatedText>Back to Help Center</TranslatedText>
       </Button>
       
       <Card>
         <CardHeader>
-          <CardTitle className="text-2xl">{article.title}</CardTitle>
+          <CardTitle className="text-2xl"><TranslatedText>{article.title}</TranslatedText></CardTitle>
           <CardDescription>
-            <span className="mr-3">Category: {article.category}</span>
-            <span>Tags: {article.tags.join(", ")}</span>
+            <TranslatedText>Category: {article.category}</TranslatedText>
+            <span className="mr-3"></span>
+            <TranslatedText>Tags: {article.tags.join(", ")}</TranslatedText>
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -68,7 +72,7 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
         </CardContent>
         <CardFooter className="flex justify-between flex-wrap">
           <div className="text-sm text-gray-500">
-            Was this article helpful?
+            <TranslatedText>Was this article helpful?</TranslatedText>
             <Button 
               variant="outline" 
               size="sm" 
@@ -76,7 +80,7 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
               onClick={() => handleArticleFeedback(article.id, true)}
               disabled={articleFeedback[article.id] !== undefined}
             >
-              Yes
+              <TranslatedText>Yes</TranslatedText>
             </Button>
             <Button 
               variant="outline" 
@@ -85,18 +89,18 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
               onClick={() => handleArticleFeedback(article.id, false)}
               disabled={articleFeedback[article.id] !== undefined}
             >
-              No
+              <TranslatedText>No</TranslatedText>
             </Button>
           </div>
           <Button variant="outline" onClick={goBack}>
-            Back to Help Center
+            <TranslatedText>Back to Help Center</TranslatedText>
           </Button>
         </CardFooter>
       </Card>
       
       {relatedArticles.length > 0 && (
         <div className="mt-8">
-          <h3 className="text-xl font-semibold mb-4">Related Articles</h3>
+          <h3 className="text-xl font-semibold mb-4"><TranslatedText>Related Articles</TranslatedText></h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {relatedArticles.map(a => (
               <Card 
@@ -105,8 +109,8 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
                 onClick={() => goBack()}
               >
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-lg">{a.title}</CardTitle>
-                  <CardDescription>{a.shortDescription}</CardDescription>
+                  <CardTitle className="text-lg"><TranslatedText>{a.title}</TranslatedText></CardTitle>
+                  <CardDescription><TranslatedText>{a.shortDescription}</TranslatedText></CardDescription>
                 </CardHeader>
               </Card>
             ))}

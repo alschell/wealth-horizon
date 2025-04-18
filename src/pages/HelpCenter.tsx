@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import PageTemplate from "@/components/shared/PageTemplate";
 import { HelpCircle } from "lucide-react";
-import TranslatedText from "@/components/ui/translated-text";
+import { TranslatedText } from "@/components/ui/translated-text";
 import { Article } from "@/types/help-center";
 import { helpArticles } from "@/data/help-articles";
 import { ArticleView } from "@/components/help-center/ArticleView";

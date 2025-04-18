@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import PageTemplate from "@/components/shared/PageTemplate";
 import { FileText } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
-import TranslatedText from "@/components/ui/translated-text";
+import { TranslatedText } from "@/components/ui/translated-text";
 import {
   ApiReferenceSection,
   CodeExamples,

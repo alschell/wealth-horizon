@@ -1,3 +1,4 @@
+
 import { useCallback } from 'react';
 import { DocumentFileWithMetadata } from '../../types';
 import { showSuccess, showError } from '@/utils/toast';
@@ -6,6 +7,7 @@ import { useDocumentFactory } from './useDocumentFactory';
 import { useDocumentFileHandler } from './useDocumentFileHandler';
 import { useDocumentFieldHandlers } from './useDocumentFieldHandlers';
 import { useDocumentOperations } from './useDocumentOperations';
+import { DocumentValidationErrors } from './validation/types';
 
 export interface UseDocumentEventHandlersProps {
   documentType: string;
@@ -18,8 +20,8 @@ export interface UseDocumentEventHandlersProps {
   setSelectedFile: (file: File | null) => void;
   documentFiles: DocumentFileWithMetadata[];
   setDocumentFiles: React.Dispatch<React.SetStateAction<DocumentFileWithMetadata[]>>;
-  errors: Record<string, boolean>;
-  setErrors: React.Dispatch<React.SetStateAction<Record<string, boolean>>>;
+  errors: Record<string, boolean>;  // Changed from DocumentValidationErrors to Record<string, boolean>
+  setErrors: React.Dispatch<React.SetStateAction<Record<string, boolean>>>;  // Updated to match errors type
   fileError: string | null;
   setFileError: (error: string | null) => void;
   isEditing: boolean;
@@ -56,7 +58,7 @@ export function useDocumentEventHandlers({
   onSave
 }: UseDocumentEventHandlersProps) {
   // Get validation functions
-  const { validateFields, validateFile } = useDocumentValidation();
+  const { validateFields, validateFile, hasErrors } = useDocumentValidation();
   
   // Get document factory functions
   const { createDocument, updateDocumentInList, removeDocumentFromList } = useDocumentFactory();
@@ -96,8 +98,14 @@ export function useDocumentEventHandlers({
     // Validate required fields
     const newErrors = validateFields(documentType, issueDate, selectedFile);
     
+    // Convert DocumentValidationErrors to Record<string, boolean> if needed
+    const errorRecord: Record<string, boolean> = {};
+    Object.entries(newErrors).forEach(([key, value]) => {
+      errorRecord[key] = !!value;
+    });
+    
     if (Object.keys(newErrors).length > 0) {
-      setErrors((prev) => ({ ...prev, ...newErrors }));
+      setErrors((prev) => ({ ...prev, ...errorRecord }));
       return;
     }
     
@@ -131,8 +139,14 @@ export function useDocumentEventHandlers({
     // Validate required fields
     const newErrors = validateFields(documentType, issueDate, selectedFile);
     
+    // Convert DocumentValidationErrors to Record<string, boolean> if needed
+    const errorRecord: Record<string, boolean> = {};
+    Object.entries(newErrors).forEach(([key, value]) => {
+      errorRecord[key] = !!value;
+    });
+    
     if (Object.keys(newErrors).length > 0) {
-      setErrors((prev) => ({ ...prev, ...newErrors }));
+      setErrors((prev) => ({ ...prev, ...errorRecord }));
       return;
     }
     

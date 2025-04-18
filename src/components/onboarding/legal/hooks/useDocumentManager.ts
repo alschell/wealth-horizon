@@ -31,8 +31,8 @@ export function useDocumentManager({
     setSelectedFile: formState.setSelectedFile,
     documentFiles: formState.documentFiles,
     setDocumentFiles: formState.setDocumentFiles,
-    errors: formState.errors,
-    setErrors: formState.setErrors,
+    errors: formState.errors as Record<string, boolean>,  // Type assertion to ensure compatibility
+    setErrors: formState.setErrors as React.Dispatch<React.SetStateAction<Record<string, boolean>>>,  // Type assertion
     fileError: formState.fileError,
     setFileError: formState.setFileError,
     isEditing: formState.isEditing,

@@ -9,10 +9,12 @@ export interface ValidationResult {
   error?: string;
 }
 
+// Update DocumentValidationErrors to have string index signature for better compatibility
 export interface DocumentValidationErrors {
   documentType?: boolean;
   issueDate?: boolean;
   selectedFile?: boolean;
+  [key: string]: boolean | undefined; // Add index signature for compatibility with Record<string, boolean>
 }
 
 export interface FileValidationResult {

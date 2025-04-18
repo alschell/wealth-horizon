@@ -4,7 +4,7 @@ import { HelmetProvider } from "react-helmet-async";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClientProvider, createQueryClient } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { Routes, Route } from "react-router-dom";
 import { OnboardingProvider } from "./context/OnboardingContext";
 import { TranslationProvider } from "./context/TranslationContext";
@@ -71,6 +71,7 @@ import DeveloperPortal from "./pages/DeveloperPortal";
 import UserGuides from "./pages/UserGuides";
 import SupportTicket from "./pages/SupportTicket";
 import CommunityForum from "./pages/CommunityForum";
+import { createQueryClient } from "./utils/queryClient";
 
 function App() {
   // Create a query client with robust error handling

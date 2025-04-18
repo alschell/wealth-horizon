@@ -47,31 +47,33 @@ export const ActivityList: React.FC<ActivityListProps> = ({ activities }) => {
       </CardHeader>
       <CardContent>
         <ScrollArea className="h-[calc(100vh-240px)]">
-          {activities.length > 0 ? (
-            <div className="space-y-4">
-              {activities.map((activity) => (
-                <div 
-                  key={activity.id}
-                  className="flex items-start p-4 rounded-md bg-white border hover:bg-gray-50 transition-colors"
-                >
-                  <div className="h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center mr-4">
-                    {getIcon(activity.type)}
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex justify-between">
-                      <h3 className="font-medium">{activity.title}</h3>
-                      <span className="text-sm text-gray-500">{activity.timestamp}</span>
+          <div>
+            {activities.length > 0 ? (
+              <div className="space-y-4">
+                {activities.map((activity) => (
+                  <div 
+                    key={activity.id}
+                    className="flex items-start p-4 rounded-md bg-white border hover:bg-gray-50 transition-colors"
+                  >
+                    <div className="h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center mr-4">
+                      {getIcon(activity.type)}
                     </div>
-                    <p className="text-sm text-gray-500 mt-1">{activity.description}</p>
+                    <div className="flex-1">
+                      <div className="flex justify-between">
+                        <h3 className="font-medium">{activity.title}</h3>
+                        <span className="text-sm text-gray-500">{activity.timestamp}</span>
+                      </div>
+                      <p className="text-sm text-gray-500 mt-1">{activity.description}</p>
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-8">
-              <p className="text-gray-500">No activities match the selected filters</p>
-            </div>
-          )}
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-8">
+                <p className="text-gray-500">No activities match the selected filters</p>
+              </div>
+            )}
+          </div>
         </ScrollArea>
       </CardContent>
     </Card>

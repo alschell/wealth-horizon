@@ -59,9 +59,11 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
         <CardHeader>
           <CardTitle className="text-2xl"><TranslatedText>{article.title}</TranslatedText></CardTitle>
           <CardDescription>
-            <TranslatedText>Category: {article.category}</TranslatedText>
+            <TranslatedText>Category: </TranslatedText>
+            <TranslatedText>{article.category}</TranslatedText>
             <span className="mr-3"></span>
-            <TranslatedText>Tags: {article.tags.join(", ")}</TranslatedText>
+            <TranslatedText>Tags: </TranslatedText>
+            <TranslatedText>{article.tags.join(", ")}</TranslatedText>
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -120,3 +122,4 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
     </section>
   );
 };
+

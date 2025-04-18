@@ -38,7 +38,7 @@ export const QuickStartGuide: React.FC<QuickStartGuideProps> = ({
       </CardHeader>
       <CardContent>
         <Steps>
-          <Step number={1} title={<TranslatedText>Get API Keys</TranslatedText>}>
+          <Step number={1} title="Get API Keys">
             <div className="mt-2 text-sm text-gray-600">
               <p><TranslatedText>Sign up for a developer account and obtain your API keys from the developer portal.</TranslatedText></p>
               <a 
@@ -50,7 +50,7 @@ export const QuickStartGuide: React.FC<QuickStartGuideProps> = ({
             </div>
           </Step>
           
-          <Step number={2} title={<TranslatedText>Install the SDK</TranslatedText>}>
+          <Step number={2} title="Install the SDK">
             <div className="mt-2 text-sm text-gray-600">
               <p><TranslatedText>Install the WealthHorizon SDK using npm or yarn:</TranslatedText></p>
               <div className="relative mt-2">
@@ -78,7 +78,7 @@ export const QuickStartGuide: React.FC<QuickStartGuideProps> = ({
             </div>
           </Step>
           
-          <Step number={3} title={<TranslatedText>Initialize the SDK</TranslatedText>}>
+          <Step number={3} title="Initialize the SDK">
             <div className="mt-2 text-sm text-gray-600">
               <p><TranslatedText>Import and initialize the SDK with your API key:</TranslatedText></p>
               <div className="relative mt-2">
@@ -107,7 +107,7 @@ const wh = new WealthHorizonSDK({
             </div>
           </Step>
           
-          <Step number={4} title={<TranslatedText>Make Your First API Call</TranslatedText>}>
+          <Step number={4} title="Make Your First API Call">
             <div className="mt-2 text-sm text-gray-600">
               <p><TranslatedText>Try making a simple API call to test your integration:</TranslatedText></p>
               <div className="relative mt-2">
@@ -150,13 +150,19 @@ getUserProfile();`, "first-call")}
         <div className="mt-6 bg-blue-50 p-4 rounded-md border border-blue-100">
           <h4 className="text-sm font-medium text-blue-800"><TranslatedText>Need more help?</TranslatedText></h4>
           <p className="mt-1 text-sm text-blue-700">
-            <TranslatedText>
-              Check out our <a href="/api-docs/api-reference" className="underline">API Reference</a> or 
-              contact our <a href="/support" className="underline">Support Team</a> for assistance.
-            </TranslatedText>
+            <TranslatedText>Check out our</TranslatedText>{" "}
+            <a href="/api-docs/api-reference" className="underline">
+              <TranslatedText>API Reference</TranslatedText>
+            </a>{" "}
+            <TranslatedText>or contact our</TranslatedText>{" "}
+            <a href="/support" className="underline">
+              <TranslatedText>Support Team</TranslatedText>
+            </a>{" "}
+            <TranslatedText>for assistance.</TranslatedText>
           </p>
         </div>
       </CardContent>
     </Card>
   );
 };
+

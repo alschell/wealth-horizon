@@ -63,7 +63,10 @@ export const SearchSection: React.FC<SearchSectionProps> = ({
                     </CardDescription>
                   </CardHeader>
                   <CardFooter className="pt-2 text-sm text-gray-500">
-                    <TranslatedText>Category: {article.category} • {article.tags.join(', ')}</TranslatedText>
+                    <TranslatedText>Category: </TranslatedText>
+                    <TranslatedText>{article.category}</TranslatedText>
+                    <span className="mx-1">•</span>
+                    <TranslatedText>{article.tags.join(', ')}</TranslatedText>
                   </CardFooter>
                 </Card>
               ))}
@@ -83,3 +86,4 @@ export const SearchSection: React.FC<SearchSectionProps> = ({
     </section>
   );
 };
+

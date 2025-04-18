@@ -3,7 +3,7 @@ import React, { Suspense } from "react";
 import { useLocation } from "react-router-dom";
 import LandingPage from "./LandingPage";
 import { withErrorBoundary } from "@/utils/withErrorBoundary";
-import LoadingSpinner from "@/components/common/LoadingSpinner";
+import EnhancedLoadingSpinner from "@/components/common/EnhancedLoadingSpinner";
 
 const Index = () => {
   const location = useLocation();
@@ -11,7 +11,14 @@ const Index = () => {
   return (
     <Suspense fallback={
       <div className="min-h-screen flex items-center justify-center">
-        <LoadingSpinner size="sm" color="text-gray-400" />
+        <EnhancedLoadingSpinner 
+          size="md" 
+          color="text-indigo-500" 
+          centered={true}
+          showDelay={0}
+          text="Loading..."
+          textPosition="bottom"
+        />
       </div>
     }>
       <LandingPage />

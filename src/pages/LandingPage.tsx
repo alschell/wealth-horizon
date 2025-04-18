@@ -4,28 +4,30 @@ import { Helmet } from "react-helmet-async";
 import { LandingLayout } from "@/components/landing";
 import { useTranslation } from "@/context/TranslationContext";
 import ErrorBoundary from "@/components/common/ErrorBoundary";
-import LoadingSpinner from "@/components/common/LoadingSpinner";
-import { Loader2 } from "lucide-react";
+import EnhancedLoadingSpinner from "@/components/common/EnhancedLoadingSpinner";
+import { useIsComponentMounted } from "@/hooks/useIsComponentMounted";
 
 /**
  * Main landing page with SEO optimization and structured data
  */
 const LandingPage: React.FC = () => {
-  const { translate, currentLanguage } = useTranslation();
+  const { translate, currentLanguage, isLoading: translationLoading } = useTranslation();
   const [title, setTitle] = useState("Wealth Horizon | Intelligent Wealth Management");
   const [description, setDescription] = useState("Wealth Horizon provides comprehensive wealth management solutions for family offices and high-net-worth individuals.");
   const [keywords, setKeywords] = useState("wealth management, family office, financial planning, investment");
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
+  const isMounted = useIsComponentMounted();
   
   useEffect(() => {
-    let isMounted = true;
     console.log("LandingPage: Translation effect triggered");
+    
+    // Maintain loading state until translations are complete
+    setIsLoading(true);
     
     const updateSEO = async () => {
       try {
         console.log("LandingPage: Starting SEO translation");
-        setIsLoading(true);
         
         // Use Promise.all to fetch all translations concurrently
         const [translatedTitle, translatedDescription, translatedKeywords] = await Promise.all([
@@ -36,19 +38,25 @@ const LandingPage: React.FC = () => {
         
         console.log("LandingPage: Translations completed successfully");
         
-        if (isMounted) {
+        if (isMounted()) {
           setTitle(translatedTitle);
           setDescription(translatedDescription);
           setKeywords(translatedKeywords);
-          setIsLoading(false);
           setHasError(false);
+          
+          // Add a small delay before removing loading state to prevent flickering
+          setTimeout(() => {
+            if (isMounted()) {
+              setIsLoading(false);
+            }
+          }, 300);
         }
       } catch (error) {
         console.error("Error translating SEO content:", error);
-        if (isMounted) {
+        if (isMounted()) {
           // On error, still show the page with default English text
-          setIsLoading(false);
           setHasError(true);
+          setIsLoading(false);
         }
       }
     };
@@ -56,9 +64,9 @@ const LandingPage: React.FC = () => {
     updateSEO();
     
     return () => {
-      isMounted = false;
+      // Cleanup handled by isMounted
     };
-  }, [translate, currentLanguage]);
+  }, [translate, currentLanguage, isMounted]);
 
   // Structured data for rich search results
   const structuredData = {
@@ -88,10 +96,18 @@ const LandingPage: React.FC = () => {
     "keywords": keywords
   };
 
-  if (isLoading) {
+  // Show loading state until all content is ready
+  if (isLoading || translationLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="h-5 w-5 text-gray-400 animate-spin" />
+        <EnhancedLoadingSpinner 
+          size="md" 
+          color="text-indigo-500" 
+          centered={true}
+          showDelay={0}
+          text="Loading content..."
+          textPosition="bottom"
+        />
       </div>
     );
   }

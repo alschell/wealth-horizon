@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/utils/supabaseClient';
-import { Loader2 } from 'lucide-react';
+import EnhancedLoadingSpinner from '@/components/common/EnhancedLoadingSpinner';
 
 // Define available languages
 export type LanguageCode = 
@@ -69,7 +69,7 @@ const TranslationContext = createContext<TranslationContextType>(defaultContext)
 export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currentLanguage, setCurrentLanguage] = useState<LanguageCode>('en');
   const [translationCache, setTranslationCache] = useState<Record<string, Record<string, string>>>({});
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true); // Start with loading state
   const [key, setKey] = useState(0); // Force component tree re-render with key
   const [isInitialized, setIsInitialized] = useState(false);
   
@@ -86,17 +86,27 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
           setCurrentLanguage(browserLang);
         }
       }
-      setIsInitialized(true);
-      console.log("TranslationProvider: Language initialized successfully");
+      // Add a delay to ensure initialization is smooth
+      setTimeout(() => {
+        setIsInitialized(true);
+        setIsLoading(false);
+        console.log("TranslationProvider: Language initialized successfully");
+      }, 200);
     } catch (error) {
       console.error("TranslationProvider: Error initializing language:", error);
       setIsInitialized(true); // Still mark as initialized to prevent hanging
+      setIsLoading(false);
     }
   }, []);
 
   // Save user language preference to database if logged in
   useEffect(() => {
+    if (!currentLanguage) return;
+    
     const saveLanguagePreference = async () => {
+      // Set loading state at the beginning of language change
+      setIsLoading(true);
+      
       const { data: { user } } = await supabase.auth.getUser();
       
       if (user) {
@@ -115,10 +125,6 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
       }
       
       localStorage.setItem('preferredLanguage', currentLanguage);
-    };
-    
-    if (currentLanguage) {
-      saveLanguagePreference();
       
       // Update HTML lang attribute and direction
       document.documentElement.lang = currentLanguage;
@@ -126,7 +132,14 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
       
       // Force re-render by updating key
       setKey(prevKey => prevKey + 1);
-    }
+      
+      // Keep loading state for a moment to avoid flickering
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 300);
+    };
+    
+    saveLanguagePreference();
   }, [currentLanguage]);
 
   // Function to set the language with more robust update mechanism
@@ -134,6 +147,9 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
     console.log(`Changing language to: ${language}`);
     
     try {
+      // Show loading state immediately
+      setIsLoading(true);
+      
       // Clear existing translation cache completely to force re-translation
       setTranslationCache({});
       
@@ -144,6 +160,7 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
       return Promise.resolve();
     } catch (error) {
       console.error("Failed to set language:", error);
+      setIsLoading(false);
       return Promise.reject(error);
     }
   }, []);
@@ -202,6 +219,7 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
       // Return original text immediately if translation service is unavailable
       if (!supabase) {
         console.error("Translation service unavailable: Supabase client not initialized");
+        setTimeout(() => setIsLoading(false), 200);
         return text;
       }
       
@@ -231,11 +249,13 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
       
       if (error) {
         console.error('Translation error:', error);
+        setTimeout(() => setIsLoading(false), 200);
         return text; // Return original text on error
       }
       
       if (!data || !data.translatedText) {
         console.error('Invalid translation response:', data);
+        setTimeout(() => setIsLoading(false), 200);
         return text; // Return original text if response is invalid
       }
       
@@ -251,12 +271,14 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
         }
       }));
       
+      // Delay turning off loading slightly to avoid flickering
+      setTimeout(() => setIsLoading(false), 200);
+      
       return finalTranslation;
     } catch (error) {
       console.error('Translation failed:', error);
+      setTimeout(() => setIsLoading(false), 200);
       return text; // Return original text on any error
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -269,7 +291,13 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
   if (!isInitialized) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="h-5 w-5 text-gray-400 animate-spin" />
+        <EnhancedLoadingSpinner 
+          size="md" 
+          color="text-indigo-500" 
+          centered={true} 
+          text="Initializing..." 
+          showDelay={0}
+        />
       </div>
     );
   }

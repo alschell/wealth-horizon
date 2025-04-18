@@ -13,6 +13,7 @@ export interface ErrorHandlerOptions {
   showToast?: boolean;
   fallbackMessage?: string;
   onError?: (error: unknown) => void;
+  componentName?: string; // Added for context in error logging
 }
 
 export function parseError(error: unknown): ErrorResponse {
@@ -44,13 +45,44 @@ export function parseError(error: unknown): ErrorResponse {
   };
 }
 
+// Add these missing utility functions
+export function getErrorMessage(error: unknown, fallbackMessage = "An unexpected error occurred"): string {
+  if (error instanceof Error) {
+    return error.message;
+  }
+  
+  if (typeof error === "string") {
+    return error;
+  }
+  
+  if (error && typeof error === "object" && "message" in error) {
+    return String((error as ErrorResponse).message);
+  }
+  
+  return fallbackMessage;
+}
+
+export function logError(error: unknown, componentName?: string): void {
+  console.error(`Error${componentName ? ` in ${componentName}` : ''}:`, error);
+  
+  if (error instanceof Error && error.stack) {
+    console.error('Stack trace:', error.stack);
+  }
+}
+
+export function createContextualError(message: string, componentName: string): Error {
+  const error = new Error(`[${componentName}] ${message}`);
+  return error;
+}
+
 export function handleError(error: unknown, options: ErrorHandlerOptions = {}) {
   const { 
     silent = false,
     logError = true,
     showToast = true,
     fallbackMessage = 'An unexpected error occurred',
-    onError 
+    onError,
+    componentName
   } = options;
 
   const errorDetails = parseError(error);
@@ -58,7 +90,8 @@ export function handleError(error: unknown, options: ErrorHandlerOptions = {}) {
   if (logError && !silent) {
     console.error('[Error Handler]:', {
       error: errorDetails,
-      originalError: error
+      originalError: error,
+      component: componentName
     });
   }
 

@@ -28,15 +28,15 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-white">
-      <div className="w-full max-w-md px-8 py-12">
-        <Link 
-          to="/" 
-          className="text-indigo-600 hover:underline mb-4 inline-block"
-        >
-          &larr; Back to Home
-        </Link>
+    <div className="min-h-screen flex items-center justify-center bg-white relative">
+      <Link 
+        to="/" 
+        className="absolute top-4 left-4 text-indigo-600 hover:underline"
+      >
+        &larr; Back to Home
+      </Link>
 
+      <div className="w-full max-w-md px-8 py-12">
         <FadeIn>
           <div className="mb-10 text-center">
             <Link to="/" className="inline-block mb-8">

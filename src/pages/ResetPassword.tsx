@@ -1,6 +1,5 @@
 
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
 import { Mail, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -30,14 +29,6 @@ const ResetPassword = () => {
     <div className="min-h-screen flex items-stretch">
       {/* Left column with form */}
       <div className="w-1/2 bg-white flex flex-col justify-center px-8 py-12 md:px-16 relative z-10">
-        <Link 
-          to="/login" 
-          className="absolute top-8 left-8 inline-flex items-center text-indigo-600 hover:text-indigo-500 font-medium transition-colors"
-        >
-          <ArrowRight className="mr-2 h-4 w-4" />
-          Back to Login
-        </Link>
-
         <div className="max-w-md mx-auto w-full">
           <FadeIn>
             {/* Logo and heading */}

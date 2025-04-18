@@ -1,5 +1,5 @@
 
-import { FileValidationResult, DocumentValidationErrors } from './types';
+import { FileValidationResult, DocumentValidationErrors, AllowedFileType } from './types';
 import { FILE_VALIDATION } from './constants';
 
 export const validateDocumentFile = (file: File): FileValidationResult => {
@@ -17,7 +17,7 @@ export const validateDocumentFile = (file: File): FileValidationResult => {
     };
   }
 
-  if (!FILE_VALIDATION.ALLOWED_TYPES.includes(file.type as any)) {
+  if (!FILE_VALIDATION.ALLOWED_TYPES.includes(file.type as AllowedFileType)) {
     return {
       isValid: false,
       error: FILE_VALIDATION.MESSAGES.FILE_TYPE

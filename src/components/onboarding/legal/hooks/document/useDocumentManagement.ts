@@ -33,20 +33,6 @@ export const useDocumentManagement = (
     });
   }, [form, createDocument, formState]);
 
-  const handleEditDocument = useCallback((documentId: string) => {
-    const documentToEdit = formState.documentFiles.find(doc => doc.id === documentId);
-    
-    if (documentToEdit) {
-      form.setFieldValue('documentType', documentToEdit.documentType);
-      form.setFieldValue('issueDate', documentToEdit.issueDate);
-      form.setFieldValue('expiryDate', documentToEdit.expiryDate || '');
-      form.setFieldValue('selectedFile', documentToEdit.file);
-      
-      formState.setIsEditing(true);
-      formState.setEditingDocumentId(documentId);
-    }
-  }, [formState, form]);
-
   const handleUpdateDocument = useCallback(() => {
     if (!formState.editingDocumentId) return;
     
@@ -58,7 +44,7 @@ export const useDocumentManagement = (
     formState.setDocumentFiles(prev => 
       updateDocumentInList(
         prev,
-        formState.editingDocumentId!,
+        formState.editingDocumentId,
         values.documentType,
         values.issueDate,
         values.expiryDate,
@@ -78,7 +64,7 @@ export const useDocumentManagement = (
 
   return {
     handleAddDocument,
-    handleEditDocument,
     handleUpdateDocument
   };
 };
+

@@ -1,11 +1,11 @@
 
 import { useCallback } from 'react';
 import { toast } from '@/components/ui/use-toast';
-import { useDocumentValidationUtil } from './useDocumentValidationUtil';
+import { DocumentValidationUtil } from './useDocumentValidationUtil';
 import { DocumentFormValues } from './types';
 
 export const useDocumentFileHandling = (form: any) => {
-  const { validateFile } = useDocumentValidationUtil();
+  const { validateFile } = DocumentValidationUtil;
 
   const handleFileSelected = useCallback((files: File[]) => {
     if (files.length === 0) return;
@@ -37,3 +37,4 @@ export const useDocumentFileHandling = (form: any) => {
     handleFileClear
   };
 };
+

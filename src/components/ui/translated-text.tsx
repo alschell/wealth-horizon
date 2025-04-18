@@ -22,6 +22,7 @@ export const TranslatedText: React.FC<TranslatedTextProps> = ({
   const [hasError, setHasError] = useState(false);
   const isMounted = useRef(true);
   const originalText = useRef(children);
+  const previousLanguage = useRef(currentLanguage);
 
   useEffect(() => {
     isMounted.current = true;
@@ -45,7 +46,12 @@ export const TranslatedText: React.FC<TranslatedTextProps> = ({
       return;
     }
 
-    let timeoutId: NodeJS.Timeout;
+    // Only translate if language has changed or content has changed
+    if (currentLanguage === previousLanguage.current && translatedContent && translatedContent !== children) {
+      return;
+    }
+
+    previousLanguage.current = currentLanguage;
     
     const translateText = async () => {
       if (!currentLanguage) return;
@@ -72,8 +78,8 @@ export const TranslatedText: React.FC<TranslatedTextProps> = ({
       }
     };
 
-    // Small delay to avoid too many translation requests at once
-    timeoutId = setTimeout(() => {
+    // Delay translation slightly to avoid overwhelming the system
+    const timeoutId = setTimeout(() => {
       translateText();
     }, 10);
     

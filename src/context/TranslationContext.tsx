@@ -75,8 +75,9 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
   
   // Load language preference from local storage on initial load
   useEffect(() => {
-    const loadLanguage = () => {
+    const loadLanguage = async () => {
       try {
+        console.log("Loading language preferences...");
         const savedLanguage = localStorage.getItem('preferredLanguage') as LanguageCode;
         if (savedLanguage && LANGUAGES.some(lang => lang.code === savedLanguage)) {
           console.log(`Loading saved language preference: ${savedLanguage}`);
@@ -101,6 +102,17 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
     
     loadLanguage();
   }, []);
+
+  // Apply language changes to document
+  useEffect(() => {
+    if (currentLanguage) {
+      console.log(`Applying language changes to document: ${currentLanguage}`);
+      
+      // Update HTML lang attribute and direction
+      document.documentElement.lang = currentLanguage;
+      document.documentElement.dir = ['ar', 'he', 'fa'].includes(currentLanguage) ? 'rtl' : 'ltr';
+    }
+  }, [currentLanguage]);
 
   // Save user language preference to database if logged in and to localStorage
   useEffect(() => {
@@ -137,10 +149,6 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
           // Continue execution even if database save fails
         }
         
-        // Update HTML lang attribute and direction
-        document.documentElement.lang = currentLanguage;
-        document.documentElement.dir = ['ar', 'he', 'fa'].includes(currentLanguage) ? 'rtl' : 'ltr';
-        
         // Force re-render by updating key
         setKey(prevKey => prevKey + 1);
       } catch (error) {
@@ -158,19 +166,27 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
     console.log(`Changing language to: ${language}`);
     
     try {
-      // Clear existing translation cache completely to force re-translation
-      setTranslationCache({});
+      setIsLoading(true);
+      
+      // Clear existing translation cache for the new language
+      setTranslationCache(prevCache => {
+        const newCache = { ...prevCache };
+        // Only clear the target language cache to force fresh translations
+        delete newCache[language];
+        return newCache;
+      });
       
       // Update the current language
       setCurrentLanguage(language);
       
-      // Update localStorage immediately for better persistence across pages
-      localStorage.setItem('preferredLanguage', language);
+      // Force re-render of all components using the context
+      setKey(prevKey => prevKey + 1);
       
-      // This will trigger the effect above that updates document lang/dir and forces re-render
+      setIsLoading(false);
       return Promise.resolve();
     } catch (error) {
       console.error(`Error setting language to ${language}:`, error);
+      setIsLoading(false);
       return Promise.reject(error);
     }
   }, []);
@@ -233,6 +249,7 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
       
       if (error) {
         console.error('Translation error:', error);
+        setIsLoading(false);
         return text;
       }
       
@@ -248,12 +265,12 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
         }
       }));
       
+      setIsLoading(false);
       return finalTranslation;
     } catch (error) {
       console.error('Translation failed:', error);
-      return text;
-    } finally {
       setIsLoading(false);
+      return text;
     }
   };
 

@@ -25,11 +25,11 @@ export function LanguageSelector() {
       // Store language in localStorage for persistence across pages
       localStorage.setItem('preferredLanguage', langCode);
       
-      // Full page reload to ensure all components reflect the new language
-      window.location.reload();
+      // No longer doing a full page reload, letting React handle the state change
+      setIsChanging(false);
+      setIsOpen(false);
     } catch (error) {
       console.error("Failed to change language:", error);
-    } finally {
       setIsChanging(false);
       setIsOpen(false);
     }

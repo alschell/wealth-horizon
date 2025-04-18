@@ -12,6 +12,7 @@ interface TableSectionProps extends AnimationItemProp {
   subscribedIndices: string[];
   handleSelectIndex: (index: IndexData) => void;
   toggleSubscription: (indexName: string) => void;
+  item: Variants | any;
 }
 
 const TableSection: React.FC<TableSectionProps> = ({
@@ -35,6 +36,7 @@ const TableSection: React.FC<TableSectionProps> = ({
             selectedIndex={selectedIndex}
             isLoading={isLoading}
             onOpenChart={onOpenChart}
+            item={item}
           />
         </CardContent>
       </Card>

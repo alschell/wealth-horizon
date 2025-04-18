@@ -1,45 +1,67 @@
 
 import React from "react";
+import { motion, Variants } from "framer-motion";
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Filter } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { 
-  DropdownMenu, 
-  DropdownMenuContent, 
-  DropdownMenuItem, 
-  DropdownMenuTrigger 
-} from "@/components/ui/dropdown-menu";
+import { Search } from "lucide-react";
+import { AnimationItemProp } from "../types/animationTypes";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
-interface SearchAndFilterProps {
+export interface SearchAndFilterProps extends AnimationItemProp {
+  filter: string;
+  setFilter: (value: string) => void;
   searchTerm: string;
-  setSearchTerm: (term: string) => void;
+  setSearchTerm: (value: string) => void;
 }
 
-const SearchAndFilter: React.FC<SearchAndFilterProps> = ({ searchTerm, setSearchTerm }) => {
+const SearchAndFilter: React.FC<SearchAndFilterProps> = ({
+  filter,
+  setFilter,
+  searchTerm,
+  setSearchTerm,
+  item
+}) => {
   return (
-    <div className="flex items-center gap-2 w-full md:w-auto">
-      <div className="relative w-full md:w-64">
-        <Input 
-          placeholder="Search indices..." 
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="pl-3 bg-white w-full" 
-        />
-      </div>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="outline" size="icon">
-            <Filter className="h-4 w-4" />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuItem>Highest Value</DropdownMenuItem>
-          <DropdownMenuItem>Biggest Gainers</DropdownMenuItem>
-          <DropdownMenuItem>Biggest Losers</DropdownMenuItem>
-          <DropdownMenuItem>Highest Volume</DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </div>
+    <motion.div variants={item as Variants}>
+      <Card>
+        <CardContent className="p-4">
+          <div className="flex flex-col md:flex-row gap-4">
+            <div className="w-full md:w-1/3">
+              <Select value={filter} onValueChange={setFilter}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Filter by region" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectItem value="all">All Regions</SelectItem>
+                    <SelectItem value="north-america">North America</SelectItem>
+                    <SelectItem value="europe">Europe</SelectItem>
+                    <SelectItem value="asia-pacific">Asia-Pacific</SelectItem>
+                    <SelectItem value="emerging-markets">Emerging Markets</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="w-full md:w-2/3 relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-4 w-4" />
+              <Input
+                placeholder="Search indices..."
+                className="pl-9"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </motion.div>
   );
 };
 

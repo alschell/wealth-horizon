@@ -32,16 +32,7 @@ const NewsGrid: React.FC<NewsGridProps> = ({ news, highlightId }) => {
           id={`news-article-${newsItem.id}`}
           className={highlightId === newsItem.id.toString() ? "ring-2 ring-indigo-500 rounded-lg" : ""}
         >
-          <NewsCard 
-            id={newsItem.id.toString()}
-            title={newsItem.headline}
-            summary={newsItem.summary}
-            imageUrl={newsItem.image || "https://via.placeholder.com/300x200?text=No+Image"}
-            source={newsItem.source}
-            date={new Date(newsItem.datetime * 1000).toLocaleDateString()}
-            url={newsItem.url}
-            category={newsItem.category}
-          />
+          <NewsCard item={newsItem} />
         </motion.div>
       ))}
     </Grid>

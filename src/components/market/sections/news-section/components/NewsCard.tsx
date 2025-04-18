@@ -11,7 +11,7 @@ const NewsCard: React.FC<NewsCardProps> = ({ item }) => {
   return (
     <Card className="hover:bg-gray-50 transition-colors">
       <CardHeader className="pb-2">
-        <h3 className="text-lg font-medium">{item.title}</h3>
+        <h3 className="text-lg font-medium">{item.title || item.headline}</h3>
         <p className="text-sm text-gray-500">{item.source} · {item.date}</p>
       </CardHeader>
       <CardContent>

@@ -8,7 +8,8 @@ export const filterNewsItems = (
 ): NewsItem[] => {
   return items.filter(item => {
     if (category !== "all" && item.category !== category) return false;
-    if (searchTerm && !item.title.toLowerCase().includes(searchTerm.toLowerCase())) return false;
+    const title = item.title || item.headline || "";
+    if (searchTerm && !title.toLowerCase().includes(searchTerm.toLowerCase())) return false;
     return true;
   });
 };
@@ -21,25 +22,26 @@ export const getNewsItems = (): NewsItem[] => {
       title: "Fed signals potential rate cuts later this year as inflation cools",
       summary: "Federal Reserve officials indicated they're getting closer to cutting interest rates as inflation shows signs of returning to their 2% target.",
       source: "Financial Times",
+      date: "2h ago",
+      url: "#",
       image: "https://placehold.co/600x400/e2e8f0/64748b?text=FT",
       imageUrl: "https://placehold.co/600x400/e2e8f0/64748b?text=FT",
       category: "markets",
-      date: "2h ago",
-      datePublished: "2h ago",
-      url: "#",
       headline: "Fed signals potential rate cuts later this year as inflation cools",
-      datetime: new Date().getTime()
+      datetime: new Date().getTime(),
+      datePublished: "2h ago"
     },
     {
       id: "2",
       title: "Tech stocks rally on positive earnings outlook from major players",
       summary: "Technology shares led a market rally after several major companies reported better-than-expected quarterly results and raised their annual forecasts.",
       source: "Wall Street Journal",
+      date: "4h ago",
+      url: "#",
       image: "https://placehold.co/600x400/e2e8f0/64748b?text=WSJ",
       category: "stocks",
       datePublished: "4h ago",
-      isBreaking: false,
-      url: "#"
+      isBreaking: false
     },
     {
       id: "3",

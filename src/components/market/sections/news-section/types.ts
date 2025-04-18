@@ -6,10 +6,33 @@ export interface NewsItem {
   source: string;
   date: string;
   url: string;
+  // Add properties used in NewsGrid and newsUtils
+  image?: string;
+  imageUrl?: string;
+  category?: string;
+  headline?: string;
+  datetime?: number;
+  datePublished?: string;
+  isBreaking?: boolean;
 }
 
 export interface NewsSectionProps {
   news: NewsItem[];
-  // Add articleId property that's being used
   articleId?: string;
+}
+
+// Add the newsCategories object for NewsHeader
+export const newsCategories = {
+  all: "All Categories",
+  markets: "Markets",
+  stocks: "Stocks",
+  commodities: "Commodities",
+  forex: "Forex",
+  crypto: "Crypto",
+  economy: "Economy"
+};
+
+export interface ChartDataPoint {
+  date: string;
+  value: number;
 }

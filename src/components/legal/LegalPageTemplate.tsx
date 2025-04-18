@@ -2,7 +2,7 @@
 import React from 'react';
 import PageTemplate from "@/components/shared/PageTemplate";
 import { FileText } from "lucide-react";
-import TranslatedText from "@/components/ui/translated-text";
+import { TranslatedText } from "@/components/ui/translated-text";
 
 interface LegalPageTemplateProps {
   title: React.ReactNode;

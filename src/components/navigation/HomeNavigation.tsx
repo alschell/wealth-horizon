@@ -1,9 +1,9 @@
-
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { LanguageSelector } from '@/components/ui/language-selector';
 import { TranslatedText } from '@/components/ui/translated-text';
+import Logo from '@/components/ui/logo';
 
 const HomeNavigation: React.FC = () => {
   const navigate = useNavigate();
@@ -29,19 +29,14 @@ const HomeNavigation: React.FC = () => {
   };
 
   return (
-    <header 
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled 
-          ? 'bg-white shadow-md border-b border-gray-100' 
-          : 'bg-transparent border-b border-transparent'
-      }`}
-    >
+    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      scrolled 
+        ? 'bg-white shadow-md border-b border-gray-100' 
+        : 'bg-transparent border-b border-transparent'
+    }`}>
       <nav className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
         <div className="flex items-center">
-          <Link to="/" className="font-bold text-xl flex items-center">
-            <span className="text-indigo-600">Wealth</span>
-            <span className="text-gray-900">Horizon</span>
-          </Link>
+          <Logo />
           
           <div className="hidden md:flex items-center ml-10 space-x-8">
             <button 

@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { IndexData } from "../types";
@@ -22,7 +21,12 @@ export const useIndicesTracker = (providedIndices?: IndexData[]) => {
   const baseIndices = providedIndices || allWorldIndices;
   
   // Map to store symbol -> index data mapping
-  const symbolToData = new Map<string, { value: number, change: number, percentChange: number, volume?: number }>();
+  const symbolToData = new Map<string, { 
+    value: number, 
+    change: number, 
+    percentChange: number, 
+    volume?: number 
+  }>();
   
   // Prepare API data for mapping to our indices
   if (apiIndices?.length) {
@@ -48,9 +52,29 @@ export const useIndicesTracker = (providedIndices?: IndexData[]) => {
         value: apiData.value,
         change: apiData.change,
         percentChange: apiData.percentChange,
-        volume: apiData.volume || index.volume
+        volume: apiData.volume || index.volume,
+        data: index.data || {
+          c: apiData.value,
+          d: apiData.change,
+          dp: apiData.percentChange,
+          h: 0, l: 0, o: 0, pc: 0, t: 0
+        }
       };
     }
+    
+    // Ensure that data property is always present
+    if (!index.data && (index.value !== undefined || index.change !== undefined)) {
+      return {
+        ...index,
+        data: {
+          c: index.value || 0,
+          d: index.change || 0,
+          dp: index.percentChange || 0,
+          h: 0, l: 0, o: 0, pc: 0, t: 0
+        }
+      };
+    }
+    
     return index;
   });
   

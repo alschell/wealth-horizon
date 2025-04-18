@@ -17,6 +17,11 @@ const SubscriptionsCard: React.FC<SubscriptionsCardProps> = ({
   indices,
   handleSelectIndex
 }) => {
+  // Helper function to get change value safely
+  const getChangeValue = (index: IndexData) => {
+    return index.change ?? index.data?.d ?? 0;
+  };
+
   return (
     <Card>
       <CardHeader className="pb-2">
@@ -44,15 +49,15 @@ const SubscriptionsCard: React.FC<SubscriptionsCardProps> = ({
                     <p className="text-xs text-gray-500">{index.region}</p>
                   </div>
                   <div className={`flex items-center ${
-                    index.change >= 0 ? "text-green-500" : "text-red-500"
+                    getChangeValue(index) >= 0 ? "text-green-500" : "text-red-500"
                   }`}>
-                    {index.change >= 0 ? (
+                    {getChangeValue(index) >= 0 ? (
                       <TrendingUp className="h-4 w-4 mr-1" />
                     ) : (
                       <TrendingDown className="h-4 w-4 mr-1" />
                     )}
                     <span>
-                      {index.change >= 0 ? "+" : ""}{index.change}%
+                      {getChangeValue(index) >= 0 ? "+" : ""}{getChangeValue(index)}%
                     </span>
                   </div>
                 </div>

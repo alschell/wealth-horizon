@@ -6,7 +6,9 @@ export const generateChartData = (indexName: string, indices: IndexData[]): Char
   // This would come from a real API in a production app
   const data: ChartDataPoint[] = [];
   const foundIndex = indices.find(i => i.name === indexName);
-  const startValue = foundIndex ? foundIndex.value : 4000; // Use the number value directly
+  
+  // Use the value property or fall back to the Quote's current price
+  const startValue = foundIndex ? (foundIndex.value ?? foundIndex.data?.c ?? 4000) : 4000;
   const volatility = Math.random() * 0.5 + 0.5; // Random volatility factor
   
   // Generate 30 days of data

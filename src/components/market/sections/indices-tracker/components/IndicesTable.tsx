@@ -1,3 +1,4 @@
+
 import React from "react";
 import { motion } from "framer-motion";
 import {
@@ -80,12 +81,12 @@ const IndicesTable: React.FC<IndicesTableProps> = ({
             >
               <TableCell className="font-medium">{index.symbol}</TableCell>
               <TableCell>
-                {index.data?.c?.toFixed(2) || "N/A"}
+                {(index.data?.c || index.value || 0).toFixed(2)}
               </TableCell>
-              <TableCell className={getChangeColor(index.data?.dp || 0)}>
+              <TableCell className={getChangeColor(index.data?.dp || index.percentChange || 0)}>
                 <div className="flex items-center gap-1">
-                  {getChangeIndicator(index.data?.dp || 0)}
-                  {formatChange(index.data?.dp || 0)}
+                  {getChangeIndicator(index.data?.dp || index.percentChange || 0)}
+                  {formatChange(index.data?.dp || index.percentChange || 0)}
                 </div>
               </TableCell>
               <TableCell className="hidden md:table-cell">

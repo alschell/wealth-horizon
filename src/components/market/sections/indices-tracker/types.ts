@@ -6,10 +6,14 @@ export interface IndexData {
   name: string;
   symbol: string;
   data: Quote;
-  // Additional properties used in the components
+  // Additional properties used in various components
+  value?: number;
+  change?: number;
+  percentChange?: number;
   region?: string;
   exchange?: string;
   volume?: number;
+  description?: string;
 }
 
 export interface IndicesTrackerProps {

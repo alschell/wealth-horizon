@@ -1,9 +1,10 @@
 
 import { useCallback } from 'react';
 import { showSuccess } from '@/utils/toast';
+import { FileValidationResult } from './validation/types';
 
 interface UseDocumentFileHandlerProps {
-  validateFile: (file: File) => string | null;
+  validateFile: (file: File) => FileValidationResult;
   setSelectedFile: (file: File | null) => void;
   setFileError: (error: string | null) => void;
   setErrors: (errors: Record<string, boolean> | ((prev: Record<string, boolean>) => Record<string, boolean>)) => void;
@@ -25,10 +26,10 @@ export function useDocumentFileHandler({
     if (files.length === 0) return;
     
     const file = files[0]; // Only use the first file
-    const error = validateFile(file);
+    const validationResult = validateFile(file);
     
-    if (error) {
-      setFileError(error);
+    if (!validationResult.isValid) {
+      setFileError(validationResult.error || "Invalid file");
       return;
     }
     

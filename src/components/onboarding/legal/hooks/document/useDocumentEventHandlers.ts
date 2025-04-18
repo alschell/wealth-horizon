@@ -1,4 +1,3 @@
-
 import { useCallback } from 'react';
 import { DocumentFileWithMetadata } from '../../types';
 import { showSuccess, showError } from '@/utils/toast';
@@ -57,14 +56,14 @@ export function useDocumentEventHandlers({
   onSave
 }: UseDocumentEventHandlersProps) {
   // Get validation functions
-  const { validateFile, validateDocumentFields } = useDocumentValidation();
+  const { validateDocumentFields, validateDocumentFile } = useDocumentValidation();
   
   // Get document factory functions
   const { createDocument, updateDocumentInList, removeDocumentFromList } = useDocumentFactory();
 
   // Use the document file handler
   const fileHandler = useDocumentFileHandler({
-    validateFile,
+    validateFile: validateDocumentFile,
     setSelectedFile,
     setFileError,
     setErrors

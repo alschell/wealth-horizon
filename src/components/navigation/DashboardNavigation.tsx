@@ -8,7 +8,6 @@ import NotificationsPopover from '@/components/dashboard/notifications/Notificat
 import { TranslatedText } from '@/components/ui/translated-text';
 import { toast } from 'sonner';
 import { useTranslation } from '@/context/TranslationContext';
-import Logo from '@/components/common/Logo';
 
 const DashboardNavigation: React.FC = () => {
   const navigate = useNavigate();
@@ -36,16 +35,17 @@ const DashboardNavigation: React.FC = () => {
   return (
     <header className="fixed top-0 z-50 w-full border-b bg-white shadow-sm">
       <div className="flex h-16 items-center justify-between mx-auto max-w-7xl px-6 sticky top-0">
-        <Logo variant="dark" />
+        <div className="flex items-center">
+          <Link to="/" className="font-bold text-xl flex items-center">
+            <span className="text-indigo-500">Wealth</span>
+            <span>Horizon</span>
+          </Link>
+        </div>
         
         <div className="flex items-center gap-3">
           <div className="relative w-64 mr-2">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-            <Input 
-              placeholder={searchPlaceholder} 
-              className="pl-10 bg-white" 
-              aria-label={searchPlaceholder}
-            />
+            <Input placeholder={searchPlaceholder} className="pl-10 bg-white" />
           </div>
           <NotificationsPopover />
           <Button 
@@ -62,7 +62,6 @@ const DashboardNavigation: React.FC = () => {
             variant="ghost" 
             size="icon" 
             onClick={handleLogout}
-            aria-label="Logout"
           >
             <LogOut className="h-5 w-5" />
             <span className="sr-only"><TranslatedText>Logout</TranslatedText></span>

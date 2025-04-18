@@ -9,12 +9,12 @@ export { enhancedUseForm } from './enhancedUseForm';
 export { useFormWithValidation } from './useFormWithValidation';
 export { useIsComponentMounted } from './useIsComponentMounted';
 export { useNotifications } from './use-notifications';
-export { useErrorHandler, withErrorHandling } from './useErrorHandler';
+export { useErrorHandler } from './useErrorHandler';
 export { useErrorBoundary } from './useErrorBoundary';
 export { useDocumentManager } from '@/context/DocumentContext';
-export { useSecurityProtection } from './useSecurityProtection';
-export { useMobile, Responsive } from './use-mobile';
-export { useTranslation } from '@/context/TranslationContext';
+
+// Using withErrorHandling from useErrorBoundary
+export { withErrorHandling } from './useErrorBoundary';
 
 // Export error utilities for convenience
 export {

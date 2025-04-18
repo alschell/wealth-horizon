@@ -3,84 +3,158 @@ import React from 'react';
 import { Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-type SpinnerSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+type SpinnerSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'custom';
 
-interface EnhancedLoadingSpinnerProps {
+export interface EnhancedLoadingSpinnerProps {
   size?: SpinnerSize;
+  text?: string;
   className?: string;
-  variant?: 'default' | 'primary' | 'secondary' | 'muted';
-  label?: string;
-  labelPosition?: 'top' | 'bottom' | 'left' | 'right';
+  textClassName?: string;
+  color?: string;
   centered?: boolean;
+  variant?: 'primary' | 'secondary' | 'accent' | 'muted';
+  customSize?: number;
+  textPosition?: 'top' | 'bottom' | 'left' | 'right';
+  showDelay?: number;
+  testId?: string;
 }
 
-const sizeMap: Record<SpinnerSize, string> = {
+const sizeClasses: Record<Exclude<SpinnerSize, 'custom'>, string> = {
   xs: 'h-3 w-3',
   sm: 'h-4 w-4',
   md: 'h-6 w-6',
   lg: 'h-8 w-8',
-  xl: 'h-12 w-12',
+  xl: 'h-12 w-12'
 };
 
-const variantMap: Record<string, string> = {
-  default: 'text-gray-500',
+const variantClasses: Record<string, string> = {
   primary: 'text-primary',
   secondary: 'text-secondary',
-  muted: 'text-muted-foreground',
+  accent: 'text-accent',
+  muted: 'text-muted-foreground'
 };
 
+/**
+ * Enhanced loading spinner component with more size options, positioning control and variants
+ */
 export const EnhancedLoadingSpinner: React.FC<EnhancedLoadingSpinnerProps> = ({
   size = 'md',
+  text,
   className,
-  variant = 'default',
-  label,
-  labelPosition = 'right',
+  textClassName,
+  color,
   centered = false,
+  variant = 'primary',
+  customSize,
+  textPosition = 'bottom',
+  showDelay = 0,
+  testId = 'loading-spinner'
 }) => {
-  const containerClasses = cn(
-    'inline-flex items-center',
-    {
-      'flex-col': labelPosition === 'top' || labelPosition === 'bottom',
-      'flex-row': labelPosition === 'left' || labelPosition === 'right',
-      'justify-center': centered,
-      'gap-1': labelPosition === 'right' || labelPosition === 'left',
-      'gap-2': labelPosition === 'top' || labelPosition === 'bottom',
-      'mx-auto': centered,
-    },
-    centered && 'w-full',
-  );
+  const [isVisible, setIsVisible] = React.useState(showDelay === 0);
   
-  const spinnerClasses = cn(
-    'animate-spin',
-    sizeMap[size],
-    variantMap[variant],
-    className
-  );
-  
-  const labelClasses = cn(
-    'text-sm font-medium',
-    variantMap[variant],
-    {
-      'order-first': labelPosition === 'left' || labelPosition === 'top',
-      'order-last': labelPosition === 'right' || labelPosition === 'bottom',
+  React.useEffect(() => {
+    if (showDelay > 0) {
+      const timer = setTimeout(() => {
+        setIsVisible(true);
+      }, showDelay);
+      
+      return () => clearTimeout(timer);
     }
+  }, [showDelay]);
+  
+  if (!isVisible) {
+    return null;
+  }
+  
+  // Determine spinner size class
+  const spinnerSizeClass = size === 'custom' && customSize 
+    ? '' // We'll use inline style for custom size
+    : sizeClasses[size as Exclude<SpinnerSize, 'custom'>];
+  
+  // Determine color class
+  const colorClass = color ? color : variantClasses[variant];
+  
+  const spinnerElement = (
+    <Loader2 
+      className={cn(
+        "animate-spin",
+        spinnerSizeClass,
+        colorClass,
+        className
+      )} 
+      style={size === 'custom' && customSize ? { width: customSize, height: customSize } : undefined}
+      data-testid={`${testId}-icon`}
+      aria-hidden="true"
+    />
   );
   
-  const content = (
-    <>
-      <Loader2 className={spinnerClasses} aria-hidden="true" />
-      {label && <span className={labelClasses}>{label}</span>}
-    </>
+  const textElement = text && (
+    <p className={cn(
+      "text-sm font-medium text-gray-600",
+      textClassName
+    )}
+    data-testid={`${testId}-text`}>
+      {text}
+    </p>
   );
   
-  return centered ? (
-    <div className="w-full flex justify-center">
-      <div className={containerClasses}>
-        {content}
+  // Layout based on text position
+  const contentElement = (() => {
+    switch (textPosition) {
+      case 'top':
+        return (
+          <>
+            {textElement}
+            <div className="mt-2">{spinnerElement}</div>
+          </>
+        );
+      case 'left':
+        return (
+          <div className="flex items-center">
+            {textElement}
+            <div className="ml-2">{spinnerElement}</div>
+          </div>
+        );
+      case 'right':
+        return (
+          <div className="flex items-center">
+            {spinnerElement}
+            <div className="ml-2">{textElement}</div>
+          </div>
+        );
+      case 'bottom':
+      default:
+        return (
+          <>
+            {spinnerElement}
+            {textElement && <div className="mt-2">{textElement}</div>}
+          </>
+        );
+    }
+  })();
+  
+  if (centered) {
+    return (
+      <div 
+        className="flex flex-col items-center justify-center w-full h-full min-h-[100px]"
+        role="status"
+        aria-live="polite"
+        data-testid={testId}
+      >
+        {contentElement}
       </div>
+    );
+  }
+  
+  return (
+    <div 
+      className="flex flex-col items-center"
+      role="status"
+      aria-live="polite"
+      data-testid={testId}
+    >
+      {contentElement}
     </div>
-  ) : (
-    <div className={containerClasses}>{content}</div>
   );
 };
 

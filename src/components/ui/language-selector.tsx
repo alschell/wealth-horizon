@@ -1,62 +1,65 @@
 
-import React from 'react';
-import { Check, Globe } from 'lucide-react';
-import { 
-  DropdownMenu, 
-  DropdownMenuContent, 
-  DropdownMenuItem, 
-  DropdownMenuTrigger,
-  DropdownMenuLabel,
-  DropdownMenuSeparator
-} from '@/components/ui/dropdown-menu';
+import React, { useState } from 'react';
+import { Globe } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useTranslation, Language } from '@/context/TranslationContext';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { useTranslation, LANGUAGES } from '@/context/TranslationContext';
+import TranslatedText from './translated-text';
 
-const AVAILABLE_LANGUAGES: Array<{code: Language; name: string}> = [
-  { code: 'en', name: 'English' },
-  { code: 'fr', name: 'Français' },
-  { code: 'es', name: 'Español' },
-  { code: 'de', name: 'Deutsch' },
-  { code: 'zh', name: '中文' }
-];
+export function LanguageSelector() {
+  const { currentLanguage, setLanguage } = useTranslation();
+  const [isOpen, setIsOpen] = useState(false);
+  const [isChanging, setIsChanging] = useState(false);
 
-interface LanguageSelectorProps {
-  variant?: 'default' | 'minimal';
-  showLabel?: boolean;
-}
+  const handleLanguageChange = async (langCode: string) => {
+    setIsChanging(true);
+    try {
+      await setLanguage(langCode as any);
+      console.log(`Language changed to ${langCode}`);
+    } catch (error) {
+      console.error("Failed to change language:", error);
+    } finally {
+      setIsChanging(false);
+      setIsOpen(false);
+    }
+  };
 
-export function LanguageSelector({ 
-  variant = 'default', 
-  showLabel = true 
-}: LanguageSelectorProps) {
-  const { language, setLanguage, languageName } = useTranslation();
-  
+  const currentLang = LANGUAGES.find(lang => lang.code === currentLanguage);
+
   return (
-    <DropdownMenu>
+    <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
       <DropdownMenuTrigger asChild>
         <Button 
-          variant={variant === 'minimal' ? 'ghost' : 'outline'} 
-          size="sm" 
-          className="gap-2"
+          variant="ghost" 
+          size="icon"
+          title={`Language: ${currentLang?.name || 'English'}`}
+          disabled={isChanging}
         >
-          <Globe className="h-4 w-4" />
-          {showLabel && <span>{languageName}</span>}
+          <Globe className={`h-5 w-5 ${isChanging ? 'animate-spin' : ''}`} />
+          <span className="sr-only">
+            <TranslatedText>Change Language</TranslatedText>
+          </span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuLabel>Select language</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        {AVAILABLE_LANGUAGES.map((lang) => (
+      <DropdownMenuContent className="w-48" align="end">
+        {LANGUAGES.map((language) => (
           <DropdownMenuItem
-            key={lang.code}
-            onClick={() => setLanguage(lang.code)}
-            className="flex items-center justify-between cursor-pointer"
+            key={language.code}
+            onClick={() => handleLanguageChange(language.code)}
+            className={`cursor-pointer ${currentLanguage === language.code ? 'bg-slate-100 font-medium' : ''}`}
+            disabled={isChanging}
           >
-            <span>{lang.name}</span>
-            {lang.code === language && <Check className="h-4 w-4 ml-2" />}
+            <span>{language.name} ({language.nativeName})</span>
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>
     </DropdownMenu>
   );
 }
+
+export default LanguageSelector;

@@ -6,7 +6,6 @@ import { AlertTriangle, RefreshCw, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { TranslatedText } from "@/components/ui/translated-text";
 
 export interface MarketDataLoaderProps {
   isLoading: boolean;
@@ -57,49 +56,20 @@ const MarketDataLoader: React.FC<MarketDataLoaderProps> = ({
     }
   };
 
-  // Error state with improved error messages
+  // Error state
   if (isError) {
-    let errorMessage = "An unexpected error occurred";
-    let errorDetails = "";
-    
-    if (error) {
-      if (error.name === "NetworkError" || error.message.includes("network")) {
-        errorMessage = "Network connection issue";
-        errorDetails = "Please check your internet connection and try again.";
-      } else if (error.message.includes("timeout") || error.message.includes("timed out")) {
-        errorMessage = "Request timed out";
-        errorDetails = "The server took too long to respond. Please try again later.";
-      } else if (error.message.includes("401") || error.message.includes("unauthorized")) {
-        errorMessage = "Authentication error";
-        errorDetails = "Your session may have expired. Please log in again.";
-      } else if (error.message.includes("403") || error.message.includes("forbidden")) {
-        errorMessage = "Access denied";
-        errorDetails = "You don't have permission to access this market data.";
-      } else if (error.message.includes("404") || error.message.includes("not found")) {
-        errorMessage = "Resource not found";
-        errorDetails = "The requested market data is unavailable.";
-      } else if (error.message.includes("500")) {
-        errorMessage = "Server error";
-        errorDetails = "There's an issue with our server. Our team has been notified.";
-      } else {
-        errorMessage = "Error loading market data";
-        errorDetails = error.message || "An unexpected error occurred while loading data.";
-      }
-    }
-
     return (
       <div className={cn("rounded-lg border p-4", className)}>
         <Alert variant="destructive">
           <AlertTriangle className="h-4 w-4" />
-          <AlertTitle><TranslatedText>{errorMessage}</TranslatedText></AlertTitle>
+          <AlertTitle>Error loading market data</AlertTitle>
           <AlertDescription>
-            <TranslatedText>{errorDetails}</TranslatedText>
+            {error?.message || "An unexpected error occurred"}
           </AlertDescription>
           {onRetry && (
             <div className="mt-3">
               <Button variant="outline" size="sm" onClick={onRetry}>
-                <RefreshCw className="h-3 w-3 mr-2" />
-                <TranslatedText>Try again</TranslatedText>
+                Try again
               </Button>
             </div>
           )}
@@ -142,7 +112,7 @@ const MarketDataLoader: React.FC<MarketDataLoaderProps> = ({
     <div className={cn("relative", className)}>
       <EnhancedLoadingOverlay
         isLoading={isLoading}
-        loadingText={loadingText}
+        text={loadingText}
         spinnerSize={loaderSize}
       >
         {children}

@@ -1,35 +1,63 @@
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from '@/context/TranslationContext';
 
 interface TranslatedTextProps {
-  textKey?: string;
-  params?: Record<string, string>;
+  children: string;
   as?: React.ElementType;
   className?: string;
-  children?: React.ReactNode;
+  withLoading?: boolean;
 }
 
 export const TranslatedText: React.FC<TranslatedTextProps> = ({
-  textKey,
-  params,
-  as: Component = 'span',
-  className,
   children,
+  as: Component = 'span',
+  className = '',
+  withLoading = false,
   ...rest
 }) => {
-  const { t } = useTranslation();
-  
-  // Support both textKey and children props
-  const content = textKey ? t(textKey, params) : children;
-  
+  const { translate, currentLanguage, isLoading } = useTranslation();
+  const [translatedContent, setTranslatedContent] = useState(children);
+
+  useEffect(() => {
+    let isMounted = true;
+    
+    const translateText = async () => {
+      try {
+        const translated = await translate(children);
+        if (isMounted) {
+          setTranslatedContent(translated);
+        }
+      } catch (error) {
+        console.error("Translation error:", error);
+        // If translation fails, fall back to original text
+        if (isMounted) {
+          setTranslatedContent(children);
+        }
+      }
+    };
+
+    // Always run translation when language changes or text changes
+    translateText();
+    
+    return () => {
+      isMounted = false;
+    };
+  }, [children, currentLanguage, translate]);
+
+  if (withLoading && isLoading) {
+    return (
+      <Component className={`animate-pulse ${className}`} {...rest}>
+        {translatedContent}
+      </Component>
+    );
+  }
+
   return (
     <Component className={className} {...rest}>
-      {content}
+      {translatedContent}
     </Component>
   );
 };
 
-// This allows import TranslatedText from ... to also work for backward compatibility
-const TranslatedTextComponent = TranslatedText;
-export default TranslatedTextComponent;
+export default TranslatedText;

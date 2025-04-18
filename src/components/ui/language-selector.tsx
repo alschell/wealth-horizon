@@ -29,13 +29,8 @@ export function LanguageSelector() {
       await setLanguage(langCode as any);
       console.log(`Language changed to ${langCode}`);
       
-      // Force a hard refresh after language change
-      if (langCode !== 'en') {
-        // Use setTimeout to ensure the language is set before refreshing
-        setTimeout(() => {
-          window.location.reload();
-        }, 100);
-      }
+      // Force a hard refresh to avoid stale translations
+      window.location.reload();
     } catch (error) {
       console.error("Failed to change language:", error);
     } finally {
@@ -55,7 +50,7 @@ export function LanguageSelector() {
           title={`Language: ${currentLang?.name || 'English'}`}
           disabled={isChanging}
         >
-          <Globe className={`h-5 w-5 ${isChanging ? 'animate-spin text-[#4E46DC]' : ''}`} />
+          <Globe className={`h-5 w-5 ${isChanging ? 'animate-spin text-indigo-600' : ''}`} />
           <span className="sr-only">
             <TranslatedText>Change Language</TranslatedText>
           </span>

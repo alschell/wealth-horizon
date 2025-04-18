@@ -1,5 +1,5 @@
 
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import { supabase } from '@/utils/supabaseClient';
 
 // Define available languages
@@ -71,7 +71,7 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
   const [currentLanguage, setCurrentLanguage] = useState<LanguageCode>('en');
   const [translationCache, setTranslationCache] = useState<Record<string, Record<string, string>>>({});
   const [isLoading, setIsLoading] = useState(false);
-  const [forceRefresh, setForceRefresh] = useState(0);
+  const isChangingLanguage = useRef(false);
   
   // Load language preference from local storage on initial load
   useEffect(() => {
@@ -88,6 +88,8 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
   // Save user language preference to database if logged in
   useEffect(() => {
+    if (isChangingLanguage.current) return;
+    
     const saveLanguagePreference = async () => {
       try {
         const { data: { user } } = await supabase.auth.getUser();
@@ -128,24 +130,22 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
     
     // Only proceed if language has actually changed
     if (language !== currentLanguage) {
+      isChangingLanguage.current = true;
       setIsLoading(true);
       
       try {
-        // Clear existing translation cache for more reliable translation refresh
-        setTranslationCache({});
-        
         // Update the current language
         setCurrentLanguage(language);
         
-        // Force re-render of all translated components
-        setForceRefresh(prev => prev + 1);
+        // Small delay to ensure language change has propagated
+        await new Promise(resolve => setTimeout(resolve, 50));
       } catch (error) {
         console.error('Error changing language:', error);
       } finally {
-        // Small delay to ensure language change has propagated
         setTimeout(() => {
           setIsLoading(false);
-        }, 300);
+          isChangingLanguage.current = false;
+        }, 200);
       }
     }
     
@@ -198,8 +198,6 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
     }
     
     try {
-      setIsLoading(true);
-      
       // Process text to protect special terms
       const { processedText, placeholders } = protectSpecialTerms(text);
       
@@ -232,14 +230,11 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
     } catch (error) {
       console.error('Translation failed:', error);
       return text;
-    } finally {
-      setIsLoading(false);
     }
   };
 
   return (
     <TranslationContext.Provider
-      key={`translation-context-${forceRefresh}`}
       value={{
         currentLanguage,
         setLanguage,

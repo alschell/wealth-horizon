@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FadeIn } from "@/components/ui/animation";
 import { toast } from "sonner";
-import TransformerAnimation from "@/components/animations/login/TransformerAnimation";
+import LogoTransformAnimation from "@/components/animations/login/LogoTransformAnimation";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -158,7 +158,7 @@ const Login = () => {
 
       {/* Right column with animation */}
       <div className="w-1/2 bg-gradient-to-br from-indigo-600 to-purple-700 relative overflow-hidden">
-        <TransformerAnimation />
+        <LogoTransformAnimation />
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 
 import React, { Component, ErrorInfo } from 'react';
-import ErrorFallback from '@/components/shared/ErrorFallback';
+import ErrorFallback from '@/components/shared/ErrorFallback/ErrorFallback';
 import { handleError } from '@/utils/errorHandling/errorHandlingCore';
 
 interface Props {

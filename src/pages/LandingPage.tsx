@@ -1,8 +1,8 @@
-
 import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async"; 
 import { LandingLayout } from "@/components/landing";
 import { useTranslation } from "@/context/TranslationContext";
+import ErrorBoundary from "@/components/common/ErrorBoundary";
 
 /**
  * Main landing page with SEO optimization and structured data
@@ -13,26 +13,39 @@ const LandingPage: React.FC = () => {
   const [description, setDescription] = useState("Wealth Horizon provides comprehensive wealth management solutions for family offices and high-net-worth individuals.");
   const [keywords, setKeywords] = useState("wealth management, family office, financial planning, investment");
   const [isLoading, setIsLoading] = useState(true);
+  const [hasError, setHasError] = useState(false);
   
   useEffect(() => {
     let isMounted = true;
+    console.log("LandingPage: Translation effect triggered");
     
     const updateSEO = async () => {
       try {
-        const translatedTitle = await translate("Wealth Horizon | Intelligent Wealth Management");
-        const translatedDescription = await translate("Wealth Horizon provides comprehensive wealth management solutions for family offices and high-net-worth individuals.");
-        const translatedKeywords = await translate("wealth management, family office, financial planning, investment");
+        console.log("LandingPage: Starting SEO translation");
+        setIsLoading(true);
+        
+        // Use Promise.all to fetch all translations concurrently
+        const [translatedTitle, translatedDescription, translatedKeywords] = await Promise.all([
+          translate("Wealth Horizon | Intelligent Wealth Management"),
+          translate("Wealth Horizon provides comprehensive wealth management solutions for family offices and high-net-worth individuals."),
+          translate("wealth management, family office, financial planning, investment")
+        ]);
+        
+        console.log("LandingPage: Translations completed successfully");
         
         if (isMounted) {
           setTitle(translatedTitle);
           setDescription(translatedDescription);
           setKeywords(translatedKeywords);
           setIsLoading(false);
+          setHasError(false);
         }
       } catch (error) {
         console.error("Error translating SEO content:", error);
         if (isMounted) {
+          // On error, still show the page with default English text
           setIsLoading(false);
+          setHasError(true);
         }
       }
     };
@@ -73,13 +86,16 @@ const LandingPage: React.FC = () => {
   };
 
   if (isLoading) {
-    return <div className="min-h-screen flex items-center justify-center">
-      <div className="animate-pulse h-8 w-8 rounded-full bg-indigo-600"></div>
-    </div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-pulse h-12 w-12 rounded-full bg-indigo-600"></div>
+      </div>
+    );
   }
 
+  // Even if there was an error translating, still render the page with default values
   return (
-    <>
+    <ErrorBoundary>
       <Helmet>
         <title>{title}</title>
         <meta name="description" content={description} />
@@ -104,7 +120,7 @@ const LandingPage: React.FC = () => {
         </script>
       </Helmet>
       <LandingLayout />
-    </>
+    </ErrorBoundary>
   );
 };
 

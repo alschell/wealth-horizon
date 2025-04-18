@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/utils/supabaseClient';
 
@@ -34,7 +33,6 @@ export const LANGUAGES: Language[] = [
   { code: 'ko', name: 'Korean', nativeName: '한국어' },
 ];
 
-// Terms that should not be translated
 export const NON_TRANSLATABLE_TERMS = [
   'WealthHorizon',
   'GDPR',
@@ -72,17 +70,26 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
   const [translationCache, setTranslationCache] = useState<Record<string, Record<string, string>>>({});
   const [isLoading, setIsLoading] = useState(false);
   const [key, setKey] = useState(0); // Force component tree re-render with key
+  const [isInitialized, setIsInitialized] = useState(false);
   
   // Load language preference from local storage on initial load
   useEffect(() => {
-    const savedLanguage = localStorage.getItem('preferredLanguage') as LanguageCode;
-    if (savedLanguage && LANGUAGES.some(lang => lang.code === savedLanguage)) {
-      setCurrentLanguage(savedLanguage);
-    } else {
-      const browserLang = navigator.language.split('-')[0] as LanguageCode;
-      if (LANGUAGES.some(lang => lang.code === browserLang)) {
-        setCurrentLanguage(browserLang);
+    try {
+      console.log("TranslationProvider: Initializing language preferences");
+      const savedLanguage = localStorage.getItem('preferredLanguage') as LanguageCode;
+      if (savedLanguage && LANGUAGES.some(lang => lang.code === savedLanguage)) {
+        setCurrentLanguage(savedLanguage);
+      } else {
+        const browserLang = navigator.language.split('-')[0] as LanguageCode;
+        if (LANGUAGES.some(lang => lang.code === browserLang)) {
+          setCurrentLanguage(browserLang);
+        }
       }
+      setIsInitialized(true);
+      console.log("TranslationProvider: Language initialized successfully");
+    } catch (error) {
+      console.error("TranslationProvider: Error initializing language:", error);
+      setIsInitialized(true); // Still mark as initialized to prevent hanging
     }
   }, []);
 
@@ -125,13 +132,19 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
   const setLanguage = useCallback(async (language: LanguageCode) => {
     console.log(`Changing language to: ${language}`);
     
-    // Clear existing translation cache completely to force re-translation
-    setTranslationCache({});
-    
-    // Update the current language
-    setCurrentLanguage(language);
-    
-    // This will trigger the effect above that updates document lang/dir and forces re-render
+    try {
+      // Clear existing translation cache completely to force re-translation
+      setTranslationCache({});
+      
+      // Update the current language
+      setCurrentLanguage(language);
+      
+      // This will trigger the effect above that updates document lang/dir and forces re-render
+      return Promise.resolve();
+    } catch (error) {
+      console.error("Failed to set language:", error);
+      return Promise.reject(error);
+    }
   }, []);
 
   // Process text before translation to protect non-translatable terms
@@ -164,10 +177,16 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
     return result;
   };
 
-  // Function to translate text
+  // Function to translate text with enhanced error handling
   const translate = async (text: string): Promise<string> => {
+    // If text is null, undefined, or not a string, return empty string to avoid crashes
+    if (!text || typeof text !== 'string') {
+      console.warn("TranslationContext: Invalid text passed to translate function", text);
+      return String(text || "");
+    }
+    
     // If the language is English or text is empty, return the original text
-    if (currentLanguage === 'en' || !text || text.trim() === '') {
+    if (currentLanguage === 'en' || text.trim() === '') {
       return text;
     }
     
@@ -179,16 +198,35 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
     try {
       setIsLoading(true);
       
+      // Return original text immediately if translation service is unavailable
+      if (!supabase) {
+        console.error("Translation service unavailable: Supabase client not initialized");
+        return text;
+      }
+      
       // Process text to protect special terms
       const { processedText, placeholders } = protectSpecialTerms(text);
       
-      // Call translation edge function
-      const { data, error } = await supabase.functions.invoke('translate', {
+      // Call translation edge function with timeout
+      const translationPromise = supabase.functions.invoke('translate', {
         body: { 
           text: processedText, 
           targetLanguage: currentLanguage 
         }
       });
+      
+      // Set a timeout to prevent hanging if the API doesn't respond
+      const timeoutPromise = new Promise<{data: null, error: Error}>((resolve) => {
+        setTimeout(() => {
+          resolve({
+            data: null,
+            error: new Error('Translation request timed out')
+          });
+        }, 3000); // 3 seconds timeout
+      });
+      
+      // Race the translation request against the timeout
+      const { data, error } = await Promise.race([translationPromise, timeoutPromise]);
       
       if (error) {
         console.error('Translation error:', error);
@@ -225,6 +263,15 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
   useEffect(() => {
     setTranslationCache({});
   }, [currentLanguage]);
+
+  // Don't render children until we've initialized language settings
+  if (!isInitialized) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-pulse h-8 w-8 rounded-full bg-indigo-600"></div>
+      </div>
+    );
+  }
 
   return (
     <TranslationContext.Provider

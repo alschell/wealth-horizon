@@ -38,10 +38,13 @@ const HomeNavigation: React.FC = () => {
     >
       <nav className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
         <div className="flex items-center">
-          <Link to="/" className="font-bold text-xl flex items-center">
+          <div 
+            onClick={() => navigate('/', { replace: true })} 
+            className="font-bold text-xl flex items-center cursor-pointer"
+          >
             <span className="text-indigo-600">Wealth</span>
             <span className="text-gray-900">Horizon</span>
-          </Link>
+          </div>
           
           <div className="hidden md:flex items-center ml-10 space-x-8">
             <button 

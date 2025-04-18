@@ -49,18 +49,18 @@ export const TranslatedText: React.FC<TranslatedTextProps> = ({
       return;
     }
     
-    // Always display original content while translation is in progress
-    // This ensures something is always visible
+    // Always display original content initially
     setTranslatedContent(children);
     
     const translateText = async () => {
-      if (!currentLanguage) return;
-      
       try {
+        // Only proceed if we have a language and the component is still mounted
+        if (!currentLanguage || !isMounted.current) return;
+        
         const translated = await translate(children);
         
         if (isMounted.current) {
-          setTranslatedContent(translated);
+          setTranslatedContent(translated || children);
         }
       } catch (error) {
         console.error("Translation error:", error);
@@ -71,8 +71,10 @@ export const TranslatedText: React.FC<TranslatedTextProps> = ({
       }
     };
 
-    // Translate immediately
-    translateText();
+    // Only translate if we're not in English
+    if (currentLanguage !== 'en') {
+      translateText();
+    }
   }, [children, currentLanguage, translate]);
 
   // Return the current content, falling back to original text if needed

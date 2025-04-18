@@ -27,6 +27,12 @@ const HomeNavigation: React.FC = () => {
       element.scrollIntoView({ behavior: "smooth" });
     }
   };
+  
+  const handleLogoClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    navigate("/");
+    window.scrollTo(0, 0);
+  };
 
   return (
     <header 
@@ -41,6 +47,7 @@ const HomeNavigation: React.FC = () => {
           <Link 
             to="/" 
             className="font-bold text-xl flex items-center cursor-pointer"
+            onClick={handleLogoClick}
           >
             <span className="text-indigo-600">Wealth</span>
             <span className="text-gray-900">Horizon</span>

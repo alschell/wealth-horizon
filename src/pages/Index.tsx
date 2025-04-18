@@ -1,12 +1,12 @@
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import LandingPage from "./LandingPage";
 
 const Index = () => {
   const location = useLocation();
   
-  React.useEffect(() => {
+  useEffect(() => {
     // Log when the Index component mounts for debugging
     console.log("Index component mounted", { pathname: location.pathname });
     

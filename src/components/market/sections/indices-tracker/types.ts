@@ -1,4 +1,3 @@
-
 import { Quote } from "@/types/market";
 
 export interface IndexData {
@@ -6,7 +5,6 @@ export interface IndexData {
   name: string;
   symbol: string;
   data?: Quote;
-  // Additional properties used in various components
   value?: number;
   change?: number;
   percentChange?: number;

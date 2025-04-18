@@ -20,6 +20,7 @@ export const TranslatedText: React.FC<TranslatedTextProps> = ({
   const [translatedContent, setTranslatedContent] = useState<string>(children);
   const isMounted = useRef(true);
   const originalText = useRef(children);
+  const [translateError, setTranslateError] = useState<Error | null>(null);
 
   // Set up and clean up
   useEffect(() => {
@@ -46,6 +47,7 @@ export const TranslatedText: React.FC<TranslatedTextProps> = ({
 
     // Always display original content initially
     setTranslatedContent(children);
+    setTranslateError(null);
     
     const translateText = async () => {
       try {
@@ -61,6 +63,7 @@ export const TranslatedText: React.FC<TranslatedTextProps> = ({
         }
       } catch (error) {
         console.error("Translation error:", error);
+        setTranslateError(error as Error);
         // If translation fails, fall back to original text
         if (isMounted.current) {
           setTranslatedContent(children);
@@ -73,6 +76,13 @@ export const TranslatedText: React.FC<TranslatedTextProps> = ({
       translateText();
     }
   }, [children, currentLanguage, translate]);
+
+  // If we're still displaying the fallback content and there's a translation error, log it
+  useEffect(() => {
+    if (translateError && translatedContent === children && currentLanguage !== 'en') {
+      console.warn(`Failed to translate "${children}" to ${currentLanguage}:`, translateError);
+    }
+  }, [translateError, translatedContent, children, currentLanguage]);
 
   // Return the current content, falling back to original text if needed
   return (

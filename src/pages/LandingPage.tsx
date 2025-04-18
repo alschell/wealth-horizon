@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Helmet } from "react-helmet-async"; 
 import { LandingLayout } from "@/components/landing";
@@ -59,8 +60,6 @@ const LandingPage: React.FC = () => {
           {JSON.stringify(structuredData)}
         </script>
       </Helmet>
-      
-      {/* Removed the interactive logo div completely */}
       
       <LandingLayout />
     </>

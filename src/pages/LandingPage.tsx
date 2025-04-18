@@ -1,5 +1,5 @@
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async"; 
 import { LandingLayout } from "@/components/landing";
 import { useTranslation } from "@/context/TranslationContext";
@@ -9,12 +9,20 @@ import { useTranslation } from "@/context/TranslationContext";
  */
 const LandingPage: React.FC = () => {
   const { currentLanguage } = useTranslation();
+  const [isReady, setIsReady] = useState(false);
   
   useEffect(() => {
     console.log("LandingPage mounted or language changed", { language: currentLanguage });
     
     // Ensure we scroll to top on landing page load or language change
     window.scrollTo(0, 0);
+    
+    // Mark component as ready after a short delay to ensure translations are loaded
+    const timeout = setTimeout(() => {
+      setIsReady(true);
+    }, 100);
+    
+    return () => clearTimeout(timeout);
   }, [currentLanguage]);
   
   // Structured data for rich search results
@@ -45,6 +53,8 @@ const LandingPage: React.FC = () => {
     "keywords": "wealth management, family office, financial planning, investment, portfolio optimization"
   };
 
+  console.log("LandingPage rendering with isReady:", isReady);
+
   return (
     <>
       <Helmet>
@@ -70,7 +80,7 @@ const LandingPage: React.FC = () => {
           {JSON.stringify(structuredData)}
         </script>
       </Helmet>
-      <LandingLayout />
+      {isReady && <LandingLayout />}
     </>
   );
 };

@@ -26,12 +26,16 @@ export const TranslatedText: React.FC<TranslatedTextProps> = ({
 
   useEffect(() => {
     isMounted.current = true;
+    console.log(`TranslatedText mounted: "${children}" (${currentLanguage})`);
+    
     return () => {
       isMounted.current = false;
     };
   }, []);
 
   useEffect(() => {
+    console.log(`TranslatedText update - Lang: ${currentLanguage}, Text: "${children}"`);
+    
     // Reset error state on new translation attempt
     setHasError(false);
     
@@ -46,20 +50,26 @@ export const TranslatedText: React.FC<TranslatedTextProps> = ({
       return;
     }
 
-    // Don't re-translate if language hasn't changed and we already have content
-    if (currentLanguage === previousLanguage.current && translatedContent && translatedContent !== children) {
-      return;
-    }
-
+    // Force translation if language has changed
+    const shouldTranslate = currentLanguage !== previousLanguage.current;
+    
     // Update previous language reference
     previousLanguage.current = currentLanguage;
+    
+    if (!shouldTranslate && translatedContent && translatedContent !== children) {
+      console.log('Skipping translation - language unchanged and content already translated');
+      return;
+    }
     
     const translateText = async () => {
       if (!currentLanguage) return;
       
       setIsTranslating(true);
+      console.log(`Starting translation of "${children}" to ${currentLanguage}`);
+      
       try {
         const translated = await translate(children);
+        console.log(`Translation result: "${translated}"`);
         
         if (isMounted.current) {
           setTranslatedContent(translated);

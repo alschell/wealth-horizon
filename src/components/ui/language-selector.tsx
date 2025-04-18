@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useTranslation, LANGUAGES } from '@/context/TranslationContext';
 import TranslatedText from './translated-text';
+import { toast } from 'sonner';
 
 export function LanguageSelector() {
   const { currentLanguage, setLanguage } = useTranslation();
@@ -17,18 +18,27 @@ export function LanguageSelector() {
   const [isChanging, setIsChanging] = useState(false);
 
   const handleLanguageChange = async (langCode: string) => {
+    if (langCode === currentLanguage) {
+      setIsOpen(false);
+      return; // Don't change if it's the same language
+    }
+
     setIsChanging(true);
     try {
+      console.log(`Attempting to change language to ${langCode}`);
       await setLanguage(langCode as any);
-      console.log(`Language changed to ${langCode}`);
       
       // Store language in localStorage for persistence across pages
       localStorage.setItem('preferredLanguage', langCode);
+      
+      toast.success(`Language changed to ${langCode}`);
+      console.log(`Language changed to ${langCode}`);
       
       setIsChanging(false);
       setIsOpen(false);
     } catch (error) {
       console.error("Failed to change language:", error);
+      toast.error("Failed to change language");
       setIsChanging(false);
       setIsOpen(false);
     }

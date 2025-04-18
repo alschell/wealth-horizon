@@ -14,9 +14,24 @@ const Index = () => {
       pathname: location.pathname,
       language: currentLanguage 
     });
+    
+    // Force scroll to top on language change or navigation
     window.scrollTo(0, 0);
+    
+    // Clear any potential error states
+    const clearErrorStates = () => {
+      // Check for any error elements that might have been created during an error
+      const errorElements = document.querySelectorAll('.error-boundary');
+      errorElements.forEach(el => {
+        el.remove();
+      });
+    };
+    
+    clearErrorStates();
   }, [location, currentLanguage]);
 
+  console.log("Index rendering LandingPage with language:", currentLanguage);
+  
   // Directly render the LandingPage component
   return <LandingPage />;
 };

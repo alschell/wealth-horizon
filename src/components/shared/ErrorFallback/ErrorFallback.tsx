@@ -15,7 +15,7 @@ const ErrorFallback: React.FC<ErrorFallbackProps> = ({
   message,
   showReset = true,
   resetText = "Try again",
-  showDetails = true,
+  showDetails = false,
   errorInfo
 }) => {
   return (

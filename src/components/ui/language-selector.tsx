@@ -16,6 +16,9 @@ export function LanguageSelector() {
   const [isOpen, setIsOpen] = useState(false);
   const [isChanging, setIsChanging] = useState(false);
 
+  // Safely ensure LANGUAGES is an array
+  const availableLanguages = Array.isArray(LANGUAGES) ? LANGUAGES : [];
+
   const handleLanguageChange = useCallback(async (langCode: string) => {
     if (isChanging || isLoading) return;
     
@@ -39,12 +42,9 @@ export function LanguageSelector() {
   }, [currentLanguage, isChanging, isLoading]);
 
   // Safely find the current language
-  const currentLang = Array.isArray(LANGUAGES) && LANGUAGES.length > 0
-    ? LANGUAGES.find(lang => lang.code === currentLanguage) 
+  const currentLang = availableLanguages.length > 0
+    ? availableLanguages.find(lang => lang.code === currentLanguage) 
     : undefined;
-
-  // Ensure LANGUAGES is an array before rendering
-  const availableLanguages = Array.isArray(LANGUAGES) ? LANGUAGES : [];
 
   return (
     <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
@@ -57,7 +57,7 @@ export function LanguageSelector() {
         >
           <Globe className={`h-5 w-5 ${isChanging ? 'animate-spin text-indigo-600' : ''}`} />
           <span className="sr-only">
-            <TranslatedText>Change Language</TranslatedText>
+            Change Language
           </span>
         </Button>
       </DropdownMenuTrigger>

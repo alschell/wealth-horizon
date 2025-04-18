@@ -6,8 +6,15 @@ import { headerVariants } from "./AnimationVariants";
 const Header: React.FC = () => {
   const handleHomeClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    // Use window.location.href to trigger a full page reload
-    window.location.href = '/';
+    
+    try {
+      // Use navigate API instead of direct location change for better reliability
+      window.location.href = '/';
+    } catch (error) {
+      console.error("Navigation error:", error);
+      // Fallback if the navigation fails
+      window.location.assign('/');
+    }
   };
 
   return (

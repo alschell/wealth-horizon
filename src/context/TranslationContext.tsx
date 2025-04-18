@@ -1,5 +1,5 @@
 
-import React, { createContext, useContext } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useLanguageManager } from './translation/useLanguageManager';
 import { useTranslationService } from './translation/useTranslationService';
 import { TranslationContextType, LanguageCode } from './translation/types';
@@ -22,6 +22,8 @@ const defaultContext: TranslationContextType = {
 const TranslationContext = createContext<TranslationContextType>(defaultContext);
 
 export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [isReady, setIsReady] = useState(false);
+
   // Get translation service functionality
   const { 
     translate: translateService, 
@@ -44,10 +46,32 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
   // Create the translate function that uses the current language
   const translate = async (text: string): Promise<string> => {
-    return translateService(text, currentLanguage);
+    if (!text) return '';
+    
+    try {
+      return await translateService(text, currentLanguage);
+    } catch (error) {
+      console.error("Translation error in context:", error);
+      return text || '';
+    }
   };
 
-  // Render the content directly, without any loading screens
+  // Ensure everything is initialized before rendering children
+  useEffect(() => {
+    if (isInitialized) {
+      setIsReady(true);
+    }
+  }, [isInitialized]);
+
+  // Provide a simplified initial loading state
+  if (!isReady) {
+    return (
+      <TranslationContext.Provider value={defaultContext}>
+        {children}
+      </TranslationContext.Provider>
+    );
+  }
+
   return (
     <TranslationContext.Provider
       key={key}

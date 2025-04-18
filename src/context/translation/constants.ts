@@ -1,6 +1,7 @@
 
 import { Language } from './types';
 
+// Ensure LANGUAGES is a valid array that can never be undefined
 export const LANGUAGES: Language[] = [
   { code: 'en', name: 'English', nativeName: 'English' },
   { code: 'zh', name: 'Chinese', nativeName: '中文' },

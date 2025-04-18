@@ -62,9 +62,11 @@ describe('useDocumentEventHandlers', () => {
     jest.clearAllMocks();
     (useDocumentValidation as jest.Mock).mockReturnValue({
       validateFields: jest.fn(() => ({})),
-      validateFile: jest.fn(() => null),
+      validateFile: jest.fn(() => ({ isValid: true, error: null })),
+      hasErrors: jest.fn(() => false),
+      // These are needed for backward compatibility with tests
       validateDocumentFields: jest.fn(() => ({})),
-      validateDocumentFile: jest.fn(() => null),
+      validateDocumentFile: jest.fn(() => ({ isValid: true, error: null }))
     });
     (useDocumentFactory as jest.Mock).mockReturnValue({
       createDocument: jest.fn(),
@@ -135,12 +137,14 @@ describe('useDocumentEventHandlers', () => {
         documentType: true,
         issueDate: true,
       })),
-      validateFile: jest.fn(() => null),
+      validateFile: jest.fn(() => ({ isValid: false, error: 'Error' })),
+      hasErrors: jest.fn(() => true),
+      // For backward compatibility
       validateDocumentFields: jest.fn(() => ({
         documentType: true,
         issueDate: true,
       })),
-      validateDocumentFile: jest.fn(() => null),
+      validateDocumentFile: jest.fn(() => ({ isValid: false, error: 'Error' }))
     });
     
     const { result } = renderHook(() => useDocumentEventHandlers(mockProps));

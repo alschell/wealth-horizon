@@ -1,48 +1,42 @@
 
 import { useCallback } from 'react';
-import { DocumentFileWithMetadata } from './types';
-import { useDocumentId } from './useDocumentId';
+import { DocumentFileWithMetadata } from '../../types';
 
-export const useDocumentList = () => {
-  const { generateDocumentId } = useDocumentId();
-
+export function useDocumentList() {
   const addDocumentToList = useCallback((
     documents: DocumentFileWithMetadata[],
-    documentType: string,
-    issueDate: string,
-    expiryDate: string,
-    file: File
+    newDocument: DocumentFileWithMetadata
   ): DocumentFileWithMetadata[] => {
-    const newDocument: DocumentFileWithMetadata = {
-      id: generateDocumentId(),
-      file,
-      documentType,
-      issueDate,
-      expiryDate
-    };
     return [...documents, newDocument];
-  }, [generateDocumentId]);
+  }, []);
 
   const updateDocumentInList = useCallback((
     documents: DocumentFileWithMetadata[],
-    id: string,
+    documentId: string,
     documentType: string,
     issueDate: string,
     expiryDate: string,
     file: File
   ): DocumentFileWithMetadata[] => {
-    return documents.map(doc => 
-      doc.id === id
-        ? { ...doc, documentType, issueDate, expiryDate, file }
-        : doc
-    );
+    return documents.map(doc => {
+      if (doc.id === documentId) {
+        return {
+          ...doc,
+          documentType,
+          issueDate,
+          expiryDate,
+          file
+        };
+      }
+      return doc;
+    });
   }, []);
 
   const removeDocumentFromList = useCallback((
     documents: DocumentFileWithMetadata[],
-    id: string
+    documentId: string
   ): DocumentFileWithMetadata[] => {
-    return documents.filter(doc => doc.id !== id);
+    return documents.filter(doc => doc.id !== documentId);
   }, []);
 
   return {
@@ -50,4 +44,4 @@ export const useDocumentList = () => {
     updateDocumentInList,
     removeDocumentFromList
   };
-};
+}

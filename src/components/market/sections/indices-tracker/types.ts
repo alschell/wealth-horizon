@@ -5,7 +5,7 @@ export interface IndexData {
   id: string;
   name: string;
   symbol: string;
-  data: Quote;
+  data?: Quote;
   // Additional properties used in various components
   value?: number;
   change?: number;

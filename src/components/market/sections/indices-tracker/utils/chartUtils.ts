@@ -8,7 +8,11 @@ export const generateChartData = (indexName: string, indices: IndexData[]): Char
   const foundIndex = indices.find(i => i.name === indexName);
   
   // Use the value property or fall back to the Quote's current price
-  const startValue = foundIndex ? (foundIndex.value ?? foundIndex.data?.c ?? 4000) : 4000;
+  const startValue = foundIndex ? (
+    foundIndex.value ?? 
+    (foundIndex.data?.c ?? 4000)
+  ) : 4000;
+  
   const volatility = Math.random() * 0.5 + 0.5; // Random volatility factor
   
   // Generate 30 days of data

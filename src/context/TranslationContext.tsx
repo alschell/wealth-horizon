@@ -21,7 +21,6 @@ export interface Language {
   nativeName: string;
 }
 
-// Ensure we have a default language array that always exists
 export const LANGUAGES: Language[] = [
   { code: 'en', name: 'English', nativeName: 'English' },
   { code: 'zh', name: 'Chinese', nativeName: '中文' },
@@ -73,79 +72,57 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
   const [translationCache, setTranslationCache] = useState<Record<string, Record<string, string>>>({});
   const [isLoading, setIsLoading] = useState(false);
   const [key, setKey] = useState(0); // Force component tree re-render with key
-  const [isInitialized, setIsInitialized] = useState(false);
   
   // Load language preference from local storage on initial load
   useEffect(() => {
-    try {
-      const savedLanguage = localStorage.getItem('preferredLanguage') as LanguageCode;
-      
-      if (savedLanguage && Array.isArray(LANGUAGES) && LANGUAGES.some(lang => lang.code === savedLanguage)) {
-        setCurrentLanguage(savedLanguage);
-      } else {
-        // Fallback to browser language or default to English
-        const browserLang = navigator.language.split('-')[0] as LanguageCode;
-        if (Array.isArray(LANGUAGES) && LANGUAGES.some(lang => lang.code === browserLang)) {
-          setCurrentLanguage(browserLang);
-        }
+    const savedLanguage = localStorage.getItem('preferredLanguage') as LanguageCode;
+    if (savedLanguage && LANGUAGES.some(lang => lang.code === savedLanguage)) {
+      setCurrentLanguage(savedLanguage);
+    } else {
+      const browserLang = navigator.language.split('-')[0] as LanguageCode;
+      if (LANGUAGES.some(lang => lang.code === browserLang)) {
+        setCurrentLanguage(browserLang);
       }
-      
-      setIsInitialized(true);
-    } catch (error) {
-      console.error("Error initializing language:", error);
-      // Ensure we still mark as initialized even if there's an error
-      setIsInitialized(true);
     }
   }, []);
 
   // Save user language preference to database if logged in
   useEffect(() => {
-    if (!isInitialized) return;
-    
     const saveLanguagePreference = async () => {
-      try {
-        const { data: { user } } = await supabase.auth.getUser();
-        
-        if (user) {
-          const { error } = await supabase
-            .from('user_language_preferences')
-            .upsert({ 
-              user_id: user.id, 
-              language_code: currentLanguage 
-            }, { 
-              onConflict: 'user_id' 
-            });
-              
-          if (error) {
-            console.error('Failed to save language preference:', error);
-          }
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (user) {
+        const { error } = await supabase
+          .from('user_language_preferences')
+          .upsert({ 
+            user_id: user.id, 
+            language_code: currentLanguage 
+          }, { 
+            onConflict: 'user_id' 
+          });
+          
+        if (error) {
+          console.error('Failed to save language preference:', error);
         }
-        
-        localStorage.setItem('preferredLanguage', currentLanguage);
-        
-        // Update HTML lang attribute and direction
-        document.documentElement.lang = currentLanguage;
-        document.documentElement.dir = ['ar', 'he', 'fa'].includes(currentLanguage) ? 'rtl' : 'ltr';
-        
-        // Force re-render by updating key
-        setKey(prevKey => prevKey + 1);
-      } catch (error) {
-        console.error("Error saving language preference:", error);
       }
+      
+      localStorage.setItem('preferredLanguage', currentLanguage);
     };
     
     if (currentLanguage) {
       saveLanguagePreference();
+      
+      // Update HTML lang attribute and direction
+      document.documentElement.lang = currentLanguage;
+      document.documentElement.dir = ['ar', 'he', 'fa'].includes(currentLanguage) ? 'rtl' : 'ltr';
+      
+      // Force re-render by updating key
+      setKey(prevKey => prevKey + 1);
     }
-  }, [currentLanguage, isInitialized]);
+  }, [currentLanguage]);
 
   // Function to set the language with more robust update mechanism
   const setLanguage = useCallback(async (language: LanguageCode) => {
-    if (!language) {
-      console.error("Invalid language code provided to setLanguage");
-      return;
-    }
-    
     console.log(`Changing language to: ${language}`);
     
     // Clear existing translation cache completely to force re-translation
@@ -159,42 +136,27 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
   // Process text before translation to protect non-translatable terms
   const protectSpecialTerms = (text: string): { processedText: string, placeholders: Record<string, string> } => {
-    if (!text || typeof text !== 'string') {
-      console.warn("Invalid text passed to protectSpecialTerms:", text);
-      return { processedText: text || '', placeholders: {} };
-    }
-    
     let processedText = text;
     const placeholders: Record<string, string> = {};
     
-    if (Array.isArray(NON_TRANSLATABLE_TERMS)) {
-      NON_TRANSLATABLE_TERMS.forEach((term, index) => {
-        if (!term) return;
-        
-        const placeholder = `___PLACEHOLDER_${index}___`;
-        const regex = new RegExp(term, 'g');
-        
-        if (processedText.match(regex)) {
-          processedText = processedText.replace(regex, placeholder);
-          placeholders[placeholder] = term;
-        }
-      });
-    }
+    NON_TRANSLATABLE_TERMS.forEach((term, index) => {
+      const placeholder = `___PLACEHOLDER_${index}___`;
+      const regex = new RegExp(term, 'g');
+      
+      if (processedText.match(regex)) {
+        processedText = processedText.replace(regex, placeholder);
+        placeholders[placeholder] = term;
+      }
+    });
     
     return { processedText, placeholders };
   };
 
   // Restore protected terms after translation
   const restoreSpecialTerms = (translatedText: string, placeholders: Record<string, string>): string => {
-    if (!translatedText || typeof translatedText !== 'string') {
-      return translatedText || '';
-    }
-    
     let result = translatedText;
     
     Object.entries(placeholders).forEach(([placeholder, originalTerm]) => {
-      if (!placeholder || !originalTerm) return;
-      
       const regex = new RegExp(placeholder, 'g');
       result = result.replace(regex, originalTerm);
     });
@@ -204,12 +166,6 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
   // Function to translate text
   const translate = async (text: string): Promise<string> => {
-    // If text is not a valid string, return it as is
-    if (!text || typeof text !== 'string') {
-      console.warn("Invalid text passed to translate:", text);
-      return text || '';
-    }
-    
     // If the language is English or text is empty, return the original text
     if (currentLanguage === 'en' || !text || text.trim() === '') {
       return text;
@@ -239,11 +195,6 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
         return text;
       }
       
-      if (!data || !data.translatedText) {
-        console.error('Missing translation data:', data);
-        return text;
-      }
-      
       // Restore protected terms in the translated text
       const finalTranslation = restoreSpecialTerms(data.translatedText, placeholders);
       
@@ -265,7 +216,6 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
     }
   };
 
-  // Provide a default value if children is not provided
   return (
     <TranslationContext.Provider
       key={key} // Key to force re-render of all children when language changes
@@ -282,15 +232,4 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
   );
 };
 
-// Safe version of useTranslation hook with error handling
-export const useTranslation = () => {
-  const context = useContext(TranslationContext);
-  
-  if (!context) {
-    console.error("useTranslation must be used within a TranslationProvider");
-    // Return default values instead of crashing
-    return defaultContext;
-  }
-  
-  return context;
-};
+export const useTranslation = () => useContext(TranslationContext);

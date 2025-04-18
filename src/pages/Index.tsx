@@ -1,20 +1,12 @@
 
-import React, { useEffect } from "react";
+import React from "react";
+import { useLocation } from "react-router-dom";
 import LandingPage from "./LandingPage";
-import { ErrorBoundary } from "@/components/common/ErrorBoundary";
-import ErrorFallback from "@/components/common/ErrorFallback";
 
 const Index = () => {
-  useEffect(() => {
-    console.log("Index component mounted");
-  }, []);
+  const location = useLocation();
   
-  return (
-    <ErrorBoundary fallback={<ErrorFallback message="Error loading the landing page" />}>
-      <LandingPage />
-    </ErrorBoundary>
-  );
+  return <LandingPage />;
 };
 
 export default Index;
-

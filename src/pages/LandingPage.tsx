@@ -1,10 +1,10 @@
-
 import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async"; 
 import { LandingLayout } from "@/components/landing";
 import { useTranslation } from "@/context/TranslationContext";
 import ErrorBoundary from "@/components/common/ErrorBoundary";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
+import Loader2 from "@/components/common/Loader2";
 
 /**
  * Main landing page with SEO optimization and structured data
@@ -90,7 +90,7 @@ const LandingPage: React.FC = () => {
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <LoadingSpinner size="sm" color="text-gray-400" text="Loading content..." textClassName="text-gray-400" />
+        <Loader2 className="h-5 w-5 text-gray-400 animate-spin" />
       </div>
     );
   }

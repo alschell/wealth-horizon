@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/utils/supabaseClient';
+import { Loader2 } from 'lucide-react';
 
 // Define available languages
 export type LanguageCode = 
@@ -268,14 +269,14 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
   if (!isInitialized) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="h-4 w-4 rounded-full bg-gray-300 animate-pulse"></div>
+        <Loader2 className="h-5 w-5 text-gray-400 animate-spin" />
       </div>
     );
   }
 
   return (
     <TranslationContext.Provider
-      key={key} // Key to force re-render of all children when language changes
+      key={key}
       value={{
         currentLanguage,
         setLanguage,

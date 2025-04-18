@@ -2,6 +2,9 @@
 import { DocumentFileWithMetadata } from '../../../types';
 
 export const documentListOperations = {
+  /**
+   * Adds a new document to the list
+   */
   addDocument: (
     documentFiles: DocumentFileWithMetadata[],
     newDocument: DocumentFileWithMetadata
@@ -9,6 +12,9 @@ export const documentListOperations = {
     return [...documentFiles, newDocument];
   },
 
+  /**
+   * Updates an existing document in the list
+   */
   updateDocument: (
     documentFiles: DocumentFileWithMetadata[],
     editingDocumentId: string,
@@ -22,6 +28,9 @@ export const documentListOperations = {
     });
   },
 
+  /**
+   * Removes a document from the list
+   */
   removeDocument: (
     documentFiles: DocumentFileWithMetadata[],
     documentId: string

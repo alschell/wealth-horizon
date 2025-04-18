@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/utils/supabaseClient';
 import { LanguageCode } from './types';
@@ -41,50 +42,66 @@ export function useLanguageManager(clearTranslationCache: () => void) {
 
   // Save user language preference to database if logged in
   useEffect(() => {
-    if (!currentLanguage || languageChangeInProgress) return;
+    if (!currentLanguage || !isInitialized) return;
     
     const saveLanguagePreference = async () => {
-      // Set loading state at the beginning of language change
-      setIsLoading(true);
-      
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      if (user) {
-        const { error } = await supabase
-          .from('user_language_preferences')
-          .upsert({ 
-            user_id: user.id, 
-            language_code: currentLanguage 
-          }, { 
-            onConflict: 'user_id' 
-          });
-          
-        if (error) {
-          console.error('Failed to save language preference:', error);
-        }
+      // Only set loading if language change is in progress
+      if (languageChangeInProgress) {
+        setIsLoading(true);
       }
       
-      localStorage.setItem('preferredLanguage', currentLanguage);
-      
-      // Update HTML lang attribute and direction
-      updateHtmlLangAttributes(currentLanguage);
-      
-      // Force re-render by updating key
-      setKey(prevKey => prevKey + 1);
-      
-      // Keep loading state for a moment to avoid flickering
-      setTimeout(() => {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        
+        if (user) {
+          const { error } = await supabase
+            .from('user_language_preferences')
+            .upsert({ 
+              user_id: user.id, 
+              language_code: currentLanguage 
+            }, { 
+              onConflict: 'user_id' 
+            });
+            
+          if (error) {
+            console.error('Failed to save language preference:', error);
+          }
+        }
+        
+        localStorage.setItem('preferredLanguage', currentLanguage);
+        
+        // Update HTML lang attribute and direction
+        updateHtmlLangAttributes(currentLanguage);
+        
+        // Force re-render by updating key
+        setKey(prevKey => prevKey + 1);
+        
+        // Add a delay before turning off loading state to avoid flickering
+        if (languageChangeInProgress) {
+          setTimeout(() => {
+            setIsLoading(false);
+            setLanguageChangeInProgress(false);
+            console.log("Language change completed:", currentLanguage);
+          }, DEFAULT_LOADING_DELAY);
+        }
+      } catch (error) {
+        console.error("Error saving language preference:", error);
         setIsLoading(false);
         setLanguageChangeInProgress(false);
-      }, DEFAULT_LOADING_DELAY);
+      }
     };
     
     saveLanguagePreference();
-  }, [currentLanguage, languageChangeInProgress]);
+  }, [currentLanguage, isInitialized, languageChangeInProgress]);
 
   // Function to set the language with more robust update mechanism
   const setLanguage = useCallback(async (language: LanguageCode) => {
     console.log(`Changing language to: ${language}`);
+    
+    if (language === currentLanguage) {
+      console.log("Language is already set to:", language);
+      return Promise.resolve();
+    }
     
     try {
       // Start language change process
@@ -109,7 +126,7 @@ export function useLanguageManager(clearTranslationCache: () => void) {
       setLanguageChangeInProgress(false);
       return Promise.reject(error);
     }
-  }, [clearTranslationCache]);
+  }, [clearTranslationCache, currentLanguage]);
 
   return {
     currentLanguage,

@@ -49,11 +49,6 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
     return translateService(text, currentLanguage);
   };
 
-  // Clear translation cache when language changes
-  React.useEffect(() => {
-    clearCache();
-  }, [currentLanguage, clearCache]);
-
   // Don't render children until we've initialized language settings
   if (!isInitialized) {
     return (

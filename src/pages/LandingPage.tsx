@@ -1,29 +1,22 @@
-
 import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async"; 
 import { LandingLayout } from "@/components/landing";
 import { useTranslation } from "@/context/TranslationContext";
 import ErrorBoundary from "@/components/common/ErrorBoundary";
-import EnhancedLoadingSpinner from "@/components/common/EnhancedLoadingSpinner";
 import { useIsComponentMounted } from "@/hooks/useIsComponentMounted";
 
 /**
  * Main landing page with SEO optimization and structured data
  */
 const LandingPage: React.FC = () => {
-  const { translate, currentLanguage, isLoading: translationLoading } = useTranslation();
+  const { translate, currentLanguage } = useTranslation();
   const [title, setTitle] = useState("Wealth Horizon | Intelligent Wealth Management");
   const [description, setDescription] = useState("Wealth Horizon provides comprehensive wealth management solutions for family offices and high-net-worth individuals.");
   const [keywords, setKeywords] = useState("wealth management, family office, financial planning, investment");
-  const [isLoading, setIsLoading] = useState(true);
-  const [hasError, setHasError] = useState(false);
   const isMounted = useIsComponentMounted();
   
   useEffect(() => {
     console.log("LandingPage: Translation effect triggered");
-    
-    // Maintain loading state until translations are complete
-    setIsLoading(true);
     
     const updateSEO = async () => {
       try {
@@ -42,22 +35,9 @@ const LandingPage: React.FC = () => {
           setTitle(translatedTitle);
           setDescription(translatedDescription);
           setKeywords(translatedKeywords);
-          setHasError(false);
-          
-          // Add a longer delay to prevent flickering
-          setTimeout(() => {
-            if (isMounted()) {
-              setIsLoading(false);
-            }
-          }, 500); // Increased from 300ms to 500ms
         }
       } catch (error) {
         console.error("Error translating SEO content:", error);
-        if (isMounted()) {
-          // On error, still show the page with default English text
-          setHasError(true);
-          setIsLoading(false);
-        }
       }
     };
     
@@ -96,23 +76,6 @@ const LandingPage: React.FC = () => {
     "keywords": keywords
   };
 
-  // Show loading state until all content is ready
-  if (isLoading || translationLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <EnhancedLoadingSpinner 
-          size="md" 
-          color="text-[#4E46DC]" 
-          centered={true}
-          showDelay={0}
-          text="Loading content..."
-          textPosition="bottom"
-        />
-      </div>
-    );
-  }
-
-  // Even if there was an error translating, still render the page with default values
   return (
     <ErrorBoundary>
       <Helmet>

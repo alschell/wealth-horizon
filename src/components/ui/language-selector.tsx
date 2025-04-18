@@ -12,22 +12,32 @@ import { useTranslation, LANGUAGES } from '@/context/TranslationContext';
 import TranslatedText from './translated-text';
 
 export function LanguageSelector() {
-  const { currentLanguage, setLanguage } = useTranslation();
+  const { currentLanguage, setLanguage, isLoading } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [isChanging, setIsChanging] = useState(false);
 
   const handleLanguageChange = useCallback(async (langCode: string) => {
+    if (isChanging || isLoading) return;
+    
+    if (langCode === currentLanguage) {
+      console.log("Language is already set to:", langCode);
+      return;
+    }
+    
     setIsChanging(true);
     try {
+      console.log(`Starting language change to ${langCode}`);
       await setLanguage(langCode as any);
       console.log(`Language changed to ${langCode}`);
     } catch (error) {
       console.error("Failed to change language:", error);
     } finally {
-      setIsChanging(false);
-      setIsOpen(false);
+      setTimeout(() => {
+        setIsChanging(false);
+        setIsOpen(false);
+      }, 500);
     }
-  }, [setLanguage]);
+  }, [setLanguage, currentLanguage, isChanging, isLoading]);
 
   const currentLang = LANGUAGES.find(lang => lang.code === currentLanguage);
 
@@ -38,9 +48,9 @@ export function LanguageSelector() {
           variant="ghost" 
           size="icon"
           title={`Language: ${currentLang?.name || 'English'}`}
-          disabled={isChanging}
+          disabled={isChanging || isLoading}
         >
-          <Globe className={`h-5 w-5 ${isChanging ? 'animate-spin' : ''}`} />
+          <Globe className={`h-5 w-5 ${isChanging || isLoading ? 'animate-spin text-[#4E46DC]' : ''}`} />
           <span className="sr-only">
             <TranslatedText>Change Language</TranslatedText>
           </span>
@@ -52,7 +62,7 @@ export function LanguageSelector() {
             key={language.code}
             onClick={() => handleLanguageChange(language.code)}
             className={`cursor-pointer ${currentLanguage === language.code ? 'bg-slate-100 font-medium' : ''}`}
-            disabled={isChanging}
+            disabled={isChanging || isLoading}
           >
             <span>{language.name} ({language.nativeName})</span>
           </DropdownMenuItem>

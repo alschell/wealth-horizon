@@ -11,7 +11,7 @@ export function useUnifiedForm<T extends Record<string, any>>(
 ): UseUnifiedFormReturn<T> {
   const [formState, setFormState] = useState(useFormState<T>(props.initialValues));
   const { setFieldValue, setFieldError, clearFieldError } = useFormFieldHandlers(formState, setFormState);
-  const { validateForm } = useFormValidation(formState.values, props.validate);
+  const { validateForm: getValidationErrors } = useFormValidation(formState.values, props.validate);
   const handleSubmit = useFormSubmit(
     formState,
     setFormState,
@@ -38,6 +38,13 @@ export function useUnifiedForm<T extends Record<string, any>>(
   const getErrorMessage = useCallback((field: keyof T) => {
     return hasError(field) ? formState.errors[field as string] || '' : '';
   }, [formState.errors, hasError]);
+  
+  // Fixed validateForm to return a boolean instead of an error object
+  const validateForm = useCallback(() => {
+    const errors = getValidationErrors();
+    setFormState(prev => ({ ...prev, errors }));
+    return Object.keys(errors).length === 0;
+  }, [getValidationErrors, setFormState]);
 
   return {
     formState,

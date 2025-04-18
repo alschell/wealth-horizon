@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 import PageTemplate from "@/components/shared/PageTemplate";
 import { HelpCircle } from "lucide-react";
-import { TranslatedText } from "@/components/ui/translated-text";
 import { Article } from "@/types/help-center";
 import { helpArticles } from "@/data/help-articles";
 import { ArticleView } from "@/components/help-center/ArticleView";
@@ -52,8 +51,8 @@ const HelpCenter = () => {
 
   return (
     <PageTemplate
-      title={<TranslatedText>Help Center</TranslatedText>}
-      description={<TranslatedText>Find answers to common questions and get support using WealthHorizon.</TranslatedText>}
+      title="Help Center"
+      description="Find answers to common questions and get support using WealthHorizon."
       icon={HelpCircle}
     >
       <div className="space-y-12">

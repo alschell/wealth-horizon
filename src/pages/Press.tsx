@@ -1,20 +1,52 @@
 
-import React from 'react';
-import PageTemplate from "@/components/shared/PageTemplate";
+import React from "react";
+import { Helmet } from "react-helmet-async";
 import { Newspaper } from "lucide-react";
-import TranslatedText from "@/components/ui/translated-text";
+import { Separator } from "@/components/ui/separator";
+import PageTemplate from "@/components/shared/PageTemplate";
+import { 
+  PressReleaseSection, 
+  MediaCoverageSection, 
+  AwardsSection, 
+  MediaInquirySection, 
+  CompanyInfoSection,
+  pressReleases,
+  mediaFeatures
+} from "@/components/press";
 
-const Press = () => {
+const Press: React.FC = () => {
   return (
-    <PageTemplate
-      title={<TranslatedText>Press</TranslatedText>}
-      description={<TranslatedText>Latest news and media coverage about WealthHorizon.</TranslatedText>}
-      icon={Newspaper}
-    >
-      <div className="space-y-8">
-        <TranslatedText>Press releases and media coverage coming soon...</TranslatedText>
-      </div>
-    </PageTemplate>
+    <>
+      <Helmet>
+        <title>Press & Media | WealthHorizon</title>
+        <meta name="description" content="Latest news, media coverage, press releases, and contact information for WealthHorizon's media relations." />
+        <meta name="keywords" content="wealth management, press releases, media coverage, fintech news, wealth tech" />
+      </Helmet>
+      
+      <PageTemplate
+        title="Press & Media"
+        description="Discover the latest news, updates, and media coverage of WealthHorizon."
+        icon={Newspaper}
+      >
+        <div className="space-y-12">
+          <PressReleaseSection pressReleases={pressReleases} />
+          
+          <Separator />
+          
+          <MediaCoverageSection mediaFeatures={mediaFeatures} />
+          
+          <Separator />
+          
+          <AwardsSection />
+          
+          <Separator />
+          
+          <MediaInquirySection />
+          
+          <CompanyInfoSection />
+        </div>
+      </PageTemplate>
+    </>
   );
 };
 

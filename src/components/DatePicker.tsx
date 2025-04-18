@@ -9,7 +9,7 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/enhanced-components"
+} from "@/components/ui/popover"
 
 interface DatePickerProps {
   id?: string;

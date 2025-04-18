@@ -14,7 +14,6 @@ import {
   DefaultDocContent,
   DocumentationLink
 } from "@/components/api-documentation";
-import TranslatedText from "@/components/ui/translated-text";
 
 const ApiDocumentation = () => {
   const { docType } = useParams();
@@ -64,8 +63,8 @@ const ApiDocumentation = () => {
 
   return (
     <PageTemplate
-      title={<TranslatedText>{title}</TranslatedText>}
-      description={<TranslatedText>Comprehensive documentation and resources for the WealthHorizon API and platform integration.</TranslatedText>}
+      title={title}
+      description="Comprehensive documentation and resources for the WealthHorizon API and platform integration."
       icon={FileText}
     >
       <div className="flex flex-col lg:flex-row gap-8">

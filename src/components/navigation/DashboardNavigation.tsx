@@ -8,7 +8,6 @@ import NotificationsPopover from '@/components/dashboard/notifications/Notificat
 import { TranslatedText } from '@/components/ui/translated-text';
 import { toast } from 'sonner';
 import { useTranslation } from '@/context/TranslationContext';
-import Logo from '@/components/ui/logo';
 
 const DashboardNavigation: React.FC = () => {
   const navigate = useNavigate();
@@ -37,7 +36,10 @@ const DashboardNavigation: React.FC = () => {
     <header className="fixed top-0 z-50 w-full border-b bg-white shadow-sm">
       <div className="flex h-16 items-center justify-between mx-auto max-w-7xl px-6 sticky top-0">
         <div className="flex items-center">
-          <Logo />
+          <Link to="/" className="font-bold text-xl flex items-center">
+            <span className="text-indigo-500">Wealth</span>
+            <span>Horizon</span>
+          </Link>
         </div>
         
         <div className="flex items-center gap-3">

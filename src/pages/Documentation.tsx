@@ -1,9 +1,8 @@
 
 import React, { useState } from "react";
 import PageTemplate from "@/components/shared/PageTemplate";
-import { FileText } from "lucide-react";
+import { BookOpen } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
-import { TranslatedText } from "@/components/ui/translated-text";
 import {
   ApiReferenceSection,
   CodeExamples,
@@ -17,9 +16,9 @@ const Documentation = () => {
 
   return (
     <PageTemplate
-      title={<TranslatedText>Documentation</TranslatedText>}
-      description={<TranslatedText>Comprehensive guides and resources for using the WealthHorizon platform.</TranslatedText>}
-      icon={FileText}
+      title="Documentation"
+      description="Comprehensive guides and resources for using the WealthHorizon platform."
+      icon={BookOpen}
     >
       <div className="space-y-12">
         <DocumentationHeader />

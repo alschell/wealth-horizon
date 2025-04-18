@@ -7,8 +7,8 @@ import { Separator } from "@/components/ui/separator";
 import { LucideIcon } from "lucide-react";
 
 interface PageTemplateProps {
-  title: React.ReactNode;
-  description: React.ReactNode;
+  title: string;
+  description: string;
   icon?: LucideIcon;
   children?: React.ReactNode;
 }

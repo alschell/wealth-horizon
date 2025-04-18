@@ -1,12 +1,9 @@
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { 
-  Tabs, 
-  TabsContent, 
-  TabsList, 
-  TabsTrigger 
-} from "@/components/ui/enhanced-components";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
+// Import components
 import AdviceHeader from "./components/AdviceHeader";
 import OverviewTab from "./tabs/OverviewTab";
 import ActiveMandatesTab from "./tabs/ActiveMandatesTab";

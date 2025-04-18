@@ -3,6 +3,7 @@ import React from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { publicRoutes, dashboardRoutes } from './routes';
 import { RouteErrorBoundary } from '@/components/error-boundary/RouteErrorBoundary';
+import { GlobalErrorBoundary } from '@/components/error-boundary/GlobalErrorBoundary';
 
 const router = createBrowserRouter([
   ...publicRoutes,
@@ -13,7 +14,11 @@ const router = createBrowserRouter([
 })));
 
 function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <GlobalErrorBoundary>
+      <RouterProvider router={router} />
+    </GlobalErrorBoundary>
+  );
 }
 
 export default App;

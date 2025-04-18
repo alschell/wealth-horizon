@@ -1,6 +1,7 @@
+
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Mail, ArrowRight, ArrowLeft } from "lucide-react";
+import { Mail, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -33,7 +34,7 @@ const ResetPassword = () => {
           to="/login" 
           className="absolute top-8 left-8 inline-flex items-center text-indigo-600 hover:text-indigo-500 font-medium transition-colors"
         >
-          <ArrowLeft className="mr-2 h-4 w-4" />
+          <ArrowRight className="mr-2 h-4 w-4" />
           Back to Login
         </Link>
 
@@ -65,7 +66,7 @@ const ResetPassword = () => {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="you@example.com" 
-                        className="pl-11 h-14 text-base border-gray-200 bg-gray-50/50 focus-visible:border-indigo-500 focus-visible:ring-indigo-200"
+                        className="pl-11 h-14 text-base border-gray-200 bg-gray-50/50 focus-visible:border-black focus-visible:ring-black"
                         autoComplete="email"
                         required
                       />
@@ -108,15 +109,6 @@ const ResetPassword = () => {
                 <p className="text-sm text-gray-600">Didn't receive the email? Check your spam folder or <button onClick={handleSubmit} className="text-indigo-600 hover:text-indigo-500 font-medium">click here to resend</button>.</p>
               </div>
             )}
-
-            <div className="text-center mt-8">
-              <Link 
-                to="/login" 
-                className="inline-flex items-center text-indigo-600 hover:text-indigo-500 font-medium transition-colors"
-              >
-                <ArrowLeft className="mr-2 h-4 w-4" /> Back to login
-              </Link>
-            </div>
           </FadeIn>
         </div>
       </div>

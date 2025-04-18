@@ -61,7 +61,7 @@ export function useDocumentEventHandlers({
   // Get document factory functions
   const { createDocument, updateDocumentInList, removeDocumentFromList } = useDocumentFactory();
 
-  // Use the document file handler
+  // Use the document file handler with proper validation
   const fileHandler = useDocumentFileHandler({
     validateFile: validateDocumentFile,
     setSelectedFile,

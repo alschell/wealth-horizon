@@ -1,6 +1,6 @@
 
 import { useCallback } from 'react';
-import { validateFile } from './validation/fileValidation';
+import { validateFile as validateFileUtil } from './validation/fileValidation';
 import { validateRequiredFields, hasValidationErrors } from './validation/fieldValidation';
 import { DocumentValidationErrors, FileValidationResult } from './validation/types';
 
@@ -13,7 +13,7 @@ export function useDocumentValidation() {
   );
 
   const validateDocumentFile = useCallback((file: File): FileValidationResult => {
-    return validateFile(file);
+    return validateFileUtil(file);
   }, []);
 
   const hasErrors = useCallback((errors: DocumentValidationErrors): boolean => {

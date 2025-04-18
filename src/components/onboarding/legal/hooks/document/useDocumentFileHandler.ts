@@ -2,7 +2,6 @@
 import { useCallback } from 'react';
 import { showSuccess } from '@/utils/toast';
 import { FileValidationResult } from './validation/types';
-import { useDocumentErrorState } from './useDocumentErrorState';
 
 interface UseDocumentFileHandlerProps {
   validateFile: (file: File) => FileValidationResult;

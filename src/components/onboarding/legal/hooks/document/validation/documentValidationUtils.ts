@@ -1,20 +1,53 @@
 
-import { DocumentValidationErrors, FileValidationResult } from './types';
-import { validateFile as validateFileUtil } from './fileValidation';
-import { validateRequiredFields as validateFields } from './fieldValidation';
+import { FileValidationResult, DocumentValidationErrors } from './types';
+import { FILE_VALIDATION } from './constants';
+
+export const validateDocumentFile = (file: File): FileValidationResult => {
+  if (!file) {
+    return {
+      isValid: false,
+      error: 'No file provided'
+    };
+  }
+
+  if (file.size > FILE_VALIDATION.MAX_SIZE) {
+    return {
+      isValid: false,
+      error: FILE_VALIDATION.MESSAGES.FILE_SIZE
+    };
+  }
+
+  if (!FILE_VALIDATION.ALLOWED_TYPES.includes(file.type)) {
+    return {
+      isValid: false,
+      error: FILE_VALIDATION.MESSAGES.FILE_TYPE
+    };
+  }
+
+  return {
+    isValid: true,
+    error: null
+  };
+};
 
 export const validateDocumentFields = (
   documentType: string,
   issueDate: string,
   selectedFile: File | null
 ): DocumentValidationErrors => {
-  return validateFields(documentType, issueDate, selectedFile);
-};
+  const errors: DocumentValidationErrors = {};
 
-export const validateDocumentFile = (file: File): FileValidationResult => {
-  return validateFileUtil(file);
-};
+  if (!documentType) {
+    errors.documentType = true;
+  }
 
-export const hasValidationErrors = (errors: DocumentValidationErrors): boolean => {
-  return Object.values(errors).some(Boolean);
+  if (!issueDate) {
+    errors.issueDate = true;
+  }
+
+  if (!selectedFile) {
+    errors.selectedFile = true;
+  }
+
+  return errors;
 };

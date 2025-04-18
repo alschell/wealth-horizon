@@ -9,6 +9,9 @@ const Index = () => {
   useEffect(() => {
     // Log when the Index component mounts for debugging
     console.log("Index component mounted", { pathname: location.pathname });
+    
+    // Ensure we scroll to top on initial page load
+    window.scrollTo(0, 0);
   }, [location.pathname]);
 
   return (

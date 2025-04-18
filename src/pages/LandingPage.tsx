@@ -1,13 +1,4 @@
 
-/**
- * LandingPage component
- * 
- * The main landing page for the application with enhanced SEO optimization
- * including structured data for rich search results.
- * 
- * @component
- */
-
 import React, { useEffect } from "react";
 import { Helmet } from "react-helmet-async"; 
 import { LandingLayout } from "@/components/landing";
@@ -21,6 +12,8 @@ const LandingPage: React.FC = () => {
   
   useEffect(() => {
     console.log("LandingPage mounted", { language: currentLanguage });
+    // Ensure we scroll to top on landing page load
+    window.scrollTo(0, 0);
   }, [currentLanguage]);
   
   // Structured data for rich search results

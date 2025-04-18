@@ -19,6 +19,7 @@ export const TranslatedText: React.FC<TranslatedTextProps> = ({
   const { translate, currentLanguage, isLoading } = useTranslation();
   const [translatedContent, setTranslatedContent] = useState<string>(children);
   const [isTranslating, setIsTranslating] = useState(false);
+  const [hasError, setHasError] = useState(false);
   const isMounted = useRef(true);
   const originalText = useRef(children);
 
@@ -30,6 +31,9 @@ export const TranslatedText: React.FC<TranslatedTextProps> = ({
   }, []);
 
   useEffect(() => {
+    // Reset error state on new translation attempt
+    setHasError(false);
+    
     // If the original text changes, update our reference to it
     if (children !== originalText.current) {
       originalText.current = children;
@@ -59,6 +63,7 @@ export const TranslatedText: React.FC<TranslatedTextProps> = ({
         // If translation fails, fall back to original text
         if (isMounted.current) {
           setTranslatedContent(children);
+          setHasError(true);
         }
       } finally {
         if (isMounted.current) {
@@ -82,6 +87,15 @@ export const TranslatedText: React.FC<TranslatedTextProps> = ({
     return (
       <Component className={`animate-pulse ${className}`} {...rest}>
         {translatedContent || children}
+      </Component>
+    );
+  }
+
+  // If there was an error in translation, use original text
+  if (hasError) {
+    return (
+      <Component className={className} {...rest}>
+        {children}
       </Component>
     );
   }

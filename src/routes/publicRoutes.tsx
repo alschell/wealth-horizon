@@ -1,8 +1,10 @@
 
 import { type RouteObject } from 'react-router-dom';
+import { useState } from 'react';
 import LandingPage from '@/pages/LandingPage';
-import { BlogPost, BlogList } from '@/components/blog';
+import { BlogList, BlogPost } from '@/components/blog';
 import { ApiReferenceContent, GettingStartedContent } from '@/components/api-documentation';
+import ApiDocumentation from '@/pages/ApiDocumentation';
 
 export const publicRoutes: RouteObject[] = [
   {
@@ -14,11 +16,11 @@ export const publicRoutes: RouteObject[] = [
     children: [
       {
         index: true,
-        element: <BlogList />,
+        element: <ApiDocumentation />,
       },
       {
         path: ':id',
-        element: <BlogPost />,
+        element: <ApiDocumentation />,
       },
     ],
   },
@@ -27,11 +29,11 @@ export const publicRoutes: RouteObject[] = [
     children: [
       {
         path: 'getting-started',
-        element: <GettingStartedContent />,
+        element: <ApiDocumentation />,
       },
       {
         path: 'api-reference',
-        element: <ApiReferenceContent />,
+        element: <ApiDocumentation />,
       },
     ],
   },

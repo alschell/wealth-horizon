@@ -60,6 +60,7 @@ const LogoTransformAnimation = () => {
               transition={{
                 duration: 2,
                 ease: "easeInOut",
+                delay: Math.random() * 0.5,
                 repeat: Infinity,
                 repeatType: "reverse",
                 repeatDelay: 3
@@ -90,6 +91,7 @@ const LogoTransformAnimation = () => {
               transition={{
                 duration: 2,
                 ease: "easeInOut",
+                delay: Math.random() * 0.5 + 0.5,
                 repeat: Infinity,
                 repeatType: "reverse",
                 repeatDelay: 3

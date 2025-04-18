@@ -7,7 +7,6 @@ const Logo = () => {
     <Link 
       to="/"
       className="text-xl font-bold tracking-tight cursor-pointer" 
-      onClick={() => window.scrollTo(0, 0)}
     >
       <span className="text-indigo-400">Wealth</span>
       <span className="ml-0.5">Pro</span>

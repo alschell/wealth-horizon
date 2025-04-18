@@ -16,7 +16,6 @@ const Header: React.FC = () => {
         <Link 
           to="/" 
           className="font-bold text-xl cursor-pointer"
-          onClick={() => window.scrollTo(0, 0)}
         >
           <span className="text-indigo-600">Wealth</span>
           <span className="text-gray-900">Horizon</span>

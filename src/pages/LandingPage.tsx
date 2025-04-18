@@ -12,6 +12,7 @@ const LandingPage: React.FC = () => {
   
   useEffect(() => {
     console.log("LandingPage mounted", { language: currentLanguage });
+    
     // Ensure we scroll to top on landing page load
     window.scrollTo(0, 0);
   }, [currentLanguage]);

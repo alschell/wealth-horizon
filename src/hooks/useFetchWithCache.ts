@@ -1,12 +1,12 @@
 
-import { useQuery, UseQueryOptions } from '@tanstack/react-query';
+import { useQuery, QueryKey, UseQueryOptions } from '@tanstack/react-query';
 import { handleError, ErrorHandlerOptions } from '@/utils/errorHandling';
 
 /**
  * Options for the useFetchWithCache hook
  */
 export interface FetchWithCacheOptions<TData, TError> 
-  extends Omit<UseQueryOptions<TData, TError, TData, any[]>, 'queryKey' | 'queryFn'> {
+  extends Omit<UseQueryOptions<TData, TError, TData, QueryKey>, 'queryKey' | 'queryFn'> {
   /**
    * Function to execute when an error occurs
    */
@@ -36,7 +36,7 @@ export interface FetchWithCacheOptions<TData, TError>
  * @param options - Additional options for the query
  */
 export function useFetchWithCache<TData, TError = unknown>(
-  queryKey: any[],
+  queryKey: QueryKey,
   fetchFn: () => Promise<TData>,
   options: FetchWithCacheOptions<TData, TError> = {}
 ) {

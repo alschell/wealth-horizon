@@ -1,5 +1,5 @@
 
-import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/utils/supabaseClient';
 
 // Define available languages
@@ -71,7 +71,7 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
   const [currentLanguage, setCurrentLanguage] = useState<LanguageCode>('en');
   const [translationCache, setTranslationCache] = useState<Record<string, Record<string, string>>>({});
   const [isLoading, setIsLoading] = useState(false);
-  const isChangingLanguage = useRef(false);
+  const [key, setKey] = useState(0); // Force component tree re-render with key
   
   // Load language preference from local storage on initial load
   useEffect(() => {
@@ -88,39 +88,36 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
   // Save user language preference to database if logged in
   useEffect(() => {
-    if (isChangingLanguage.current) return;
-    
     const saveLanguagePreference = async () => {
-      try {
-        const { data: { user } } = await supabase.auth.getUser();
-        
-        if (user) {
-          const { error } = await supabase
-            .from('user_language_preferences')
-            .upsert({ 
-              user_id: user.id, 
-              language_code: currentLanguage 
-            }, { 
-              onConflict: 'user_id' 
-            });
-              
-          if (error) {
-            console.error('Failed to save language preference:', error);
-          }
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (user) {
+        const { error } = await supabase
+          .from('user_language_preferences')
+          .upsert({ 
+            user_id: user.id, 
+            language_code: currentLanguage 
+          }, { 
+            onConflict: 'user_id' 
+          });
+          
+        if (error) {
+          console.error('Failed to save language preference:', error);
         }
-        
-        localStorage.setItem('preferredLanguage', currentLanguage);
-      } catch (error) {
-        console.error('Error saving language preference:', error);
       }
       
-      // Update HTML lang attribute and direction
-      document.documentElement.lang = currentLanguage;
-      document.documentElement.dir = ['ar', 'he', 'fa'].includes(currentLanguage) ? 'rtl' : 'ltr';
+      localStorage.setItem('preferredLanguage', currentLanguage);
     };
     
     if (currentLanguage) {
       saveLanguagePreference();
+      
+      // Update HTML lang attribute and direction
+      document.documentElement.lang = currentLanguage;
+      document.documentElement.dir = ['ar', 'he', 'fa'].includes(currentLanguage) ? 'rtl' : 'ltr';
+      
+      // Force re-render by updating key
+      setKey(prevKey => prevKey + 1);
     }
   }, [currentLanguage]);
 
@@ -128,29 +125,14 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
   const setLanguage = useCallback(async (language: LanguageCode) => {
     console.log(`Changing language to: ${language}`);
     
-    // Only proceed if language has actually changed
-    if (language !== currentLanguage) {
-      isChangingLanguage.current = true;
-      setIsLoading(true);
-      
-      try {
-        // Update the current language
-        setCurrentLanguage(language);
-        
-        // Small delay to ensure language change has propagated
-        await new Promise(resolve => setTimeout(resolve, 50));
-      } catch (error) {
-        console.error('Error changing language:', error);
-      } finally {
-        setTimeout(() => {
-          setIsLoading(false);
-          isChangingLanguage.current = false;
-        }, 200);
-      }
-    }
+    // Clear existing translation cache completely to force re-translation
+    setTranslationCache({});
     
-    return Promise.resolve();
-  }, [currentLanguage]);
+    // Update the current language
+    setCurrentLanguage(language);
+    
+    // This will trigger the effect above that updates document lang/dir and forces re-render
+  }, []);
 
   // Process text before translation to protect non-translatable terms
   const protectSpecialTerms = (text: string): { processedText: string, placeholders: Record<string, string> } => {
@@ -184,13 +166,10 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
   // Function to translate text
   const translate = async (text: string): Promise<string> => {
-    // Skip translation for empty strings or when language is English
+    // If the language is English or text is empty, return the original text
     if (currentLanguage === 'en' || !text || text.trim() === '') {
       return text;
     }
-    
-    // Create a cache key that includes both the text and target language
-    const cacheKey = `${text}_${currentLanguage}`;
     
     // Check if translation is already in cache
     if (translationCache[currentLanguage]?.[text]) {
@@ -198,6 +177,8 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
     }
     
     try {
+      setIsLoading(true);
+      
       // Process text to protect special terms
       const { processedText, placeholders } = protectSpecialTerms(text);
       
@@ -217,7 +198,7 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
       // Restore protected terms in the translated text
       const finalTranslation = restoreSpecialTerms(data.translatedText, placeholders);
       
-      // Cache the translation with the specific language key
+      // Cache the translation
       setTranslationCache(prevCache => ({
         ...prevCache,
         [currentLanguage]: {
@@ -230,11 +211,14 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
     } catch (error) {
       console.error('Translation failed:', error);
       return text;
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
     <TranslationContext.Provider
+      key={key} // Key to force re-render of all children when language changes
       value={{
         currentLanguage,
         setLanguage,

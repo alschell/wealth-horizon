@@ -1,13 +1,13 @@
 
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { Mail, ArrowRight, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FadeIn, ScaleIn } from "@/components/ui/animation";
 import { toast } from "sonner";
-import { Link } from "react-router-dom";
-import LogoTransformAnimation from "@/components/animations/login/LogoTransformAnimation";
+import PlatformAnimation from "@/components/animations/login/PlatformAnimation";
 
 const ResetPassword = () => {
   const [email, setEmail] = useState("");
@@ -29,26 +29,21 @@ const ResetPassword = () => {
   return (
     <div className="min-h-screen flex items-stretch">
       {/* Left column with form */}
-      <div className="w-1/2 bg-white flex flex-col justify-center px-8 py-12 md:px-16 relative z-10">
-        <Link 
-          to="/login" 
-          className="absolute top-8 left-8 inline-flex items-center text-indigo-600 hover:text-indigo-500 font-medium transition-colors"
-        >
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Login
-        </Link>
-
+      <div className="w-full lg:w-1/2 bg-white flex flex-col justify-center px-8 py-12 md:px-16 relative z-10">
         <div className="max-w-md mx-auto w-full">
           <FadeIn>
             {/* Logo and heading */}
-            <div className="mb-12 text-center">
-              <h1 className="text-3xl font-bold">
-                <span className="text-indigo-600">Wealth</span>
-                <span className="text-gray-900">Horizon</span>
-              </h1>
+            <div className="mb-10">
+              <Link to="/" className="inline-block mb-8">
+                <h1 className="text-3xl font-bold">
+                  <span className="text-indigo-600">Wealth</span>
+                  <span className="text-gray-900">Horizon</span>
+                </h1>
+              </Link>
+              <h2 className="text-3xl font-bold text-gray-900 mb-3">Reset your password</h2>
+              <p className="text-gray-600">Enter your email address and we'll send you instructions to reset your password.</p>
             </div>
 
-            {/* Form */}
             {!isSubmitted ? (
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="space-y-5">
@@ -66,7 +61,7 @@ const ResetPassword = () => {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="you@example.com" 
-                        className="pl-11 h-14 text-base border-gray-200 bg-gray-50/50 focus-visible:border-black focus-visible:ring-black"
+                        className="pl-11 h-14 text-base border-gray-200 bg-gray-50/50 focus-visible:border-indigo-500 focus-visible:ring-indigo-200"
                         autoComplete="email"
                         required
                       />
@@ -109,13 +104,22 @@ const ResetPassword = () => {
                 <p className="text-sm text-gray-600">Didn't receive the email? Check your spam folder or <button onClick={handleSubmit} className="text-indigo-600 hover:text-indigo-500 font-medium">click here to resend</button>.</p>
               </div>
             )}
+
+            <div className="text-center mt-8">
+              <Link 
+                to="/login" 
+                className="inline-flex items-center text-indigo-600 hover:text-indigo-500 font-medium transition-colors"
+              >
+                <ArrowLeft className="mr-2 h-4 w-4" /> Back to login
+              </Link>
+            </div>
           </FadeIn>
         </div>
       </div>
 
       {/* Right column with animation */}
-      <div className="w-1/2 bg-gradient-to-br from-indigo-600 to-purple-700 relative overflow-hidden">
-        <LogoTransformAnimation />
+      <div className="hidden lg:block lg:w-1/2 bg-gradient-to-br from-indigo-600 to-purple-700 relative overflow-hidden">
+        <PlatformAnimation />
       </div>
     </div>
   );

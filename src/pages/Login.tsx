@@ -1,7 +1,6 @@
-
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { Mail, Lock, ArrowRight, Eye, EyeOff, Shield, ArrowLeft } from "lucide-react";
+import { Mail, Lock, ArrowRight, Eye, EyeOff, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -43,7 +42,7 @@ const Login = () => {
 
         <div className="max-w-md mx-auto w-full">
           <FadeIn>
-            {/* Logo and heading - now just the logo part */}
+            {/* Logo and heading */}
             <div className="mb-12 text-center">
               <h1 className="text-3xl font-bold">
                 <span className="text-indigo-600">Wealth</span>
@@ -151,15 +150,6 @@ const Login = () => {
                   </>
                 )}
               </Button>
-
-              <div className="text-center mt-8">
-                <p className="text-gray-600">
-                  Don't have an account?{" "}
-                  <Link to="/onboarding" className="text-indigo-600 hover:text-indigo-500 font-medium transition-colors">
-                    Sign up
-                  </Link>
-                </p>
-              </div>
             </form>
           </FadeIn>
         </div>

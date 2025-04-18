@@ -1,12 +1,3 @@
-/**
- * LandingPage component
- * 
- * The main landing page for the application with enhanced SEO optimization
- * including structured data for rich search results.
- * 
- * @component
- */
-
 import React from "react";
 import { Helmet } from "react-helmet-async"; 
 import { LandingLayout } from "@/components/landing";
@@ -69,11 +60,7 @@ const LandingPage: React.FC = () => {
         </script>
       </Helmet>
       
-      {/* Modify the logo to be non-interactive */}
-      <div className="text-3xl font-bold inline-block mb-8">
-        <span className="text-indigo-600">Wealth</span>
-        <span className="text-gray-900">Horizon</span>
-      </div>
+      {/* Removed the interactive logo div completely */}
       
       <LandingLayout />
     </>

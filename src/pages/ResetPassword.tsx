@@ -8,21 +8,27 @@ import { Label } from "@/components/ui/label";
 import { FadeIn, ScaleIn } from "@/components/ui/animation";
 import { toast } from "sonner";
 import PlatformAnimation from "@/components/animations/login/PlatformAnimation";
+import TranslatedText from "@/components/ui/translated-text";
+import { useTranslation } from "@/context/TranslationContext";
 
 const ResetPassword = () => {
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const { translate } = useTranslation();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    
+    // Get the translated string before showing the toast
+    const successMessage = await translate("Password reset instructions sent to your email");
     
     // Simulate loading state and API call
     setTimeout(() => {
       setIsLoading(false);
       setIsSubmitted(true);
-      toast.success("Password reset instructions sent to your email");
+      toast.success(successMessage);
     }, 1000);
   };
 
@@ -40,8 +46,12 @@ const ResetPassword = () => {
                   <span className="text-gray-900">Horizon</span>
                 </h1>
               </Link>
-              <h2 className="text-3xl font-bold text-gray-900 mb-3">Reset your password</h2>
-              <p className="text-gray-600">Enter your email address and we'll send you instructions to reset your password.</p>
+              <h2 className="text-3xl font-bold text-gray-900 mb-3">
+                <TranslatedText>Reset your password</TranslatedText>
+              </h2>
+              <p className="text-gray-600">
+                <TranslatedText>Enter your email address and we'll send you instructions to reset your password.</TranslatedText>
+              </p>
             </div>
 
             {!isSubmitted ? (
@@ -49,7 +59,7 @@ const ResetPassword = () => {
                 <div className="space-y-5">
                   <div className="space-y-2.5">
                     <Label htmlFor="email" className="text-gray-700 font-medium text-base">
-                      Email Address
+                      <TranslatedText>Email Address</TranslatedText>
                     </Label>
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
@@ -80,11 +90,11 @@ const ResetPassword = () => {
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                       </svg>
-                      Sending...
+                      <TranslatedText>Sending...</TranslatedText>
                     </div>
                   ) : (
                     <>
-                      Reset Password <ArrowRight className="ml-2 h-5 w-5" />
+                      <TranslatedText>Reset Password</TranslatedText> <ArrowRight className="ml-2 h-5 w-5" />
                     </>
                   )}
                 </Button>
@@ -96,12 +106,20 @@ const ResetPassword = () => {
                     <div className="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center mr-3">
                       <Mail className="h-5 w-5 text-green-600" />
                     </div>
-                    <h3 className="font-semibold text-green-900">Check your inbox</h3>
+                    <h3 className="font-semibold text-green-900"><TranslatedText>Check your inbox</TranslatedText></h3>
                   </div>
-                  <p className="text-sm">We've sent instructions to <strong>{email}</strong>. Please check your email inbox and follow the link to reset your password.</p>
+                  <p className="text-sm">
+                    <TranslatedText>We've sent instructions to</TranslatedText> <strong>{email}</strong>. 
+                    <TranslatedText>Please check your email inbox and follow the link to reset your password.</TranslatedText>
+                  </p>
                 </div>
                 
-                <p className="text-sm text-gray-600">Didn't receive the email? Check your spam folder or <button onClick={handleSubmit} className="text-indigo-600 hover:text-indigo-500 font-medium">click here to resend</button>.</p>
+                <p className="text-sm text-gray-600">
+                  <TranslatedText>Didn't receive the email? Check your spam folder or</TranslatedText>{" "}
+                  <button onClick={handleSubmit} className="text-indigo-600 hover:text-indigo-500 font-medium">
+                    <TranslatedText>click here to resend</TranslatedText>
+                  </button>.
+                </p>
               </div>
             )}
 
@@ -110,7 +128,7 @@ const ResetPassword = () => {
                 to="/login" 
                 className="inline-flex items-center text-indigo-600 hover:text-indigo-500 font-medium transition-colors"
               >
-                <ArrowLeft className="mr-2 h-4 w-4" /> Back to login
+                <ArrowLeft className="mr-2 h-4 w-4" /> <TranslatedText>Back to login</TranslatedText>
               </Link>
             </div>
           </FadeIn>

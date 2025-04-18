@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from '@/context/TranslationContext';
 
 interface TranslatedTextProps {
@@ -17,77 +17,45 @@ export const TranslatedText: React.FC<TranslatedTextProps> = ({
   ...rest
 }) => {
   const { translate, currentLanguage, isLoading } = useTranslation();
-  const [translatedContent, setTranslatedContent] = useState<string>(children);
-  const isMounted = useRef(true);
-  const originalText = useRef(children);
-  const [translateError, setTranslateError] = useState<Error | null>(null);
+  const [translatedContent, setTranslatedContent] = useState(children);
 
-  // Set up and clean up
   useEffect(() => {
-    isMounted.current = true;
-    console.log("TranslatedText mounted for:", children, "current language:", currentLanguage);
-    
-    return () => {
-      isMounted.current = false;
-    };
-  }, []);
-
-  // Handle translation when language or content changes
-  useEffect(() => {
-    // If the original text changes, update our reference to it
-    if (children !== originalText.current) {
-      originalText.current = children;
-    }
-    
-    // Skip translation for empty content
-    if (!children || children.trim() === '') {
-      setTranslatedContent(children);
-      return;
-    }
-
-    // Always display original content initially
-    setTranslatedContent(children);
-    setTranslateError(null);
+    let isMounted = true;
     
     const translateText = async () => {
       try {
-        // Only proceed if we have a language and the component is still mounted
-        if (!currentLanguage || !isMounted.current) return;
-        
-        console.log(`Attempting to translate: "${children}" to ${currentLanguage}`);
         const translated = await translate(children);
-        
-        if (isMounted.current) {
-          console.log(`Translation result for "${children}": "${translated}"`);
-          setTranslatedContent(translated || children);
+        if (isMounted) {
+          setTranslatedContent(translated);
         }
       } catch (error) {
         console.error("Translation error:", error);
-        setTranslateError(error as Error);
         // If translation fails, fall back to original text
-        if (isMounted.current) {
+        if (isMounted) {
           setTranslatedContent(children);
         }
       }
     };
 
-    // Only translate if we have a language and it's not English
-    if (currentLanguage && currentLanguage !== 'en') {
-      translateText();
-    }
+    // Always run translation when language changes or text changes
+    translateText();
+    
+    return () => {
+      isMounted = false;
+    };
   }, [children, currentLanguage, translate]);
 
-  // If we're still displaying the fallback content and there's a translation error, log it
-  useEffect(() => {
-    if (translateError && translatedContent === children && currentLanguage !== 'en') {
-      console.warn(`Failed to translate "${children}" to ${currentLanguage}:`, translateError);
-    }
-  }, [translateError, translatedContent, children, currentLanguage]);
+  if (withLoading && isLoading) {
+    return (
+      <Component className={`animate-pulse ${className}`} {...rest}>
+        {translatedContent}
+      </Component>
+    );
+  }
 
-  // Return the current content, falling back to original text if needed
   return (
     <Component className={className} {...rest}>
-      {translatedContent || children}
+      {translatedContent}
     </Component>
   );
 };

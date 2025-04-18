@@ -1,3 +1,4 @@
+
 import React, { useEffect } from "react";
 import { HelmetProvider } from "react-helmet-async";
 import { Toaster } from "@/components/ui/toaster";
@@ -92,7 +93,7 @@ function App() {
 
   // Add debugging to identify when App renders
   useEffect(() => {
-    console.log("App component mounted or re-rendered");
+    console.log("App component mounted");
     
     // Basic platform health check
     const checkBrowserCompatibility = () => {

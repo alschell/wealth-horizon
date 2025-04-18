@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Globe } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -8,53 +8,28 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useTranslation, LANGUAGES, LanguageCode } from '@/context/TranslationContext';
+import { useTranslation, LANGUAGES } from '@/context/TranslationContext';
 import TranslatedText from './translated-text';
-import { toast } from 'sonner';
 
 export function LanguageSelector() {
   const { currentLanguage, setLanguage } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [isChanging, setIsChanging] = useState(false);
 
-  const handleLanguageChange = async (langCode: string) => {
-    if (langCode === currentLanguage || isChanging) {
-      setIsOpen(false);
-      return; // Don't change if it's the same language or already changing
-    }
-
-    console.log(`Starting language change to ${langCode} from ${currentLanguage}`);
+  const handleLanguageChange = useCallback(async (langCode: string) => {
     setIsChanging(true);
-    
     try {
-      // Store language in localStorage
-      localStorage.setItem('preferredLanguage', langCode);
-      
-      // First close the dropdown to avoid UI glitches
-      setIsOpen(false);
-      
-      // Change the language - cast to LanguageCode since we validate it's in LANGUAGES
-      const validLangCode = LANGUAGES.find(l => l.code === langCode)?.code;
-      if (!validLangCode) {
-        throw new Error(`Invalid language code: ${langCode}`);
-      }
-      
-      await setLanguage(validLangCode as LanguageCode);
-      console.log(`Language successfully changed to ${langCode}`);
-      
-      // Notify user after successful change
-      toast.success(`Language changed to ${LANGUAGES.find(l => l.code === langCode)?.name || langCode}`);
+      await setLanguage(langCode as any);
+      console.log(`Language changed to ${langCode}`);
     } catch (error) {
       console.error("Failed to change language:", error);
-      toast.error("Failed to change language");
-      // Remove from localStorage if it failed
-      localStorage.removeItem('preferredLanguage');
     } finally {
       setIsChanging(false);
+      setIsOpen(false);
     }
-  };
+  }, [setLanguage]);
 
-  const currentLang = LANGUAGES.find(lang => lang.code === currentLanguage) || LANGUAGES[0];
+  const currentLang = LANGUAGES.find(lang => lang.code === currentLanguage);
 
   return (
     <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>

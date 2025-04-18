@@ -1,102 +1,49 @@
+import { renderHook, act } from '@testing-library/react';
+import { useMarketData } from '../useMarketData';
+import { useSymbolSearch } from '../useSymbolSearch';
+import { mockMarketData, mockSearchResults } from './mockData';
+import { QueryClient, QueryClientProvider } from '@tanstack/query-core';
 
-import { renderHook } from '@testing-library/react-hooks';
-import { useQuote, useMarketNews, useCompanyNews, useSymbolSearch, useIndices, useCandleData } from '../index';
-import * as api from '@/utils/market-data/api';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import React from 'react';
-
-// Mock the API functions
-jest.mock('@/utils/market-data/api', () => ({
-  getQuote: jest.fn(),
-  getMarketNews: jest.fn(),
-  getCompanyNews: jest.fn(),
-  searchSymbols: jest.fn(),
-  getIndices: jest.fn(),
-  getCandleData: jest.fn(),
-  formatQuote: jest.fn((data) => ({ 
-    raw: data, 
-    formatted: { price: '100.00' } 
-  })),
-  refreshMarketData: jest.fn(),
+// Mock the API calls
+jest.mock('../utils', () => ({
+  fetchMarketData: jest.fn(() => Promise.resolve(mockMarketData)),
+  searchSymbols: jest.fn(() => Promise.resolve(mockSearchResults)),
 }));
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: false,
-    },
-  },
-});
-
-// Wrapper for testing hooks with react-query
-const wrapper = ({ children }: { children: React.ReactNode }) => (
-  <QueryClientProvider client={queryClient}>
-    {children}
-  </QueryClientProvider>
-);
-
 describe('Market Data Hooks', () => {
+  let queryClient: QueryClient;
+
   beforeEach(() => {
-    queryClient.clear();
-    jest.clearAllMocks();
+    queryClient = new QueryClient();
   });
 
-  describe('useQuote', () => {
-    it('fetches quote data for a symbol', async () => {
-      const mockQuote = { c: 100, d: 5, dp: 5, h: 105, l: 95, o: 98, pc: 95, t: 1234567890 };
-      (api.getQuote as jest.Mock).mockResolvedValue(mockQuote);
-      (api.formatQuote as jest.Mock).mockReturnValue({
-        price: '100.00',
-        change: '5.00',
-        percentChange: '5.00',
-        high: '105.00',
-        low: '95.00',
-        open: '98.00',
-        previousClose: '95.00',
-        timestamp: new Date(1234567890 * 1000).toLocaleDateString()
-      });
+  it('useMarketData should fetch and return market data', async () => {
+    const wrapper = ({ children }: { children: React.ReactNode }) => (
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    );
 
-      const { result, waitFor } = renderHook(() => useQuote('AAPL'), { wrapper });
+    const { result, waitForNextUpdate } = renderHook(() => useMarketData('AAPL'), { wrapper });
 
-      // Initial state
-      expect(result.current.isLoading).toBe(true);
-      expect(result.current.data).toBeUndefined();
+    await waitForNextUpdate();
 
-      await waitFor(() => result.current.isSuccess);
-
-      // After data load
-      expect(api.getQuote).toHaveBeenCalledWith('AAPL', expect.any(Object));
-      expect(result.current.data).toBeDefined();
-      expect(result.current.data?.formatted.price).toBe('100.00');
-    });
+    expect(result.current.data).toEqual(mockMarketData);
+    expect(result.current.isLoading).toBe(false);
   });
 
-  // Additional tests for other hooks
-  describe('useMarketNews', () => {
-    it('fetches market news', async () => {
-      const mockNews = [{ id: 1, headline: 'Test News', summary: 'Test Summary' }];
-      (api.getMarketNews as jest.Mock).mockResolvedValue(mockNews);
+  it('useSymbolSearch should search and return symbols', async () => {
+    const wrapper = ({ children }: { children: React.ReactNode }) => (
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    );
 
-      const { result, waitFor } = renderHook(() => useMarketNews('general', 5), { wrapper });
+    const { result, waitForNextUpdate } = renderHook(() => useSymbolSearch(), { wrapper });
 
-      await waitFor(() => result.current.isSuccess);
-
-      expect(api.getMarketNews).toHaveBeenCalledWith('general', 5, expect.any(Object));
-      expect(result.current.data).toEqual(mockNews);
+    act(() => {
+      result.current.setSearchTerm('AA');
     });
-  });
 
-  describe('useIndices', () => {
-    it('fetches indices data', async () => {
-      const mockIndices = [{ symbol: '^GSPC', name: 'S&P 500', price: 4000 }];
-      (api.getIndices as jest.Mock).mockResolvedValue(mockIndices);
+    await waitForNextUpdate();
 
-      const { result, waitFor } = renderHook(() => useIndices(), { wrapper });
-
-      await waitFor(() => result.current.isSuccess);
-
-      expect(api.getIndices).toHaveBeenCalled();
-      expect(result.current.data).toEqual(mockIndices);
-    });
+    expect(result.current.results).toEqual(mockSearchResults);
+    expect(result.current.isLoading).toBe(false);
   });
 });

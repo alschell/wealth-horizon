@@ -1,101 +1,74 @@
-
 import React from 'react';
 import { useStandardForm } from '@/hooks/useStandardForm';
-import { StandardForm } from '@/components/ui/standard-form';
-import FormField from '@/components/ui/form-field';
-import { validateRequired, validateEmail, validatePhone } from '@/utils/formValidation';
 
 interface ContactFormData {
   name: string;
   email: string;
-  phone: string;
   message: string;
 }
 
-const StandardFormExample: React.FC = () => {
-  // Define validation rules
-  const validationRules = {
-    name: (value: string) => validateRequired(value, 'Name'),
-    email: validateEmail,
-    phone: validatePhone,
-    message: (value: string) => validateRequired(value, 'Message')
-  };
-  
-  // Use our standardized form hook
+export const StandardFormExample = () => {
   const {
-    formData,
+    values,
     errors,
+    touched,
     handleChange,
-    handleBlur,
     handleSubmit,
-    isSubmitting
+    validateForm
   } = useStandardForm<ContactFormData>({
     initialValues: {
       name: '',
       email: '',
-      phone: '',
       message: ''
     },
-    validationRules,
-    onSubmit: async (data) => {
-      // In a real app, submit to an API
-      console.log('Submitting form data:', data);
-      // Simulate API delay
+    validate: (values) => {
+      const errors: Record<string, string> = {};
+      if (!values.name) errors.name = 'Name is required';
+      if (!values.email) errors.email = 'Email is required';
+      return errors;
+    },
+    onSubmit: async (values) => {
+      console.log('Form values:', values);
       await new Promise(resolve => setTimeout(resolve, 1000));
     },
-    successMessage: 'Your message has been sent successfully!',
-    resetAfterSubmit: true
+    onSuccess: () => {
+      alert('Form submitted successfully!');
+    }
   });
-  
+
   return (
-    <StandardForm
-      onSubmit={handleSubmit}
-      isSubmitting={isSubmitting}
-      formTitle="Contact Us"
-      formDescription="Fill out the form below to get in touch with our team."
-    >
-      <FormField
-        name="name"
-        label="Name"
-        value={formData.name}
-        onChange={handleChange}
-        onBlur={handleBlur}
-        error={errors.name}
-        required
-      />
-      
-      <FormField
-        name="email"
-        label="Email"
-        type="email"
-        value={formData.email}
-        onChange={handleChange}
-        onBlur={handleBlur}
-        error={errors.email}
-        required
-      />
-      
-      <FormField
-        name="phone"
-        label="Phone"
-        value={formData.phone}
-        onChange={handleChange}
-        onBlur={handleBlur}
-        error={errors.phone}
-      />
-      
-      <FormField
-        name="message"
-        label="Message"
-        type="textarea"
-        value={formData.message}
-        onChange={handleChange}
-        onBlur={handleBlur}
-        error={errors.message}
-        required
-      />
-    </StandardForm>
+    <form onSubmit={handleSubmit}>
+      <div className="space-y-4">
+        <input
+          name="name"
+          value={values.name}
+          onChange={handleChange}
+          placeholder="Name"
+          className={`border rounded px-3 py-2 w-full ${errors.name && touched.name ? 'border-red-500' : ''}`}
+        />
+        {errors.name && touched.name && <p className="text-red-500">{errors.name}</p>}
+
+        <input
+          name="email"
+          value={values.email}
+          onChange={handleChange}
+          placeholder="Email"
+          className={`border rounded px-3 py-2 w-full ${errors.email && touched.email ? 'border-red-500' : ''}`}
+        />
+        {errors.email && touched.email && <p className="text-red-500">{errors.email}</p>}
+
+        <textarea
+          name="message"
+          value={values.message}
+          onChange={handleChange}
+          placeholder="Message"
+          className="border rounded px-3 py-2 w-full"
+        />
+
+        <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
+          Submit
+        </button>
+      </div>
+    </form>
   );
 };
-
-export default StandardFormExample;

@@ -1,5 +1,4 @@
-
-import { QueryClient } from "@tanstack/react-query";
+import { QueryClient } from '@tanstack/query-core';
 import { Logger } from "@/utils/logger";
 import { toast } from "sonner";
 

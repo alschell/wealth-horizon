@@ -1,4 +1,3 @@
-
 import { useState, useCallback } from 'react';
 import { DocumentFileWithMetadata } from '../types';
 import { toast } from '@/components/ui/use-toast';
@@ -29,7 +28,7 @@ export const useDocumentCore = ({
   const [fileError, setFileError] = useState<string | null>(null);
   
   // Editing state
-  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [isEditing, setIsEditing] = useState<boolean>(isEditing>(false);
   const [editingDocumentId, setEditingDocumentId] = useState<string | null>(null);
   
   // Get document factory functions
@@ -51,14 +50,16 @@ export const useDocumentCore = ({
       if (!values.selectedFile) errors.selectedFile = 'A document file is required';
       
       return errors;
+    },
+    onSubmit: async (values) => {
+      // Submit logic here
     }
   });
-  
-  // Handle file selection
+
   const handleFileSelected = useCallback((files: File[]) => {
     if (files.length === 0) return;
     
-    const file = files[0]; // Only use the first file
+    const file = files[0];
     const error = DocumentValidationUtil.validateFile(file);
     
     if (error) {
@@ -66,7 +67,7 @@ export const useDocumentCore = ({
       return;
     }
     
-    form.setValue('selectedFile', file);
+    form.setFieldValue('selectedFile', file);
     setFileError(null);
     
     toast({
@@ -74,27 +75,20 @@ export const useDocumentCore = ({
       description: "Document has been successfully uploaded.",
     });
   }, [form]);
-  
-  // Clear selected file
-  const handleFileClear = useCallback(() => {
-    form.setValue('selectedFile', null);
-    setFileError(null);
-  }, [form]);
-  
-  // Handle date changes
+
+  // Update other handlers to use form.setFieldValue instead of setValue
   const handleDateChange = useCallback((field: 'issueDate' | 'expiryDate', date?: Date) => {
     if (date) {
-      form.setValue(field, date.toISOString().split('T')[0]);
+      form.setFieldValue(field, date.toISOString().split('T')[0]);
     } else {
-      form.setValue(field, '');
+      form.setFieldValue(field, '');
     }
   }, [form]);
-  
-  // Handle document type selection
+
   const handleDocumentTypeChange = useCallback((type: string) => {
-    form.setValue('documentType', type);
+    form.setFieldValue('documentType', type);
   }, [form]);
-  
+
   // Add a new document
   const handleAddDocument = useCallback(() => {
     const { values } = form;
@@ -129,7 +123,7 @@ export const useDocumentCore = ({
     const documentToEdit = documentFiles.find(doc => doc.id === documentId);
     
     if (documentToEdit) {
-      form.setValues({
+      form.setFieldValues({
         documentType: documentToEdit.documentType,
         issueDate: documentToEdit.issueDate,
         expiryDate: documentToEdit.expiryDate || '',

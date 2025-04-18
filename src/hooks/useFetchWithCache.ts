@@ -1,77 +1,62 @@
+import { useState, useEffect } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { QueryClient } from '@tanstack/query-core';
+import type { QueryKey } from '@tanstack/query-core';
 
-import { useQuery, QueryKey, UseQueryOptions } from '@tanstack/react-query';
-import { handleError, ErrorHandlerOptions } from '@/utils/errorHandling';
-
-/**
- * Options for the useFetchWithCache hook
- */
-export interface FetchWithCacheOptions<TData, TError> 
-  extends Omit<UseQueryOptions<TData, TError, TData, QueryKey>, 'queryKey' | 'queryFn'> {
-  /**
-   * Function to execute when an error occurs
-   */
-  onError?: (error: TError) => void;
-  
-  /**
-   * Custom error message to display
-   */
-  errorMessage?: string;
-  
-  /**
-   * Whether to show a toast notification on error
-   */
-  showErrorToast?: boolean;
-  
-  /**
-   * Component name for better error logging
-   */
-  componentName?: string;
+interface CacheOptions {
+  cacheTime?: number;
+  staleTime?: number;
 }
 
 /**
- * Hook for data fetching with caching and error handling
- * 
- * @param queryKey - Unique key for the query
- * @param fetchFn - Function to fetch the data
- * @param options - Additional options for the query
+ * Custom hook for fetching data with caching using React Query
  */
-export function useFetchWithCache<TData, TError = unknown>(
-  queryKey: QueryKey,
-  fetchFn: () => Promise<TData>,
-  options: FetchWithCacheOptions<TData, TError> = {}
+export function useFetchWithCache<T>(
+  key: QueryKey,
+  fetcher: () => Promise<T>,
+  options: CacheOptions = {}
 ) {
-  const { 
-    onError,
-    errorMessage = 'Failed to fetch data',
-    showErrorToast = true,
-    componentName,
-    ...queryOptions
-  } = options;
-  
-  return useQuery<TData, TError>({
-    queryKey,
-    queryFn: async () => {
+  const queryClient = useQueryClient();
+  const { cacheTime = 5 * 60 * 1000, staleTime = 60 * 1000 } = options;
+  const [data, setData] = useState<T | undefined>(undefined);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      setError(null);
+
       try {
-        const result = await fetchFn();
-        if (result === undefined) {
-          throw new Error(errorMessage);
+        const cachedData: T | undefined = queryClient.getQueryData(key);
+
+        if (cachedData) {
+          setData(cachedData);
+          setIsLoading(false);
+          return;
         }
-        return result;
-      } catch (error) {
-        const errorHandlerOptions: ErrorHandlerOptions = {
-          fallbackMessage: errorMessage,
-          showToast: showErrorToast,
-          componentName
-        };
+
+        const result = await fetcher();
+        setData(result);
         
-        if (onError) {
-          errorHandlerOptions.onError = onError as (error: unknown) => void;
-        }
-        
-        handleError(error, errorHandlerOptions);
-        throw error; // Let React Query handle the error state
+        // Set data to cache
+        queryClient.setQueryData(key, result, {
+          cacheTime: cacheTime,
+        });
+      } catch (e: any) {
+        setError(e instanceof Error ? e : new Error(String(e)));
+      } finally {
+        setIsLoading(false);
       }
-    },
-    ...queryOptions
-  });
+    };
+
+    fetchData();
+  }, [key, fetcher, cacheTime, queryClient, staleTime]);
+
+  return {
+    data,
+    isLoading,
+    error,
+  };
 }
+

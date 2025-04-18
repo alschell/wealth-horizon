@@ -1,4 +1,3 @@
-
 import { ReactNode } from 'react';
 
 export interface FormValidationRules<T> {
@@ -46,7 +45,7 @@ export interface UseUnifiedFormReturn<T> extends FormActions<T>, FormHelpers<T> 
 export interface UseUnifiedFormProps<T> {
   initialValues: T;
   validate?: (values: T) => Record<string, string>;
-  onSubmit?: (values: T) => Promise<void> | void;
+  onSubmit?: (values: T) => Promise<void>;
   onSuccess?: () => void;
   onError?: (error: unknown) => void;
   successMessage?: string;

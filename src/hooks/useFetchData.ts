@@ -101,6 +101,7 @@ export function useFetchData<TData, TError = Error>(
     }
   });
   
+  // Return combined result with our extended properties
   return {
     data,
     error,

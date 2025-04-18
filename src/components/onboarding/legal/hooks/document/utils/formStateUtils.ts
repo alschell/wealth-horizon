@@ -1,27 +1,54 @@
 
 import { DocumentFileWithMetadata } from '../../../types';
 
+export interface FormState {
+  documentType: string;
+  issueDate: string;
+  expiryDate: string;
+  selectedFile: File | null;
+  documentFiles: DocumentFileWithMetadata[];
+  errors: Record<string, boolean>;
+  fileError: string | null;
+  isEditing: boolean;
+  editingDocumentId: string | null;
+  isSubmitting: boolean;
+}
+
 export const formStateUtils = {
   /**
-   * Creates initial form state
+   * Creates initial form state with proper typing
    */
-  createInitialState: () => ({
+  createInitialState: (): FormState => ({
     documentType: '',
     issueDate: '',
     expiryDate: '',
-    selectedFile: null as File | null,
-    documentFiles: [] as DocumentFileWithMetadata[],
-    errors: {} as Record<string, boolean>,
-    fileError: null as string | null,
+    selectedFile: null,
+    documentFiles: [],
+    errors: {},
+    fileError: null,
     isEditing: false,
-    editingDocumentId: null as string | null,
+    editingDocumentId: null,
     isSubmitting: false
   }),
 
   /**
-   * Resets form state to initial values
+   * Resets form state to initial values safely
    */
-  resetFormState: (setState: (value: any) => void) => {
+  resetFormState: (setState: (value: FormState) => void): void => {
     setState(formStateUtils.createInitialState());
+  },
+
+  /**
+   * Updates a single field in the form state
+   */
+  updateField: <K extends keyof FormState>(
+    state: FormState,
+    field: K,
+    value: FormState[K]
+  ): FormState => {
+    return {
+      ...state,
+      [field]: value
+    };
   }
 };

@@ -38,9 +38,17 @@ export const validateDocumentValidation = {
   ): DocumentValidationErrors => {
     const errors: DocumentValidationErrors = {};
     
-    if (!documentType) errors.documentType = true;
-    if (!issueDate) errors.issueDate = true;
-    if (!selectedFile) errors.selectedFile = true;
+    DOCUMENT_VALIDATION.REQUIRED_FIELDS.forEach(field => {
+      if (field === 'documentType' && !documentType) {
+        errors.documentType = true;
+      }
+      if (field === 'issueDate' && !issueDate) {
+        errors.issueDate = true;
+      }
+      if (field === 'selectedFile' && !selectedFile) {
+        errors.selectedFile = true;
+      }
+    });
     
     return errors;
   },
@@ -49,4 +57,3 @@ export const validateDocumentValidation = {
     return Object.values(errors).some(error => error === true);
   }
 };
-

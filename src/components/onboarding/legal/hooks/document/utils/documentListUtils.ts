@@ -13,12 +13,12 @@ export const documentListOperations = {
   },
 
   /**
-   * Updates an existing document in the list
+   * Updates an existing document in the list with type safety
    */
   updateDocument: (
     documentFiles: DocumentFileWithMetadata[],
     editingDocumentId: string,
-    updatedDocument: Partial<DocumentFileWithMetadata>
+    updatedDocument: Partial<Omit<DocumentFileWithMetadata, 'id'>>
   ): DocumentFileWithMetadata[] => {
     return documentFiles.map(doc => {
       if (doc.id === editingDocumentId) {
@@ -29,12 +29,23 @@ export const documentListOperations = {
   },
 
   /**
-   * Removes a document from the list
+   * Safely removes a document from the list
    */
   removeDocument: (
     documentFiles: DocumentFileWithMetadata[],
     documentId: string
   ): DocumentFileWithMetadata[] => {
+    if (!documentId) return documentFiles;
     return documentFiles.filter(doc => doc.id !== documentId);
+  },
+
+  /**
+   * Find a document by ID with type safety
+   */
+  findDocumentById: (
+    documentFiles: DocumentFileWithMetadata[],
+    documentId: string
+  ): DocumentFileWithMetadata | undefined => {
+    return documentFiles.find(doc => doc.id === documentId);
   }
 };

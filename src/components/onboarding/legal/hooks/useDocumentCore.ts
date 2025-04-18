@@ -1,7 +1,7 @@
 
 import { useCallback } from 'react';
 import { DocumentFileWithMetadata } from '../types';
-import { toast } from '@/hooks/use-toast';
+import { toast } from '@/components/ui/use-toast';
 import { useUnifiedForm } from '@/hooks/form/useUnifiedForm';
 import { useDocumentFormState, createInitialFormValues } from './document/useDocumentFormState';
 import { UseDocumentCoreProps } from './document/types';

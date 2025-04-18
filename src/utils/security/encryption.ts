@@ -8,7 +8,7 @@
  * @module encryption
  */
 
-// Import core encryption functionality from authentication
+// Import core encryption functionality directly from authentication
 import { 
   encryptData as baseEncryptData,
   decryptData as baseDecryptData

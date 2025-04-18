@@ -6,7 +6,7 @@ export class CsrfProtection {
   private static readonly HEADER_NAME = 'X-CSRF-Token';
 
   static generateToken(): string {
-    // Fixed: passing a number directly instead of TokenOptions object
+    // Call generateSecureToken with just the byte length parameter
     const token = generateSecureToken(32);
     this.storeToken(token);
     return token;
@@ -46,9 +46,10 @@ export class CsrfProtection {
     let input = form.querySelector(`input[name="${this.HEADER_NAME}"]`) as HTMLInputElement | null;
     if (!input) {
       input = document.createElement('input');
-      // Fix: add proper type casting for the HTMLElement
-      input.type = 'hidden';
-      input.name = this.HEADER_NAME;
+      // Properly set attributes on the HTMLInputElement
+      const inputElement = input as HTMLInputElement;
+      inputElement.type = 'hidden';
+      inputElement.name = this.HEADER_NAME;
       form.appendChild(input);
     }
     input.value = token;

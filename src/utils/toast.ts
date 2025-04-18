@@ -1,46 +1,18 @@
 
-import { toast } from '@/hooks/use-toast';
+import { toast } from '@/components/ui/use-toast';
 
-/**
- * Show a success toast notification
- */
-export function showSuccess(title: string, message?: string) {
+export const showSuccess = (title: string, description: string) => {
   toast({
     title,
-    description: message,
+    description,
     variant: 'default'
   });
-}
+};
 
-/**
- * Show an error toast notification
- */
-export function showError(title: string, message?: string) {
+export const showError = (title: string, description: string) => {
   toast({
     title,
-    description: message,
+    description,
     variant: 'destructive'
   });
-}
-
-/**
- * Show an info toast notification
- */
-export function showInfo(title: string, message?: string) {
-  toast({
-    title,
-    description: message
-  });
-}
-
-/**
- * Show a warning toast notification
- */
-export function showWarning(title: string, message?: string) {
-  toast({
-    title,
-    description: message,
-    variant: 'destructive',
-    className: 'bg-amber-500'
-  });
-}
+};

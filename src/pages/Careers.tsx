@@ -85,10 +85,7 @@ const Careers = () => {
         <CareersCTA onResumeUpload={() => setIsResumeModalOpen(true)} />
       </div>
 
-      <ResumeUploadModal 
-        open={isResumeModalOpen} 
-        onOpenChange={setIsResumeModalOpen}
-      />
+      {isResumeModalOpen && <ResumeUploadModal />}
     </PageTemplate>
   );
 };

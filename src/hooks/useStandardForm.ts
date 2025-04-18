@@ -5,6 +5,7 @@ import { ValidationRules } from './form/useFormValidation';
 interface StandardFormOptions<T> {
   initialValues: T;
   validationRules?: ValidationRules<T>;
+  validate?: (values: T) => Record<string, string>;
   onSubmit?: (values: T) => Promise<void>;
   onSuccess?: () => void;
   onError?: (error: unknown) => void;
@@ -14,7 +15,7 @@ interface StandardFormOptions<T> {
 }
 
 export function useStandardForm<T extends Record<string, any>>(options: StandardFormOptions<T>) {
-  const { onSubmit, ...rest } = options;
+  const { onSubmit, validate, ...rest } = options;
   
   // Wrap onSubmit to ensure it always returns a Promise
   const wrappedOnSubmit = onSubmit 
@@ -29,6 +30,7 @@ export function useStandardForm<T extends Record<string, any>>(options: Standard
 
   return useUnifiedForm({
     ...rest,
-    onSubmit: wrappedOnSubmit
+    onSubmit: wrappedOnSubmit,
+    validate
   });
 }

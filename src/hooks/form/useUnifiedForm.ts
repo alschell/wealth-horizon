@@ -7,6 +7,7 @@ import { useFormSubmission } from './useFormSubmission';
 export interface UseUnifiedFormProps<T> {
   initialValues: T;
   validationRules?: ValidationRules<T>;
+  validate?: (values: T) => Record<string, string>;
   onSubmit?: (values: T) => Promise<void>;
   onSuccess?: () => void;
   onError?: (error: unknown) => void;
@@ -17,6 +18,7 @@ export interface UseUnifiedFormProps<T> {
 export function useUnifiedForm<T extends Record<string, any>>({
   initialValues,
   validationRules = {},
+  validate,
   onSubmit,
   onSuccess,
   onError,
@@ -27,16 +29,36 @@ export function useUnifiedForm<T extends Record<string, any>>({
     formState,
     setFormState,
     setFieldValue,
+    setFieldValues,
     setFieldError,
     clearFieldError,
     resetForm
   } = useFormState(initialValues);
 
-  const { validateField, validateForm } = useFormValidation(
+  const { validateField, validateForm: validateFormWithRules } = useFormValidation(
     formState.values,
     validationRules,
     errors => setFormState(prev => ({ ...prev, errors }))
   );
+  
+  // Combined validation function that runs both the rules-based and custom validation
+  const validateForm = useCallback(() => {
+    // Run rules-based validation first
+    const ruleErrors = validateFormWithRules();
+    
+    // Run custom validation if provided
+    const customErrors = validate ? validate(formState.values) : {};
+    
+    // Combine both sets of errors
+    const combinedErrors = { ...ruleErrors, ...customErrors };
+    
+    // Update form state with combined errors
+    if (Object.keys(combinedErrors).length > 0) {
+      setFormState(prev => ({ ...prev, errors: combinedErrors }));
+    }
+    
+    return combinedErrors;
+  }, [formState.values, validateFormWithRules, validate, setFormState]);
 
   const { handleSubmit } = useFormSubmission<T>();
 
@@ -101,6 +123,7 @@ export function useUnifiedForm<T extends Record<string, any>>({
     isDirty: formState.isDirty,
     handleChange,
     setFieldValue,
+    setFieldValues,
     handleSubmit: submitForm,
     resetForm,
     validateField,

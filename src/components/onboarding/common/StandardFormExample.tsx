@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useStandardForm } from '@/hooks/useStandardForm';
 
@@ -21,11 +22,9 @@ export const StandardFormExample = () => {
       email: '',
       message: ''
     },
-    validate: (values) => {
-      const errors: Record<string, string> = {};
-      if (!values.name) errors.name = 'Name is required';
-      if (!values.email) errors.email = 'Email is required';
-      return errors;
+    validationRules: {
+      name: (value) => !value ? 'Name is required' : null,
+      email: (value) => !value ? 'Email is required' : null
     },
     onSubmit: async (values) => {
       console.log('Form values:', values);

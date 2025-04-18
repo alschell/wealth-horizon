@@ -93,9 +93,9 @@ export const useDocumentCore = ({
   // Add a new document
   const handleAddDocument = useCallback(() => {
     const { values } = form;
-    const { isValid, errors } = form.validateForm();
+    const errors = form.validateForm();
     
-    if (!isValid || !values.selectedFile) {
+    if (Object.keys(errors).length > 0 || !values.selectedFile) {
       return;
     }
     
@@ -124,12 +124,10 @@ export const useDocumentCore = ({
     const documentToEdit = documentFiles.find(doc => doc.id === documentId);
     
     if (documentToEdit) {
-      form.setFieldValues({
-        documentType: documentToEdit.documentType,
-        issueDate: documentToEdit.issueDate,
-        expiryDate: documentToEdit.expiryDate || '',
-        selectedFile: documentToEdit.file
-      });
+      form.setFieldValue('documentType', documentToEdit.documentType);
+      form.setFieldValue('issueDate', documentToEdit.issueDate);
+      form.setFieldValue('expiryDate', documentToEdit.expiryDate || '');
+      form.setFieldValue('selectedFile', documentToEdit.file);
       
       setIsEditing(true);
       setEditingDocumentId(documentId);
@@ -141,9 +139,9 @@ export const useDocumentCore = ({
     if (!editingDocumentId) return;
     
     const { values } = form;
-    const { isValid } = form.validateForm();
+    const errors = form.validateForm();
     
-    if (!isValid || !values.selectedFile) {
+    if (Object.keys(errors).length > 0 || !values.selectedFile) {
       return;
     }
     

@@ -1,20 +1,11 @@
 
 import { useState, useCallback } from 'react';
 
-export interface FormState<T> {
-  values: T;
-  errors: Record<string, string>;
-  touched: Record<string, boolean>;
-  isDirty: boolean;
-  isSubmitting: boolean;
-  isSuccess: boolean;
-}
-
 export function useFormState<T extends Record<string, any>>(initialValues: T) {
-  const [formState, setFormState] = useState<FormState<T>>({
+  const [formState, setFormState] = useState({
     values: initialValues,
-    errors: {},
-    touched: {},
+    errors: {} as Record<string, string>,
+    touched: {} as Record<string, boolean>,
     isDirty: false,
     isSubmitting: false,
     isSuccess: false
@@ -29,10 +20,26 @@ export function useFormState<T extends Record<string, any>>(initialValues: T) {
     }));
   }, []);
 
-  const setFieldError = useCallback((field: keyof T, error: string) => {
+  const setFieldValues = useCallback((fields: Partial<T>) => {
+    setFormState(prev => {
+      const touchedFields = Object.keys(fields).reduce((acc, key) => {
+        acc[key] = true;
+        return acc;
+      }, {} as Record<string, boolean>);
+      
+      return {
+        ...prev,
+        values: { ...prev.values, ...fields },
+        touched: { ...prev.touched, ...touchedFields },
+        isDirty: true
+      };
+    });
+  }, []);
+
+  const setFieldError = useCallback((field: keyof T, message: string) => {
     setFormState(prev => ({
       ...prev,
-      errors: { ...prev.errors, [field]: error }
+      errors: { ...prev.errors, [field]: message }
     }));
   }, []);
 
@@ -40,7 +47,10 @@ export function useFormState<T extends Record<string, any>>(initialValues: T) {
     setFormState(prev => {
       const newErrors = { ...prev.errors };
       delete newErrors[field as string];
-      return { ...prev, errors: newErrors };
+      return {
+        ...prev,
+        errors: newErrors
+      };
     });
   }, []);
 
@@ -59,6 +69,7 @@ export function useFormState<T extends Record<string, any>>(initialValues: T) {
     formState,
     setFormState,
     setFieldValue,
+    setFieldValues,
     setFieldError,
     clearFieldError,
     resetForm

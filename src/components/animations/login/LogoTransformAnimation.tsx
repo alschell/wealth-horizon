@@ -7,8 +7,8 @@ const LogoTransformAnimation = () => {
   const generateBubbles = (count: number) => {
     return Array.from({ length: count }, (_, i) => ({
       id: i,
-      size: Math.random() * 60 + 20, // Size between 20px and 80px
-      color: `rgba(255, 255, 255, ${Math.random() * 0.4 + 0.1})`,
+      size: Math.random() * 100 + 20, // Size between 20px and 120px
+      color: `rgba(78, 70, 220, ${Math.random() * 0.4 + 0.1})`, // Use theme color with opacity
       initialPosition: {
         x: Math.random() * 800 - 400,
         y: Math.random() * 800 - 400,
@@ -18,7 +18,7 @@ const LogoTransformAnimation = () => {
     }));
   };
 
-  const bubbles = generateBubbles(30);
+  const bubbles = generateBubbles(50);
   
   return (
     <div className="absolute inset-0 flex items-center justify-center overflow-hidden">
@@ -93,33 +93,6 @@ const LogoTransformAnimation = () => {
             delay: bubble.delay,
             repeat: Infinity,
             ease: "easeInOut",
-          }}
-        />
-      ))}
-
-      {/* Small particles */}
-      {Array.from({ length: 20 }).map((_, i) => (
-        <motion.div
-          key={`particle-${i}`}
-          className="absolute rounded-full bg-white"
-          style={{
-            width: Math.random() * 3 + 1,
-            height: Math.random() * 3 + 1,
-          }}
-          initial={{ 
-            x: Math.random() * 600 - 300,
-            y: Math.random() * 600 - 300,
-            opacity: 0,
-          }}
-          animate={{ 
-            x: Math.random() * 600 - 300,
-            y: Math.random() * 600 - 300,
-            opacity: [0, 0.8, 0],
-          }}
-          transition={{
-            duration: Math.random() * 8 + 4,
-            repeat: Infinity,
-            delay: Math.random() * 2,
           }}
         />
       ))}

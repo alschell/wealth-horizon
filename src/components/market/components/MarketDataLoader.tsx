@@ -112,7 +112,7 @@ const MarketDataLoader: React.FC<MarketDataLoaderProps> = ({
     <div className={cn("relative", className)}>
       <EnhancedLoadingOverlay
         isLoading={isLoading}
-        text={loadingText}
+        loadingText={loadingText}
         spinnerSize={loaderSize}
       >
         {children}

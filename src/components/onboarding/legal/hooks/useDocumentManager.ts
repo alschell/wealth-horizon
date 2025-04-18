@@ -19,9 +19,27 @@ export function useDocumentManager({
   // Use form state hook
   const formState = useDocumentFormState(initialDocuments);
   
-  // Use event handlers hook
+  // Use event handlers hook with all required properties from formState
   const eventHandlers = useDocumentEventHandlers({
-    ...formState,
+    documentType: formState.documentType,
+    setDocumentType: formState.setDocumentType,
+    issueDate: formState.issueDate,
+    setIssueDate: formState.setIssueDate,
+    expiryDate: formState.expiryDate,
+    setExpiryDate: formState.setExpiryDate,
+    selectedFile: formState.selectedFile,
+    setSelectedFile: formState.setSelectedFile,
+    documentFiles: formState.documentFiles,
+    setDocumentFiles: formState.setDocumentFiles,
+    errors: formState.errors,
+    setErrors: formState.setErrors,
+    fileError: formState.fileError,
+    setFileError: formState.setFileError,
+    isEditing: formState.isEditing,
+    setIsEditing: formState.setIsEditing,
+    editingDocumentId: formState.editingDocumentId,
+    setEditingDocumentId: formState.setEditingDocumentId,
+    resetForm: formState.resetForm,
     onSave
   });
   

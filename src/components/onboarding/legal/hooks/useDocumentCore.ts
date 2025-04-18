@@ -1,3 +1,4 @@
+
 import { useCallback, useState } from 'react';
 import { DocumentFileWithMetadata } from '../types';
 import { toast } from '@/components/ui/use-toast';
@@ -24,10 +25,8 @@ export const useDocumentCore = ({
 
   const [fileError, setFileError] = useState<string | null>(null);
   
-  // Editing state
-  const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [editingDocumentId, setEditingDocumentId] = useState<string | null>(null);
-
+  // Editing state is now part of formState
+  
   const handleFileSelected = useCallback((files: File[]) => {
     if (files.length === 0) return;
     
@@ -35,18 +34,18 @@ export const useDocumentCore = ({
     const error = validateFile(file);
     
     if (error) {
-      setFileError(error);
+      formState.setFileError(error);
       return;
     }
     
     form.setFieldValue('selectedFile', file);
-    setFileError(null);
+    formState.setFileError(null);
     
     toast({
       title: "File uploaded",
       description: "Document has been successfully uploaded.",
     });
-  }, [form, validateFile]);
+  }, [form, validateFile, formState]);
 
   // Update other handlers to use form.setFieldValue instead of setValue
   const handleDateChange = useCallback((field: 'issueDate' | 'expiryDate', date?: Date) => {
@@ -100,14 +99,14 @@ export const useDocumentCore = ({
       form.setFieldValue('expiryDate', documentToEdit.expiryDate || '');
       form.setFieldValue('selectedFile', documentToEdit.file);
       
-      setIsEditing(true);
-      setEditingDocumentId(documentId);
+      formState.setIsEditing(true);
+      formState.setEditingDocumentId(documentId);
     }
-  }, [formState.documentFiles, form]);
+  }, [formState, form]);
   
   // Update an existing document
   const handleUpdateDocument = useCallback(() => {
-    if (!editingDocumentId) return;
+    if (!formState.editingDocumentId) return;
     
     const { values } = form;
     const errors = form.validateForm();
@@ -120,7 +119,7 @@ export const useDocumentCore = ({
     formState.setDocumentFiles(prev => 
       updateDocumentInList(
         prev,
-        editingDocumentId,
+        formState.editingDocumentId!,
         values.documentType,
         values.issueDate,
         values.expiryDate,
@@ -130,21 +129,21 @@ export const useDocumentCore = ({
     
     // Reset form and editing state
     form.resetForm();
-    setIsEditing(false);
-    setEditingDocumentId(null);
+    formState.setIsEditing(false);
+    formState.setEditingDocumentId(null);
     
     toast({
       title: "Document updated",
       description: "The document has been updated successfully.",
     });
-  }, [editingDocumentId, form, updateDocumentInList, formState]);
+  }, [formState, form, updateDocumentInList]);
   
   // Cancel edit operation
   const handleCancelEdit = useCallback(() => {
     form.resetForm();
-    setIsEditing(false);
-    setEditingDocumentId(null);
-  }, [form]);
+    formState.setIsEditing(false);
+    formState.setEditingDocumentId(null);
+  }, [form, formState]);
   
   // Remove a document
   const handleRemoveDocument = useCallback((documentId: string) => {
@@ -168,12 +167,15 @@ export const useDocumentCore = ({
     }
     
     try {
+      formState.setIsSubmitting(true);
       onSave(formState.documentFiles);
       
       toast({
         title: "Documents saved",
         description: "Documents have been saved successfully.",
       });
+      
+      formState.setIsSubmitting(false);
     } catch (error) {
       console.error("Error submitting documents:", error);
       toast({
@@ -181,17 +183,18 @@ export const useDocumentCore = ({
         description: "An error occurred while saving documents.",
         variant: "destructive"
       });
+      formState.setIsSubmitting(false);
     }
-  }, [formState.documentFiles, onSave]);
+  }, [formState, onSave]);
 
   return {
-    ...form.formState.values,
+    ...form.values,
     documentFiles: formState.documentFiles,
-    errors: form.formState.errors,
-    fileError: fileError,
-    isSubmitting: form.formState.isSubmitting,
-    isEditing: isEditing,
-    editingDocumentId: editingDocumentId,
+    errors: form.errors,
+    fileError: formState.fileError,
+    isSubmitting: formState.isSubmitting,
+    isEditing: formState.isEditing,
+    editingDocumentId: formState.editingDocumentId,
     handleFileSelected,
     handleFileClear: () => form.setFieldValue('selectedFile', null),
     handleDateChange,

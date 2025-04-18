@@ -1,5 +1,5 @@
 
-import DocumentValidationUtil from '../useDocumentValidationUtil';
+import { DocumentValidationUtil } from '../useDocumentValidationUtil';
 import { mockFile } from './mockData';
 
 describe('DocumentValidationUtil', () => {

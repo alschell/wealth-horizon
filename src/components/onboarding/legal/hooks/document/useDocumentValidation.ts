@@ -1,5 +1,5 @@
 
-import DocumentValidationUtil from './useDocumentValidationUtil';
+import { DocumentValidationUtil } from './useDocumentValidationUtil';
 
 /**
  * Hook providing validation functions for document management

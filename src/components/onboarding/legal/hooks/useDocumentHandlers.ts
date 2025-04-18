@@ -58,6 +58,6 @@ export const useDocumentHandlers = ({
     handleUpdateDocument: documentManager.handleUpdateDocument,
     handleCancelEdit: documentManager.handleCancelEdit,
     handleRemoveDocument: documentManager.handleRemoveDocument,
-    resetForm: documentManager.resetForm
+    // No need to expose resetForm here since it's not used directly
   };
 };

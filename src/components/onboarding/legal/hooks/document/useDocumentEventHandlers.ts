@@ -8,7 +8,7 @@ import { useDocumentFileHandler } from './useDocumentFileHandler';
 import { useDocumentFieldHandlers } from './useDocumentFieldHandlers';
 import { useDocumentOperations } from './useDocumentOperations';
 
-interface UseDocumentEventHandlersProps {
+export interface UseDocumentEventHandlersProps {
   documentType: string;
   setDocumentType: (type: string) => void;
   issueDate: string;
@@ -183,6 +183,9 @@ export function useDocumentEventHandlers({
     handleRemoveDocument: documentOperations.handleRemoveDocument,
     
     // Form submission
-    handleSubmit
+    handleSubmit,
+    
+    // Make resetForm available for other components
+    resetForm
   };
 }

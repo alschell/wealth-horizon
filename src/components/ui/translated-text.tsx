@@ -43,12 +43,6 @@ export const TranslatedText: React.FC<TranslatedTextProps> = ({
       return;
     }
 
-    // For English, just use the original text without an API call
-    if (currentLanguage === 'en') {
-      setTranslatedContent(children);
-      return;
-    }
-    
     // Always display original content initially
     setTranslatedContent(children);
     
@@ -72,7 +66,7 @@ export const TranslatedText: React.FC<TranslatedTextProps> = ({
     };
 
     // Only translate if we're not in English
-    if (currentLanguage !== 'en') {
+    if (currentLanguage && currentLanguage !== 'en') {
       translateText();
     }
   }, [children, currentLanguage, translate]);

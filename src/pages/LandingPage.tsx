@@ -1,8 +1,10 @@
+
 import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async"; 
 import { LandingLayout } from "@/components/landing";
 import { useTranslation } from "@/context/TranslationContext";
 import ErrorBoundary from "@/components/common/ErrorBoundary";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
 
 /**
  * Main landing page with SEO optimization and structured data
@@ -88,7 +90,7 @@ const LandingPage: React.FC = () => {
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-pulse h-12 w-12 rounded-full bg-indigo-600"></div>
+        <LoadingSpinner size="sm" color="text-gray-400" text="Loading content..." textClassName="text-gray-400" />
       </div>
     );
   }

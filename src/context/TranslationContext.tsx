@@ -268,7 +268,7 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
   if (!isInitialized) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-pulse h-8 w-8 rounded-full bg-indigo-600"></div>
+        <div className="h-4 w-4 rounded-full bg-gray-300 animate-pulse"></div>
       </div>
     );
   }

@@ -3,6 +3,7 @@ import React, { Suspense } from "react";
 import { useLocation } from "react-router-dom";
 import LandingPage from "./LandingPage";
 import { withErrorBoundary } from "@/utils/withErrorBoundary";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
 
 const Index = () => {
   const location = useLocation();
@@ -10,7 +11,7 @@ const Index = () => {
   return (
     <Suspense fallback={
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-pulse h-12 w-12 rounded-full bg-indigo-600"></div>
+        <LoadingSpinner size="sm" color="text-gray-400" />
       </div>
     }>
       <LandingPage />

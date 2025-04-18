@@ -21,19 +21,17 @@ export const TranslatedText: React.FC<TranslatedTextProps> = ({
   const [isTranslating, setIsTranslating] = useState(false);
   const isMounted = useRef(true);
   const originalText = useRef(children);
-  const previousLanguage = useRef(currentLanguage);
 
   // Set up and clean up
   useEffect(() => {
     isMounted.current = true;
-    console.log(`TranslatedText mounted: "${children}" (${currentLanguage})`);
     
     return () => {
       isMounted.current = false;
     };
   }, []);
 
-  // Handle translation on language change
+  // Handle translation when language or content changes
   useEffect(() => {
     // If the original text changes, update our reference to it
     if (children !== originalText.current) {
@@ -46,13 +44,9 @@ export const TranslatedText: React.FC<TranslatedTextProps> = ({
       return;
     }
 
-    // Always translate if language changed
-    const shouldTranslate = currentLanguage !== previousLanguage.current;
-    
-    // Update previous language reference
-    previousLanguage.current = currentLanguage;
-    
-    if (!shouldTranslate && translatedContent) {
+    // For English, just use the original text without an API call
+    if (currentLanguage === 'en') {
+      setTranslatedContent(children);
       return;
     }
     
@@ -60,17 +54,9 @@ export const TranslatedText: React.FC<TranslatedTextProps> = ({
       if (!currentLanguage) return;
       
       setIsTranslating(true);
-      console.log(`Starting translation of "${children}" to ${currentLanguage}`);
       
       try {
-        // For English, just use the original text
-        if (currentLanguage === 'en') {
-          setTranslatedContent(children);
-          return;
-        }
-        
         const translated = await translate(children);
-        console.log(`Translation result: "${translated}"`);
         
         if (isMounted.current) {
           setTranslatedContent(translated);
@@ -88,11 +74,11 @@ export const TranslatedText: React.FC<TranslatedTextProps> = ({
       }
     };
 
-    // Translate immediately, don't use timeout which can cause race conditions
+    // Translate immediately
     translateText();
   }, [children, currentLanguage, translate]);
 
-  // Return the content, possibly with loading state
+  // Return the current content, falling back to original text if needed
   return (
     <Component className={className} {...rest}>
       {translatedContent || children}

@@ -30,18 +30,26 @@ export function LanguageSelector() {
       // Store language in localStorage before the async operation
       localStorage.setItem('preferredLanguage', langCode);
       
-      await setLanguage(langCode as any);
-      console.log(`Language successfully changed to ${langCode}`);
-      
-      toast.success(`Language changed to ${langCode}`);
+      // Set a timeout to ensure UI updates before the language change process
+      setTimeout(async () => {
+        try {
+          await setLanguage(langCode as any);
+          console.log(`Language successfully changed to ${langCode}`);
+          toast.success(`Language changed to ${LANGUAGES.find(l => l.code === langCode)?.name || langCode}`);
+        } catch (error) {
+          console.error("Failed to change language:", error);
+          toast.error("Failed to change language");
+          // Remove from localStorage if it failed
+          localStorage.removeItem('preferredLanguage');
+        } finally {
+          setIsChanging(false);
+          setIsOpen(false);
+        }
+      }, 100);
     } catch (error) {
-      console.error("Failed to change language:", error);
-      toast.error("Failed to change language");
-      // Remove from localStorage if it failed
-      localStorage.removeItem('preferredLanguage');
-    } finally {
+      console.error("Error in language change handler:", error);
       setIsChanging(false);
-      setIsOpen(false);
+      toast.error("Failed to change language");
     }
   };
 

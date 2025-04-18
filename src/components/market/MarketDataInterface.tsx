@@ -7,6 +7,7 @@ import IndicesTracker from "./sections/IndicesTracker";
 import NewsSection from "./sections/NewsSection";
 import WatchlistSection from "./sections/WatchlistSection";
 import { useLocation, useSearchParams } from "react-router-dom";
+import { mockIndices } from "./sections/indices-tracker/data/mockData";
 
 const MarketDataInterface = () => {
   const location = useLocation();
@@ -59,11 +60,11 @@ const MarketDataInterface = () => {
           </TabsContent>
           
           <TabsContent value="indices" className="mt-0">
-            <IndicesTracker />
+            <IndicesTracker indices={mockIndices} />
           </TabsContent>
           
           <TabsContent value="news" className="mt-0">
-            <NewsSection articleId={location.state?.articleId} />
+            <NewsSection news={[]} articleId={location.state?.articleId} />
           </TabsContent>
           
           <TabsContent value="watchlist" className="mt-0">

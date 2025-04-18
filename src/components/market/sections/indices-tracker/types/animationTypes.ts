@@ -2,5 +2,5 @@
 import { Variants } from "framer-motion";
 
 export interface AnimationItemProp {
-  item?: Variants;
+  item: Variants | any;
 }

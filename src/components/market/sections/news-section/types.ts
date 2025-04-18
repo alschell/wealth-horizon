@@ -10,4 +10,6 @@ export interface NewsItem {
 
 export interface NewsSectionProps {
   news: NewsItem[];
+  // Add articleId property that's being used
+  articleId?: string;
 }

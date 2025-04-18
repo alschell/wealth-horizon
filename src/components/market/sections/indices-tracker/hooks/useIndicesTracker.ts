@@ -9,14 +9,17 @@ import { toast } from "sonner";
 /**
  * Custom hook for managing the indices tracker state and functionality
  */
-export const useIndicesTracker = () => {
+export const useIndicesTracker = (providedIndices?: IndexData[]) => {
   const [filter, setFilter] = useState("ALL");
   const [searchTerm, setSearchTerm] = useState("");
   const [subscribedIndices, setSubscribedIndices] = useState<string[]>(["S&P 500", "NASDAQ Composite", "Dow Jones", "FTSE 100", "Nikkei 225"]);
   const [selectedIndex, setSelectedIndex] = useState<IndexData | null>(null);
   
-  // Fetch indices data from API
+  // Fetch indices data from API if not provided
   const { data: apiIndices, isLoading, error } = useIndices();
+  
+  // Use provided indices or default to world indices
+  const baseIndices = providedIndices || allWorldIndices;
   
   // Map to store symbol -> index data mapping
   const symbolToData = new Map<string, { value: number, change: number, percentChange: number, volume?: number }>();
@@ -37,8 +40,8 @@ export const useIndicesTracker = () => {
   }
   
   // Combine API data with our complete list of indices
-  const indices: IndexData[] = allWorldIndices.map(index => {
-    const apiData = symbolToData.get(index.symbol);
+  const indices: IndexData[] = baseIndices.map(index => {
+    const apiData = index.symbol ? symbolToData.get(index.symbol) : null;
     if (apiData) {
       return {
         ...index,
@@ -91,7 +94,7 @@ export const useIndicesTracker = () => {
     }
     
     // Check if the index's region is in the selected region group
-    return regionToCountryMap[currentFilter]?.includes(index.region) || false;
+    return index.region ? regionToCountryMap[currentFilter]?.includes(index.region) || false : false;
   };
   
   /**
@@ -103,7 +106,7 @@ export const useIndicesTracker = () => {
     const searchLower = term.toLowerCase();
     return (
       index.name.toLowerCase().includes(searchLower) || 
-      index.region.toLowerCase().includes(searchLower) ||
+      (index.region && index.region.toLowerCase().includes(searchLower)) ||
       (index.description && index.description.toLowerCase().includes(searchLower))
     );
   };

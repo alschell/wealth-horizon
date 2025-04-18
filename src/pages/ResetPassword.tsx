@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Mail, ArrowRight, ArrowLeft } from "lucide-react";
@@ -7,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FadeIn, ScaleIn } from "@/components/ui/animation";
 import { toast } from "sonner";
-import PlatformAnimation from "@/components/animations/login/PlatformAnimation";
+import TransformerAnimation from "@/components/animations/login/TransformerAnimation";
 
 const ResetPassword = () => {
   const [email, setEmail] = useState("");
@@ -29,21 +28,26 @@ const ResetPassword = () => {
   return (
     <div className="min-h-screen flex items-stretch">
       {/* Left column with form */}
-      <div className="w-full lg:w-1/2 bg-white flex flex-col justify-center px-8 py-12 md:px-16 relative z-10">
+      <div className="w-1/2 bg-white flex flex-col justify-center px-8 py-12 md:px-16 relative z-10">
+        <Link 
+          to="/login" 
+          className="absolute top-8 left-8 inline-flex items-center text-indigo-600 hover:text-indigo-500 font-medium transition-colors"
+        >
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Back to Login
+        </Link>
+
         <div className="max-w-md mx-auto w-full">
           <FadeIn>
             {/* Logo and heading */}
-            <div className="mb-10">
-              <Link to="/" className="inline-block mb-8">
-                <h1 className="text-3xl font-bold">
-                  <span className="text-indigo-600">Wealth</span>
-                  <span className="text-gray-900">Horizon</span>
-                </h1>
-              </Link>
-              <h2 className="text-3xl font-bold text-gray-900 mb-3">Reset your password</h2>
-              <p className="text-gray-600">Enter your email address and we'll send you instructions to reset your password.</p>
+            <div className="mb-12 text-center">
+              <h1 className="text-3xl font-bold">
+                <span className="text-indigo-600">Wealth</span>
+                <span className="text-gray-900">Horizon</span>
+              </h1>
             </div>
 
+            {/* Form */}
             {!isSubmitted ? (
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="space-y-5">
@@ -118,8 +122,8 @@ const ResetPassword = () => {
       </div>
 
       {/* Right column with animation */}
-      <div className="hidden lg:block lg:w-1/2 bg-gradient-to-br from-indigo-600 to-purple-700 relative overflow-hidden">
-        <PlatformAnimation />
+      <div className="w-1/2 bg-gradient-to-br from-indigo-600 to-purple-700 relative overflow-hidden">
+        <TransformerAnimation />
       </div>
     </div>
   );

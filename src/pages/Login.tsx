@@ -1,13 +1,13 @@
 
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { Mail, Lock, ArrowRight, Eye, EyeOff, Shield } from "lucide-react";
+import { Mail, Lock, ArrowRight, Eye, EyeOff, Shield, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FadeIn } from "@/components/ui/animation";
 import { toast } from "sonner";
-import LoginAnimation from "@/components/animations/login/LoginAnimation";
+import TransformerAnimation from "@/components/animations/login/TransformerAnimation";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -31,20 +31,24 @@ const Login = () => {
 
   return (
     <div className="min-h-screen flex items-stretch">
-      {/* Left column with form - equal width (1/2) */}
+      {/* Left column with form */}
       <div className="w-1/2 bg-white flex flex-col justify-center px-8 py-12 md:px-16 relative z-10">
+        <Link 
+          to="/" 
+          className="absolute top-8 left-8 inline-flex items-center text-indigo-600 hover:text-indigo-500 font-medium transition-colors"
+        >
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Back to Home
+        </Link>
+
         <div className="max-w-md mx-auto w-full">
           <FadeIn>
-            {/* Logo and heading */}
-            <div className="mb-10">
-              <Link to="/" className="inline-block mb-8">
-                <h1 className="text-3xl font-bold">
-                  <span className="text-indigo-600">Wealth</span>
-                  <span className="text-gray-900">Horizon</span>
-                </h1>
-              </Link>
-              <h2 className="text-3xl font-bold text-gray-900 mb-3">Welcome back</h2>
-              <p className="text-gray-600">Sign in to your personalized dashboard</p>
+            {/* Logo and heading - now just the logo part */}
+            <div className="mb-12 text-center">
+              <h1 className="text-3xl font-bold">
+                <span className="text-indigo-600">Wealth</span>
+                <span className="text-gray-900">Horizon</span>
+              </h1>
             </div>
 
             {/* Form */}
@@ -161,9 +165,9 @@ const Login = () => {
         </div>
       </div>
 
-      {/* Right column with animation - equal width (1/2) */}
+      {/* Right column with animation */}
       <div className="w-1/2 bg-gradient-to-br from-indigo-600 to-purple-700 relative overflow-hidden">
-        <LoginAnimation />
+        <TransformerAnimation />
       </div>
     </div>
   );

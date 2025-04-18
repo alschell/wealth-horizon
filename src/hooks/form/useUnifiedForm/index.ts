@@ -31,6 +31,48 @@ export function useUnifiedForm<T extends Record<string, any>>(
     clearFieldError(name as keyof T);
   }, [setFieldValue, clearFieldError]);
 
+  // Add handleBlur implementation
+  const handleBlur = useCallback((field: keyof T) => {
+    setFormState(prev => ({
+      ...prev,
+      touched: { ...prev.touched, [field]: true }
+    }));
+  }, [setFormState]);
+
+  // Add setFieldValues implementation
+  const setFieldValues = useCallback((fields: Partial<T>) => {
+    setFormState(prev => {
+      const touchedFields = Object.keys(fields).reduce((acc, key) => {
+        acc[key] = true;
+        return acc;
+      }, {} as Record<string, boolean>);
+      
+      return {
+        ...prev,
+        values: { ...prev.values, ...fields },
+        touched: { ...prev.touched, ...touchedFields },
+        isDirty: true
+      };
+    });
+    
+    // Clear errors for all updated fields
+    Object.keys(fields).forEach(field => {
+      clearFieldError(field as keyof T);
+    });
+  }, [clearFieldError]);
+
+  // Add resetForm implementation
+  const resetForm = useCallback(() => {
+    setFormState({
+      values: props.initialValues,
+      errors: {},
+      touched: {},
+      isDirty: false,
+      isSubmitting: false,
+      isSuccess: false
+    });
+  }, [props.initialValues]);
+
   const hasError = useCallback((field: keyof T) => {
     return formState.touched[field as string] && Boolean(formState.errors[field as string]);
   }, [formState.touched, formState.errors]);
@@ -49,11 +91,14 @@ export function useUnifiedForm<T extends Record<string, any>>(
   return {
     formState,
     handleChange,
+    handleBlur,
     setFieldValue,
+    setFieldValues,
     setFieldError,
     clearFieldError,
     validateForm,
     handleSubmit,
+    resetForm,
     hasError,
     getErrorMessage
   };

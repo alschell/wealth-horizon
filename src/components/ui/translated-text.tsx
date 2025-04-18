@@ -19,11 +19,11 @@ export const TranslatedText: React.FC<TranslatedTextProps> = ({
   const { translate, currentLanguage, isLoading } = useTranslation();
   const [translatedContent, setTranslatedContent] = useState<string>(children);
   const [isTranslating, setIsTranslating] = useState(false);
-  const [hasError, setHasError] = useState(false);
   const isMounted = useRef(true);
   const originalText = useRef(children);
   const previousLanguage = useRef(currentLanguage);
 
+  // Set up and clean up
   useEffect(() => {
     isMounted.current = true;
     console.log(`TranslatedText mounted: "${children}" (${currentLanguage})`);
@@ -33,31 +33,26 @@ export const TranslatedText: React.FC<TranslatedTextProps> = ({
     };
   }, []);
 
+  // Handle translation on language change
   useEffect(() => {
-    console.log(`TranslatedText update - Lang: ${currentLanguage}, Text: "${children}"`);
-    
-    // Reset error state on new translation attempt
-    setHasError(false);
-    
     // If the original text changes, update our reference to it
     if (children !== originalText.current) {
       originalText.current = children;
     }
     
-    // Check if we should proceed with translation
+    // Skip translation for empty content
     if (!children || children.trim() === '') {
       setTranslatedContent(children);
       return;
     }
 
-    // Force translation if language has changed
+    // Always translate if language changed
     const shouldTranslate = currentLanguage !== previousLanguage.current;
     
     // Update previous language reference
     previousLanguage.current = currentLanguage;
     
-    if (!shouldTranslate && translatedContent && translatedContent !== children) {
-      console.log('Skipping translation - language unchanged and content already translated');
+    if (!shouldTranslate && translatedContent) {
       return;
     }
     
@@ -68,6 +63,12 @@ export const TranslatedText: React.FC<TranslatedTextProps> = ({
       console.log(`Starting translation of "${children}" to ${currentLanguage}`);
       
       try {
+        // For English, just use the original text
+        if (currentLanguage === 'en') {
+          setTranslatedContent(children);
+          return;
+        }
+        
         const translated = await translate(children);
         console.log(`Translation result: "${translated}"`);
         
@@ -79,7 +80,6 @@ export const TranslatedText: React.FC<TranslatedTextProps> = ({
         // If translation fails, fall back to original text
         if (isMounted.current) {
           setTranslatedContent(children);
-          setHasError(true);
         }
       } finally {
         if (isMounted.current) {
@@ -88,26 +88,11 @@ export const TranslatedText: React.FC<TranslatedTextProps> = ({
       }
     };
 
-    // Small delay to avoid overwhelming translation requests
-    const timeoutId = setTimeout(() => {
-      translateText();
-    }, 10);
-    
-    return () => {
-      clearTimeout(timeoutId);
-    };
+    // Translate immediately, don't use timeout which can cause race conditions
+    translateText();
   }, [children, currentLanguage, translate]);
 
-  // If loading is requested and translation is in progress, show loading state
-  if (withLoading && (isLoading || isTranslating)) {
-    return (
-      <Component className={`animate-pulse ${className}`} {...rest}>
-        {translatedContent || children}
-      </Component>
-    );
-  }
-
-  // On error or default case, return the content
+  // Return the content, possibly with loading state
   return (
     <Component className={className} {...rest}>
       {translatedContent || children}

@@ -23,22 +23,23 @@ export function LanguageSelector() {
       return; // Don't change if it's the same language
     }
 
+    console.log(`Starting language change to ${langCode} from ${currentLanguage}`);
     setIsChanging(true);
+    
     try {
-      console.log(`Attempting to change language to ${langCode}`);
-      await setLanguage(langCode as any);
-      
-      // Store language in localStorage for persistence across pages
+      // Store language in localStorage before the async operation
       localStorage.setItem('preferredLanguage', langCode);
       
-      toast.success(`Language changed to ${langCode}`);
-      console.log(`Language changed to ${langCode}`);
+      await setLanguage(langCode as any);
+      console.log(`Language successfully changed to ${langCode}`);
       
-      setIsChanging(false);
-      setIsOpen(false);
+      toast.success(`Language changed to ${langCode}`);
     } catch (error) {
       console.error("Failed to change language:", error);
       toast.error("Failed to change language");
+      // Remove from localStorage if it failed
+      localStorage.removeItem('preferredLanguage');
+    } finally {
       setIsChanging(false);
       setIsOpen(false);
     }

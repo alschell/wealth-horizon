@@ -9,20 +9,13 @@ import { useTranslation } from "@/context/TranslationContext";
  */
 const LandingPage: React.FC = () => {
   const { currentLanguage } = useTranslation();
-  const [isReady, setIsReady] = useState(false);
+  const [isReady, setIsReady] = useState(true); // Set to true by default to ensure rendering
   
   useEffect(() => {
     console.log("LandingPage mounted or language changed", { language: currentLanguage });
     
     // Ensure we scroll to top on landing page load or language change
     window.scrollTo(0, 0);
-    
-    // Mark component as ready after a short delay to ensure translations are loaded
-    const timeout = setTimeout(() => {
-      setIsReady(true);
-    }, 100);
-    
-    return () => clearTimeout(timeout);
   }, [currentLanguage]);
   
   // Structured data for rich search results
@@ -55,6 +48,7 @@ const LandingPage: React.FC = () => {
 
   console.log("LandingPage rendering with isReady:", isReady);
 
+  // Always render LandingLayout, don't gate it behind isReady
   return (
     <>
       <Helmet>
@@ -80,7 +74,7 @@ const LandingPage: React.FC = () => {
           {JSON.stringify(structuredData)}
         </script>
       </Helmet>
-      {isReady && <LandingLayout />}
+      <LandingLayout />
     </>
   );
 };

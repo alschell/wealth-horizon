@@ -32,7 +32,7 @@ const Index = () => {
 
   console.log("Index rendering LandingPage with language:", currentLanguage);
   
-  // Directly render the LandingPage component
+  // Directly render the LandingPage component without any conditions
   return <LandingPage />;
 };
 

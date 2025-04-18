@@ -1,4 +1,3 @@
-
 /**
  * LandingPage component
  * 
@@ -69,6 +68,13 @@ const LandingPage: React.FC = () => {
           {JSON.stringify(structuredData)}
         </script>
       </Helmet>
+      
+      {/* Modify the logo to be non-interactive */}
+      <div className="text-3xl font-bold inline-block mb-8">
+        <span className="text-indigo-600">Wealth</span>
+        <span className="text-gray-900">Horizon</span>
+      </div>
+      
       <LandingLayout />
     </>
   );

@@ -167,7 +167,7 @@ export function getErrorMessage(error: unknown): string {
 export function withErrorHandling<P extends object>(
   Component: React.ComponentType<P>,
   options?: ErrorHandlerOptions
-) {
+): React.FC<P> {
   return function WithErrorHandling(props: P) {
     const errorHandler = useErrorHandler(options);
     return <Component {...props} errorHandler={errorHandler} />;

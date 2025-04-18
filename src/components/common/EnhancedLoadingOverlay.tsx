@@ -8,7 +8,7 @@ interface EnhancedLoadingOverlayProps {
   children: React.ReactNode;
   spinnerSize?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
   spinnerVariant?: 'default' | 'primary' | 'secondary' | 'muted';
-  loadingText?: string;
+  loadingText?: string;  // Changed from deprecated "text" property
   className?: string;
   overlayClassName?: string;
   spinnerClassName?: string;
@@ -21,7 +21,7 @@ export const EnhancedLoadingOverlay: React.FC<EnhancedLoadingOverlayProps> = ({
   children,
   spinnerSize = 'md',
   spinnerVariant = 'primary',
-  loadingText,
+  loadingText,  // Use the new property name consistently
   className,
   overlayClassName,
   spinnerClassName,

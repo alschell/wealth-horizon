@@ -1,4 +1,3 @@
-
 import * as React from "react"
 import { TooltipProvider } from "@/components/ui/tooltip"
 
@@ -27,7 +26,7 @@ export function useSidebar() {
   return context
 }
 
-import { useIsMobile } from "@/hooks/use-mobile"
+import { useMobile } from '@/hooks/use-mobile'
 
 export const SidebarProvider = React.forwardRef<
   HTMLDivElement,
@@ -49,7 +48,7 @@ export const SidebarProvider = React.forwardRef<
     },
     ref
   ) => {
-    const isMobile = useIsMobile()
+    const isMobile = useMobile()
     const [openMobile, setOpenMobile] = React.useState(false)
 
     const [_open, _setOpen] = React.useState(defaultOpen)

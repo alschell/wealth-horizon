@@ -11,6 +11,9 @@ interface TranslationContextType {
   t: (key: string, params?: Record<string, string>) => string;
   isRTL: boolean;
   languageName: string;
+  // Add these missing properties
+  currentLanguage: Language;
+  translate: (key: string, params?: Record<string, string>) => Promise<string>;
 }
 
 // Default language
@@ -27,6 +30,15 @@ const LANGUAGE_NAMES: Record<Language, string> = {
   de: 'Deutsch',
   zh: '中文',
 };
+
+// Export language list for UI
+export const LANGUAGES = [
+  { code: 'en', name: 'English', nativeName: 'English' },
+  { code: 'fr', name: 'French', nativeName: 'Français' },
+  { code: 'es', name: 'Spanish', nativeName: 'Español' },
+  { code: 'de', name: 'German', nativeName: 'Deutsch' },
+  { code: 'zh', name: 'Chinese', nativeName: '中文' },
+];
 
 // Create the context
 const TranslationContext = createContext<TranslationContextType | undefined>(undefined);
@@ -93,6 +105,17 @@ export const TranslationProvider: React.FC<{
     return translated;
   };
 
+  // Async translate function for UI components
+  const translate = async (key: string, params?: Record<string, string>): Promise<string> => {
+    // In a real app, this might do API calls or load from files
+    // We'll simulate async behavior but return the same as t()
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve(t(key, params));
+      }, 10);
+    });
+  };
+
   // Load translations for current language
   useEffect(() => {
     const loadTranslations = async () => {
@@ -121,7 +144,10 @@ export const TranslationProvider: React.FC<{
         setLanguage, 
         t, 
         isRTL: RTL_LANGUAGES.includes(language),
-        languageName: LANGUAGE_NAMES[language]
+        languageName: LANGUAGE_NAMES[language],
+        // Add the new properties
+        currentLanguage: language,
+        translate
       }}
     >
       {children}

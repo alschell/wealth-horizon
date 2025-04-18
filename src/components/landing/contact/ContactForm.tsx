@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -7,11 +7,8 @@ import { Label } from "@/components/ui/label";
 import CustomSearchableSelect from "@/components/ui/custom-searchable-select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { CheckCheck } from "lucide-react";
-import TranslatedText from "@/components/ui/translated-text";
-import { useTranslation } from "@/context/TranslationContext";
 
 const ContactForm: React.FC = () => {
-  const { translate, currentLanguage } = useTranslation();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [email, setEmail] = useState("");
   const [fullName, setFullName] = useState("");
@@ -20,8 +17,6 @@ const ContactForm: React.FC = () => {
   const [inquiry, setInquiry] = useState("");
   const [message, setMessage] = useState("");
   const [showSuccessModal, setShowSuccessModal] = useState(false);
-  const [translatedIndustryOptions, setTranslatedIndustryOptions] = useState<string[]>([]);
-  const [translatedInquiryOptions, setTranslatedInquiryOptions] = useState<string[]>([]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -65,44 +60,15 @@ const ContactForm: React.FC = () => {
     "Other"
   ];
 
-  // Translate industry options when language changes
-  useEffect(() => {
-    const translateOptions = async () => {
-      try {
-        // Clear previous translations first to avoid stale data
-        setTranslatedIndustryOptions([]);
-        setTranslatedInquiryOptions([]);
-        
-        // Translate industry options
-        const translatedIndustries = await Promise.all(
-          industryOptions.map(option => translate(option))
-        );
-        setTranslatedIndustryOptions(translatedIndustries);
-
-        // Translate inquiry options
-        const translatedInquiries = await Promise.all(
-          inquiryOptions.map(option => translate(option))
-        );
-        setTranslatedInquiryOptions(translatedInquiries);
-      } catch (error) {
-        console.error("Failed to translate options:", error);
-      }
-    };
-
-    translateOptions();
-  }, [translate, currentLanguage]); // Add currentLanguage as a dependency to retrigger translations
-
   return (
     <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-200">
-      <h3 className="text-xl font-semibold text-gray-900 mb-6">
-        <TranslatedText>Send us a message</TranslatedText>
-      </h3>
+      <h3 className="text-xl font-semibold text-gray-900 mb-6">Send us a message</h3>
       
       <form onSubmit={handleSubmit} className="flex flex-col h-full">
         <div className="space-y-6 flex-grow">
           <div className="space-y-2">
             <Label htmlFor="email">
-              <TranslatedText>Email</TranslatedText><span className="text-indigo-600 ml-1">*</span>
+              Email<span className="text-indigo-600 ml-1">*</span>
             </Label>
             <Input 
               id="email" 
@@ -116,7 +82,7 @@ const ContactForm: React.FC = () => {
           
           <div className="space-y-2">
             <Label htmlFor="full-name">
-              <TranslatedText>Full name</TranslatedText><span className="text-indigo-600 ml-1">*</span>
+              Full name<span className="text-indigo-600 ml-1">*</span>
             </Label>
             <Input 
               id="full-name" 
@@ -129,7 +95,7 @@ const ContactForm: React.FC = () => {
           
           <div className="space-y-2">
             <Label htmlFor="company">
-              <TranslatedText>Company</TranslatedText><span className="text-indigo-600 ml-1">*</span>
+              Company<span className="text-indigo-600 ml-1">*</span>
             </Label>
             <Input 
               id="company" 
@@ -142,14 +108,14 @@ const ContactForm: React.FC = () => {
           
           <div className="space-y-2">
             <Label htmlFor="industry">
-              <TranslatedText>Industry</TranslatedText><span className="text-indigo-600 ml-1">*</span>
+              Industry<span className="text-indigo-600 ml-1">*</span>
             </Label>
             <CustomSearchableSelect 
               id="industry"
               label=""
               value={industry}
               placeholder="Select your industry"
-              options={translatedIndustryOptions.length > 0 ? translatedIndustryOptions : industryOptions}
+              options={industryOptions}
               onChange={(value) => setIndustry(value)}
               required={true}
               allowCustomValue
@@ -158,14 +124,14 @@ const ContactForm: React.FC = () => {
           
           <div className="space-y-2">
             <Label htmlFor="inquiry-type">
-              <TranslatedText>Type of inquiry</TranslatedText><span className="text-indigo-600 ml-1">*</span>
+              Type of inquiry<span className="text-indigo-600 ml-1">*</span>
             </Label>
             <CustomSearchableSelect 
               id="inquiry-type"
               label=""
               value={inquiry}
               placeholder="Select inquiry type"
-              options={translatedInquiryOptions.length > 0 ? translatedInquiryOptions : inquiryOptions}
+              options={inquiryOptions}
               onChange={(value) => setInquiry(value)}
               required={true}
               allowCustomValue
@@ -174,7 +140,7 @@ const ContactForm: React.FC = () => {
           
           <div className="space-y-2">
             <Label htmlFor="message">
-              <TranslatedText>Message</TranslatedText><span className="text-indigo-600 ml-1">*</span>
+              Message<span className="text-indigo-600 ml-1">*</span>
             </Label>
             <div className="h-[144px]">
               <Textarea 
@@ -191,10 +157,7 @@ const ContactForm: React.FC = () => {
         
         <div className="mt-6 flex-shrink-0">
           <Button type="submit" className="w-full md:w-auto" disabled={isSubmitting}>
-            {isSubmitting ? 
-              <TranslatedText>Sending...</TranslatedText> : 
-              <TranslatedText>Send Message</TranslatedText>
-            }
+            {isSubmitting ? "Sending..." : "Send Message"}
           </Button>
         </div>
       </form>
@@ -206,16 +169,12 @@ const ContactForm: React.FC = () => {
             <CheckCheck className="h-12 w-12 text-[#4E46DC]" />
             
             <DialogTitle className="text-xl font-semibold text-center mt-2">
-              <TranslatedText>Message sent successfully!</TranslatedText>
+              Message sent successfully!
             </DialogTitle>
             
             <div className="text-center space-y-1">
-              <p className="text-gray-700">
-                <TranslatedText>Thank you for your message.</TranslatedText>
-              </p>
-              <p className="text-gray-700">
-                <TranslatedText>We will get back to you within 1-2 working days.</TranslatedText>
-              </p>
+              <p className="text-gray-700">Thank you for your message.</p>
+              <p className="text-gray-700">We will get back to you within 1-2 working days.</p>
             </div>
           </div>
           
@@ -224,7 +183,7 @@ const ContactForm: React.FC = () => {
               onClick={() => setShowSuccessModal(false)}
               className="bg-black text-white hover:bg-gray-800"
             >
-              <TranslatedText>Close</TranslatedText>
+              Close
             </Button>
           </DialogFooter>
         </DialogContent>

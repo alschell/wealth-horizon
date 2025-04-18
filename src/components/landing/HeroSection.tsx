@@ -4,13 +4,13 @@ import { ChevronDown, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FadeIn, ScaleIn } from "@/components/ui/animation";
 import DashboardAnimation from "@/components/animations/DashboardAnimation";
-import TranslatedText from "@/components/ui/translated-text";
 
 interface HeroSectionProps {
   onScrollToFeatures: () => void;
 }
 
 const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToFeatures }) => {
+  // Add debugging
   useEffect(() => {
     console.log("HeroSection component mounted");
     console.log("HeroSection container:", document.querySelector('section.relative'));
@@ -30,9 +30,6 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToFeatures }) => {
     }
   };
 
-  // Key features that need to be translated individually
-  const keyFeatures = ["AI-native platform", "Real-time analytics", "SOC 2 certified"];
-
   return (
     <section className="relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-br from-indigo-50 to-white -z-10"></div>
@@ -40,22 +37,17 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToFeatures }) => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <FadeIn delay={0.2}>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-gray-900 leading-tight">
-              <TranslatedText>Holistic wealth management for</TranslatedText>{" "}
-              <span className="text-indigo-600">
-                <TranslatedText>family offices</TranslatedText>
-              </span>
-              <TranslatedText> and </TranslatedText>
-              <span className="text-indigo-600">
-                <TranslatedText>institutions</TranslatedText>
-              </span>
+              Holistic wealth management for{" "}
+              <span className="text-indigo-600">family offices</span> and{" "}
+              <span className="text-indigo-600">institutions</span>
             </h1>
             <p className="mt-6 text-xl text-gray-600 max-w-2xl">
-              <TranslatedText>All your wealth made actionable on one platform</TranslatedText><br />
-              <TranslatedText>across all your banks, brokers and custodians</TranslatedText>
+              All your wealth made actionable on one platform<br />
+              across all your banks, brokers and custodians
             </p>
             <div className="mt-10 flex flex-col sm:flex-row gap-4">
               <Button size="lg" className="text-md px-8" onClick={scrollToContact}>
-                <TranslatedText>Contact Us</TranslatedText>
+                Contact Us
               </Button>
               <Button
                 variant="outline"
@@ -63,14 +55,14 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToFeatures }) => {
                 className="text-md px-8"
                 onClick={scrollToWhyWH}
               >
-                <TranslatedText>Learn More</TranslatedText>
+                Learn More
               </Button>
             </div>
             <div className="mt-10 flex flex-wrap gap-x-8 gap-y-4 items-center text-sm text-gray-600">
-              {keyFeatures.map((item, index) => (
+              {["AI-native platform", "Real-time analytics", "SOC 2 certified"].map((item, index) => (
                 <div key={index} className="flex items-center gap-2">
                   <CheckCircle size={16} className="text-indigo-600" />
-                  <TranslatedText>{item}</TranslatedText>
+                  <span>{item}</span>
                 </div>
               ))}
             </div>

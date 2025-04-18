@@ -3,7 +3,6 @@ import React from "react";
 import { FadeIn } from "@/components/ui/animation";
 import ContactForm from "./ContactForm";
 import ContactInformation from "./ContactInformation";
-import TranslatedText from "@/components/ui/translated-text";
 
 const ContactFormSection: React.FC = () => {
   return (
@@ -11,16 +10,12 @@ const ContactFormSection: React.FC = () => {
       <div className="max-w-7xl mx-auto px-6">
         <FadeIn>
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
-              <TranslatedText>Contact Us</TranslatedText>
-            </h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Contact Us</h2>
             <p className="mt-4 text-xl text-gray-600 mx-auto max-w-5xl whitespace-nowrap">
-              <TranslatedText>Have questions about how </TranslatedText>
-              <span className="text-indigo-600">Wealth</span>
-              <TranslatedText>Horizon can transform your wealth management?</TranslatedText>
+              Have questions about how <span className="text-indigo-600">Wealth</span>Horizon can transform your wealth management?
             </p>
             <p className="mt-2 text-xl text-gray-600">
-              <TranslatedText>Get in touch with our team.</TranslatedText>
+              Get in touch with our team.
             </p>
           </div>
         </FadeIn>

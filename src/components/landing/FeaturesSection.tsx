@@ -3,7 +3,6 @@ import React from "react";
 import { FadeIn, ScaleIn, StaggerContainer, StaggerItem } from "@/components/ui/animation";
 import { LineChart, Shield, BarChart3, FileText, Users, Lock, LucideIcon } from "lucide-react";
 import DashboardAnimation from "@/components/animations/DashboardAnimation";
-import TranslatedText from "@/components/ui/translated-text";
 
 // Define the features with the correct icon type and sort them alphabetically
 const features = [
@@ -49,13 +48,9 @@ const FeaturesSection: React.FC<FeaturesSectionProps> = ({ id }) => {
       <div className="max-w-7xl mx-auto px-6">
         <FadeIn>
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
-              <TranslatedText>Key Features</TranslatedText>
-            </h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Key Features</h2>
             <p className="mt-4 text-xl text-gray-600 max-w-3xl mx-auto">
-              <TranslatedText>
-                Our AI-native platform simplifies managing all your wealth with intuitive tools designed for the most sophisticated family offices and institutions
-              </TranslatedText>
+              Our AI-native platform simplifies managing all your wealth with intuitive tools designed for the most sophisticated family offices and institutions
             </p>
           </div>
         </FadeIn>
@@ -78,13 +73,9 @@ const FeaturesSection: React.FC<FeaturesSectionProps> = ({ id }) => {
                     <div className="w-10 h-10 flex items-center justify-center text-indigo-600">
                       <feature.icon size={20} />
                     </div>
-                    <h3 className="text-xl font-semibold text-gray-900">
-                      <TranslatedText>{feature.title}</TranslatedText>
-                    </h3>
+                    <h3 className="text-xl font-semibold text-gray-900">{feature.title}</h3>
                   </div>
-                  <p className="text-gray-600">
-                    <TranslatedText>{feature.description}</TranslatedText>
-                  </p>
+                  <p className="text-gray-600">{feature.description}</p>
                 </StaggerItem>
               ))}
             </StaggerContainer>

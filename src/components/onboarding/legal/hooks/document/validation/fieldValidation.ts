@@ -1,6 +1,6 @@
 
 import { DocumentValidationErrors } from './types';
-import { FILE_VALIDATION } from './constants';
+import { FILE_VALIDATION, DOCUMENT_VALIDATION } from './validationConstants';
 
 export const validateRequiredFields = (
   documentType: string,

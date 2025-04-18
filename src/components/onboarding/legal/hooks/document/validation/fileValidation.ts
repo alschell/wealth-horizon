@@ -1,20 +1,16 @@
 
 import { FileValidationResult, AllowedFileType } from './types';
-import { FILE_VALIDATION } from './constants';
+import { FILE_VALIDATION } from './validationConstants';
 
-/**
- * Validates a file for document upload
- */
 export const validateFile = (file: File): FileValidationResult => {
-  // Check if file exists
   if (!file) {
     return {
       isValid: false,
-      error: 'No file provided'
+      error: FILE_VALIDATION.MESSAGES.REQUIRED_FIELD
     };
   }
 
-  // Check file size
+  // Size validation
   if (file.size > FILE_VALIDATION.MAX_SIZE) {
     return {
       isValid: false,
@@ -22,7 +18,7 @@ export const validateFile = (file: File): FileValidationResult => {
     };
   }
 
-  // Check file type
+  // Type validation
   if (!FILE_VALIDATION.ALLOWED_TYPES.includes(file.type as AllowedFileType)) {
     return {
       isValid: false,
@@ -30,7 +26,6 @@ export const validateFile = (file: File): FileValidationResult => {
     };
   }
 
-  // File is valid
   return {
     isValid: true,
     error: null

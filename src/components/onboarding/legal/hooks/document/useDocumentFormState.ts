@@ -1,72 +1,55 @@
 
-import { useState, useCallback } from 'react';
-import { DocumentFileWithMetadata } from '../../types';
-import { DocumentState } from './types';
+import { useState } from 'react';
+import { DocumentFileWithMetadata, DocumentValidationErrors } from './types';
 
-export const useDocumentFormState = (initialDocuments: DocumentFileWithMetadata[] = []): DocumentState => {
-  // Document data state
-  const [documentType, setDocumentType] = useState<string>('');
-  const [issueDate, setIssueDate] = useState<string>('');
-  const [expiryDate, setExpiryDate] = useState<string>('');
+interface UseDocumentFormStateProps {
+  initialDocuments?: DocumentFileWithMetadata[];
+}
+
+export function useDocumentFormState({ initialDocuments = [] }: UseDocumentFormStateProps = {}) {
+  const [documentType, setDocumentType] = useState('');
+  const [issueDate, setIssueDate] = useState('');
+  const [expiryDate, setExpiryDate] = useState('');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [documentFiles, setDocumentFiles] = useState<DocumentFileWithMetadata[]>(initialDocuments);
-  
-  // Error state
-  const [errors, setErrors] = useState<Record<string, boolean>>({});
+  const [errors, setErrors] = useState<DocumentValidationErrors>({});
   const [fileError, setFileError] = useState<string | null>(null);
-  
-  // UI state
-  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [isEditing, setIsEditing] = useState(false);
   const [editingDocumentId, setEditingDocumentId] = useState<string | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  
-  // Reset form to initial state
-  const resetForm = useCallback(() => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const resetForm = () => {
     setDocumentType('');
     setIssueDate('');
     setExpiryDate('');
     setSelectedFile(null);
     setErrors({});
     setFileError(null);
-  }, []);
+    setIsEditing(false);
+    setEditingDocumentId(null);
+  };
 
   return {
-    // Document data
     documentType,
-    issueDate,
-    expiryDate,
-    selectedFile,
-    documentFiles,
-    
-    // Error state
-    errors,
-    fileError,
-    
-    // UI state
-    isEditing,
-    editingDocumentId,
-    isSubmitting,
-    
-    // Setters
     setDocumentType,
+    issueDate,
     setIssueDate,
+    expiryDate,
     setExpiryDate,
+    selectedFile,
     setSelectedFile,
+    documentFiles,
     setDocumentFiles,
+    errors,
     setErrors,
+    fileError,
     setFileError,
+    isEditing,
     setIsEditing,
+    editingDocumentId,
     setEditingDocumentId,
+    isSubmitting,
     setIsSubmitting,
-    
-    // Actions
     resetForm
   };
-};
-
-export const createInitialFormValues = () => ({
-  documentType: '',
-  issueDate: '',
-  expiryDate: '',
-  selectedFile: null
-});
+}

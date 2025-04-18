@@ -1,5 +1,8 @@
 
-import { FILE_VALIDATION } from './constants';
+import { FILE_VALIDATION, DOCUMENT_VALIDATION } from './validationConstants';
+
+export type AllowedFileType = typeof FILE_VALIDATION.ALLOWED_TYPES[number];
+export type RequiredField = typeof DOCUMENT_VALIDATION.REQUIRED_FIELDS[number];
 
 export interface ValidationResult {
   isValid: boolean;
@@ -16,5 +19,3 @@ export interface FileValidationResult {
   isValid: boolean;
   error: string | null;
 }
-
-export type AllowedFileType = typeof FILE_VALIDATION.ALLOWED_TYPES[number];

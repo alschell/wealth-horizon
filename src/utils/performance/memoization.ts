@@ -5,6 +5,7 @@
 
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { dequal } from 'dequal';
+import * as React from 'react';
 
 /**
  * Custom hook for memoizing a value with deep equality comparison

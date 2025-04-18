@@ -4,12 +4,12 @@
  * with integrated error handling and loading states
  */
 
-import { useQuery, UseQueryOptions, UseQueryResult } from '@tanstack/react-query';
+import { useQuery, UseQueryOptions, UseQueryResult, QueryKey } from '@tanstack/react-query';
 import { useErrorHandler } from './useErrorHandler';
 import { useState, useCallback } from 'react';
 
 interface FetchDataOptions<TData, TError> extends 
-  Omit<UseQueryOptions<TData, TError, TData>, 'queryKey' | 'queryFn'> {
+  Omit<UseQueryOptions<TData, TError, TData, QueryKey>, 'queryKey' | 'queryFn'> {
   
   /** Custom error message to display if fetch fails */
   errorMessage?: string;
@@ -19,9 +19,6 @@ interface FetchDataOptions<TData, TError> extends
   
   /** Component name for error logging context */
   componentName?: string;
-  
-  /** Custom error handler */
-  onError?: (error: TError) => void;
   
   /** Whether to automatically retry failed requests */
   autoRetry?: boolean;
@@ -47,7 +44,6 @@ export function useFetchData<TData, TError = Error>(
     errorMessage = 'Failed to fetch data',
     showErrorToast = true,
     componentName,
-    onError,
     autoRetry = true,
     maxRetries = 3,
     ...queryOptions
@@ -100,15 +96,13 @@ export function useFetchData<TData, TError = Error>(
     queryFn: handleFetchWithErrorHandling,
     retry: autoRetry ? maxRetries : false,
     ...queryOptions,
-    onError: (err) => {
-      // Call custom error handler if provided
-      if (onError) {
-        onError(err);
-      }
-      
-      // Call the original onError if provided in options
-      if (queryOptions.onError) {
-        queryOptions.onError(err);
+    meta: {
+      ...queryOptions.meta,
+      errorHandler: (err: TError) => {
+        // Call custom error handler if provided in options
+        if (options.onError) {
+          options.onError(err);
+        }
       }
     }
   });

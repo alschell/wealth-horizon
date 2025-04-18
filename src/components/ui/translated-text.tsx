@@ -23,14 +23,21 @@ export const TranslatedText: React.FC<TranslatedTextProps> = ({
     let isMounted = true;
     
     const translateText = async () => {
-      if (!children) {
+      // Safety check - if children is not a valid string, don't attempt translation
+      if (!children || typeof children !== 'string') {
+        if (isMounted) {
+          setTranslatedContent(String(children || ''));
+        }
         return;
       }
       
       try {
-        const translated = await translate(children);
-        if (isMounted && translated) {
-          setTranslatedContent(translated);
+        // Only call translate if it's a function and we have text to translate
+        if (typeof translate === 'function') {
+          const translated = await translate(children);
+          if (isMounted && translated) {
+            setTranslatedContent(translated);
+          }
         }
       } catch (error) {
         console.error("Translation error:", error);

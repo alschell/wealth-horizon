@@ -23,14 +23,19 @@ export function useTranslationService() {
     }
     
     // Check if translation is already in cache
-    if (translationCache[targetLanguage]?.[text]) {
-      return translationCache[targetLanguage][text];
+    const langCache = translationCache[targetLanguage];
+    if (langCache && typeof langCache === 'object' && langCache[text]) {
+      return langCache[text];
     }
     
     try {
-      // Return original text immediately if translation service is unavailable
+      // Set loading state
+      setIsLoading(true);
+      
+      // Check if Supabase client is available
       if (!supabase) {
         console.error("Translation service unavailable: Supabase client not initialized");
+        setIsLoading(false);
         return text;
       }
       
@@ -60,11 +65,13 @@ export function useTranslationService() {
       
       if (error) {
         console.error('Translation error:', error);
+        setIsLoading(false);
         return text; // Return original text on error
       }
       
       if (!data || !data.translatedText) {
         console.error('Invalid translation response:', data);
+        setIsLoading(false);
         return text; // Return original text if response is invalid
       }
       
@@ -72,17 +79,23 @@ export function useTranslationService() {
       const finalTranslation = restoreSpecialTerms(data.translatedText, placeholders);
       
       // Cache the translation
-      setTranslationCache(prevCache => ({
-        ...prevCache,
-        [targetLanguage]: {
+      setTranslationCache(prevCache => {
+        const updatedLangCache = {
           ...(prevCache[targetLanguage] || {}),
           [text]: finalTranslation
-        }
-      }));
+        };
+        
+        return {
+          ...prevCache,
+          [targetLanguage]: updatedLangCache
+        };
+      });
       
+      setIsLoading(false);
       return finalTranslation;
     } catch (error) {
       console.error('Translation failed:', error);
+      setIsLoading(false);
       return text; // Return original text on any error
     }
   };

@@ -12,7 +12,7 @@ import { useTranslation, LANGUAGES } from '@/context/TranslationContext';
 import TranslatedText from './translated-text';
 
 export function LanguageSelector() {
-  const { currentLanguage, setLanguage, isLoading } = useTranslation();
+  const { currentLanguage, isLoading } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [isChanging, setIsChanging] = useState(false);
 
@@ -31,17 +31,20 @@ export function LanguageSelector() {
       localStorage.setItem('preferredLanguage', langCode);
       
       // Force a complete page reload to reset all components and translation states
-      window.location.href = window.location.pathname;
+      window.location.reload();
     } catch (error) {
       console.error("Failed to change language:", error);
       setIsChanging(false);
     }
-  }, [setLanguage, currentLanguage, isChanging, isLoading]);
+  }, [currentLanguage, isChanging, isLoading]);
 
   // Safely find the current language
-  const currentLang = Array.isArray(LANGUAGES) 
+  const currentLang = Array.isArray(LANGUAGES) && LANGUAGES.length > 0
     ? LANGUAGES.find(lang => lang.code === currentLanguage) 
     : undefined;
+
+  // Ensure LANGUAGES is an array before rendering
+  const availableLanguages = Array.isArray(LANGUAGES) ? LANGUAGES : [];
 
   return (
     <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
@@ -59,7 +62,7 @@ export function LanguageSelector() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-48" align="end">
-        {Array.isArray(LANGUAGES) && LANGUAGES.map((language) => (
+        {availableLanguages.length > 0 ? availableLanguages.map((language) => (
           <DropdownMenuItem
             key={language.code}
             onClick={() => handleLanguageChange(language.code)}
@@ -68,7 +71,11 @@ export function LanguageSelector() {
           >
             <span>{language.name} ({language.nativeName})</span>
           </DropdownMenuItem>
-        ))}
+        )) : (
+          <DropdownMenuItem disabled>
+            <span>No languages available</span>
+          </DropdownMenuItem>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );

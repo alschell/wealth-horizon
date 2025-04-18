@@ -16,11 +16,15 @@ export function useLanguageManager(clearTranslationCache: () => void) {
     try {
       console.log("LanguageManager: Initializing language preferences");
       const savedLanguage = localStorage.getItem('preferredLanguage') as LanguageCode;
-      if (savedLanguage && LANGUAGES.some(lang => lang.code === savedLanguage)) {
+      
+      // Make sure LANGUAGES is defined and is an array
+      const validLanguages = Array.isArray(LANGUAGES) ? LANGUAGES : [];
+      
+      if (savedLanguage && validLanguages.some(lang => lang.code === savedLanguage)) {
         setCurrentLanguage(savedLanguage);
       } else {
         const browserLang = navigator.language.split('-')[0] as LanguageCode;
-        if (LANGUAGES.some(lang => lang.code === browserLang)) {
+        if (validLanguages.some(lang => lang.code === browserLang)) {
           setCurrentLanguage(browserLang);
         }
       }
@@ -38,20 +42,31 @@ export function useLanguageManager(clearTranslationCache: () => void) {
     
     const saveLanguagePreference = async () => {
       try {
-        const { data: { user } } = await supabase.auth.getUser();
+        // Check if supabase is defined
+        if (!supabase) {
+          console.warn('Supabase client not available for saving language preference');
+          localStorage.setItem('preferredLanguage', currentLanguage);
+          updateHtmlLangAttributes(currentLanguage);
+          setKey(prevKey => prevKey + 1);
+          return;
+        }
         
-        if (user) {
-          const { error } = await supabase
+        const { data, error } = await supabase.auth.getUser();
+        
+        if (error) {
+          console.warn('User not authenticated, saving language preference to localStorage only');
+        } else if (data?.user) {
+          const { error: upsertError } = await supabase
             .from('user_language_preferences')
             .upsert({ 
-              user_id: user.id, 
+              user_id: data.user.id, 
               language_code: currentLanguage 
             }, { 
               onConflict: 'user_id' 
             });
             
-          if (error) {
-            console.error('Failed to save language preference:', error);
+          if (upsertError) {
+            console.error('Failed to save language preference:', upsertError);
           }
         }
         
@@ -64,6 +79,8 @@ export function useLanguageManager(clearTranslationCache: () => void) {
         setKey(prevKey => prevKey + 1);
       } catch (error) {
         console.error("Error saving language preference:", error);
+        // Still update localStorage even if there's an error with Supabase
+        localStorage.setItem('preferredLanguage', currentLanguage);
       }
     };
     
@@ -84,7 +101,9 @@ export function useLanguageManager(clearTranslationCache: () => void) {
       setIsLoading(true);
       
       // Clear existing translation cache completely to force re-translation
-      clearTranslationCache();
+      if (typeof clearTranslationCache === 'function') {
+        clearTranslationCache();
+      }
       
       // Update the current language
       setCurrentLanguage(language);

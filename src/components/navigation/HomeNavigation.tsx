@@ -49,21 +49,24 @@ const HomeNavigation: React.FC = () => {
   );
 };
 
-const NavigationBrand: React.FC = () => (
-  <Link 
-    to="/" 
-    className="font-bold text-xl flex items-center"
-    onClick={(e) => {
-      // Prevent default behavior and handle navigation manually to avoid errors
-      e.preventDefault();
-      // Use window.location.href to force a full page reload which avoids translation errors
-      window.location.href = '/';
-    }}
-  >
-    <span className="text-indigo-600">Wealth</span>
-    <span className="text-gray-900">Horizon</span>
-  </Link>
-);
+const NavigationBrand: React.FC = () => {
+  const handleLogoClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    // Use window.location.href to trigger a full page reload
+    window.location.href = '/';
+  };
+
+  return (
+    <a 
+      href="/" 
+      className="font-bold text-xl flex items-center"
+      onClick={handleLogoClick}
+    >
+      <span className="text-indigo-600">Wealth</span>
+      <span className="text-gray-900">Horizon</span>
+    </a>
+  );
+};
 
 const NavigationLinks: React.FC<{ scrollToSection: (id: string) => void }> = ({ 
   scrollToSection 

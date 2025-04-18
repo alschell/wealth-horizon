@@ -1,8 +1,7 @@
-
 import React from "react";
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { ScrollArea } from "@/components/ui/enhanced-components";
 import { Clock, CreditCard, DollarSign, FileText, Lock, TrendingUp } from "lucide-react";
 
 export interface Activity {

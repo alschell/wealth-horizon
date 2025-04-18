@@ -9,7 +9,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/components/ui/enhanced-components";
 
 interface ActivityFiltersProps {
   timeFilter: string;
@@ -120,3 +120,5 @@ export const ActivityFilters: React.FC<ActivityFiltersProps> = ({
     </div>
   );
 };
+
+export default ActivityFilters;

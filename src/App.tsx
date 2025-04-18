@@ -1,10 +1,9 @@
-
 import React, { useEffect } from "react";
 import { HelmetProvider } from "react-helmet-async";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider, createQueryClient } from "@/lib/query-client";
 import { Routes, Route } from "react-router-dom";
 import { OnboardingProvider } from "./context/OnboardingContext";
 import { TranslationProvider } from "./context/TranslationContext";
@@ -74,22 +73,7 @@ import CommunityForum from "./pages/CommunityForum";
 
 function App() {
   // Create a query client with robust error handling
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        refetchOnWindowFocus: false,
-        staleTime: 1000 * 60 * 5, // 5 minutes
-        retry: 2,
-        retryDelay: attemptIndex => Math.min(1000 * (2 ** attemptIndex), 30000),
-        // Updated to use meta object for onError in React Query v5
-        meta: {
-          onError: (error: Error) => {
-            console.error("Query error:", error);
-          }
-        }
-      },
-    }
-  });
+  const queryClient = createQueryClient();
 
   // Add debugging to identify when App renders
   useEffect(() => {

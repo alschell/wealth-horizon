@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Helmet } from "react-helmet-async"; 
 import { LandingLayout } from "@/components/landing";
 import { useTranslation } from "@/context/TranslationContext";
@@ -9,6 +9,10 @@ import { useTranslation } from "@/context/TranslationContext";
  */
 const LandingPage: React.FC = () => {
   const { currentLanguage } = useTranslation();
+  
+  useEffect(() => {
+    console.log("LandingPage mounted with language:", currentLanguage);
+  }, [currentLanguage]);
   
   // Structured data for rich search results
   const structuredData = {

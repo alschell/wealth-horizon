@@ -34,7 +34,7 @@ export function LanguageSelector() {
       setIsOpen(false);
       
       // Change the language
-      await setLanguage(langCode as any);
+      await setLanguage(langCode);
       console.log(`Language successfully changed to ${langCode}`);
       
       // Notify user after successful change

@@ -19,7 +19,7 @@ const Index = () => {
     window.scrollTo(0, 0);
   }, [location, currentLanguage]);
 
-  // Always render the LandingPage component, regardless of language state
+  // Always render the LandingPage component
   return <LandingPage />;
 };
 

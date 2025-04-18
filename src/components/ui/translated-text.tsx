@@ -24,6 +24,7 @@ export const TranslatedText: React.FC<TranslatedTextProps> = ({
   // Set up and clean up
   useEffect(() => {
     isMounted.current = true;
+    console.log("TranslatedText mounted for:", children, "current language:", currentLanguage);
     
     return () => {
       isMounted.current = false;
@@ -51,9 +52,11 @@ export const TranslatedText: React.FC<TranslatedTextProps> = ({
         // Only proceed if we have a language and the component is still mounted
         if (!currentLanguage || !isMounted.current) return;
         
+        console.log(`Attempting to translate: "${children}" to ${currentLanguage}`);
         const translated = await translate(children);
         
         if (isMounted.current) {
+          console.log(`Translation result for "${children}": "${translated}"`);
           setTranslatedContent(translated || children);
         }
       } catch (error) {

@@ -74,31 +74,29 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
   const [isLoading, setIsLoading] = useState(false);
   const [key, setKey] = useState(0); // Force component tree re-render with key
   
+  // Debug helper
+  const logDebug = (message: string, data?: any) => {
+    console.log(`TranslationProvider - ${message}`, data || '');
+  };
+
   // Load language preference from local storage on initial load
   useEffect(() => {
     const loadLanguage = async () => {
       try {
-        console.log("Loading language preferences...");
-        const savedLanguage = localStorage.getItem('preferredLanguage') as LanguageCode;
+        logDebug("Loading language preferences...");
+        const savedLanguage = localStorage.getItem('preferredLanguage');
+        
         if (savedLanguage && LANGUAGES.some(lang => lang.code === savedLanguage)) {
-          console.log(`Loading saved language preference: ${savedLanguage}`);
-          // For non-English saved preferences, verify it's a valid language before setting
-          if (savedLanguage !== 'en') {
-            const isValidLanguage = LANGUAGES.some(lang => lang.code === savedLanguage);
-            if (isValidLanguage) {
-              setCurrentLanguage(savedLanguage);
-              return;
-            }
-          } else {
-            setCurrentLanguage(savedLanguage);
-            return;
-          }
+          logDebug(`Loading saved language preference: ${savedLanguage}`);
+          setCurrentLanguage(savedLanguage as LanguageCode);
+          return;
         }
       } catch (error) {
         console.error("Error loading language from localStorage:", error);
       }
       
       // Always default to English if no valid saved preference
+      logDebug("Defaulting to English");
       setCurrentLanguage('en');
     };
     
@@ -108,7 +106,7 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
   // Apply language changes to document
   useEffect(() => {
     if (currentLanguage) {
-      console.log(`Applying language changes to document: ${currentLanguage}`);
+      logDebug(`Applying language changes to document: ${currentLanguage}`);
       
       // Update HTML lang attribute and direction
       document.documentElement.lang = currentLanguage;
@@ -124,7 +122,7 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
       try {
         // Save to localStorage first (more reliable)
         localStorage.setItem('preferredLanguage', currentLanguage);
-        console.log(`Saved language preference to localStorage: ${currentLanguage}`);
+        logDebug(`Saved language preference to localStorage: ${currentLanguage}`);
         
         // Try to save to database if user is logged in
         try {
@@ -143,7 +141,7 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
             if (error) {
               console.error('Failed to save language preference to database:', error);
             } else {
-              console.log(`Saved language preference to database for user ${user.id}: ${currentLanguage}`);
+              logDebug(`Saved language preference to database for user ${user.id}: ${currentLanguage}`);
             }
           }
         } catch (dbError) {
@@ -162,11 +160,11 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
   // Function to set the language with more robust update mechanism
   const setLanguage = useCallback(async (language: LanguageCode) => {
-    console.log(`Changing language to: ${language}`);
+    logDebug(`Changing language to: ${language}`);
     
     try {
       if (language === currentLanguage) {
-        console.log("Language already set to", language);
+        logDebug("Language already set to", language);
         return Promise.resolve();
       }
       
@@ -185,6 +183,7 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
       
       // Force re-render of all components using the context
       setTimeout(() => {
+        logDebug("Triggering re-render with new key");
         setKey(prevKey => prevKey + 1);
         setIsLoading(false);
       }, 50);
@@ -236,6 +235,7 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
     
     // Check if translation is already in cache
     if (translationCache[currentLanguage]?.[text]) {
+      logDebug(`Found cached translation for: "${text}"`);
       return translationCache[currentLanguage][text];
     }
     
@@ -244,6 +244,8 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
       
       // Process text to protect special terms
       const { processedText, placeholders } = protectSpecialTerms(text);
+      
+      logDebug(`Calling translation API for: "${processedText}" to ${currentLanguage}`);
       
       // Call translation edge function
       const { data, error } = await supabase.functions.invoke('translate', {
@@ -261,6 +263,8 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
       
       // Restore protected terms in the translated text
       const finalTranslation = restoreSpecialTerms(data.translatedText, placeholders);
+      
+      logDebug(`Translation result: "${finalTranslation}"`);
       
       // Cache the translation
       setTranslationCache(prevCache => ({

@@ -1,6 +1,7 @@
+
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { Mail, Lock, ArrowRight, Eye, EyeOff, Shield } from "lucide-react";
+import { Mail, Lock, ArrowRight, Eye, EyeOff, Shield, Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -38,12 +39,12 @@ const Login = () => {
       <div className="w-full max-w-md px-8 py-12">
         <FadeIn>
           <div className="mb-10 text-center">
-            <div className="inline-block mb-8">
+            <Link to="/" className="inline-block mb-8">
               <h1 className="text-3xl font-bold">
                 <span className="text-indigo-600">Wealth</span>
                 <span className="text-gray-900">Horizon</span>
               </h1>
-            </div>
+            </Link>
             <h2 className="text-3xl font-bold text-gray-900 mb-3">Welcome back</h2>
             <p className="text-gray-600">Sign in to your personalized dashboard</p>
           </div>
@@ -52,7 +53,7 @@ const Login = () => {
             <div className="space-y-5">
               <div className="space-y-2.5">
                 <Label htmlFor="email" className="text-gray-700 font-medium text-base">
-                  Email Address <span className="text-red-500" style={{color: '#DC2626'}}>*</span>
+                  Email Address
                 </Label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
@@ -73,7 +74,7 @@ const Login = () => {
               <div className="space-y-2.5">
                 <div className="flex items-center justify-between">
                   <Label htmlFor="password" className="text-gray-700 font-medium text-base">
-                    Password <span className="text-red-500" style={{color: '#DC2626'}}>*</span>
+                    Password
                   </Label>
                   <Link to="/reset-password" className="text-sm text-indigo-600 hover:text-indigo-500 font-medium transition-colors">
                     Forgot password?

@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Mail, ArrowRight } from "lucide-react";
@@ -35,12 +36,12 @@ const ResetPassword = () => {
       <div className="w-full max-w-md px-8 py-12">
         <FadeIn>
           <div className="mb-10 text-center">
-            <div className="inline-block mb-8">
+            <Link to="/" className="inline-block mb-8">
               <h1 className="text-3xl font-bold">
                 <span className="text-indigo-600">Wealth</span>
                 <span className="text-gray-900">Horizon</span>
               </h1>
-            </div>
+            </Link>
             <h2 className="text-3xl font-bold text-gray-900 mb-3">Reset your password</h2>
             <p className="text-gray-600">Enter your email address and we'll send you instructions to reset your password.</p>
           </div>
@@ -49,7 +50,7 @@ const ResetPassword = () => {
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-2.5">
                 <Label htmlFor="email" className="text-gray-700 font-medium text-base">
-                  Email Address <span className="text-red-500" style={{color: '#DC2626'}}>*</span>
+                  Email Address
                 </Label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">

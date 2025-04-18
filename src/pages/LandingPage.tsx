@@ -1,4 +1,13 @@
 
+/**
+ * LandingPage component
+ * 
+ * The main landing page for the application with enhanced SEO optimization
+ * including structured data for rich search results.
+ * 
+ * @component
+ */
+
 import React from "react";
 import { Helmet } from "react-helmet-async"; 
 import { LandingLayout } from "@/components/landing";
@@ -60,7 +69,6 @@ const LandingPage: React.FC = () => {
           {JSON.stringify(structuredData)}
         </script>
       </Helmet>
-      
       <LandingLayout />
     </>
   );

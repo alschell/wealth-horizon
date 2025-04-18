@@ -18,7 +18,6 @@ export const TranslatedText: React.FC<TranslatedTextProps> = ({
 }) => {
   const { translate, currentLanguage, isLoading } = useTranslation();
   const [translatedContent, setTranslatedContent] = useState<string>(children);
-  const [isTranslating, setIsTranslating] = useState(false);
   const isMounted = useRef(true);
   const originalText = useRef(children);
 
@@ -53,8 +52,6 @@ export const TranslatedText: React.FC<TranslatedTextProps> = ({
     const translateText = async () => {
       if (!currentLanguage) return;
       
-      setIsTranslating(true);
-      
       try {
         const translated = await translate(children);
         
@@ -66,10 +63,6 @@ export const TranslatedText: React.FC<TranslatedTextProps> = ({
         // If translation fails, fall back to original text
         if (isMounted.current) {
           setTranslatedContent(children);
-        }
-      } finally {
-        if (isMounted.current) {
-          setIsTranslating(false);
         }
       }
     };

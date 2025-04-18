@@ -3,6 +3,9 @@
  * Security utilities for secure storage
  */
 
+// Import from a unified location to avoid circular dependencies
+import { generateSecureToken } from '../security';
+
 /**
  * Secure storage with expiration and domain binding
  */
@@ -100,7 +103,7 @@ export const storeCsrfToken = (token: string): void => {
 };
 
 /**
- * Get stored CSRF token
+ * Get stored CSRF token, generates a new one if none exists
  */
 export const getCsrfToken = (): string => {
   const token = secureStore.get('csrf_token');
@@ -108,11 +111,7 @@ export const getCsrfToken = (): string => {
   if (token) return token;
   
   // Generate a new token if none exists
-  const newToken = generateCsrfToken();
+  const newToken = generateSecureToken(32);
   storeCsrfToken(newToken);
   return newToken;
 };
-
-// Import this function from authentication to avoid duplication
-import { generateCsrfToken } from './authentication';
-

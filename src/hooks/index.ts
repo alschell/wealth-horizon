@@ -12,6 +12,7 @@ export { useNotifications } from './use-notifications';
 export { useErrorHandler } from './useErrorHandler';
 export { useErrorBoundary } from './useErrorBoundary';
 export { useDocumentManager } from '@/context/DocumentContext';
+export { useSecurityProtection } from './useSecurityProtection';
 
 // Using withErrorHandling from useErrorBoundary
 export { withErrorHandling } from './useErrorBoundary';

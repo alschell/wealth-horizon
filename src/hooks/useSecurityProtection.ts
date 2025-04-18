@@ -1,6 +1,7 @@
 
 import { useEffect } from 'react';
-import { sessionManager, CsrfProtection } from '@/utils/security';
+import { sessionManager } from '@/utils/security/session';
+import { CsrfProtection } from '@/utils/security/csrf';
 
 export function useSecurityProtection() {
   useEffect(() => {
@@ -24,4 +25,3 @@ export function useSecurityProtection() {
     appendTokenToForm: CsrfProtection.appendTokenToForm,
   };
 }
-

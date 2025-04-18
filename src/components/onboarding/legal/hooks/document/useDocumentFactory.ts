@@ -1,62 +1,27 @@
 
-import { DocumentFileWithMetadata } from '../../types';
+import { useCallback } from 'react';
+import { DocumentFileWithMetadata } from './types';
+import { useDocumentId } from './useDocumentId';
+import { useDocumentList } from './useDocumentList';
 
-/**
- * Hook providing factory functions for document management
- */
 export function useDocumentFactory() {
-  /**
-   * Creates a new document with metadata
-   */
-  const createDocument = (
+  const { generateDocumentId } = useDocumentId();
+  const { addDocumentToList, updateDocumentInList, removeDocumentFromList } = useDocumentList();
+
+  const createDocument = useCallback((
     documentType: string,
     issueDate: string,
     expiryDate: string,
     selectedFile: File
   ): DocumentFileWithMetadata => {
     return {
-      id: `doc-${Date.now()}`,
+      id: generateDocumentId(),
       file: selectedFile,
       documentType,
       issueDate,
       expiryDate
     };
-  };
-
-  /**
-   * Updates a document in a list of documents
-   */
-  const updateDocumentInList = (
-    documents: DocumentFileWithMetadata[],
-    id: string,
-    documentType: string,
-    issueDate: string,
-    expiryDate: string,
-    file: File
-  ): DocumentFileWithMetadata[] => {
-    return documents.map(doc => {
-      if (doc.id === id) {
-        return {
-          ...doc,
-          file,
-          documentType,
-          issueDate,
-          expiryDate
-        };
-      }
-      return doc;
-    });
-  };
-
-  /**
-   * Removes a document from a list of documents
-   */
-  const removeDocumentFromList = (
-    documents: DocumentFileWithMetadata[],
-    id: string
-  ): DocumentFileWithMetadata[] => {
-    return documents.filter(doc => doc.id !== id);
-  };
+  }, [generateDocumentId]);
 
   return {
     createDocument,

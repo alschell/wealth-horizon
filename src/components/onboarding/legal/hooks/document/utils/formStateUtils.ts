@@ -1,18 +1,6 @@
 
+import { FormState, FormFieldName } from '../types/formTypes';
 import { DocumentFileWithMetadata } from '../../../types';
-
-export interface FormState {
-  documentType: string;
-  issueDate: string;
-  expiryDate: string;
-  selectedFile: File | null;
-  documentFiles: DocumentFileWithMetadata[];
-  errors: Record<string, boolean>;
-  fileError: string | null;
-  isEditing: boolean;
-  editingDocumentId: string | null;
-  isSubmitting: boolean;
-}
 
 export const formStateUtils = {
   /**
@@ -41,7 +29,7 @@ export const formStateUtils = {
   /**
    * Updates a single field in the form state
    */
-  updateField: <K extends keyof FormState>(
+  updateField: <K extends FormFieldName>(
     state: FormState,
     field: K,
     value: FormState[K]
@@ -50,5 +38,19 @@ export const formStateUtils = {
       ...state,
       [field]: value
     };
+  },
+
+  /**
+   * Updates multiple fields at once
+   */
+  updateFields: (
+    state: FormState,
+    updates: Partial<FormState>
+  ): FormState => {
+    return {
+      ...state,
+      ...updates
+    };
   }
 };
+

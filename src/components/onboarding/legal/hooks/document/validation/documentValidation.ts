@@ -1,6 +1,7 @@
 
 import { DocumentValidationErrors, FileValidationResult } from './types';
 import { FILE_VALIDATION, DOCUMENT_VALIDATION } from './validationConstants';
+import { FormState } from '../types/formTypes';
 
 export const validateDocumentValidation = {
   file: (file: File): FileValidationResult => {
@@ -57,3 +58,4 @@ export const validateDocumentValidation = {
     return Object.values(errors).some(error => error === true);
   }
 };
+

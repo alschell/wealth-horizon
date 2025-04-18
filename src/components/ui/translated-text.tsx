@@ -46,11 +46,12 @@ export const TranslatedText: React.FC<TranslatedTextProps> = ({
       return;
     }
 
-    // Only translate if language has changed or content has changed
+    // Don't re-translate if language hasn't changed and we already have content
     if (currentLanguage === previousLanguage.current && translatedContent && translatedContent !== children) {
       return;
     }
 
+    // Update previous language reference
     previousLanguage.current = currentLanguage;
     
     const translateText = async () => {
@@ -58,7 +59,6 @@ export const TranslatedText: React.FC<TranslatedTextProps> = ({
       
       setIsTranslating(true);
       try {
-        console.log(`Translating: "${children}" to ${currentLanguage}`);
         const translated = await translate(children);
         
         if (isMounted.current) {
@@ -78,7 +78,7 @@ export const TranslatedText: React.FC<TranslatedTextProps> = ({
       }
     };
 
-    // Delay translation slightly to avoid overwhelming the system
+    // Small delay to avoid overwhelming translation requests
     const timeoutId = setTimeout(() => {
       translateText();
     }, 10);
@@ -88,7 +88,7 @@ export const TranslatedText: React.FC<TranslatedTextProps> = ({
     };
   }, [children, currentLanguage, translate]);
 
-  // Show loading state if requested and translation is in progress
+  // If loading is requested and translation is in progress, show loading state
   if (withLoading && (isLoading || isTranslating)) {
     return (
       <Component className={`animate-pulse ${className}`} {...rest}>
@@ -97,15 +97,7 @@ export const TranslatedText: React.FC<TranslatedTextProps> = ({
     );
   }
 
-  // If there was an error in translation, use original text
-  if (hasError) {
-    return (
-      <Component className={className} {...rest}>
-        {children}
-      </Component>
-    );
-  }
-
+  // On error or default case, return the content
   return (
     <Component className={className} {...rest}>
       {translatedContent || children}

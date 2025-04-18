@@ -11,9 +11,9 @@ const LandingPage: React.FC = () => {
   const { currentLanguage } = useTranslation();
   
   useEffect(() => {
-    console.log("LandingPage mounted", { language: currentLanguage });
+    console.log("LandingPage mounted or language changed", { language: currentLanguage });
     
-    // Ensure we scroll to top on landing page load
+    // Ensure we scroll to top on landing page load or language change
     window.scrollTo(0, 0);
   }, [currentLanguage]);
   

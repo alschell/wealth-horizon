@@ -26,6 +26,9 @@ export function useDocumentValidation() {
   return {
     validateFields,
     validateFile,
-    hasErrors
+    hasErrors,
+    // Add these for backward compatibility with tests
+    validateDocumentFields: validateFields,
+    validateDocumentFile: validateFile
   };
 }

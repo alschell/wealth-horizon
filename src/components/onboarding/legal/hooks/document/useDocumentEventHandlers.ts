@@ -56,14 +56,14 @@ export function useDocumentEventHandlers({
   onSave
 }: UseDocumentEventHandlersProps) {
   // Get validation functions
-  const { validateDocumentFields, validateDocumentFile } = useDocumentValidation();
+  const { validateFields, validateFile } = useDocumentValidation();
   
   // Get document factory functions
   const { createDocument, updateDocumentInList, removeDocumentFromList } = useDocumentFactory();
 
   // Use the document file handler with proper validation
   const fileHandler = useDocumentFileHandler({
-    validateFile: validateDocumentFile,
+    validateFile,
     setSelectedFile,
     setFileError,
     setFieldError: (field, hasError) => setErrors(prev => ({ ...prev, [field]: hasError }))
@@ -94,7 +94,7 @@ export function useDocumentEventHandlers({
    */
   const handleAddDocument = useCallback(() => {
     // Validate required fields
-    const newErrors = validateDocumentFields(documentType, issueDate, selectedFile);
+    const newErrors = validateFields(documentType, issueDate, selectedFile);
     
     if (Object.keys(newErrors).length > 0) {
       setErrors((prev) => ({ ...prev, ...newErrors }));
@@ -106,7 +106,7 @@ export function useDocumentEventHandlers({
     }
     
     documentOperations.handleAddDocument(documentType, issueDate, expiryDate, selectedFile);
-  }, [documentType, issueDate, expiryDate, selectedFile, validateDocumentFields, setErrors, documentOperations]);
+  }, [documentType, issueDate, expiryDate, selectedFile, validateFields, setErrors, documentOperations]);
   
   /**
    * Edit an existing document
@@ -129,7 +129,7 @@ export function useDocumentEventHandlers({
     if (!editingDocumentId) return;
     
     // Validate required fields
-    const newErrors = validateDocumentFields(documentType, issueDate, selectedFile);
+    const newErrors = validateFields(documentType, issueDate, selectedFile);
     
     if (Object.keys(newErrors).length > 0) {
       setErrors((prev) => ({ ...prev, ...newErrors }));
@@ -141,7 +141,7 @@ export function useDocumentEventHandlers({
     }
     
     documentOperations.handleUpdateDocument(editingDocumentId, documentType, issueDate, expiryDate, selectedFile);
-  }, [editingDocumentId, documentType, issueDate, expiryDate, selectedFile, validateDocumentFields, setErrors, documentOperations]);
+  }, [editingDocumentId, documentType, issueDate, expiryDate, selectedFile, validateFields, setErrors, documentOperations]);
   
   /**
    * Submit all documents

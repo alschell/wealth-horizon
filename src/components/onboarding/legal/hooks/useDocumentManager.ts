@@ -17,7 +17,7 @@ export function useDocumentManager({
   initialDocuments = []
 }: UseDocumentManagerProps = {}) {
   // Use form state hook
-  const formState = useDocumentFormState(initialDocuments);
+  const formState = useDocumentFormState({ initialDocuments });
   
   // Use event handlers hook with all required properties from formState
   const eventHandlers = useDocumentEventHandlers({

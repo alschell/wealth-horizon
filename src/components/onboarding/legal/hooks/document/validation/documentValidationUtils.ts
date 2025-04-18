@@ -2,7 +2,7 @@
 import { FileValidationResult, DocumentValidationErrors, AllowedFileType } from './types';
 import { FILE_VALIDATION } from './validationConstants';
 import { validateFile } from './fileValidation';
-import { validateRequiredFields } from './fieldValidation';
+import { validateRequiredFields, hasValidationErrors } from './fieldValidation';
 
 export const validateDocumentFile = validateFile;
 

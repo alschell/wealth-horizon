@@ -1,8 +1,9 @@
 
 import { useState } from 'react';
-import { DocumentFileWithMetadata, DocumentValidationErrors } from './types';
+import { DocumentFileWithMetadata } from '../../types';
+import { DocumentValidationErrors } from './validation/types';
 
-interface UseDocumentFormStateProps {
+export interface UseDocumentFormStateProps {
   initialDocuments?: DocumentFileWithMetadata[];
 }
 
@@ -53,3 +54,11 @@ export function useDocumentFormState({ initialDocuments = [] }: UseDocumentFormS
     resetForm
   };
 }
+
+// Add this function for backward compatibility with useDocumentCore.ts
+export const createInitialFormValues = () => ({
+  documentType: '',
+  issueDate: '',
+  expiryDate: '',
+  selectedFile: null
+});

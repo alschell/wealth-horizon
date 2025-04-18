@@ -1,3 +1,4 @@
+
 import { useCallback } from 'react';
 import { DocumentFileWithMetadata } from '../types';
 import { toast } from '@/components/ui/use-toast';
@@ -13,7 +14,7 @@ export const useDocumentCore = ({
   onSave,
   initialDocuments = []
 }: UseDocumentCoreProps) => {
-  const formState = useDocumentFormState(initialDocuments);
+  const formState = useDocumentFormState({ initialDocuments });
   const { createDocument, updateDocumentInList, removeDocumentFromList } = useDocumentFactory();
 
   const form = useUnifiedForm({

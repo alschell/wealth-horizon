@@ -20,7 +20,7 @@ describe('useDocumentFormState', () => {
   });
   
   it('should initialize with provided documents', () => {
-    const { result } = renderHook(() => useDocumentFormState(mockDocuments));
+    const { result } = renderHook(() => useDocumentFormState({ initialDocuments: mockDocuments }));
     
     expect(result.current.documentFiles).toEqual(mockDocuments);
   });

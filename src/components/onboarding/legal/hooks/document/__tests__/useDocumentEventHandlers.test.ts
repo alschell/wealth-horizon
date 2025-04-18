@@ -61,8 +61,10 @@ describe('useDocumentEventHandlers', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     (useDocumentValidation as jest.Mock).mockReturnValue({
+      validateFields: jest.fn(() => ({})),
       validateFile: jest.fn(() => null),
       validateDocumentFields: jest.fn(() => ({})),
+      validateDocumentFile: jest.fn(() => null),
     });
     (useDocumentFactory as jest.Mock).mockReturnValue({
       createDocument: jest.fn(),
@@ -79,7 +81,7 @@ describe('useDocumentEventHandlers', () => {
     });
     
     // We expect validation to be called
-    expect(useDocumentValidation().validateDocumentFields).toHaveBeenCalledWith(
+    expect(useDocumentValidation().validateFields).toHaveBeenCalledWith(
       mockProps.documentType,
       mockProps.issueDate,
       mockProps.selectedFile
@@ -113,7 +115,7 @@ describe('useDocumentEventHandlers', () => {
     });
     
     // Validation should be called
-    expect(useDocumentValidation().validateDocumentFields).toHaveBeenCalled();
+    expect(useDocumentValidation().validateFields).toHaveBeenCalled();
   });
 
   it('should handle form submission', async () => {
@@ -129,11 +131,16 @@ describe('useDocumentEventHandlers', () => {
 
   it('should validate fields and show errors if validation fails', () => {
     (useDocumentValidation as jest.Mock).mockReturnValue({
+      validateFields: jest.fn(() => ({
+        documentType: true,
+        issueDate: true,
+      })),
       validateFile: jest.fn(() => null),
       validateDocumentFields: jest.fn(() => ({
         documentType: true,
         issueDate: true,
       })),
+      validateDocumentFile: jest.fn(() => null),
     });
     
     const { result } = renderHook(() => useDocumentEventHandlers(mockProps));

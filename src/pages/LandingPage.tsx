@@ -1,19 +1,21 @@
 
-import React, { useEffect } from "react";
+/**
+ * LandingPage component
+ * 
+ * The main landing page for the application with enhanced SEO optimization
+ * including structured data for rich search results.
+ * 
+ * @component
+ */
+
+import React from "react";
 import { Helmet } from "react-helmet-async"; 
 import { LandingLayout } from "@/components/landing";
-import { useTranslation } from "@/context/TranslationContext";
 
 /**
  * Main landing page with SEO optimization and structured data
  */
 const LandingPage: React.FC = () => {
-  const { currentLanguage } = useTranslation();
-  
-  useEffect(() => {
-    console.log("LandingPage mounted with language:", currentLanguage);
-  }, [currentLanguage]);
-  
   // Structured data for rich search results
   const structuredData = {
     "@context": "https://schema.org",
@@ -42,7 +44,6 @@ const LandingPage: React.FC = () => {
     "keywords": "wealth management, family office, financial planning, investment, portfolio optimization"
   };
 
-  // Always render the full page content regardless of language state
   return (
     <>
       <Helmet>
@@ -61,7 +62,7 @@ const LandingPage: React.FC = () => {
         <link rel="canonical" href="https://wealthhorizon.com/" />
         
         {/* Add language and direction */}
-        <html lang={currentLanguage} dir={['ar', 'he', 'fa'].includes(currentLanguage) ? 'rtl' : 'ltr'} />
+        <html lang="en" dir="ltr" />
         
         {/* Add structured data for rich search results */}
         <script type="application/ld+json">

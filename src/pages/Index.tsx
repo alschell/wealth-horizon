@@ -14,11 +14,7 @@ const Index = () => {
     window.scrollTo(0, 0);
   }, [location.pathname]);
 
-  return (
-    <React.Suspense fallback={<div className="p-8 text-center">Loading...</div>}>
-      <LandingPage />
-    </React.Suspense>
-  );
+  return <LandingPage />;
 };
 
 export default Index;

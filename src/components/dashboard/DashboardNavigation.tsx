@@ -31,22 +31,19 @@ const DashboardNavigation: React.FC = () => {
     
     navigate('/logout');
   };
-  
-  const handleLogoClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    // Navigate to home and scroll to top
-    navigate('/');
-    window.scrollTo(0, 0);
-  };
 
   return (
     <header className="fixed top-0 z-50 w-full border-b bg-white shadow-sm">
       <div className="flex h-16 items-center justify-between mx-auto max-w-7xl px-6 sticky top-0">
         <div className="flex items-center">
-          <a onClick={handleLogoClick} className="font-bold text-xl flex items-center cursor-pointer">
+          <Link 
+            to="/" 
+            className="font-bold text-xl flex items-center cursor-pointer"
+            onClick={() => window.scrollTo(0, 0)}
+          >
             <span className="text-indigo-500">Wealth</span>
             <span>Horizon</span>
-          </a>
+          </Link>
         </div>
         
         <div className="flex items-center gap-3">

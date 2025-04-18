@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { LanguageSelector } from '@/components/ui/language-selector';
 import { TranslatedText } from '@/components/ui/translated-text';
+import Logo from '@/components/common/Logo';
 
 const HomeNavigation: React.FC = () => {
   const navigate = useNavigate();
@@ -38,33 +39,34 @@ const HomeNavigation: React.FC = () => {
     >
       <nav className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
         <div className="flex items-center">
-          <Link to="/" className="font-bold text-xl flex items-center">
-            <span className="text-indigo-600">Wealth</span>
-            <span className="text-gray-900">Horizon</span>
-          </Link>
+          <Logo variant={scrolled ? 'dark' : 'default'} />
           
           <div className="hidden md:flex items-center ml-10 space-x-8">
             <button 
               onClick={() => scrollToSection('why-wh')} 
               className="text-gray-700 hover:text-indigo-600 transition-colors"
+              aria-label="Navigate to Why WH section"
             >
               <TranslatedText>Why WH</TranslatedText>
             </button>
             <button 
               onClick={() => scrollToSection('features')} 
               className="text-gray-700 hover:text-indigo-600 transition-colors"
+              aria-label="Navigate to Features section"
             >
               <TranslatedText>Features</TranslatedText>
             </button>
             <button 
               onClick={() => scrollToSection('benefits')} 
               className="text-gray-700 hover:text-indigo-600 transition-colors"
+              aria-label="Navigate to Benefits section"
             >
               <TranslatedText>Benefits</TranslatedText>
             </button>
             <button 
               onClick={() => scrollToSection('testimonials')} 
               className="text-gray-700 hover:text-indigo-600 transition-colors"
+              aria-label="Navigate to Testimonials section"
             >
               <TranslatedText>Testimonials</TranslatedText>
             </button>
@@ -73,10 +75,17 @@ const HomeNavigation: React.FC = () => {
         
         <div className="flex items-center gap-3">
           <LanguageSelector />
-          <Button variant="ghost" onClick={() => navigate('/login')}>
+          <Button 
+            variant="ghost" 
+            onClick={() => navigate('/login')}
+            aria-label="Log in to your account"
+          >
             <TranslatedText>Log In</TranslatedText>
           </Button>
-          <Button onClick={() => scrollToSection('contact')}>
+          <Button 
+            onClick={() => scrollToSection('contact')}
+            aria-label="Navigate to Contact section"
+          >
             <TranslatedText>Contact Us</TranslatedText>
           </Button>
         </div>

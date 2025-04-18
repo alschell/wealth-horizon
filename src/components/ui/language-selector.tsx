@@ -12,39 +12,24 @@ import { useTranslation, LANGUAGES } from '@/context/TranslationContext';
 import TranslatedText from './translated-text';
 
 export function LanguageSelector() {
-  const { currentLanguage, isLoading } = useTranslation();
+  const { currentLanguage, setLanguage } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [isChanging, setIsChanging] = useState(false);
 
-  // Safely ensure LANGUAGES is an array
-  const availableLanguages = Array.isArray(LANGUAGES) ? LANGUAGES : [];
-
   const handleLanguageChange = useCallback(async (langCode: string) => {
-    if (isChanging || isLoading) return;
-    
-    if (langCode === currentLanguage) {
-      return;
-    }
-    
     setIsChanging(true);
     try {
-      console.log(`Starting language change to ${langCode}`);
-      
-      // Store the selected language in localStorage before reload
-      localStorage.setItem('preferredLanguage', langCode);
-      
-      // Force a complete page reload to reset all components and translation states
-      window.location.reload();
+      await setLanguage(langCode as any);
+      console.log(`Language changed to ${langCode}`);
     } catch (error) {
       console.error("Failed to change language:", error);
+    } finally {
       setIsChanging(false);
+      setIsOpen(false);
     }
-  }, [currentLanguage, isChanging, isLoading]);
+  }, [setLanguage]);
 
-  // Safely find the current language
-  const currentLang = availableLanguages.length > 0
-    ? availableLanguages.find(lang => lang.code === currentLanguage) 
-    : undefined;
+  const currentLang = LANGUAGES.find(lang => lang.code === currentLanguage);
 
   return (
     <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
@@ -55,14 +40,14 @@ export function LanguageSelector() {
           title={`Language: ${currentLang?.name || 'English'}`}
           disabled={isChanging}
         >
-          <Globe className={`h-5 w-5 ${isChanging ? 'animate-spin text-indigo-600' : ''}`} />
+          <Globe className={`h-5 w-5 ${isChanging ? 'animate-spin' : ''}`} />
           <span className="sr-only">
-            Change Language
+            <TranslatedText>Change Language</TranslatedText>
           </span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-48" align="end">
-        {availableLanguages.length > 0 ? availableLanguages.map((language) => (
+        {LANGUAGES.map((language) => (
           <DropdownMenuItem
             key={language.code}
             onClick={() => handleLanguageChange(language.code)}
@@ -71,11 +56,7 @@ export function LanguageSelector() {
           >
             <span>{language.name} ({language.nativeName})</span>
           </DropdownMenuItem>
-        )) : (
-          <DropdownMenuItem disabled>
-            <span>No languages available</span>
-          </DropdownMenuItem>
-        )}
+        ))}
       </DropdownMenuContent>
     </DropdownMenu>
   );

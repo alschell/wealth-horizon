@@ -1,15 +1,28 @@
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { LogOut, Settings, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import NotificationsPopover from '@/components/dashboard/notifications/NotificationsPopover';
+import { TranslatedText } from '@/components/ui/translated-text';
 import { toast } from 'sonner';
+import { useTranslation } from '@/context/TranslationContext';
 
 const DashboardNavigation: React.FC = () => {
   const navigate = useNavigate();
-  
+  const { translate, currentLanguage } = useTranslation();
+  const [searchPlaceholder, setSearchPlaceholder] = useState("Search...");
+
+  useEffect(() => {
+    const updatePlaceholder = async () => {
+      const translated = await translate("Search...");
+      setSearchPlaceholder(translated);
+    };
+    
+    updatePlaceholder();
+  }, [translate, currentLanguage]);
+
   const handleLogout = () => {
     localStorage.removeItem("auth_token");
     localStorage.removeItem("user_data");
@@ -19,35 +32,20 @@ const DashboardNavigation: React.FC = () => {
     navigate('/logout');
   };
 
-  const handleLogoClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    try {
-      // Use direct URL navigation for reliability
-      window.location.href = '/';
-    } catch (error) {
-      console.error("Navigation error:", error);
-      window.location.reload();
-    }
-  };
-
   return (
     <header className="fixed top-0 z-50 w-full border-b bg-white shadow-sm">
       <div className="flex h-16 items-center justify-between mx-auto max-w-7xl px-6 sticky top-0">
         <div className="flex items-center">
-          <a
-            href="/"
-            className="font-bold text-xl flex items-center"
-            onClick={handleLogoClick}
-          >
+          <Link to="/" className="font-bold text-xl flex items-center">
             <span className="text-indigo-500">Wealth</span>
             <span>Horizon</span>
-          </a>
+          </Link>
         </div>
         
         <div className="flex items-center gap-3">
           <div className="relative w-64 mr-2">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-            <Input placeholder="Search..." className="pl-10 bg-white" />
+            <Input placeholder={searchPlaceholder} className="pl-10 bg-white" />
           </div>
           <NotificationsPopover />
           <Button 
@@ -57,7 +55,7 @@ const DashboardNavigation: React.FC = () => {
           >
             <Link to="/settings">
               <Settings className="h-5 w-5" />
-              <span className="sr-only">Settings</span>
+              <span className="sr-only"><TranslatedText>Settings</TranslatedText></span>
             </Link>
           </Button>
           <Button 
@@ -66,7 +64,7 @@ const DashboardNavigation: React.FC = () => {
             onClick={handleLogout}
           >
             <LogOut className="h-5 w-5" />
-            <span className="sr-only">Logout</span>
+            <span className="sr-only"><TranslatedText>Logout</TranslatedText></span>
           </Button>
         </div>
       </div>

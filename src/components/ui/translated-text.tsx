@@ -16,54 +16,28 @@ export const TranslatedText: React.FC<TranslatedTextProps> = ({
   withLoading = false,
   ...rest
 }) => {
-  const { translate, currentLanguage } = useTranslation();
-  const [translatedContent, setTranslatedContent] = useState<string>('');
-  const [isTranslating, setIsTranslating] = useState<boolean>(false);
+  const { translate, currentLanguage, isLoading } = useTranslation();
+  const [translatedContent, setTranslatedContent] = useState(children);
 
   useEffect(() => {
-    // Skip the effect entirely if required data is missing
-    if (!translate || typeof translate !== 'function') {
-      console.warn("TranslatedText: translate function is not available");
-      setTranslatedContent(String(children || ''));
-      return;
-    }
-
     let isMounted = true;
-    const textToTranslate = typeof children === 'string' ? children : String(children || '');
     
     const translateText = async () => {
-      // Don't attempt translation if we have no content
-      if (!textToTranslate) {
-        if (isMounted) {
-          setTranslatedContent('');
-        }
-        return;
-      }
-      
-      setIsTranslating(true);
-      
       try {
-        const translated = await translate(textToTranslate);
-        if (isMounted && translated) {
+        const translated = await translate(children);
+        if (isMounted) {
           setTranslatedContent(translated);
-        } else if (isMounted) {
-          // Fallback to original text if translation fails
-          setTranslatedContent(textToTranslate);
         }
       } catch (error) {
         console.error("Translation error:", error);
         // If translation fails, fall back to original text
         if (isMounted) {
-          setTranslatedContent(textToTranslate);
-        }
-      } finally {
-        if (isMounted) {
-          setIsTranslating(false);
+          setTranslatedContent(children);
         }
       }
     };
 
-    // Run translation
+    // Always run translation when language changes or text changes
     translateText();
     
     return () => {
@@ -71,12 +45,17 @@ export const TranslatedText: React.FC<TranslatedTextProps> = ({
     };
   }, [children, currentLanguage, translate]);
 
-  // Ensure we always return something valid
-  const displayContent = translatedContent || (typeof children === 'string' ? children : String(children || ''));
-  
+  if (withLoading && isLoading) {
+    return (
+      <Component className={`animate-pulse ${className}`} {...rest}>
+        {translatedContent}
+      </Component>
+    );
+  }
+
   return (
     <Component className={className} {...rest}>
-      {displayContent}
+      {translatedContent}
     </Component>
   );
 };

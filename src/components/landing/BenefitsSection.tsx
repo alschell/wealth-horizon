@@ -3,6 +3,7 @@ import React from "react";
 import { BarChart3, Shield, Layers, Clock } from "lucide-react";
 import { FadeIn, StaggerContainer, StaggerItem, ScaleIn } from "@/components/ui/animation";
 import DashboardAnimation from "@/components/animations/DashboardAnimation";
+import TranslatedText from "@/components/ui/translated-text";
 
 const benefits = [
   {
@@ -33,9 +34,13 @@ const BenefitsSection: React.FC = () => {
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-16">
           <FadeIn>
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Transform Your Wealth Management</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
+              <TranslatedText>Transform Your Wealth Management</TranslatedText>
+            </h2>
             <p className="mt-4 text-xl text-gray-600 max-w-3xl mx-auto">
-              Experience a new level of efficiency, insight, and control with <span className="text-indigo-600">Wealth</span><span className="text-gray-900">Horizon</span>.
+              <TranslatedText>Experience a new level of efficiency, insight, and control with </TranslatedText>
+              <span className="text-indigo-600">Wealth</span>
+              <span className="text-gray-900">Horizon</span>.
             </p>
           </FadeIn>
         </div>
@@ -49,8 +54,12 @@ const BenefitsSection: React.FC = () => {
                     {benefit.icon}
                   </div>
                   <div>
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2">{benefit.title}</h3>
-                    <p className="text-gray-600">{benefit.description}</p>
+                    <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                      <TranslatedText>{benefit.title}</TranslatedText>
+                    </h3>
+                    <p className="text-gray-600">
+                      <TranslatedText>{benefit.description}</TranslatedText>
+                    </p>
                   </div>
                 </div>
               </StaggerItem>

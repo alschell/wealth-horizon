@@ -7,14 +7,16 @@ import { useDocumentErrorState } from './useDocumentErrorState';
 interface UseDocumentFileHandlerProps {
   validateFile: (file: File) => FileValidationResult;
   setSelectedFile: (file: File | null) => void;
+  setFileError: (error: string | null) => void;
+  setFieldError: (field: string, hasError: boolean) => void;
 }
 
 export function useDocumentFileHandler({
   validateFile,
-  setSelectedFile
+  setSelectedFile,
+  setFileError,
+  setFieldError
 }: UseDocumentFileHandlerProps) {
-  const { setFileError, setFieldError } = useDocumentErrorState();
-
   const handleFileSelected = useCallback((files: File[]) => {
     if (files.length === 0) return;
     

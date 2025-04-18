@@ -66,7 +66,7 @@ export function useDocumentEventHandlers({
     validateFile: validateDocumentFile,
     setSelectedFile,
     setFileError,
-    setErrors
+    setFieldError: (field, hasError) => setErrors(prev => ({ ...prev, [field]: hasError }))
   });
 
   // Use the document field handlers

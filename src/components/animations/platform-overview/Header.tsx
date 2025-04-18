@@ -4,6 +4,10 @@ import { motion } from "framer-motion";
 import { headerVariants } from "./AnimationVariants";
 
 const Header: React.FC = () => {
+  const handleHomeClick = () => {
+    window.location.href = '/';
+  };
+
   return (
     <motion.div 
       className="bg-gray-50 border-b border-gray-200 p-4"
@@ -12,10 +16,10 @@ const Header: React.FC = () => {
       variants={headerVariants}
     >
       <div className="flex items-center">
-        <span className="font-bold text-xl">
+        <button onClick={handleHomeClick} className="font-bold text-xl focus:outline-none">
           <span className="text-indigo-600">Wealth</span>
           <span className="text-gray-900">Horizon</span>
-        </span>
+        </button>
       </div>
     </motion.div>
   );

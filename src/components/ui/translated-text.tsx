@@ -17,15 +17,21 @@ export const TranslatedText: React.FC<TranslatedTextProps> = ({
   ...rest
 }) => {
   const { translate, currentLanguage, isLoading } = useTranslation();
-  const [translatedContent, setTranslatedContent] = useState(children);
+  const [translatedContent, setTranslatedContent] = useState<string>(children || '');
 
   useEffect(() => {
+    // Safety check - if children is not a valid string, don't try to translate
+    if (!children || typeof children !== 'string') {
+      console.warn('TranslatedText received invalid children:', children);
+      return;
+    }
+
     let isMounted = true;
     
     const translateText = async () => {
       try {
         const translated = await translate(children);
-        if (isMounted) {
+        if (isMounted && translated) {
           setTranslatedContent(translated);
         }
       } catch (error) {
@@ -48,14 +54,14 @@ export const TranslatedText: React.FC<TranslatedTextProps> = ({
   if (withLoading && isLoading) {
     return (
       <Component className={`animate-pulse ${className}`} {...rest}>
-        {translatedContent}
+        {translatedContent || children || ''}
       </Component>
     );
   }
 
   return (
     <Component className={className} {...rest}>
-      {translatedContent}
+      {translatedContent || children || ''}
     </Component>
   );
 };

@@ -45,9 +45,9 @@ export function useUnifiedForm<T extends Record<string, any>>(props: UseUnifiedF
   } = useFormHandlers<T>({
     setValues,
     clearError: (field) => {
-      // Use a type assertion to match the expected type
-      setErrors((prev) => {
-        const newErrors = { ...prev };
+      // Properly type the error state update function
+      setErrors((prevErrors) => {
+        const newErrors = { ...prevErrors };
         delete newErrors[field as string];
         return newErrors;
       });

@@ -24,14 +24,30 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToFeatures }) => {
   };
 
   const scrollToWhyWH = () => {
-    const benefitsSection = document.getElementById('benefits');
-    if (benefitsSection) {
-      benefitsSection.scrollIntoView({ behavior: 'smooth' });
+    // Use the first implementation - directly access the element by ID
+    const whySection = document.getElementById('benefits');
+    
+    if (whySection) {
+      // Add logging for troubleshooting
+      console.log("Found benefits section, scrolling to it:", whySection);
+      // Scroll with a slight delay to ensure all elements are fully rendered
+      setTimeout(() => {
+        whySection.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
     } else {
-      // If benefits section not found, try features as fallback
-      const featuresSection = document.getElementById('features');
-      if (featuresSection) {
-        featuresSection.scrollIntoView({ behavior: 'smooth' });
+      console.log("Benefits section not found, checking for alternatives");
+      // If benefits section not found, try WhyWHSection as fallback
+      const alternativeSection = document.querySelector('section#benefits');
+      if (alternativeSection) {
+        console.log("Found alternative benefits section, scrolling to it");
+        alternativeSection.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        // Last resort - try features as fallback
+        console.log("No benefits section found, trying features section");
+        const featuresSection = document.getElementById('features');
+        if (featuresSection) {
+          featuresSection.scrollIntoView({ behavior: 'smooth' });
+        }
       }
     }
   };

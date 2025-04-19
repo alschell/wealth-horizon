@@ -7,6 +7,7 @@ import TestimonialsSection from "./TestimonialsSection";
 import CTASection from "./CTASection";
 import FooterSection from "./FooterSection";
 import { ContactFormSection } from "./contact";
+import BenefitsSection from "./BenefitsSection";
 import { useScrollToSection } from "@/hooks/useScrollToSection";
 
 // Define section IDs
@@ -22,6 +23,7 @@ const LandingLayout: React.FC = () => {
         onScrollToFeatures={() => scrollToSection(sectionRefs.features)} 
       />
       
+      {/* Explicitly add an id="benefits" to the WhyWHSection div wrapper */}
       <div ref={sectionRefs.benefits} id="benefits">
         <WhyWHSection />
       </div>

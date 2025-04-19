@@ -122,16 +122,19 @@ export function useFormFields<T extends Record<string, any>>(
     }
     
     // Run custom validator if provided
-    const validatorForField = validators[field as keyof T];
-    if (validatorForField) {
-      const errorMessage = validatorForField(values[field]);
-      
-      if (errorMessage) {
-        setErrors(prev => ({
-          ...prev,
-          [field as string]: errorMessage
-        }));
-        return false;
+    // Fix the type issue by checking if the field exists in validators
+    if (Object.prototype.hasOwnProperty.call(validators, field)) {
+      const validatorFn = validators[field as keyof typeof validators];
+      if (validatorFn) {
+        const errorMessage = validatorFn(values[field]);
+        
+        if (errorMessage) {
+          setErrors(prev => ({
+            ...prev,
+            [field as string]: errorMessage
+          }));
+          return false;
+        }
       }
     }
     
@@ -166,19 +169,21 @@ export function useFormFields<T extends Record<string, any>>(
     });
     
     // Run custom validators
+    // Fix the type issue by iterating through keys properly
     Object.keys(validators).forEach(key => {
       const field = key as keyof T;
-      const validatorFn = validators[field];
-      
-      if (validatorFn) {
-        const errorMessage = validatorFn(values[field]);
-        
-        if (errorMessage) {
-          setErrors(prev => ({
-            ...prev,
-            [field as string]: errorMessage
-          }));
-          isValid = false;
+      if (Object.prototype.hasOwnProperty.call(validators, field)) {
+        const validatorFn = validators[field as keyof typeof validators];
+        if (validatorFn) {
+          const errorMessage = validatorFn(values[field]);
+          
+          if (errorMessage) {
+            setErrors(prev => ({
+              ...prev,
+              [field as string]: errorMessage
+            }));
+            isValid = false;
+          }
         }
       }
     });

@@ -1,3 +1,4 @@
+
 import React from "react";
 import { FadeIn, ScaleIn, StaggerContainer, StaggerItem } from "@/components/ui/animation";
 import { LineChart, Shield, BarChart3, FileText, Users, Lock } from "lucide-react";

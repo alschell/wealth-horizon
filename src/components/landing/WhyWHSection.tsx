@@ -1,3 +1,4 @@
+
 import React from "react";
 import { FadeIn, ScaleIn } from "@/components/ui/animation";
 import { Binary, WalletCards, Box, Bot } from "lucide-react";

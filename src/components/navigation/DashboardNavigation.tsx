@@ -67,7 +67,6 @@ const DashboardNavigation: React.FC = () => {
               >
                 <LogOut className="h-5 w-5" />
                 <span className="sr-only"><TranslatedText>Logout</TranslatedText></span>
-                </Link>
               </Button>
             </div>
           </div>

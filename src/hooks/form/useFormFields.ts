@@ -43,8 +43,8 @@ export function useFormFields<T extends Record<string, any>>(
     
     // Run field-specific validator if exists
     const fieldKey = field as string;
-    if (Object.prototype.hasOwnProperty.call(validators, fieldKey)) {
-      const validator = validators[fieldKey as keyof typeof validators];
+    if (validators && fieldKey in validators) {
+      const validator = validators[field as keyof T];
       if (validator) {
         const validationResult = validator(value);
         if (validationResult) {
@@ -73,8 +73,8 @@ export function useFormFields<T extends Record<string, any>>(
     
     // Validate field on blur
     const fieldKey = field as string;
-    if (Object.prototype.hasOwnProperty.call(validators, fieldKey)) {
-      const validator = validators[fieldKey as keyof typeof validators];
+    if (validators && fieldKey in validators) {
+      const validator = validators[field as keyof T];
       if (validator) {
         const validationResult = validator(values[field]);
         if (validationResult) {
@@ -95,14 +95,15 @@ export function useFormFields<T extends Record<string, any>>(
     const validationErrors: Record<string, string> = { ...requiredErrors };
     
     Object.keys(validators).forEach((fieldName) => {
-      const field = fieldName as string;
-      if (Object.prototype.hasOwnProperty.call(validators, field)) {
-        const validator = validators[field as keyof typeof validators];
+      const field = fieldName as keyof T;
+      
+      if (validators && field in validators) {
+        const validator = validators[field];
         
         if (validator && field in values) {
-          const validationResult = validator(values[field as keyof T]);
+          const validationResult = validator(values[field]);
           if (validationResult) {
-            validationErrors[field] = validationResult;
+            validationErrors[field as string] = validationResult;
           }
         }
       }

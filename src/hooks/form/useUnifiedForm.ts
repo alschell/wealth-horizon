@@ -20,7 +20,7 @@ export function useUnifiedForm<T extends Record<string, any>>(
 ): UseUnifiedFormReturn<T> {
   const {
     initialValues,
-    validators = {} as Partial<Record<keyof T, Validator<any>>>,
+    validators = {} as Partial<Record<keyof T, Validator>>,
     requiredFields = [],
     onSubmit,
     onSuccess,
@@ -31,7 +31,7 @@ export function useUnifiedForm<T extends Record<string, any>>(
   } = props;
   
   // Create enhanced validators with required fields validation
-  const enhancedValidators = { ...validators } as Record<keyof T, Validator<any>>;
+  const enhancedValidators = { ...validators } as Record<keyof T, Validator>;
   
   requiredFields.forEach(field => {
     if (!enhancedValidators[field]) {

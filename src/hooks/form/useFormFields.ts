@@ -13,7 +13,11 @@ export interface UseFormFieldsOptions<T> {
 export function useFormFields<T extends Record<string, any>>(
   options: UseFormFieldsOptions<T>
 ) {
-  const { initialValues, requiredFields = [], validators = {} } = options;
+  const { 
+    initialValues, 
+    requiredFields = [], 
+    validators = {} as Partial<Record<keyof T, Validator>> 
+  } = options;
   
   const [values, setValues] = useState<T>(initialValues);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -113,9 +117,8 @@ export function useFormFields<T extends Record<string, any>>(
       return false;
     }
     
-    const validator = validators[field as keyof T];
-    if (validator && typeof validator === 'function') {
-      const errorMessage = validator(values[field]);
+    if (field in validators && validators[field]) {
+      const errorMessage = validators[field]!(values[field]);
       if (errorMessage) {
         setErrors(prev => ({
           ...prev,
@@ -145,9 +148,8 @@ export function useFormFields<T extends Record<string, any>>(
       }
     });
     
-    Object.keys(validators).forEach(key => {
-      const field = key as keyof T;
-      if (validators[field] && typeof validators[field] === 'function') {
+    (Object.keys(validators) as Array<keyof T>).forEach(field => {
+      if (field in validators && validators[field]) {
         if (!validateField(field)) {
           isValid = false;
         }

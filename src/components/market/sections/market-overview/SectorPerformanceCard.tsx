@@ -2,7 +2,7 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip, Cell } from "recharts";
 
 /**
  * SectorPerformanceCard displays sector performance data in a card format with a bar chart
@@ -38,11 +38,11 @@ export const SectorPerformanceCard: React.FC = () => {
               formatter={(value: number) => [`${value.toFixed(2)}%`, 'Performance']}
               labelFormatter={(label) => `${label}`}
             />
-            <Bar 
-              dataKey="value" 
-              fill={(entry) => entry.value >= 0 ? "#4ade80" : "#f87171"} 
-              radius={4}
-            />
+            <Bar dataKey="value" fill="#9b87f5" radius={4}>
+              {sectorData.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={entry.value >= 0 ? "#4ade80" : "#f87171"} />
+              ))}
+            </Bar>
           </BarChart>
         </ResponsiveContainer>
       </CardContent>

@@ -9,17 +9,17 @@ describe('useUnifiedForm', () => {
     email: z.string().email('Invalid email')
   });
 
-  const defaultValues = {
+  const initialValues = {
     name: '',
     email: ''
   };
 
   it('should initialize with default values', () => {
     const { result } = renderHook(() => 
-      useUnifiedForm({ defaultValues, schema })
+      useUnifiedForm({ initialValues, schema })
     );
 
-    expect(result.current.formState.values).toEqual(defaultValues);
+    expect(result.current.formState.values).toEqual(initialValues);
     expect(result.current.formState.errors).toEqual({});
   });
 

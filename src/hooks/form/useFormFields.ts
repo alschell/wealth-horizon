@@ -2,10 +2,13 @@
 import { useState, useCallback } from 'react';
 import { validateRequiredFields } from '@/utils/validation/formValidation';
 
+// Define a validator function type
+type ValidatorFn = (value: any) => string | null;
+
 interface UseFormFieldsOptions<T> {
   initialValues: T;
   requiredFields?: Array<keyof T>;
-  validators?: Partial<Record<keyof T, (value: any) => string | null>>;
+  validators?: Partial<Record<keyof T, ValidatorFn>>;
 }
 
 /**
@@ -39,9 +42,10 @@ export function useFormFields<T extends Record<string, any>>(
     }
     
     // Run field-specific validator if exists
-    const validator = validators[field as keyof typeof validators];
-    if (validator && typeof validator === 'function') {
-      const validationResult = validator(value);
+    const fieldKey = field as keyof typeof validators;
+    const validatorFn = validators[fieldKey];
+    if (validatorFn && typeof validatorFn === 'function') {
+      const validationResult = validatorFn(value);
       if (validationResult) {
         setErrors(prev => ({ ...prev, [field]: validationResult }));
       }
@@ -66,9 +70,10 @@ export function useFormFields<T extends Record<string, any>>(
     setTouched(prev => ({ ...prev, [field]: true }));
     
     // Validate field on blur
-    const validator = validators[field as keyof typeof validators];
-    if (validator && typeof validator === 'function') {
-      const validationResult = validator(values[field]);
+    const fieldKey = field as keyof typeof validators;
+    const validatorFn = validators[fieldKey];
+    if (validatorFn && typeof validatorFn === 'function') {
+      const validationResult = validatorFn(values[field]);
       if (validationResult) {
         setErrors(prev => ({ ...prev, [field]: validationResult }));
       }
@@ -85,9 +90,9 @@ export function useFormFields<T extends Record<string, any>>(
     // Run field-specific validators
     const validationErrors: Record<string, string> = { ...requiredErrors };
     
-    Object.entries(validators).forEach(([field, validator]) => {
-      if (validator && typeof validator === 'function' && field in values) {
-        const validationResult = validator(values[field as keyof T]);
+    Object.entries(validators).forEach(([field, validatorFn]) => {
+      if (validatorFn && typeof validatorFn === 'function' && field in values) {
+        const validationResult = validatorFn(values[field as keyof T]);
         if (validationResult) {
           validationErrors[field] = validationResult;
         }

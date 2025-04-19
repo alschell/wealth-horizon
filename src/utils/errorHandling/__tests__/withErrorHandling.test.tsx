@@ -1,8 +1,9 @@
+
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { ErrorBoundary, ErrorFallback } from '@/components/error-boundary';
-import { withErrorBoundary } from '../withErrorBoundary';
-import { withCustomErrorFallback } from '../withErrorBoundary';
+import { withErrorBoundary, withCustomErrorFallback } from '@/utils/withErrorBoundary';
+import { withErrorHandling } from '@/hooks/useErrorHandler';
 
 // Mock components for testing
 const WorkingComponent = () => <div>Working Component</div>;

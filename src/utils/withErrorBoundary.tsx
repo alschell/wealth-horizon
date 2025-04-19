@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { ErrorBoundary } from '@/components/error-boundary';
 

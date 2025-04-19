@@ -1,22 +1,37 @@
 
-import { useCallback } from 'react';
+import { useState, useCallback } from 'react';
 
-interface UseFormFieldsOptions<T> {
-  setValues: React.Dispatch<React.SetStateAction<T>>;
-  setTouched: React.Dispatch<React.SetStateAction<Record<string, boolean>>>;
-  clearError: (field: keyof T) => void;
+export interface UseFormFieldsOptions<T> {
+  initialValues: T;
+  requiredFields?: (keyof T)[];
+  validators?: {
+    [key in keyof T]?: (value: any) => string | null;
+  };
 }
 
 /**
  * Hook for managing form field changes and updates
  * 
  * @param options Hook options
- * @returns Form field handler functions
+ * @returns Form state and field handler functions
  */
 export function useFormFields<T extends Record<string, any>>(
   options: UseFormFieldsOptions<T>
 ) {
-  const { setValues, setTouched, clearError } = options;
+  const { initialValues, requiredFields = [], validators = {} } = options;
+  
+  const [values, setValues] = useState<T>(initialValues);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
+  const [isDirty, setIsDirty] = useState(false);
+  
+  const clearError = useCallback((field: keyof T) => {
+    setErrors(prev => {
+      const newErrors = { ...prev };
+      delete newErrors[field as string];
+      return newErrors;
+    });
+  }, []);
 
   const handleChange = useCallback((
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -37,14 +52,19 @@ export function useFormFields<T extends Record<string, any>>(
       ...prev,
       [name]: true
     }));
-  }, [setValues, clearError, setTouched]);
+    
+    setIsDirty(true);
+  }, [clearError]);
 
   const handleBlur = useCallback((field: keyof T) => {
     setTouched(prev => ({
       ...prev,
       [field]: true
     }));
-  }, [setTouched]);
+    
+    // Validate on blur
+    validateField(field);
+  }, []);
 
   const setFieldValue = useCallback((field: keyof T, value: any) => {
     setValues(prev => ({
@@ -58,7 +78,9 @@ export function useFormFields<T extends Record<string, any>>(
       ...prev,
       [field]: true
     }));
-  }, [setValues, clearError, setTouched]);
+    
+    setIsDirty(true);
+  }, [clearError]);
 
   const setFieldValues = useCallback((fields: Partial<T>) => {
     setValues(prev => ({
@@ -81,12 +103,103 @@ export function useFormFields<T extends Record<string, any>>(
         ...touchedFields
       };
     });
-  }, [setValues, clearError, setTouched]);
+    
+    setIsDirty(true);
+  }, [clearError]);
+
+  // Validate a single field
+  const validateField = useCallback((field: keyof T) => {
+    // Check for required field
+    if (requiredFields.includes(field) && (values[field] === undefined || values[field] === null || values[field] === '')) {
+      setErrors(prev => ({
+        ...prev,
+        [field as string]: `${String(field)} is required`
+      }));
+      return false;
+    }
+    
+    // Run custom validator if provided
+    if (validators[field]) {
+      const validatorFn = validators[field];
+      const errorMessage = validatorFn?.(values[field]);
+      
+      if (errorMessage) {
+        setErrors(prev => ({
+          ...prev,
+          [field as string]: errorMessage
+        }));
+        return false;
+      }
+    }
+    
+    // Clear error if validation passes
+    clearError(field);
+    return true;
+  }, [values, requiredFields, validators, clearError]);
+
+  // Validate all fields
+  const validateFields = useCallback(() => {
+    let isValid = true;
+    
+    // Mark all fields as touched
+    const allTouched = Object.keys(values).reduce((acc, key) => {
+      acc[key] = true;
+      return acc;
+    }, {} as Record<string, boolean>);
+    
+    setTouched(allTouched);
+    
+    // Validate required fields
+    requiredFields.forEach(field => {
+      if (values[field] === undefined || values[field] === null || values[field] === '') {
+        setErrors(prev => ({
+          ...prev,
+          [field as string]: `${String(field)} is required`
+        }));
+        isValid = false;
+      }
+    });
+    
+    // Run custom validators
+    Object.keys(validators).forEach(key => {
+      const field = key as keyof T;
+      const validatorFn = validators[field];
+      
+      if (validatorFn) {
+        const errorMessage = validatorFn(values[field]);
+        
+        if (errorMessage) {
+          setErrors(prev => ({
+            ...prev,
+            [field as string]: errorMessage
+          }));
+          isValid = false;
+        }
+      }
+    });
+    
+    return isValid;
+  }, [values, requiredFields, validators]);
+
+  // Reset form to initial state
+  const resetForm = useCallback(() => {
+    setValues(initialValues);
+    setErrors({});
+    setTouched({});
+    setIsDirty(false);
+  }, [initialValues]);
 
   return {
+    values,
+    errors,
+    touched,
+    isDirty,
+    isValid: Object.keys(errors).length === 0,
     handleChange,
     handleBlur,
     setFieldValue,
-    setFieldValues
+    setFieldValues,
+    validateFields,
+    resetForm
   };
 }

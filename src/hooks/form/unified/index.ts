@@ -9,7 +9,6 @@
 
 export { useUnifiedForm } from './useUnifiedForm';
 export { useFormFieldHandlers } from '../handlers/useFormFieldHandlers';
-export { useFormSubmissionState } from '../submission/useFormSubmissionState';
 export { useFormSubmission } from '../useFormSubmission';
 export { useFormState } from '../useFormState';
 export { useFormValidation } from '../useFormValidation';

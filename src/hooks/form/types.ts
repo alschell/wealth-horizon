@@ -55,12 +55,25 @@ export interface FormHelpers<T> {
  * Form submission options
  */
 export interface FormSubmissionOptions<T> {
+  /** Callback executed after successful submission */
   onSuccess?: () => void;
+  
+  /** Callback executed when an error occurs */
   onError?: (error: unknown) => void;
+  
+  /** Success message to display */
   successMessage?: string;
+  
+  /** Error message to display on failure */
   errorMessage?: string;
+  
+  /** Function to validate form before submission */
+  validateForm?: (data: T) => boolean | Promise<boolean>;
+  
+  /** Whether to reset form state after submission */
   resetAfterSubmit?: boolean;
-  validateForm?: ((data: T) => boolean | Promise<boolean>) | (() => boolean | Promise<boolean>);
+  
+  /** Function to reset form state */
   resetForm?: () => void;
 }
 

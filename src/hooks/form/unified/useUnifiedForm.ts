@@ -1,3 +1,4 @@
+
 import { useCallback } from 'react';
 import { useFormFields } from '../useFormFields';
 import { useFormValidation } from '../useFormValidation';
@@ -24,10 +25,11 @@ export function useUnifiedForm<T extends Record<string, any>>(
     successMessage = 'Form submitted successfully',
     errorMessage = 'An error occurred during submission',
     requiredFields = [],
-    validators = {}
+    validators = {},
+    resetAfterSubmit = false
   } = props;
   
-  // Use the new useFormFields hook for managing form state
+  // Use the form fields hook for managing form state
   const {
     values,
     errors,
@@ -55,18 +57,20 @@ export function useUnifiedForm<T extends Record<string, any>>(
     setFieldError,
     clearFieldError
   } = useFormValidation<T>({
-    validators: {},
+    validators: validators,
     requiredFields,
     setErrors: () => {} // This is handled by useFormFields now
   });
   
   // Validate form with current values
   const validateForm = useCallback((): boolean => {
-    return validateWithValidators(values);
-  }, [validateWithValidators, values]);
+    return validateFields(values);
+  }, [validateFields, values]);
   
   // Initialize form submission
   const {
+    isSubmitting, 
+    isSuccess,
     createSubmitHandler
   } = useFormSubmission<T>();
   
@@ -76,11 +80,11 @@ export function useUnifiedForm<T extends Record<string, any>>(
     {
       successMessage,
       errorMessage,
-      validateForm: validateFields,
+      validateForm: validateForm,
       onSuccess,
       onError,
-      resetAfterSubmit: false,
-      resetForm: resetForm
+      resetAfterSubmit,
+      resetForm
     }
   );
   
@@ -95,24 +99,21 @@ export function useUnifiedForm<T extends Record<string, any>>(
     [submitHandler, values]
   );
   
-  // Create formState object for backwards compatibility
-  const formState = {
-    values,
-    errors,
-    touched,
-    isDirty,
-    isSubmitting: false, // This would be handled by useFormSubmission
-    isSuccess: false     // This would be handled by useFormSubmission
-  };
-  
   return {
-    formState,
+    formState: {
+      values,
+      errors,
+      touched,
+      isDirty,
+      isSubmitting,
+      isSuccess
+    },
     values,
     errors,
     touched,
     isDirty,
-    isSubmitting: false,
-    isSuccess: false,
+    isSubmitting,
+    isSuccess,
     handleChange,
     handleBlur,
     setFieldValue,

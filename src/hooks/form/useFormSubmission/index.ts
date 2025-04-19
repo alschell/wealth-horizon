@@ -4,12 +4,24 @@ import { useIsComponentMounted } from '@/hooks/useIsComponentMounted';
 import { showSuccess, showError } from '@/utils/toast';
 import type { FormSubmissionOptions } from '../types';
 
+/**
+ * Hook for managing form submission
+ * 
+ * @returns Functions and state for handling form submissions
+ */
 export function useFormSubmission<T>() {
   const isMounted = useIsComponentMounted();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [lastError, setLastError] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState(false);
 
+  /**
+   * Creates a submit handler with the given submission function and options
+   * 
+   * @param onSubmit Function to call with form data
+   * @param options Submission options
+   * @returns Submit handler function
+   */
   const createSubmitHandler = useCallback(
     (
       onSubmit: (data: T) => Promise<void> | void,

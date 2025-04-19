@@ -42,10 +42,9 @@ export function useFormFields<T extends Record<string, any>>(
     }
     
     // Run field-specific validator if exists
-    const fieldKey = field as keyof T;
-    // Check if the field exists in validators using JavaScript's hasOwnProperty
+    const fieldKey = field as string;
     if (Object.prototype.hasOwnProperty.call(validators, fieldKey)) {
-      const validator = validators[fieldKey];
+      const validator = validators[fieldKey as keyof typeof validators];
       if (validator) {
         const validationResult = validator(value);
         if (validationResult) {
@@ -73,10 +72,9 @@ export function useFormFields<T extends Record<string, any>>(
     setTouched(prev => ({ ...prev, [field]: true }));
     
     // Validate field on blur
-    const fieldKey = field as keyof T;
-    // Check if the field exists in validators using JavaScript's hasOwnProperty
+    const fieldKey = field as string;
     if (Object.prototype.hasOwnProperty.call(validators, fieldKey)) {
-      const validator = validators[fieldKey];
+      const validator = validators[fieldKey as keyof typeof validators];
       if (validator) {
         const validationResult = validator(values[field]);
         if (validationResult) {
@@ -97,15 +95,14 @@ export function useFormFields<T extends Record<string, any>>(
     const validationErrors: Record<string, string> = { ...requiredErrors };
     
     Object.keys(validators).forEach((fieldName) => {
-      const field = fieldName as keyof T;
-      // Check if the field exists in validators using JavaScript's hasOwnProperty
+      const field = fieldName as string;
       if (Object.prototype.hasOwnProperty.call(validators, field)) {
-        const validator = validators[field];
+        const validator = validators[field as keyof typeof validators];
         
         if (validator && field in values) {
-          const validationResult = validator(values[field]);
+          const validationResult = validator(values[field as keyof T]);
           if (validationResult) {
-            validationErrors[field as string] = validationResult;
+            validationErrors[field] = validationResult;
           }
         }
       }

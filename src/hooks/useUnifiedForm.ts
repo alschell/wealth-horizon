@@ -1,8 +1,9 @@
+
 import { useState, useCallback } from 'react';
 import { getErrorMessage, parseError } from '@/utils/errorHandling';
 import { showSuccess } from '@/utils/toast';
 import { useFormSubmission } from './form/useFormSubmission';
-import type { FormSubmissionOptions } from './form/useFormSubmission/types';
+// Removed the conflicting import
 
 /**
  * Options for form submission
@@ -124,16 +125,18 @@ export function useUnifiedForm<T extends Record<string, any>>(initialData: T) {
     submitFn: (data: T) => Promise<void>,
     options: FormSubmissionOptions<T> = {}
   ) => {
-    const compatibleOptions: FormSubmissionOptions<T> = {
+    // Create a compatible options object to pass to the form submission hook
+    const formSubmissionOptions = {
       ...options,
       resetForm: resetForm
     };
     
-    if ('logToConsole' in compatibleOptions) {
-      delete (compatibleOptions as any).logToConsole;
+    // Remove logToConsole as it's not part of the form submission hook options
+    if ('logToConsole' in formSubmissionOptions) {
+      delete (formSubmissionOptions as any).logToConsole;
     }
     
-    const submitHandler = createSubmitHandler(submitFn, compatibleOptions);
+    const submitHandler = createSubmitHandler(submitFn, formSubmissionOptions);
     return submitHandler(formData);
   }, [formData, resetForm, createSubmitHandler]);
 

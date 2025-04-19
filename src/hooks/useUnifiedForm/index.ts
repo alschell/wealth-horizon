@@ -49,8 +49,8 @@ export function useUnifiedForm<T extends Record<string, any>>(props: UseUnifiedF
       setErrors((prevErrors) => {
         const newErrors = { ...prevErrors };
         delete newErrors[field as string];
-        return newErrors;
-      } as any);
+        return newErrors as any;
+      });
     },
     setTouched
   });

@@ -6,9 +6,10 @@ export interface ErrorFallbackProps {
   resetErrorBoundary?: () => void;
   title?: string;
   message?: string;
+  description?: string;
   showReset?: boolean;
+  showResetButton?: boolean;
   resetText?: string;
   showDetails?: boolean;
   errorInfo?: ErrorInfo;
-  description?: string;
 }

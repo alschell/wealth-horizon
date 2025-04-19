@@ -37,8 +37,8 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
           error={this.state.error}
           resetErrorBoundary={this.props.resetErrorBoundary}
           title={`Error in ${this.props.componentName || 'component'}`}
-          errorInfo={this.state.errorInfo}
-          showDetails={true}
+          description={this.state.errorInfo?.componentStack}
+          showResetButton={true}
         />
       );
     }

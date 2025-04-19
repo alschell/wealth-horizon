@@ -63,8 +63,8 @@ export function useErrorBoundary(config: ErrorBoundaryConfig = {}) {
               error={new Error(message)} 
               resetErrorBoundary={resetErrorBoundary}
               title="Error Occurred" 
-              message={message}
-              showReset={showReset}
+              description={message}
+              showResetButton={showReset}
             />
           )
         }

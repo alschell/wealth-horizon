@@ -1,4 +1,3 @@
-
 import React from "react";
 import { FadeIn, ScaleIn } from "@/components/ui/animation";
 import { Layers, Zap, Building2, Brain } from "lucide-react";
@@ -36,17 +35,11 @@ const WhyWHSection: React.FC = () => {
             <h2 className="text-3xl md:text-4xl font-bold text-center">
               <TranslatedText>Why </TranslatedText><span className="text-indigo-600">Wealth</span><span className="text-gray-900">Horizon</span>
             </h2>
-            <div className="mt-4 text-xl text-gray-600 max-w-3xl mx-auto">
-              <div className="text-center">
-                <TranslatedText>
-                  Discover why leading family offices and institutions choose our platform
-                </TranslatedText>
-              </div>
-              <div className="text-center">
-                <TranslatedText>
-                  for their wealth management needs
-                </TranslatedText>
-              </div>
+            <div className="mt-4 text-xl text-gray-600 max-w-3xl mx-auto text-center">
+              <TranslatedText>
+                Discover why leading family offices and institutions choose our platform
+                for their wealth management needs
+              </TranslatedText>
             </div>
           </div>
         </FadeIn>

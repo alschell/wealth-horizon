@@ -8,7 +8,7 @@ import type { Validator } from './validators';
 interface UseFormValidationOptions<T> {
   validators: Record<string, Validator>;
   requiredFields: (keyof T)[];
-  setErrors: (errors: Record<string, string>) => void;
+  setErrors: React.Dispatch<React.SetStateAction<Record<string, string>>>;
 }
 
 /**
@@ -42,10 +42,12 @@ export function useFormValidation<T extends Record<string, any>>(options: UseFor
       }
     });
     
+    // Replace all errors with the validation results
     setErrors(errors);
     return Object.keys(errors).length === 0;
   }, [validators, requiredFields, setErrors]);
 
+  // Set a specific field error
   const setFieldError = useCallback((field: keyof T, message: string) => {
     setErrors(prev => ({
       ...prev,
@@ -53,6 +55,7 @@ export function useFormValidation<T extends Record<string, any>>(options: UseFor
     }));
   }, [setErrors]);
 
+  // Clear a specific field error
   const clearFieldError = useCallback((field: keyof T) => {
     setErrors(prev => {
       const newErrors = { ...prev };

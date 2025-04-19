@@ -1,4 +1,3 @@
-
 import type { Validator } from '@/hooks/form/validators/validatorUtils';
 
 /**
@@ -25,26 +24,25 @@ export const validateRequiredFields = <T extends Record<string, any>>(
 };
 
 /**
- * Creates an error clearing function
+ * Creates an error clearing function with proper typing
  */
-export const createErrorClearer = <T>(
+export const createErrorClearer = <T extends Record<string, any>>(
   setErrors: React.Dispatch<React.SetStateAction<Record<string, string>>>
 ): (field: keyof T) => void => {
   return (field: keyof T) => {
     setErrors(prev => {
-      const newErrors = { ...prev };
-      delete newErrors[field as string];
-      return newErrors;
+      const { [field as string]: _, ...rest } = prev;
+      return rest;
     });
   };
 };
 
 /**
- * Validates a single field using its validator
+ * Validates a single field with improved type safety
  */
-export const validateField = <T>(
+export const validateField = <T extends Record<string, any>>(
   field: keyof T,
-  value: any,
+  value: T[keyof T],
   validator: Validator
 ): string | null => {
   try {
@@ -56,7 +54,7 @@ export const validateField = <T>(
 };
 
 /**
- * Validates multiple fields using their validators
+ * Validates multiple fields with proper typing
  */
 export const validateFields = <T extends Record<string, any>>(
   values: T,

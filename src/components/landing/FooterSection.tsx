@@ -28,7 +28,7 @@ const FooterSection: React.FC = () => {
               <span className="text-white">Horizon</span>
             </h3>
             <p className="mb-4">
-              <TranslatedText>Holistic wealth management for family offices and institutions.</TranslatedText>
+              <TranslatedText>Holistic wealth management for family offices and institutions</TranslatedText>
             </p>
             <SocialLinks />
           </div>

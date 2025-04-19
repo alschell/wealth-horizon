@@ -8,7 +8,7 @@ const WhyWHSection: React.FC = () => {
   const reasons = [
     {
       title: "Holistic Wealth Management",
-      description: "Efficiently manage all your assets across multiple financial institutions in one centralized platform. WealthHorizon consolidates your entire portfolio, streamlining the complexities of navigating disparate banking systems, providing a unified view of your wealth.",
+      description: "Efficiently manage all your assets across multiple financial institutions in one centralized platform. WealthHorizon consolidates your entire portfolio, streamlining the complexities of navigating disparate banking systems, providing a unified view of your wealth",
       icon: <WalletCards size={28} />
     },
     {
@@ -54,13 +54,15 @@ const WhyWHSection: React.FC = () => {
           {reasons.map((reason, index) => (
             <ScaleIn key={index} delay={0.1 * index}>
               <div className="flex flex-col h-full p-6 border border-gray-100 rounded-xl shadow-sm hover:shadow-md transition-shadow bg-white">
-                <div className="w-12 h-12 mx-auto mb-4 flex items-center justify-center rounded-full bg-indigo-50 text-indigo-600">
-                  {reason.icon}
+                <div className="flex flex-col items-center mb-4">
+                  <div className="w-12 h-12 mx-auto mb-4 flex items-center justify-center rounded-full bg-indigo-50 text-indigo-600">
+                    {reason.icon}
+                  </div>
+                  <h3 className="text-xl font-semibold text-center text-gray-900">
+                    <TranslatedText>{reason.title}</TranslatedText>
+                  </h3>
                 </div>
-                <h3 className="text-xl font-semibold mb-2 text-center text-gray-900">
-                  <TranslatedText>{reason.title}</TranslatedText>
-                </h3>
-                <p className="text-gray-600 flex-grow text-center">
+                <p className="text-gray-600 text-left flex-grow">
                   <TranslatedText>{reason.description}</TranslatedText>
                 </p>
               </div>

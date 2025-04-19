@@ -1,33 +1,23 @@
 
-import { useMemo } from 'react';
+import { useCallback } from 'react';
 
 /**
- * Hook that provides memoized validation utility functions
+ * Hook for form validation utilities
  * 
- * @param errors Form error records
+ * @param errors Current form errors
  * @returns Validation utility functions
  */
 export function useFormValidationUtils(errors: Record<string, string>) {
-  /**
-   * Check if a field has an error
-   */
-  const hasError = useMemo(
-    () => (field: string): boolean => {
-      return Boolean(errors[field]);
-    },
+  const hasError = useCallback(
+    (field: string) => Boolean(errors[field]),
     [errors]
   );
-  
-  /**
-   * Get error message for a field
-   */
-  const getErrorMessage = useMemo(
-    () => (field: string): string => {
-      return errors[field] || '';
-    },
+
+  const getErrorMessage = useCallback(
+    (field: string) => errors[field] || '',
     [errors]
   );
-  
+
   return {
     hasError,
     getErrorMessage

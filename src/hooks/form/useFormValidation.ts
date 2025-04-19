@@ -1,83 +1,66 @@
 
 import { useCallback } from 'react';
-import { Validator, createFormValidator } from '@/utils/validation/core';
+import type { Validator } from './validators';
 
 /**
- * Options for form validation
+ * Options for form validation hook
  */
 interface UseFormValidationOptions<T> {
-  /**
-   * Custom field validators
-   */
-  validators?: Partial<Record<keyof T, Validator>>;
-  
-  /**
-   * Required fields in the form
-   */
-  requiredFields?: Array<keyof T>;
-  
-  /**
-   * Function to set form errors
-   */
-  setErrors: React.Dispatch<React.SetStateAction<Record<string, string>>>;
+  validators: Record<string, Validator>;
+  requiredFields: (keyof T)[];
+  setErrors: (errors: Record<string, string>) => void;
 }
 
 /**
  * Hook for form validation
  * 
  * @param options Validation options
- * @returns Form validation utilities
+ * @returns Validation functions
  */
-export function useFormValidation<T extends Record<string, any>>(
-  options: UseFormValidationOptions<T>
-) {
-  const { validators = {}, requiredFields = [], setErrors } = options;
-  
-  /**
-   * Validate form data
-   */
-  const validateForm = useCallback(
-    (values: T): boolean => {
-      // Create a validator function from field validators
-      const validate = createFormValidator<T>(validators);
-      
-      // Run validation and update errors
-      const validationErrors = validate(values);
-      setErrors(validationErrors);
-      
-      // Return whether form is valid
-      return Object.keys(validationErrors).length === 0;
-    },
-    [validators, setErrors]
-  );
-  
-  /**
-   * Set a field error
-   */
-  const setFieldError = useCallback(
-    (field: keyof T, message: string) => {
-      setErrors(prev => ({
-        ...prev,
-        [field as string]: message
-      }));
-    },
-    [setErrors]
-  );
-  
-  /**
-   * Clear a field error
-   */
-  const clearFieldError = useCallback(
-    (field: keyof T) => {
-      setErrors(prev => {
-        const newErrors = { ...prev };
-        delete newErrors[field as string];
-        return newErrors;
-      });
-    },
-    [setErrors]
-  );
-  
+export function useFormValidation<T extends Record<string, any>>(options: UseFormValidationOptions<T>) {
+  const { validators, requiredFields, setErrors } = options;
+
+  const validateForm = useCallback((values: T) => {
+    const errors: Record<string, string> = {};
+    
+    // Validate required fields
+    requiredFields.forEach(field => {
+      const value = values[field];
+      if (value === undefined || value === null || value === '' || 
+          (Array.isArray(value) && value.length === 0)) {
+        errors[field as string] = `${String(field)} is required`;
+      }
+    });
+    
+    // Apply custom validators
+    Object.entries(validators).forEach(([field, validator]) => {
+      if (!errors[field] && validator && typeof validator === 'function') {
+        const message = validator(values[field as keyof T]);
+        if (message) {
+          errors[field] = message;
+        }
+      }
+    });
+    
+    setErrors(errors);
+    return Object.keys(errors).length === 0;
+  }, [validators, requiredFields, setErrors]);
+
+  const setFieldError = useCallback((field: keyof T, message: string) => {
+    setErrors(prev => ({
+      ...prev,
+      [field as string]: message
+    }));
+  }, [setErrors]);
+
+  const clearFieldError = useCallback((field: keyof T) => {
+    setErrors(prev => {
+      const newErrors = { ...prev };
+      delete newErrors[field as string];
+      return newErrors;
+    });
+  }, [setErrors]);
+
   return {
     validateForm,
     setFieldError,

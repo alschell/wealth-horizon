@@ -1,7 +1,12 @@
 
-export * from './useUnifiedForm';
+/**
+ * Unified form module
+ * 
+ * This module exports the unified form hook and related types.
+ * It provides a complete solution for form state management,
+ * validation, and submission.
+ */
+
+export { useUnifiedForm } from './useUnifiedForm';
 export * from './types';
-export * from './validation';
-export * from './useFormFields';
-export * from './useFormValidation';
-export * from './useFormSubmission';
+export * from './utils';

@@ -1,10 +1,19 @@
 
 /**
- * Configuration constants for unified form hooks
+ * Configuration for form hooks
  */
+
 export const FORM_CONFIG = {
   defaultSuccessMessage: 'Form submitted successfully',
   defaultErrorMessage: 'An error occurred. Please try again.',
-  defaultDebounceTime: 300,
-  resetTimeout: 3000
+  validationOptions: {
+    validateOnChange: true,
+    validateOnBlur: true,
+    validateOnSubmit: true,
+  },
+  submissionConfig: {
+    resetAfterSubmit: false,
+    showSuccessNotification: true,
+    showErrorNotification: true,
+  }
 };

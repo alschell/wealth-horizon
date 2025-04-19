@@ -48,6 +48,7 @@ export interface UseUnifiedFormReturn<T> extends FormActions<T>, FormHelpers<T> 
   isDirty: boolean;
   isSubmitting: boolean;
   isSuccess: boolean;
+  validateFields?: () => boolean; // Added for test compatibility
 }
 
 export interface UseUnifiedFormProps<T> {
@@ -60,4 +61,5 @@ export interface UseUnifiedFormProps<T> {
   errorMessage?: string;
   requiredFields?: (keyof T)[];
   validators?: Partial<Record<keyof T, Validator>>;
+  resetAfterSubmit?: boolean; // Added the missing property
 }

@@ -121,12 +121,10 @@ export function useFormFields<T extends Record<string, any>>(
     }
     
     // Run custom validator if provided
-    // Use a safer approach to check if the field is in validators
     const fieldKey = field as string;
-    const hasValidator = fieldKey in validators && validators[field] !== undefined;
-    
-    if (hasValidator) {
-      const validatorFn = validators[field];
+    // Safely check if there's a validator for this field
+    if (validators && Object.prototype.hasOwnProperty.call(validators, fieldKey)) {
+      const validatorFn = validators[field as keyof typeof validators];
       if (validatorFn) {
         const errorMessage = validatorFn(values[field]);
         
@@ -170,27 +168,29 @@ export function useFormFields<T extends Record<string, any>>(
       }
     });
     
-    // Fix the type issue by checking each field properly
-    Object.keys(validators).forEach(key => {
-      const field = key as keyof T;
-      const fieldKey = field as string;
-      const hasValidator = fieldKey in validators && validators[field] !== undefined;
-      
-      if (hasValidator) {
-        const validatorFn = validators[field];
-        if (validatorFn) {
-          const errorMessage = validatorFn(values[field]);
-          
-          if (errorMessage) {
-            setErrors(prev => ({
-              ...prev,
-              [field as string]: errorMessage
-            }));
-            isValid = false;
+    // Safely validate using custom validators
+    if (validators) {
+      Object.keys(validators).forEach(key => {
+        const field = key as keyof T;
+        const fieldKey = field as string;
+        
+        // Safely check if there's a validator for this field
+        if (Object.prototype.hasOwnProperty.call(validators, fieldKey)) {
+          const validatorFn = validators[field as keyof typeof validators];
+          if (validatorFn) {
+            const errorMessage = validatorFn(values[field]);
+            
+            if (errorMessage) {
+              setErrors(prev => ({
+                ...prev,
+                [field as string]: errorMessage
+              }));
+              isValid = false;
+            }
           }
         }
-      }
-    });
+      });
+    }
     
     return isValid;
   }, [values, requiredFields, validators]);

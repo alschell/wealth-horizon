@@ -54,8 +54,8 @@ const TestimonialsSection: React.FC = () => {
                     {testimonial.name.charAt(0)}
                   </div>
                   <div className="ml-4 text-center">
-                    <p className="font-semibold text-gray-900">{testimonial.name}</p>
-                    <p className="text-sm text-gray-600">{testimonial.position}</p>
+                    <p className="font-semibold text-gray-900 text-center">{testimonial.name}</p>
+                    <p className="text-sm text-gray-600 text-center">{testimonial.position}</p>
                   </div>
                 </div>
               </div>

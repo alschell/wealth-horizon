@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { MarketSummaryCard } from '../../components/MarketSummaryCard';
+import { AssetClassesCard } from './AssetClassesCard';
 
 interface MarketSummaryProps {
   marketData: Array<{

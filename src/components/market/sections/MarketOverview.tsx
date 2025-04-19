@@ -4,6 +4,8 @@ import { motion } from "framer-motion";
 import { MarketSummarySection } from "./market-overview/MarketSummarySection";
 import { MarketChart } from "./market-overview/MarketChart";
 import { CommoditiesSection } from "./market-overview/CommoditiesSection";
+import { SectorPerformanceCard } from "./market-overview/SectorPerformanceCard";
+import { CommoditiesCard } from "./market-overview/CommoditiesCard";
 
 const MarketOverview = () => {
   // Mock data - in a real app, this would come from an API

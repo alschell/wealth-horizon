@@ -18,6 +18,7 @@ export const sanitizeHtml = (unsafeString: string): string => {
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#039;')
     .replace(/javascript:/gi, 'removed:')
+    .replace(/vbscript:/gi, 'removed:') // Prevent vbscript: URLs which can be used for XSS
     .replace(/on\w+=/gi, 'data-removed=')
     .replace(/data:/gi, 'removed:'); // Prevent data: URLs which can be used for XSS
 };
@@ -70,6 +71,7 @@ export const sanitizeHtmlAttribute = (attributeValue: string): string => {
     .replace(/>/g, '&gt;')
     .replace(/</g, '&lt;')
     .replace(/javascript:/gi, 'removed:')
+    .replace(/vbscript:/gi, 'removed:') // Prevent vbscript: URLs which can be used for XSS
     .replace(/data:/gi, 'removed:');
 };
 

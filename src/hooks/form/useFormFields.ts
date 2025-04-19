@@ -176,7 +176,7 @@ export function useFormFields<T extends Record<string, any>>(options: UseFormFie
     
     // Apply custom validators
     Object.entries(validators).forEach(([field, validator]) => {
-      if (validator) {
+      if (validator && typeof validator === 'function') {
         const message = validator(values[field as keyof T]);
         if (message) {
           newErrors[field] = message;

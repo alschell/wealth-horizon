@@ -1,7 +1,5 @@
-
 import React, { useState, useCallback } from 'react';
-import ErrorBoundary from '@/components/common/ErrorBoundary';
-import ErrorFallback from '@/components/common/ErrorFallback';
+import { ErrorBoundary, ErrorFallback } from '@/components/error-boundary';
 import { useNotifications } from '@/hooks/use-notifications';
 
 interface ErrorBoundaryConfig {

@@ -18,10 +18,11 @@ export {
   type ErrorHandlerOptions
 } from './errorHandlingCore';
 
-// Re-export error boundary HOCs from common components
+// Re-export error boundary components
 export { 
-  withErrorBoundary
-} from '@/components/common/ErrorBoundary';
+  ErrorBoundary,
+  ErrorFallback 
+} from '@/components/error-boundary';
 
 // Re-export error hook for functional components
 export { useErrorHandler } from '@/hooks/useErrorHandler';

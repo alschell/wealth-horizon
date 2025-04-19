@@ -1,10 +1,9 @@
-
 import React, { Suspense, useCallback } from "react";
 import { Helmet } from "react-helmet-async";
 import { Users } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import PageTemplate from "@/components/shared/PageTemplate";
-import ErrorBoundary from "@/components/common/ErrorBoundary";
+import { ErrorBoundary } from "@/components/error-boundary";
 import TeamLoadingSkeleton from "@/components/team/TeamLoadingSkeleton";
 import { 
   LeadershipSection, 

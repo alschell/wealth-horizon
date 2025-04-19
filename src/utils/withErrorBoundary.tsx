@@ -1,6 +1,5 @@
-
 import React from 'react';
-import ErrorBoundary from '@/components/common/ErrorBoundary';
+import { ErrorBoundary } from '@/components/error-boundary';
 
 interface WithErrorBoundaryOptions {
   fallback?: React.ReactNode;

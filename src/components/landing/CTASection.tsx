@@ -17,10 +17,10 @@ const CTASection: React.FC = () => {
       <div className="max-w-7xl mx-auto px-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <FadeIn>
-            <h2 className="text-3xl md:text-4xl font-bold text-white">
+            <h2 className="text-3xl md:text-4xl font-bold text-white text-center">
               <TranslatedText>Ready to Optimize Your Wealth Management?</TranslatedText>
             </h2>
-            <p className="mt-4 text-xl text-indigo-100 max-w-2xl">
+            <p className="mt-4 text-xl text-indigo-100 max-w-2xl mx-auto text-center">
               <TranslatedText>
                 Join leading family offices and institutions that have transformed their operations with 
               </TranslatedText>
@@ -31,7 +31,7 @@ const CTASection: React.FC = () => {
             </p>
           </FadeIn>
           <FadeIn delay={0.2}>
-            <div className="flex flex-col sm:flex-row gap-4 justify-end">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button 
                 size="lg" 
                 className="bg-black hover:bg-gray-800 text-white text-md px-8"

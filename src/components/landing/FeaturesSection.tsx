@@ -1,41 +1,41 @@
 
 import React from "react";
 import { FadeIn, ScaleIn, StaggerContainer, StaggerItem } from "@/components/ui/animation";
-import { LineChart, Shield, BarChart3, FileText, Users, Lock, LucideIcon } from "lucide-react";
+import { Search, ChartBar, Wallet, Database, FileText, Shield } from "lucide-react";
 import DashboardAnimation from "@/components/animations/DashboardAnimation";
 import TranslatedText from "@/components/ui/translated-text";
 
 // Define the features with the correct icon type and sort them alphabetically
 const features = [
   {
-    title: "Compliance Management",
-    description: "Stay ahead of regulatory requirements with automated compliance monitoring.",
+    title: "Access market data and news",
+    description: "Stay informed with up-to-the-minute market data and news. Access critical, real-time information to make informed investment decisions quickly and confidently.",
+    icon: Database
+  },
+  {
+    title: "Create customized reports",
+    description: "Seamlessly create comprehensive financial reports and statements that meet the specific needs of your organization. Track performance trends, assess your financial standing and facilitate clear communication with stakeholders using visually engaging summaries.",
+    icon: FileText
+  },
+  {
+    title: "Identify opportunities",
+    description: "Leverage advanced portfolio tools and benchmarks for in-depth insights. Effortlessly assess your financial health and make strategic decisions aligned with your financial objectives.",
+    icon: Search
+  },
+  {
+    title: "Manage your financial data",
+    description: "Take control and ownership of your data. Manage user access with granular, role-based permissions to ensure security. Share your data securely, temporarily or permanently, internally or with third parties as needed.",
+    icon: Database
+  },
+  {
+    title: "Monitor risks and stay compliant",
+    description: "Seamlessly monitor and manage financial risks while staying compliant with regulatory standards. Identify potential risks, track compliance requirements, and receive clear, actionable insights tailored to your needs.",
     icon: Shield
   },
   {
-    title: "Comprehensive Dashboard",
-    description: "Get a holistic view of your wealth across all your banks, brokers and custodians.",
-    icon: LineChart
-  },
-  {
-    title: "Real-time Analytics",
-    description: "Monitor your investments with real-time updates and customizable dashboards.",
-    icon: BarChart3
-  },
-  {
-    title: "Risk Management",
-    description: "Identify and mitigate risks with our sophisticated analysis tools.",
-    icon: BarChart3
-  },
-  {
-    title: "Secure Collaboration",
-    description: "Invite team members and stakeholders to the platform.",
-    icon: Users
-  },
-  {
-    title: "Advanced Reporting",
-    description: "Create custom reports with detailed insights and easy-to-understand visualizations.",
-    icon: FileText
+    title: "Optimize your liquidity and place term deposits",
+    description: "Enhance your liquidity management with advanced tools designed for effective cash flow monitoring. Strategically allocate term deposits to optimize returns while ensuring you maintain the liquidity necessary for immediate operational needs.",
+    icon: Wallet
   }
 ].sort((a, b) => a.title.localeCompare(b.title));
 
@@ -49,10 +49,10 @@ const FeaturesSection: React.FC<FeaturesSectionProps> = ({ id }) => {
       <div className="max-w-7xl mx-auto px-6">
         <FadeIn>
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 text-center" style={{ textAlign: 'center' }}>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 text-center">
               <TranslatedText>Transform Your Wealth Management</TranslatedText>
             </h2>
-            <p className="mt-4 text-xl text-gray-600 max-w-3xl mx-auto text-center" style={{ textAlign: 'center' }}>
+            <p className="mt-4 text-xl text-gray-600 max-w-3xl mx-auto text-center">
               <TranslatedText>
                 Experience a new level of efficiency, insight, and control with WealthHorizon
               </TranslatedText>

@@ -7,6 +7,7 @@ import { AlertCircle, RefreshCw } from 'lucide-react';
 
 /**
  * Fallback component for error boundaries
+ * Displays user-friendly error messages with optional reset functionality
  */
 const ErrorFallback: React.FC<ErrorFallbackProps> = ({ 
   error, 

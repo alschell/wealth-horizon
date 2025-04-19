@@ -3,6 +3,7 @@ import { ErrorInfo } from 'react';
 
 /**
  * Props for the ErrorFallback component
+ * Provides consistent error display across the application
  */
 export interface ErrorFallbackProps {
   /** The error that was caught */

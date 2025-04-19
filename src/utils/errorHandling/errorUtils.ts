@@ -10,6 +10,9 @@ export interface ErrorResponse {
 
 /**
  * Extracts error message from any error type
+ * @param error - The error to extract a message from
+ * @param fallbackMessage - Default message if none can be extracted
+ * @returns A human-readable error message
  */
 export function getErrorMessage(error: unknown, fallbackMessage = "An unexpected error occurred"): string {
   if (error instanceof Error) {
@@ -29,6 +32,8 @@ export function getErrorMessage(error: unknown, fallbackMessage = "An unexpected
 
 /**
  * Parses an error into a standardized format
+ * @param error - The error to parse
+ * @returns A standardized error response object
  */
 export function parseError(error: unknown): ErrorResponse {
   if (error instanceof Error) {
@@ -64,6 +69,8 @@ export function parseError(error: unknown): ErrorResponse {
 
 /**
  * Logs an error to the console with optional component context
+ * @param error - The error to log
+ * @param componentName - Optional component name for context
  */
 export function logError(error: unknown, componentName?: string): void {
   console.error(`Error${componentName ? ` in ${componentName}` : ''}:`, error);
@@ -74,6 +81,9 @@ export function logError(error: unknown, componentName?: string): void {
 
 /**
  * Creates an error with component context in the message
+ * @param message - The base error message
+ * @param componentName - The component name to include
+ * @returns A new Error with context
  */
 export function createContextualError(message: string, componentName: string): Error {
   return new Error(`[${componentName}] ${message}`);

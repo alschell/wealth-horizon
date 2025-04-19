@@ -26,8 +26,8 @@ type SectionId = typeof SECTION_IDS[number];
  * Main landing page layout component that organizes all landing page sections
  */
 const LandingLayout: React.FC = () => {
-  // Create refs for each section using the hook
-  const { sectionRefs, scrollToSection } = useScrollToSection<SectionId>(SECTION_IDS);
+  // Create refs for each section using the hook - remove the type parameter to fix the error
+  const { sectionRefs, scrollToSection } = useScrollToSection(SECTION_IDS);
   
   // Memoize the section map to prevent unnecessary re-renders
   const sectionComponents = useMemo(() => ({

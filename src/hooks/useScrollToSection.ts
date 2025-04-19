@@ -4,7 +4,7 @@ import { useRef, useCallback, useMemo } from 'react';
 /**
  * Type definition for section references
  */
-type SectionRefs = Record<string, React.RefObject<HTMLDivElement>>;
+type SectionRefs<T extends string> = Record<T, React.RefObject<HTMLDivElement>>;
 
 /**
  * Options for scrolling behavior
@@ -22,16 +22,16 @@ interface ScrollOptions {
  * @param defaultOptions - Default scroll options
  * @returns An object containing section refs and a function to scroll to a section
  */
-export const useScrollToSection = (
-  sectionIds: string[], 
+export const useScrollToSection = <T extends readonly string[]>(
+  sectionIds: T, 
   defaultOptions: ScrollOptions = { behavior: 'smooth', block: 'start' }
 ) => {
   // Create refs for each section - memoized to avoid recreating on each render
-  const sectionRefs: SectionRefs = useMemo(() => {
+  const sectionRefs = useMemo(() => {
     return sectionIds.reduce((acc, id) => {
-      acc[id] = useRef<HTMLDivElement>(null);
+      acc[id as string] = useRef<HTMLDivElement>(null);
       return acc;
-    }, {} as SectionRefs);
+    }, {} as Record<string, React.RefObject<HTMLDivElement>>);
   }, [sectionIds]);
 
   // Scroll to a specific section with optional override options

@@ -1,58 +1,34 @@
 
-import { useState, useCallback } from 'react';
-import { validateRequiredFields } from '@/utils/validation/formValidation';
+import { useCallback } from 'react';
 
-// Define a validator function type
-type ValidatorFn = (value: any) => string | null;
-
+/**
+ * Types for form field handling
+ */
 interface UseFormFieldsOptions<T> {
-  initialValues: T;
-  requiredFields?: Array<keyof T>;
-  validators?: Partial<Record<keyof T, ValidatorFn>>;
+  /**
+   * Function to update form values
+   */
+  setValues: React.Dispatch<React.SetStateAction<T>>;
+  
+  /**
+   * Function to clear field errors
+   */
+  clearError?: (field: keyof T) => void;
+  
+  /**
+   * Function to set touched fields
+   */
+  setTouched?: React.Dispatch<React.SetStateAction<Record<string, boolean>>>;
 }
 
 /**
- * A lightweight hook for managing form fields
- * @param options - Hook configuration options
- * @returns Form field state and utility functions
+ * Hook for handling form field interactions
+ * 
+ * @param options Hook configuration options
+ * @returns Form field event handlers
  */
-export function useFormFields<T extends Record<string, any>>(
-  options: UseFormFieldsOptions<T>
-) {
-  const { initialValues, requiredFields = [], validators = {} } = options;
-  
-  const [values, setValues] = useState<T>(initialValues);
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  const [touched, setTouched] = useState<Record<string, boolean>>({});
-  
-  /**
-   * Update a single form field
-   */
-  const setFieldValue = useCallback((field: keyof T, value: any) => {
-    setValues(prev => ({ ...prev, [field]: value }));
-    setTouched(prev => ({ ...prev, [field]: true }));
-    
-    // Clear error for this field
-    if (errors[field as string]) {
-      setErrors(prev => {
-        const newErrors = { ...prev };
-        delete newErrors[field as string];
-        return newErrors;
-      });
-    }
-    
-    // Run field-specific validator if exists
-    const fieldKey = field as string;
-    if (fieldKey in validators) {
-      const validator = (validators as Record<string, ValidatorFn | undefined>)[fieldKey];
-      if (validator) {
-        const validationResult = validator(value);
-        if (validationResult) {
-          setErrors(prev => ({ ...prev, [field]: validationResult }));
-        }
-      }
-    }
-  }, [errors, validators]);
+export function useFormFields<T extends Record<string, any>>(options: UseFormFieldsOptions<T>) {
+  const { setValues, clearError, setTouched } = options;
   
   /**
    * Handle input change events
@@ -62,86 +38,87 @@ export function useFormFields<T extends Record<string, any>>(
   ) => {
     const { name, value, type } = e.target;
     const fieldValue = type === 'checkbox' ? (e.target as HTMLInputElement).checked : value;
-    setFieldValue(name as keyof T, fieldValue);
-  }, [setFieldValue]);
+    
+    setValues(prev => ({
+      ...prev,
+      [name]: fieldValue
+    }));
+    
+    if (clearError) {
+      clearError(name as keyof T);
+    }
+    
+    if (setTouched) {
+      setTouched(prev => ({
+        ...prev,
+        [name]: true
+      }));
+    }
+  }, [setValues, clearError, setTouched]);
   
   /**
-   * Handle field blur events
+   * Handle input blur events to mark field as touched
    */
   const handleBlur = useCallback((field: keyof T) => {
-    setTouched(prev => ({ ...prev, [field]: true }));
-    
-    // Validate field on blur
-    const fieldKey = field as string;
-    if (fieldKey in validators) {
-      const validator = (validators as Record<string, ValidatorFn | undefined>)[fieldKey];
-      if (validator) {
-        const validationResult = validator(values[field]);
-        if (validationResult) {
-          setErrors(prev => ({ ...prev, [field]: validationResult }));
-        }
-      }
+    if (setTouched) {
+      setTouched(prev => ({
+        ...prev,
+        [field]: true
+      }));
     }
-  }, [validators, values]);
+  }, [setTouched]);
   
   /**
-   * Validate all form fields
+   * Set a specific field value
    */
-  const validateFields = useCallback(() => {
-    // Validate required fields
-    const requiredErrors = validateRequiredFields(values, requiredFields as Array<keyof T>);
+  const setFieldValue = useCallback((field: keyof T, value: any) => {
+    setValues(prev => ({
+      ...prev,
+      [field]: value
+    }));
     
-    // Run field-specific validators
-    const validationErrors: Record<string, string> = { ...requiredErrors };
+    if (clearError) {
+      clearError(field);
+    }
     
-    Object.keys(validators).forEach((fieldName) => {
-      const field = fieldName as keyof T;
-      const fieldKey = field as string;
-      
-      if (fieldKey in validators) {
-        const validator = (validators as Record<string, ValidatorFn | undefined>)[fieldKey];
-        
-        if (validator && field in values) {
-          const validationResult = validator(values[field]);
-          if (validationResult) {
-            validationErrors[fieldKey] = validationResult;
-          }
-        }
-      }
-    });
-    
-    setErrors(validationErrors);
-    
-    // Mark all fields as touched
-    const allTouched = Object.keys(values).reduce((acc, key) => {
-      acc[key] = true;
-      return acc;
-    }, {} as Record<string, boolean>);
-    
-    setTouched(allTouched);
-    
-    return Object.keys(validationErrors).length === 0;
-  }, [values, requiredFields, validators]);
+    if (setTouched) {
+      setTouched(prev => ({
+        ...prev,
+        [field]: true
+      }));
+    }
+  }, [setValues, clearError, setTouched]);
   
   /**
-   * Reset form to initial values
+   * Set multiple field values at once
    */
-  const resetForm = useCallback(() => {
-    setValues(initialValues);
-    setErrors({});
-    setTouched({});
-  }, [initialValues]);
+  const setFieldValues = useCallback((fields: Partial<T>) => {
+    setValues(prev => ({
+      ...prev,
+      ...fields
+    }));
+    
+    if (clearError) {
+      Object.keys(fields).forEach(field => {
+        clearError(field as keyof T);
+      });
+    }
+    
+    if (setTouched) {
+      setTouched(prev => ({
+        ...prev,
+        ...Object.keys(fields).reduce((acc, key) => {
+          acc[key] = true;
+          return acc;
+        }, {} as Record<string, boolean>)
+      }));
+    }
+  }, [setValues, clearError, setTouched]);
   
   return {
-    values,
-    errors,
-    touched,
-    setFieldValue,
     handleChange,
     handleBlur,
-    validateFields,
-    resetForm,
-    isDirty: JSON.stringify(values) !== JSON.stringify(initialValues),
-    isValid: Object.keys(errors).length === 0
+    setFieldValue,
+    setFieldValues
   };
 }

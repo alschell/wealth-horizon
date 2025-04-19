@@ -1,77 +1,128 @@
 
 import { useState, useCallback } from 'react';
 
-export function useFormState<T extends Record<string, any>>(initialValues: T) {
-  const [formState, setFormState] = useState({
+/**
+ * Interface for form state
+ */
+export interface FormState<T> {
+  values: T;
+  errors: Record<string, string>;
+  touched: Record<string, boolean>;
+  isDirty: boolean;
+  isSubmitting: boolean;
+  isSuccess: boolean;
+}
+
+/**
+ * Create initial form state with default values
+ * 
+ * @param initialValues Initial form values
+ * @returns Initial form state
+ */
+export function createInitialFormState<T>(initialValues: T): FormState<T> {
+  return {
     values: initialValues,
-    errors: {} as Record<string, string>,
-    touched: {} as Record<string, boolean>,
+    errors: {},
+    touched: {},
     isDirty: false,
     isSubmitting: false,
     isSuccess: false
-  });
+  };
+}
 
-  const setFieldValue = useCallback((field: keyof T, value: any) => {
-    setFormState(prev => ({
-      ...prev,
-      values: { ...prev.values, [field]: value },
-      touched: { ...prev.touched, [field]: true },
-      isDirty: true
-    }));
-  }, []);
-
-  const setFieldValues = useCallback((fields: Partial<T>) => {
+/**
+ * Hook for managing form state
+ * 
+ * @param initialValues Initial form values
+ * @returns Form state and state updater functions
+ */
+export function useFormState<T extends Record<string, any>>(initialValues: T) {
+  const [formState, setFormState] = useState<FormState<T>>(
+    createInitialFormState(initialValues)
+  );
+  
+  /**
+   * Reset form state to initial values
+   */
+  const resetFormState = useCallback((newInitialValues?: T) => {
+    setFormState(createInitialFormState(newInitialValues || initialValues));
+  }, [initialValues]);
+  
+  /**
+   * Update form values
+   */
+  const setValues = useCallback((
+    values: React.SetStateAction<T>
+  ) => {
     setFormState(prev => {
-      const touchedFields = Object.keys(fields).reduce((acc, key) => {
-        acc[key] = true;
-        return acc;
-      }, {} as Record<string, boolean>);
+      const newValues = typeof values === 'function' 
+        ? (values as (prev: T) => T)(prev.values) 
+        : values;
       
       return {
         ...prev,
-        values: { ...prev.values, ...fields },
-        touched: { ...prev.touched, ...touchedFields },
+        values: newValues,
         isDirty: true
       };
     });
   }, []);
-
-  const setFieldError = useCallback((field: keyof T, message: string) => {
+  
+  /**
+   * Set form errors
+   */
+  const setErrors = useCallback((
+    errors: React.SetStateAction<Record<string, string>>
+  ) => {
     setFormState(prev => ({
       ...prev,
-      errors: { ...prev.errors, [field]: message }
+      errors: typeof errors === 'function'
+        ? (errors as (prev: Record<string, string>) => Record<string, string>)(prev.errors)
+        : errors
     }));
   }, []);
-
-  const clearFieldError = useCallback((field: keyof T) => {
-    setFormState(prev => {
-      const newErrors = { ...prev.errors };
-      delete newErrors[field as string];
-      return {
-        ...prev,
-        errors: newErrors
-      };
-    });
+  
+  /**
+   * Set which fields have been touched
+   */
+  const setTouched = useCallback((
+    touched: React.SetStateAction<Record<string, boolean>>
+  ) => {
+    setFormState(prev => ({
+      ...prev,
+      touched: typeof touched === 'function'
+        ? (touched as (prev: Record<string, boolean>) => Record<string, boolean>)(prev.touched)
+        : touched
+    }));
   }, []);
-
-  const resetForm = useCallback(() => {
-    setFormState({
-      values: initialValues,
-      errors: {},
-      touched: {},
-      isDirty: false,
-      isSubmitting: false,
-      isSuccess: false
-    });
-  }, [initialValues]);
-
+  
+  /**
+   * Set submission state
+   */
+  const setSubmitting = useCallback((isSubmitting: boolean) => {
+    setFormState(prev => ({
+      ...prev,
+      isSubmitting
+    }));
+  }, []);
+  
+  /**
+   * Set success state
+   */
+  const setSuccess = useCallback((isSuccess: boolean) => {
+    setFormState(prev => ({
+      ...prev,
+      isSuccess
+    }));
+  }, []);
+  
   return {
     formState,
     setFormState,
-    setFieldValue,
-    setFieldValues,
-    setFieldError,
-    clearFieldError,
-    resetForm
+    resetFormState,
+    setValues,
+    setErrors,
+    setTouched,
+    setSubmitting,
+    setSuccess
   };
 }

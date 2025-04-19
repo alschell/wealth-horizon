@@ -1,20 +1,16 @@
 
-import { 
-  ValidationResult, 
-  Validator, 
-  combineValidators, 
-  minLength, 
-  maxLength, 
-  matchesPattern 
-} from './core';
+/**
+ * Specialized validators for different field types
+ * Each validator returns either null (valid) or an error message string
+ */
 
 /**
- * Validate that a field is required
- * @param fieldName - The name of the field (for error message)
- * @returns Validator function
+ * Validates that a field has a value
+ * @param fieldName Display name for the field in error messages
+ * @returns Validation function
  */
-export function required(fieldName: string = 'This field'): Validator {
-  return (value: any): ValidationResult => {
+export const required = (fieldName: string = 'This field') => {
+  return (value: any): string | null => {
     if (value === undefined || value === null || value === '') {
       return `${fieldName} is required`;
     }
@@ -23,133 +19,184 @@ export function required(fieldName: string = 'This field'): Validator {
     }
     return null;
   };
-}
+};
 
 /**
- * Validate an email address
- * @returns Validator function
+ * Validates that a string is a valid email address
+ * @returns Validation function
  */
-export function email(): Validator<string> {
-  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  return matchesPattern(emailRegex, 'Please enter a valid email address');
-}
+export const email = () => {
+  return (value: string): string | null => {
+    if (!value) return null; // Skip validation if empty (use required() for required fields)
+    
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(value) ? null : 'Please enter a valid email address';
+  };
+};
 
 /**
- * Validate a phone number
- * @returns Validator function
+ * Validates that a string is a valid phone number
+ * @returns Validation function
  */
-export function phone(): Validator<string> {
-  return (value: string): ValidationResult => {
+export const phone = () => {
+  return (value: string): string | null => {
     if (!value) return null;
     
-    // Allow various phone formats but ensure it's at least 10 digits
-    const digitsOnly = value.replace(/\D/g, '');
-    if (digitsOnly.length < 10) {
-      return 'Phone number must have at least 10 digits';
-    }
-    return null;
+    // Basic phone validation - can be enhanced for international formats
+    const phoneRegex = /^[+]?[\d\s()-]{8,20}$/;
+    return phoneRegex.test(value) ? null : 'Please enter a valid phone number';
   };
-}
+};
 
 /**
- * Validate a URL
- * @returns Validator function
+ * Validates that a string is a valid URL
+ * @returns Validation function
  */
-export function url(): Validator<string> {
-  return (value: string): ValidationResult => {
+export const url = () => {
+  return (value: string): string | null => {
     if (!value) return null;
     
     try {
       new URL(value);
       return null;
-    } catch (e) {
+    } catch {
       return 'Please enter a valid URL';
     }
   };
-}
+};
 
 /**
- * Validate a number
- * @returns Validator function
+ * Validates that a value is a number
+ * @param options Optional configuration for number validation
+ * @returns Validation function
  */
-export function number(): Validator<string> {
-  return (value: string): ValidationResult => {
-    if (!value) return null;
+export const number = (options: { min?: number; max?: number; integer?: boolean } = {}) => {
+  return (value: string | number): string | null => {
+    if (!value && value !== 0) return null;
     
-    if (isNaN(Number(value))) {
-      return 'Must be a valid number';
-    }
-    return null;
-  };
-}
-
-/**
- * Validate a number within a range
- * @param min - Minimum value
- * @param max - Maximum value
- * @returns Validator function
- */
-export function numberRange(min: number, max: number): Validator<string> {
-  return (value: string): ValidationResult => {
-    if (!value) return null;
+    const num = typeof value === 'string' ? Number(value) : value;
     
-    const num = Number(value);
     if (isNaN(num)) {
-      return 'Must be a valid number';
+      return 'Please enter a valid number';
     }
     
-    if (num < min || num > max) {
-      return `Must be between ${min} and ${max}`;
+    if (options.integer && !Number.isInteger(num)) {
+      return 'Please enter a whole number';
     }
+    
+    if (options.min !== undefined && num < options.min) {
+      return `Value must be at least ${options.min}`;
+    }
+    
+    if (options.max !== undefined && num > options.max) {
+      return `Value must be no more than ${options.max}`;
+    }
+    
     return null;
   };
-}
+};
 
 /**
- * Validate a percentage (0-100)
- * @returns Validator function
+ * Validates that a number is a percentage (0-100)
+ * @returns Validation function
  */
-export function percentage(): Validator<string> {
-  return numberRange(0, 100);
-}
+export const percentage = () => {
+  return number({ min: 0, max: 100 });
+};
 
 /**
- * Create a validator for a password with common requirements
- * @param options - Password validation options
- * @returns Validator function
+ * Validates a password meets security requirements
+ * @param options Password validation options
+ * @returns Validation function
  */
-export function password(options = {
-  minLength: 8,
-  requireUppercase: true,
-  requireLowercase: true,
-  requireNumber: true,
-  requireSpecial: true
-}): Validator<string> {
-  return (value: string): ValidationResult => {
+export const password = (options: {
+  minLength?: number;
+  requireUppercase?: boolean;
+  requireLowercase?: boolean;
+  requireNumbers?: boolean;
+  requireSpecialChars?: boolean;
+} = {}) => {
+  const {
+    minLength = 8,
+    requireUppercase = true,
+    requireLowercase = true,
+    requireNumbers = true,
+    requireSpecialChars = true
+  } = options;
+  
+  return (value: string): string | null => {
     if (!value) return null;
     
-    const errors: string[] = [];
+    const errors = [];
     
-    if (options.minLength && value.length < options.minLength) {
-      errors.push(`Password must be at least ${options.minLength} characters long`);
+    if (value.length < minLength) {
+      errors.push(`Password must be at least ${minLength} characters long`);
     }
     
-    if (options.requireUppercase && !/[A-Z]/.test(value)) {
+    if (requireUppercase && !/[A-Z]/.test(value)) {
       errors.push('Password must contain at least one uppercase letter');
     }
     
-    if (options.requireLowercase && !/[a-z]/.test(value)) {
+    if (requireLowercase && !/[a-z]/.test(value)) {
       errors.push('Password must contain at least one lowercase letter');
     }
     
-    if (options.requireNumber && !/\d/.test(value)) {
+    if (requireNumbers && !/\d/.test(value)) {
       errors.push('Password must contain at least one number');
     }
     
-    if (options.requireSpecial && !/[!@#$%^&*(),.?":{}|<>]/.test(value)) {
+    if (requireSpecialChars && !/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(value)) {
       errors.push('Password must contain at least one special character');
     }
     
-    return errors.length > 0 ? errors[0] : null;
+    return errors.length ? errors.join('. ') : null;
   };
-}
+};
+
+/**
+ * Validates a Legal Entity Identifier (LEI)
+ * @returns Validation function
+ */
+export const lei = () => {
+  return (value: string): string | null => {
+    if (!value) return null;
+    
+    // LEI is a 20-character alphanumeric code
+    if (!/^[A-Z0-9]{20}$/.test(value)) {
+      return 'LEI must be a 20-character alphanumeric code';
+    }
+    
+    return null;
+  };
+};
+
+/**
+ * Validates a date is within a valid range
+ * @param options Date validation options
+ * @returns Validation function
+ */
+export const date = (options: { min?: Date; max?: Date; } = {}) => {
+  return (value: string | Date): string | null => {
+    if (!value) return null;
+    
+    try {
+      const date = value instanceof Date ? value : new Date(value);
+      
+      if (isNaN(date.getTime())) {
+        return 'Please enter a valid date';
+      }
+      
+      if (options.min && date < options.min) {
+        return `Date must be on or after ${options.min.toLocaleDateString()}`;
+      }
+      
+      if (options.max && date > options.max) {
+        return `Date must be on or before ${options.max.toLocaleDateString()}`;
+      }
+      
+      return null;
+    } catch {
+      return 'Please enter a valid date';
+    }
+  };
+};

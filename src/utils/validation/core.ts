@@ -1,101 +1,123 @@
 
 /**
- * Core validation utilities for consistent validation throughout the application
+ * Core validation utilities for form data
  */
+import { z } from 'zod';
 
 /**
- * Validation result type
+ * Type for validation functions
  */
-export type ValidationResult = string | null | undefined;
+export type Validator = (value: any) => string | null;
 
 /**
- * Validator function type
- */
-export type Validator<T = any> = (value: T) => ValidationResult;
-
-/**
- * Combine multiple validators into a single validator
- * @param validators - Array of validator functions
+ * Combines multiple validation functions for a single field
+ * Stops at the first validation error
+ * 
+ * @param validators Array of validator functions
  * @returns Combined validator function
  */
-export function combineValidators<T>(...validators: Validator<T>[]): Validator<T> {
-  return (value: T): ValidationResult => {
+export const combineValidators = (...validators: Validator[]): Validator => {
+  return (value: any): string | null => {
     for (const validator of validators) {
-      const result = validator(value);
-      if (result) {
-        return result;
-      }
+      const error = validator(value);
+      if (error) return error;
     }
     return null;
   };
-}
+};
 
 /**
- * Create a validator that only runs if the value is not empty
- * @param validator - The validator function to wrap
- * @returns Conditional validator function
+ * Creates a form validation function from field validators
+ * 
+ * @param fieldValidators Record of field names to validation functions
+ * @returns Function that validates an entire form and returns validation errors
  */
-export function optional<T>(validator: Validator<T>): Validator<T> {
-  return (value: T): ValidationResult => {
-    if (value === undefined || value === null || value === '') {
-      return null;
+export const createFormValidator = <T extends Record<string, any>>(
+  fieldValidators: Partial<Record<keyof T, Validator>>
+) => {
+  return (values: T): Record<string, string> => {
+    const errors: Record<string, string> = {};
+    
+    for (const [field, validator] of Object.entries(fieldValidators)) {
+      if (validator) {
+        const error = validator(values[field]);
+        if (error) {
+          errors[field] = error;
+        }
+      }
     }
-    return validator(value);
+    
+    return errors;
   };
-}
+};
 
 /**
- * Check if a value is empty (null, undefined, empty string, or empty array)
- * @param value - The value to check
- * @returns True if the value is empty, false otherwise
+ * Generic form validation using Zod schema
+ * 
+ * @param data Data to validate
+ * @param schema Zod schema to validate against
+ * @returns Validated data or validation errors
  */
-export function isEmpty(value: any): boolean {
-  if (value === null || value === undefined) return true;
-  if (typeof value === 'string') return value.trim() === '';
-  if (Array.isArray(value)) return value.length === 0;
-  if (typeof value === 'object') return Object.keys(value).length === 0;
-  return false;
-}
+export const validateWithSchema = <T>(
+  data: unknown,
+  schema: z.ZodType<T>
+): { data: T; errors: null } | { data: null; errors: z.ZodError } => {
+  try {
+    const validatedData = schema.parse(data);
+    return { data: validatedData, errors: null };
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return { data: null, errors: error };
+    }
+    throw error;
+  }
+};
 
 /**
- * Create a validator that checks if a value has a minimum length
- * @param min - Minimum length
- * @param message - Custom error message (optional)
- * @returns Validator function
+ * Formats Zod validation errors into a more usable object
+ * 
+ * @param zodError Zod validation error
+ * @returns Record of field paths to error messages
  */
-export function minLength(min: number, message?: string): Validator<string> {
-  return (value: string): ValidationResult => {
-    if (!value) return null;
-    return value.length < min 
-      ? message || `Must be at least ${min} characters` 
-      : null;
-  };
-}
+export const formatZodErrors = (
+  zodError: z.ZodError
+): Record<string, string> => {
+  const formattedErrors: Record<string, string> = {};
+  
+  zodError.errors.forEach((error) => {
+    const path = error.path.join('.');
+    if (path) {
+      formattedErrors[path] = error.message;
+    }
+  });
+  
+  return formattedErrors;
+};
 
 /**
- * Create a validator that checks if a value has a maximum length
- * @param max - Maximum length
- * @param message - Custom error message (optional)
- * @returns Validator function
+ * Validate a form with a Zod schema and get formatted errors
+ * 
+ * @param data Data to validate
+ * @param schema Zod schema to validate against
+ * @returns Validated data or formatted validation errors
  */
-export function maxLength(max: number, message?: string): Validator<string> {
-  return (value: string): ValidationResult => {
-    if (!value) return null;
-    return value.length > max 
-      ? message || `Must be no more than ${max} characters` 
-      : null;
-  };
-}
+export const validateForm = <T>(
+  data: unknown,
+  schema: z.ZodType<T>
+): { data: T; errors: null } | { data: null; errors: Record<string, string> } => {
+  const result = validateWithSchema(data, schema);
+  if (result.errors) {
+    return { data: null, errors: formatZodErrors(result.errors) };
+  }
+  return result as { data: T; errors: null };
+};
 
 /**
- * Create a validator that checks if a value matches a pattern
- * @param pattern - Regular expression pattern
- * @param message - Error message
- * @returns Validator function
+ * Creates a validation function from a Zod schema
+ * 
+ * @param schema Zod schema to validate against
+ * @returns Function that validates data against the schema
  */
-export function matchesPattern(pattern: RegExp, message: string): Validator<string> {
-  return (value: string): ValidationResult => {
-    if (!value) return null;
-    return pattern.test(value) ? null : message;
-  };
-}
+export const createValidator = <T>(schema: z.ZodType<T>) => {
+  return (data: unknown) => validateForm(data, schema);
+};

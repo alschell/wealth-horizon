@@ -1,41 +1,86 @@
 
 import { useCallback } from 'react';
+import { Validator, createFormValidator } from '@/utils/validation/core';
 
-export type ValidationRule<T> = (value: T) => string | null;
-
-export interface ValidationRules<T> {
-  [key: string]: ValidationRule<any>;
+/**
+ * Options for form validation
+ */
+interface UseFormValidationOptions<T> {
+  /**
+   * Custom field validators
+   */
+  validators?: Partial<Record<keyof T, Validator>>;
+  
+  /**
+   * Required fields in the form
+   */
+  requiredFields?: Array<keyof T>;
+  
+  /**
+   * Function to set form errors
+   */
+  setErrors: React.Dispatch<React.SetStateAction<Record<string, string>>>;
 }
 
+/**
+ * Hook for form validation
+ * 
+ * @param options Validation options
+ * @returns Form validation utilities
+ */
 export function useFormValidation<T extends Record<string, any>>(
-  values: T,
-  validationRules: ValidationRules<T> = {},
-  onError?: (errors: Record<string, string>) => void
+  options: UseFormValidationOptions<T>
 ) {
-  const validateField = useCallback((field: keyof T, value: any): string | null => {
-    const rule = validationRules[field as string];
-    return rule ? rule(value) : null;
-  }, [validationRules]);
-
-  const validateForm = useCallback((): Record<string, string> => {
-    const errors: Record<string, string> = {};
-    
-    Object.keys(validationRules).forEach(field => {
-      const error = validateField(field as keyof T, values[field as keyof T]);
-      if (error) {
-        errors[field] = error;
-      }
-    });
-
-    if (onError && Object.keys(errors).length > 0) {
-      onError(errors);
-    }
-
-    return errors;
-  }, [validationRules, validateField, values, onError]);
-
+  const { validators = {}, requiredFields = [], setErrors } = options;
+  
+  /**
+   * Validate form data
+   */
+  const validateForm = useCallback(
+    (values: T): boolean => {
+      // Create a validator function from field validators
+      const validate = createFormValidator<T>(validators);
+      
+      // Run validation and update errors
+      const validationErrors = validate(values);
+      setErrors(validationErrors);
+      
+      // Return whether form is valid
+      return Object.keys(validationErrors).length === 0;
+    },
+    [validators, setErrors]
+  );
+  
+  /**
+   * Set a field error
+   */
+  const setFieldError = useCallback(
+    (field: keyof T, message: string) => {
+      setErrors(prev => ({
+        ...prev,
+        [field as string]: message
+      }));
+    },
+    [setErrors]
+  );
+  
+  /**
+   * Clear a field error
+   */
+  const clearFieldError = useCallback(
+    (field: keyof T) => {
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors[field as string];
+        return newErrors;
+      });
+    },
+    [setErrors]
+  );
+  
   return {
-    validateField,
-    validateForm
+    validateForm,
+    setFieldError,
+    clearFieldError
   };
 }

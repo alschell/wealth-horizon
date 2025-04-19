@@ -1,9 +1,11 @@
+
 import React, { memo, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import TradingFormNavigation from "./TradingFormNavigation";
 import { OrderType, Instrument, TradeOrder } from "../types";
 import { useTradingFormContent } from "../hooks/useTradingFormContent";
 import { TradingFormContentBody } from "./form/TradingFormContentBody";
+import { TRADING_FORM_STEPS } from "../components/TradingFormSteps";
 
 interface TradingFormContentProps {
   currentStep: number;

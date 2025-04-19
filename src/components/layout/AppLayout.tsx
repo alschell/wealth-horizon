@@ -1,8 +1,8 @@
 
 import React from 'react';
-import { Layout } from '@/components/Layout';
-import { Navigation } from '@/components/Navigation';
-import { AnimatedTransition } from '@/components/AnimatedTransition';
+import Layout from '@/components/Layout';
+import Navigation from '@/components/Navigation';
+import AnimatedTransition from '@/components/AnimatedTransition';
 
 interface AppLayoutProps {
   children: React.ReactNode;

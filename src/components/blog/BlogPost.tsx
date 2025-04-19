@@ -43,7 +43,7 @@ export const BlogPostView: React.FC<BlogPostViewProps> = ({
               <Clock size={14} className="mr-1" /> {post.readTime}
             </span>
           </div>
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-800">{post.title}</h1>
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-800 text-left">{post.title}</h1>
         </div>
         
         <div className="flex items-center justify-between border-y border-gray-100 py-4">
@@ -60,7 +60,7 @@ export const BlogPostView: React.FC<BlogPostViewProps> = ({
                 <User className="w-6 h-6 text-indigo-600 m-2" />
               )}
             </div>
-            <div>
+            <div className="text-left">
               <p className="font-medium text-gray-800">{post.author}</p>
               <p className="text-sm text-gray-500">{post.date}</p>
             </div>

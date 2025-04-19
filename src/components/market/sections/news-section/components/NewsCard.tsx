@@ -12,7 +12,10 @@ const NewsCard: React.FC<NewsCardProps> = ({ item }) => {
     <Card className="hover:bg-gray-50 transition-colors">
       <CardHeader className="pb-2">
         <h3 className="text-lg font-medium text-left">{item.title || item.headline}</h3>
-        <p className="text-sm text-gray-500 text-right">{item.source} · {item.date}</p>
+        <div className="flex justify-between items-center text-sm text-gray-500">
+          <span>{item.source}</span>
+          <span>{item.date}</span>
+        </div>
       </CardHeader>
       <CardContent>
         <p className="text-sm text-gray-600 text-left">{item.summary}</p>

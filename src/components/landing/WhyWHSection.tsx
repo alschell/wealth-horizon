@@ -39,6 +39,7 @@ const WhyWHSection: React.FC = () => {
             <p className="mt-4 text-xl text-gray-600 max-w-3xl mx-auto text-center">
               <TranslatedText>
                 Discover why leading family offices and institutions choose our platform
+                <br />
                 for their wealth management needs
               </TranslatedText>
             </p>

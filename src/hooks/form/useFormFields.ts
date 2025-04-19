@@ -113,7 +113,7 @@ export function useFormFields<T extends Record<string, any>>(
       return false;
     }
     
-    const validator = validators[field];
+    const validator = validators[field as keyof T];
     if (validator && typeof validator === 'function') {
       const errorMessage = validator(values[field]);
       if (errorMessage) {
@@ -147,9 +147,7 @@ export function useFormFields<T extends Record<string, any>>(
     
     Object.keys(validators).forEach(key => {
       const field = key as keyof T;
-      const validator = validators[field];
-      
-      if (validator && typeof validator === 'function') {
+      if (validators[field] && typeof validators[field] === 'function') {
         if (!validateField(field)) {
           isValid = false;
         }
@@ -157,7 +155,7 @@ export function useFormFields<T extends Record<string, any>>(
     });
     
     return isValid;
-  }, [validateField, requiredFields, validators]);
+  }, [validateField, requiredFields, validators, values]);
 
   const resetForm = useCallback(() => {
     setValues(initialValues);

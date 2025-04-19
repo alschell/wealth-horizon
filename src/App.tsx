@@ -1,3 +1,6 @@
+import React from 'react';
+import { AppLayout } from '@/components/layout/AppLayout';
+import './App.css';
 
 import React, { useEffect } from "react";
 import { HelmetProvider } from "react-helmet-async";

@@ -123,60 +123,12 @@ export function useUnifiedForm<T extends Record<string, any>>(initialData: T) {
     submitFn: (data: T) => Promise<void>,
     options: FormSubmissionOptions<T> = {}
   ) => {
-    const {
-      onSuccess,
-      onError,
-      successMessage = 'Form submitted successfully',
-      errorMessage = 'Error submitting form',
-      validateForm,
-      resetAfterSubmit = false,
-      logToConsole = true
-    } = options;
-
-    // Validate form if validation function is provided
-    if (validateForm && !validateForm(formData)) {
-      return false;
-    }
-
-    setIsSubmitting(true);
-    setLastError(null);
-
-    try {
-      await submitFn(formData);
-      
-      if (successMessage) {
-        showSuccess('Success', successMessage);
-      }
-      
-      setIsSuccess(true);
-      
-      if (resetAfterSubmit) {
-        resetForm();
-      }
-      
-      if (onSuccess) {
-        onSuccess(formData);
-      }
-      
-      return true;
-    } catch (error) {
-      setIsSuccess(false);
-      
-      const errorMsg = getErrorMessage(error);
-      setLastError(errorMsg);
-      
-      if (logToConsole) {
-        console.error('Form submission error:', parseError(error));
-      }
-      
-      if (onError) {
-        onError(error);
-      }
-      
-      return false;
-    } finally {
-      setIsSubmitting(false);
-    }
+    const submitHandler = createSubmitHandler(submitFn, {
+      ...options,
+      resetForm: () => resetForm()
+    });
+    
+    return submitHandler(formData);
   }, [formData, resetForm, createSubmitHandler]);
 
   return {

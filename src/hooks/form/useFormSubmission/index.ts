@@ -2,7 +2,7 @@
 import { useState, useCallback } from 'react';
 import { useIsComponentMounted } from '@/hooks/useIsComponentMounted';
 import { showSuccess, showError } from '@/utils/toast';
-import { FormSubmissionOptions } from './types';
+import type { FormSubmissionOptions } from './types';
 
 export function useFormSubmission<T>() {
   const isMounted = useIsComponentMounted();

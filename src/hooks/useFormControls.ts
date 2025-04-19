@@ -2,28 +2,20 @@
 import { useState, useCallback } from 'react';
 import { useIsComponentMounted } from './useIsComponentMounted';
 import { showSuccess, showError } from '@/utils/toast';
+import { FormSubmissionOptions } from './form/types';
 
 /**
- * Options for form submission handler creation
+ * Return type for the useFormControls hook
  */
-export interface FormSubmissionOptions<T> {
-  /** Callback executed after successful submission */
-  onSuccess?: () => void;
-  
-  /** Callback executed when an error occurs */
-  onError?: (error: unknown) => void;
-  
-  /** Success message to display */
-  successMessage?: string;
-  
-  /** Error message to display on failure */
-  errorMessage?: string;
-  
-  /** Whether to reset form state after submission */
-  resetAfterSubmit?: boolean;
-  
-  /** Function to validate form before submission */
-  validateForm?: (data: T) => Promise<boolean> | boolean;
+export interface UseFormControlsReturn<T> {
+  isSubmitting: boolean;
+  lastError: string | null;
+  isSuccess: boolean;
+  resetState: () => void;
+  createSubmitHandler: (
+    onSubmit: (data: T) => Promise<void> | void,
+    options?: FormSubmissionOptions<T>
+  ) => (data: T) => Promise<void>;
 }
 
 /**
@@ -31,7 +23,7 @@ export interface FormSubmissionOptions<T> {
  * 
  * @returns Form state management utilities and handlers
  */
-export function useFormControls<T>() {
+export function useFormControls<T>(): UseFormControlsReturn<T> {
   const isMounted = useIsComponentMounted();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [lastError, setLastError] = useState<string | null>(null);

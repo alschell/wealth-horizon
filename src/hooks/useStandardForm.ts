@@ -1,8 +1,11 @@
 
 import { useUnifiedForm } from './form/useUnifiedForm';
-import type { UseUnifiedFormReturn } from './form/unified/types';
+import type { UseUnifiedFormReturn } from './form/types';
 import type { Validator } from './form/validators';
 
+/**
+ * Options for the standard form hook
+ */
 interface StandardFormOptions<T> {
   initialValues: T;
   validators?: Partial<Record<keyof T, Validator>>;

@@ -2,17 +2,29 @@
 import { useState, useCallback } from 'react';
 import { useIsComponentMounted } from '@/hooks/useIsComponentMounted';
 import { showSuccess, showError } from '@/utils/toast';
-import type { FormSubmissionOptions } from './types';
+import type { FormSubmissionOptions } from '../types';
 
+/**
+ * Hook for managing form submission
+ * 
+ * @returns Functions and state for handling form submissions
+ */
 export function useFormSubmission<T>() {
   const isMounted = useIsComponentMounted();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [lastError, setLastError] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState(false);
 
+  /**
+   * Creates a submit handler with the given submission function and options
+   * 
+   * @param onSubmit Function to call with form data
+   * @param options Submission options
+   * @returns Submit handler function
+   */
   const createSubmitHandler = useCallback(
     (
-      onSubmit: (data: T) => Promise<void>,
+      onSubmit: (data: T) => Promise<void> | void,
       options: FormSubmissionOptions<T> = {}
     ) => {
       const {
@@ -26,6 +38,7 @@ export function useFormSubmission<T>() {
       } = options;
 
       return async (data: T): Promise<boolean> => {
+        // Validate form if validation function is provided
         if (validateForm && !validateForm(data)) {
           return false;
         }

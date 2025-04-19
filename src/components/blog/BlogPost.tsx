@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Calendar, Clock, User } from "lucide-react";
@@ -36,7 +35,7 @@ export const BlogPostView: React.FC<BlogPostViewProps> = ({
       
       <div className="space-y-6">
         <div className="space-y-2">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center justify-between">
             <span className="inline-block px-3 py-1 text-xs font-medium text-indigo-600 bg-indigo-50 rounded-full">
               {post.category}
             </span>
@@ -76,31 +75,31 @@ export const BlogPostView: React.FC<BlogPostViewProps> = ({
             </Button>
           </div>
         </div>
-      </div>
-      
-      <div className="aspect-video w-full bg-gray-100 rounded-lg overflow-hidden mb-8">
-        <img 
-          src={post.image} 
-          alt={post.title}
-          className="w-full h-full object-cover"
-          onError={handleImageError}
+        
+        <div className="aspect-video w-full bg-gray-100 rounded-lg overflow-hidden mb-8">
+          <img 
+            src={post.image} 
+            alt={post.title}
+            className="w-full h-full object-cover"
+            onError={handleImageError}
+          />
+        </div>
+        
+        <div className="prose prose-indigo max-w-none prose-lg text-left" dangerouslySetInnerHTML={{ __html: post.content }} />
+        
+        <Separator className="my-12" />
+        
+        <RelatedArticles 
+          currentPost={post}
+          allPosts={allPosts}
+          goBack={goBack}
+          viewBlogPost={viewBlogPost}
         />
+        
+        <Separator className="my-12" />
+        
+        <CommentsSection postId={post.id} />
       </div>
-      
-      <div className="prose prose-indigo max-w-none prose-lg" dangerouslySetInnerHTML={{ __html: post.content }} />
-      
-      <Separator className="my-12" />
-      
-      <RelatedArticles 
-        currentPost={post}
-        allPosts={allPosts}
-        goBack={goBack}
-        viewBlogPost={viewBlogPost}
-      />
-      
-      <Separator className="my-12" />
-      
-      <CommentsSection postId={post.id} />
     </article>
   );
 };

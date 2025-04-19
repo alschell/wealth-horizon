@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import type { Validator } from './validators/validatorUtils';
-import { validateField, validateFields, createErrorClearer } from '@/utils/form/validation/formValidationUtils';
+import { validateField, validateFields as validateMultipleFields, createErrorClearer } from '@/utils/form/validation/formValidationUtils';
 
 export interface UseFormFieldsOptions<T> {
   initialValues: T;
@@ -8,9 +8,6 @@ export interface UseFormFieldsOptions<T> {
   validators?: Partial<Record<keyof T, Validator>>;
 }
 
-/**
- * Hook for managing form field changes and updates
- */
 export function useFormFields<T extends Record<string, any>>(
   options: UseFormFieldsOptions<T>
 ) {
@@ -114,7 +111,7 @@ export function useFormFields<T extends Record<string, any>>(
     }
     
     if (field in validators && validators[field]) {
-      const error = validateField(field, values[field], validators[field]);
+      const error = validateField(field, values[field], validators[field]!);
       if (error) {
         setErrors(prev => ({
           ...prev,
@@ -128,8 +125,8 @@ export function useFormFields<T extends Record<string, any>>(
     return true;
   }, [values, requiredFields, validators, clearError]);
 
-  const validateFields = useCallback(() => {
-    const errors = validateFields(values, validators, requiredFields);
+  const validateAllFields = useCallback(() => {
+    const errors = validateMultipleFields(values, validators, requiredFields);
     setErrors(errors);
     return Object.keys(errors).length === 0;
   }, [values, validators, requiredFields]);
@@ -151,7 +148,7 @@ export function useFormFields<T extends Record<string, any>>(
     handleBlur,
     setFieldValue,
     setFieldValues,
-    validateFields,
+    validateFields: validateAllFields,
     resetForm
   };
 }

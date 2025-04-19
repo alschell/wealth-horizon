@@ -7,7 +7,7 @@
  */
 
 // Core error types and interfaces - export only once
-export { 
+export type { 
   ErrorResponse,
   ErrorHandlerOptions,
   BaseErrorOptions
@@ -46,3 +46,4 @@ export {
   withErrorHandling,
   withCustomErrorFallback
 } from './withErrorHandling';
+

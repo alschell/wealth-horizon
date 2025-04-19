@@ -15,6 +15,8 @@ interface ErrorBoundaryConfig extends ErrorHandlerOptions {
   message?: string;
   /** Whether to show a notification to the user */
   notifyUser?: boolean;
+  /** Custom fallback UI to show when error occurs */
+  fallback?: React.ReactNode;
 }
 
 /**

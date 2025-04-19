@@ -43,6 +43,8 @@ export interface ErrorHandlerOptions {
   action?: () => void;
   /** Action text for toast notification */
   actionText?: string;
+  /** Custom fallback UI when error occurs */
+  fallback?: React.ReactNode;
 }
 
 /**
@@ -58,3 +60,4 @@ export interface BaseErrorOptions {
   /** Whether to log errors to console */
   logToConsole?: boolean;
 }
+

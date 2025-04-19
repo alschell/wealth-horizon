@@ -24,10 +24,12 @@ export function withErrorHandling<P extends object>(
     logToConsole = true,
   } = options;
 
-  const handleError = (error: Error, errorInfo: React.ErrorInfo) => {
+  const handleError = (error: unknown) => {
     if (logToConsole) {
       logError(error, componentName);
-      console.error('Component stack:', errorInfo.componentStack);
+      if (error instanceof Error && 'stack' in error) {
+        console.error('Component stack:', error.stack);
+      }
     }
     
     if (onError) {

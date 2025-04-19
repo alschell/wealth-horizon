@@ -8,13 +8,13 @@
     <meta name="description" content="Advanced wealth management platform for family offices" />
     <meta name="author" content="Wealth Horizon" />
 
-    <!-- Force refresh of title and metadata -->
+    <!-- Force no caching of this document and all resources -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     
-    <!-- Add version number to force refresh -->
-    <meta name="version" content="1.0.1" />
+    <!-- Add random version number to force refresh -->
+    <meta name="version" content="1.0.2-<?php echo rand(10000,99999); ?>" />
 
     <meta property="og:title" content="WealthHorizon - All your wealth made actionable" />
     <meta property="og:description" content="Advanced wealth management platform for family offices" />
@@ -33,7 +33,7 @@
 
   <body>
     <div id="root"></div>
-    <!-- Add version query parameter to force refresh -->
-    <script type="module" src="/src/main.tsx?v=1.0.1"></script>
+    <!-- Add random query parameter to force refresh -->
+    <script type="module" src="/src/main.tsx?v=1.0.2-<?php echo rand(10000,99999); ?>"></script>
   </body>
 </html>

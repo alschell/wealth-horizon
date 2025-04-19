@@ -2,7 +2,6 @@
 import React from "react";
 import { Search, Wallet, Database, FileText, Shield } from "lucide-react";
 import TranslatedText from "@/components/ui/translated-text";
-import { FadeIn, ScaleIn } from "@/components/ui/animation";
 
 const features = [
   {
@@ -11,7 +10,7 @@ const features = [
     icon: Search
   },
   {
-    title: "Optimize your liquidity and place term deposits",
+    title: "Optimize your liquidity",
     description: "Enhance your liquidity management with advanced tools designed for effective cash flow monitoring. Strategically allocate term deposits to optimize returns while ensuring you maintain the liquidity necessary for immediate operational needs.",
     icon: Wallet
   },
@@ -68,21 +67,20 @@ const FeaturesSection: React.FC<FeaturesSectionProps> = ({ id }) => {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {orderedFeatures.map((feature, index) => (
-            <ScaleIn key={index} delay={0.1 * index}>
-              <div 
-                className="p-8 border border-gray-100 rounded-xl shadow-sm hover:shadow-md transition-shadow bg-white h-full flex flex-col"
-              >
-                <div className="w-12 h-12 mb-6 flex items-center justify-center rounded-full bg-indigo-50 text-indigo-600">
-                  <feature.icon size={28} />
-                </div>
-                <h3 className="text-xl font-semibold mb-4 text-gray-900 text-left">
-                  <TranslatedText>{feature.title}</TranslatedText>
-                </h3>
-                <p className="text-gray-600 leading-relaxed flex-grow text-left">
-                  <TranslatedText>{feature.description}</TranslatedText>
-                </p>
+            <div 
+              key={index}
+              className="p-8 border border-gray-100 rounded-xl shadow-sm hover:shadow-md transition-shadow bg-white h-full flex flex-col"
+            >
+              <div className="w-12 h-12 mb-6 flex items-center justify-center rounded-full bg-indigo-50 text-indigo-600">
+                <feature.icon size={28} />
               </div>
-            </ScaleIn>
+              <h3 className="text-xl font-semibold mb-4 text-gray-900 text-left">
+                <TranslatedText>{feature.title}</TranslatedText>
+              </h3>
+              <p className="text-gray-600 leading-relaxed flex-grow text-left">
+                <TranslatedText>{feature.description}</TranslatedText>
+              </p>
+            </div>
           ))}
         </div>
       </div>

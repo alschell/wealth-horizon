@@ -1,22 +1,26 @@
 
 import { useCallback } from 'react';
-import { Dispatch, SetStateAction } from 'react';
 import { FormSubmissionState } from './types';
 
 /**
- * Hook to create a reset state handler
+ * A hook that provides a reset state function for form submission state
  * 
- * @param setFormSubmissionState State setter function
- * @returns Reset state handler
+ * @param setFormSubmissionState - State setter function
+ * @returns Function to reset state to default values
  */
 export function useResetState(
-  setFormSubmissionState: Dispatch<SetStateAction<FormSubmissionState>>
-) {
-  return useCallback(() => {
+  setFormSubmissionState: React.Dispatch<React.SetStateAction<FormSubmissionState>>
+): () => void {
+  /**
+   * Reset form submission state to default values
+   */
+  const resetState = useCallback(() => {
     setFormSubmissionState({
       isSubmitting: false,
       lastError: null,
       isSuccess: false
     });
   }, [setFormSubmissionState]);
+
+  return resetState;
 }

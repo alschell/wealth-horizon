@@ -45,14 +45,14 @@ interface FeaturesSectionProps {
 
 const FeaturesSection: React.FC<FeaturesSectionProps> = ({ id }) => {
   return (
-    <section className="w-full bg-gray-50 py-24" id={id}>
-      <div className="max-w-[1400px] mx-auto px-6">
+    <section className="py-24 bg-gray-50" id={id}>
+      <div className="max-w-7xl mx-auto px-6">
         <FadeIn>
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 text-center">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
               <TranslatedText>Key Features</TranslatedText>
             </h2>
-            <p className="mt-4 text-xl text-gray-600 max-w-3xl mx-auto text-center">
+            <p className="mt-4 text-xl text-gray-600 max-w-3xl mx-auto">
               <TranslatedText>
                 Our AI-native platform simplifies managing all your wealth with intuitive tools designed for the most sophisticated family offices and institutions
               </TranslatedText>

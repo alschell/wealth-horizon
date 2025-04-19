@@ -94,14 +94,14 @@ const ContactForm: React.FC = () => {
 
   return (
     <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-200">
-      <h3 className="text-xl font-semibold text-gray-900 mb-6 text-left">
+      <h3 className="text-xl font-semibold text-gray-900 mb-6">
         <TranslatedText>Send us a message</TranslatedText>
       </h3>
       
       <form onSubmit={handleSubmit} className="flex flex-col h-full">
         <div className="space-y-6 flex-grow">
           <div className="space-y-2">
-            <Label htmlFor="email" className="text-left block">
+            <Label htmlFor="email">
               <TranslatedText>Email</TranslatedText><span className="text-indigo-600 ml-1">*</span>
             </Label>
             <Input 
@@ -111,12 +111,11 @@ const ContactForm: React.FC = () => {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="john@example.com" 
               required 
-              className="text-left"
             />
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="full-name" className="text-left block">
+            <Label htmlFor="full-name">
               <TranslatedText>Full name</TranslatedText><span className="text-indigo-600 ml-1">*</span>
             </Label>
             <Input 
@@ -125,12 +124,11 @@ const ContactForm: React.FC = () => {
               onChange={(e) => setFullName(e.target.value)}
               placeholder="John Doe" 
               required 
-              className="text-left"
             />
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="company" className="text-left block">
+            <Label htmlFor="company">
               <TranslatedText>Company</TranslatedText><span className="text-indigo-600 ml-1">*</span>
             </Label>
             <Input 
@@ -139,12 +137,11 @@ const ContactForm: React.FC = () => {
               onChange={(e) => setCompany(e.target.value)}
               placeholder="Your company" 
               required 
-              className="text-left"
             />
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="industry" className="text-left block">
+            <Label htmlFor="industry">
               <TranslatedText>Industry</TranslatedText><span className="text-indigo-600 ml-1">*</span>
             </Label>
             <CustomSearchableSelect 
@@ -156,12 +153,11 @@ const ContactForm: React.FC = () => {
               onChange={(value) => setIndustry(value)}
               required={true}
               allowCustomValue
-              className="text-left"
             />
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="inquiry-type" className="text-left block">
+            <Label htmlFor="inquiry-type">
               <TranslatedText>Type of inquiry</TranslatedText><span className="text-indigo-600 ml-1">*</span>
             </Label>
             <CustomSearchableSelect 
@@ -173,12 +169,11 @@ const ContactForm: React.FC = () => {
               onChange={(value) => setInquiry(value)}
               required={true}
               allowCustomValue
-              className="text-left"
             />
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="message" className="text-left block">
+            <Label htmlFor="message">
               <TranslatedText>Message</TranslatedText><span className="text-indigo-600 ml-1">*</span>
             </Label>
             <div className="h-[144px]">
@@ -187,14 +182,14 @@ const ContactForm: React.FC = () => {
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 placeholder="How can we help you?"
-                className="h-full w-full resize-none focus-visible:outline-none focus-visible:ring-0 focus-visible:border-black focus-visible:border-2 text-left"
+                className="h-full w-full resize-none focus-visible:outline-none focus-visible:ring-0 focus-visible:border-black focus-visible:border-2"
                 required
               />
             </div>
           </div>
         </div>
         
-        <div className="mt-6 flex-shrink-0 text-left">
+        <div className="mt-6 flex-shrink-0">
           <Button type="submit" className="w-full md:w-auto" disabled={isSubmitting}>
             {isSubmitting ? 
               <TranslatedText>Sending...</TranslatedText> : 
@@ -215,10 +210,10 @@ const ContactForm: React.FC = () => {
             </DialogTitle>
             
             <div className="text-center space-y-1">
-              <p className="text-gray-700 text-center">
+              <p className="text-gray-700">
                 <TranslatedText>Thank you for your message.</TranslatedText>
               </p>
-              <p className="text-gray-700 text-center">
+              <p className="text-gray-700">
                 <TranslatedText>We will get back to you within 1-2 working days.</TranslatedText>
               </p>
             </div>

@@ -42,12 +42,11 @@ const FormField: React.FC<FormFieldProps> = ({
   const InputComponent = isTextarea ? Textarea : Input;
   
   return (
-    <div className={cn('space-y-2 text-left', className)}>
+    <div className={cn('space-y-2', className)}>
       {label && (
         <Label 
           htmlFor={name} 
           className={cn(
-            'text-left',
             required && 'after:content-["*"] after:ml-0.5 after:text-red-500',
             labelClassName
           )}
@@ -62,7 +61,7 @@ const FormField: React.FC<FormFieldProps> = ({
         type={isTextarea ? undefined : type}
         placeholder={placeholder}
         disabled={disabled}
-        className={cn('text-left', error && 'border-red-500 focus-visible:ring-red-500', inputClassName)}
+        className={cn(error && 'border-red-500 focus-visible:ring-red-500', inputClassName)}
         aria-invalid={!!error}
         aria-describedby={error ? `${name}-error` : undefined}
         {...props}
@@ -71,7 +70,7 @@ const FormField: React.FC<FormFieldProps> = ({
       {error && (
         <p 
           id={`${name}-error`} 
-          className={cn('text-sm font-medium text-red-500 text-left', errorClassName)}
+          className={cn('text-sm font-medium text-red-500', errorClassName)}
           aria-live="polite"
         >
           {error}

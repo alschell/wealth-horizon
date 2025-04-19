@@ -25,16 +25,15 @@ const DashboardLayout = ({
   }, [location.pathname]);
 
   return (
-    <div className="min-h-screen flex flex-col w-full bg-background pt-16">
+    <div className="min-h-screen flex flex-col w-full bg-background pt-16"> {/* pt-16 for fixed header */}
       <div className="flex-1 flex flex-col overflow-hidden">
         <main className="flex-1 overflow-auto">
           <div 
             className={cn(
-              "mx-auto w-full",
+              fullWidth ? "w-full" : "max-w-7xl mx-auto w-full",
               paddingX,
               paddingY
             )}
-            style={{ maxWidth: "1400px" }}
           >
             <PageTransition>
               {children}

@@ -23,16 +23,16 @@ const testimonials = [
 
 const TestimonialsSection: React.FC = () => {
   return (
-    <section className="w-full bg-white py-24" id="testimonials">
-      <div className="max-w-[1400px] mx-auto px-6">
+    <section className="py-24 bg-white" id="testimonials">
+      <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-16">
           <FadeIn>
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 text-center">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
               <TranslatedText>Trusted by Leading Institutions</TranslatedText>
             </h2>
-            <p className="mt-4 text-xl text-gray-600 max-w-3xl mx-auto text-center">
+            <p className="mt-4 text-xl text-gray-600 max-w-3xl mx-auto">
               <TranslatedText>See what family offices and institutional investors say about </TranslatedText>
-              <span className="text-indigo-600">Wealth</span><span>Horizon</span>
+              <span className="text-indigo-600">Wealth</span><span>Horizon</span>.
             </p>
           </FadeIn>
         </div>
@@ -40,22 +40,22 @@ const TestimonialsSection: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {testimonials.map((testimonial, index) => (
             <FadeIn key={index} delay={index * 0.1}>
-              <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-200 h-full flex flex-col text-center">
-                <div className="mb-6 text-center">
+              <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-200 h-full flex flex-col">
+                <div className="mb-6">
                   {[1, 2, 3, 4, 5].map((star) => (
                     <span key={star} className="text-yellow-400">★</span>
                   ))}
                 </div>
-                <p className="text-gray-700 flex-grow italic mb-6 text-center">
+                <p className="text-gray-700 flex-grow italic mb-6">
                   "<TranslatedText>{testimonial.quote}</TranslatedText>"
                 </p>
-                <div className="flex items-center justify-center">
+                <div className="flex items-center">
                   <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 font-semibold">
                     {testimonial.name.charAt(0)}
                   </div>
-                  <div className="ml-4 text-center">
-                    <p className="font-semibold text-gray-900 text-center">{testimonial.name}</p>
-                    <p className="text-sm text-gray-600 text-center">{testimonial.position}</p>
+                  <div className="ml-4">
+                    <p className="font-semibold text-gray-900">{testimonial.name}</p>
+                    <p className="text-sm text-gray-600">{testimonial.position}</p>
                   </div>
                 </div>
               </div>

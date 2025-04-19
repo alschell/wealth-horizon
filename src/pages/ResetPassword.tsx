@@ -28,7 +28,7 @@ const ResetPassword = () => {
     <div className="min-h-screen flex items-center justify-center bg-white relative">
       <Link 
         to="/login" 
-        className="absolute top-4 left-4 text-indigo-600 hover:underline flex items-center"
+        className="absolute top-4 left-4 text-indigo-600 hover:underline"
       >
         &larr; Back to Login
       </Link>
@@ -42,8 +42,8 @@ const ResetPassword = () => {
                 <span className="text-gray-900">Horizon</span>
               </h1>
             </Link>
-            <h2 className="text-3xl font-bold text-gray-900 mb-3 text-center">Reset your password</h2>
-            <p className="text-gray-600 text-center">Enter your email address and we'll send you instructions to reset your password</p>
+            <h2 className="text-3xl font-bold text-gray-900 mb-3">Reset your password</h2>
+            <p className="text-gray-600">Enter your email address and we'll send you instructions to reset your password.</p>
           </div>
 
           {!isSubmitted ? (

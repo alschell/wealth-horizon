@@ -30,15 +30,16 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToFeatures }) => {
     }
   };
 
+  // Key features that need to be translated individually
   const keyFeatures = ["AI-native platform", "Real-time analytics", "SOC 2 certified"];
 
   return (
-    <section className="w-full relative overflow-hidden">
+    <section className="relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-br from-indigo-50 to-white -z-10"></div>
-      <div className="max-w-[1400px] mx-auto px-6 py-24 md:py-32 lg:py-40 pt-24">
+      <div className="max-w-7xl mx-auto px-6 py-24 md:py-32 lg:py-40 pt-24">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <FadeIn delay={0.2}>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-gray-900 leading-tight text-center lg:text-left">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-gray-900 leading-tight">
               <TranslatedText>Holistic wealth management for</TranslatedText>{" "}
               <span className="text-indigo-600">
                 <TranslatedText>family offices</TranslatedText>
@@ -48,11 +49,11 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToFeatures }) => {
                 <TranslatedText>institutions</TranslatedText>
               </span>
             </h1>
-            <p className="mt-6 text-xl text-gray-600 max-w-2xl text-center lg:text-left">
+            <p className="mt-6 text-xl text-gray-600 max-w-2xl">
               <TranslatedText>All your wealth made actionable on one platform</TranslatedText><br />
               <TranslatedText>across all your banks, brokers and custodians</TranslatedText>
             </p>
-            <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+            <div className="mt-10 flex flex-col sm:flex-row gap-4">
               <Button size="lg" className="text-md px-8" onClick={scrollToContact}>
                 <TranslatedText>Contact Us</TranslatedText>
               </Button>
@@ -65,7 +66,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToFeatures }) => {
                 <TranslatedText>Learn More</TranslatedText>
               </Button>
             </div>
-            <div className="mt-10 flex flex-wrap gap-x-8 gap-y-4 items-center text-sm text-gray-600 justify-center lg:justify-start">
+            <div className="mt-10 flex flex-wrap gap-x-8 gap-y-4 items-center text-sm text-gray-600">
               {keyFeatures.map((item, index) => (
                 <div key={index} className="flex items-center gap-2">
                   <CheckCircle size={16} className="text-indigo-600" />

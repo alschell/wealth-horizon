@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -35,7 +36,7 @@ const HomeNavigation: React.FC = () => {
           : 'bg-transparent border-b border-transparent'
       }`}
     >
-      <nav className="mx-auto px-6 h-16 flex items-center justify-between" style={{ maxWidth: "1400px" }}>
+      <nav className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
         <div className="flex items-center">
           <Link to="/" className="font-bold text-xl flex items-center">
             <span className="text-indigo-600">Wealth</span>

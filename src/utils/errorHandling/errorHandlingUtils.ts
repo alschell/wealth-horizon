@@ -1,14 +1,6 @@
 
 import { toast } from '@/hooks/use-toast';
-
-/**
- * Standard error response format
- */
-export interface ErrorResponse {
-  message: string;
-  code?: string;
-  details?: Record<string, any>;
-}
+import { getErrorMessage, parseError, type ErrorResponse } from './errorUtils';
 
 /**
  * Options for error handler
@@ -21,59 +13,6 @@ export interface ErrorHandlerOptions {
   actionText?: string;
   action?: () => void;
   onError?: (error: unknown) => void;
-}
-
-/**
- * Extracts error message from any error type
- */
-export function getErrorMessage(error: unknown, fallbackMessage = "An unexpected error occurred"): string {
-  if (error instanceof Error) {
-    return error.message;
-  }
-  
-  if (typeof error === "string") {
-    return error;
-  }
-  
-  if (error && typeof error === "object" && "message" in error) {
-    return String((error as ErrorResponse).message);
-  }
-  
-  return fallbackMessage;
-}
-
-/**
- * Parses an error into a standardized format
- */
-export function parseError(error: unknown): ErrorResponse {
-  if (error instanceof Error) {
-    return {
-      message: error.message,
-      code: error.name
-    };
-  }
-  
-  if (typeof error === "string") {
-    return {
-      message: error,
-      code: "ERROR_STRING"
-    };
-  }
-  
-  if (error && typeof error === "object") {
-    if ("message" in error) {
-      return {
-        message: String((error as ErrorResponse).message),
-        code: (error as ErrorResponse).code || "ERROR_OBJECT",
-        details: (error as ErrorResponse).details
-      };
-    }
-  }
-  
-  return {
-    message: "An unexpected error occurred",
-    code: "UNKNOWN_ERROR"
-  };
 }
 
 /**
@@ -93,11 +32,9 @@ export function handleError(
     onError
   } = options;
   
-  // Get error message
-  const errorMessage = getErrorMessage(error, fallbackMessage);
-  
   // Parse error details
   const errorDetails = parseError(error);
+  const errorMessage = errorDetails.message || fallbackMessage;
   
   // Log error to console if enabled
   if (logToConsole && !silent) {
@@ -130,7 +67,6 @@ export function handleError(
 
 /**
  * Creates a try-catch wrapper for async functions
- * Renamed from withErrorHandling to withErrorCatch to avoid collision
  */
 export function withErrorCatch<T extends (...args: any[]) => Promise<any>>(
   fn: T,

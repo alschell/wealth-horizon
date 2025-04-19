@@ -1,52 +1,8 @@
 
-import { useState, useCallback } from 'react';
-import { useToast } from '@/hooks/use-toast';
-import { getErrorMessage, logError } from '@/utils/errorHandling';
+import { useErrorHandler as useAppErrorHandler } from '@/utils/errorHandling';
 
-export const useErrorHandler = (componentName?: string) => {
-  const { toast } = useToast();
-  const [lastError, setLastError] = useState<Error | null>(null);
+// Re-export the centralized implementation for backward compatibility
+export const useErrorHandler = useAppErrorHandler;
 
-  const handleError = useCallback((error: unknown) => {
-    const errorMessage = getErrorMessage(error);
-    setLastError(error instanceof Error ? error : new Error(errorMessage));
-    logError(error, componentName);
-    toast({
-      title: 'Error',
-      description: errorMessage,
-      variant: 'destructive'
-    });
-  }, [componentName, toast]);
-
-  const clearLastError = useCallback(() => {
-    setLastError(null);
-  }, []);
-
-  const withErrorHandling = useCallback(<T extends (...args: any[]) => any>(fn: T) => {
-    return async (...args: Parameters<T>): Promise<ReturnType<T> | undefined> => {
-      try {
-        return await fn(...args);
-      } catch (error) {
-        handleError(error);
-        return undefined;
-      }
-    };
-  }, [handleError]);
-
-  const tryCatch = useCallback(async <T>(fn: () => Promise<T> | T): Promise<T | undefined> => {
-    try {
-      return await fn();
-    } catch (error) {
-      handleError(error);
-      return undefined;
-    }
-  }, [handleError]);
-
-  return {
-    handleError,
-    lastError,
-    clearLastError,
-    withErrorHandling,
-    tryCatch
-  };
-};
+// Export everything from the centralized implementation
+export * from '@/utils/errorHandling/useErrorHandler';

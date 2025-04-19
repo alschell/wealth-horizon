@@ -1,22 +1,36 @@
 
-import { showError } from '@/utils/toast';
-
+/**
+ * Standard error response format
+ */
 export interface ErrorResponse {
   message: string;
   code: string;
   details?: Record<string, unknown>;
 }
 
-export const getErrorMessage = (error: unknown, fallbackMessage = 'An unexpected error occurred'): string => {
-  if (error instanceof Error) return error.message;
-  if (typeof error === 'string') return error;
-  if (typeof error === 'object' && error !== null && 'message' in error) {
-    return String((error as { message: unknown }).message);
+/**
+ * Extracts error message from any error type
+ */
+export function getErrorMessage(error: unknown, fallbackMessage = "An unexpected error occurred"): string {
+  if (error instanceof Error) {
+    return error.message;
   }
+  
+  if (typeof error === "string") {
+    return error;
+  }
+  
+  if (error && typeof error === "object" && "message" in error) {
+    return String((error as ErrorResponse).message);
+  }
+  
   return fallbackMessage;
-};
+}
 
-export const parseError = (error: unknown): ErrorResponse => {
+/**
+ * Parses an error into a standardized format
+ */
+export function parseError(error: unknown): ErrorResponse {
   if (error instanceof Error) {
     return {
       message: error.message,
@@ -24,36 +38,43 @@ export const parseError = (error: unknown): ErrorResponse => {
       details: { stack: error.stack }
     };
   }
-
-  if (typeof error === 'string') {
+  
+  if (typeof error === "string") {
     return {
       message: error,
-      code: 'ERROR'
+      code: "ERROR_STRING"
     };
   }
-
-  if (typeof error === 'object' && error !== null) {
-    const errorObj = error as Record<string, unknown>;
-    return {
-      message: getErrorMessage(errorObj.message),
-      code: typeof errorObj.code === 'string' ? errorObj.code : 'UNKNOWN_ERROR',
-      details: errorObj
-    };
+  
+  if (error && typeof error === "object") {
+    if ("message" in error) {
+      return {
+        message: String((error as ErrorResponse).message),
+        code: (error as any).code || "ERROR_OBJECT",
+        details: (error as any).details
+      };
+    }
   }
-
+  
   return {
-    message: 'An unexpected error occurred',
-    code: 'UNKNOWN_ERROR'
+    message: "An unexpected error occurred",
+    code: "UNKNOWN_ERROR"
   };
-};
+}
 
-export const logError = (error: unknown, componentName?: string): void => {
+/**
+ * Logs an error to the console with optional component context
+ */
+export function logError(error: unknown, componentName?: string): void {
   console.error(`Error${componentName ? ` in ${componentName}` : ''}:`, error);
   if (error instanceof Error) {
     console.error('Stack trace:', error.stack);
   }
-};
+}
 
-export const createContextualError = (message: string, componentName: string): Error => {
+/**
+ * Creates an error with component context in the message
+ */
+export function createContextualError(message: string, componentName: string): Error {
   return new Error(`[${componentName}] ${message}`);
-};
+}

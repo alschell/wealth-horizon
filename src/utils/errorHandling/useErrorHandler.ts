@@ -1,31 +1,42 @@
 
 import { useState, useCallback } from 'react';
 import { useToast } from '@/hooks/use-toast';
-import { parseError, type ErrorResponse } from './errorHandlingUtils';
+import { parseError, type ErrorResponse } from './errorUtils';
+import { handleError } from './errorHandlingUtils';
 
-interface ErrorHandlerOptions {
+/**
+ * Options for the error handler hook
+ */
+export interface ErrorHandlerHookOptions {
   silent?: boolean;
   logToConsole?: boolean;
   showToast?: boolean;
   toastTitle?: string;
   fallbackMessage?: string;
+  componentName?: string;
   onError?: (error: unknown) => void;
 }
 
 /**
  * Hook providing consistent error handling utilities
+ * 
+ * @param defaultOptions Default options for all error handling in this hook instance
  */
-export function useErrorHandler(defaultOptions: ErrorHandlerOptions = {}) {
+export function useErrorHandler(defaultOptions: ErrorHandlerHookOptions = {}) {
   const [lastError, setLastError] = useState<ErrorResponse | null>(null);
   const { toast } = useToast();
   
-  const handleError = useCallback((error: unknown, options: ErrorHandlerOptions = {}) => {
+  /**
+   * Handles an error with configurable options
+   */
+  const handleErrorWithOptions = useCallback((error: unknown, options: ErrorHandlerHookOptions = {}) => {
     const {
       silent = defaultOptions.silent ?? false,
       logToConsole = defaultOptions.logToConsole ?? true,
       showToast = defaultOptions.showToast ?? true,
       toastTitle = defaultOptions.toastTitle ?? 'Error',
       fallbackMessage = defaultOptions.fallbackMessage ?? 'An unexpected error occurred',
+      componentName = defaultOptions.componentName,
       onError = defaultOptions.onError
     } = options;
     
@@ -33,23 +44,18 @@ export function useErrorHandler(defaultOptions: ErrorHandlerOptions = {}) {
     const parsedError = parseError(error);
     setLastError(parsedError);
     
-    // Log to console if enabled
-    if (logToConsole && !silent) {
-      console.error('[Error Handler]:', parsedError);
-    }
+    // Use the centralized error handler
+    handleError(error, {
+      fallbackMessage,
+      logToConsole,
+      showToast,
+      silent,
+      onError
+    });
     
-    // Show toast notification if enabled
-    if (showToast && !silent) {
-      toast({
-        title: toastTitle,
-        description: parsedError.message || fallbackMessage,
-        variant: "destructive"
-      });
-    }
-    
-    // Call custom error handler if provided
-    if (onError) {
-      onError(error);
+    // Log component context if provided
+    if (componentName && logToConsole && !silent) {
+      console.info(`Error occurred in component: ${componentName}`);
     }
     
     return parsedError;
@@ -60,35 +66,35 @@ export function useErrorHandler(defaultOptions: ErrorHandlerOptions = {}) {
    */
   const withErrorHandling = useCallback(<T extends (...args: any[]) => Promise<any>>(
     fn: T,
-    options: ErrorHandlerOptions = {}
+    options: ErrorHandlerHookOptions = {}
   ) => {
     return async (...args: Parameters<T>): Promise<ReturnType<T> | undefined> => {
       try {
         return await fn(...args);
       } catch (error) {
-        handleError(error, options);
+        handleErrorWithOptions(error, options);
         return undefined;
       }
     };
-  }, [handleError]);
+  }, [handleErrorWithOptions]);
   
   /**
    * Safely executes a function with error handling
    */
   const tryCatch = useCallback(async <T>(
     fn: () => Promise<T> | T,
-    options: ErrorHandlerOptions = {}
+    options: ErrorHandlerHookOptions = {}
   ): Promise<T | undefined> => {
     try {
       return await fn();
     } catch (error) {
-      handleError(error, options);
+      handleErrorWithOptions(error, options);
       return undefined;
     }
-  }, [handleError]);
+  }, [handleErrorWithOptions]);
   
   return {
-    handleError,
+    handleError: handleErrorWithOptions,
     withErrorHandling,
     tryCatch,
     lastError,

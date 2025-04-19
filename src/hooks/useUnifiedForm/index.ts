@@ -1,3 +1,4 @@
+
 import { useCallback } from 'react';
 import { useIsComponentMounted } from '../useIsComponentMounted';
 import { useFormState } from './core/useFormState';
@@ -44,12 +45,12 @@ export function useUnifiedForm<T extends Record<string, any>>(props: UseUnifiedF
   } = useFormHandlers<T>({
     setValues,
     clearError: (field) => {
-      // Cast the function to correctly handle the state update
-      setErrors((prevErrors: Record<string, string>) => {
+      // Use a type assertion to correctly handle the state update
+      setErrors((prevErrors) => {
         const newErrors = { ...prevErrors };
         delete newErrors[field as string];
-        return newErrors as Partial<Record<keyof T, string>>;
-      });
+        return newErrors;
+      } as any);
     },
     setTouched
   });

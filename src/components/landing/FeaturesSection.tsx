@@ -65,21 +65,23 @@ const FeaturesSection: React.FC<FeaturesSectionProps> = ({ id }) => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
           {orderedFeatures.map((feature, index) => (
             <div 
               key={index}
-              className="p-8 border border-gray-100 rounded-xl shadow-sm hover:shadow-md transition-shadow bg-white h-full flex flex-col"
+              className="flex gap-4"
             >
-              <div className="w-12 h-12 mb-6 flex items-center justify-center rounded-full bg-indigo-50 text-indigo-600">
-                <feature.icon size={28} />
+              <div className="flex-shrink-0 w-12 h-12 flex items-center justify-center rounded-lg bg-gray-50 text-[#4E46DC]">
+                <feature.icon size={24} />
               </div>
-              <h3 className="text-xl font-semibold mb-4 text-gray-900 text-left">
-                <TranslatedText>{feature.title}</TranslatedText>
-              </h3>
-              <p className="text-gray-600 leading-relaxed flex-grow text-left">
-                <TranslatedText>{feature.description}</TranslatedText>
-              </p>
+              <div>
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                  <TranslatedText>{feature.title}</TranslatedText>
+                </h3>
+                <p className="text-gray-600">
+                  <TranslatedText>{feature.description}</TranslatedText>
+                </p>
+              </div>
             </div>
           ))}
         </div>

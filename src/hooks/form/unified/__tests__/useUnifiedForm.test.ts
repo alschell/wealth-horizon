@@ -16,7 +16,25 @@ describe('useUnifiedForm', () => {
 
   it('should initialize with default values', () => {
     const { result } = renderHook(() => 
-      useUnifiedForm({ initialValues, schema })
+      useUnifiedForm({ 
+        initialValues, 
+        validate: (values) => {
+          try {
+            schema.parse(values);
+            return {};
+          } catch (error) {
+            if (error instanceof z.ZodError) {
+              return error.errors.reduce((acc, curr) => {
+                if (curr.path[0]) {
+                  acc[curr.path[0]] = curr.message;
+                }
+                return acc;
+              }, {} as Record<string, string>);
+            }
+            return {};
+          }
+        }
+      })
     );
 
     expect(result.current.formState.values).toEqual(initialValues);

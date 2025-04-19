@@ -2,23 +2,12 @@
 import React, { useCallback, useState } from 'react';
 import { ErrorBoundary } from '@/components/error-boundary';
 import { useErrorHandler } from '@/utils/errorHandling';
-import { ErrorHandlerOptions } from '@/utils/errorHandling/types';
-import { toast } from '@/hooks/use-toast';
+import { ErrorHandlerOptions } from '@/utils/errorHandling/types/core';
+import ErrorFallback from '@/components/shared/ErrorFallback/ErrorFallback';
 
 export function useErrorBoundary(options: ErrorHandlerOptions = {}) {
-  const {
-    fallbackMessage = "Something went wrong",
-    showToast = true,
-    componentName,
-    fallback
-  } = options;
-  
   const [error, setError] = useState<Error | null>(null);
-  const { handleError } = useErrorHandler({
-    componentName,
-    showToast,
-    fallbackMessage
-  });
+  const { handleError } = useErrorHandler(options);
   
   const reset = useCallback(() => {
     setError(null);
@@ -26,28 +15,33 @@ export function useErrorBoundary(options: ErrorHandlerOptions = {}) {
   
   const ErrorBoundaryWrapper = useCallback(({ children }: { children: React.ReactNode }) => {
     if (error) {
-      if (fallback) {
-        return fallback;
+      if (options.fallback) {
+        return options.fallback;
       }
       
       return (
-        <div className="p-4 border border-red-300 rounded bg-red-50">
-          <h3 className="text-lg font-medium text-red-800">Error</h3>
-          <p className="mt-1 text-red-700">{error.message || fallbackMessage}</p>
-          {reset && (
-            <button 
-              onClick={reset}
-              className="mt-3 px-3 py-1 text-sm bg-red-100 text-red-800 rounded hover:bg-red-200"
-            >
-              Try Again
-            </button>
-          )}
-        </div>
+        <ErrorFallback 
+          error={error}
+          resetErrorBoundary={reset}
+          title={options.componentName ? `Error in ${options.componentName}` : 'Error'}
+          description={options.fallbackMessage || error.message}
+          showResetButton={true}
+        />
       );
     }
     
-    return <>{children}</>;
-  }, [error, fallbackMessage, reset, fallback]);
+    return <ErrorBoundary
+      fallback={options.fallback}
+      onError={(err) => {
+        const errorObj = err instanceof Error ? err : new Error(String(err));
+        setError(errorObj);
+        handleError(err);
+      }}
+      componentName={options.componentName}
+    >
+      {children}
+    </ErrorBoundary>;
+  }, [error, options, handleError, reset]);
   
   return {
     error,
@@ -61,30 +55,6 @@ export function useErrorBoundary(options: ErrorHandlerOptions = {}) {
     isError: error !== null,
     ErrorBoundaryWrapper
   };
-}
-
-export function withErrorHandling<P extends object>(
-  Component: React.ComponentType<P>,
-  options: ErrorHandlerOptions = {}
-): React.FC<P> {
-  const displayName = Component.displayName || Component.name || 'Component';
-  
-  const WrappedComponent: React.FC<P> = (props) => {
-    const { ErrorBoundaryWrapper } = useErrorBoundary({
-      ...options,
-      componentName: options.componentName || displayName
-    });
-    
-    return (
-      <ErrorBoundaryWrapper>
-        <Component {...props} />
-      </ErrorBoundaryWrapper>
-    );
-  };
-  
-  WrappedComponent.displayName = `withErrorHandling(${displayName})`;
-  
-  return WrappedComponent;
 }
 
 export default useErrorBoundary;

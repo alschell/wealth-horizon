@@ -1,10 +1,10 @@
 
 import { useUnifiedForm } from './form/useUnifiedForm';
-import { ValidationRules } from './form/useFormValidation';
+import type { UseUnifiedFormReturn } from './form/unified/types';
 
 interface StandardFormOptions<T> {
   initialValues: T;
-  validationRules?: ValidationRules<T>;
+  validationRules?: Partial<Record<keyof T, (value: any) => string | null>>;
   validate?: (values: T) => Record<string, string>;
   onSubmit?: (values: T) => Promise<void>;
   onSuccess?: () => void;
@@ -14,8 +14,8 @@ interface StandardFormOptions<T> {
   resetAfterSubmit?: boolean;
 }
 
-export function useStandardForm<T extends Record<string, any>>(options: StandardFormOptions<T>) {
-  const { onSubmit, validate, ...rest } = options;
+export function useStandardForm<T extends Record<string, any>>(options: StandardFormOptions<T>): UseUnifiedFormReturn<T> {
+  const { onSubmit, validate, validationRules, ...rest } = options;
   
   // Wrap onSubmit to ensure it always returns a Promise
   const wrappedOnSubmit = onSubmit 
@@ -30,6 +30,7 @@ export function useStandardForm<T extends Record<string, any>>(options: Standard
 
   return useUnifiedForm({
     ...rest,
+    validators: validationRules,
     onSubmit: wrappedOnSubmit,
     validate
   });

@@ -10,7 +10,6 @@ export {
   handleError,
   getErrorMessage,
   createErrorHandler,
-  logError,
   createContextualError,
   withErrorHandling,
   tryCatch,

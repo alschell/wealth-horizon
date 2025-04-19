@@ -23,6 +23,9 @@ export interface UseUnifiedFormProps<T> {
   successMessage?: string;
   errorMessage?: string;
   requiredFields?: Array<keyof T>;
+  // Add missing properties
+  validators?: Partial<Record<keyof T, (value: any) => string | null>>;
+  resetAfterSubmit?: boolean;
 }
 
 /**
@@ -49,4 +52,7 @@ export interface UseUnifiedFormReturn<T> {
   resetForm: () => void;
   hasError: (field: string) => boolean;
   getErrorMessage: (field: string) => string;
+  // Additional fields for compatibility
+  isValid?: boolean;
+  validateFields?: () => boolean;
 }

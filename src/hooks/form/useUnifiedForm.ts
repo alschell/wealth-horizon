@@ -7,7 +7,7 @@ import { useFormSubmission } from './useFormSubmission';
 import { useFormValidationUtils } from './useFormValidationUtils';
 import { Validator } from '@/utils/validation/core';
 import { required } from '@/utils/validation/validators';
-import { UseUnifiedFormProps, UseUnifiedFormReturn } from './types';
+import { UseUnifiedFormProps, UseUnifiedFormReturn } from './unified/types';
 
 /**
  * Unified form hook for handling form state, validation, and submission

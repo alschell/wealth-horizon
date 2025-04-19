@@ -42,7 +42,7 @@ export function useFormValidation<T extends Record<string, any>>(options: Valida
     const allErrors = { ...requiredErrors, ...customErrors };
     
     // Update form errors
-    setErrors(allErrors);
+    setErrors(allErrors as Partial<Record<keyof T, string>>);
     
     // Return whether form is valid
     return Object.keys(allErrors).length === 0;

@@ -16,15 +16,25 @@ if (!rootElement) {
 
 console.log("Root element found:", rootElement);
 
-const root = createRoot(rootElement);
+try {
+  const root = createRoot(rootElement);
 
-// Make sure the entire app is wrapped in React and BrowserRouter
-root.render(
-  <React.StrictMode>
+  // Make sure the entire app is wrapped in React and BrowserRouter
+  root.render(
     <BrowserRouter>
       <App />
     </BrowserRouter>
-  </React.StrictMode>
-);
+  );
 
-console.log("Finished mounting application");
+  console.log("Finished mounting application");
+} catch (error) {
+  console.error("Critical error during application initialization:", error);
+  // Display a basic error message when React fails to mount
+  rootElement.innerHTML = `
+    <div style="padding: 20px; text-align: center; font-family: sans-serif;">
+      <h2>Application Error</h2>
+      <p>Sorry, the application failed to load. Please try refreshing the page.</p>
+      <button onclick="window.location.reload()">Refresh Page</button>
+    </div>
+  `;
+}

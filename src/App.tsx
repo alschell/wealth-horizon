@@ -1,6 +1,6 @@
 
 import './App.css';
-import { useEffect } from "react";
+import { useEffect, StrictMode } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import Navigation from "./components/Navigation";
@@ -10,6 +10,8 @@ import { createQueryClient } from "./utils/queryClient";
 import { AppProviders } from "./components/providers/AppProviders";
 import { setupGlobalErrorHandler } from "./utils/errorHandling/globalErrorHandler";
 import { useBrowserCompatibility } from "./hooks/useBrowserCompatibility";
+import { ErrorBoundary } from "@/components/error-boundary";
+import ErrorFallback from "@/components/shared/ErrorFallback";
 
 function App() {
   const queryClient = createQueryClient({
@@ -34,13 +36,24 @@ function App() {
   }, []);
 
   return (
-    <AppProviders queryClient={queryClient}>
-      <Navigation />
-      <AppRoutes />
-      <Toaster />
-      <Sonner />
-      <ChatButton />
-    </AppProviders>
+    <StrictMode>
+      <ErrorBoundary
+        fallback={<ErrorFallback 
+          error={new Error("Application failed to render")}
+          resetErrorBoundary={() => window.location.reload()}
+          title="Application Error"
+          description="We encountered an error while loading the application. Please try refreshing the page."
+        />}
+      >
+        <AppProviders queryClient={queryClient}>
+          <Navigation />
+          <AppRoutes />
+          <Toaster />
+          <Sonner />
+          <ChatButton />
+        </AppProviders>
+      </ErrorBoundary>
+    </StrictMode>
   );
 }
 

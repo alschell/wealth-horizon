@@ -32,7 +32,7 @@ const TestimonialsSection: React.FC = () => {
             </h2>
             <p className="mt-4 text-xl text-gray-600 max-w-3xl mx-auto">
               <TranslatedText>See what family offices and institutional investors say about </TranslatedText>
-              <span className="text-indigo-600">Wealth</span><span>Horizon</span>.
+              <span className="text-indigo-600">Wealth</span><span>Horizon</span>
             </p>
           </FadeIn>
         </div>

@@ -1,4 +1,3 @@
-
 import React from "react";
 import { FadeIn, ScaleIn, StaggerContainer, StaggerItem } from "@/components/ui/animation";
 import { LineChart, Shield, BarChart3, FileText, Users, Lock, LucideIcon } from "lucide-react";
@@ -53,13 +52,9 @@ const FeaturesSection: React.FC<FeaturesSectionProps> = ({ id }) => {
               <TranslatedText>Transform Your Wealth Management</TranslatedText>
             </h2>
             <p className="mt-4 text-xl text-gray-600 max-w-3xl mx-auto">
-              <TranslatedText>
-                Our AI-native platform simplifies managing all your wealth with intuitive tools designed for the most sophisticated family offices and institutions
-              </TranslatedText>
-              <br />
-              <TranslatedText>
-                Experience a new level of efficiency, insight, and control with WealthHorizon
-              </TranslatedText>
+              <TranslatedText>Experience a new level of efficiency, insight, and control with </TranslatedText>
+              <span className="text-indigo-600">Wealth</span>
+              <span className="text-gray-900">Horizon</span>
             </p>
           </div>
         </FadeIn>

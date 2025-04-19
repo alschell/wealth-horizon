@@ -1,6 +1,5 @@
-
 import { useState, useCallback } from 'react';
-import type { Validator } from './validators';
+import type { Validator } from './validators/validatorUtils';
 
 export interface UseFormFieldsOptions<T> {
   initialValues: T;
@@ -10,9 +9,6 @@ export interface UseFormFieldsOptions<T> {
 
 /**
  * Hook for managing form field changes and updates
- * 
- * @param options Hook options
- * @returns Form state and field handler functions
  */
 export function useFormFields<T extends Record<string, any>>(
   options: UseFormFieldsOptions<T>
@@ -61,7 +57,6 @@ export function useFormFields<T extends Record<string, any>>(
       [field as string]: true
     }));
     
-    // Validate on blur
     validateField(field);
   }, []);
 
@@ -106,9 +101,7 @@ export function useFormFields<T extends Record<string, any>>(
     setIsDirty(true);
   }, [clearError]);
 
-  // Validate a single field
   const validateField = useCallback((field: keyof T) => {
-    // Check for required field
     if (requiredFields.includes(field) && 
         (values[field] === undefined || 
          values[field] === null || 
@@ -120,34 +113,27 @@ export function useFormFields<T extends Record<string, any>>(
       return false;
     }
     
-    // Run custom validator if provided
     const fieldKey = field as string;
-    // Safely check if there's a validator for this field
-    if (validators && Object.prototype.hasOwnProperty.call(validators, fieldKey)) {
-      const validatorFn = validators[field as keyof typeof validators];
-      if (validatorFn) {
-        const errorMessage = validatorFn(values[field]);
-        
-        if (errorMessage) {
-          setErrors(prev => ({
-            ...prev,
-            [field as string]: errorMessage
-          }));
-          return false;
-        }
+    const validator = validators[field];
+    
+    if (validator && typeof validator === 'function') {
+      const errorMessage = validator(values[field]);
+      if (errorMessage) {
+        setErrors(prev => ({
+          ...prev,
+          [fieldKey]: errorMessage
+        }));
+        return false;
       }
     }
     
-    // Clear error if validation passes
     clearError(field);
     return true;
   }, [values, requiredFields, validators, clearError]);
 
-  // Validate all fields
   const validateFields = useCallback(() => {
     let isValid = true;
     
-    // Mark all fields as touched
     const allTouched = Object.keys(values).reduce((acc, key) => {
       acc[key] = true;
       return acc;
@@ -155,47 +141,26 @@ export function useFormFields<T extends Record<string, any>>(
     
     setTouched(allTouched);
     
-    // Validate required fields
     requiredFields.forEach(field => {
-      if (values[field] === undefined || 
-          values[field] === null || 
-          values[field] === '') {
-        setErrors(prev => ({
-          ...prev,
-          [field as string]: `${String(field)} is required`
-        }));
+      if (!validateField(field)) {
         isValid = false;
       }
     });
     
-    // Safely validate using custom validators
-    if (validators) {
-      Object.keys(validators).forEach(key => {
-        const field = key as keyof T;
-        const fieldKey = field as string;
-        
-        // Safely check if there's a validator for this field
-        if (Object.prototype.hasOwnProperty.call(validators, fieldKey)) {
-          const validatorFn = validators[field as keyof typeof validators];
-          if (validatorFn) {
-            const errorMessage = validatorFn(values[field]);
-            
-            if (errorMessage) {
-              setErrors(prev => ({
-                ...prev,
-                [field as string]: errorMessage
-              }));
-              isValid = false;
-            }
-          }
+    Object.keys(validators).forEach(key => {
+      const field = key as keyof T;
+      const validator = validators[field];
+      
+      if (validator && typeof validator === 'function') {
+        if (!validateField(field)) {
+          isValid = false;
         }
-      });
-    }
+      }
+    });
     
     return isValid;
-  }, [values, requiredFields, validators]);
+  }, [validateField, requiredFields, validators, values]);
 
-  // Reset form to initial state
   const resetForm = useCallback(() => {
     setValues(initialValues);
     setErrors({});
@@ -214,6 +179,11 @@ export function useFormFields<T extends Record<string, any>>(
     setFieldValue,
     setFieldValues,
     validateFields,
-    resetForm
+    resetForm: useCallback(() => {
+      setValues(initialValues);
+      setErrors({});
+      setTouched({});
+      setIsDirty(false);
+    }, [initialValues])
   };
 }

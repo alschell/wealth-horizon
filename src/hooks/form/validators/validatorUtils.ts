@@ -1,8 +1,11 @@
-
 /**
  * Validator type definition - a function that accepts a value and returns an error message or null
  */
-export type Validator = (value: any) => string | null;
+export type Validator<T = any> = (value: T) => string | null;
+
+export interface ValidatorMap<T> {
+  [key: string]: Validator<T>;
+}
 
 /**
  * Creates a required field validator
@@ -10,11 +13,12 @@ export type Validator = (value: any) => string | null;
  * @param fieldName The name of the field to validate
  * @returns A validator function
  */
-export const required = (fieldName: string): Validator => (value: any): string | null => {
-  if (value === undefined || value === null || value === '') {
-    return `${fieldName} is required`;
-  }
-  return null;
+export const required = (fieldName: string): Validator => 
+  (value: any): string | null => {
+    if (value === undefined || value === null || value === '') {
+      return `${fieldName} is required`;
+    }
+    return null;
 };
 
 /**

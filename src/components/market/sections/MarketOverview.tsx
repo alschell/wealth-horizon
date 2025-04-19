@@ -1,17 +1,9 @@
+
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { TrendingUp, TrendingDown, ArrowUpRight } from "lucide-react";
 import { motion } from "framer-motion";
-import { 
-  ChartContainer, 
-  ChartTooltip,
-  ChartTooltipContent,
-  ChartLegend,
-  ChartLegendContent 
-} from "@/components/ui/chart";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Area, AreaChart } from "recharts";
-import { MarketSummaryCard } from "../components/MarketSummaryCard";
+import { MarketSummarySection } from "./market-overview/MarketSummarySection";
+import { MarketChart } from "./market-overview/MarketChart";
+import { CommoditiesSection } from "./market-overview/CommoditiesSection";
 
 const MarketOverview = () => {
   // Mock data - in a real app, this would come from an API
@@ -36,32 +28,11 @@ const MarketOverview = () => {
     { name: "Sep", sp500: 4587, nasdaq: 14346, dowjones: 36124 },
   ];
 
-  const assetClasses = [
-    { name: "Equities", value: 2.1, color: "#555555" },
-    { name: "Fixed Income", value: -0.3, color: "#777777" },
-    { name: "Commodities", value: 1.5, color: "#555555" },
-    { name: "Currencies", value: -0.2, color: "#777777" },
-    { name: "Crypto", value: 3.5, color: "#555555" },
-  ];
-
-  // Chart config
   const chartConfig = {
-    sp500: {
-      label: "S&P 500",
-      color: "#333333"
-    },
-    nasdaq: {
-      label: "NASDAQ",
-      color: "#666666"
-    },
-    dowjones: {
-      label: "Dow Jones",
-      color: "#999999"
-    },
-    value: {
-      label: "Value",
-      color: "#666666"
-    }
+    sp500: { label: "S&P 500", color: "#333333" },
+    nasdaq: { label: "NASDAQ", color: "#666666" },
+    dowjones: { label: "Dow Jones", color: "#999999" },
+    value: { label: "Value", color: "#666666" }
   };
 
   const container = {
@@ -86,169 +57,17 @@ const MarketOverview = () => {
       animate="show"
       className="space-y-6"
     >
-      <motion.div variants={item} className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <MarketSummaryCard 
-          title="Today's Markets"
-          subtitle="Major indices overview"
-          data={marketData.slice(0, 3)}
-        />
-        <MarketSummaryCard 
-          title="Global Markets"
-          subtitle="International indices"
-          data={marketData.slice(3, 6)}
-        />
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-base">Asset Classes</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {assetClasses.map((asset) => (
-                <div key={asset.name} className="flex justify-between items-center">
-                  <span className="font-medium text-sm">{asset.name}</span>
-                  <div className={`flex items-center ${
-                    asset.value >= 0 ? "text-green-500" : "text-red-500"
-                  }`}>
-                    {asset.value >= 0 ? (
-                      <TrendingUp className="h-3 w-3 mr-1" />
-                    ) : (
-                      <TrendingDown className="h-3 w-3 mr-1" />
-                    )}
-                    <span className="text-xs font-semibold">
-                      {asset.value >= 0 ? "+" : ""}{asset.value}%
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+      <motion.div variants={item}>
+        <MarketSummarySection marketData={marketData} />
       </motion.div>
 
       <motion.div variants={item}>
-        <Card className="w-full">
-          <CardHeader className="pb-0">
-            <div className="flex items-center justify-between">
-              <CardTitle>Major Indices - 9 Month Trend</CardTitle>
-              <Button variant="ghost" className="text-xs flex items-center gap-1 text-gray-500">
-                View Full Chart <ArrowUpRight size={14} />
-              </Button>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="h-80 w-full mt-2 mb-6 overflow-hidden"> 
-              <ChartContainer config={chartConfig}>
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart 
-                    data={chartData} 
-                    margin={{ top: 20, right: 30, left: 20, bottom: 40 }}
-                  > 
-                    <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                    <XAxis dataKey="name" tick={{ fontSize: 12 }} tickMargin={10} />
-                    <YAxis tick={{ fontSize: 12 }} tickMargin={10} />
-                    <ChartTooltip content={<ChartTooltipContent />} />
-                    <Line type="monotone" dataKey="sp500" stroke="#333333" strokeWidth={2} dot={false} />
-                    <Line type="monotone" dataKey="nasdaq" stroke="#666666" strokeWidth={2} dot={false} />
-                    <Line type="monotone" dataKey="dowjones" stroke="#999999" strokeWidth={2} dot={false} />
-                    <ChartLegend content={<ChartLegendContent />} verticalAlign="bottom" height={36} />
-                  </LineChart>
-                </ResponsiveContainer>
-              </ChartContainer>
-            </div>
-          </CardContent>
-        </Card>
+        <MarketChart chartData={chartData} chartConfig={chartConfig} />
       </motion.div>
 
       <motion.div variants={item} className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader className="pb-0">
-            <div className="flex items-center justify-between">
-              <CardTitle>Market Sectors</CardTitle>
-              <Button variant="ghost" className="text-xs flex items-center gap-1 text-gray-500">
-                View All <ArrowUpRight size={14} />
-              </Button>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="h-60">
-              <ChartContainer config={{
-                value: {
-                  label: "Performance",
-                  color: "#666666"
-                }
-              }}>
-                <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={[
-                    {name: 'Technology', value: 3.2},
-                    {name: 'Healthcare', value: 1.5},
-                    {name: 'Financials', value: -0.8},
-                    {name: 'Energy', value: 2.1},
-                    {name: 'Consumer', value: 0.5},
-                    {name: 'Utilities', value: -0.3},
-                  ]}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                    <XAxis dataKey="name" tick={{ fontSize: 12 }} tickMargin={10} />
-                    <YAxis tick={{ fontSize: 12 }} tickMargin={10} />
-                    <ChartTooltip content={<ChartTooltipContent />} />
-                    <defs>
-                      <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#666666" stopOpacity={0.8}/>
-                        <stop offset="95%" stopColor="#666666" stopOpacity={0}/>
-                      </linearGradient>
-                    </defs>
-                    <Area type="monotone" dataKey="value" stroke="#666666" fillOpacity={1} fill="url(#colorUv)" />
-                  </AreaChart>
-                </ResponsiveContainer>
-              </ChartContainer>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="pb-0">
-            <div className="flex items-center justify-between">
-              <CardTitle>Commodities</CardTitle>
-              <Button variant="ghost" className="text-xs flex items-center gap-1 text-gray-500">
-                View All <ArrowUpRight size={14} />
-              </Button>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4 mt-2">
-              {[
-                { name: "Gold", price: "$2,356.70", change: 0.75, color: "#777777" },
-                { name: "Silver", price: "$28.12", change: 1.15, color: "#999999" },
-                { name: "Crude Oil", price: "$75.46", change: -0.65, color: "#333333" },
-                { name: "Natural Gas", price: "$3.12", change: 2.15, color: "#555555" },
-              ].map((item) => (
-                <div key={item.name} className="flex justify-between items-center">
-                  <div className="flex items-center">
-                    <div 
-                      className="w-3 h-3 rounded-full mr-2" 
-                      style={{ backgroundColor: item.color }}
-                    ></div>
-                    <span className="font-medium">{item.name}</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <span className="text-sm">{item.price}</span>
-                    <div className={`flex items-center ${
-                      item.change >= 0 ? "text-gray-700" : "text-gray-500"
-                    }`}>
-                      {item.change >= 0 ? (
-                        <TrendingUp className="h-3 w-3 mr-1" />
-                      ) : (
-                        <TrendingDown className="h-3 w-3 mr-1" />
-                      )}
-                      <span className="text-xs font-semibold">
-                        {item.change >= 0 ? "+" : ""}{item.change}%
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+        <SectorPerformanceCard />
+        <CommoditiesCard />
       </motion.div>
     </motion.div>
   );

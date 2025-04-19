@@ -19,20 +19,23 @@ interface ActivityListProps {
 }
 
 export const ActivityList: React.FC<ActivityListProps> = ({ activities }) => {
+  // Ensure activities is always an array to prevent undefined.length errors
+  const safeActivities = activities || [];
+  
   return (
     <Card>
       <CardHeader className="pb-2">
         <div className="flex justify-between items-center">
           <CardTitle className="text-xl">Activity History</CardTitle>
-          <Badge className="bg-gray-800">{activities.length} Activities</Badge>
+          <Badge className="bg-gray-800">{safeActivities.length} Activities</Badge>
         </div>
       </CardHeader>
       <CardContent>
         <ScrollArea className="h-[calc(100vh-240px)]">
           <div>
-            {activities.length > 0 ? (
+            {safeActivities.length > 0 ? (
               <div className="space-y-4">
-                {activities.map((activity) => (
+                {safeActivities.map((activity) => (
                   <ActivityItem key={activity.id} activity={activity} />
                 ))}
               </div>

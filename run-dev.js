@@ -4,13 +4,23 @@
 // This script runs Vite directly from the node_modules directory
 const { spawn } = require('child_process');
 const path = require('path');
-
-const viteExecutable = path.resolve(__dirname, 'node_modules', '.bin', 'vite');
+const fs = require('fs');
 
 console.log('Starting Vite development server...');
-console.log(`Using Vite from: ${viteExecutable}`);
 
-const viteProcess = spawn(viteExecutable, [], {
+// Check if vite exists in node_modules
+const viteExecutablePath = path.resolve(__dirname, 'node_modules', '.bin', 'vite');
+const viteExists = fs.existsSync(viteExecutablePath);
+
+if (!viteExists) {
+  console.error('Vite executable not found in node_modules/.bin');
+  console.error('Please install vite with: npm install vite@latest');
+  process.exit(1);
+}
+
+console.log(`Using Vite from: ${viteExecutablePath}`);
+
+const viteProcess = spawn(viteExecutablePath, [], {
   stdio: 'inherit',
   shell: true
 });

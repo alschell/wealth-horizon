@@ -34,7 +34,7 @@ const DashboardNavigation: React.FC = () => {
 
   return (
     <header className="fixed top-0 z-50 w-full border-b bg-white shadow-sm">
-      {/* Add a container div with the same max-width and padding as the dashboard content */}
+      {/* Container div with the same max-width and padding as the dashboard content */}
       <div className="mx-auto max-w-7xl w-full px-6">
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center">

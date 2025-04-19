@@ -1,3 +1,4 @@
+
 import React from "react";
 import { FadeIn } from "@/components/ui/animation";
 import ContactForm from "./ContactForm";
@@ -13,7 +14,7 @@ const ContactFormSection: React.FC = () => {
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 text-center">
               <TranslatedText>Contact Us</TranslatedText>
             </h2>
-            <p className="mt-4 text-xl text-gray-600 max-w-5xl mx-auto text-center whitespace-nowrap">
+            <p className="mt-4 text-xl text-gray-600 max-w-5xl mx-auto text-center">
               <TranslatedText>Have questions about how </TranslatedText>
               <span className="text-indigo-600">Wealth</span>
               <TranslatedText>Horizon can transform your wealth management?</TranslatedText>

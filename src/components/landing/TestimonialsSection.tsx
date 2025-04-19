@@ -1,3 +1,4 @@
+
 import React from "react";
 import { FadeIn } from "@/components/ui/animation";
 import TranslatedText from "@/components/ui/translated-text";

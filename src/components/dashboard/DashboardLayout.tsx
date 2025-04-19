@@ -11,10 +11,6 @@ interface DashboardLayoutProps {
   paddingX?: string;
 }
 
-/**
- * Dashboard layout component that provides consistent layout structure
- * for all dashboard pages.
- */
 const DashboardLayout = ({ 
   children, 
   fullWidth = false,
@@ -23,7 +19,7 @@ const DashboardLayout = ({
 }: DashboardLayoutProps) => {
   const location = useLocation();
   
-  // Scroll to top when location changes for better UX
+  // Scroll to top when location changes
   React.useEffect(() => {
     window.scrollTo(0, 0);
   }, [location.pathname]);

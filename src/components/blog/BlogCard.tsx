@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Clock, User } from "lucide-react";
 import { BlogPost } from "./types";
@@ -26,16 +27,15 @@ export const BlogCard: React.FC<BlogCardProps> = ({ post, onClick }) => {
         />
       </div>
       <div className="p-6">
-        <div className="flex items-center justify-between mb-3">
-          <span className="text-xs font-medium text-indigo-600 bg-indigo-50 rounded-full px-3 py-1">
-            {post.category}
-          </span>
+        <div className="flex items-center mb-3">
+          <span className="text-xs font-medium text-indigo-600 bg-indigo-50 rounded-full px-3 py-1">{post.category}</span>
+          <span className="mx-2 text-gray-300">•</span>
           <span className="text-sm text-gray-500 flex items-center">
             <Clock size={14} className="mr-1" /> {post.readTime}
           </span>
         </div>
-        <h3 className="text-xl font-semibold text-gray-800 mb-2 text-left">{post.title}</h3>
-        <p className="text-gray-600 mb-4 text-left">{post.excerpt}</p>
+        <h3 className="text-xl font-semibold text-gray-800 mb-2">{post.title}</h3>
+        <p className="text-gray-600 mb-4">{post.excerpt}</p>
         <div className="flex items-center justify-between">
           <div className="flex items-center">
             <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 mr-2">

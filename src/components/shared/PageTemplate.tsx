@@ -1,3 +1,4 @@
+
 import React, { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { FadeIn } from "@/components/ui/animation";
@@ -20,6 +21,7 @@ const PageTemplate: React.FC<PageTemplateProps> = ({
 }) => {
   const location = useLocation();
   
+  // Scroll to top when location changes
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [location.pathname]);
@@ -29,16 +31,16 @@ const PageTemplate: React.FC<PageTemplateProps> = ({
       <div className="py-12 max-w-7xl mx-auto px-6">
         <FadeIn>
           <div className="mb-8">
-            <Link to="/" className="text-indigo-600 hover:underline mb-4 inline-block text-left">
+            <Link to="/" className="text-indigo-600 hover:underline mb-4 inline-block">
               &larr; Back to Home
             </Link>
             
-            <div className="flex items-start gap-3 mb-2">
+            <div className="flex items-center gap-3 mb-2">
               {Icon && <Icon className="h-7 w-7 text-indigo-600" />}
-              <h1 className="text-3xl font-bold text-gray-900 text-left">{title}</h1>
+              <h1 className="text-3xl font-bold text-gray-900">{title}</h1>
             </div>
             
-            <p className="text-gray-600 max-w-full text-left whitespace-normal text-base leading-relaxed">
+            <p className="text-gray-600 max-w-full whitespace-normal text-base leading-relaxed">
               {description}
             </p>
           </div>

@@ -6,21 +6,18 @@ import { HomeNavigation, DashboardNavigation } from './navigation';
 
 /**
  * Main navigation component that conditionally renders the appropriate
- * navigation variant based on the current route.
- * 
- * Uses route detection to determine which navigation component to render
- * and whether navigation should be visible at all.
+ * navigation variant based on the current route
  */
 const Navigation: React.FC = () => {
   const location = useLocation();
   const { isHomePage, shouldHideNavigation } = useNavigationRoutes(location);
 
-  // If navigation should be hidden (like on auth pages), return null
+  // If navigation should be hidden, return null
   if (shouldHideNavigation) {
     return null;
   }
 
-  // Render the appropriate navigation component based on current route
+  // Determine which navigation to render based on the current route
   return isHomePage ? <HomeNavigation /> : <DashboardNavigation />;
 };
 

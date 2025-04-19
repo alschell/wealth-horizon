@@ -10,14 +10,13 @@ interface DashboardHeaderProps {
 
 const DashboardHeader: React.FC<DashboardHeaderProps> = ({ onCustomizeClick }) => {
   return (
-    <div className="flex justify-between items-start">
+    <div className="flex justify-between items-center">
       <PageHeaderCard
         icon={LayoutDashboard}
         title="Dashboard"
         description="Your complete financial overview at a glance"
         iconColor="text-gray-700"
         iconBgColor="bg-gray-100"
-        className="text-left"
       />
       <Button 
         variant="ghost" 

@@ -1,7 +1,10 @@
 
-// Export navigation components with consistent naming
+// Components
 export { default as HomeNavigation } from './HomeNavigation';
 export { default as DashboardNavigation } from './DashboardNavigation';
 
-// Export shared navigation utilities
-export * from './useNavigationRoutes';
+// Hooks
+export { useNavigationRoutes } from './useNavigationRoutes';
+
+// Configuration
+export { ROUTES_CONFIG } from './routesConfig';

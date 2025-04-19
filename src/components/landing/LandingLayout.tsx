@@ -1,4 +1,5 @@
-import React, { useMemo } from "react";
+
+import React from "react";
 import HeroSection from "./HeroSection";
 import WhyWHSection from "./WhyWHSection";
 import FeaturesSection from "./FeaturesSection";
@@ -6,34 +7,15 @@ import BenefitsSection from "./BenefitsSection";
 import TestimonialsSection from "./TestimonialsSection";
 import CTASection from "./CTASection";
 import FooterSection from "./FooterSection";
-import ContactFormSection from "./ContactFormSection";
+import { ContactFormSection } from "./contact";
 import { useScrollToSection } from "@/hooks/useScrollToSection";
 
-const SECTION_IDS = [
-  'why-wh',
-  'features',
-  'benefits',
-  'testimonials',
-  'contact',
-  'about'
-] as const;
+// Define section IDs
+const SECTION_IDS = ['why-wh', 'features', 'benefits', 'testimonials', 'contact', 'about'];
 
-type SectionId = typeof SECTION_IDS[number];
-
-/**
- * Main landing page layout component that organizes all landing page sections
- */
 const LandingLayout: React.FC = () => {
+  // Create refs for each section - this is where the error is occurring
   const { sectionRefs, scrollToSection } = useScrollToSection(SECTION_IDS);
-  
-  const sectionComponents = useMemo(() => ({
-    'why-wh': <WhyWHSection />,
-    'features': <FeaturesSection />,
-    'benefits': <BenefitsSection />,
-    'testimonials': <TestimonialsSection />,
-    'contact': <ContactFormSection />,
-    'about': <FooterSection />
-  }), []);
 
   return (
     <div className="min-h-screen bg-white w-full">
@@ -41,14 +23,31 @@ const LandingLayout: React.FC = () => {
         onScrollToFeatures={() => scrollToSection(sectionRefs.features)} 
       />
       
-      {SECTION_IDS.map((sectionId) => (
-        <div key={sectionId} ref={sectionRefs[sectionId]} id={sectionId}>
-          {sectionComponents[sectionId]}
-        </div>
-      ))}
+      <div ref={sectionRefs['why-wh']} id="why-wh">
+        <WhyWHSection />
+      </div>
+      
+      <div ref={sectionRefs.features} id="features">
+        <FeaturesSection />
+      </div>
+      
+      <div ref={sectionRefs.benefits} id="benefits">
+        <BenefitsSection />
+      </div>
+      
+      <div ref={sectionRefs.testimonials} id="testimonials">
+        <TestimonialsSection />
+      </div>
+      
+      <div ref={sectionRefs.contact} id="contact">
+        <ContactFormSection />
+      </div>
       
       <CTASection />
-      <FooterSection />
+      
+      <div ref={sectionRefs.about} id="about">
+        <FooterSection />
+      </div>
     </div>
   );
 };

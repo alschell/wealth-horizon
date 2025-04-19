@@ -34,42 +34,38 @@ const DashboardNavigation: React.FC = () => {
 
   return (
     <header className="fixed top-0 z-50 w-full border-b bg-white shadow-sm">
-      <div className="w-full mx-auto">
-        <div className="max-w-7xl mx-auto px-6 w-full">
-          <div className="flex h-16 items-center justify-between">
-            <div className="flex items-center">
-              <Link to="/" className="font-bold text-xl flex items-center">
-                <span className="text-indigo-500">Wealth</span>
-                <span>Horizon</span>
-              </Link>
-            </div>
-            
-            <div className="flex items-center gap-3">
-              <div className="relative w-64 mr-2">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-                <Input placeholder={searchPlaceholder} className="pl-10 bg-white" />
-              </div>
-              <NotificationsPopover />
-              <Button 
-                variant="ghost" 
-                size="icon"
-                asChild
-              >
-                <Link to="/settings">
-                  <Settings className="h-5 w-5" />
-                  <span className="sr-only"><TranslatedText>Settings</TranslatedText></span>
-                </Link>
-              </Button>
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                onClick={handleLogout}
-              >
-                <LogOut className="h-5 w-5" />
-                <span className="sr-only"><TranslatedText>Logout</TranslatedText></span>
-              </Button>
-            </div>
+      <div className="flex h-16 items-center justify-between mx-auto max-w-7xl px-6 sticky top-0">
+        <div className="flex items-center">
+          <Link to="/" className="font-bold text-xl flex items-center">
+            <span className="text-indigo-500">Wealth</span>
+            <span>Horizon</span>
+          </Link>
+        </div>
+        
+        <div className="flex items-center gap-3">
+          <div className="relative w-64 mr-2">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+            <Input placeholder={searchPlaceholder} className="pl-10 bg-white" />
           </div>
+          <NotificationsPopover />
+          <Button 
+            variant="ghost" 
+            size="icon"
+            asChild
+          >
+            <Link to="/settings">
+              <Settings className="h-5 w-5" />
+              <span className="sr-only"><TranslatedText>Settings</TranslatedText></span>
+            </Link>
+          </Button>
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            onClick={handleLogout}
+          >
+            <LogOut className="h-5 w-5" />
+            <span className="sr-only"><TranslatedText>Logout</TranslatedText></span>
+          </Button>
         </div>
       </div>
     </header>

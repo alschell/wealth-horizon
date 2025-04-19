@@ -34,10 +34,10 @@ const BenefitsSection: React.FC = () => {
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-16">
           <FadeIn>
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 text-center mx-auto">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
               <TranslatedText>Transform Your Wealth Management</TranslatedText>
             </h2>
-            <p className="mt-4 text-xl text-gray-600 max-w-3xl mx-auto text-center">
+            <p className="mt-4 text-xl text-gray-600 max-w-3xl mx-auto">
               <TranslatedText>Experience a new level of efficiency, insight, and control with </TranslatedText>
               <span className="text-indigo-600">Wealth</span>
               <span className="text-gray-900">Horizon</span>.
@@ -54,10 +54,10 @@ const BenefitsSection: React.FC = () => {
                     {benefit.icon}
                   </div>
                   <div>
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2 text-left lg:text-center">
+                    <h3 className="text-xl font-semibold text-gray-900 mb-2">
                       <TranslatedText>{benefit.title}</TranslatedText>
                     </h3>
-                    <p className="text-gray-600 text-left lg:text-center">
+                    <p className="text-gray-600">
                       <TranslatedText>{benefit.description}</TranslatedText>
                     </p>
                   </div>

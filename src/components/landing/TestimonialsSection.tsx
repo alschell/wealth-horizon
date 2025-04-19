@@ -27,7 +27,7 @@ const TestimonialsSection: React.FC = () => {
       <div className="max-w-7xl mx-auto px-6">
         <div className="mb-16">
           <FadeIn>
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 text-center mx-auto">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 text-center">
               <TranslatedText>Trusted by Leading Institutions</TranslatedText>
             </h2>
             <p className="mt-4 text-xl text-gray-600 max-w-3xl mx-auto text-center">
@@ -41,15 +41,15 @@ const TestimonialsSection: React.FC = () => {
           {testimonials.map((testimonial, index) => (
             <FadeIn key={index} delay={index * 0.1}>
               <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-200 h-full flex flex-col">
-                <div className="mb-6 text-center">
+                <div className="mb-6">
                   {[1, 2, 3, 4, 5].map((star) => (
                     <span key={star} className="text-yellow-400">★</span>
                   ))}
                 </div>
-                <p className="text-gray-700 flex-grow italic mb-6 text-center">
+                <p className="text-gray-700 flex-grow italic mb-6">
                   "<TranslatedText>{testimonial.quote}</TranslatedText>"
                 </p>
-                <div className="flex items-center justify-center">
+                <div className="flex items-center">
                   <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 font-semibold">
                     {testimonial.name.charAt(0)}
                   </div>

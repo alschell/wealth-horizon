@@ -1,7 +1,7 @@
 
 import React from "react";
 import { FadeIn, ScaleIn } from "@/components/ui/animation";
-import { Target, TrendingUp, CheckCircle, UserPlus } from "lucide-react";
+import { CheckCircle, Target, TrendingUp, UserPlus } from "lucide-react";
 import TranslatedText from "@/components/ui/translated-text";
 
 const WhyWHSection: React.FC = () => {
@@ -33,12 +33,10 @@ const WhyWHSection: React.FC = () => {
       <div className="max-w-7xl mx-auto px-6">
         <FadeIn>
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-center mx-auto">
-              <TranslatedText>Why </TranslatedText>
-              <span className="text-indigo-600">Wealth</span>
-              <span className="text-gray-900">Horizon</span>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
+              <TranslatedText>Why </TranslatedText><span className="text-indigo-600">Wealth</span><span className="text-gray-900">Horizon</span>
             </h2>
-            <p className="mt-4 text-xl text-gray-600 max-w-3xl mx-auto text-center">
+            <p className="mt-4 text-xl text-gray-600 max-w-3xl mx-auto">
               <TranslatedText>
                 Discover why leading family offices and institutions choose our platform for their wealth management needs
               </TranslatedText>
@@ -53,10 +51,10 @@ const WhyWHSection: React.FC = () => {
                 <div className="w-12 h-12 mx-auto mb-4 flex items-center justify-center rounded-full bg-indigo-50 text-indigo-600">
                   {reason.icon}
                 </div>
-                <h3 className="text-xl font-semibold mb-2 text-center">
+                <h3 className="text-xl font-semibold mb-2 text-gray-900">
                   <TranslatedText>{reason.title}</TranslatedText>
                 </h3>
-                <p className="text-gray-600 text-center">
+                <p className="text-gray-600">
                   <TranslatedText>{reason.description}</TranslatedText>
                 </p>
               </div>

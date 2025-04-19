@@ -30,6 +30,14 @@ export interface UseUnifiedFormProps<T> {
  */
 export interface UseUnifiedFormReturn<T> {
   formState: FormState<T>;
+  // Direct access to form state for compatibility
+  values: T;
+  errors: Record<string, string>;
+  touched: Record<string, boolean>;
+  isDirty: boolean;
+  isSubmitting: boolean;
+  isSuccess: boolean;
+  // Form handlers
   handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void;
   handleBlur: (field: keyof T) => void;
   setFieldValue: (field: keyof T, value: any) => void;

@@ -7,121 +7,7 @@ import { useFormSubmission } from './useFormSubmission';
 import { useFormValidationUtils } from './useFormValidationUtils';
 import { Validator } from '@/utils/validation/core';
 import { required } from '@/utils/validation/validators';
-
-/**
- * Props for the useUnifiedForm hook
- */
-export interface UseUnifiedFormProps<T> {
-  /**
-   * Initial form values
-   */
-  initialValues: T;
-  
-  /**
-   * Field validators
-   */
-  validators?: Partial<Record<keyof T, Validator>>;
-  
-  /**
-   * Required fields
-   */
-  requiredFields?: Array<keyof T>;
-  
-  /**
-   * Form submission handler
-   */
-  onSubmit?: (values: T) => Promise<void> | void;
-  
-  /**
-   * Success callback
-   */
-  onSuccess?: () => void;
-  
-  /**
-   * Error callback
-   */
-  onError?: (error: unknown) => void;
-  
-  /**
-   * Success message
-   */
-  successMessage?: string;
-  
-  /**
-   * Error message
-   */
-  errorMessage?: string;
-  
-  /**
-   * Reset form after successful submission
-   */
-  resetAfterSubmit?: boolean;
-}
-
-/**
- * Return type for the useUnifiedForm hook
- */
-export interface UseUnifiedFormReturn<T> {
-  /**
-   * Form state
-   */
-  formState: ReturnType<typeof useFormState<T>>['formState'];
-  
-  /**
-   * Handle input change
-   */
-  handleChange: ReturnType<typeof useFormFields<T>>['handleChange'];
-  
-  /**
-   * Handle input blur
-   */
-  handleBlur: ReturnType<typeof useFormFields<T>>['handleBlur'];
-  
-  /**
-   * Set a field value
-   */
-  setFieldValue: ReturnType<typeof useFormFields<T>>['setFieldValue'];
-  
-  /**
-   * Set multiple field values
-   */
-  setFieldValues: ReturnType<typeof useFormFields<T>>['setFieldValues'];
-  
-  /**
-   * Set a field error
-   */
-  setFieldError: ReturnType<typeof useFormValidation<T>>['setFieldError'];
-  
-  /**
-   * Clear a field error
-   */
-  clearFieldError: ReturnType<typeof useFormValidation<T>>['clearFieldError'];
-  
-  /**
-   * Validate the form
-   */
-  validateForm: () => boolean;
-  
-  /**
-   * Handle form submission
-   */
-  handleSubmit: (e?: React.FormEvent) => Promise<boolean>;
-  
-  /**
-   * Reset the form
-   */
-  resetForm: () => void;
-  
-  /**
-   * Check if a field has an error
-   */
-  hasError: ReturnType<typeof useFormValidationUtils>['hasError'];
-  
-  /**
-   * Get error message for a field
-   */
-  getErrorMessage: ReturnType<typeof useFormValidationUtils>['getErrorMessage'];
-}
+import { UseUnifiedFormProps, UseUnifiedFormReturn } from './types';
 
 /**
  * Unified form hook for handling form state, validation, and submission
@@ -229,8 +115,15 @@ export function useUnifiedForm<T extends Record<string, any>>(
   // Get validation utils
   const { hasError, getErrorMessage } = useFormValidationUtils(formState.errors);
   
+  // For backwards compatibility, add direct references to formState properties
   return {
     formState,
+    values: formState.values,
+    errors: formState.errors,
+    touched: formState.touched,
+    isDirty: formState.isDirty,
+    isSubmitting: formState.isSubmitting,
+    isSuccess: formState.isSuccess,
     handleChange,
     handleBlur,
     setFieldValue,
@@ -241,6 +134,8 @@ export function useUnifiedForm<T extends Record<string, any>>(
     handleSubmit,
     resetForm,
     hasError,
-    getErrorMessage
+    getErrorMessage,
+    // For test compatibility
+    validateFields: validateForm
   };
 }

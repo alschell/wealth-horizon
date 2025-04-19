@@ -92,6 +92,14 @@ export function useUnifiedForm<T extends Record<string, any>>(
 
   return {
     formState,
+    // Add direct access to form state properties for compatibility
+    values: formState.values,
+    errors: formState.errors,
+    touched: formState.touched,
+    isDirty: formState.isDirty,
+    isSubmitting: formState.isSubmitting,
+    isSuccess: formState.isSuccess,
+    // Form actions and helpers
     handleChange,
     handleBlur,
     setFieldValue,

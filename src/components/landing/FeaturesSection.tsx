@@ -54,6 +54,10 @@ const FeaturesSection: React.FC<FeaturesSectionProps> = ({ id }) => {
             </h2>
             <p className="mt-4 text-xl text-gray-600 max-w-3xl mx-auto">
               <TranslatedText>
+                Our AI-native platform simplifies managing all your wealth with intuitive tools designed for the most sophisticated family offices and institutions
+              </TranslatedText>
+              <br />
+              <TranslatedText>
                 Experience a new level of efficiency, insight, and control with WealthHorizon
               </TranslatedText>
             </p>

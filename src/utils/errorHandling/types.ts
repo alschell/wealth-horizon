@@ -42,6 +42,10 @@ export interface ErrorHandlerOptions {
   componentName?: string;
   /** Optional callback to execute when error occurs */
   onError?: (error: unknown) => void;
+  /** Custom fallback UI to show when an error occurs */
+  fallback?: React.ReactNode;
+  /** Custom toast title for error notifications */
+  toastTitle?: string;
 }
 
 /**

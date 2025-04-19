@@ -2,7 +2,7 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
 import { DocumentFileWithMetadata } from '@/components/onboarding/legal/types';
 import { useErrorHandler } from '@/utils/errorHandling/useErrorHandler';
-import { useErrorBoundary } from '@/utils/errorHandling/useErrorBoundary';
+import { useErrorBoundary } from '@/hooks/useErrorBoundary';
 
 interface DocumentContextType {
   documents: DocumentFileWithMetadata[];
@@ -36,7 +36,9 @@ export const DocumentProvider: React.FC<DocumentProviderProps> = ({
     message: 'There was an error with the document management system.',
     onError: (error) => {
       setError(error);
-      handleError(error, { toastTitle: 'Document Error' });
+      handleError(error, { 
+        toastTitle: 'Document Error' 
+      });
     }
   });
 

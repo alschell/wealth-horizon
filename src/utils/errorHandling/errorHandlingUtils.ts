@@ -23,7 +23,8 @@ export function handleError(
     actionText,
     action,
     onError,
-    componentName
+    componentName,
+    toastTitle = "Error"
   } = options;
   
   // Parse error details
@@ -47,7 +48,7 @@ export function handleError(
   // Show toast notification if enabled and not silent
   if (showToast && !silent) {
     toast({
-      title: "Error",
+      title: toastTitle,
       description: errorMessage,
       variant: "destructive",
       action: actionText && action ? {

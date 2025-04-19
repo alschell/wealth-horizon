@@ -6,7 +6,7 @@
  * Includes utilities for parsing, logging, and displaying errors.
  */
 
-// Core error types and interfaces - export only once
+// Core error types and interfaces
 export type { 
   ErrorResponse,
   ErrorHandlerOptions,
@@ -46,4 +46,3 @@ export {
   withErrorHandling,
   withCustomErrorFallback
 } from './withErrorHandling';
-

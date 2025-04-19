@@ -1,7 +1,7 @@
-
 import { useState, useCallback } from 'react';
 import { getErrorMessage, parseError } from '@/utils/errorHandling';
 import { showSuccess } from '@/utils/toast';
+import { useFormSubmission } from './form/useFormSubmission';
 
 /**
  * Options for form submission
@@ -111,6 +111,8 @@ export function useUnifiedForm<T extends Record<string, any>>(initialData: T) {
     setLastError(null);
   }, [initialData]);
 
+  const { createSubmitHandler } = useFormSubmission<T>();
+
   /**
    * Submit form data
    * @param submitFn Function to call with form data
@@ -175,7 +177,7 @@ export function useUnifiedForm<T extends Record<string, any>>(initialData: T) {
     } finally {
       setIsSubmitting(false);
     }
-  }, [formData, resetForm]);
+  }, [formData, resetForm, createSubmitHandler]);
 
   return {
     formData,

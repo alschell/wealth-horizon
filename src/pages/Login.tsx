@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Mail, Lock, ArrowRight, Eye, EyeOff, Shield, Home } from "lucide-react";
@@ -31,7 +30,7 @@ const Login = () => {
     <div className="min-h-screen flex items-center justify-center bg-white relative">
       <Link 
         to="/" 
-        className="absolute top-4 left-4 text-indigo-600 hover:underline"
+        className="absolute top-4 left-4 text-indigo-600 hover:underline flex items-center"
       >
         &larr; Back to Home
       </Link>
@@ -45,8 +44,8 @@ const Login = () => {
                 <span className="text-gray-900">Horizon</span>
               </h1>
             </Link>
-            <h2 className="text-3xl font-bold text-gray-900 mb-3">Welcome back</h2>
-            <p className="text-gray-600">Sign in to your personalized dashboard</p>
+            <h2 className="text-3xl font-bold text-gray-900 mb-3 text-center">Welcome back</h2>
+            <p className="text-gray-600 text-center">Sign in to your personalized dashboard</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">

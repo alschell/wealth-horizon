@@ -40,7 +40,11 @@ export function useFormSubmission<T>() {
       return async (data: T): Promise<boolean> => {
         // Validate form if validation function is provided
         if (validateForm && typeof validateForm === 'function') {
-          const isValid = validateForm.length > 0 ? validateForm(data) : validateForm();
+          // Check if validateForm expects arguments based on its length property
+          const isValid = validateForm.length > 0 
+            ? await validateForm(data) 
+            : await validateForm();
+            
           if (!isValid) {
             return false;
           }

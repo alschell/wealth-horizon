@@ -60,10 +60,11 @@ export function useFormControls<T>(): UseFormControlsReturn<T> {
 
         // Validate form if validation function is provided
         if (validateForm) {
-          // Check if validateForm expects an argument
-          const isValid = typeof validateForm.length > 0 && validateForm.length === 1 ? 
-            await validateForm(data) : 
-            await validateForm();
+          // Check if validateForm expects an argument based on function length
+          const validateFn = validateForm as Function;
+          const isValid = validateFn.length > 0 
+            ? await validateForm(data) 
+            : await validateForm();
             
           if (!isValid) return;
         }

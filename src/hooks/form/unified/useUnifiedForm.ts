@@ -1,4 +1,3 @@
-
 import { useCallback } from 'react';
 import { useFormFields } from '../useFormFields';
 import { useFormValidation } from '../useFormValidation';
@@ -50,8 +49,9 @@ export function useUnifiedForm<T extends Record<string, any>>(
   // Get validation utils
   const { hasError, getErrorMessage } = useFormValidationUtils(errors);
   
-  // Initialize form validation (for backward compatibility)
+  // Initialize form validation
   const {
+    validateForm: validateWithValidators,
     setFieldError,
     clearFieldError
   } = useFormValidation<T>({
@@ -59,6 +59,11 @@ export function useUnifiedForm<T extends Record<string, any>>(
     requiredFields,
     setErrors: () => {} // This is handled by useFormFields now
   });
+  
+  // Validate form with current values
+  const validateForm = useCallback((): boolean => {
+    return validateWithValidators(values);
+  }, [validateWithValidators, values]);
   
   // Initialize form submission
   const {
@@ -114,12 +119,12 @@ export function useUnifiedForm<T extends Record<string, any>>(
     setFieldValues,
     setFieldError,
     clearFieldError,
-    validateForm: validateFields,
+    validateForm,
     handleSubmit,
     resetForm,
     hasError,
     getErrorMessage,
     // For test compatibility
-    validateFields
+    validateFields: validateForm
   };
 }

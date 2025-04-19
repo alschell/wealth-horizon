@@ -3,7 +3,7 @@ import { useState, useCallback } from 'react';
 import type { Validator } from './validators/validatorUtils';
 import { 
   validateField, 
-  validateFields, 
+  validateFields as validateMultipleFields, 
   createErrorClearer 
 } from '@/utils/form/validation/formValidationUtils';
 
@@ -135,8 +135,8 @@ export function useFormFields<T extends Record<string, any>>(
     return true;
   }, [values, requiredFields, validators, clearError]);
 
-  const validateAllFields = useCallback(() => {
-    const errors = validateMultipleFields(values, validators, requiredFields);
+  const validateAllFields = useCallback((): boolean => {
+    const errors = validateMultipleFields(values, validators || {}, requiredFields);
     setErrors(errors);
     return Object.keys(errors).length === 0;
   }, [values, validators, requiredFields]);
@@ -158,7 +158,7 @@ export function useFormFields<T extends Record<string, any>>(
     handleBlur,
     setFieldValue,
     setFieldValues,
-    validateFields,
+    validateFields: validateAllFields,
     resetForm
   };
 }

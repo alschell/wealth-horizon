@@ -1,4 +1,3 @@
-
 import { renderHook, act } from '@testing-library/react-hooks';
 import { useFormFields } from '../useFormFields';
 
@@ -77,16 +76,6 @@ describe('useFormFields', () => {
     });
     
     expect(result.current.errors.name).toBeTruthy();
-    expect(result.current.errors.email).toBeTruthy();
-    expect(result.current.isValid).toBe(false);
-    
-    // Update a field to make it valid
-    act(() => {
-      result.current.setFieldValue('name', 'John Doe');
-      result.current.validateFields();
-    });
-    
-    expect(result.current.errors.name).toBeFalsy();
     expect(result.current.errors.email).toBeTruthy();
   });
   

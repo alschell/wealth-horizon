@@ -1,36 +1,88 @@
 
 import { useState, useCallback } from 'react';
+import { FormState } from './unified/types';
 
 /**
  * Hook for managing form state
  * 
  * @param initialValues Initial form values
- * @returns Form state and state update functions
+ * @returns Form state and state updaters
  */
 export function useFormState<T extends Record<string, any>>(initialValues: T) {
-  const [values, setValues] = useState<T>(initialValues);
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  const [touched, setTouched] = useState<Record<string, boolean>>({});
-  const [isDirty, setIsDirty] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
+  const [formState, setFormState] = useState<FormState<T>>({
+    values: initialValues,
+    errors: {},
+    touched: {},
+    isDirty: false,
+    isSubmitting: false,
+    isSuccess: false
+  });
 
-  const formState = {
-    values,
-    errors,
-    touched,
-    isDirty,
-    isSubmitting,
-    isSuccess
-  };
+  const setValues = useCallback((valuesUpdater: React.SetStateAction<T>) => {
+    setFormState(prev => {
+      const newValues = typeof valuesUpdater === 'function'
+        ? valuesUpdater(prev.values)
+        : valuesUpdater;
+        
+      return {
+        ...prev,
+        values: newValues,
+        isDirty: true
+      };
+    });
+  }, []);
+
+  const setErrors = useCallback((errorsUpdater: React.SetStateAction<Record<string, string>>) => {
+    setFormState(prev => {
+      const newErrors = typeof errorsUpdater === 'function'
+        ? errorsUpdater(prev.errors)
+        : errorsUpdater;
+        
+      return {
+        ...prev,
+        errors: newErrors
+      };
+    });
+  }, []);
+
+  const setTouched = useCallback((touchedUpdater: React.SetStateAction<Record<string, boolean>>) => {
+    setFormState(prev => {
+      const newTouched = typeof touchedUpdater === 'function'
+        ? touchedUpdater(prev.touched)
+        : touchedUpdater;
+        
+      return {
+        ...prev,
+        touched: newTouched
+      };
+    });
+  }, []);
+
+  const setSubmitting = useCallback((isSubmitting: boolean) => {
+    setFormState(prev => ({
+      ...prev,
+      isSubmitting,
+      ...(isSubmitting ? { isSuccess: false } : {})
+    }));
+  }, []);
+
+  const setSuccess = useCallback((isSuccess: boolean) => {
+    setFormState(prev => ({
+      ...prev,
+      isSuccess,
+      isSubmitting: false
+    }));
+  }, []);
 
   const resetFormState = useCallback(() => {
-    setValues(initialValues);
-    setErrors({});
-    setTouched({});
-    setIsDirty(false);
-    setIsSubmitting(false);
-    setIsSuccess(false);
+    setFormState({
+      values: initialValues,
+      errors: {},
+      touched: {},
+      isDirty: false,
+      isSubmitting: false,
+      isSuccess: false
+    });
   }, [initialValues]);
 
   return {
@@ -38,9 +90,8 @@ export function useFormState<T extends Record<string, any>>(initialValues: T) {
     setValues,
     setErrors,
     setTouched,
-    setIsDirty,
-    setIsSubmitting,
-    setIsSuccess,
+    setSubmitting,
+    setSuccess,
     resetFormState
   };
 }

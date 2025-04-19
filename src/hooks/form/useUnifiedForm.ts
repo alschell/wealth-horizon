@@ -1,7 +1,7 @@
 
 import { useCallback } from 'react';
 import { useFormState } from './useFormState';
-import { useFormFields } from './useFormFields';
+import { useFormFieldHandlers } from './handlers/useFormFieldHandlers';
 import { useFormValidation } from './useFormValidation';
 import { useFormSubmission } from './useFormSubmission';
 import { useFormValidationUtils } from './useFormValidationUtils';
@@ -54,7 +54,7 @@ export function useUnifiedForm<T extends Record<string, any>>(
     handleBlur,
     setFieldValue,
     setFieldValues
-  } = useFormFields<T>({
+  } = useFormFieldHandlers<T>({
     setValues,
     clearError: (field) => setErrors(prev => {
       const newErrors = { ...prev };

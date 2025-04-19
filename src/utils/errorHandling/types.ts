@@ -1,3 +1,4 @@
+
 import { ErrorInfo } from 'react';
 
 /**
@@ -39,7 +40,7 @@ export interface ErrorHandlerOptions {
   /** Component name for contextual error messages */
   componentName?: string;
   /** Optional callback when error occurs */
-  onError?: (error: unknown) => void;
+  onError?: (error: Error, errorInfo?: React.ErrorInfo) => void;
   /** Custom fallback UI */
   fallback?: React.ReactNode;
   /** Custom toast title */

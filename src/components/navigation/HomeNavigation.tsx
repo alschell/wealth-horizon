@@ -45,7 +45,7 @@ const HomeNavigation: React.FC = () => {
           
           <div className="hidden md:flex items-center ml-10 space-x-8">
             <button 
-              onClick={() => scrollToSection('why-wh')} 
+              onClick={() => scrollToSection('benefits')} 
               className="text-gray-700 hover:text-indigo-600 transition-colors"
             >
               <TranslatedText>Benefits</TranslatedText>

@@ -10,7 +10,7 @@ import { ContactFormSection } from "./contact";
 import { useScrollToSection } from "@/hooks/useScrollToSection";
 
 // Define section IDs
-const SECTION_IDS = ['why-wh', 'features', 'testimonials', 'contact', 'about'];
+const SECTION_IDS = ['benefits', 'features', 'testimonials', 'contact', 'about'];
 
 const LandingLayout: React.FC = () => {
   // Create refs for each section
@@ -22,7 +22,7 @@ const LandingLayout: React.FC = () => {
         onScrollToFeatures={() => scrollToSection(sectionRefs.features)} 
       />
       
-      <div ref={sectionRefs['why-wh']} id="why-wh">
+      <div ref={sectionRefs.benefits} id="benefits">
         <WhyWHSection />
       </div>
       

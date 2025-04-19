@@ -78,13 +78,31 @@ This document serves as the definitive guide for developers working on our platf
 - **src/constants/**: Constant values and configuration
 - **src/assets/**: Static assets like images and icons
 
-### Module Structure
+### Component Composition Guidelines
 
-- One component/hook/utility per file
-- Index files for convenient exports
-- Group related files in appropriate feature directories
-- Keep files under 250 lines of code
-- Extract complex logic into separate utilities or hooks
+- Break complex interfaces into smaller, focused components
+- Use composition over inheritance
+- Keep component files under 200 lines of code
+- Extract reusable UI patterns into shared components
+- Follow atomic design principles:
+  - Atoms: Basic UI elements (buttons, inputs)
+  - Molecules: Simple component combinations
+  - Organisms: Complex UI sections
+  - Templates: Page layouts
+  - Pages: Complete interfaces
+
+### File Organization Standards
+
+- Group related files in feature directories
+- Place shared utilities in appropriate utility folders
+- Keep test files adjacent to their implementations
+- Use index files for clean exports
+- Maintain clear separation of concerns:
+  - Components: UI and presentation logic
+  - Hooks: Business logic and state management
+  - Utils: Helper functions and utilities
+  - Types: Type definitions and interfaces
+  - Constants: Configuration and static data
 
 ## Component Architecture
 
@@ -191,16 +209,18 @@ This document serves as the definitive guide for developers working on our platf
 
 ## Error Handling
 
-- Implement consistent error handling with error boundaries
-- Use try/catch blocks for async operations
+- Use error boundaries for React component errors
+- Implement consistent error handling patterns
+- Log errors appropriately in development/production
 - Provide user-friendly error messages
-- Log errors appropriately (without exposing sensitive information)
-- Use centralized error handling utilities
-- Implement graceful fallbacks for failed operations
-- Handle network errors consistently
-- Differentiate between expected and unexpected errors
-- Provide retry mechanisms where appropriate
-- Include error tracking and monitoring
+- Handle async errors with proper error states
+- Use type-safe error handling with TypeScript
+- Implement retry mechanisms where appropriate
+- Follow the error handling hierarchy:
+  1. Component-level error boundaries
+  2. Route-level error handling
+  3. Global error handling
+  4. API error handling
 
 ## Form Handling
 

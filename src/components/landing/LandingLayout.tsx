@@ -7,14 +7,14 @@ import BenefitsSection from "./BenefitsSection";
 import TestimonialsSection from "./TestimonialsSection";
 import CTASection from "./CTASection";
 import FooterSection from "./FooterSection";
-import { ContactFormSection } from "./contact";
+import ContactFormSection from "./ContactFormSection";
 import { useScrollToSection } from "@/hooks/useScrollToSection";
 
 // Define section IDs
 const SECTION_IDS = ['why-wh', 'features', 'benefits', 'testimonials', 'contact', 'about'];
 
 const LandingLayout: React.FC = () => {
-  // Create refs for each section - this is where the error is occurring
+  // Create refs for each section
   const { sectionRefs, scrollToSection } = useScrollToSection(SECTION_IDS);
 
   return (

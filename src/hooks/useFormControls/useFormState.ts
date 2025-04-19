@@ -3,8 +3,9 @@ import { useState } from 'react';
 import { FormSubmissionState } from './types';
 
 /**
- * Hook for managing form submission state
- * @returns Form state and setter
+ * Hook to manage form submission state
+ * 
+ * @returns Form submission state and state setter
  */
 export function useFormSubmissionState() {
   const [formSubmissionState, setFormSubmissionState] = useState<FormSubmissionState>({

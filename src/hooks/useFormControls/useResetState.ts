@@ -1,14 +1,16 @@
 
 import { useCallback } from 'react';
+import { Dispatch, SetStateAction } from 'react';
 import { FormSubmissionState } from './types';
 
 /**
- * Hook for creating form reset functionality
- * @param setFormSubmissionState - Form state setter
+ * Hook to create a reset state handler
+ * 
+ * @param setFormSubmissionState State setter function
  * @returns Reset state handler
  */
 export function useResetState(
-  setFormSubmissionState: React.Dispatch<React.SetStateAction<FormSubmissionState>>
+  setFormSubmissionState: Dispatch<SetStateAction<FormSubmissionState>>
 ) {
   return useCallback(() => {
     setFormSubmissionState({

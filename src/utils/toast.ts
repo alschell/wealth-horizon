@@ -1,34 +1,45 @@
 
 /**
- * Toast utility functions for displaying notifications to users
+ * Toast utility functions for success and error notifications
  */
+import { toast } from "sonner";
 
-// Function to show a success message toast
-export function showSuccess(title: string, message: string): void {
-  console.log(`Success: ${title} - ${message}`);
-  // Implementation would connect to a toast library
+/**
+ * Display a success toast notification
+ */
+export function showSuccess(title: string, message: string) {
+  toast.success(title, {
+    description: message,
+    duration: 3000,
+  });
 }
 
-// Function to show an error message toast
-export function showError(title: string, message: string): void {
-  console.error(`Error: ${title} - ${message}`);
-  // Implementation would connect to a toast library
+/**
+ * Display an error toast notification
+ */
+export function showError(title: string, message: string) {
+  toast.error(title, {
+    description: message,
+    duration: 5000,
+  });
 }
 
-// Function to show an info message toast
-export function showInfo(title: string, message: string): void {
-  console.log(`Info: ${title} - ${message}`);
-  // Implementation would connect to a toast library
+/**
+ * Display an info toast notification
+ */
+export function showInfo(title: string, message: string) {
+  toast.info(title, {
+    description: message,
+    duration: 3000,
+  });
 }
 
-// Function to show a warning message toast
-export function showWarning(title: string, message: string): void {
-  console.warn(`Warning: ${title} - ${message}`);
-  // Implementation would connect to a toast library
-}
-
-// Function to dismiss all toasts
-export function dismissAllToasts(): void {
-  console.log('Dismissed all toasts');
-  // Implementation would connect to a toast library
+/**
+ * Display a warning toast notification
+ */
+export function showWarning(title: string, message: string) {
+  toast.warning(title, {
+    description: message,
+    duration: 4000,
+  });
 }

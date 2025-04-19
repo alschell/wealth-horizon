@@ -8,5 +8,7 @@
  */
 
 export { useUnifiedForm } from './useUnifiedForm';
+export { useFormFieldHandlers } from '../handlers/useFormFieldHandlers';
+export { useFormSubmissionState } from '../submission/useFormSubmissionState';
 export * from './types';
 export * from './utils';

@@ -57,12 +57,6 @@ const HomeNavigation: React.FC = () => {
               <TranslatedText>Features</TranslatedText>
             </button>
             <button 
-              onClick={() => scrollToSection('benefits')} 
-              className="text-gray-700 hover:text-indigo-600 transition-colors"
-            >
-              <TranslatedText>Benefits</TranslatedText>
-            </button>
-            <button 
               onClick={() => scrollToSection('testimonials')} 
               className="text-gray-700 hover:text-indigo-600 transition-colors"
             >

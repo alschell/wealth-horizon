@@ -11,16 +11,16 @@ const ContactFormSection: React.FC = () => {
       <div className="max-w-7xl mx-auto px-6">
         <FadeIn>
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 text-center">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 text-center" style={{ textAlign: 'center' }}>
               <TranslatedText>Contact Us</TranslatedText>
             </h2>
-            <p className="mt-4 text-xl text-gray-600 mx-auto max-w-3xl text-center">
+            <p className="mt-4 text-xl text-gray-600 mx-auto max-w-3xl text-center" style={{ textAlign: 'center' }}>
               <TranslatedText>Have questions about how </TranslatedText>
               <span className="text-indigo-600">Wealth</span>
               <span className="text-gray-900">Horizon</span>
               <TranslatedText> can transform your wealth management?</TranslatedText>
             </p>
-            <p className="mt-2 text-xl text-gray-600 text-center">
+            <p className="mt-2 text-xl text-gray-600 text-center" style={{ textAlign: 'center' }}>
               <TranslatedText>Get in touch with our team.</TranslatedText>
             </p>
           </div>

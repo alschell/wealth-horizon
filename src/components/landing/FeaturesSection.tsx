@@ -49,10 +49,10 @@ const FeaturesSection: React.FC<FeaturesSectionProps> = ({ id }) => {
       <div className="max-w-7xl mx-auto px-6">
         <FadeIn>
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 text-center">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 text-center" style={{ textAlign: 'center' }}>
               <TranslatedText>Transform Your Wealth Management</TranslatedText>
             </h2>
-            <p className="mt-4 text-xl text-gray-600 max-w-3xl mx-auto text-center">
+            <p className="mt-4 text-xl text-gray-600 max-w-3xl mx-auto text-center" style={{ textAlign: 'center' }}>
               <TranslatedText>
                 Experience a new level of efficiency, insight, and control with WealthHorizon
               </TranslatedText>

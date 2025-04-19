@@ -1,50 +1,30 @@
 
-import { useCallback, useState } from "react";
-import { toast } from "@/hooks/use-toast";
-import React from "react";
-
-interface ErrorBoundaryHookOptions {
-  fallbackMessage?: string;
-  showToast?: boolean;
-  resetOnUnmount?: boolean;
-  logToConsole?: boolean;
-  componentName?: string;
-}
+import React, { useCallback, useState } from 'react';
+import { ErrorBoundary } from '@/components/error-boundary';
+import { useErrorHandler } from '@/utils/errorHandling';
+import { ErrorHandlerOptions } from '@/utils/errorHandling/types';
+import { toast } from '@/hooks/use-toast';
 
 /**
  * Hook for use in components to show error boundary functionality
  * without using class components
+ * 
+ * @param options Configuration options for the error boundary hook
+ * @returns Error boundary utilities and wrapper component
  */
-export function useErrorBoundary(options: ErrorBoundaryHookOptions = {}) {
+export function useErrorBoundary(options: ErrorHandlerOptions = {}) {
   const {
     fallbackMessage = "Something went wrong",
     showToast = true,
-    resetOnUnmount = true,
-    logToConsole = true,
     componentName
   } = options;
   
   const [error, setError] = useState<Error | null>(null);
-  
-  const handleError = useCallback((caught: unknown) => {
-    const err = caught instanceof Error ? caught : new Error(String(caught));
-    
-    setError(err);
-    
-    if (logToConsole) {
-      console.error(`Error ${componentName ? `in ${componentName}` : 'caught by boundary'}:`, err);
-    }
-    
-    if (showToast) {
-      toast({
-        title: "An error occurred",
-        description: err.message || fallbackMessage,
-        variant: "destructive"
-      });
-    }
-    
-    return err;
-  }, [fallbackMessage, showToast, logToConsole, componentName]);
+  const { handleError } = useErrorHandler({
+    componentName,
+    showToast,
+    fallbackMessage
+  });
   
   const reset = useCallback(() => {
     setError(null);
@@ -74,7 +54,12 @@ export function useErrorBoundary(options: ErrorBoundaryHookOptions = {}) {
   
   return {
     error,
-    handleError,
+    handleError: (caught: unknown) => {
+      const err = caught instanceof Error ? caught : new Error(String(caught));
+      setError(err);
+      handleError(err);
+      return err;
+    },
     reset,
     isError: error !== null,
     ErrorBoundaryWrapper
@@ -83,10 +68,14 @@ export function useErrorBoundary(options: ErrorBoundaryHookOptions = {}) {
 
 /**
  * HOC to wrap a component with error boundary using the hook
+ * 
+ * @param Component Component to wrap with error handling
+ * @param options Configuration options
+ * @returns Wrapped component with error handling
  */
 export function withErrorHandling<P extends object>(
   Component: React.ComponentType<P>,
-  options: ErrorBoundaryHookOptions = {}
+  options: ErrorHandlerOptions = {}
 ): React.FC<P> {
   const displayName = Component.displayName || Component.name || 'Component';
   

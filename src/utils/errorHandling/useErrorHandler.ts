@@ -1,72 +1,47 @@
 
 import { useState, useCallback } from 'react';
 import { useToast } from '@/hooks/use-toast';
-import { parseError, type ErrorResponse } from './errorUtils';
-import { handleError } from './errorHandlingUtils';
-
-/**
- * Options for the error handler hook
- */
-export interface ErrorHandlerHookOptions {
-  silent?: boolean;
-  logToConsole?: boolean;
-  showToast?: boolean;
-  toastTitle?: string;
-  fallbackMessage?: string;
-  componentName?: string;
-  onError?: (error: unknown) => void;
-}
+import { ErrorHandlerOptions, ErrorResponse } from './types';
+import { parseError } from './errorUtils';
+import { handleError, withErrorCatch, tryCatch } from './errorHandlingUtils';
 
 /**
  * Hook providing consistent error handling utilities
+ * Centralizes error handling logic and provides a simple API
  * 
  * @param defaultOptions Default options for all error handling in this hook instance
+ * @returns Error handling utilities
  */
-export function useErrorHandler(defaultOptions: ErrorHandlerHookOptions = {}) {
+export function useErrorHandler(defaultOptions: ErrorHandlerOptions = {}) {
   const [lastError, setLastError] = useState<ErrorResponse | null>(null);
   const { toast } = useToast();
   
   /**
    * Handles an error with configurable options
+   * @param error - The error to handle
+   * @param options - Error handling options to override defaults
+   * @returns The parsed error
    */
-  const handleErrorWithOptions = useCallback((error: unknown, options: ErrorHandlerHookOptions = {}) => {
-    const {
-      silent = defaultOptions.silent ?? false,
-      logToConsole = defaultOptions.logToConsole ?? true,
-      showToast = defaultOptions.showToast ?? true,
-      toastTitle = defaultOptions.toastTitle ?? 'Error',
-      fallbackMessage = defaultOptions.fallbackMessage ?? 'An unexpected error occurred',
-      componentName = defaultOptions.componentName,
-      onError = defaultOptions.onError
-    } = options;
-    
-    // Parse error to standardized format
+  const handleErrorWithOptions = useCallback((error: unknown, options: ErrorHandlerOptions = {}) => {
+    const mergedOptions = { ...defaultOptions, ...options };
     const parsedError = parseError(error);
     setLastError(parsedError);
     
     // Use the centralized error handler
-    handleError(error, {
-      fallbackMessage,
-      logToConsole,
-      showToast,
-      silent,
-      onError
-    });
-    
-    // Log component context if provided
-    if (componentName && logToConsole && !silent) {
-      console.info(`Error occurred in component: ${componentName}`);
-    }
+    handleError(error, mergedOptions);
     
     return parsedError;
-  }, [defaultOptions, toast]);
+  }, [defaultOptions]);
   
   /**
    * Wraps an async function with error handling
+   * @param fn - The function to wrap
+   * @param options - Error handling options
+   * @returns A wrapped function that handles errors
    */
   const withErrorHandling = useCallback(<T extends (...args: any[]) => Promise<any>>(
     fn: T,
-    options: ErrorHandlerHookOptions = {}
+    options: ErrorHandlerOptions = {}
   ) => {
     return async (...args: Parameters<T>): Promise<ReturnType<T> | undefined> => {
       try {
@@ -80,10 +55,13 @@ export function useErrorHandler(defaultOptions: ErrorHandlerHookOptions = {}) {
   
   /**
    * Safely executes a function with error handling
+   * @param fn - The function to execute
+   * @param options - Error handling options
+   * @returns The result of the function or undefined
    */
-  const tryCatch = useCallback(async <T>(
+  const tryCatchFn = useCallback(async <T>(
     fn: () => Promise<T> | T,
-    options: ErrorHandlerHookOptions = {}
+    options: ErrorHandlerOptions = {}
   ): Promise<T | undefined> => {
     try {
       return await fn();
@@ -96,7 +74,7 @@ export function useErrorHandler(defaultOptions: ErrorHandlerHookOptions = {}) {
   return {
     handleError: handleErrorWithOptions,
     withErrorHandling,
-    tryCatch,
+    tryCatch: tryCatchFn,
     lastError,
     clearLastError: () => setLastError(null)
   };

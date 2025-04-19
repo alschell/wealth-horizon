@@ -1,32 +1,36 @@
 
 /**
- * Error Handling Utilities
+ * Error Handling Module
  * 
- * This module exports a unified API for error handling across the application.
- * It provides utilities for logging, displaying, and managing errors.
+ * Provides a unified API for error handling across the application.
+ * Includes utilities for parsing, logging, and displaying errors.
  */
 
-// Error utilities
+// Core error types and interfaces
+export * from './types';
+
+// Error utilities for parsing, formatting, and logging errors
 export { 
+  getErrorMessage,
+  parseError,
   logError,
   createContextualError,
-  type ErrorResponse,
-  getErrorMessage,
-  parseError
+  formatErrorDetails,
+  isApiErrorResponse
 } from './errorUtils';
 
-// Error boundaries and components
+// Error handling functions
+export {
+  handleError,
+  withErrorCatch,
+  tryCatch
+} from './errorHandlingUtils';
+
+// React hooks for error handling
+export { useErrorHandler } from './useErrorHandler';
+
+// Higher order components for error boundaries
 export {
   withErrorHandling,
   withCustomErrorFallback
 } from './withErrorHandling';
-
-// Function wrappers and handlers
-export {
-  handleError,
-  type ErrorHandlerOptions,
-  withErrorCatch
-} from './errorHandlingUtils';
-
-// React hooks
-export { useErrorHandler } from './useErrorHandler';

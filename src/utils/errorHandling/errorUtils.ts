@@ -1,12 +1,5 @@
 
-/**
- * Standard error response format
- */
-export interface ErrorResponse {
-  message: string;
-  code: string;
-  details?: Record<string, unknown>;
-}
+import { ErrorResponse } from './types';
 
 /**
  * Extracts error message from any error type
@@ -87,4 +80,31 @@ export function logError(error: unknown, componentName?: string): void {
  */
 export function createContextualError(message: string, componentName: string): Error {
   return new Error(`[${componentName}] ${message}`);
+}
+
+/**
+ * Format error details for display
+ * @param error - The error to format
+ * @returns Formatted error details as a string
+ */
+export function formatErrorDetails(error: unknown): string {
+  if (error instanceof Error) {
+    return error.stack || error.message;
+  }
+  
+  return JSON.stringify(error, null, 2);
+}
+
+/**
+ * Check if an object is an API error response
+ * @param obj - The object to check
+ * @returns Whether the object matches the API error format
+ */
+export function isApiErrorResponse(obj: unknown): obj is ErrorResponse {
+  return (
+    typeof obj === 'object' &&
+    obj !== null &&
+    'message' in obj &&
+    typeof (obj as ErrorResponse).message === 'string'
+  );
 }

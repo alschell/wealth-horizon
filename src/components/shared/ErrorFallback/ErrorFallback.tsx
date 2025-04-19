@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { ErrorFallbackProps } from './ErrorFallbackProps';
+import { ErrorFallbackProps } from '@/utils/errorHandling/types';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { AlertCircle, RefreshCw } from 'lucide-react';

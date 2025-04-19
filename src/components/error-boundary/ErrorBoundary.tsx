@@ -1,7 +1,7 @@
-
 import React, { Component, ErrorInfo } from 'react';
-import { ErrorBoundaryProps, ErrorBoundaryState } from './types';
-import ErrorFallback from '@/components/shared/ErrorFallback';
+import { ErrorBoundaryProps, ErrorBoundaryState } from '@/utils/errorHandling/types';
+import ErrorFallback from '@/components/shared/ErrorFallback/ErrorFallback';
+import { logError } from '@/utils/errorHandling/errorUtils';
 
 /**
  * Error Boundary component that catches JavaScript errors anywhere in its child
@@ -17,27 +17,41 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('Error caught by boundary:', error, errorInfo);
+    // Log the error
+    logError(error, this.props.componentName);
+    console.error('Component Stack:', errorInfo.componentStack);
     
+    // Call onError handler if provided
     if (this.props.onError) {
       this.props.onError(error, errorInfo);
     }
     
+    // Update state with error info
     this.setState({ errorInfo });
   }
 
+  // Reset the error boundary state
+  public resetErrorBoundary = () => {
+    this.setState({ hasError: false, error: undefined, errorInfo: undefined });
+    if (this.props.resetErrorBoundary) {
+      this.props.resetErrorBoundary();
+    }
+  };
+
   public render() {
     if (this.state.hasError) {
+      // Use custom fallback if provided
       if (this.props.fallback) {
         return this.props.fallback;
       }
 
+      // Otherwise use the default ErrorFallback
       return (
         <ErrorFallback 
           error={this.state.error}
-          resetErrorBoundary={this.props.resetErrorBoundary}
+          resetErrorBoundary={this.resetErrorBoundary}
           title={`Error in ${this.props.componentName || 'component'}`}
-          description={this.state.errorInfo?.componentStack}
+          errorInfo={this.state.errorInfo}
           showResetButton={true}
         />
       );

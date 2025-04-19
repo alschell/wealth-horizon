@@ -1,5 +1,5 @@
 
-import { FormSubmissionState } from '../form/submission/types';
+import { SubmissionState } from '../form/submission/types';
 
 /**
  * Options for form submission
@@ -27,7 +27,7 @@ export interface FormSubmissionOptions<T> {
 /**
  * Form submission state
  */
-export interface FormSubmissionState {
+export interface FormSubmissionState extends SubmissionState {
   /** Whether the form is currently submitting */
   isSubmitting: boolean;
   

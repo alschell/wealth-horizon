@@ -57,13 +57,9 @@ export function useUnifiedFormCompat<T extends Record<string, any>>(
     setFieldValue,
     setFieldValues
   } = useFormFields<T>({
-    setValues,
-    clearError: (field) => setErrors(prev => {
-      const newErrors = { ...prev };
-      delete newErrors[field as string];
-      return newErrors;
-    }),
-    setTouched
+    initialValues: formState.values,
+    validators: enhancedValidators,
+    requiredFields
   });
   
   // Initialize form validation

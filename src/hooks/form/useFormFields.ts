@@ -59,7 +59,7 @@ export function useFormFields<T extends Record<string, any>>(
   const handleBlur = useCallback((field: keyof T) => {
     setTouched(prev => ({
       ...prev,
-      [field]: true
+      [field as string]: true
     }));
     
     // Validate on blur
@@ -76,7 +76,7 @@ export function useFormFields<T extends Record<string, any>>(
     
     setTouched(prev => ({
       ...prev,
-      [field]: true
+      [field as string]: true
     }));
     
     setIsDirty(true);
@@ -122,9 +122,9 @@ export function useFormFields<T extends Record<string, any>>(
     }
     
     // Run custom validator if provided
-    if (validators[field as keyof T]) {
-      const validatorFn = validators[field as keyof T];
-      const errorMessage = validatorFn?.(values[field as keyof T]);
+    const validatorForField = validators[field as keyof T];
+    if (validatorForField) {
+      const errorMessage = validatorForField(values[field as keyof T]);
       
       if (errorMessage) {
         setErrors(prev => ({
@@ -171,7 +171,7 @@ export function useFormFields<T extends Record<string, any>>(
       const validatorFn = validators[field];
       
       if (validatorFn) {
-        const errorMessage = validatorFn(values[field]);
+        const errorMessage = validatorFn(values[field as keyof T]);
         
         if (errorMessage) {
           setErrors(prev => ({

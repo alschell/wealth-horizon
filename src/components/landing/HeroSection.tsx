@@ -26,10 +26,13 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToFeatures }) => {
   const scrollToWhyWH = () => {
     const benefitsSection = document.getElementById('benefits');
     if (benefitsSection) {
-      console.log("Scrolling to benefits section");
       benefitsSection.scrollIntoView({ behavior: 'smooth' });
     } else {
-      console.log("Benefits section not found");
+      // If benefits section not found, try features as fallback
+      const featuresSection = document.getElementById('features');
+      if (featuresSection) {
+        featuresSection.scrollIntoView({ behavior: 'smooth' });
+      }
     }
   };
 

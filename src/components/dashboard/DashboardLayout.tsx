@@ -36,7 +36,9 @@ const DashboardLayout = ({
             )}
           >
             <PageTransition>
-              {children}
+              <div className="text-left"> {/* Add text-left to ensure all content is left-aligned */}
+                {children}
+              </div>
             </PageTransition>
           </div>
         </main>

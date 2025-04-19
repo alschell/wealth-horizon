@@ -1,4 +1,3 @@
-
 import { useCallback } from 'react';
 import { useIsComponentMounted } from '../useIsComponentMounted';
 import { useFormState } from './core/useFormState';
@@ -50,7 +49,7 @@ export function useUnifiedForm<T extends Record<string, any>>(props: UseUnifiedF
         const newErrors = { ...prevErrors };
         delete newErrors[field as string];
         return newErrors as Partial<Record<keyof T, string>>;
-      } as unknown as Partial<Record<keyof T, string>>);
+      });
     },
     setTouched
   });

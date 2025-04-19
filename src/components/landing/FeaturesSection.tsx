@@ -2,6 +2,7 @@
 import React from "react";
 import { Search, Wallet, Database, FileText, Shield } from "lucide-react";
 import TranslatedText from "@/components/ui/translated-text";
+import { FadeIn, ScaleIn } from "@/components/ui/animation";
 
 const features = [
   {
@@ -36,6 +37,16 @@ const features = [
   }
 ];
 
+// Reorder the features for the desired 2-column layout
+const orderedFeatures = [
+  features[0], // Identify opportunities
+  features[1], // Optimize your liquidity
+  features[2], // Access market data
+  features[3], // Manage your financial data
+  features[4], // Create customized reports
+  features[5], // Monitor risks
+];
+
 interface FeaturesSectionProps {
   id?: string;
 }
@@ -55,26 +66,23 @@ const FeaturesSection: React.FC<FeaturesSectionProps> = ({ id }) => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {features.map((feature, index) => (
-            <div 
-              key={index} 
-              className="p-8 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow"
-            >
-              <div className="flex items-start gap-4">
-                <div className="flex-shrink-0 w-12 h-12 flex items-center justify-center rounded-lg bg-indigo-50 text-indigo-600">
-                  <feature.icon size={24} />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {orderedFeatures.map((feature, index) => (
+            <ScaleIn key={index} delay={0.1 * index}>
+              <div 
+                className="p-8 border border-gray-100 rounded-xl shadow-sm hover:shadow-md transition-shadow bg-white h-full flex flex-col"
+              >
+                <div className="w-12 h-12 mb-6 flex items-center justify-center rounded-full bg-indigo-50 text-indigo-600">
+                  <feature.icon size={28} />
                 </div>
-                <div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                    <TranslatedText>{feature.title}</TranslatedText>
-                  </h3>
-                  <p className="text-gray-600">
-                    <TranslatedText>{feature.description}</TranslatedText>
-                  </p>
-                </div>
+                <h3 className="text-xl font-semibold mb-4 text-gray-900 text-left">
+                  <TranslatedText>{feature.title}</TranslatedText>
+                </h3>
+                <p className="text-gray-600 leading-relaxed flex-grow text-left">
+                  <TranslatedText>{feature.description}</TranslatedText>
+                </p>
               </div>
-            </div>
+            </ScaleIn>
           ))}
         </div>
       </div>

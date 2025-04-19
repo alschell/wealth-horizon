@@ -2,12 +2,47 @@
 /**
  * FormField component
  * 
- * A reusable, accessible form field component that handles:
- * - Labels with required indicators
- * - Input validation with error display
- * - Proper ARIA attributes for accessibility
+ * A reusable, accessible form field component that handles labels, validation,
+ * and error states while maintaining WCAG 2.1 accessibility standards.
  * 
- * @component
+ * @example Basic Usage
+ * ```tsx
+ * <FormField
+ *   id="email"
+ *   label="Email Address"
+ *   value={email}
+ *   onChange={handleChange}
+ *   type="email"
+ *   required
+ * />
+ * ```
+ * 
+ * @example With Error State
+ * ```tsx
+ * <FormField
+ *   id="password"
+ *   label="Password"
+ *   value={password}
+ *   onChange={handleChange}
+ *   type="password"
+ *   error="Password must be at least 8 characters"
+ *   required
+ * />
+ * ```
+ * 
+ * @example With Custom Validation
+ * ```tsx
+ * <FormField
+ *   id="phone"
+ *   label="Phone Number"
+ *   value={phone}
+ *   onChange={handleChange}
+ *   type="tel"
+ *   pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+ *   placeholder="123-456-7890"
+ *   error={phoneError}
+ * />
+ * ```
  */
 
 import React from "react";

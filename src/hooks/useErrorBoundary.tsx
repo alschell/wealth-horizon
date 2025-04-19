@@ -5,6 +5,12 @@ import { useErrorHandler } from '@/utils/errorHandling';
 import { ErrorHandlerOptions } from '@/utils/errorHandling/types/core';
 import ErrorFallback from '@/components/shared/ErrorFallback/ErrorFallback';
 
+/**
+ * Hook for creating and managing error boundaries
+ * 
+ * @param options Error handling options
+ * @returns Error boundary utilities and wrapper component
+ */
 export function useErrorBoundary(options: ErrorHandlerOptions = {}) {
   const [error, setError] = useState<Error | null>(null);
   const { handleError } = useErrorHandler(options);

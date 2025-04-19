@@ -6,6 +6,8 @@ import { createErrorClearer } from './validation';
 /**
  * Hook for handling form field changes, blur events, and value updates
  * 
+ * Provides field management functionality with validation support
+ * 
  * @param formState - Current form state
  * @param setFormState - Function to update form state
  * @returns Form field handlers

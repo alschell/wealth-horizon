@@ -6,6 +6,8 @@ import { validateRequiredFields } from './validation';
 /**
  * Hook for form validation functionality
  * 
+ * Provides utilities for validating form values and managing error state
+ * 
  * @param formState - Current form state
  * @param setFormState - Function to update form state
  * @param validate - Custom validation function
@@ -24,6 +26,18 @@ export function useFormValidation<T extends Record<string, any>>(
       ...prev,
       errors: { ...prev.errors, [field as string]: message }
     }));
+  }, [setFormState]);
+  
+  // Clear a field error
+  const clearFieldError = useCallback((field: keyof T) => {
+    setFormState(prev => {
+      const newErrors = { ...prev.errors };
+      delete newErrors[field as string];
+      return {
+        ...prev,
+        errors: newErrors
+      };
+    });
   }, [setFormState]);
 
   // Validate the form
@@ -49,6 +63,7 @@ export function useFormValidation<T extends Record<string, any>>(
 
   return {
     setFieldError,
+    clearFieldError,
     validateForm
   };
 }

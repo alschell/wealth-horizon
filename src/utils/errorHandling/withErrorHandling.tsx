@@ -5,6 +5,13 @@ import ErrorFallback from '@/components/shared/ErrorFallback/ErrorFallback';
 import { logError } from './errorUtils';
 import { ErrorHandlerOptions } from './types';
 
+/**
+ * Higher-order component that wraps a component with an error boundary
+ * 
+ * @param Component - Component to wrap
+ * @param options - Error boundary options
+ * @returns Wrapped component with error handling
+ */
 export function withErrorHandling<P extends object>(
   Component: React.ComponentType<P>, 
   options: ErrorHandlerOptions = {}
@@ -54,6 +61,13 @@ export function withErrorHandling<P extends object>(
   return WithErrorHandlingWrapper;
 }
 
+/**
+ * HOC that wraps a component with a custom error fallback component
+ * 
+ * @param Component - Component to wrap
+ * @param FallbackComponent - Custom fallback component to show on error
+ * @returns Wrapped component with custom error handling
+ */
 export function withCustomErrorFallback<P extends object, FallbackProps extends {error?: Error}>(
   Component: React.ComponentType<P>,
   FallbackComponent: React.ComponentType<FallbackProps>

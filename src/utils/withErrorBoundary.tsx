@@ -1,11 +1,7 @@
 
 import React from 'react';
 import { ErrorBoundary } from '@/components/error-boundary';
-
-interface WithErrorBoundaryOptions {
-  fallback?: React.ReactNode;
-  onError?: (error: Error, errorInfo: React.ErrorInfo) => void;
-}
+import { ErrorHandlerOptions } from '@/utils/errorHandling/types';
 
 /**
  * Higher-order component that wraps a component with an ErrorBoundary
@@ -16,13 +12,17 @@ interface WithErrorBoundaryOptions {
  */
 export function withErrorBoundary<P extends object>(
   Component: React.ComponentType<P>,
-  options: WithErrorBoundaryOptions = {}
+  options: ErrorHandlerOptions = {}
 ): React.FC<P> {
-  const { fallback, onError } = options;
+  const { fallback, onError, componentName } = options;
   
   const WithErrorBoundary: React.FC<P> = (props) => {
     return (
-      <ErrorBoundary fallback={fallback} onError={onError}>
+      <ErrorBoundary 
+        fallback={fallback} 
+        onError={onError}
+        componentName={componentName || Component.displayName || Component.name}
+      >
         <Component {...props} />
       </ErrorBoundary>
     );
@@ -46,26 +46,7 @@ export function withCustomErrorFallback<P extends object, FallbackProps extends 
   Component: React.ComponentType<P>,
   FallbackComponent: React.ComponentType<FallbackProps>
 ): React.ComponentType<P> {
-  return class WithCustomErrorFallback extends React.Component<P, {hasError: boolean; error?: Error}> {
-    constructor(props: P) {
-      super(props);
-      this.state = { hasError: false };
-    }
-
-    static getDerivedStateFromError(error: Error) {
-      return { hasError: true, error };
-    }
-
-    componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-      console.error("Error caught by withCustomErrorFallback:", error, errorInfo);
-    }
-
-    render() {
-      if (this.state.hasError) {
-        return <FallbackComponent error={this.state.error} {...{} as any} />;
-      }
-
-      return <Component {...this.props} />;
-    }
-  };
+  return withErrorBoundary(Component, {
+    fallback: <FallbackComponent error={new Error()} {...{} as any} />
+  });
 }

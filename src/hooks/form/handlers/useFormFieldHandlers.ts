@@ -13,6 +13,8 @@ interface UseFormFieldHandlersOptions<T> {
 /**
  * Hook for handling form field events
  * 
+ * Provides reusable handlers for form field changes, blur events, and setting field values
+ * 
  * @param options Hook options
  * @returns Field handling functions
  */

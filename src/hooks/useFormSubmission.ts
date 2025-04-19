@@ -1,6 +1,5 @@
-
 import { useState, useCallback } from 'react';
-import { getErrorMessage, parseError } from '@/utils/errorHandling';
+import { getErrorMessage } from '@/utils/errorHandling';
 import { showSuccess } from '@/utils/toast';
 
 /**

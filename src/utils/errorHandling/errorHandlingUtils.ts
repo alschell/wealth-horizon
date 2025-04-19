@@ -130,8 +130,9 @@ export function handleError(
 
 /**
  * Creates a try-catch wrapper for async functions
+ * Renamed from withErrorHandling to withErrorCatch to avoid collision
  */
-export function withErrorHandling<T extends (...args: any[]) => Promise<any>>(
+export function withErrorCatch<T extends (...args: any[]) => Promise<any>>(
   fn: T,
   options: ErrorHandlerOptions = {}
 ): (...args: Parameters<T>) => Promise<ReturnType<T> | undefined> {

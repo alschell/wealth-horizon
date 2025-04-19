@@ -5,7 +5,7 @@ export interface FormSubmissionOptions<T> {
   successMessage?: string;
   errorMessage?: string;
   resetAfterSubmit?: boolean;
-  validateForm?: () => Promise<boolean> | boolean;
+  validateForm?: ((data: T) => boolean | Promise<boolean>) | (() => boolean | Promise<boolean>);
 }
 
 export interface FormSubmissionState {

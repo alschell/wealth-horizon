@@ -39,8 +39,11 @@ export function useFormSubmission<T>() {
 
       return async (data: T): Promise<boolean> => {
         // Validate form if validation function is provided
-        if (validateForm && !validateForm(data)) {
-          return false;
+        if (validateForm && typeof validateForm === 'function') {
+          const isValid = validateForm.length > 0 ? validateForm(data) : validateForm();
+          if (!isValid) {
+            return false;
+          }
         }
 
         setIsSubmitting(true);
@@ -54,7 +57,7 @@ export function useFormSubmission<T>() {
             setIsSuccess(true);
             
             if (onSuccess) {
-              onSuccess(data);
+              onSuccess();
             }
             
             if (resetAfterSubmit && resetForm) {

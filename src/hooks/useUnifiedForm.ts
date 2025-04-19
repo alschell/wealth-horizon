@@ -11,7 +11,7 @@ import { useFormSubmission } from './form/useFormSubmission';
  */
 export interface FormSubmissionOptions<T> {
   /** Callback executed after successful submission */
-  onSuccess?: (data: T) => void;
+  onSuccess?: () => void;
   
   /** Callback executed when an error occurs */
   onError?: (error: unknown) => void;
@@ -132,6 +132,10 @@ export function useUnifiedForm<T extends Record<string, any>>(initialData: T) {
       // Ensure validateForm gets the form data
       validateForm: options.validateForm 
         ? (data: T) => options.validateForm!(data) 
+        : undefined,
+      // Convert onSuccess to match expected signature
+      onSuccess: options.onSuccess 
+        ? () => { if (options.onSuccess) options.onSuccess(); }
         : undefined
     };
     

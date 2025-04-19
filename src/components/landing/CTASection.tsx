@@ -17,14 +17,13 @@ const CTASection: React.FC = () => {
       <div className="max-w-7xl mx-auto px-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <FadeIn>
-            <h2 className="text-3xl md:text-4xl font-bold text-white text-left whitespace-nowrap">
+            <h2 className="text-3xl md:text-4xl font-bold text-white">
               <TranslatedText>Ready to Optimize Your Wealth Management?</TranslatedText>
             </h2>
-            <p className="mt-4 text-xl text-indigo-100 max-w-2xl text-left">
+            <p className="mt-4 text-xl text-indigo-100 max-w-2xl">
               <TranslatedText>
                 Join leading family offices and institutions that have transformed their operations with 
               </TranslatedText>
-              {" "}
               <span className="font-semibold">
                 <span className="text-indigo-200">Wealth</span>
                 <span className="text-white">Horizon</span>

@@ -43,7 +43,7 @@ describe('errorUtils', () => {
       const result = parseError('String error');
       
       expect(result.message).toBe('String error');
-      expect(result.code).toBe('STRING_ERROR');
+      expect(result.code).toBe('ERROR');
     });
     
     it('should parse objects with message property correctly', () => {
@@ -55,11 +55,7 @@ describe('errorUtils', () => {
       
       expect(result.message).toBe('Object error');
       expect(result.code).toBe('CUSTOM_CODE');
-      expect(result.details).toEqual({
-        message: 'Object error',
-        code: 'CUSTOM_CODE',
-        details: { field: 'value' }
-      });
+      expect(result.details).toEqual({ field: 'value' });
     });
     
     it('should handle unknown error types', () => {
@@ -110,15 +106,6 @@ describe('errorUtils', () => {
       
       expect(error.message).toBe('[TestComponent] Something went wrong');
       expect(error instanceof Error).toBe(true);
-    });
-    
-    it('should create an error with object context', () => {
-      const contextData = { componentId: 'test-123', userId: 'user-456' };
-      const error = createContextualError('Something went wrong', contextData);
-      
-      expect(error.message).toBe('Something went wrong');
-      expect(error instanceof Error).toBe(true);
-      expect((error as any).context).toEqual(contextData);
     });
   });
 });

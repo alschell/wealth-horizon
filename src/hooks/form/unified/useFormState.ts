@@ -21,10 +21,6 @@ export function createInitialFormState<T extends FieldValues>(defaultValues?: T)
 
 /**
  * Hook for managing form state
- * 
- * Provides a complete solution for managing form state including values,
- * errors, touched fields, and submission state
- * 
  * @param defaultValues - Initial form values
  * @returns Form state and state setters
  */

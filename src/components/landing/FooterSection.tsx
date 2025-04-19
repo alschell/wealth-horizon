@@ -13,6 +13,7 @@ const FooterSection: React.FC = () => {
     if (element) {
       element.scrollIntoView({ behavior: "smooth" });
     } else {
+      // If not found on current page, navigate to home with hash
       navigate(`/#${id}`);
     }
   };
@@ -22,21 +23,21 @@ const FooterSection: React.FC = () => {
       <div className="max-w-7xl mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           <div>
-            <h3 className="text-white font-bold text-xl mb-4 text-left">
+            <h3 className="text-white font-bold text-xl mb-4">
               <span className="text-indigo-400">Wealth</span>
               <span className="text-white">Horizon</span>
             </h3>
-            <p className="mb-4 text-left">
+            <p className="mb-4">
               <TranslatedText>Holistic wealth management for family offices and institutions.</TranslatedText>
             </p>
             <SocialLinks />
           </div>
           
           <div>
-            <h4 className="text-white font-semibold mb-4 text-left">
+            <h4 className="text-white font-semibold mb-4">
               <TranslatedText>Solutions</TranslatedText>
             </h4>
-            <ul className="space-y-2 text-left">
+            <ul className="space-y-2">
               <li><Link to="/portfolio-management" className="hover:text-white transition-colors">
                 <TranslatedText>Portfolio Management</TranslatedText>
               </Link></li>
@@ -56,10 +57,10 @@ const FooterSection: React.FC = () => {
           </div>
           
           <div>
-            <h4 className="text-white font-semibold mb-4 text-left">
+            <h4 className="text-white font-semibold mb-4">
               <TranslatedText>Company</TranslatedText>
             </h4>
-            <ul className="space-y-2 text-left">
+            <ul className="space-y-2">
               <li><Link to="/about" className="hover:text-white transition-colors">
                 <TranslatedText>About Us</TranslatedText>
               </Link></li>
@@ -79,10 +80,10 @@ const FooterSection: React.FC = () => {
           </div>
           
           <div>
-            <h4 className="text-white font-semibold mb-4 text-left">
+            <h4 className="text-white font-semibold mb-4">
               <TranslatedText>Resources</TranslatedText>
             </h4>
-            <ul className="space-y-2 text-left">
+            <ul className="space-y-2">
               <li><Link to="/documentation" className="hover:text-white transition-colors">
                 <TranslatedText>Documentation</TranslatedText>
               </Link></li>
@@ -105,7 +106,7 @@ const FooterSection: React.FC = () => {
         <Separator className="my-8 bg-gray-800" />
         
         <div className="flex flex-col md:flex-row justify-between items-center">
-          <p className="text-left">
+          <p>
             <TranslatedText>© 2025 WealthHorizon. All rights reserved.</TranslatedText>
           </p>
           <div className="mt-4 md:mt-0">

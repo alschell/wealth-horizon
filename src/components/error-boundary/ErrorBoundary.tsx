@@ -1,9 +1,12 @@
 
 import React, { Component, ErrorInfo } from 'react';
 import { ErrorBoundaryProps, ErrorBoundaryState } from './types';
-import ErrorFallback from '@/components/shared/ErrorFallback/ErrorFallback';
-import { handleError } from '@/utils/errorHandling/core';
+import ErrorFallback from '@/components/shared/ErrorFallback';
 
+/**
+ * Error Boundary component that catches JavaScript errors anywhere in its child
+ * component tree and displays a fallback UI
+ */
 export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   public state: ErrorBoundaryState = {
     hasError: false
@@ -14,36 +17,27 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    handleError(error, {
-      componentName: this.props.componentName,
-      context: { componentStack: errorInfo.componentStack },
-      onError: this.props.onError ? 
-        () => {
-          if (this.props.onError) {
-            this.props.onError(error, errorInfo);
-          }
-        } : 
-        undefined
-    });
+    console.error('Error caught by boundary:', error, errorInfo);
+    
+    if (this.props.onError) {
+      this.props.onError(error, errorInfo);
+    }
     
     this.setState({ errorInfo });
   }
 
-  public resetErrorBoundary = () => {
-    this.setState({ hasError: false, error: undefined, errorInfo: undefined });
-    if (this.props.resetErrorBoundary) {
-      this.props.resetErrorBoundary();
-    }
-  };
-
   public render() {
     if (this.state.hasError) {
-      return this.props.fallback || (
+      if (this.props.fallback) {
+        return this.props.fallback;
+      }
+
+      return (
         <ErrorFallback 
-          error={this.state.error || new Error('Unknown error')}
-          resetErrorBoundary={this.resetErrorBoundary}
+          error={this.state.error}
+          resetErrorBoundary={this.props.resetErrorBoundary}
           title={`Error in ${this.props.componentName || 'component'}`}
-          errorInfo={this.state.errorInfo}
+          description={this.state.errorInfo?.componentStack}
           showResetButton={true}
         />
       );

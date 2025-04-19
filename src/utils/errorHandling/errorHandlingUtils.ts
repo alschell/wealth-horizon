@@ -1,46 +1,146 @@
 
-import { ErrorHandlerOptions, ErrorResponse } from './types/core';
-import { handleError } from './core';
+import { toast } from '@/hooks/use-toast';
 
 /**
- * Wraps a function with try/catch error handling
- * @param fn The function to wrap
- * @param options Error handling options
- * @returns Function that executes the original function with error handling
+ * Standard error response format
  */
-export function withErrorCatch<T>(
-  fn: () => Promise<T> | T,
+export interface ErrorResponse {
+  message: string;
+  code?: string;
+  details?: Record<string, any>;
+}
+
+/**
+ * Options for error handler
+ */
+export interface ErrorHandlerOptions {
+  fallbackMessage?: string;
+  logError?: boolean;
+  showToast?: boolean;
+  silent?: boolean;
+  actionText?: string;
+  action?: () => void;
+  onError?: (error: unknown) => void;
+}
+
+/**
+ * Extracts error message from any error type
+ */
+export function getErrorMessage(error: unknown, fallbackMessage = "An unexpected error occurred"): string {
+  if (error instanceof Error) {
+    return error.message;
+  }
+  
+  if (typeof error === "string") {
+    return error;
+  }
+  
+  if (error && typeof error === "object" && "message" in error) {
+    return String((error as ErrorResponse).message);
+  }
+  
+  return fallbackMessage;
+}
+
+/**
+ * Parses an error into a standardized format
+ */
+export function parseError(error: unknown): ErrorResponse {
+  if (error instanceof Error) {
+    return {
+      message: error.message,
+      code: error.name
+    };
+  }
+  
+  if (typeof error === "string") {
+    return {
+      message: error,
+      code: "ERROR_STRING"
+    };
+  }
+  
+  if (error && typeof error === "object") {
+    if ("message" in error) {
+      return {
+        message: String((error as ErrorResponse).message),
+        code: (error as ErrorResponse).code || "ERROR_OBJECT",
+        details: (error as ErrorResponse).details
+      };
+    }
+  }
+  
+  return {
+    message: "An unexpected error occurred",
+    code: "UNKNOWN_ERROR"
+  };
+}
+
+/**
+ * Unified error handling function
+ */
+export function handleError(
+  error: unknown, 
   options: ErrorHandlerOptions = {}
-): () => Promise<T | undefined> {
-  return async (): Promise<T | undefined> => {
+): void {
+  const { 
+    fallbackMessage = "An unexpected error occurred",
+    logError = true,
+    showToast = true,
+    silent = false,
+    actionText,
+    action,
+    onError
+  } = options;
+  
+  // Get error message
+  const errorMessage = getErrorMessage(error, fallbackMessage);
+  
+  // Parse error details
+  const errorDetails = parseError(error);
+  
+  // Log error to console if enabled
+  if (logError && !silent) {
+    console.error("Error:", {
+      message: errorMessage,
+      code: errorDetails.code,
+      details: errorDetails.details,
+      original: error
+    });
+  }
+  
+  // Show toast notification if enabled and not silent
+  if (showToast && !silent) {
+    toast({
+      title: "Error",
+      description: errorMessage,
+      variant: "destructive",
+      action: actionText && action ? {
+        label: actionText,
+        onClick: action
+      } : undefined
+    });
+  }
+  
+  // Call error callback if provided
+  if (onError) {
+    onError(error);
+  }
+}
+
+/**
+ * Creates a try-catch wrapper for async functions
+ */
+export function withErrorHandling<T extends (...args: any[]) => Promise<any>>(
+  fn: T,
+  options: ErrorHandlerOptions = {}
+): (...args: Parameters<T>) => Promise<ReturnType<T> | undefined> {
+  return async (...args: Parameters<T>): Promise<ReturnType<T> | undefined> => {
     try {
-      return await fn();
+      return await fn(...args);
     } catch (error) {
       handleError(error, options);
       return undefined;
     }
   };
-}
-
-/**
- * Alias for withErrorCatch for backward compatibility
- */
-export const tryCatch = withErrorCatch;
-
-/**
- * Executes a function with try/catch error handling
- * @param fn The function to execute
- * @param options Error handling options
- * @returns Result of the function or undefined if it failed
- */
-export async function handleWithTry<T>(
-  fn: () => Promise<T> | T,
-  options: ErrorHandlerOptions = {}
-): Promise<T | undefined> {
-  try {
-    return await fn();
-  } catch (error) {
-    handleError(error, options);
-    return undefined;
-  }
 }

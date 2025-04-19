@@ -1,3 +1,3 @@
 
 export { default } from './ErrorFallback';
-export * from '@/utils/errorHandling/types';
+export * from './ErrorFallbackProps';

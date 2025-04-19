@@ -1,27 +1,21 @@
 
 import React, { useState, useCallback } from 'react';
 import { ErrorBoundary } from '@/components/error-boundary';
-import ErrorFallback from '@/components/shared/ErrorFallback/ErrorFallback';
+import ErrorFallback from '@/components/shared/ErrorFallback';
 import { useNotifications } from '@/hooks/use-notifications';
-import { ErrorHandlerOptions } from './types/core';
 
-/**
- * Configuration options for the error boundary hook
- */
-interface ErrorBoundaryConfig extends ErrorHandlerOptions {
-  /** Whether to show the reset button in the error fallback */
+interface ErrorBoundaryConfig {
+  fallback?: React.ReactNode;
+  onError?: (error: Error, errorInfo: React.ErrorInfo) => void;
   showReset?: boolean;
-  /** Custom error message to display */
   message?: string;
-  /** Whether to show a notification to the user */
+  componentName?: string;
+  logError?: boolean;
   notifyUser?: boolean;
 }
 
 /**
  * Hook for consistent error boundary usage throughout the application
- * 
- * @param config Configuration options for the error boundary
- * @returns Object containing ErrorBoundaryWrapper component and reset function
  */
 export function useErrorBoundary(config: ErrorBoundaryConfig = {}) {
   const {
@@ -30,7 +24,7 @@ export function useErrorBoundary(config: ErrorBoundaryConfig = {}) {
     showReset = true,
     message = "Something went wrong",
     componentName,
-    logToConsole = true,
+    logError = true,
     notifyUser = true
   } = config;
   
@@ -39,7 +33,7 @@ export function useErrorBoundary(config: ErrorBoundaryConfig = {}) {
   
   // Handle errors caught by the error boundary
   const handleError = useCallback((error: Error, errorInfo: React.ErrorInfo) => {
-    if (logToConsole) {
+    if (logError) {
       console.error(`Error in ${componentName || 'component'}:`, error);
       console.error('Component stack:', errorInfo.componentStack);
     }
@@ -51,7 +45,7 @@ export function useErrorBoundary(config: ErrorBoundaryConfig = {}) {
     if (onError) {
       onError(error, errorInfo);
     }
-  }, [componentName, logToConsole, message, notifyUser, onError, showError]);
+  }, [componentName, logError, message, notifyUser, onError, showError]);
   
   // Reset the error boundary
   const resetErrorBoundary = useCallback(() => {

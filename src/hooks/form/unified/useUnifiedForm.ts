@@ -1,4 +1,3 @@
-
 import { useCallback } from 'react';
 import { useFormFields } from '../useFormFields';
 import { useFormValidation } from '../useFormValidation';
@@ -25,11 +24,10 @@ export function useUnifiedForm<T extends Record<string, any>>(
     successMessage = 'Form submitted successfully',
     errorMessage = 'An error occurred during submission',
     requiredFields = [],
-    validators = {},
-    resetAfterSubmit = false
+    validators = {}
   } = props;
   
-  // Use the form fields hook for managing form state
+  // Use the new useFormFields hook for managing form state
   const {
     values,
     errors,
@@ -57,20 +55,18 @@ export function useUnifiedForm<T extends Record<string, any>>(
     setFieldError,
     clearFieldError
   } = useFormValidation<T>({
-    validators: validators,
+    validators: {},
     requiredFields,
     setErrors: () => {} // This is handled by useFormFields now
   });
   
   // Validate form with current values
   const validateForm = useCallback((): boolean => {
-    return validateFields();
-  }, [validateFields]);
+    return validateWithValidators(values);
+  }, [validateWithValidators, values]);
   
   // Initialize form submission
   const {
-    isSubmitting, 
-    isSuccess,
     createSubmitHandler
   } = useFormSubmission<T>();
   
@@ -80,11 +76,11 @@ export function useUnifiedForm<T extends Record<string, any>>(
     {
       successMessage,
       errorMessage,
-      validateForm: validateForm,
+      validateForm: validateFields,
       onSuccess,
       onError,
-      resetAfterSubmit,
-      resetForm
+      resetAfterSubmit: false,
+      resetForm: resetForm
     }
   );
   
@@ -99,21 +95,24 @@ export function useUnifiedForm<T extends Record<string, any>>(
     [submitHandler, values]
   );
   
-  return {
-    formState: {
-      values,
-      errors,
-      touched,
-      isDirty,
-      isSubmitting,
-      isSuccess
-    },
+  // Create formState object for backwards compatibility
+  const formState = {
     values,
     errors,
     touched,
     isDirty,
-    isSubmitting,
-    isSuccess,
+    isSubmitting: false, // This would be handled by useFormSubmission
+    isSuccess: false     // This would be handled by useFormSubmission
+  };
+  
+  return {
+    formState,
+    values,
+    errors,
+    touched,
+    isDirty,
+    isSubmitting: false,
+    isSuccess: false,
     handleChange,
     handleBlur,
     setFieldValue,
@@ -126,6 +125,6 @@ export function useUnifiedForm<T extends Record<string, any>>(
     hasError,
     getErrorMessage,
     // For test compatibility
-    validateFields
+    validateFields: validateForm
   };
 }

@@ -41,6 +41,7 @@ const TestComponent = ({
 };
 
 describe('useErrorBoundary', () => {
+  // Mock console.error to prevent test output cluttering
   let consoleErrorSpy: jest.SpyInstance;
   
   beforeAll(() => {
@@ -53,6 +54,7 @@ describe('useErrorBoundary', () => {
 
   it('should render fallback UI when error occurs', () => {
     render(<TestComponent />);
+    
     expect(screen.getByText(/Test error message/i)).toBeInTheDocument();
   });
   
@@ -62,7 +64,7 @@ describe('useErrorBoundary', () => {
     
     expect(handleError).toHaveBeenCalledTimes(1);
     expect(handleError.mock.calls[0][0]).toBeInstanceOf(Error);
-    expect((handleError.mock.calls[0][0] as Error).message).toBe('Test error');
+    expect(handleError.mock.calls[0][0].message).toBe('Test error');
   });
   
   it('should render custom fallback when provided', () => {

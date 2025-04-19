@@ -2,22 +2,17 @@
 import { useState, useCallback } from 'react';
 import { useIsComponentMounted } from './useIsComponentMounted';
 import { showSuccess, showError } from '@/utils/toast';
-import { FormSubmissionOptions } from './form/types';
 
 /**
- * Return type for the useFormControls hook
+ * Options for form submission handler creation
  */
-export interface UseFormControlsReturn<T> {
-  formSubmissionState: {
-    isSubmitting: boolean;
-    lastError: string | null;
-    isSuccess: boolean;
-  };
-  resetState: () => void;
-  createSubmitHandler: (
-    onSubmit: (data: T) => Promise<void> | void,
-    options?: FormSubmissionOptions<T>
-  ) => (data: T) => Promise<void>;
+export interface FormSubmissionOptions<T> {
+  onSuccess?: () => void;
+  onError?: (error: unknown) => void;
+  successMessage?: string;
+  errorMessage?: string;
+  resetAfterSubmit?: boolean;
+  validateForm?: () => Promise<boolean> | boolean;
 }
 
 /**
@@ -25,7 +20,7 @@ export interface UseFormControlsReturn<T> {
  * 
  * @returns Form state management utilities and handlers
  */
-export function useFormControls<T>(): UseFormControlsReturn<T> {
+export function useFormControls<T>() {
   const isMounted = useIsComponentMounted();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [lastError, setLastError] = useState<string | null>(null);
@@ -60,7 +55,7 @@ export function useFormControls<T>(): UseFormControlsReturn<T> {
 
         // Validate form if validation function is provided
         if (validateForm) {
-          const isValid = await validateForm(data);
+          const isValid = await validateForm();
           if (!isValid) return;
         }
 
@@ -110,11 +105,9 @@ export function useFormControls<T>(): UseFormControlsReturn<T> {
   );
 
   return {
-    formSubmissionState: {
-      isSubmitting,
-      lastError,
-      isSuccess
-    },
+    isSubmitting,
+    lastError,
+    isSuccess,
     resetState,
     createSubmitHandler,
   };

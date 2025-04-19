@@ -1,7 +1,5 @@
 
-import './App.css';
-
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { HelmetProvider } from "react-helmet-async";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";

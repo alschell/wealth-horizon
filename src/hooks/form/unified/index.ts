@@ -9,16 +9,10 @@
 
 export { useUnifiedForm } from './useUnifiedForm';
 export { useFormFieldHandlers } from '../handlers/useFormFieldHandlers';
+export { useFormSubmissionState } from '../submission/useFormSubmissionState';
 export { useFormSubmission } from '../useFormSubmission';
 export { useFormState } from '../useFormState';
 export { useFormValidation } from '../useFormValidation';
 export { useFormValidationUtils } from '../useFormValidationUtils';
-
-// Only export types that don't conflict with the main types.ts
-export type {
-  UseUnifiedFormReturn,
-  UseUnifiedFormProps
-} from './types';
-
-// Re-export utility functions
+export * from './types';
 export * from './utils';

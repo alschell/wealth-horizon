@@ -4,7 +4,9 @@ import { useErrorHandler } from '../useErrorHandler';
 
 // Mock toast
 jest.mock('@/hooks/use-toast', () => ({
-  toast: jest.fn()
+  useToast: () => ({
+    toast: jest.fn()
+  })
 }));
 
 describe('useErrorHandler', () => {
@@ -94,7 +96,7 @@ describe('useErrorHandler', () => {
     // Test successful execution
     let returnValue;
     await act(async () => {
-      returnValue = await result.current.tryCatch(() => 'success')();
+      returnValue = await result.current.tryCatch(() => 'success');
     });
     
     expect(returnValue).toBe('success');
@@ -104,7 +106,7 @@ describe('useErrorHandler', () => {
     await act(async () => {
       returnValue = await result.current.tryCatch(() => {
         throw new Error('Function failed');
-      })();
+      });
     });
     
     expect(returnValue).toBeUndefined();

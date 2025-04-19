@@ -1,25 +1,31 @@
 
-import { useState, useCallback } from 'react';
-import { useIsComponentMounted } from '@/hooks/useIsComponentMounted';
+import { useCallback } from 'react';
+import { useIsComponentMounted } from '../useIsComponentMounted';
 import { showSuccess, showError } from '@/utils/toast';
-import type { FormSubmissionOptions } from '../types';
+
+export interface FormSubmissionOptions<T> {
+  successMessage?: string;
+  errorMessage?: string;
+  validateForm?: () => boolean;
+  onSuccess?: () => void;
+  onError?: (error: unknown) => void;
+  resetAfterSubmit?: boolean;
+  resetForm?: () => void;
+}
 
 /**
- * Hook for managing form submission
+ * Hook for form submission handling
  * 
- * @returns Functions and state for handling form submissions
+ * @returns Form submission utilities
  */
-export function useFormSubmission<T>() {
+export function useFormSubmission<T extends Record<string, any>>() {
   const isMounted = useIsComponentMounted();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [lastError, setLastError] = useState<string | null>(null);
-  const [isSuccess, setIsSuccess] = useState(false);
 
   /**
-   * Creates a submit handler with the given submission function and options
+   * Create a submit handler for a form
    * 
-   * @param onSubmit Function to call with form data
-   * @param options Submission options
+   * @param onSubmit Form submission function
+   * @param options Form submission options
    * @returns Submit handler function
    */
   const createSubmitHandler = useCallback(
@@ -28,32 +34,29 @@ export function useFormSubmission<T>() {
       options: FormSubmissionOptions<T> = {}
     ) => {
       const {
-        onSuccess,
-        onError,
         successMessage = 'Form submitted successfully',
         errorMessage = 'An error occurred during submission',
         validateForm,
+        onSuccess,
+        onError,
         resetAfterSubmit = false,
         resetForm
       } = options;
 
       return async (data: T): Promise<boolean> => {
-        if (validateForm) {
-          const isValid = await validateForm(data);
-          if (!isValid) {
-            return false;
-          }
+        // If validation is provided, run it first
+        if (validateForm && !validateForm()) {
+          return false;
         }
-
-        setIsSubmitting(true);
-        setLastError(null);
 
         try {
           await onSubmit(data);
           
+          // Only update state if component is still mounted
           if (isMounted()) {
-            showSuccess('Success', successMessage);
-            setIsSuccess(true);
+            if (successMessage) {
+              showSuccess("Success", successMessage);
+            }
             
             if (onSuccess) {
               onSuccess();
@@ -65,13 +68,15 @@ export function useFormSubmission<T>() {
             
             return true;
           }
+          
           return true;
         } catch (error) {
+          // Only handle error if component is still mounted
           if (isMounted()) {
-            console.error('Form submission error:', error);
+            console.error("Form submission error:", error);
+            
             const errorMsg = error instanceof Error ? error.message : errorMessage;
-            setLastError(errorMsg);
-            showError('Error', errorMsg);
+            showError("Error", errorMsg);
             
             if (onError) {
               onError(error);
@@ -79,11 +84,8 @@ export function useFormSubmission<T>() {
             
             return false;
           }
+          
           return false;
-        } finally {
-          if (isMounted()) {
-            setIsSubmitting(false);
-          }
         }
       };
     },
@@ -91,9 +93,6 @@ export function useFormSubmission<T>() {
   );
 
   return {
-    isSubmitting,
-    lastError,
-    isSuccess,
     createSubmitHandler
   };
 }

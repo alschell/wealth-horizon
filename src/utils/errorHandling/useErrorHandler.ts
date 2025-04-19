@@ -1,66 +1,97 @@
 
-import { useCallback, useState } from 'react';
-import { handleError } from './core';
-import { ErrorHandlerOptions, ErrorResponse } from './types/core';
+import { useState, useCallback } from 'react';
+import { useToast } from '@/hooks/use-toast';
+import { parseError, type ErrorResponse } from './errorHandlingUtils';
+
+interface ErrorHandlerOptions {
+  silent?: boolean;
+  logToConsole?: boolean;
+  showToast?: boolean;
+  toastTitle?: string;
+  fallbackMessage?: string;
+  onError?: (error: unknown) => void;
+}
 
 /**
- * Hook for consistent error handling throughout the application
- * 
- * @param defaultOptions Default options for all error handling
- * @returns Error handling utilities
+ * Hook providing consistent error handling utilities
  */
 export function useErrorHandler(defaultOptions: ErrorHandlerOptions = {}) {
   const [lastError, setLastError] = useState<ErrorResponse | null>(null);
+  const { toast } = useToast();
+  
+  const handleError = useCallback((error: unknown, options: ErrorHandlerOptions = {}) => {
+    const {
+      silent = defaultOptions.silent ?? false,
+      logToConsole = defaultOptions.logToConsole ?? true,
+      showToast = defaultOptions.showToast ?? true,
+      toastTitle = defaultOptions.toastTitle ?? 'Error',
+      fallbackMessage = defaultOptions.fallbackMessage ?? 'An unexpected error occurred',
+      onError = defaultOptions.onError
+    } = options;
+    
+    // Parse error to standardized format
+    const parsedError = parseError(error);
+    setLastError(parsedError);
+    
+    // Log to console if enabled
+    if (logToConsole && !silent) {
+      console.error('[Error Handler]:', parsedError);
+    }
+    
+    // Show toast notification if enabled
+    if (showToast && !silent) {
+      toast({
+        title: toastTitle,
+        description: parsedError.message || fallbackMessage,
+        variant: "destructive"
+      });
+    }
+    
+    // Call custom error handler if provided
+    if (onError) {
+      onError(error);
+    }
+    
+    return parsedError;
+  }, [defaultOptions, toast]);
   
   /**
-   * Handle an error with consistent behavior
+   * Wraps an async function with error handling
    */
-  const handleErrorWithOptions = useCallback(
-    (error: unknown, options: ErrorHandlerOptions = {}) => {
-      const mergedOptions = { ...defaultOptions, ...options };
-      const errorResponse = handleError(error, mergedOptions);
-      setLastError(errorResponse);
-      return errorResponse;
-    },
-    [defaultOptions]
-  );
+  const withErrorHandling = useCallback(<T extends (...args: any[]) => Promise<any>>(
+    fn: T,
+    options: ErrorHandlerOptions = {}
+  ) => {
+    return async (...args: Parameters<T>): Promise<ReturnType<T> | undefined> => {
+      try {
+        return await fn(...args);
+      } catch (error) {
+        handleError(error, options);
+        return undefined;
+      }
+    };
+  }, [handleError]);
   
   /**
-   * Clear the last error
+   * Safely executes a function with error handling
    */
-  const clearLastError = useCallback(() => {
-    setLastError(null);
-  }, []);
-  
-  /**
-   * Wrap a function with error handling
-   */
-  const withErrorHandling = useCallback(
-    <T>(fn: () => Promise<T> | T, options: ErrorHandlerOptions = {}) => {
-      return async (): Promise<T | undefined> => {
-        try {
-          return await fn();
-        } catch (error) {
-          handleErrorWithOptions(error, options);
-          return undefined;
-        }
-      };
-    },
-    [handleErrorWithOptions]
-  );
-  
-  /**
-   * Aliases for backward compatibility
-   */
-  const withTry = withErrorHandling;
-  const tryCatch = withErrorHandling;
+  const tryCatch = useCallback(async <T>(
+    fn: () => Promise<T> | T,
+    options: ErrorHandlerOptions = {}
+  ): Promise<T | undefined> => {
+    try {
+      return await fn();
+    } catch (error) {
+      handleError(error, options);
+      return undefined;
+    }
+  }, [handleError]);
   
   return {
-    handleError: handleErrorWithOptions,
-    withTry,
-    tryCatch,
+    handleError,
     withErrorHandling,
+    tryCatch,
     lastError,
-    clearLastError
+    clearLastError: () => setLastError(null)
   };
 }

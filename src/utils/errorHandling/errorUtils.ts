@@ -1,8 +1,12 @@
 
 /**
- * Extracts a human-readable message from any error
+ * Utility functions for consistent error handling
  */
-export function getErrorMessage(error: unknown, fallbackMessage?: string): string {
+
+/**
+ * Extracts a readable message from various error types
+ */
+export function getErrorMessage(error: unknown, fallbackMessage: string = "An unexpected error occurred"): string {
   if (error instanceof Error) {
     return error.message;
   }
@@ -12,121 +16,70 @@ export function getErrorMessage(error: unknown, fallbackMessage?: string): strin
   }
   
   if (error && typeof error === 'object' && 'message' in error) {
-    return String((error as any).message);
+    return String((error as {message: unknown}).message);
   }
   
-  return fallbackMessage || 'An unexpected error occurred';
+  return fallbackMessage;
 }
 
 /**
- * Parse any error into a standardized format
+ * Standardized error response format
  */
-export function parseError(error: unknown): {
+export interface ErrorResponse {
   message: string;
-  code: string;
-  details?: Record<string, unknown>;
-  originalError?: unknown;
-} {
+  code?: string;
+  details?: Record<string, any>;
+}
+
+/**
+ * Parses an error into a standardized format
+ */
+export function parseError(error: unknown): ErrorResponse {
   if (error instanceof Error) {
     return {
       message: error.message,
-      code: error.name,
-      details: { stack: error.stack },
-      originalError: error
+      code: error.name
     };
   }
   
   if (typeof error === 'string') {
     return {
       message: error,
-      code: 'STRING_ERROR'
+      code: 'ERROR'
     };
   }
   
   if (error && typeof error === 'object') {
     if ('message' in error) {
-      const errorObj = error as any;
       return {
-        message: String(errorObj.message),
-        code: errorObj.code || 'OBJECT_ERROR',
-        details: errorObj,
-        originalError: error
+        message: String((error as ErrorResponse).message),
+        code: (error as ErrorResponse).code || 'ERROR',
+        details: (error as ErrorResponse).details
       };
     }
   }
   
   return {
     message: 'An unexpected error occurred',
-    code: 'UNKNOWN_ERROR',
-    originalError: error
+    code: 'UNKNOWN_ERROR'
   };
 }
 
 /**
- * Logs an error to the console with additional details
- * 
- * @param error - The error to log
- * @param context - Name of the component or additional context (optional)
+ * Logs error details to the console
  */
-export function logError(error: unknown, context?: string | Record<string, unknown>): void {
-  if (typeof context === 'string') {
-    console.error(`Error in ${context}:`, error);
-  } else {
-    console.error('Error:', error);
-  }
+export function logError(error: unknown, componentName?: string): void {
+  console.error(`Error${componentName ? ` in ${componentName}` : ''}:`, error);
   
   if (error instanceof Error && error.stack) {
     console.error('Stack trace:', error.stack);
   }
-  
-  if (typeof context === 'object' && context !== null) {
-    console.error('Context:', context);
-  }
 }
 
 /**
- * Creates a contextual error with additional metadata
+ * Creates a descriptive error with component context
  */
-export function createContextualError(
-  message: string, 
-  context: Record<string, unknown> | string = {}
-): Error {
-  const error = new Error(
-    typeof context === 'string' 
-      ? `[${context}] ${message}` 
-      : message
-  );
-  
-  if (typeof context !== 'string') {
-    Object.assign(error, { context });
-  }
-  
+export function createContextualError(message: string, componentName: string): Error {
+  const error = new Error(`[${componentName}] ${message}`);
   return error;
-}
-
-/**
- * Formats error details for display
- */
-export function formatErrorDetails(error: unknown): string {
-  if (error instanceof Error) {
-    return `${error.name}: ${error.message}${error.stack ? `\n${error.stack}` : ''}`;
-  }
-  
-  return String(error);
-}
-
-/**
- * Checks if an object is an API error response
- */
-export function isApiErrorResponse(obj: unknown): obj is {
-  message: string;
-  code?: string;
-  details?: Record<string, unknown>;
-} {
-  return Boolean(
-    obj &&
-    typeof obj === 'object' &&
-    'message' in obj &&
-    typeof (obj as { message: unknown }).message === 'string'
-  );
 }

@@ -28,12 +28,12 @@ export function enhancedUseFormSubmission<T>({
   resetAfterSubmit = false,
 }: UseEnhancedFormSubmissionOptions<T>) {
   const {
-    formSubmissionState,
+    isSubmitting,
+    lastError,
+    isSuccess,
     resetState,
     createSubmitHandler
   } = useFormControls<T>();
-
-  const { isSubmitting, lastError, isSuccess } = formSubmissionState;
 
   const handleSubmit = useCallback(
     createSubmitHandler(onSubmit, {

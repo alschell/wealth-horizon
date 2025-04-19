@@ -41,7 +41,7 @@ export function useFormControls<T>(): UseFormControlsReturn<T> {
 
         // Validate form if validation function is provided
         if (validateForm) {
-          const isValid = await validateForm(data);
+          const isValid = await validateForm();
           if (!isValid) return;
         }
 

@@ -1,7 +1,11 @@
 
 import React from 'react';
 import { ErrorBoundary } from '@/components/error-boundary';
-import { ErrorHandlerOptions } from '@/utils/errorHandling/types';
+
+interface WithErrorBoundaryOptions {
+  fallback?: React.ReactNode;
+  onError?: (error: Error, errorInfo: React.ErrorInfo) => void;
+}
 
 /**
  * Higher-order component that wraps a component with an ErrorBoundary
@@ -12,17 +16,13 @@ import { ErrorHandlerOptions } from '@/utils/errorHandling/types';
  */
 export function withErrorBoundary<P extends object>(
   Component: React.ComponentType<P>,
-  options: ErrorHandlerOptions = {}
+  options: WithErrorBoundaryOptions = {}
 ): React.FC<P> {
-  const { fallback, onError, componentName } = options;
+  const { fallback, onError } = options;
   
   const WithErrorBoundary: React.FC<P> = (props) => {
     return (
-      <ErrorBoundary 
-        fallback={fallback} 
-        onError={onError}
-        componentName={componentName || Component.displayName || Component.name}
-      >
+      <ErrorBoundary fallback={fallback} onError={onError}>
         <Component {...props} />
       </ErrorBoundary>
     );
@@ -46,7 +46,26 @@ export function withCustomErrorFallback<P extends object, FallbackProps extends 
   Component: React.ComponentType<P>,
   FallbackComponent: React.ComponentType<FallbackProps>
 ): React.ComponentType<P> {
-  return withErrorBoundary(Component, {
-    fallback: <FallbackComponent error={new Error()} {...{} as any} />
-  });
+  return class WithCustomErrorFallback extends React.Component<P, {hasError: boolean; error?: Error}> {
+    constructor(props: P) {
+      super(props);
+      this.state = { hasError: false };
+    }
+
+    static getDerivedStateFromError(error: Error) {
+      return { hasError: true, error };
+    }
+
+    componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+      console.error("Error caught by withCustomErrorFallback:", error, errorInfo);
+    }
+
+    render() {
+      if (this.state.hasError) {
+        return <FallbackComponent error={this.state.error} {...{} as any} />;
+      }
+
+      return <Component {...this.props} />;
+    }
+  };
 }

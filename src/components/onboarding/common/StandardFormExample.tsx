@@ -22,7 +22,7 @@ export const StandardFormExample = () => {
       email: '',
       message: ''
     },
-    validators: {
+    validationRules: {
       name: (value) => !value ? 'Name is required' : null,
       email: (value) => !value ? 'Email is required' : null
     },

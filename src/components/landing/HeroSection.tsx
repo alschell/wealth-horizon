@@ -24,34 +24,13 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToFeatures }) => {
   };
 
   const scrollToWhyWH = () => {
-    // Use the first implementation - directly access the element by ID
-    const whySection = document.getElementById('benefits');
-    
-    if (whySection) {
-      // Add logging for troubleshooting
-      console.log("Found benefits section, scrolling to it:", whySection);
-      // Scroll with a slight delay to ensure all elements are fully rendered
-      setTimeout(() => {
-        whySection.scrollIntoView({ behavior: 'smooth' });
-      }, 100);
-    } else {
-      console.log("Benefits section not found, checking for alternatives");
-      // If benefits section not found, try WhyWHSection as fallback
-      const alternativeSection = document.querySelector('section#benefits');
-      if (alternativeSection) {
-        console.log("Found alternative benefits section, scrolling to it");
-        alternativeSection.scrollIntoView({ behavior: 'smooth' });
-      } else {
-        // Last resort - try features as fallback
-        console.log("No benefits section found, trying features section");
-        const featuresSection = document.getElementById('features');
-        if (featuresSection) {
-          featuresSection.scrollIntoView({ behavior: 'smooth' });
-        }
-      }
+    const whyWHSection = document.getElementById('why-wh');
+    if (whyWHSection) {
+      whyWHSection.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
+  // Key features that need to be translated individually
   const keyFeatures = ["AI-native platform", "Real-time analytics", "SOC 2 certified"];
 
   return (
@@ -60,7 +39,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToFeatures }) => {
       <div className="max-w-7xl mx-auto px-6 py-24 md:py-32 lg:py-40 pt-24">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <FadeIn delay={0.2}>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-gray-900 leading-tight text-left">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-gray-900 leading-tight">
               <TranslatedText>Holistic wealth management for</TranslatedText>{" "}
               <span className="text-indigo-600">
                 <TranslatedText>family offices</TranslatedText>
@@ -70,7 +49,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToFeatures }) => {
                 <TranslatedText>institutions</TranslatedText>
               </span>
             </h1>
-            <p className="mt-6 text-xl text-gray-600 max-w-2xl text-left">
+            <p className="mt-6 text-xl text-gray-600 max-w-2xl">
               <TranslatedText>All your wealth made actionable on one platform</TranslatedText><br />
               <TranslatedText>across all your banks, brokers and custodians</TranslatedText>
             </p>

@@ -1,13 +1,12 @@
 
 import React from 'react';
-import { ErrorFallbackProps } from '@/utils/errorHandling/types';
+import { ErrorFallbackProps } from './ErrorFallbackProps';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { AlertCircle, RefreshCw } from 'lucide-react';
 
 /**
  * Fallback component for error boundaries
- * Displays user-friendly error messages with optional reset functionality
  */
 const ErrorFallback: React.FC<ErrorFallbackProps> = ({ 
   error, 
@@ -15,8 +14,7 @@ const ErrorFallback: React.FC<ErrorFallbackProps> = ({
   title = "Something went wrong",
   message,
   description,
-  showReset,
-  showResetButton = showReset ?? true,
+  showReset = true,
   resetText = "Try again",
   showDetails = true,
   errorInfo
@@ -41,7 +39,7 @@ const ErrorFallback: React.FC<ErrorFallbackProps> = ({
             </div>
           )}
           
-          {(showResetButton || showReset) && resetErrorBoundary && (
+          {showReset && resetErrorBoundary && (
             <Button 
               variant="outline" 
               onClick={resetErrorBoundary} 

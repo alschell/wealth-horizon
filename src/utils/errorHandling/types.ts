@@ -1,15 +1,13 @@
-
 import { ErrorInfo } from 'react';
 
 /**
  * Standard error response format
- * Used for consistent error handling across the application
  */
 export interface ErrorResponse {
   /** Human-readable error message */
   message: string;
   /** Error code for categorization and handling */
-  code: string;
+  code?: string;
   /** Additional error details */
   details?: Record<string, unknown>;
   /** Original error that caused this error */
@@ -24,15 +22,15 @@ export interface ErrorResponse {
 export interface ErrorHandlerOptions {
   /** Whether to suppress normal error handling behavior */
   silent?: boolean;
-  /** Additional context information to include with the error */
+  /** Additional context information */
   context?: Record<string, unknown>;
-  /** Whether to show a toast notification for this error */
+  /** Whether to show a toast notification */
   showToast?: boolean;
-  /** Whether to log this error to the console */
+  /** Whether to log to console */
   logToConsole?: boolean;
-  /** Whether to re-throw the error after handling */
+  /** Whether to re-throw the error */
   rethrow?: boolean;
-  /** Custom fallback message to use if error doesn't have one */
+  /** Custom fallback message */
   fallbackMessage?: string;
   /** Action text for toast notifications */
   actionText?: string;
@@ -40,11 +38,11 @@ export interface ErrorHandlerOptions {
   action?: () => void;
   /** Component name for contextual error messages */
   componentName?: string;
-  /** Optional callback to execute when error occurs */
+  /** Optional callback when error occurs */
   onError?: (error: unknown) => void;
-  /** Custom fallback UI to show when an error occurs */
+  /** Custom fallback UI */
   fallback?: React.ReactNode;
-  /** Custom toast title for error notifications */
+  /** Custom toast title */
   toastTitle?: string;
 }
 

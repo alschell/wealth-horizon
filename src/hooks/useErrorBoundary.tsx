@@ -5,18 +5,12 @@ import { useErrorHandler } from '@/utils/errorHandling';
 import { ErrorHandlerOptions } from '@/utils/errorHandling/types';
 import { toast } from '@/hooks/use-toast';
 
-/**
- * Hook for use in components to show error boundary functionality
- * without using class components
- * 
- * @param options Configuration options for the error boundary hook
- * @returns Error boundary utilities and wrapper component
- */
-export function useErrorBoundary(options: ErrorHandlerOptions & { fallbackMessage?: string } = {}) {
+export function useErrorBoundary(options: ErrorHandlerOptions = {}) {
   const {
     fallbackMessage = "Something went wrong",
     showToast = true,
-    componentName
+    componentName,
+    fallback
   } = options;
   
   const [error, setError] = useState<Error | null>(null);
@@ -30,9 +24,12 @@ export function useErrorBoundary(options: ErrorHandlerOptions & { fallbackMessag
     setError(null);
   }, []);
   
-  // Add ErrorBoundaryWrapper component
   const ErrorBoundaryWrapper = useCallback(({ children }: { children: React.ReactNode }) => {
     if (error) {
+      if (fallback) {
+        return fallback;
+      }
+      
       return (
         <div className="p-4 border border-red-300 rounded bg-red-50">
           <h3 className="text-lg font-medium text-red-800">Error</h3>
@@ -50,7 +47,7 @@ export function useErrorBoundary(options: ErrorHandlerOptions & { fallbackMessag
     }
     
     return <>{children}</>;
-  }, [error, fallbackMessage, reset]);
+  }, [error, fallbackMessage, reset, fallback]);
   
   return {
     error,
@@ -66,16 +63,9 @@ export function useErrorBoundary(options: ErrorHandlerOptions & { fallbackMessag
   };
 }
 
-/**
- * HOC to wrap a component with error boundary using the hook
- * 
- * @param Component Component to wrap with error handling
- * @param options Configuration options
- * @returns Wrapped component with error handling
- */
 export function withErrorHandling<P extends object>(
   Component: React.ComponentType<P>,
-  options: ErrorHandlerOptions & { fallbackMessage?: string } = {}
+  options: ErrorHandlerOptions = {}
 ): React.FC<P> {
   const displayName = Component.displayName || Component.name || 'Component';
   

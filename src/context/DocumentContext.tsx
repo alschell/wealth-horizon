@@ -35,11 +35,11 @@ export const DocumentProvider: React.FC<DocumentProviderProps> = ({
     componentName: 'DocumentProvider',
     fallbackMessage: 'There was an error with the document management system.',
     onError: (error) => {
-      // Convert unknown error to Error object before setting state
       const errorObj = error instanceof Error ? error : new Error(String(error));
       setError(errorObj);
       handleError(error, { 
-        toastTitle: 'Document Error' 
+        toastTitle: 'Document Error',
+        fallbackMessage: 'There was an error with the document management system.' 
       });
     }
   });

@@ -1,5 +1,4 @@
-
-import React from "react";
+import React, { useMemo } from "react";
 import UserManagementHeader from "../components/UserManagementHeader";
 import UsersList from "../components/UsersList";
 import InviteUserDialog from "../components/InviteUserDialog";
@@ -32,9 +31,38 @@ const UserManagementInterface = () => {
     handleResendInvite
   } = useUserActionDialog();
   
-  // Use the global hook to ensure the invite dialog state is properly tracked
   const { isOpen: inviteDialogOpen } = useGlobalInviteUserDialog();
   
+  const tabContent = useMemo(() => ({
+    active: (
+      <TabsContent value="active" className="mt-0">
+        <div className="border rounded-lg shadow-sm bg-white overflow-hidden">
+          <div className="p-4">
+            <UsersList status="active" />
+          </div>
+        </div>
+      </TabsContent>
+    ),
+    invited: (
+      <TabsContent value="invited" className="mt-0">
+        <div className="border rounded-lg shadow-sm bg-white overflow-hidden">
+          <div className="p-4">
+            <UsersList status="invited" />
+          </div>
+        </div>
+      </TabsContent>
+    ),
+    inactive: (
+      <TabsContent value="inactive" className="mt-0">
+        <div className="border rounded-lg shadow-sm bg-white overflow-hidden">
+          <div className="p-4">
+            <UsersList status="inactive" />
+          </div>
+        </div>
+      </TabsContent>
+    )
+  }), []);
+
   return (
     <div className="max-w-7xl mx-auto w-full p-4">
       <UserManagementHeader />
@@ -53,33 +81,12 @@ const UserManagementInterface = () => {
             <TabsTrigger value="inactive" className="text-sm">Inactive Users</TabsTrigger>
           </TabsList>
           
-          <TabsContent value="active" className="mt-0">
-            <div className="border rounded-lg shadow-sm bg-white overflow-hidden">
-              <div className="p-4">
-                <UsersList status="active" />
-              </div>
-            </div>
-          </TabsContent>
-          
-          <TabsContent value="invited" className="mt-0">
-            <div className="border rounded-lg shadow-sm bg-white overflow-hidden">
-              <div className="p-4">
-                <UsersList status="invited" />
-              </div>
-            </div>
-          </TabsContent>
-          
-          <TabsContent value="inactive" className="mt-0">
-            <div className="border rounded-lg shadow-sm bg-white overflow-hidden">
-              <div className="p-4">
-                <UsersList status="inactive" />
-              </div>
-            </div>
-          </TabsContent>
+          {tabContent.active}
+          {tabContent.invited}
+          {tabContent.inactive}
         </Tabs>
       </motion.div>
       
-      {/* User action dialogs */}
       <EditUserDialog 
         open={editDialogOpen} 
         user={selectedUser} 
@@ -136,4 +143,4 @@ const UserManagementInterface = () => {
   );
 };
 
-export default UserManagementInterface;
+export default React.memo(UserManagementInterface);

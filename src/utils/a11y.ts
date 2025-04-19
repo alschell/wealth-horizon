@@ -1,4 +1,3 @@
-
 /**
  * Utility functions for accessibility improvements
  */
@@ -107,4 +106,55 @@ export function trapFocus(
   return () => {
     document.removeEventListener('keydown', handleKeyDown);
   };
+}
+
+/**
+ * Announce form errors to screen readers
+ * @param fieldName The name of the field with an error
+ * @param errorMessage The error message to announce
+ */
+export function announceFormError(fieldName: string, errorMessage: string): void {
+  const message = `Error in ${fieldName}: ${errorMessage}`;
+  announceToScreenReader(message, 'assertive');
+}
+
+/**
+ * Announce successful form submission to screen readers
+ * @param formName Optional name of the form that was submitted
+ */
+export function announceFormSuccess(formName?: string): void {
+  const message = formName 
+    ? `${formName} submitted successfully` 
+    : 'Form submitted successfully';
+  announceToScreenReader(message, 'polite');
+}
+
+/**
+ * Handle keyboard navigation for dropdown menus
+ * @param event Keyboard event
+ * @param itemCount Total number of items in the dropdown
+ * @param currentIndex Current focused item index
+ * @returns New index to focus
+ */
+export function handleDropdownKeyboardNav(
+  event: React.KeyboardEvent,
+  itemCount: number,
+  currentIndex: number
+): number {
+  switch (event.key) {
+    case 'ArrowDown':
+      event.preventDefault();
+      return (currentIndex + 1) % itemCount;
+    case 'ArrowUp':
+      event.preventDefault();
+      return (currentIndex - 1 + itemCount) % itemCount;
+    case 'Home':
+      event.preventDefault();
+      return 0;
+    case 'End':
+      event.preventDefault();
+      return itemCount - 1;
+    default:
+      return currentIndex;
+  }
 }

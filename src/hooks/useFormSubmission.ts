@@ -3,21 +3,41 @@ import { useState, useCallback } from 'react';
 import { handleError, ErrorHandlerOptions } from '@/utils/errorHandling';
 import { showSuccess } from '@/utils/toast';
 
+/**
+ * Options for form submission handling
+ * @template T The type of form data being submitted
+ */
 export interface FormSubmissionOptions<T> {
+  /** Callback executed after successful submission */
   onSuccess?: (data: T) => void;
+  
+  /** Callback executed when an error occurs */
   onError?: (error: unknown) => void;
+  
+  /** Success message to display */
   successMessage?: string;
+  
+  /** Error message to display on failure */
   errorMessage?: string;
+  
+  /** Function to validate form before submission */
   validateForm?: (data: T) => boolean;
+  
+  /** Whether to reset form state after submission */
   resetAfterSubmit?: boolean;
 }
 
 /**
  * Hook for managing form submission
+ * @template T The type of form data being submitted
+ * @returns Object containing submission state and submit function
  */
 export function useFormSubmission<T>() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  /**
+   * Submit form data with the provided submit function
+   */
   const submitForm = useCallback(async <D extends T>(
     submitFn: (data: D) => Promise<void>,
     data: D,
@@ -54,7 +74,8 @@ export function useFormSubmission<T>() {
     } catch (error) {
       const errorHandlerOptions: ErrorHandlerOptions = {
         fallbackMessage: errorMessage,
-        onError: onError
+        logToConsole: true,
+        onError: onError as (error: unknown) => void
       };
       
       handleError(error, errorHandlerOptions);

@@ -1,19 +1,37 @@
 
-import { useEffect, useRef, useCallback } from 'react';
+import { useRef, useEffect } from 'react';
 
 /**
- * A hook to check if a component is still mounted.
- * Useful for avoiding state updates on unmounted components.
+ * Hook to check if a component is still mounted
+ * 
+ * Useful for preventing state updates on unmounted components,
+ * which would trigger React warnings.
+ * 
+ * @example
+ * ```tsx
+ * const isMounted = useIsComponentMounted();
+ * 
+ * useEffect(() => {
+ *   const fetchData = async () => {
+ *     const data = await fetchSomething();
+ *     if (isMounted()) {
+ *       setData(data); // Only update state if still mounted
+ *     }
+ *   };
+ *   fetchData();
+ * }, []);
+ * ```
+ * 
+ * @returns A function that returns whether the component is mounted
  */
-export function useIsComponentMounted() {
-  const isMountedRef = useRef(false);
-
+export function useIsComponentMounted(): () => boolean {
+  const isMountedRef = useRef<boolean>(true);
+  
   useEffect(() => {
-    isMountedRef.current = true;
     return () => {
       isMountedRef.current = false;
     };
   }, []);
-
-  return useCallback(() => isMountedRef.current, []);
+  
+  return () => isMountedRef.current;
 }

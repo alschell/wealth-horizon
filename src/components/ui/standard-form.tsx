@@ -33,21 +33,21 @@ export function StandardForm({
   submitDisabled = false
 }: StandardFormProps) {
   return (
-    <form onSubmit={onSubmit} className={cn('space-y-4', className)}>
+    <form onSubmit={onSubmit} className={cn('space-y-4 text-left', className)}>
       {formTitle && (
-        <div className="space-y-2">
-          <h2 className="text-2xl font-bold">{formTitle}</h2>
+        <div className="space-y-2 text-left">
+          <h2 className="text-2xl font-bold text-left">{formTitle}</h2>
           {formDescription && (
-            <p className="text-gray-500">{formDescription}</p>
+            <p className="text-gray-500 text-left">{formDescription}</p>
           )}
         </div>
       )}
       
-      <div className="space-y-4">
+      <div className="space-y-4 text-left">
         {children}
       </div>
       
-      <div className="flex justify-end space-x-2 pt-2">
+      <div className="flex justify-end space-x-2 pt-2 text-left">
         {onCancel && (
           <Button 
             type="button" 

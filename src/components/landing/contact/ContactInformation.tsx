@@ -6,7 +6,7 @@ import TranslatedText from "@/components/ui/translated-text";
 const ContactInformation: React.FC = () => {
   return (
     <div className="bg-white rounded-2xl p-8 h-full shadow-sm border border-gray-200">
-      <h3 className="text-xl font-semibold text-gray-900 mb-6">
+      <h3 className="text-xl font-semibold text-gray-900 mb-6 text-left">
         <TranslatedText>Contact Information</TranslatedText>
       </h3>
       
@@ -17,12 +17,12 @@ const ContactInformation: React.FC = () => {
             <div className="mt-1 mr-4 flex-shrink-0 flex items-center justify-center w-10 h-10 text-[#4E46DC]">
               <HelpCircle size={20} />
             </div>
-            <div>
-              <h4 className="text-gray-900 font-medium mb-1">
+            <div className="text-left">
+              <h4 className="text-gray-900 font-medium mb-1 text-left">
                 <TranslatedText>Client Support</TranslatedText>
               </h4>
-              <p className="text-gray-600 text-sm">
-                <a href="mailto:support@wealthhorizon.ai" className="text-indigo-600 hover:text-indigo-800">
+              <p className="text-gray-600 text-sm text-left">
+                <a href="mailto:support@wealthhorizon.ai" className="text-indigo-600 hover:text-indigo-800 text-left">
                   support@wealthhorizon.ai
                 </a>
               </p>
@@ -35,12 +35,12 @@ const ContactInformation: React.FC = () => {
           <div className="mt-1 mr-4 flex-shrink-0 flex items-center justify-center w-10 h-10 text-[#4E46DC]">
             <BriefcaseIcon size={20} />
           </div>
-          <div>
-            <h4 className="text-gray-900 font-medium mb-1">
+          <div className="text-left">
+            <h4 className="text-gray-900 font-medium mb-1 text-left">
               <TranslatedText>Sales</TranslatedText>
             </h4>
-            <p className="text-gray-600 text-sm">
-              <a href="mailto:sales@wealthhorizon.ai" className="text-indigo-600 hover:text-indigo-800">
+            <p className="text-gray-600 text-sm text-left">
+              <a href="mailto:sales@wealthhorizon.ai" className="text-indigo-600 hover:text-indigo-800 text-left">
                 sales@wealthhorizon.ai
               </a>
             </p>
@@ -52,12 +52,12 @@ const ContactInformation: React.FC = () => {
           <div className="mt-1 mr-4 flex-shrink-0 flex items-center justify-center w-10 h-10 text-[#4E46DC]">
             <NewspaperIcon size={20} />
           </div>
-          <div>
-            <h4 className="text-gray-900 font-medium mb-1">
+          <div className="text-left">
+            <h4 className="text-gray-900 font-medium mb-1 text-left">
               <TranslatedText>Press Inquiries</TranslatedText>
             </h4>
-            <p className="text-gray-600 text-sm">
-              <a href="mailto:media@wealthhorizon.ai" className="text-indigo-600 hover:text-indigo-800">
+            <p className="text-gray-600 text-sm text-left">
+              <a href="mailto:media@wealthhorizon.ai" className="text-indigo-600 hover:text-indigo-800 text-left">
                 media@wealthhorizon.ai
               </a>
             </p>
@@ -69,12 +69,12 @@ const ContactInformation: React.FC = () => {
           <div className="mt-1 mr-4 flex-shrink-0 flex items-center justify-center w-10 h-10 text-[#4E46DC]">
             <UsersIcon size={20} />
           </div>
-          <div>
-            <h4 className="text-gray-900 font-medium mb-1">
+          <div className="text-left">
+            <h4 className="text-gray-900 font-medium mb-1 text-left">
               <TranslatedText>Marketing Inquiries</TranslatedText>
             </h4>
-            <p className="text-gray-600 text-sm">
-              <a href="mailto:marketing@wealthhorizon.ai" className="text-indigo-600 hover:text-indigo-800">
+            <p className="text-gray-600 text-sm text-left">
+              <a href="mailto:marketing@wealthhorizon.ai" className="text-indigo-600 hover:text-indigo-800 text-left">
                 marketing@wealthhorizon.ai
               </a>
             </p>
@@ -86,12 +86,12 @@ const ContactInformation: React.FC = () => {
           <div className="mt-1 mr-4 flex-shrink-0 flex items-center justify-center w-10 h-10 text-[#4E46DC]">
             <HandshakeIcon size={20} />
           </div>
-          <div>
-            <h4 className="text-gray-900 font-medium mb-1">
+          <div className="text-left">
+            <h4 className="text-gray-900 font-medium mb-1 text-left">
               <TranslatedText>Partnerships</TranslatedText>
             </h4>
-            <p className="text-gray-600 text-sm">
-              <a href="mailto:partnerships@wealthhorizon.ai" className="text-indigo-600 hover:text-indigo-800">
+            <p className="text-gray-600 text-sm text-left">
+              <a href="mailto:partnerships@wealthhorizon.ai" className="text-indigo-600 hover:text-indigo-800 text-left">
                 partnerships@wealthhorizon.ai
               </a>
             </p>
@@ -103,16 +103,16 @@ const ContactInformation: React.FC = () => {
           <div className="mt-1 mr-4 flex-shrink-0 flex items-center justify-center w-10 h-10 text-[#4E46DC]">
             <Phone size={20} />
           </div>
-          <div>
-            <h4 className="text-gray-900 font-medium mb-1">
+          <div className="text-left">
+            <h4 className="text-gray-900 font-medium mb-1 text-left">
               <TranslatedText>Phone</TranslatedText>
             </h4>
-            <p className="text-gray-600 text-sm">
-              <a href="tel:+18312731336" className="text-indigo-600 hover:text-indigo-800">
+            <p className="text-gray-600 text-sm text-left">
+              <a href="tel:+18312731336" className="text-indigo-600 hover:text-indigo-800 text-left">
                 +1 (831) 273-1336
               </a>
             </p>
-            <p className="text-gray-600 text-sm">
+            <p className="text-gray-600 text-sm text-left">
               <TranslatedText>Monday-Friday, 9am-6pm EST</TranslatedText>
             </p>
           </div>
@@ -123,11 +123,11 @@ const ContactInformation: React.FC = () => {
           <div className="mt-1 mr-4 flex-shrink-0 flex items-center justify-center w-10 h-10 text-[#4E46DC]">
             <MapPin size={20} />
           </div>
-          <div>
-            <h4 className="text-gray-900 font-medium mb-1">
+          <div className="text-left">
+            <h4 className="text-gray-900 font-medium mb-1 text-left">
               <TranslatedText>Office</TranslatedText>
             </h4>
-            <p className="text-gray-600 text-sm">
+            <p className="text-gray-600 text-sm text-left">
               8 The Green STE B<br />
               Dover, DE 19901<br />
               <TranslatedText>United States</TranslatedText>

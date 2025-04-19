@@ -80,13 +80,13 @@ export function useFormFields<T extends Record<string, any>>(
    */
   const validateFields = useCallback(() => {
     // Validate required fields
-    const requiredErrors = validateRequiredFields(values, requiredFields);
+    const requiredErrors = validateRequiredFields(values, requiredFields as Array<keyof T>);
     
     // Run field-specific validators
     const validationErrors: Record<string, string> = { ...requiredErrors };
     
     Object.entries(validators).forEach(([field, validator]) => {
-      if (validator) {
+      if (validator && field in values) {
         const error = validator(values[field as keyof T]);
         if (error) {
           validationErrors[field] = error;

@@ -42,15 +42,15 @@ const SecurityCheck: React.FC<SecurityCheckProps> = ({ onAuditComplete }) => {
     
     // URL validation
     if (formValues.url) {
-      const urlError = validateUrl(formValues.url, { requireHttps: true });
+      const urlError = validateUrl(formValues.url);
       if (urlError) newErrors.url = urlError;
     }
     
     // Password validation if provided
     if (formValues.password) {
-      const passwordResult = validatePassword(formValues.password);
-      if (!passwordResult.valid) {
-        newErrors.password = passwordResult.message;
+      const passwordError = validatePassword(formValues.password);
+      if (passwordError) {
+        newErrors.password = passwordError;
       }
     }
     

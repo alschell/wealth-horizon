@@ -1,6 +1,6 @@
 
 import { useCallback } from 'react';
-import { FieldValues } from 'react-hook-form';
+import { FieldValues, UseFormProps, DefaultValues } from 'react-hook-form';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { UseUnifiedFormOptions, UnifiedFormState } from './types';
@@ -26,12 +26,12 @@ export function useUnifiedForm<T extends FieldValues>({
   ...formOptions
 }: UseUnifiedFormOptions<T>) {
   // Initialize form state
-  const { formState, setFormState } = useFormState<T>(defaultValues as T);
+  const { formState, setFormState } = useFormState<T>(defaultValues as DefaultValues<T>);
 
   // Initialize react-hook-form with zod resolver if schema is provided
   const methods = useForm<T>({
     ...formOptions,
-    defaultValues,
+    defaultValues: defaultValues as DefaultValues<T>,
     ...(schema && { resolver: zodResolver(schema) })
   });
 

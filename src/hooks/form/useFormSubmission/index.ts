@@ -41,7 +41,7 @@ export function useFormSubmission<T>() {
             setIsSuccess(true);
             
             if (onSuccess) {
-              onSuccess();
+              onSuccess(data);
             }
             
             if (resetAfterSubmit && resetForm) {

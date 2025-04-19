@@ -1,6 +1,6 @@
 
 export interface FormSubmissionOptions<T> {
-  onSuccess?: () => void;
+  onSuccess?: (data: T) => void;
   onError?: (error: unknown) => void;
   successMessage?: string;
   errorMessage?: string;

@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react';
 import { getErrorMessage, parseError } from '@/utils/errorHandling';
 import { showSuccess } from '@/utils/toast';
 import { useFormSubmission } from './form/useFormSubmission';
+import type { FormSubmissionOptions } from './form/useFormSubmission/types';
 
 /**
  * Options for form submission
@@ -123,11 +124,16 @@ export function useUnifiedForm<T extends Record<string, any>>(initialData: T) {
     submitFn: (data: T) => Promise<void>,
     options: FormSubmissionOptions<T> = {}
   ) => {
-    const submitHandler = createSubmitHandler(submitFn, {
+    const compatibleOptions: FormSubmissionOptions<T> = {
       ...options,
-      resetForm: () => resetForm()
-    });
+      resetForm: resetForm
+    };
     
+    if ('logToConsole' in compatibleOptions) {
+      delete (compatibleOptions as any).logToConsole;
+    }
+    
+    const submitHandler = createSubmitHandler(submitFn, compatibleOptions);
     return submitHandler(formData);
   }, [formData, resetForm, createSubmitHandler]);
 

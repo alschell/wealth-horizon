@@ -1,7 +1,7 @@
 
 import { useState } from 'react';
 import { FieldValues } from 'react-hook-form';
-import { UnifiedFormState } from './types';
+import { FormState } from './types';
 
 /**
  * Hook for managing form state
@@ -9,7 +9,7 @@ import { UnifiedFormState } from './types';
  * @returns Form state and state setters
  */
 export function useFormState<T extends FieldValues>(defaultValues?: T) {
-  const [formState, setFormState] = useState<UnifiedFormState<T>>({
+  const [formState, setFormState] = useState<FormState<T>>({
     values: (defaultValues || {}) as T,
     errors: {},
     touched: {},

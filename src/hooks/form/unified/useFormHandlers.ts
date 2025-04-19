@@ -1,7 +1,7 @@
 
 import { useCallback } from 'react';
 import { FieldValues } from 'react-hook-form';
-import { UnifiedFormState } from './types';
+import { FormState } from './types';
 import { createInputChangeHandler, createBlurHandler } from '@/utils/handlers/formEventHandlers';
 
 /**
@@ -11,8 +11,8 @@ import { createInputChangeHandler, createBlurHandler } from '@/utils/handlers/fo
  * @returns Form field handlers
  */
 export function useFormHandlers<T extends FieldValues>(
-  formState: UnifiedFormState<T>,
-  setFormState: React.Dispatch<React.SetStateAction<UnifiedFormState<T>>>
+  formState: FormState<T>,
+  setFormState: React.Dispatch<React.SetStateAction<FormState<T>>>
 ) {
   const clearError = useCallback((field: keyof T) => {
     setFormState(prev => {

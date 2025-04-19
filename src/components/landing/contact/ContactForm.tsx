@@ -100,8 +100,8 @@ const ContactForm: React.FC = () => {
       
       <form onSubmit={handleSubmit} className="flex flex-col h-full">
         <div className="space-y-6 flex-grow">
-          <div className="space-y-2">
-            <Label htmlFor="email">
+          <div className="space-y-2 text-left">
+            <Label htmlFor="email" className="text-left block">
               <TranslatedText>Email</TranslatedText><span className="text-indigo-600 ml-1">*</span>
             </Label>
             <Input 
@@ -114,8 +114,8 @@ const ContactForm: React.FC = () => {
             />
           </div>
           
-          <div className="space-y-2">
-            <Label htmlFor="full-name">
+          <div className="space-y-2 text-left">
+            <Label htmlFor="full-name" className="text-left block">
               <TranslatedText>Full name</TranslatedText><span className="text-indigo-600 ml-1">*</span>
             </Label>
             <Input 
@@ -127,8 +127,8 @@ const ContactForm: React.FC = () => {
             />
           </div>
           
-          <div className="space-y-2">
-            <Label htmlFor="company">
+          <div className="space-y-2 text-left">
+            <Label htmlFor="company" className="text-left block">
               <TranslatedText>Company</TranslatedText><span className="text-indigo-600 ml-1">*</span>
             </Label>
             <Input 
@@ -140,8 +140,8 @@ const ContactForm: React.FC = () => {
             />
           </div>
           
-          <div className="space-y-2">
-            <Label htmlFor="industry">
+          <div className="space-y-2 text-left">
+            <Label htmlFor="industry" className="text-left block">
               <TranslatedText>Industry</TranslatedText><span className="text-indigo-600 ml-1">*</span>
             </Label>
             <CustomSearchableSelect 
@@ -156,8 +156,8 @@ const ContactForm: React.FC = () => {
             />
           </div>
           
-          <div className="space-y-2">
-            <Label htmlFor="inquiry-type">
+          <div className="space-y-2 text-left">
+            <Label htmlFor="inquiry-type" className="text-left block">
               <TranslatedText>Type of inquiry</TranslatedText><span className="text-indigo-600 ml-1">*</span>
             </Label>
             <CustomSearchableSelect 
@@ -172,8 +172,8 @@ const ContactForm: React.FC = () => {
             />
           </div>
           
-          <div className="space-y-2">
-            <Label htmlFor="message">
+          <div className="space-y-2 text-left">
+            <Label htmlFor="message" className="text-left block">
               <TranslatedText>Message</TranslatedText><span className="text-indigo-600 ml-1">*</span>
             </Label>
             <div className="h-[144px]">
@@ -189,7 +189,7 @@ const ContactForm: React.FC = () => {
           </div>
         </div>
         
-        <div className="mt-6 flex-shrink-0">
+        <div className="mt-6 flex-shrink-0 text-left">
           <Button type="submit" className="w-full md:w-auto" disabled={isSubmitting}>
             {isSubmitting ? 
               <TranslatedText>Sending...</TranslatedText> : 

@@ -32,11 +32,11 @@ const WhyWHSection: React.FC = () => {
     <section className="py-24 bg-white" id="benefits">
       <div className="max-w-7xl mx-auto px-6">
         <FadeIn>
-          <div className="mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-left">
+          <div className="mb-16 text-center">
+            <h2 className="text-3xl md:text-4xl font-bold">
               <TranslatedText>Why </TranslatedText><span className="text-indigo-600">Wealth</span><span className="text-gray-900">Horizon</span>
             </h2>
-            <p className="mt-4 text-xl text-gray-600 max-w-3xl text-left">
+            <p className="mt-4 text-xl text-gray-600 max-w-3xl mx-auto">
               <TranslatedText>
                 Discover why leading family offices and institutions choose our platform
                 for their wealth management needs

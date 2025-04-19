@@ -10,7 +10,7 @@ const ContactFormSection: React.FC = () => {
     <section className="py-24 bg-white" id="contact">
       <div className="max-w-7xl mx-auto px-6">
         <FadeIn>
-          <div className="text-left mb-16">
+          <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
               <TranslatedText>Contact Us</TranslatedText>
             </h2>

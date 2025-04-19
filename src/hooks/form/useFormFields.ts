@@ -123,8 +123,8 @@ export function useFormFields<T extends Record<string, any>>(
     
     // Run custom validator if provided
     // Fix the type issue by checking if the field exists in validators
-    if (Object.prototype.hasOwnProperty.call(validators, field)) {
-      const validatorFn = validators[field as keyof typeof validators];
+    if (field in validators) {
+      const validatorFn = validators[field];
       if (validatorFn) {
         const errorMessage = validatorFn(values[field]);
         
@@ -172,8 +172,8 @@ export function useFormFields<T extends Record<string, any>>(
     // Fix the type issue by iterating through keys properly
     Object.keys(validators).forEach(key => {
       const field = key as keyof T;
-      if (Object.prototype.hasOwnProperty.call(validators, field)) {
-        const validatorFn = validators[field as keyof typeof validators];
+      if (field in validators) {
+        const validatorFn = validators[field];
         if (validatorFn) {
           const errorMessage = validatorFn(values[field]);
           

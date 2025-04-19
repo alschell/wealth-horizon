@@ -7,12 +7,23 @@ import { showSuccess, showError } from '@/utils/toast';
  * Options for form submission handler creation
  */
 export interface FormSubmissionOptions<T> {
+  /** Callback executed after successful submission */
   onSuccess?: () => void;
+  
+  /** Callback executed when an error occurs */
   onError?: (error: unknown) => void;
+  
+  /** Success message to display */
   successMessage?: string;
+  
+  /** Error message to display on failure */
   errorMessage?: string;
+  
+  /** Whether to reset form state after submission */
   resetAfterSubmit?: boolean;
-  validateForm?: () => Promise<boolean> | boolean;
+  
+  /** Function to validate form before submission */
+  validateForm?: (data: T) => Promise<boolean> | boolean;
 }
 
 /**
@@ -55,7 +66,7 @@ export function useFormControls<T>() {
 
         // Validate form if validation function is provided
         if (validateForm) {
-          const isValid = await validateForm();
+          const isValid = await validateForm(data);
           if (!isValid) return;
         }
 

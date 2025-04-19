@@ -54,7 +54,7 @@ export function useFormSubmission<T>() {
     } catch (error) {
       const errorHandlerOptions: ErrorHandlerOptions = {
         fallbackMessage: errorMessage,
-        onError: onError
+        onError: onError as (error: unknown) => void
       };
       
       handleError(error, errorHandlerOptions);

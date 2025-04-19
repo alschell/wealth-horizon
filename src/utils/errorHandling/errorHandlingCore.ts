@@ -23,6 +23,9 @@ export interface ErrorHandlerOptions {
   showToast?: boolean;
   logToConsole?: boolean;
   rethrow?: boolean;
+  fallbackMessage?: string;
+  logError?: boolean;
+  onError?: (error: unknown) => void;
 }
 
 /**
@@ -64,7 +67,11 @@ export function parseError(error: unknown): ErrorResponse {
  * Standard error handler function
  */
 export function handleError(error: unknown, options: ErrorHandlerOptions = {}): ErrorResponse {
-  const { silent = false, logToConsole = true } = options;
+  const { 
+    silent = false, 
+    logToConsole = true, 
+    fallbackMessage = 'An unexpected error occurred' 
+  } = options;
   const parsedError = parseError(error);
   
   if (logToConsole) {
@@ -94,7 +101,9 @@ export function getErrorMessage(error: unknown): string {
  */
 export function createContextualError(message: string, originalError?: unknown, context?: Record<string, unknown>): Error {
   const contextualError = new Error(message);
+  // Using optional chaining to avoid the Error.cause compatibility issue
   if (originalError) {
+    // @ts-ignore - Ignore the TypeScript error for Error.cause
     contextualError.cause = originalError;
   }
   if (context) {

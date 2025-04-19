@@ -1,7 +1,7 @@
 
 import { useState, useCallback } from 'react';
-import { handleError } from '@/utils/errorHandling';
-import { showSuccess } from '@/utils/toast';
+import { getErrorMessage, parseError } from '@/utils/errorHandling';
+import { showSuccess, showError } from '@/utils/toast';
 import { FormSubmissionOptions, SubmissionState } from './types';
 
 /**
@@ -64,13 +64,10 @@ export function useFormSubmission<T>() {
       
       return true;
     } catch (error) {
-      const errorHandlerOptions = {
-        fallbackMessage: errorMessage,
-        logToConsole: true,
-        onError: onError as (error: unknown) => void
-      };
+      const parsedError = parseError(error);
+      console.error('Form submission error:', parsedError);
       
-      handleError(error, errorHandlerOptions);
+      showError('Error', getErrorMessage(error, errorMessage));
       
       setState(prev => ({
         ...prev,
@@ -78,6 +75,10 @@ export function useFormSubmission<T>() {
         isSuccess: false,
         lastError: errorMessage
       }));
+      
+      if (onError) {
+        onError(error);
+      }
       
       return false;
     }

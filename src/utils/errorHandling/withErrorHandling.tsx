@@ -68,11 +68,14 @@ export function withErrorHandling<P extends object>(
   return WithErrorHandlingWrapper;
 }
 
+/**
+ * Creates a component wrapped with error boundary and custom fallback component
+ */
 export const withCustomErrorFallback = <P extends object>(
   Component: React.ComponentType<P>,
   FallbackComponent: React.ComponentType<{ error?: Error }>
 ): React.FC<P> => {
   return withErrorHandling(Component, {
-    fallback: (props: { error?: Error }) => <FallbackComponent error={props.error} />
+    fallback: <FallbackComponent error={new Error()} />
   });
 };

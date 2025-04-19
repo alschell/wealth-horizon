@@ -15,7 +15,7 @@ export interface ErrorResponse {
  */
 export interface ErrorHandlerOptions {
   fallbackMessage?: string;
-  logError?: boolean;
+  logToConsole?: boolean;
   showToast?: boolean;
   silent?: boolean;
   actionText?: string;
@@ -85,7 +85,7 @@ export function handleError(
 ): void {
   const { 
     fallbackMessage = "An unexpected error occurred",
-    logError = true,
+    logToConsole = true,
     showToast = true,
     silent = false,
     actionText,
@@ -100,7 +100,7 @@ export function handleError(
   const errorDetails = parseError(error);
   
   // Log error to console if enabled
-  if (logError && !silent) {
+  if (logToConsole && !silent) {
     console.error("Error:", {
       message: errorMessage,
       code: errorDetails.code,

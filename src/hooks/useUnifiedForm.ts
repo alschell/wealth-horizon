@@ -1,6 +1,6 @@
 
 import { useState, useCallback } from 'react';
-import { handleError, ErrorHandlerOptions } from '@/utils/errorHandling';
+import { getErrorMessage, parseError } from '@/utils/errorHandling';
 import { showSuccess } from '@/utils/toast';
 
 /**
@@ -160,22 +160,22 @@ export function useUnifiedForm<T extends Record<string, any>>(initialData: T) {
     } catch (error) {
       setIsSuccess(false);
       
-      const errorMsg = error instanceof Error ? error.message : errorMessage;
+      const errorMsg = getErrorMessage(error, errorMessage);
       setLastError(errorMsg);
       
-      const errorHandlerOptions: ErrorHandlerOptions = {
-        fallbackMessage: errorMessage,
-        logToConsole: logToConsole,
-        onError: onError as (error: unknown) => void
-      };
+      if (logToConsole) {
+        console.error('Form submission error:', parseError(error));
+      }
       
-      handleError(error, errorHandlerOptions);
+      if (onError) {
+        onError(error);
+      }
       
       return false;
     } finally {
       setIsSubmitting(false);
     }
-  }, [formData, resetForm]);
+  }, [formData]);
 
   return {
     formData,

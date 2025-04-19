@@ -1,6 +1,6 @@
 
 import { useState, useCallback } from 'react';
-import { useToast } from '@/components/ui/toast';
+import { useToast } from '@/hooks/use-toast';
 import { getErrorMessage, logError } from '@/utils/errorHandling';
 
 export const useErrorHandler = (componentName?: string) => {

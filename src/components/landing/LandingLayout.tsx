@@ -1,4 +1,3 @@
-
 import React, { useMemo } from "react";
 import HeroSection from "./HeroSection";
 import WhyWHSection from "./WhyWHSection";
@@ -10,7 +9,6 @@ import FooterSection from "./FooterSection";
 import ContactFormSection from "./ContactFormSection";
 import { useScrollToSection } from "@/hooks/useScrollToSection";
 
-// Define all section IDs for better maintainability
 const SECTION_IDS = [
   'why-wh',
   'features',
@@ -26,10 +24,8 @@ type SectionId = typeof SECTION_IDS[number];
  * Main landing page layout component that organizes all landing page sections
  */
 const LandingLayout: React.FC = () => {
-  // Create refs for each section using the hook - remove the type parameter to fix the error
   const { sectionRefs, scrollToSection } = useScrollToSection(SECTION_IDS);
   
-  // Memoize the section map to prevent unnecessary re-renders
   const sectionComponents = useMemo(() => ({
     'why-wh': <WhyWHSection />,
     'features': <FeaturesSection />,
@@ -52,6 +48,7 @@ const LandingLayout: React.FC = () => {
       ))}
       
       <CTASection />
+      <FooterSection />
     </div>
   );
 };

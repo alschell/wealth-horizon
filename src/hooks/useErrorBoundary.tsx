@@ -12,7 +12,7 @@ import { toast } from '@/hooks/use-toast';
  * @param options Configuration options for the error boundary hook
  * @returns Error boundary utilities and wrapper component
  */
-export function useErrorBoundary(options: ErrorHandlerOptions = {}) {
+export function useErrorBoundary(options: ErrorHandlerOptions & { fallbackMessage?: string } = {}) {
   const {
     fallbackMessage = "Something went wrong",
     showToast = true,
@@ -75,7 +75,7 @@ export function useErrorBoundary(options: ErrorHandlerOptions = {}) {
  */
 export function withErrorHandling<P extends object>(
   Component: React.ComponentType<P>,
-  options: ErrorHandlerOptions = {}
+  options: ErrorHandlerOptions & { fallbackMessage?: string } = {}
 ): React.FC<P> {
   const displayName = Component.displayName || Component.name || 'Component';
   

@@ -18,7 +18,6 @@ export function withErrorHandling<P extends object>(
   options: ErrorHandlerOptions = {}
 ): React.FC<P> {
   const {
-    fallback,
     onError,
     showToast = true,
     fallbackMessage = "Something went wrong",
@@ -26,22 +25,22 @@ export function withErrorHandling<P extends object>(
     logToConsole = true,
   } = options;
 
-  const WithErrorHandlingWrapper: React.FC<P> = (props) => {
-    const handleError = (error: Error, errorInfo: React.ErrorInfo) => {
-      if (logToConsole) {
-        logError(error, componentName);
-        console.error('Component stack:', errorInfo.componentStack);
-      }
-      
-      if (onError) {
-        onError(error);
-      }
-    };
+  const handleError = (error: Error, errorInfo: React.ErrorInfo) => {
+    if (logToConsole) {
+      logError(error, componentName);
+      console.error('Component stack:', errorInfo.componentStack);
+    }
+    
+    if (onError) {
+      onError(error);
+    }
+  };
 
+  const WithErrorHandlingWrapper: React.FC<P> = (props) => {
     return (
       <ErrorBoundary
         fallback={
-          fallback || (
+          options.fallback || (
             <ErrorFallback 
               error={new Error(fallbackMessage)} 
               resetErrorBoundary={() => {}}

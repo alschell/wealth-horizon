@@ -33,9 +33,11 @@ export const DocumentProvider: React.FC<DocumentProviderProps> = ({
   
   const { ErrorBoundaryWrapper } = useErrorBoundary({
     componentName: 'DocumentProvider',
-    message: 'There was an error with the document management system.',
+    fallbackMessage: 'There was an error with the document management system.',
     onError: (error) => {
-      setError(error);
+      // Convert unknown error to Error object before setting state
+      const errorObj = error instanceof Error ? error : new Error(String(error));
+      setError(errorObj);
       handleError(error, { 
         toastTitle: 'Document Error' 
       });

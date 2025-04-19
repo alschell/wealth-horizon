@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Search, Wallet, Database, FileText, Shield } from "lucide-react";
 import TranslatedText from "@/components/ui/translated-text";
@@ -50,7 +51,7 @@ interface FeaturesSectionProps {
 
 const FeaturesSection: React.FC<FeaturesSectionProps> = ({ id }) => {
   return (
-    <section className="py-24 bg-gray-50" id={id}>
+    <section className="py-24 bg-gray-50" id={id || "features"}>
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 text-center">
@@ -67,19 +68,17 @@ const FeaturesSection: React.FC<FeaturesSectionProps> = ({ id }) => {
           {orderedFeatures.map((feature, index) => (
             <div 
               key={index}
-              className="flex gap-4"
+              className="bg-white p-8 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow h-full flex flex-col"
             >
-              <div className="flex-shrink-0 w-12 h-12 flex items-center justify-center rounded-lg bg-gray-50 text-[#4E46DC]">
+              <div className="mb-4 w-12 h-12 flex items-center justify-center rounded-lg bg-indigo-50 text-indigo-600">
                 <feature.icon size={24} />
               </div>
-              <div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                  <TranslatedText>{feature.title}</TranslatedText>
-                </h3>
-                <p className="text-gray-600">
-                  <TranslatedText>{feature.description}</TranslatedText>
-                </p>
-              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                <TranslatedText>{feature.title}</TranslatedText>
+              </h3>
+              <p className="text-gray-600 flex-grow">
+                <TranslatedText>{feature.description}</TranslatedText>
+              </p>
             </div>
           ))}
         </div>

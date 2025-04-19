@@ -1,3 +1,4 @@
+
 import React, { useEffect } from "react";
 import { ChevronDown, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -23,9 +24,12 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToFeatures }) => {
   };
 
   const scrollToWhyWH = () => {
-    const whyWHSection = document.getElementById('benefits');
-    if (whyWHSection) {
-      whyWHSection.scrollIntoView({ behavior: 'smooth' });
+    const benefitsSection = document.getElementById('benefits');
+    if (benefitsSection) {
+      console.log("Scrolling to benefits section");
+      benefitsSection.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      console.log("Benefits section not found");
     }
   };
 

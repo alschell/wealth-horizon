@@ -1,107 +1,119 @@
 
 /**
- * Field validation utilities for form validation
+ * Field-level validation functions
  */
 
 /**
  * Validates that a field is not empty
- * 
- * @param value - Value to validate
- * @param fieldName - Name of the field for error message
+ * @param value - Field value to validate
+ * @param message - Custom error message
  * @returns Error message or null if valid
  */
-export const validateRequired = (value: string, fieldName: string): string | null => {
-  if (!value || value.trim() === '') {
-    return `${fieldName} is required`;
+export const validateRequired = (
+  value: any,
+  message = 'This field is required'
+): string | null => {
+  if (
+    value === undefined || 
+    value === null || 
+    value === '' || 
+    (Array.isArray(value) && value.length === 0)
+  ) {
+    return message;
   }
   return null;
 };
 
 /**
- * Validates a field using a regular expression pattern
- * 
+ * Validates a value against a regex pattern
  * @param value - Value to validate
- * @param pattern - RegExp pattern to match
- * @param errorMessage - Custom error message
+ * @param pattern - Regex pattern
+ * @param message - Custom error message
  * @returns Error message or null if valid
  */
 export const validatePattern = (
   value: string, 
   pattern: RegExp, 
-  errorMessage: string
+  message = 'Invalid format'
 ): string | null => {
-  if (!value) return null; // Empty values should be handled by validateRequired
-
+  if (!value) return null; // Don't validate empty values
   if (!pattern.test(value)) {
-    return errorMessage;
+    return message;
   }
   return null;
 };
 
 /**
- * Validates an LEI (Legal Entity Identifier)
- * 
- * @param value - LEI value to validate
+ * Validates a Legal Entity Identifier (LEI)
+ * @param lei - LEI to validate
  * @returns Error message or null if valid
  */
-export const validateLei = (value: string): string | null => {
-  if (!value) return null; // Empty values should be handled by validateRequired
+export const validateLei = (lei: string): string | null => {
+  if (!lei) return null; // Don't validate empty values
   
   // LEI is a 20-character alphanumeric string
-  if (value.length !== 20) {
-    return "LEI must be 20 characters";
-  }
-  
-  // LEI format: 18 alphanumeric characters + 2 check digits
-  const leiPattern = /^[0-9A-Z]{18}[0-9]{2}$/;
-  if (!leiPattern.test(value)) {
-    return "LEI must be 18 alphanumeric characters followed by 2 digits";
+  const leiPattern = /^[A-Z0-9]{18}[0-9]{2}$/;
+  if (!leiPattern.test(lei)) {
+    return 'LEI must be a 20-character alphanumeric string';
   }
   
   return null;
 };
 
 /**
- * Validates a date format
- * 
- * @param value - Date string to validate
- * @param format - Expected format (e.g., 'YYYY-MM-DD')
+ * Validates a date string
+ * @param date - Date string to validate
+ * @param options - Validation options
  * @returns Error message or null if valid
  */
-export const validateDate = (value: string, format = 'YYYY-MM-DD'): string | null => {
-  if (!value) return null; // Empty values should be handled by validateRequired
+export const validateDate = (
+  date: string,
+  options: { required?: boolean; past?: boolean; future?: boolean } = {}
+): string | null => {
+  const { required = false, past = false, future = false } = options;
   
-  // Basic date validation for ISO format
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) {
-    return `Date must be in ${format} format`;
+  if (!date) {
+    return required ? 'Date is required' : null;
   }
   
-  // Check if the date is valid
-  const date = new Date(value);
-  if (isNaN(date.getTime())) {
-    return "Invalid date";
+  // Try to parse the date
+  const parsedDate = new Date(date);
+  if (isNaN(parsedDate.getTime())) {
+    return 'Invalid date format';
+  }
+  
+  const now = new Date();
+  
+  // Check if date should be in the past
+  if (past && parsedDate > now) {
+    return 'Date must be in the past';
+  }
+  
+  // Check if date should be in the future
+  if (future && parsedDate < now) {
+    return 'Date must be in the future';
   }
   
   return null;
 };
 
 /**
- * Validates a field has a minimum length
- * 
- * @param value - Value to validate
- * @param minLength - Minimum length required
- * @param fieldName - Name of the field for error message
+ * Validates minimum length of a string
+ * @param value - String to validate
+ * @param minLength - Minimum required length
+ * @param message - Custom error message
  * @returns Error message or null if valid
  */
 export const validateMinLength = (
-  value: string, 
-  minLength: number, 
-  fieldName: string
+  value: string,
+  minLength: number,
+  message?: string
 ): string | null => {
-  if (!value) return null; // Empty values should be handled by validateRequired
+  if (!value) return null; // Don't validate empty values
   
   if (value.length < minLength) {
-    return `${fieldName} must be at least ${minLength} characters`;
+    return message || `Must be at least ${minLength} characters`;
   }
+  
   return null;
 };

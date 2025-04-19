@@ -1,50 +1,36 @@
 
-/**
- * Unified form validation utilities
- */
-
-import { z } from 'zod';
+import { useMemo } from 'react';
 
 /**
- * Validates required fields in a form data object
- * 
- * @param values Object containing form data
- * @param requiredFields Array of field names that are required
- * @returns Object with validation errors (if any)
+ * Create a memoized error checker function
+ * @param errors Error record
+ * @returns Function to check if a field has an error
  */
-export const validateRequiredFields = <T extends Record<string, any>>(
-  values: T, 
-  requiredFields: Array<keyof T>
-): Record<string, string> => {
-  const errors: Record<string, string> = {};
-  
-  requiredFields.forEach(field => {
-    const value = values[field];
-    
-    if (
-      value === undefined || 
-      value === null || 
-      value === '' || 
-      (Array.isArray(value) && value.length === 0)
-    ) {
-      errors[field as string] = 'This field is required';
-    }
-  });
-  
-  return errors;
-};
+export function createErrorChecker(errors: Record<string, string>) {
+  return (field: string): boolean => {
+    return Boolean(errors[field]);
+  };
+}
 
 /**
- * Factory function to create an error clearing function
- * 
- * @returns A function that clears a specified field error
+ * Create a memoized error message getter function
+ * @param errors Error record
+ * @returns Function to get error message for a field
  */
-export const createErrorClearer = <T>(
-  setFormState: React.Dispatch<React.SetStateAction<{
-    errors: Record<string, string>;
-    [key: string]: any;
-  }>>
-) => {
+export function createErrorMessageGetter(errors: Record<string, string>) {
+  return (field: string): string => {
+    return errors[field] || '';
+  };
+}
+
+/**
+ * Create a memoized error clearer function
+ * @param setFormState Form state setter
+ * @returns Function to clear error for a field
+ */
+export function createErrorClearer<T>(
+  setFormState: React.Dispatch<React.SetStateAction<any>>
+) {
   return (field: keyof T) => {
     setFormState(prev => {
       const newErrors = { ...prev.errors };
@@ -55,49 +41,54 @@ export const createErrorClearer = <T>(
       };
     });
   };
-};
+}
 
 /**
- * Validates a form using Zod schema
- * 
- * @param values Form values to validate
- * @param schema Zod schema for validation
- * @returns Object with validation errors (if any)
+ * Validate required fields in a form
+ * @param values Form values
+ * @param requiredFields Array of required field keys
+ * @returns Object with field errors
  */
-export const validateWithZodSchema = <T extends Record<string, any>>(
-  values: T, 
-  schema: z.ZodType<T>
-): Record<string, string> => {
-  try {
-    schema.parse(values);
-    return {};
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      return error.errors.reduce((acc, curr) => {
-        if (curr.path[0]) {
-          acc[curr.path[0] as string] = curr.message;
-        }
-        return acc;
-      }, {} as Record<string, string>);
+export function validateRequiredFields<T>(
+  values: T,
+  requiredFields: Array<keyof T> = []
+): Record<string, string> {
+  const errors: Record<string, string> = {};
+
+  requiredFields.forEach(field => {
+    const value = values[field];
+    const isEmpty =
+      value === undefined ||
+      value === null ||
+      value === '' ||
+      (Array.isArray(value) && value.length === 0);
+
+    if (isEmpty) {
+      errors[field as string] = 'This field is required';
     }
-    return {};
-  }
-};
+  });
+
+  return errors;
+}
 
 /**
- * Creates a function to check if a field has an error
+ * Hook for form validation that memoizes validation functions
+ * @param errors Current error state
+ * @returns Memoized validation utilities
  */
-export const createErrorChecker = (errors: Record<string, string>) => {
-  return (field: string): boolean => {
-    return Boolean(errors[field]);
-  };
-};
+export function useFormValidationUtils(errors: Record<string, string>) {
+  const hasError = useMemo(
+    () => createErrorChecker(errors),
+    [errors]
+  );
 
-/**
- * Creates a function to get an error message for a field
- */
-export const createErrorMessageGetter = (errors: Record<string, string>) => {
-  return (field: string): string => {
-    return errors[field] || '';
+  const getErrorMessage = useMemo(
+    () => createErrorMessageGetter(errors),
+    [errors]
+  );
+
+  return {
+    hasError,
+    getErrorMessage
   };
-};
+}

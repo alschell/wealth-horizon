@@ -1,28 +1,20 @@
 
-import { useState, useCallback } from 'react';
+import { useCallback } from 'react';
 import { useIsComponentMounted } from '../useIsComponentMounted';
 import { showSuccess, showError } from '@/utils/toast';
-import { FormSubmissionOptions, FormSubmissionState, UseFormControlsReturn } from './types';
+import { FormSubmissionOptions, UseFormControlsReturn } from './types';
+import { useFormSubmissionState } from './useFormState';
+import { useResetState } from './useResetState';
 
 /**
  * Hook for managing form submission state and handlers
+ * Provides a unified approach to form submission with integrated
+ * validation, success/error handling, and state management.
  */
 export function useFormControls<T>(): UseFormControlsReturn<T> {
   const isMounted = useIsComponentMounted();
-  const [formSubmissionState, setFormSubmissionState] = useState<FormSubmissionState>({
-    isSubmitting: false,
-    lastError: null,
-    isSuccess: false
-  });
-
-  // Reset state handler
-  const resetState = useCallback(() => {
-    setFormSubmissionState({
-      isSubmitting: false,
-      lastError: null,
-      isSuccess: false
-    });
-  }, []);
+  const { formSubmissionState, setFormSubmissionState } = useFormSubmissionState();
+  const resetState = useResetState(setFormSubmissionState);
 
   // Create a submission handler
   const createSubmitHandler = useCallback(
@@ -100,7 +92,7 @@ export function useFormControls<T>(): UseFormControlsReturn<T> {
         }
       };
     },
-    [isMounted, resetState]
+    [isMounted, resetState, setFormSubmissionState]
   );
 
   return {

@@ -1,58 +1,50 @@
 
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { ArrowUpRight } from 'lucide-react';
-import { 
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent
-} from '@/components/ui/chart';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from 'recharts';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip } from "recharts";
 
-export const SectorPerformanceCard = () => {
+/**
+ * SectorPerformanceCard displays sector performance data in a card format with a bar chart
+ * 
+ * @returns Sector Performance Card component with chart visualization
+ */
+export const SectorPerformanceCard: React.FC = () => {
+  // Mock data - in a real app, this would come from an API
+  const sectorData = [
+    { name: "Technology", value: 2.34 },
+    { name: "Healthcare", value: 1.56 },
+    { name: "Financial", value: -0.23 },
+    { name: "Consumer", value: 0.89 },
+    { name: "Energy", value: -1.45 },
+    { name: "Utilities", value: 0.44 },
+    { name: "Real Estate", value: -0.78 },
+  ];
+
   return (
     <Card>
-      <CardHeader className="pb-0">
+      <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
-          <CardTitle>Market Sectors</CardTitle>
-          <Button variant="ghost" className="text-xs flex items-center gap-1 text-gray-500">
-            View All <ArrowUpRight size={14} />
-          </Button>
+          <CardTitle className="text-base">Sector Performance</CardTitle>
+          <Badge variant="outline" className="text-xs">Daily</Badge>
         </div>
       </CardHeader>
       <CardContent>
-        <div className="h-60">
-          <ChartContainer config={{
-            value: {
-              label: "Performance",
-              color: "#666666"
-            }
-          }}>
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={[
-                {name: 'Technology', value: 3.2},
-                {name: 'Healthcare', value: 1.5},
-                {name: 'Financials', value: -0.8},
-                {name: 'Energy', value: 2.1},
-                {name: 'Consumer', value: 0.5},
-                {name: 'Utilities', value: -0.3},
-              ]}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                <XAxis dataKey="name" tick={{ fontSize: 12 }} tickMargin={10} />
-                <YAxis tick={{ fontSize: 12 }} tickMargin={10} />
-                <ChartTooltip content={<ChartTooltipContent />} />
-                <defs>
-                  <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#666666" stopOpacity={0.8}/>
-                    <stop offset="95%" stopColor="#666666" stopOpacity={0}/>
-                  </linearGradient>
-                </defs>
-                <Area type="monotone" dataKey="value" stroke="#666666" fillOpacity={1} fill="url(#colorUv)" />
-              </AreaChart>
-            </ResponsiveContainer>
-          </ChartContainer>
-        </div>
+        <ResponsiveContainer width="100%" height={220}>
+          <BarChart data={sectorData} layout="vertical" margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
+            <XAxis type="number" domain={['dataMin', 'dataMax']} tickFormatter={(value) => `${value}%`} />
+            <YAxis type="category" dataKey="name" width={100} />
+            <Tooltip 
+              formatter={(value: number) => [`${value.toFixed(2)}%`, 'Performance']}
+              labelFormatter={(label) => `${label}`}
+            />
+            <Bar 
+              dataKey="value" 
+              fill={(entry) => entry.value >= 0 ? "#4ade80" : "#f87171"} 
+              radius={4}
+            />
+          </BarChart>
+        </ResponsiveContainer>
       </CardContent>
     </Card>
   );

@@ -1,104 +1,104 @@
 
-import { useCallback } from 'react';
-import { FieldValues, UseFormProps, DefaultValues } from 'react-hook-form';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { UseUnifiedFormOptions, UnifiedFormState } from './types';
-import { useFormState } from './useFormState';
-import { useFormHandlers } from './useFormHandlers';
+import { useState, useCallback } from 'react';
+import { useIsComponentMounted } from '../../useIsComponentMounted';
+import { showSuccess, showError } from '@/utils/toast';
+import { 
+  UseUnifiedFormProps, 
+  UseUnifiedFormReturn,
+  FormState
+} from './types';
+import { validateRequiredFields } from './validation';
+import { useFormFields } from './useFormFields';
 import { useFormValidation } from './useFormValidation';
 import { useFormSubmission } from './useFormSubmission';
 
 /**
- * Enhanced form hook that combines react-hook-form with submission handling
- * @param options - Form configuration options
- * @returns Form state, methods, and handlers
+ * Unified form hook for handling form state, validation, and submission
+ * @param props - Form configuration
+ * @returns Form state, actions, and helpers
  */
-export function useUnifiedForm<T extends FieldValues>({
-  schema,
-  defaultValues,
-  onSubmit,
-  onSuccess,
-  onError,
-  successMessage = 'Form submitted successfully',
-  errorMessage = 'Error submitting form',
-  resetAfterSubmit = false,
-  ...formOptions
-}: UseUnifiedFormOptions<T>) {
-  // Initialize form state
-  const { formState, setFormState } = useFormState<T>();
-
-  // Initialize form state with default values
-  useCallback(() => {
-    setFormState({
-      values: defaultValues as T,
-      errors: {},
-      touched: {},
-      isDirty: false,
-      isSubmitting: false,
-      isSuccess: false
-    });
-  }, [defaultValues, setFormState])();
-
-  // Initialize react-hook-form with zod resolver if schema is provided
-  const methods = useForm<T>({
-    ...formOptions,
-    defaultValues: defaultValues as DefaultValues<T>,
-    ...(schema && { resolver: zodResolver(schema) })
-  });
-
-  // Get form handlers
+export function useUnifiedForm<T extends Record<string, any>>(
+  props: UseUnifiedFormProps<T>
+): UseUnifiedFormReturn<T> {
   const {
-    handleChange,
-    handleBlur,
-    setFieldValue,
-    setFieldValues,
-    setFieldError,
-    clearFieldError
-  } = useFormHandlers<T>(formState, setFormState);
-
-  // Get form validation
-  const { validateForm } = useFormValidation<T>(
-    formState,
-    setFormState,
-    [] // Pass required fields if needed
-  );
-
-  // Get form submission handler
-  const { handleSubmit: submitHandler } = useFormSubmission<T>(
-    formState,
-    setFormState,
+    initialValues,
+    validate,
     onSubmit,
     onSuccess,
     onError,
-    successMessage,
+    successMessage = 'Form submitted successfully',
+    errorMessage = 'An error occurred. Please try again.',
+    requiredFields = []
+  } = props;
+
+  const isMounted = useIsComponentMounted();
+  
+  // Form state
+  const [formState, setFormState] = useState<FormState<T>>({
+    values: initialValues,
+    errors: {},
+    touched: {},
+    isDirty: false,
+    isSubmitting: false,
+    isSuccess: false
+  });
+
+  // Use form field handlers
+  const { 
+    handleChange, 
+    handleBlur, 
+    setFieldValue, 
+    setFieldValues, 
+    clearFieldError 
+  } = useFormFields<T>(formState, setFormState);
+
+  // Use form validation handlers
+  const { 
+    setFieldError, 
+    validateForm 
+  } = useFormValidation<T>(formState, setFormState, validate, requiredFields, validateRequiredFields);
+
+  // Use form submission handler
+  const { 
+    handleSubmit, 
+    resetForm 
+  } = useFormSubmission<T>(
+    formState, 
+    setFormState, 
+    validateForm, 
+    onSubmit, 
+    isMounted, 
+    onSuccess, 
+    onError, 
+    successMessage, 
     errorMessage
   );
 
-  // Reset form to initial state
-  const resetFormState = useCallback(() => {
-    setFormState({
-      values: defaultValues as T,
-      errors: {},
-      touched: {},
-      isDirty: false,
-      isSubmitting: false,
-      isSuccess: false
-    });
-  }, [defaultValues, setFormState]);
+  // Helper to check if field has error
+  const hasError = useCallback((field: keyof T) => {
+    return Boolean(formState.errors[field as string]);
+  }, [formState.errors]);
+
+  // Helper to get error message for field
+  const getErrorMessage = useCallback((field: keyof T) => {
+    return formState.errors[field as string] || '';
+  }, [formState.errors]);
 
   return {
-    ...methods,
     formState,
-    handleSubmit: methods.handleSubmit(submitHandler),
-    resetFormState,
-    submit: submitHandler,
     handleChange,
     handleBlur,
     setFieldValue,
     setFieldValues,
     setFieldError,
     clearFieldError,
-    validateForm
+    validateForm,
+    handleSubmit,
+    resetForm,
+    hasError,
+    getErrorMessage
   };
 }
+
+export * from './types';
+export * from './validation';

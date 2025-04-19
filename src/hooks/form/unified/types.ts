@@ -1,45 +1,44 @@
 
-import { FieldValues } from 'react-hook-form';
-import { ZodSchema } from 'zod';
-
 /**
- * Options for unified form configuration
+ * Form state interface
  */
-export interface UseUnifiedFormOptions<T extends FieldValues> {
-  /** Zod schema for form validation */
-  schema?: ZodSchema<T>;
-  /** Default form values */
-  defaultValues: T;
-  /** Form submission handler */
-  onSubmit?: (data: T) => Promise<void> | void;
-  /** Success callback after form submission */
-  onSuccess?: () => void;
-  /** Error callback after form submission failure */
-  onError?: (error: unknown) => void;
-  /** Success message to display after successful submission */
-  successMessage?: string;
-  /** Error message to display after failed submission */
-  errorMessage?: string;
-  /** Whether to reset form after successful submission */
-  resetAfterSubmit?: boolean;
-  /** Additional form options */
-  [key: string]: any;
+export interface FormState<T> {
+  values: T;
+  errors: Record<string, string>;
+  touched: Record<string, boolean>;
+  isDirty: boolean;
+  isSubmitting: boolean;
+  isSuccess: boolean;
 }
 
 /**
- * Form state for unified form
+ * Props for the useUnifiedForm hook
  */
-export interface UnifiedFormState<T extends FieldValues> {
-  /** Current form values */
-  values: T;
-  /** Form validation errors */
-  errors: Record<string, string>;
-  /** Fields that have been touched/interacted with */
-  touched: Record<string, boolean>;
-  /** Whether form has been modified from initial state */
-  isDirty: boolean;
-  /** Whether form is currently submitting */
-  isSubmitting: boolean;
-  /** Whether form submission was successful */
-  isSuccess: boolean;
+export interface UseUnifiedFormProps<T> {
+  initialValues: T;
+  validate?: (values: T) => Record<string, string>;
+  onSubmit?: (values: T) => Promise<void> | void;
+  onSuccess?: () => void;
+  onError?: (error: unknown) => void;
+  successMessage?: string;
+  errorMessage?: string;
+  requiredFields?: Array<keyof T>;
+}
+
+/**
+ * Return type for the useUnifiedForm hook
+ */
+export interface UseUnifiedFormReturn<T> {
+  formState: FormState<T>;
+  handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void;
+  handleBlur: (field: keyof T) => void;
+  setFieldValue: (field: keyof T, value: any) => void;
+  setFieldValues: (fields: Partial<T>) => void;
+  setFieldError: (field: keyof T, message: string) => void;
+  clearFieldError: (field: keyof T) => void;
+  validateForm: () => boolean;
+  handleSubmit: (e?: React.FormEvent) => Promise<boolean>;
+  resetForm: () => void;
+  hasError: (field: keyof T) => boolean;
+  getErrorMessage: (field: keyof T) => string;
 }

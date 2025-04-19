@@ -52,7 +52,7 @@ export function withErrorHandling<P extends object>(
               resetErrorBoundary={() => {}}
               title="Error Occurred" 
               description={message}
-              showReset={showReset}
+              showResetButton={showReset}
             />
           )
         }

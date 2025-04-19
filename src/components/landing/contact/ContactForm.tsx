@@ -94,7 +94,7 @@ const ContactForm: React.FC = () => {
 
   return (
     <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-200">
-      <h3 className="text-xl font-semibold text-gray-900 mb-6">
+      <h3 className="text-xl font-semibold text-gray-900 mb-6 text-left">
         <TranslatedText>Send us a message</TranslatedText>
       </h3>
       

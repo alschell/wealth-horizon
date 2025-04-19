@@ -27,10 +27,10 @@ const TestimonialsSection: React.FC = () => {
       <div className="max-w-7xl mx-auto px-6">
         <div className="mb-16">
           <FadeIn>
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 text-center" style={{ textAlign: 'center' }}>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 text-center">
               <TranslatedText>Trusted by Leading Institutions</TranslatedText>
             </h2>
-            <p className="mt-4 text-xl text-gray-600 max-w-3xl mx-auto text-center" style={{ textAlign: 'center' }}>
+            <p className="mt-4 text-xl text-gray-600 max-w-3xl mx-auto text-center">
               <TranslatedText>See what family offices and institutional investors say about </TranslatedText>
               <span className="text-indigo-600">Wealth</span><span>Horizon</span>
             </p>
@@ -46,7 +46,7 @@ const TestimonialsSection: React.FC = () => {
                     <span key={star} className="text-yellow-400">★</span>
                   ))}
                 </div>
-                <p className="text-gray-700 flex-grow italic mb-6">
+                <p className="text-gray-700 flex-grow italic mb-6 text-left">
                   "<TranslatedText>{testimonial.quote}</TranslatedText>"
                 </p>
                 <div className="flex items-center">

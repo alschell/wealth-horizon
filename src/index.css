@@ -97,11 +97,6 @@
   span.text-red-500 {
     @apply text-indigo-600;
   }
-  
-  /* Override for text-center to work */
-  .text-center {
-    text-align: center !important;
-  }
 }
 
 @layer utilities {
@@ -124,4 +119,18 @@
   .input-focus {
     @apply focus:border-black focus:ring-2 focus:ring-black/20 transition-all;
   }
+  
+  /* Override classes to enforce text alignment */
+  .text-left {
+    text-align: left !important;
+  }
+  
+  .text-center {
+    text-align: center !important;
+  }
+  
+  .text-right {
+    text-align: right !important;
+  }
 }
+

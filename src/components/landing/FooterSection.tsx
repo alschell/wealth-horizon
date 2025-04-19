@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Separator } from "@/components/ui/separator";
 import { Link, useNavigate } from "react-router-dom";
@@ -104,7 +105,7 @@ const FooterSection: React.FC = () => {
         <Separator className="my-8 bg-gray-800" />
         
         <div className="flex flex-col md:flex-row justify-between items-center">
-          <p>
+          <p className="text-left">
             <TranslatedText>© 2025 WealthHorizon. All rights reserved.</TranslatedText>
           </p>
           <div className="mt-4 md:mt-0">

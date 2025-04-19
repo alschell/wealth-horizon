@@ -33,7 +33,7 @@ const WhyWHSection: React.FC = () => {
       <div className="max-w-7xl mx-auto px-6">
         <FadeIn>
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 text-center">
+            <h2 className="text-3xl md:text-4xl font-bold text-center mx-auto">
               <TranslatedText>Why </TranslatedText>
               <span className="text-indigo-600">Wealth</span>
               <span className="text-gray-900">Horizon</span>
@@ -53,7 +53,7 @@ const WhyWHSection: React.FC = () => {
                 <div className="w-12 h-12 mx-auto mb-4 flex items-center justify-center rounded-full bg-indigo-50 text-indigo-600">
                   {reason.icon}
                 </div>
-                <h3 className="text-xl font-semibold mb-2 text-gray-900 text-center">
+                <h3 className="text-xl font-semibold mb-2 text-center">
                   <TranslatedText>{reason.title}</TranslatedText>
                 </h3>
                 <p className="text-gray-600 text-center">

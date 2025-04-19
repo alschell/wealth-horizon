@@ -1,3 +1,4 @@
+
 import React from "react";
 import { FadeIn, ScaleIn, StaggerContainer, StaggerItem } from "@/components/ui/animation";
 import { LineChart, Shield, BarChart3, FileText, Users, Lock, LucideIcon } from "lucide-react";
@@ -48,7 +49,7 @@ const FeaturesSection: React.FC<FeaturesSectionProps> = ({ id }) => {
       <div className="max-w-7xl mx-auto px-6">
         <FadeIn>
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 text-center">
+            <h2 className="text-3xl md:text-4xl font-bold text-center mx-auto">
               <TranslatedText>Key Features</TranslatedText>
             </h2>
             <p className="mt-4 text-xl text-gray-600 max-w-3xl mx-auto text-center">
@@ -73,15 +74,15 @@ const FeaturesSection: React.FC<FeaturesSectionProps> = ({ id }) => {
             <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 gap-6" delay={0.3}>
               {features.map((feature, index) => (
                 <StaggerItem key={index} className="space-y-2">
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 justify-center md:justify-start">
                     <div className="w-10 h-10 flex items-center justify-center text-indigo-600">
                       <feature.icon size={20} />
                     </div>
-                    <h3 className="text-xl font-semibold text-gray-900">
+                    <h3 className="text-xl font-semibold text-center md:text-left">
                       <TranslatedText>{feature.title}</TranslatedText>
                     </h3>
                   </div>
-                  <p className="text-gray-600">
+                  <p className="text-gray-600 text-center md:text-left">
                     <TranslatedText>{feature.description}</TranslatedText>
                   </p>
                 </StaggerItem>

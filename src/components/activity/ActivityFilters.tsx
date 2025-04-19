@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -40,10 +39,7 @@ export const ActivityFilters: React.FC<ActivityFiltersProps> = ({
         <CardContent className="space-y-4">
           <div className="space-y-2">
             <label className="text-sm font-medium">Time Period</label>
-            <Select 
-              value={timeFilter} 
-              onValueChange={setTimeFilter}
-            >
+            <Select value={timeFilter} onValueChange={setTimeFilter}>
               <SelectTrigger>
                 <SelectValue placeholder="Select time period" />
               </SelectTrigger>
@@ -59,10 +55,7 @@ export const ActivityFilters: React.FC<ActivityFiltersProps> = ({
           
           <div className="space-y-2">
             <label className="text-sm font-medium">Activity Type</label>
-            <Select 
-              value={typeFilter} 
-              onValueChange={setTypeFilter}
-            >
+            <Select value={typeFilter} onValueChange={setTypeFilter}>
               <SelectTrigger>
                 <SelectValue placeholder="Select type" />
               </SelectTrigger>

@@ -1,10 +1,8 @@
 
-import { ErrorResponse } from './types/core';
-
 /**
  * Extracts a human-readable message from any error
  */
-export function getErrorMessage(error: unknown): string {
+export function getErrorMessage(error: unknown, fallbackMessage?: string): string {
   if (error instanceof Error) {
     return error.message;
   }
@@ -17,14 +15,63 @@ export function getErrorMessage(error: unknown): string {
     return String((error as any).message);
   }
   
-  return 'An unexpected error occurred';
+  return fallbackMessage || 'An unexpected error occurred';
+}
+
+/**
+ * Parse any error into a standardized format
+ */
+export function parseError(error: unknown): {
+  message: string;
+  code: string;
+  details?: Record<string, unknown>;
+  originalError?: unknown;
+} {
+  if (error instanceof Error) {
+    return {
+      message: error.message,
+      code: error.name,
+      details: { stack: error.stack },
+      originalError: error
+    };
+  }
+  
+  if (typeof error === 'string') {
+    return {
+      message: error,
+      code: 'STRING_ERROR'
+    };
+  }
+  
+  if (error && typeof error === 'object') {
+    if ('message' in error) {
+      const errorObj = error as any;
+      return {
+        message: String(errorObj.message),
+        code: errorObj.code || 'OBJECT_ERROR',
+        details: errorObj,
+        originalError: error
+      };
+    }
+  }
+  
+  return {
+    message: 'An unexpected error occurred',
+    code: 'UNKNOWN_ERROR',
+    originalError: error
+  };
 }
 
 /**
  * Logs an error to the console with context
  */
 export function logError(error: unknown, componentName?: string): void {
-  console.error(`[${componentName || 'Error'}]`, error);
+  const prefix = componentName ? `Error in ${componentName}:` : `Error:`;
+  console.error(prefix, error);
+  
+  if (error instanceof Error && error.stack) {
+    console.error('Stack trace:', error.stack);
+  }
 }
 
 /**
@@ -32,10 +79,18 @@ export function logError(error: unknown, componentName?: string): void {
  */
 export function createContextualError(
   message: string, 
-  context: Record<string, unknown> = {}
+  context: Record<string, unknown> | string = {}
 ): Error {
-  const error = new Error(message);
-  Object.assign(error, { context });
+  const error = new Error(
+    typeof context === 'string' 
+      ? `[${context}] ${message}` 
+      : message
+  );
+  
+  if (typeof context !== 'string') {
+    Object.assign(error, { context });
+  }
+  
   return error;
 }
 
@@ -53,11 +108,15 @@ export function formatErrorDetails(error: unknown): string {
 /**
  * Checks if an object is an API error response
  */
-export function isApiErrorResponse(obj: unknown): obj is ErrorResponse {
+export function isApiErrorResponse(obj: unknown): obj is {
+  message: string;
+  code?: string;
+  details?: Record<string, unknown>;
+} {
   return Boolean(
     obj &&
     typeof obj === 'object' &&
     'message' in obj &&
-    typeof (obj as ErrorResponse).message === 'string'
+    typeof (obj as { message: unknown }).message === 'string'
   );
 }

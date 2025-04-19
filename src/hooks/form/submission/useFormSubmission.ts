@@ -67,7 +67,7 @@ export function useFormSubmission<T>() {
       const parsedError = parseError(error);
       console.error('Form submission error:', parsedError);
       
-      showError('Error', getErrorMessage(error, errorMessage));
+      showError('Error', getErrorMessage(error));
       
       setState(prev => ({
         ...prev,

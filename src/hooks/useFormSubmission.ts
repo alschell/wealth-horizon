@@ -1,3 +1,4 @@
+
 import { useState, useCallback } from 'react';
 import { getErrorMessage } from '@/utils/errorHandling';
 import { showSuccess } from '@/utils/toast';
@@ -71,7 +72,7 @@ export function useFormSubmission<T>() {
       
       return true;
     } catch (error) {
-      const errorMsg = getErrorMessage(error, errorMessage);
+      const errorMsg = getErrorMessage(error);
       console.error("Form submission error:", error);
       
       if (onError) {

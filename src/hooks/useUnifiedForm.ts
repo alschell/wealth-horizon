@@ -160,7 +160,7 @@ export function useUnifiedForm<T extends Record<string, any>>(initialData: T) {
     } catch (error) {
       setIsSuccess(false);
       
-      const errorMsg = getErrorMessage(error, errorMessage);
+      const errorMsg = getErrorMessage(error);
       setLastError(errorMsg);
       
       if (logToConsole) {
@@ -175,7 +175,7 @@ export function useUnifiedForm<T extends Record<string, any>>(initialData: T) {
     } finally {
       setIsSubmitting(false);
     }
-  }, [formData]);
+  }, [formData, resetForm]);
 
   return {
     formData,

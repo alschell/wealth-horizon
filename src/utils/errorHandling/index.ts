@@ -6,8 +6,14 @@
  * Includes utilities for parsing, logging, and displaying errors.
  */
 
-// Core error types and interfaces
-export * from './types/core';
+// Core error types and interfaces - export only once
+export { 
+  ErrorResponse,
+  ErrorHandlerOptions,
+  BaseErrorOptions
+} from './types/core';
+
+// Additional types
 export * from './types';
 
 // Error utilities for parsing, formatting, and logging errors

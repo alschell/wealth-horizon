@@ -13,7 +13,6 @@ import { useScrollToSection } from "@/hooks/useScrollToSection";
 const SECTION_IDS = ['why-wh', 'features', 'testimonials', 'contact', 'about'];
 
 const LandingLayout: React.FC = () => {
-  // Create refs for each section
   const { sectionRefs, scrollToSection } = useScrollToSection(SECTION_IDS);
 
   return (

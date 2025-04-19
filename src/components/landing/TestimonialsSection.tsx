@@ -40,20 +40,20 @@ const TestimonialsSection: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {testimonials.map((testimonial, index) => (
             <FadeIn key={index} delay={index * 0.1}>
-              <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-200 h-full flex flex-col">
+              <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-200 h-full flex flex-col items-center text-center">
                 <div className="mb-6">
                   {[1, 2, 3, 4, 5].map((star) => (
                     <span key={star} className="text-yellow-400">★</span>
                   ))}
                 </div>
-                <p className="text-gray-700 flex-grow italic mb-6 text-left">
+                <p className="text-gray-700 flex-grow mb-6 italic">
                   "<TranslatedText>{testimonial.quote}</TranslatedText>"
                 </p>
-                <div className="flex items-center">
+                <div className="flex flex-col items-center">
                   <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 font-semibold">
                     {testimonial.name.charAt(0)}
                   </div>
-                  <div className="ml-4">
+                  <div className="mt-4 text-center">
                     <p className="font-semibold text-gray-900">{testimonial.name}</p>
                     <p className="text-sm text-gray-600">{testimonial.position}</p>
                   </div>

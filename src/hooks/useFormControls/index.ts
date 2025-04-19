@@ -1,4 +1,3 @@
-
 import { useCallback } from 'react';
 import { useIsComponentMounted } from '../useIsComponentMounted';
 import { showSuccess, showError } from '@/utils/toast';
@@ -41,12 +40,7 @@ export function useFormControls<T>(): UseFormControlsReturn<T> {
 
         // Validate form if validation function is provided
         if (validateForm) {
-          // Check if validateForm expects arguments by examining function length
-          const validateFn = validateForm as Function;
-          const isValid = validateFn.length > 0 
-            ? await validateForm(data) 
-            : await validateForm(data); // Always pass data even to functions that might not use it
-            
+          const isValid = await validateForm(data);
           if (!isValid) return;
         }
 

@@ -4,24 +4,12 @@ import { useIsComponentMounted } from '@/hooks/useIsComponentMounted';
 import { showSuccess, showError } from '@/utils/toast';
 import type { FormSubmissionOptions } from '../types';
 
-/**
- * Hook for managing form submission
- * 
- * @returns Functions and state for handling form submissions
- */
 export function useFormSubmission<T>() {
   const isMounted = useIsComponentMounted();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [lastError, setLastError] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState(false);
 
-  /**
-   * Creates a submit handler with the given submission function and options
-   * 
-   * @param onSubmit Function to call with form data
-   * @param options Submission options
-   * @returns Submit handler function
-   */
   const createSubmitHandler = useCallback(
     (
       onSubmit: (data: T) => Promise<void> | void,
@@ -38,13 +26,8 @@ export function useFormSubmission<T>() {
       } = options;
 
       return async (data: T): Promise<boolean> => {
-        // Validate form if validation function is provided
-        if (validateForm && typeof validateForm === 'function') {
-          // Check if validateForm expects arguments based on its length property
-          const isValid = validateForm.length > 0 
-            ? await validateForm(data) 
-            : await validateForm(data); // Always pass data even to functions that might not use it
-            
+        if (validateForm) {
+          const isValid = await validateForm(data);
           if (!isValid) {
             return false;
           }

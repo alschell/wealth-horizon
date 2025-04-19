@@ -45,8 +45,8 @@ export function useFormFields<T extends Record<string, any>>(
     const fieldKey = field as keyof T;
     // Check if the field exists in validators using JavaScript's hasOwnProperty
     if (Object.prototype.hasOwnProperty.call(validators, fieldKey)) {
-      const validator = validators[fieldKey as keyof typeof validators];
-      if (validator && typeof validator === 'function') {
+      const validator = validators[fieldKey];
+      if (validator) {
         const validationResult = validator(value);
         if (validationResult) {
           setErrors(prev => ({ ...prev, [field]: validationResult }));
@@ -76,8 +76,8 @@ export function useFormFields<T extends Record<string, any>>(
     const fieldKey = field as keyof T;
     // Check if the field exists in validators using JavaScript's hasOwnProperty
     if (Object.prototype.hasOwnProperty.call(validators, fieldKey)) {
-      const validator = validators[fieldKey as keyof typeof validators];
-      if (validator && typeof validator === 'function') {
+      const validator = validators[fieldKey];
+      if (validator) {
         const validationResult = validator(values[field]);
         if (validationResult) {
           setErrors(prev => ({ ...prev, [field]: validationResult }));
@@ -100,9 +100,9 @@ export function useFormFields<T extends Record<string, any>>(
       const field = fieldName as keyof T;
       // Check if the field exists in validators using JavaScript's hasOwnProperty
       if (Object.prototype.hasOwnProperty.call(validators, field)) {
-        const validator = validators[field as keyof typeof validators];
+        const validator = validators[field];
         
-        if (validator && typeof validator === 'function' && field in values) {
+        if (validator && field in values) {
           const validationResult = validator(values[field]);
           if (validationResult) {
             validationErrors[field as string] = validationResult;

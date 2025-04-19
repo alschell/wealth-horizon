@@ -58,13 +58,15 @@ const FeaturesSection: React.FC = () => {
           {features.map((feature, index) => (
             <StaggerItem key={index} className="h-full">
               <div className="h-full p-6 bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-                <div className="w-12 h-12 flex items-center justify-center rounded-full bg-indigo-50 text-indigo-600 mb-4">
-                  <feature.icon size={24} />
+                <div className="flex flex-col items-center">
+                  <div className="w-12 h-12 flex items-center justify-center rounded-full bg-indigo-50 text-indigo-600 mb-4">
+                    <feature.icon size={24} />
+                  </div>
+                  <h3 className="text-xl font-semibold mb-3 text-center text-gray-900">
+                    <TranslatedText>{feature.title}</TranslatedText>
+                  </h3>
                 </div>
-                <h3 className="text-xl font-semibold mb-3 text-gray-900">
-                  <TranslatedText>{feature.title}</TranslatedText>
-                </h3>
-                <p className="text-gray-600">
+                <p className="text-gray-600 text-left">
                   <TranslatedText>{feature.description}</TranslatedText>
                 </p>
               </div>

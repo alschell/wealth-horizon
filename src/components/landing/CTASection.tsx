@@ -22,7 +22,12 @@ const CTASection: React.FC = () => {
             </h2>
             <p className="mt-4 text-xl text-indigo-100 max-w-2xl">
               <TranslatedText>
-                Join leading family offices and institutions that have transformed their operations with </TranslatedText>
+                Join leading family offices and institutions that have transformed
+              </TranslatedText>
+              <br />
+              <TranslatedText>
+                their operations with 
+              </TranslatedText>
               <span className="font-semibold">
                 <span className="text-indigo-200">Wealth</span>
                 <span className="text-white">Horizon</span>

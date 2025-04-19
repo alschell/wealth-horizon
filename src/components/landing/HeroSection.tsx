@@ -1,4 +1,3 @@
-
 import React, { useEffect } from "react";
 import { ChevronDown, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -30,7 +29,6 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToFeatures }) => {
     }
   };
 
-  // Key features that need to be translated individually
   const keyFeatures = ["AI-native platform", "Real-time analytics", "SOC 2 certified"];
 
   return (

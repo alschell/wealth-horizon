@@ -4,7 +4,7 @@ export interface FormSubmissionOptions<T> {
   onError?: (error: unknown) => void;
   successMessage?: string;
   errorMessage?: string;
-  validateForm?: () => boolean;
+  validateForm?: (data: T) => boolean;
   resetAfterSubmit?: boolean;
   resetForm?: () => void;
 }

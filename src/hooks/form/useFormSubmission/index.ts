@@ -26,7 +26,7 @@ export function useFormSubmission<T>() {
       } = options;
 
       return async (data: T): Promise<boolean> => {
-        if (validateForm && !validateForm()) {
+        if (validateForm && !validateForm(data)) {
           return false;
         }
 

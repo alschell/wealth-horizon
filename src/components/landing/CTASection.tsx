@@ -24,6 +24,7 @@ const CTASection: React.FC = () => {
               <TranslatedText>
                 Join leading family offices and institutions that have transformed their operations with 
               </TranslatedText>
+              {" "}
               <span className="font-semibold">
                 <span className="text-indigo-200">Wealth</span>
                 <span className="text-white">Horizon</span>

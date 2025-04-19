@@ -21,8 +21,8 @@ export {
 // Re-export error boundary components
 export { 
   ErrorBoundary,
-  ErrorFallback 
 } from '@/components/error-boundary';
+export { default as ErrorFallback } from '@/components/shared/ErrorFallback';
 
 // Re-export error hook for functional components
 export { useErrorHandler } from '@/hooks/useErrorHandler';

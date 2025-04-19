@@ -9,5 +9,6 @@ export interface ErrorFallbackProps {
   showReset?: boolean;
   resetText?: string;
   showDetails?: boolean;
-  errorInfo?: ErrorInfo;  // Added this property
+  errorInfo?: ErrorInfo;
+  description?: string;
 }

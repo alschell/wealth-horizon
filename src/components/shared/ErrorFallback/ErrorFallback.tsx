@@ -13,18 +13,22 @@ const ErrorFallback: React.FC<ErrorFallbackProps> = ({
   resetErrorBoundary,
   title = "Something went wrong",
   message,
+  description,
   showReset = true,
   resetText = "Try again",
   showDetails = true,
   errorInfo
 }) => {
+  // Use either message or description (for backward compatibility)
+  const errorMessage = message || description || (error && error.message) || "An unexpected error occurred.";
+  
   return (
     <Alert variant="destructive" className="my-4">
       <AlertCircle className="h-5 w-5" />
       <AlertTitle>{title}</AlertTitle>
       <AlertDescription>
         <div className="mt-2">
-          <p className="text-sm">{message || (error && error.message) || "An unexpected error occurred."}</p>
+          <p className="text-sm">{errorMessage}</p>
           
           {showDetails && errorInfo && (
             <div className="mt-2 text-xs">

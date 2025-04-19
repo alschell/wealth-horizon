@@ -1,6 +1,7 @@
 
 import React, { useState, useCallback } from 'react';
-import { ErrorBoundary, ErrorFallback } from '@/components/error-boundary';
+import { ErrorBoundary } from '@/components/error-boundary';
+import { ErrorFallback } from '@/components/shared/ErrorFallback';
 import { useNotifications } from '@/hooks/use-notifications';
 
 interface ErrorBoundaryConfig {
@@ -61,9 +62,9 @@ export function useErrorBoundary(config: ErrorBoundaryConfig = {}) {
             <ErrorFallback 
               error={new Error(message)} 
               resetErrorBoundary={resetErrorBoundary}
-              showReset={showReset}
               title="Error Occurred" 
               message={message}
+              showReset={showReset}
             />
           )
         }

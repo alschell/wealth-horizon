@@ -6,6 +6,7 @@ export interface ErrorBoundaryProps {
   fallback?: ReactNode;
   componentName?: string;
   onError?: (error: Error, errorInfo: React.ErrorInfo) => void;
+  resetErrorBoundary?: () => void;
 }
 
 export interface ErrorBoundaryState {

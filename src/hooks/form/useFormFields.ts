@@ -111,9 +111,9 @@ export function useFormFields<T extends Record<string, any>>(
   const validateField = useCallback((field: keyof T) => {
     // Check for required field
     if (requiredFields.includes(field) && 
-        (values[field as keyof T] === undefined || 
-         values[field as keyof T] === null || 
-         values[field as keyof T] === '')) {
+        (values[field] === undefined || 
+         values[field] === null || 
+         values[field] === '')) {
       setErrors(prev => ({
         ...prev,
         [field as string]: `${String(field)} is required`
@@ -124,7 +124,7 @@ export function useFormFields<T extends Record<string, any>>(
     // Run custom validator if provided
     const validatorForField = validators[field as keyof T];
     if (validatorForField) {
-      const errorMessage = validatorForField(values[field as keyof T]);
+      const errorMessage = validatorForField(values[field]);
       
       if (errorMessage) {
         setErrors(prev => ({
@@ -154,9 +154,9 @@ export function useFormFields<T extends Record<string, any>>(
     
     // Validate required fields
     requiredFields.forEach(field => {
-      if (values[field as keyof T] === undefined || 
-          values[field as keyof T] === null || 
-          values[field as keyof T] === '') {
+      if (values[field] === undefined || 
+          values[field] === null || 
+          values[field] === '') {
         setErrors(prev => ({
           ...prev,
           [field as string]: `${String(field)} is required`
@@ -171,7 +171,7 @@ export function useFormFields<T extends Record<string, any>>(
       const validatorFn = validators[field];
       
       if (validatorFn) {
-        const errorMessage = validatorFn(values[field as keyof T]);
+        const errorMessage = validatorFn(values[field]);
         
         if (errorMessage) {
           setErrors(prev => ({

@@ -27,7 +27,7 @@ export function withErrorHandling<P extends object>(
 
   const handleError = (error: Error, errorInfo: React.ErrorInfo) => {
     if (logToConsole) {
-      logError(error, componentName); // This should accept only one argument
+      logError(error, componentName); // Only pass error and componentName
       console.error('Component stack:', errorInfo.componentStack);
     }
     

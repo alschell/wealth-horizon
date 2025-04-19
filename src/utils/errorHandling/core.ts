@@ -80,7 +80,17 @@ export function handleError(error: unknown, options: ErrorHandlerOptions = {}): 
   }
 
   if (onError) {
-    onError(error);
+    // Convert the unknown error to an Error object if it isn't one already
+    const errorObject = error instanceof Error ? error : new Error(String(parsedError.message));
+    
+    // If onError expects an ErrorInfo parameter, create a simple one
+    if (options.onError && options.onError.length > 1) {
+      const componentStack = parsedError.details?.stack ? String(parsedError.details.stack) : '';
+      onError(errorObject, { componentStack });
+    } else {
+      // @ts-ignore - We're handling different function signatures
+      onError(errorObject);
+    }
   }
 
   if (options.rethrow) {

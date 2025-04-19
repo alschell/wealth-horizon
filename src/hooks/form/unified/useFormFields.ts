@@ -1,6 +1,7 @@
 
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { FormState } from './types';
+import { createErrorClearer } from './validation';
 
 /**
  * Hook for handling form field changes, blur events, and value updates
@@ -13,17 +14,11 @@ export function useFormFields<T extends Record<string, any>>(
   formState: FormState<T>,
   setFormState: React.Dispatch<React.SetStateAction<FormState<T>>>
 ) {
-  // Clear a field error
-  const clearFieldError = useCallback((field: keyof T) => {
-    setFormState(prev => {
-      const newErrors = { ...prev.errors };
-      delete newErrors[field as string];
-      return {
-        ...prev,
-        errors: newErrors
-      };
-    });
-  }, [setFormState]);
+  // Create reusable error clearer
+  const clearFieldError = useMemo(
+    () => createErrorClearer<T>(setFormState),
+    [setFormState]
+  );
 
   // Handle input changes
   const handleChange = useCallback((

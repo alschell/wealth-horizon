@@ -60,3 +60,40 @@ export const validateForm = <T>(
 export const createValidator = <T>(schema: z.ZodType<T>) => {
   return (data: unknown) => validateForm(data, schema);
 };
+
+/**
+ * Combines multiple validation functions for a single field
+ */
+export const combineValidators = (
+  validators: Array<(value: any) => string | null>
+) => {
+  return (value: any): string | null => {
+    for (const validator of validators) {
+      const error = validator(value);
+      if (error) return error;
+    }
+    return null;
+  };
+};
+
+/**
+ * Creates a form validation function from field validators
+ */
+export const createFormValidator = <T extends Record<string, any>>(
+  validators: Partial<Record<keyof T, (value: any) => string | null>>
+) => {
+  return (values: T): Record<string, string> => {
+    const errors: Record<string, string> = {};
+    
+    for (const [field, validator] of Object.entries(validators)) {
+      if (validator) {
+        const error = validator(values[field]);
+        if (error) {
+          errors[field] = error;
+        }
+      }
+    }
+    
+    return errors;
+  };
+};

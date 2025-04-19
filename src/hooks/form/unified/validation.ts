@@ -1,71 +1,103 @@
 
 /**
- * Validates required fields in a form
- * 
- * @param values - Form values
- * @param requiredFields - Array of required field names
- * @returns Object with error messages for missing required fields
+ * Unified form validation utilities
  */
-export function validateRequiredFields<T extends Record<string, any>>(
+
+import { z } from 'zod';
+
+/**
+ * Validates required fields in a form data object
+ * 
+ * @param values Object containing form data
+ * @param requiredFields Array of field names that are required
+ * @returns Object with validation errors (if any)
+ */
+export const validateRequiredFields = <T extends Record<string, any>>(
   values: T, 
   requiredFields: Array<keyof T>
-): Record<string, string> {
+): Record<string, string> => {
   const errors: Record<string, string> = {};
   
   requiredFields.forEach(field => {
     const value = values[field];
     
-    // Check for undefined, null, empty string
-    if (value === undefined || value === null || value === '') {
+    if (
+      value === undefined || 
+      value === null || 
+      value === '' || 
+      (Array.isArray(value) && value.length === 0)
+    ) {
       errors[field as string] = 'This field is required';
-    }
-    // Check for empty arrays
-    else if (Array.isArray(value) && value.length === 0) {
-      errors[field as string] = 'At least one item is required';
     }
   });
   
   return errors;
-}
+};
 
 /**
- * Creates a function to clear errors for specific fields
+ * Factory function to create an error clearing function
  * 
- * @param setErrors - Function to update errors state
- * @returns Function that clears errors for specified fields
+ * @returns A function that clears a specified field error
  */
-export function createErrorClearer<T>(
-  setErrors: (updater: (prev: Record<string, string>) => Record<string, string>) => void
-): (fields: Array<keyof T>) => void {
-  return (fields: Array<keyof T>) => {
-    setErrors(prev => {
-      const newErrors = { ...prev };
-      fields.forEach(field => {
-        delete newErrors[field as string];
-      });
-      return newErrors;
+export const createErrorClearer = <T>(
+  setFormState: React.Dispatch<React.SetStateAction<{
+    errors: Record<string, string>;
+    [key: string]: any;
+  }>>
+) => {
+  return (field: keyof T) => {
+    setFormState(prev => {
+      const newErrors = { ...prev.errors };
+      delete newErrors[field as string];
+      return {
+        ...prev,
+        errors: newErrors
+      };
     });
   };
-}
+};
 
 /**
- * Validates email format
+ * Validates a form using Zod schema
  * 
- * @param email - Email string to validate
- * @returns Boolean indicating if email is valid
+ * @param values Form values to validate
+ * @param schema Zod schema for validation
+ * @returns Object with validation errors (if any)
  */
-export function isValidEmail(email: string): boolean {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
-}
+export const validateWithZodSchema = <T extends Record<string, any>>(
+  values: T, 
+  schema: z.ZodType<T>
+): Record<string, string> => {
+  try {
+    schema.parse(values);
+    return {};
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return error.errors.reduce((acc, curr) => {
+        if (curr.path[0]) {
+          acc[curr.path[0] as string] = curr.message;
+        }
+        return acc;
+      }, {} as Record<string, string>);
+    }
+    return {};
+  }
+};
 
 /**
- * Validates phone number format
- * 
- * @param phone - Phone string to validate
- * @returns Boolean indicating if phone is valid
+ * Creates a function to check if a field has an error
  */
-export function isValidPhone(phone: string): boolean {
-  const phoneRegex = /^\+?[0-9]{10,15}$/;
-  return phoneRegex.test(phone);
-}
+export const createErrorChecker = (errors: Record<string, string>) => {
+  return (field: string): boolean => {
+    return Boolean(errors[field]);
+  };
+};
+
+/**
+ * Creates a function to get an error message for a field
+ */
+export const createErrorMessageGetter = (errors: Record<string, string>) => {
+  return (field: string): string => {
+    return errors[field] || '';
+  };
+};

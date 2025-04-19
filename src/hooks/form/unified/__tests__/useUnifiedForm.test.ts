@@ -41,5 +41,45 @@ describe('useUnifiedForm', () => {
     expect(result.current.formState.errors).toEqual({});
   });
 
-  // Add more tests as needed
+  it('should update form values correctly', () => {
+    const { result } = renderHook(() => useUnifiedForm({ initialValues }));
+
+    act(() => {
+      result.current.setFieldValue('name', 'John Doe');
+    });
+
+    expect(result.current.formState.values.name).toBe('John Doe');
+    expect(result.current.formState.isDirty).toBe(true);
+  });
+
+  it('should validate form fields', () => {
+    const { result } = renderHook(() => 
+      useUnifiedForm({
+        initialValues,
+        validate: (values) => {
+          const errors: Record<string, string> = {};
+          
+          if (!values.name) {
+            errors.name = 'Name is required';
+          }
+          
+          if (!values.email) {
+            errors.email = 'Email is required';
+          } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email)) {
+            errors.email = 'Invalid email';
+          }
+          
+          return errors;
+        },
+        requiredFields: ['name', 'email']
+      })
+    );
+
+    act(() => {
+      result.current.validateForm();
+    });
+
+    expect(result.current.formState.errors.name).toBe('Name is required');
+    expect(result.current.formState.errors.email).toBe('Email is required');
+  });
 });

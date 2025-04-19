@@ -1,6 +1,7 @@
 
 import { useCallback } from 'react';
 import { FormState } from './types';
+import { validateRequiredFields } from './validation';
 
 /**
  * Hook for form validation functionality
@@ -9,15 +10,13 @@ import { FormState } from './types';
  * @param setFormState - Function to update form state
  * @param validate - Custom validation function
  * @param requiredFields - Array of required field names
- * @param validateRequiredFields - Function to validate required fields
  * @returns Form validation handlers
  */
 export function useFormValidation<T extends Record<string, any>>(
   formState: FormState<T>,
   setFormState: React.Dispatch<React.SetStateAction<FormState<T>>>,
   validate: ((values: T) => Record<string, string>) | undefined,
-  requiredFields: Array<keyof T>,
-  validateRequiredFields: (values: T, requiredFields: Array<keyof T>) => Record<string, string>
+  requiredFields: Array<keyof T> = []
 ) {
   // Set a field error
   const setFieldError = useCallback((field: keyof T, message: string) => {
@@ -46,7 +45,7 @@ export function useFormValidation<T extends Record<string, any>>(
     
     // Return whether form is valid
     return Object.keys(combinedErrors).length === 0;
-  }, [formState.values, requiredFields, validate, setFormState, validateRequiredFields]);
+  }, [formState.values, requiredFields, validate, setFormState]);
 
   return {
     setFieldError,

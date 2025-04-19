@@ -1,16 +1,16 @@
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { useIsComponentMounted } from '../../useIsComponentMounted';
-import { showSuccess, showError } from '@/utils/toast';
 import { 
   UseUnifiedFormProps, 
   UseUnifiedFormReturn,
   FormState
 } from './types';
-import { validateRequiredFields } from './validation';
 import { useFormFields } from './useFormFields';
 import { useFormValidation } from './useFormValidation';
 import { useFormSubmission } from './useFormSubmission';
+import { createErrorChecker, createErrorMessageGetter } from './validation';
+import { FORM_CONFIG } from './config';
 
 /**
  * Unified form hook for handling form state, validation, and submission
@@ -26,8 +26,8 @@ export function useUnifiedForm<T extends Record<string, any>>(
     onSubmit,
     onSuccess,
     onError,
-    successMessage = 'Form submitted successfully',
-    errorMessage = 'An error occurred. Please try again.',
+    successMessage = FORM_CONFIG.defaultSuccessMessage,
+    errorMessage = FORM_CONFIG.defaultErrorMessage,
     requiredFields = []
   } = props;
 
@@ -56,12 +56,12 @@ export function useUnifiedForm<T extends Record<string, any>>(
   const { 
     setFieldError, 
     validateForm 
-  } = useFormValidation<T>(formState, setFormState, validate, requiredFields, validateRequiredFields);
+  } = useFormValidation<T>(formState, setFormState, validate, requiredFields);
 
   // Use form submission handler
   const { 
     handleSubmit, 
-    resetForm 
+    resetForm: resetFormSubmission 
   } = useFormSubmission<T>(
     formState, 
     setFormState, 
@@ -74,15 +74,21 @@ export function useUnifiedForm<T extends Record<string, any>>(
     errorMessage
   );
 
-  // Helper to check if field has error
-  const hasError = useCallback((field: keyof T) => {
-    return Boolean(formState.errors[field as string]);
-  }, [formState.errors]);
+  // Reset form to initial state
+  const resetForm = useCallback(() => {
+    resetFormSubmission(initialValues);
+  }, [initialValues, resetFormSubmission]);
 
-  // Helper to get error message for field
-  const getErrorMessage = useCallback((field: keyof T) => {
-    return formState.errors[field as string] || '';
-  }, [formState.errors]);
+  // Create error helpers with memoization
+  const hasError = useMemo(
+    () => createErrorChecker(formState.errors),
+    [formState.errors]
+  );
+
+  const getErrorMessage = useMemo(
+    () => createErrorMessageGetter(formState.errors),
+    [formState.errors]
+  );
 
   return {
     formState,
@@ -99,6 +105,3 @@ export function useUnifiedForm<T extends Record<string, any>>(
     getErrorMessage
   };
 }
-
-export * from './types';
-export * from './validation';

@@ -12,13 +12,6 @@ export interface FormState<T> {
 }
 
 /**
- * Unified form state interface (used internally)
- */
-export interface UnifiedFormState<T> extends FormState<T> {
-  // Same as FormState for now, but may be extended in the future
-}
-
-/**
  * Props for the useUnifiedForm hook
  */
 export interface UseUnifiedFormProps<T> {
@@ -46,6 +39,6 @@ export interface UseUnifiedFormReturn<T> {
   validateForm: () => boolean;
   handleSubmit: (e?: React.FormEvent) => Promise<boolean>;
   resetForm: () => void;
-  hasError: (field: keyof T) => boolean;
-  getErrorMessage: (field: keyof T) => string;
+  hasError: (field: string) => boolean;
+  getErrorMessage: (field: string) => string;
 }

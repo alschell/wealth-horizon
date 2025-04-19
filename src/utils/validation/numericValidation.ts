@@ -4,95 +4,125 @@
  */
 
 /**
- * Validates if a value is a valid number within given constraints
- * @param value - Value to validate
- * @param options - Validation options
+ * Validates if a value is a valid number
+ * @param value Value to validate
+ * @param options Validation options
  * @returns Error message or null if valid
  */
 export const validateNumber = (
   value: string | number,
-  options: { min?: number; max?: number; required?: boolean } = {}
+  options: {
+    required?: boolean;
+    min?: number;
+    max?: number;
+    integer?: boolean;
+    allowNegative?: boolean;
+  } = {}
 ): string | null => {
-  const { min, max, required = true } = options;
-  
-  // Check if required
-  if (required && (value === '' || value === null || value === undefined)) {
-    return 'This field is required';
+  const {
+    required = false,
+    min = Number.MIN_SAFE_INTEGER,
+    max = Number.MAX_SAFE_INTEGER,
+    integer = false,
+    allowNegative = true
+  } = options;
+
+  // Handle empty values
+  if (value === '' || value === null || value === undefined) {
+    return required ? 'This field is required' : null;
   }
-  
-  // If not required and empty, it's valid
-  if (!required && (value === '' || value === null || value === undefined)) {
-    return null;
-  }
-  
+
   // Convert to number
   const num = typeof value === 'string' ? parseFloat(value) : value;
-  
+
   // Check if it's a valid number
   if (isNaN(num)) {
     return 'Please enter a valid number';
   }
-  
-  // Check min constraint
-  if (min !== undefined && num < min) {
+
+  // Check integer constraint
+  if (integer && !Number.isInteger(num)) {
+    return 'Please enter a whole number';
+  }
+
+  // Check negative constraint
+  if (!allowNegative && num < 0) {
+    return 'Please enter a positive number';
+  }
+
+  // Check min/max constraints
+  if (num < min) {
     return `Value must be at least ${min}`;
   }
-  
-  // Check max constraint
-  if (max !== undefined && num > max) {
+
+  if (num > max) {
     return `Value must be at most ${max}`;
   }
-  
+
   return null;
 };
 
 /**
- * Validates if a value is a valid percentage (0-100)
- * @param value - Value to validate
- * @param options - Validation options
+ * Validates a percentage value (0-100)
+ * @param value Value to validate
+ * @param options Validation options
  * @returns Error message or null if valid
  */
 export const validatePercentage = (
   value: string | number,
-  options: { required?: boolean } = {}
+  options: {
+    required?: boolean;
+    allowDecimal?: boolean;
+  } = {}
 ): string | null => {
-  return validateNumber(value, {
+  const { required = false, allowDecimal = true } = options;
+
+  // First use the standard number validation
+  const numberError = validateNumber(value, {
+    required,
     min: 0,
     max: 100,
-    required: options.required
+    integer: !allowDecimal,
+    allowNegative: false
   });
+
+  if (numberError) {
+    return numberError;
+  }
+
+  return null;
 };
 
 /**
- * Validates if a value is a valid currency amount
- * @param value - Value to validate
- * @param options - Validation options
+ * Validates a currency value
+ * @param value Value to validate
+ * @param options Validation options
  * @returns Error message or null if valid
  */
 export const validateCurrency = (
   value: string | number,
-  options: { min?: number; max?: number; required?: boolean } = {}
+  options: {
+    required?: boolean;
+    min?: number;
+    max?: number;
+    allowNegative?: boolean;
+  } = {}
 ): string | null => {
-  const { required = true } = options;
-  
-  // Check if required
-  if (required && (value === '' || value === null || value === undefined)) {
-    return 'Amount is required';
+  const { required = false, min, max, allowNegative = true } = options;
+
+  // First use the standard number validation
+  const numberError = validateNumber(value, {
+    required,
+    min,
+    max,
+    integer: false,
+    allowNegative
+  });
+
+  if (numberError) {
+    return numberError;
   }
-  
-  // If not required and empty, it's valid
-  if (!required && (value === '' || value === null || value === undefined)) {
-    return null;
-  }
-  
-  // Convert to string and check format
-  const valueStr = String(value);
-  const currencyRegex = /^-?\d+(\.\d{1,2})?$/;
-  
-  if (!currencyRegex.test(valueStr)) {
-    return 'Please enter a valid amount with up to 2 decimal places';
-  }
-  
-  // Use validateNumber for min/max checks
-  return validateNumber(value, options);
+
+  // Additional currency-specific validations could be added here
+  return null;
 };

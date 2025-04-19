@@ -2,6 +2,7 @@
 import { useCallback } from 'react';
 import { showSuccess, showError } from '@/utils/toast';
 import { FormState } from './types';
+import { FORM_CONFIG } from './config';
 
 /**
  * Hook for form submission functionality
@@ -25,8 +26,8 @@ export function useFormSubmission<T extends Record<string, any>>(
   isMounted: () => boolean,
   onSuccess: (() => void) | undefined,
   onError: ((error: unknown) => void) | undefined,
-  successMessage: string,
-  errorMessage: string
+  successMessage: string = FORM_CONFIG.defaultSuccessMessage,
+  errorMessage: string = FORM_CONFIG.defaultErrorMessage
 ) {
   // Handle form submission
   const handleSubmit = useCallback(async (e?: React.FormEvent) => {
@@ -110,16 +111,16 @@ export function useFormSubmission<T extends Record<string, any>>(
   }, [formState.values, validateForm, onSubmit, isMounted, onSuccess, onError, successMessage, errorMessage, setFormState]);
 
   // Reset form to initial state
-  const resetForm = useCallback(() => {
+  const resetForm = useCallback((initialValues: T) => {
     setFormState({
-      values: formState.values,
+      values: initialValues,
       errors: {},
       touched: {},
       isDirty: false,
       isSubmitting: false,
       isSuccess: false
     });
-  }, [formState.values, setFormState]);
+  }, [setFormState]);
 
   return {
     handleSubmit,

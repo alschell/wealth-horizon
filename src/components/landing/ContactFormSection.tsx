@@ -1,10 +1,13 @@
 
 import React from "react";
 import { FadeIn } from "@/components/ui/animation";
-import ContactForm from "./contact/ContactForm";
-import ContactInformation from "./contact/ContactInformation";
+import { ContactForm, ContactInformation } from "@/components/landing/contact";
 import TranslatedText from "@/components/ui/translated-text";
 
+/**
+ * Contact form section for the landing page
+ * Displays a contact form and contact information
+ */
 const ContactFormSection: React.FC = () => {
   return (
     <section className="py-24 bg-white" id="contact">

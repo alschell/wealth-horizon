@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { LogOut, Settings, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -9,19 +9,24 @@ import { TranslatedText } from '@/components/ui/translated-text';
 import { toast } from 'sonner';
 import { useTranslation } from '@/context/TranslationContext';
 
+/**
+ * Dashboard navigation component that provides navigation controls
+ * for authenticated users within the dashboard.
+ */
 const DashboardNavigation: React.FC = () => {
   const navigate = useNavigate();
   const { translate, currentLanguage } = useTranslation();
   const [searchPlaceholder, setSearchPlaceholder] = useState("Search...");
 
+  // Memoize the translation update to prevent unnecessary re-renders
+  const updatePlaceholder = useCallback(async () => {
+    const translated = await translate("Search...");
+    setSearchPlaceholder(translated);
+  }, [translate]);
+
   useEffect(() => {
-    const updatePlaceholder = async () => {
-      const translated = await translate("Search...");
-      setSearchPlaceholder(translated);
-    };
-    
     updatePlaceholder();
-  }, [translate, currentLanguage]);
+  }, [updatePlaceholder, currentLanguage]);
 
   const handleLogout = () => {
     localStorage.removeItem("auth_token");

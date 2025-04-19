@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { ErrorBoundary, ErrorFallback } from '@/components/error-boundary';
+import { ErrorBoundary } from '@/components/error-boundary';
 import { withErrorBoundary, withCustomErrorFallback } from '@/utils/withErrorBoundary';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
 

@@ -45,10 +45,10 @@ export function useUnifiedForm<T extends Record<string, any>>(props: UseUnifiedF
   } = useFormHandlers<T>({
     setValues,
     clearError: (field) => {
-      setErrors((prev) => {
+      setErrors((prev: Record<string, string>) => {
         const newErrors = { ...prev };
         delete newErrors[field as string];
-        return newErrors;
+        return newErrors as Partial<Record<keyof T, string>>;
       });
     },
     setTouched

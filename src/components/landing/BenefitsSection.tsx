@@ -1,5 +1,6 @@
+
 import React from "react";
-import { Layers, BarChart3, Shield, Clock } from "lucide-react";
+import { BarChart3, Shield, Layers, Clock } from "lucide-react";
 import { FadeIn, StaggerContainer, StaggerItem, ScaleIn } from "@/components/ui/animation";
 import DashboardAnimation from "@/components/animations/DashboardAnimation";
 import TranslatedText from "@/components/ui/translated-text";
@@ -33,10 +34,10 @@ const BenefitsSection: React.FC = () => {
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-16">
           <FadeIn>
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 text-center">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
               <TranslatedText>Transform Your Wealth Management</TranslatedText>
             </h2>
-            <p className="mt-4 text-xl text-gray-600 max-w-3xl mx-auto text-center">
+            <p className="mt-4 text-xl text-gray-600 max-w-3xl mx-auto">
               <TranslatedText>Experience a new level of efficiency, insight, and control with </TranslatedText>
               <span className="text-indigo-600">Wealth</span>
               <span className="text-gray-900">Horizon</span>.

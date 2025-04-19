@@ -1,9 +1,11 @@
+
 import React from "react";
 import { FadeIn, ScaleIn, StaggerContainer, StaggerItem } from "@/components/ui/animation";
-import { LineChart, Shield, BarChart3, FileText, Users, Lock } from "lucide-react";
+import { LineChart, Shield, BarChart3, FileText, Users, Lock, LucideIcon } from "lucide-react";
 import DashboardAnimation from "@/components/animations/DashboardAnimation";
 import TranslatedText from "@/components/ui/translated-text";
 
+// Define the features with the correct icon type and sort them alphabetically
 const features = [
   {
     title: "Compliance Management",
@@ -47,10 +49,10 @@ const FeaturesSection: React.FC<FeaturesSectionProps> = ({ id }) => {
       <div className="max-w-7xl mx-auto px-6">
         <FadeIn>
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 text-center">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
               <TranslatedText>Key Features</TranslatedText>
             </h2>
-            <p className="mt-4 text-xl text-gray-600 max-w-3xl mx-auto text-center">
+            <p className="mt-4 text-xl text-gray-600 max-w-3xl mx-auto">
               <TranslatedText>
                 Our AI-native platform simplifies managing all your wealth with intuitive tools designed for the most sophisticated family offices and institutions
               </TranslatedText>

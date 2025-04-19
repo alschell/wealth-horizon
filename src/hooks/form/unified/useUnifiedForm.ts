@@ -64,8 +64,8 @@ export function useUnifiedForm<T extends Record<string, any>>(
   
   // Validate form with current values
   const validateForm = useCallback((): boolean => {
-    return validateFields(values);
-  }, [validateFields, values]);
+    return validateFields();
+  }, [validateFields]);
   
   // Initialize form submission
   const {
@@ -126,6 +126,6 @@ export function useUnifiedForm<T extends Record<string, any>>(
     hasError,
     getErrorMessage,
     // For test compatibility
-    validateFields: validateForm
+    validateFields
   };
 }

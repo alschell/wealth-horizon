@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { useErrorBoundary } from '../useErrorBoundary';
@@ -16,7 +15,7 @@ const TestComponent = ({
   message = 'Test error message',
   componentName = 'TestComponent'
 }: {
-  onError?: (error: Error, errorInfo: React.ErrorInfo) => void,
+  onError?: (error: unknown) => void,
   fallback?: React.ReactNode,
   showReset?: boolean,
   message?: string,
@@ -64,7 +63,7 @@ describe('useErrorBoundary', () => {
     
     expect(handleError).toHaveBeenCalledTimes(1);
     expect(handleError.mock.calls[0][0]).toBeInstanceOf(Error);
-    expect(handleError.mock.calls[0][0].message).toBe('Test error');
+    expect((handleError.mock.calls[0][0] as Error).message).toBe('Test error');
   });
   
   it('should render custom fallback when provided', () => {

@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import type { Validator } from './validators/validatorUtils';
+import { validateField, validateFields, createErrorClearer } from '@/utils/form/validation/formValidationUtils';
 
 export interface UseFormFieldsOptions<T> {
   initialValues: T;
@@ -24,13 +25,7 @@ export function useFormFields<T extends Record<string, any>>(
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [isDirty, setIsDirty] = useState(false);
   
-  const clearError = useCallback((field: keyof T) => {
-    setErrors(prev => {
-      const newErrors = { ...prev };
-      delete newErrors[field as string];
-      return newErrors;
-    });
-  }, []);
+  const clearError = useCallback(createErrorClearer<T>(setErrors), []);
 
   const handleChange = useCallback((
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -61,7 +56,7 @@ export function useFormFields<T extends Record<string, any>>(
       [field as string]: true
     }));
     
-    validateField(field);
+    validateSingleField(field);
   }, []);
 
   const setFieldValue = useCallback((field: keyof T, value: any) => {
@@ -105,11 +100,12 @@ export function useFormFields<T extends Record<string, any>>(
     setIsDirty(true);
   }, [clearError]);
 
-  const validateField = useCallback((field: keyof T) => {
+  const validateSingleField = useCallback((field: keyof T) => {
     if (requiredFields.includes(field) && 
         (values[field] === undefined || 
          values[field] === null || 
-         values[field] === '')) {
+         values[field] === '' ||
+         (Array.isArray(values[field]) && values[field].length === 0))) {
       setErrors(prev => ({
         ...prev,
         [field as string]: `${String(field)} is required`
@@ -118,11 +114,11 @@ export function useFormFields<T extends Record<string, any>>(
     }
     
     if (field in validators && validators[field]) {
-      const errorMessage = validators[field]!(values[field]);
-      if (errorMessage) {
+      const error = validateField(field, values[field], validators[field]);
+      if (error) {
         setErrors(prev => ({
           ...prev,
-          [field as string]: errorMessage
+          [field as string]: error
         }));
         return false;
       }
@@ -133,31 +129,10 @@ export function useFormFields<T extends Record<string, any>>(
   }, [values, requiredFields, validators, clearError]);
 
   const validateFields = useCallback(() => {
-    let isValid = true;
-    
-    const allTouched = Object.keys(values).reduce((acc, key) => {
-      acc[key] = true;
-      return acc;
-    }, {} as Record<string, boolean>);
-    
-    setTouched(allTouched);
-    
-    requiredFields.forEach(field => {
-      if (!validateField(field)) {
-        isValid = false;
-      }
-    });
-    
-    (Object.keys(validators) as Array<keyof T>).forEach(field => {
-      if (field in validators && validators[field]) {
-        if (!validateField(field)) {
-          isValid = false;
-        }
-      }
-    });
-    
-    return isValid;
-  }, [validateField, requiredFields, validators, values]);
+    const errors = validateFields(values, validators, requiredFields);
+    setErrors(errors);
+    return Object.keys(errors).length === 0;
+  }, [values, validators, requiredFields]);
 
   const resetForm = useCallback(() => {
     setValues(initialValues);

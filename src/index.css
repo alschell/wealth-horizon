@@ -69,7 +69,7 @@
 
 @layer base {
   * {
-    @apply border-border;
+    @apply border-border text-left;
   }
 
   body {
@@ -90,13 +90,17 @@
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-display tracking-tight text-black;
+    @apply font-display tracking-tight text-black text-left;
   }
   
   /* Update the color of required field asterisks to match the indigo-600 color used for family offices */
   label > span.text-red-500, 
   span.text-red-500 {
     @apply text-indigo-600;
+  }
+
+  p, span, div {
+    @apply text-left;
   }
 }
 

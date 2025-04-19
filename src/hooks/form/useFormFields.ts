@@ -43,9 +43,9 @@ export function useFormFields<T extends Record<string, any>>(
     
     // Run field-specific validator if exists
     const fieldKey = field as string;
-    if (validators[fieldKey as keyof T] && typeof validators[fieldKey as keyof T] === 'function') {
-      const validatorFn = validators[fieldKey as keyof T] as ValidatorFn;
-      const validationResult = validatorFn(value);
+    const validator = validators[field];
+    if (validator && typeof validator === 'function') {
+      const validationResult = validator(value);
       if (validationResult) {
         setErrors(prev => ({ ...prev, [field]: validationResult }));
       }
@@ -70,10 +70,9 @@ export function useFormFields<T extends Record<string, any>>(
     setTouched(prev => ({ ...prev, [field]: true }));
     
     // Validate field on blur
-    const fieldKey = field as string;
-    if (validators[fieldKey as keyof T] && typeof validators[fieldKey as keyof T] === 'function') {
-      const validatorFn = validators[fieldKey as keyof T] as ValidatorFn;
-      const validationResult = validatorFn(values[field]);
+    const validator = validators[field];
+    if (validator && typeof validator === 'function') {
+      const validationResult = validator(values[field]);
       if (validationResult) {
         setErrors(prev => ({ ...prev, [field]: validationResult }));
       }
@@ -90,12 +89,14 @@ export function useFormFields<T extends Record<string, any>>(
     // Run field-specific validators
     const validationErrors: Record<string, string> = { ...requiredErrors };
     
-    Object.entries(validators).forEach(([field, validatorFn]) => {
-      if (validatorFn && typeof validatorFn === 'function' && field in values) {
-        const typedValidator = validatorFn as ValidatorFn;
-        const validationResult = typedValidator(values[field as keyof T]);
+    Object.keys(validators).forEach((fieldName) => {
+      const field = fieldName as keyof T;
+      const validator = validators[field];
+      
+      if (validator && typeof validator === 'function' && field in values) {
+        const validationResult = validator(values[field]);
         if (validationResult) {
-          validationErrors[field] = validationResult;
+          validationErrors[field as string] = validationResult;
         }
       }
     });

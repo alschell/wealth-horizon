@@ -1,3 +1,4 @@
+
 import { useState, useCallback } from 'react';
 import { useIsComponentMounted } from '../../useIsComponentMounted';
 import { showSuccess, showError } from '@/utils/toast';
@@ -41,7 +42,10 @@ export function useUnifiedForm<T extends FieldValues>({
 
   // Create handlers using utility functions
   const handleChange = createInputChangeHandler(
-    values => setFormState(prev => ({ ...prev, values })),
+    (values: T) => setFormState(prev => ({ 
+      ...prev, 
+      values: values as T 
+    })),
     field => setFormState(prev => {
       const newErrors = { ...prev.errors };
       delete newErrors[field as string];
@@ -50,7 +54,10 @@ export function useUnifiedForm<T extends FieldValues>({
   );
 
   const handleBlur = createBlurHandler<T>(
-    touched => setFormState(prev => ({ ...prev, touched }))
+    (touched: Record<string, boolean>) => setFormState(prev => ({ 
+      ...prev, 
+      touched 
+    }))
   );
 
   const clearError = useCallback((field: keyof T) => {
@@ -68,7 +75,7 @@ export function useUnifiedForm<T extends FieldValues>({
   const setFieldValue = useCallback((field: keyof T, value: any) => {
     setFormState(prev => ({
       ...prev,
-      values: { ...prev.values, [field]: value },
+      values: { ...prev.values, [field]: value } as T,
       touched: { ...prev.touched, [field]: true },
       isDirty: true
     }));
@@ -86,7 +93,7 @@ export function useUnifiedForm<T extends FieldValues>({
       
       return {
         ...prev,
-        values: { ...prev.values, ...fields },
+        values: { ...prev.values, ...fields } as T,
         touched: { ...prev.touched, ...touchedFields },
         isDirty: true
       };

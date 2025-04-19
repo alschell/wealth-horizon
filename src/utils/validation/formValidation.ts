@@ -33,7 +33,7 @@ export const validateRequiredFields = <T extends Record<string, any>>(
 /**
  * Creates a function to clear errors by field name
  */
-export const createErrorClearer = <T>(
+export const createErrorClearer = <T extends Record<string, any>>(
   setErrors: React.Dispatch<React.SetStateAction<Record<string, string>>>
 ): (field: keyof T) => void => {
   return (field: keyof T) => {

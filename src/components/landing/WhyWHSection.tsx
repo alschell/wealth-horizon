@@ -53,14 +53,14 @@ const WhyWHSection: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {reasons.map((reason, index) => (
             <ScaleIn key={index} delay={0.1 * index}>
-              <div className="p-6 border border-gray-100 rounded-xl shadow-sm hover:shadow-md transition-shadow bg-white text-center">
+              <div className="flex flex-col h-full p-6 border border-gray-100 rounded-xl shadow-sm hover:shadow-md transition-shadow bg-white">
                 <div className="w-12 h-12 mx-auto mb-4 flex items-center justify-center rounded-full bg-indigo-50 text-indigo-600">
                   {reason.icon}
                 </div>
-                <h3 className="text-xl font-semibold mb-2 text-gray-900">
+                <h3 className="text-xl font-semibold mb-2 text-center text-gray-900">
                   <TranslatedText>{reason.title}</TranslatedText>
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-gray-600 flex-grow text-center">
                   <TranslatedText>{reason.description}</TranslatedText>
                 </p>
               </div>

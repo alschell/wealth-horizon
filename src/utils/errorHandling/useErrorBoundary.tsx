@@ -1,3 +1,4 @@
+
 import React, { useState, useCallback } from 'react';
 import { ErrorBoundary } from '@/components/error-boundary';
 import ErrorFallback from '@/components/shared/ErrorFallback/ErrorFallback';
@@ -37,9 +38,10 @@ export function useErrorBoundary(config: ErrorBoundaryConfig = {}) {
   const [key, setKey] = useState<number>(0);
   
   // Handle errors caught by the error boundary
-  const handleError = useCallback((error: unknown) => {
+  const handleError = useCallback((error: Error, errorInfo: React.ErrorInfo) => {
     if (logToConsole) {
       console.error(`Error in ${componentName || 'component'}:`, error);
+      console.error('Component stack:', errorInfo.componentStack);
     }
     
     if (notifyUser) {
@@ -47,7 +49,7 @@ export function useErrorBoundary(config: ErrorBoundaryConfig = {}) {
     }
     
     if (onError) {
-      onError(error);
+      onError(error, errorInfo);
     }
   }, [componentName, logToConsole, message, notifyUser, onError, showError]);
   

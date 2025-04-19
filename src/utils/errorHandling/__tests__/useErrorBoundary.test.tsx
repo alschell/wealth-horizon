@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { useErrorBoundary } from '../useErrorBoundary';
@@ -15,7 +16,7 @@ const TestComponent = ({
   message = 'Test error message',
   componentName = 'TestComponent'
 }: {
-  onError?: (error: unknown) => void,
+  onError?: (error: Error, errorInfo: React.ErrorInfo) => void,
   fallback?: React.ReactNode,
   showReset?: boolean,
   message?: string,

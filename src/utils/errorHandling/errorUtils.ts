@@ -1,4 +1,3 @@
-
 /**
  * Extracts a human-readable message from any error
  */
@@ -63,11 +62,17 @@ export function parseError(error: unknown): {
 }
 
 /**
- * Logs an error to the console with context
+ * Logs an error to the console with additional details
+ * 
+ * @param error - The error to log
+ * @param componentName - Name of the component where the error occurred (optional)
  */
 export function logError(error: unknown, componentName?: string): void {
-  const prefix = componentName ? `Error in ${componentName}:` : `Error:`;
-  console.error(prefix, error);
+  if (componentName) {
+    console.error(`Error in ${componentName}:`, error);
+  } else {
+    console.error('Error:', error);
+  }
   
   if (error instanceof Error && error.stack) {
     console.error('Stack trace:', error.stack);

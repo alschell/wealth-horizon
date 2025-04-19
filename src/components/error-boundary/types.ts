@@ -15,7 +15,7 @@ export interface ErrorBoundaryProps {
   /**
    * Handler called when an error is caught
    */
-  onError?: (error: unknown) => void;
+  onError?: (error: Error, errorInfo: ErrorInfo) => void;
   
   /**
    * Name of the component for error reporting

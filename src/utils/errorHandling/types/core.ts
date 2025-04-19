@@ -36,7 +36,7 @@ export interface ErrorHandlerOptions {
   /** Custom fallback message to use if error doesn't have one */
   fallbackMessage?: string;
   /** Optional callback to execute when error occurs */
-  onError?: (error: unknown, errorInfo?: ErrorInfo) => void;
+  onError?: (error: Error, errorInfo?: ErrorInfo) => void;
   /** Component name where error occurred (for logging) */
   componentName?: string;
   /** Toast notification title */

@@ -20,7 +20,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
       onError: this.props.onError ? 
         () => {
           if (this.props.onError) {
-            this.props.onError(error);
+            this.props.onError(error, errorInfo);
           }
         } : 
         undefined

@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { ErrorBoundary } from '@/components/error-boundary/ErrorBoundary';
 import ErrorFallback from '@/components/shared/ErrorFallback/ErrorFallback';
@@ -26,7 +27,7 @@ export function withErrorHandling<P extends object>(
 
   const handleError = (error: Error, errorInfo: React.ErrorInfo) => {
     if (logToConsole) {
-      logError(error, componentName);
+      logError(error, componentName); // This should accept only one argument
       console.error('Component stack:', errorInfo.componentStack);
     }
     

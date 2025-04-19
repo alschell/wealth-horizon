@@ -49,8 +49,8 @@ const WhyWHSection: React.FC = () => {
   ];
 
   return (
-    <section className="py-24 bg-white w-full" id="why-wh">
-      <div className="max-w-7xl mx-auto px-6">
+    <section className="w-full bg-white py-24" id="why-wh">
+      <div className="max-w-[1400px] mx-auto px-6">
         <FadeIn>
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 text-center">

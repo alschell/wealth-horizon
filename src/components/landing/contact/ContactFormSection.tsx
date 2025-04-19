@@ -1,4 +1,3 @@
-
 import React from "react";
 import { FadeIn } from "@/components/ui/animation";
 import ContactForm from "./ContactForm";
@@ -7,8 +6,8 @@ import TranslatedText from "@/components/ui/translated-text";
 
 const ContactFormSection: React.FC = () => {
   return (
-    <section className="py-24 bg-white" id="contact">
-      <div className="max-w-7xl mx-auto px-6">
+    <section className="w-full bg-white py-24" id="contact">
+      <div className="max-w-[1400px] mx-auto px-6">
         <FadeIn>
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 text-center">

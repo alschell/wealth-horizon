@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Separator } from "@/components/ui/separator";
 import { Link, useNavigate } from "react-router-dom";
@@ -18,8 +17,8 @@ const FooterSection: React.FC = () => {
   };
 
   return (
-    <footer className="bg-gray-900 text-gray-400 py-16 w-full" id="about">
-      <div className="max-w-7xl mx-auto px-6">
+    <footer className="w-full bg-gray-900 text-gray-400 py-16" id="about">
+      <div className="max-w-[1400px] mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           <div className="text-left">
             <h3 className="text-white font-bold text-xl mb-4 text-left">

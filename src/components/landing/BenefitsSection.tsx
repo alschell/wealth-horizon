@@ -1,4 +1,3 @@
-
 import React from "react";
 import { BarChart3, Shield, Layers, Clock } from "lucide-react";
 import { FadeIn, StaggerContainer, StaggerItem, ScaleIn } from "@/components/ui/animation";
@@ -30,8 +29,8 @@ const benefits = [
 
 const BenefitsSection: React.FC = () => {
   return (
-    <section className="py-24 bg-gray-50" id="benefits">
-      <div className="max-w-7xl mx-auto px-6">
+    <section className="w-full bg-gray-50 py-24" id="benefits">
+      <div className="max-w-[1400px] mx-auto px-6">
         <div className="text-center mb-16">
           <FadeIn>
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900">

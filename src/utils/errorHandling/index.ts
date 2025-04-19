@@ -7,6 +7,7 @@
  */
 
 // Core error types and interfaces
+export * from './types/core';
 export * from './types';
 
 // Error utilities for parsing, formatting, and logging errors
@@ -22,8 +23,13 @@ export {
 // Error handling functions
 export {
   handleError,
+  createErrorHandler
+} from './core';
+
+export {
   withErrorCatch,
-  tryCatch
+  tryCatch,
+  handleWithTry
 } from './errorHandlingUtils';
 
 // React hooks for error handling

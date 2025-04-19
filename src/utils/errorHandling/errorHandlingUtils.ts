@@ -1,107 +1,39 @@
 
-import { toast } from '@/hooks/use-toast';
-import { ErrorHandlerOptions, ErrorResponse } from './types';
-import { getErrorMessage, parseError, logError } from './errorUtils';
+import { ErrorHandlerOptions, ErrorResponse } from './types/core';
+import { handleError } from './core';
 
 /**
- * Unified error handling function
- * Performs logging, notification, and optional callback actions for errors
- * 
- * @param error - The error to handle
- * @param options - Error handling options
- * @returns The parsed error response
+ * Wraps a function with try/catch error handling
+ * @param fn The function to wrap
+ * @param options Error handling options
+ * @returns Function that executes the original function with error handling
  */
-export function handleError(
-  error: unknown, 
+export function withErrorCatch<T>(
+  fn: () => Promise<T> | T,
   options: ErrorHandlerOptions = {}
-): ErrorResponse {
-  const { 
-    fallbackMessage = "An unexpected error occurred",
-    logToConsole = true,
-    showToast = true,
-    silent = false,
-    actionText,
-    action,
-    onError,
-    componentName,
-    toastTitle = "Error"
-  } = options;
-  
-  // Parse error details
-  const errorDetails = parseError(error);
-  const errorMessage = errorDetails.message || fallbackMessage;
-  
-  // Log error to console if enabled
-  if (logToConsole && !silent) {
-    if (componentName) {
-      logError(error, componentName);
-    } else {
-      console.error("Error:", {
-        message: errorMessage,
-        code: errorDetails.code,
-        details: errorDetails.details,
-        original: error
-      });
-    }
-  }
-  
-  // Show toast notification if enabled and not silent
-  if (showToast && !silent) {
-    toast({
-      title: toastTitle,
-      description: errorMessage,
-      variant: "destructive",
-      action: actionText && action ? {
-        label: actionText,
-        onClick: action
-      } : undefined
-    });
-  }
-  
-  // Call error callback if provided
-  if (onError) {
-    onError(error);
-  }
-  
-  return errorDetails;
-}
-
-/**
- * Creates a try-catch wrapper for async functions
- * Handles errors using the standard error handling utility
- * 
- * @param fn - The function to wrap with error handling
- * @param options - Error handling options
- * @returns A wrapped function that handles errors
- */
-export function withErrorCatch<T extends (...args: any[]) => Promise<any>>(
-  fn: T,
-  options: ErrorHandlerOptions = {}
-): (...args: Parameters<T>) => Promise<ReturnType<T> | undefined> {
-  return async (...args: Parameters<T>): Promise<ReturnType<T> | undefined> => {
+): () => Promise<T | undefined> {
+  return async (): Promise<T | undefined> => {
     try {
-      return await fn(...args);
+      return await fn();
     } catch (error) {
       handleError(error, options);
-      
-      if (options.rethrow) {
-        throw error;
-      }
-      
       return undefined;
     }
   };
 }
 
 /**
- * Try-catch wrapper for any function (async or sync)
- * Provides a cleaner way to handle errors in either case
- * 
- * @param fn - The function to execute
- * @param options - Error handling options
- * @returns The result of the function or undefined
+ * Alias for withErrorCatch for backward compatibility
  */
-export async function tryCatch<T>(
+export const tryCatch = withErrorCatch;
+
+/**
+ * Executes a function with try/catch error handling
+ * @param fn The function to execute
+ * @param options Error handling options
+ * @returns Result of the function or undefined if it failed
+ */
+export async function handleWithTry<T>(
   fn: () => Promise<T> | T,
   options: ErrorHandlerOptions = {}
 ): Promise<T | undefined> {
@@ -109,11 +41,6 @@ export async function tryCatch<T>(
     return await fn();
   } catch (error) {
     handleError(error, options);
-    
-    if (options.rethrow) {
-      throw error;
-    }
-    
     return undefined;
   }
 }

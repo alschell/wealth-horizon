@@ -1,8 +1,7 @@
 
 import React, { Component, ErrorInfo } from 'react';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { ErrorBoundaryProps, ErrorBoundaryState } from './types';
-import { DefaultErrorFallback } from './DefaultErrorFallback';
+import ErrorFallback from '@/components/shared/ErrorFallback';
 
 /**
  * Error Boundary component that catches JavaScript errors anywhere in its child
@@ -33,7 +32,13 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
         return this.props.fallback;
       }
 
-      return <DefaultErrorFallback error={this.state.error} />;
+      return (
+        <ErrorFallback 
+          error={this.state.error}
+          errorInfo={this.state.errorInfo}
+          title={`Error in ${this.props.componentName || 'component'}`}
+        />
+      );
     }
 
     return this.props.children;

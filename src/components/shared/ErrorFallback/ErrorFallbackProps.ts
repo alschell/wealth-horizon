@@ -1,29 +1,13 @@
 
-/**
- * Props for the ErrorFallback component
- */
+import { ErrorInfo } from 'react';
+
 export interface ErrorFallbackProps {
-  /** The error that was caught */
-  error: Error;
-  
-  /** Function to reset the error boundary */
+  error?: Error;
   resetErrorBoundary?: () => void;
-  
-  /** Custom title for the error message */
   title?: string;
-  
-  /** Whether to show the reset button */
-  showReset?: boolean;
-  
-  /** Custom text for the reset button */
-  resetText?: string;
-  
-  /** Custom error message */
   message?: string;
-  
-  /** Whether to show detailed error information */
+  showReset?: boolean;
+  resetText?: string;
   showDetails?: boolean;
-  
-  /** Additional error info from React */
-  errorInfo?: React.ErrorInfo;
+  errorInfo?: ErrorInfo;
 }

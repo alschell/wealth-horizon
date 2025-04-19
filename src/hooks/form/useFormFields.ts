@@ -43,8 +43,8 @@ export function useFormFields<T extends Record<string, any>>(
     
     // Run field-specific validator if exists
     const fieldKey = field as string;
-    if (validators && fieldKey in validators) {
-      const validator = validators[field as keyof T];
+    if (fieldKey in validators) {
+      const validator = (validators as Record<string, ValidatorFn | undefined>)[fieldKey];
       if (validator) {
         const validationResult = validator(value);
         if (validationResult) {
@@ -73,8 +73,8 @@ export function useFormFields<T extends Record<string, any>>(
     
     // Validate field on blur
     const fieldKey = field as string;
-    if (validators && fieldKey in validators) {
-      const validator = validators[field as keyof T];
+    if (fieldKey in validators) {
+      const validator = (validators as Record<string, ValidatorFn | undefined>)[fieldKey];
       if (validator) {
         const validationResult = validator(values[field]);
         if (validationResult) {
@@ -96,14 +96,15 @@ export function useFormFields<T extends Record<string, any>>(
     
     Object.keys(validators).forEach((fieldName) => {
       const field = fieldName as keyof T;
+      const fieldKey = field as string;
       
-      if (validators && field in validators) {
-        const validator = validators[field];
+      if (fieldKey in validators) {
+        const validator = (validators as Record<string, ValidatorFn | undefined>)[fieldKey];
         
         if (validator && field in values) {
           const validationResult = validator(values[field]);
           if (validationResult) {
-            validationErrors[field as string] = validationResult;
+            validationErrors[fieldKey] = validationResult;
           }
         }
       }

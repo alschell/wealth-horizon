@@ -33,16 +33,16 @@ const WhyWHSection: React.FC = () => {
       <div className="max-w-7xl mx-auto px-6">
         <FadeIn>
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
+            <h2 className="text-3xl md:text-4xl font-bold text-center">
               <TranslatedText>Why </TranslatedText><span className="text-indigo-600">Wealth</span><span className="text-gray-900">Horizon</span>
             </h2>
             <div className="mt-4 text-xl text-gray-600 max-w-3xl mx-auto">
-              <div>
+              <div className="text-center">
                 <TranslatedText>
                   Discover why leading family offices and institutions choose our platform
                 </TranslatedText>
               </div>
-              <div>
+              <div className="text-center">
                 <TranslatedText>
                   for their wealth management needs
                 </TranslatedText>
@@ -54,14 +54,14 @@ const WhyWHSection: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {reasons.map((reason, index) => (
             <ScaleIn key={index} delay={0.1 * index}>
-              <div className="p-8 border border-gray-100 rounded-xl shadow-sm hover:shadow-md transition-shadow bg-white">
+              <div className="p-8 border border-gray-100 rounded-xl shadow-sm hover:shadow-md transition-shadow bg-white h-full flex flex-col">
                 <div className="w-12 h-12 mb-6 flex items-center justify-center rounded-full bg-indigo-50 text-indigo-600">
                   {reason.icon}
                 </div>
                 <h3 className="text-xl font-semibold mb-4 text-gray-900">
                   <TranslatedText>{reason.title}</TranslatedText>
                 </h3>
-                <p className="text-gray-600 leading-relaxed">
+                <p className="text-gray-600 leading-relaxed flex-grow">
                   <TranslatedText>{reason.description}</TranslatedText>
                 </p>
               </div>

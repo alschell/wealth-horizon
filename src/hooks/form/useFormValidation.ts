@@ -6,7 +6,7 @@ import type { Validator } from './validators';
  * Options for form validation hook
  */
 interface UseFormValidationOptions<T> {
-  validators: Record<string, Validator>;
+  validators: Partial<Record<string, Validator>>;
   requiredFields: (keyof T)[];
   setErrors: React.Dispatch<React.SetStateAction<Record<string, string>>>;
 }

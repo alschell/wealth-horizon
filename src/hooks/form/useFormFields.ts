@@ -1,12 +1,11 @@
 
 import { useState, useCallback } from 'react';
+import type { Validator } from './validators';
 
 export interface UseFormFieldsOptions<T> {
   initialValues: T;
   requiredFields?: (keyof T)[];
-  validators?: {
-    [key in keyof T]?: (value: any) => string | null;
-  };
+  validators?: Partial<Record<keyof T, Validator>>;
 }
 
 /**
@@ -122,8 +121,11 @@ export function useFormFields<T extends Record<string, any>>(
     }
     
     // Run custom validator if provided
-    // Fix the type issue by checking if the field exists in validators
-    if (field in validators) {
+    // Use a safer approach to check if the field is in validators
+    const fieldKey = field as string;
+    const hasValidator = fieldKey in validators && validators[field] !== undefined;
+    
+    if (hasValidator) {
       const validatorFn = validators[field];
       if (validatorFn) {
         const errorMessage = validatorFn(values[field]);
@@ -168,11 +170,13 @@ export function useFormFields<T extends Record<string, any>>(
       }
     });
     
-    // Run custom validators
-    // Fix the type issue by iterating through keys properly
+    // Fix the type issue by checking each field properly
     Object.keys(validators).forEach(key => {
       const field = key as keyof T;
-      if (field in validators) {
+      const fieldKey = field as string;
+      const hasValidator = fieldKey in validators && validators[field] !== undefined;
+      
+      if (hasValidator) {
         const validatorFn = validators[field];
         if (validatorFn) {
           const errorMessage = validatorFn(values[field]);

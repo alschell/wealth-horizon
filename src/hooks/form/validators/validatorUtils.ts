@@ -1,11 +1,16 @@
 
 /**
+ * Validator type definition - a function that accepts a value and returns an error message or null
+ */
+export type Validator = (value: any) => string | null;
+
+/**
  * Creates a required field validator
  * 
  * @param fieldName The name of the field to validate
  * @returns A validator function
  */
-export const required = (fieldName: string) => (value: any): string | null => {
+export const required = (fieldName: string): Validator => (value: any): string | null => {
   if (value === undefined || value === null || value === '') {
     return `${fieldName} is required`;
   }
@@ -19,7 +24,7 @@ export const required = (fieldName: string) => (value: any): string | null => {
  * @param minLength The minimum length required
  * @returns A validator function
  */
-export const minLength = (fieldName: string, minLength: number) => (value: string): string | null => {
+export const minLength = (fieldName: string, minLength: number): Validator => (value: string): string | null => {
   if (!value || value.length < minLength) {
     return `${fieldName} must be at least ${minLength} characters`;
   }
@@ -33,7 +38,7 @@ export const minLength = (fieldName: string, minLength: number) => (value: strin
  * @param maxLength The maximum length allowed
  * @returns A validator function
  */
-export const maxLength = (fieldName: string, maxLength: number) => (value: string): string | null => {
+export const maxLength = (fieldName: string, maxLength: number): Validator => (value: string): string | null => {
   if (value && value.length > maxLength) {
     return `${fieldName} must be less than ${maxLength} characters`;
   }
@@ -46,7 +51,7 @@ export const maxLength = (fieldName: string, maxLength: number) => (value: strin
  * @param fieldName The name of the field to validate
  * @returns A validator function
  */
-export const email = (fieldName: string) => (value: string): string | null => {
+export const email = (fieldName: string): Validator => (value: string): string | null => {
   if (!value) return null;
   
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -64,7 +69,7 @@ export const email = (fieldName: string) => (value: string): string | null => {
  * @param message The error message to display
  * @returns A validator function
  */
-export const pattern = (fieldName: string, pattern: RegExp, message: string) => (value: string): string | null => {
+export const pattern = (fieldName: string, pattern: RegExp, message: string): Validator => (value: string): string | null => {
   if (!value) return null;
   
   if (!pattern.test(value)) {
@@ -79,7 +84,7 @@ export const pattern = (fieldName: string, pattern: RegExp, message: string) => 
  * @param validators The validators to combine
  * @returns A combined validator function
  */
-export const compose = (...validators: ((value: any) => string | null)[]) => (value: any): string | null => {
+export const compose = (...validators: Validator[]): Validator => (value: any): string | null => {
   for (const validator of validators) {
     const error = validator(value);
     if (error) {

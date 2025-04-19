@@ -20,7 +20,7 @@ interface ErrorBoundaryConfig {
 export function withErrorHandling<P extends object>(
   Component: React.ComponentType<P>, 
   options: ErrorBoundaryConfig = {}
-) {
+): React.FC<P> {
   const {
     fallback,
     onError,
@@ -31,7 +31,7 @@ export function withErrorHandling<P extends object>(
     notifyUser = true
   } = options;
 
-  return function WithErrorHandlingWrapper(props: P) {
+  const WithErrorHandlingWrapper: React.FC<P> = (props) => {
     const handleError = (error: Error, errorInfo: React.ErrorInfo) => {
       if (shouldLogError) {
         logError(error, componentName);
@@ -63,13 +63,16 @@ export function withErrorHandling<P extends object>(
       </ErrorBoundary>
     );
   };
+
+  WithErrorHandlingWrapper.displayName = `WithErrorHandling(${componentName})`;
+  return WithErrorHandlingWrapper;
 }
 
 export const withCustomErrorFallback = <P extends object>(
   Component: React.ComponentType<P>,
   FallbackComponent: React.ComponentType<{ error?: Error }>
-) => {
+): React.FC<P> => {
   return withErrorHandling(Component, {
-    fallback: (props) => <FallbackComponent error={props.error} />
+    fallback: (props: { error?: Error }) => <FallbackComponent error={props.error} />
   });
 };

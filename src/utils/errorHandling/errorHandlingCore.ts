@@ -22,6 +22,7 @@ export interface ErrorHandlerOptions {
   showToast?: boolean;
   logError?: boolean;
   onError?: (error: unknown) => void;
+  componentName?: string; // Add componentName property
 }
 
 /**
@@ -154,3 +155,10 @@ export const tryCatch = async <T>(
     return undefined;
   }
 };
+
+/**
+ * Log errors to console
+ */
+export const logError = (error: unknown, context?: string): void => {
+  console.error(`${context ? `[${context}] ` : ''}Error:`, error);
+}

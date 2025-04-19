@@ -191,8 +191,8 @@ export function useFormFields<T extends Record<string, any>>(options: UseFormFie
   
   // Reset form for test mode
   const resetForm = useCallback(() => {
-    if (isTestMode) {
-      setInternalValues(initialValues as T);
+    if (isTestMode && initialValues) {
+      setInternalValues(initialValues);
       setInternalErrors({});
       setInternalTouched({});
       setInternalIsDirty(false);

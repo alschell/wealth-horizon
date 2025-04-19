@@ -20,7 +20,6 @@ export { withErrorHandling } from './useErrorBoundary';
 export {
   getErrorMessage,
   parseError,
-  logError,
   handleError,
   tryCatch
 } from '@/utils/errorHandling';

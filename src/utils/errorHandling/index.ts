@@ -13,6 +13,7 @@ export {
   createContextualError,
   withErrorHandling,
   tryCatch,
+  logError,
   type ErrorResponse,
   type ErrorHandlerOptions
 } from './errorHandlingCore';

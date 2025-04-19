@@ -4,12 +4,6 @@ import { handleError } from '@/utils/errorHandling';
 import { showSuccess } from '@/utils/toast';
 import { FormSubmissionOptions, SubmissionState } from './types';
 
-/**
- * Custom hook for managing form submissions with state tracking
- * 
- * @template T The type of form data being submitted
- * @returns Form submission state and submit function
- */
 export function useFormSubmission<T>() {
   const [state, setState] = useState<SubmissionState>({
     isSubmitting: false,
@@ -17,14 +11,6 @@ export function useFormSubmission<T>() {
     isSuccess: false
   });
 
-  /**
-   * Submits form data with the provided submit function
-   * 
-   * @param submitFn Function that performs the actual submission
-   * @param data The form data to submit
-   * @param options Configuration options for the submission
-   * @returns Promise resolving to boolean indicating success
-   */
   const submitForm = useCallback(async (
     submitFn: (data: T) => Promise<void>,
     data: T,
@@ -39,7 +25,6 @@ export function useFormSubmission<T>() {
       resetAfterSubmit
     } = options;
 
-    // Validate form if validation function is provided
     if (validateForm && !validateForm(data)) {
       return false;
     }
@@ -66,8 +51,7 @@ export function useFormSubmission<T>() {
     } catch (error) {
       const errorHandlerOptions = {
         fallbackMessage: errorMessage,
-        logToConsole: true,
-        onError: onError as (error: unknown) => void
+        onError: onError
       };
       
       handleError(error, errorHandlerOptions);

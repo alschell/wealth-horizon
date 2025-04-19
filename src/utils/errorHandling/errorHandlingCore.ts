@@ -1,214 +1,164 @@
 
 /**
- * Core error handling utilities
- * Provides standardized error parsing, handling, and utility functions
+ * Core error handling utilities for consistent error management
  */
 
 /**
- * Error response type returned by error handling functions
+ * Standard error response format
  */
 export interface ErrorResponse {
   message: string;
   code?: string;
+  status?: number;
   originalError?: unknown;
-  context?: Record<string, unknown>;
+  details?: Record<string, unknown>;
 }
 
 /**
- * Options for error handling functions
+ * Options for error handler
  */
 export interface ErrorHandlerOptions {
-  /** Whether to suppress normal error handling behavior */
-  silent?: boolean;
-  /** Additional context information to include with the error */
-  context?: Record<string, unknown>;
-  /** Whether to show a toast notification for this error */
-  showToast?: boolean;
-  /** Whether to log this error to the console */
-  logToConsole?: boolean;
-  /** Whether to re-throw the error after handling */
-  rethrow?: boolean;
-  /** Custom fallback message to use if error doesn't have one */
   fallbackMessage?: string;
-  /** Legacy property - use logToConsole instead */
+  showToast?: boolean;
   logError?: boolean;
-  /** Optional callback to execute when error occurs */
   onError?: (error: unknown) => void;
+  componentName?: string; // Add componentName property
 }
 
 /**
- * Parse any error into a standardized error response
- * @param error - The error to parse
- * @returns A standardized error response object
+ * Parse an error into a standardized format
  */
-export function parseError(error: unknown): ErrorResponse {
-  if (error instanceof Error) {
-    return {
-      message: error.message,
-      code: error.name,
-      originalError: error,
-    };
-  }
+export const parseError = (error: unknown): ErrorResponse => {
+  // Default error response
+  const defaultResponse: ErrorResponse = {
+    message: 'An unknown error occurred',
+    code: 'UNKNOWN_ERROR'
+  };
   
+  // Handle string errors
   if (typeof error === 'string') {
     return {
       message: error,
+      code: 'ERROR_MESSAGE'
     };
   }
   
+  // Handle Error objects
+  if (error instanceof Error) {
+    return {
+      message: error.message || defaultResponse.message,
+      code: error.name || 'ERROR',
+      originalError: error,
+      // Use safer approach without Error.cause
+      details: {
+        stack: error.stack
+      }
+    };
+  }
+  
+  // Handle API responses with error data (common format)
   if (error && typeof error === 'object') {
-    // Handle API error responses
-    if ('message' in error && typeof error.message === 'string') {
+    const apiError = error as any;
+    
+    if (apiError.message) {
       return {
-        message: error.message,
-        code: 'code' in error ? String(error.code) : undefined,
+        message: apiError.message,
+        code: apiError.code || apiError.error || 'API_ERROR',
+        status: apiError.status || apiError.statusCode,
         originalError: error,
+        details: apiError
       };
     }
   }
   
   return {
-    message: 'An unknown error occurred',
-    originalError: error,
+    ...defaultResponse,
+    originalError: error
   };
-}
+};
 
 /**
- * Standard error handler function
- * @param error - The error to handle
- * @param options - Error handling options
- * @returns Parsed error response
+ * Get a human-readable error message
  */
-export function handleError(error: unknown, options: ErrorHandlerOptions = {}): ErrorResponse {
-  const { 
-    silent = false, 
-    logToConsole = true, 
-    fallbackMessage = 'An unexpected error occurred' 
-  } = options;
+export const getErrorMessage = (error: unknown, fallback = 'An error occurred'): string => {
+  const parsedError = parseError(error);
+  return parsedError.message || fallback;
+};
+
+/**
+ * Handle an error with consistent approach
+ */
+export const handleError = (error: unknown, options: ErrorHandlerOptions = {}): ErrorResponse => {
+  const { fallbackMessage = 'An error occurred', logError = true, onError } = options;
+  
   const parsedError = parseError(error);
   
-  if (logToConsole) {
-    console.error('Error:', parsedError.message, parsedError.originalError);
+  // Log error if requested
+  if (logError) {
+    console.error('Error:', parsedError.message, parsedError);
   }
   
-  if (options.context) {
-    parsedError.context = options.context;
-  }
-  
-  if (options.rethrow) {
-    throw error;
+  // Call provided error handler if available
+  if (onError) {
+    onError(error);
   }
   
   return parsedError;
-}
+};
 
 /**
- * Get a human-readable error message from any error
- * @param error - The error to extract a message from
- * @returns A human-readable error message string
+ * Create a reusable error handler with default options
  */
-export function getErrorMessage(error: unknown): string {
-  return parseError(error).message;
-}
-
-/**
- * Create a contextual error with additional information
- * @param message - The error message
- * @param originalError - The original error that caused this one
- * @param context - Additional context information
- * @returns A new Error object with additional context
- */
-export function createContextualError(message: string, originalError?: unknown, context?: Record<string, unknown>): Error {
-  const contextualError = new Error(message);
-  
-  // Using TypeScript ignore to handle the Error.cause compatibility issue
-  // Error.cause was added in ES2022 but TypeScript may target an earlier version
-  if (originalError) {
-    // @ts-ignore - Error.cause is available in modern browsers and Node.js
-    contextualError.cause = originalError;
-  }
-  
-  if (context) {
-    (contextualError as any).context = context;
-  }
-  
-  return contextualError;
-}
-
-/**
- * Create an error handler function with default options
- * @param defaultOptions - Default options to use for all errors
- * @returns A configured error handler function
- */
-export function createErrorHandler(defaultOptions: ErrorHandlerOptions = {}) {
+export const createErrorHandler = (defaultOptions: ErrorHandlerOptions = {}) => {
   return (error: unknown, options: ErrorHandlerOptions = {}) => {
     return handleError(error, { ...defaultOptions, ...options });
   };
-}
+};
 
 /**
- * Wrap an async function with error handling
- * @param fn - The async function to wrap
- * @param options - Error handling options
- * @returns A new function that handles errors
+ * Create a contextualized error
  */
-export function withErrorHandling<T extends (...args: any[]) => Promise<any>>(
+export const createContextualError = (context: string, originalError: unknown): Error => {
+  const parsedError = parseError(originalError);
+  const contextualError = new Error(`${context}: ${parsedError.message}`);
+  return contextualError;
+};
+
+/**
+ * Wrap a function with error handling
+ */
+export const withErrorHandling = <T extends (...args: any[]) => Promise<any>>(
   fn: T,
   options: ErrorHandlerOptions = {}
-): (...args: Parameters<T>) => Promise<ReturnType<T> | undefined> {
+) => {
   return async (...args: Parameters<T>): Promise<ReturnType<T> | undefined> => {
     try {
       return await fn(...args);
     } catch (error) {
       handleError(error, options);
-      
-      if (options.rethrow) {
-        throw error;
-      }
-      
       return undefined;
     }
   };
-}
+};
 
 /**
- * Try-catch wrapper with standardized error handling
- * @param fn - The function to execute
- * @param options - Error handling options
- * @returns The result of the function or undefined if it throws
+ * Try-catch wrapper for async functions
  */
-export async function tryCatch<T>(
+export const tryCatch = async <T>(
   fn: () => Promise<T> | T,
   options: ErrorHandlerOptions = {}
-): Promise<T | undefined> {
+): Promise<T | undefined> => {
   try {
     return await fn();
   } catch (error) {
     handleError(error, options);
-    
-    if (options.rethrow) {
-      throw error;
-    }
-    
     return undefined;
   }
-}
+};
 
 /**
- * Log an error with standardized format
- * @param error - The error to log
- * @param context - Additional context information
+ * Log errors to console
  */
-export function logError(error: unknown, context?: Record<string, unknown>): void {
-  const parsedError = parseError(error);
-  
-  if (context) {
-    parsedError.context = context;
-  }
-  
-  console.error('[ERROR]', parsedError.message, {
-    code: parsedError.code,
-    context: parsedError.context,
-    error: parsedError.originalError
-  });
+export const logError = (error: unknown, context?: string): void => {
+  console.error(`${context ? `[${context}] ` : ''}Error:`, error);
 }

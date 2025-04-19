@@ -26,7 +26,19 @@ export function useUnifiedForm<T extends FieldValues>({
   ...formOptions
 }: UseUnifiedFormOptions<T>) {
   // Initialize form state
-  const { formState, setFormState } = useFormState<T>(defaultValues as DefaultValues<T>);
+  const { formState, setFormState } = useFormState<T>();
+
+  // Initialize form state with default values
+  useCallback(() => {
+    setFormState({
+      values: defaultValues as T,
+      errors: {},
+      touched: {},
+      isDirty: false,
+      isSubmitting: false,
+      isSuccess: false
+    });
+  }, [defaultValues, setFormState])();
 
   // Initialize react-hook-form with zod resolver if schema is provided
   const methods = useForm<T>({

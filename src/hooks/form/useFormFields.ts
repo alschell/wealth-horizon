@@ -40,7 +40,7 @@ export function useFormFields<T extends Record<string, any>>(
     
     // Run field-specific validator if exists
     const validator = validators[field];
-    if (validator) {
+    if (validator && typeof validator === 'function') {
       const error = validator(value);
       if (error) {
         setErrors(prev => ({ ...prev, [field]: error }));
@@ -67,7 +67,7 @@ export function useFormFields<T extends Record<string, any>>(
     
     // Validate field on blur
     const validator = validators[field];
-    if (validator) {
+    if (validator && typeof validator === 'function') {
       const error = validator(values[field]);
       if (error) {
         setErrors(prev => ({ ...prev, [field]: error }));
@@ -86,7 +86,7 @@ export function useFormFields<T extends Record<string, any>>(
     const validationErrors: Record<string, string> = { ...requiredErrors };
     
     Object.entries(validators).forEach(([field, validator]) => {
-      if (validator && field in values) {
+      if (validator && typeof validator === 'function' && field in values) {
         const error = validator(values[field as keyof T]);
         if (error) {
           validationErrors[field] = error;

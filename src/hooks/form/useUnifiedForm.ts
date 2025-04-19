@@ -5,7 +5,7 @@ import { useFormFields } from './useFormFields';
 import { useFormValidation } from './useFormValidation';
 import { useFormSubmission } from './useFormSubmission';
 import { useFormValidationUtils } from './useFormValidationUtils';
-import { Validator } from '@/utils/validation/core';
+import type { Validator } from './validators';
 import { required } from '@/utils/validation/validators';
 import { UseUnifiedFormProps, UseUnifiedFormReturn } from './unified/types';
 

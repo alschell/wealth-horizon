@@ -1,5 +1,6 @@
 
 import { useCallback, useState } from 'react';
+import type { Validator } from './validators';
 
 /**
  * Types for form field handling
@@ -23,7 +24,7 @@ export interface UseFormFieldsOptions<T> {
   // For test compatibility
   initialValues?: T;
   requiredFields?: Array<keyof T>;
-  validators?: Partial<Record<keyof T, (value: any) => string | null>>;
+  validators?: Partial<Record<keyof T, Validator>>;
 }
 
 /**

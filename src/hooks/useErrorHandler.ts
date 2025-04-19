@@ -1,84 +1,52 @@
 
 import { useState, useCallback } from 'react';
-import { useToast } from './use-toast';
-import { 
-  parseError, 
-  type ErrorHandlerOptions,
-  type ErrorResponse
-} from '@/utils/errorHandling/errorHandlingCore';
+import { useToast } from '@/components/ui/toast';
+import { getErrorMessage, logError } from '@/utils/errorHandling';
 
-/**
- * Hook for consistent error handling throughout the application
- */
-export function useErrorHandler(defaultOptions: ErrorHandlerOptions = {}) {
-  const [lastError, setLastError] = useState<ErrorResponse | null>(null);
+export const useErrorHandler = (componentName?: string) => {
   const { toast } = useToast();
-  
-  /**
-   * Handle an error with standardized approach
-   */
-  const handleErrorWithState = useCallback((error: unknown, options: ErrorHandlerOptions = {}) => {
-    const mergedOptions = { ...defaultOptions, ...options };
-    const errorDetails = parseError(error);
-    setLastError(errorDetails);
-    return errorDetails;
-  }, [defaultOptions]);
-  
-  /**
-   * Wrap an async function with error handling
-   */
-  const withErrorHandlingState = useCallback(<T extends (...args: any[]) => Promise<any>>(
-    fn: T,
-    options: ErrorHandlerOptions = {}
-  ) => {
+  const [lastError, setLastError] = useState<Error | null>(null);
+
+  const handleError = useCallback((error: unknown) => {
+    const errorMessage = getErrorMessage(error);
+    setLastError(error instanceof Error ? error : new Error(errorMessage));
+    logError(error, componentName);
+    toast({
+      title: 'Error',
+      description: errorMessage,
+      variant: 'destructive'
+    });
+  }, [componentName, toast]);
+
+  const clearLastError = useCallback(() => {
+    setLastError(null);
+  }, []);
+
+  const withErrorHandling = useCallback(<T extends (...args: any[]) => any>(fn: T) => {
     return async (...args: Parameters<T>): Promise<ReturnType<T> | undefined> => {
       try {
         return await fn(...args);
       } catch (error) {
-        handleErrorWithState(error, options);
+        handleError(error);
         return undefined;
       }
     };
-  }, [handleErrorWithState]);
-  
-  /**
-   * Try-catch wrapper with state management
-   */
-  const tryCatchWithState = useCallback(async <T>(
-    fn: () => Promise<T> | T,
-    options: ErrorHandlerOptions = {}
-  ): Promise<T | undefined> => {
+  }, [handleError]);
+
+  const tryCatch = useCallback(async <T>(fn: () => Promise<T> | T): Promise<T | undefined> => {
     try {
       return await fn();
     } catch (error) {
-      handleErrorWithState(error, options);
+      handleError(error);
       return undefined;
     }
-  }, [handleErrorWithState]);
-  
-  /**
-   * Show an error toast manually
-   */
-  const showError = useCallback((title: string, message: string) => {
-    toast({
-      title,
-      description: message,
-      variant: "destructive"
-    });
-  }, [toast]);
-  
+  }, [handleError]);
+
   return {
-    // State
+    handleError,
     lastError,
-    clearLastError: () => setLastError(null),
-    
-    // Error handling functions
-    handleError: handleErrorWithState,
-    withErrorHandling: withErrorHandlingState,
-    tryCatch: tryCatchWithState,
-    showError,
-    
-    // Utility functions re-exported for convenience
-    parseError
+    clearLastError,
+    withErrorHandling,
+    tryCatch
   };
-}
+};

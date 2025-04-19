@@ -207,20 +207,31 @@ This document serves as the definitive guide for developers working on our platf
 - Use strict null checking
 - Avoid type assertions except when necessary
 
-## Error Handling
+## Error Handling Best Practices
 
-- Use error boundaries for React component errors
-- Implement consistent error handling patterns
-- Log errors appropriately in development/production
-- Provide user-friendly error messages
-- Handle async errors with proper error states
-- Use type-safe error handling with TypeScript
-- Implement retry mechanisms where appropriate
-- Follow the error handling hierarchy:
-  1. Component-level error boundaries
-  2. Route-level error handling
-  3. Global error handling
-  4. API error handling
+1. **Use Centralized Error Utilities**
+   - Always use utilities from `@/utils/errorHandling`
+   - Follow the standardized error response format
+   - Implement proper error boundaries
+   - Use context-aware error messages
+
+2. **Error Logging**
+   - Use structured logging with severity levels
+   - Include component context in error logs
+   - Never expose sensitive information in error messages
+   - Implement proper error tracking
+
+3. **User-Facing Errors**
+   - Provide clear, actionable error messages
+   - Use toast notifications consistently
+   - Support i18n for error messages
+   - Implement proper fallback UI
+
+4. **Error Recovery**
+   - Implement retry mechanisms where appropriate
+   - Provide clear recovery actions
+   - Maintain application state during errors
+   - Handle offline scenarios gracefully
 
 ## Form Handling
 

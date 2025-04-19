@@ -18,5 +18,5 @@ export {
   type ErrorResponse,
   getErrorMessage,
   parseError,
-  withErrorHandling as withErrorCatch
+  withErrorCatch
 } from './errorHandlingUtils';

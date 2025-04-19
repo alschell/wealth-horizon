@@ -27,7 +27,7 @@ export function withErrorHandling<P extends object>(
 
   const handleError = (error: Error, errorInfo: React.ErrorInfo) => {
     if (logToConsole) {
-      logError(error, componentName); // Pass both error and componentName
+      logError(error, componentName); // Pass error and componentName as context
       console.error('Component stack:', errorInfo.componentStack);
     }
     

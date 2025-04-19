@@ -66,17 +66,21 @@ export function parseError(error: unknown): {
  * Logs an error to the console with additional details
  * 
  * @param error - The error to log
- * @param componentName - Name of the component where the error occurred (optional)
+ * @param context - Name of the component or additional context (optional)
  */
-export function logError(error: unknown, componentName?: string): void {
-  if (componentName) {
-    console.error(`Error in ${componentName}:`, error);
+export function logError(error: unknown, context?: string | Record<string, unknown>): void {
+  if (typeof context === 'string') {
+    console.error(`Error in ${context}:`, error);
   } else {
     console.error('Error:', error);
   }
   
   if (error instanceof Error && error.stack) {
     console.error('Stack trace:', error.stack);
+  }
+  
+  if (typeof context === 'object' && context !== null) {
+    console.error('Context:', context);
   }
 }
 

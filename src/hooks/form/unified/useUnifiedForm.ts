@@ -5,12 +5,11 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FieldValues } from 'react-hook-form';
 import { UseUnifiedFormOptions, UnifiedFormState } from './types';
-import { validateRequiredFields, createErrorClearer } from './utils/validation';
+import { validateRequiredFields } from '@/utils/validation/formValidation';
+import { createInputChangeHandler, createBlurHandler } from '@/utils/handlers/formEventHandlers';
 
 /**
  * Enhanced form hook that combines react-hook-form with submission handling
- * @param options Configuration options for the form
- * @returns Form state and handlers
  */
 export function useUnifiedForm<T extends FieldValues>({
   schema,
@@ -40,7 +39,20 @@ export function useUnifiedForm<T extends FieldValues>({
     ...(schema && { resolver: zodResolver(schema) })
   });
 
-  // Create a function to clear field errors
+  // Create handlers using utility functions
+  const handleChange = createInputChangeHandler(
+    values => setFormState(prev => ({ ...prev, values })),
+    field => setFormState(prev => {
+      const newErrors = { ...prev.errors };
+      delete newErrors[field as string];
+      return { ...prev, errors: newErrors };
+    })
+  );
+
+  const handleBlur = createBlurHandler<T>(
+    touched => setFormState(prev => ({ ...prev, touched }))
+  );
+
   const clearError = useCallback((field: keyof T) => {
     setFormState(prev => {
       const newErrors = { ...prev.errors };
@@ -50,33 +62,6 @@ export function useUnifiedForm<T extends FieldValues>({
         errors: newErrors
       };
     });
-  }, []);
-
-  // Handle input changes
-  const handleChange = useCallback((
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
-  ) => {
-    const { name, value, type } = e.target;
-    const fieldValue = type === 'checkbox' 
-      ? (e.target as HTMLInputElement).checked 
-      : value;
-    
-    setFormState(prev => ({
-      ...prev,
-      values: { ...prev.values, [name]: fieldValue },
-      touched: { ...prev.touched, [name]: true },
-      isDirty: true
-    }));
-    
-    clearError(name as keyof T);
-  }, [clearError]);
-
-  // Handle field blur
-  const handleBlur = useCallback((field: keyof T) => {
-    setFormState(prev => ({
-      ...prev,
-      touched: { ...prev.touched, [field]: true }
-    }));
   }, []);
 
   // Set a single field value

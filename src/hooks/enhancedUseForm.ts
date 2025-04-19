@@ -43,9 +43,7 @@ export function enhancedUseForm<T extends FieldValues>({
 }: UseEnhancedFormOptions<T>) {
   // Get form state management from useFormControls
   const {
-    isSubmitting,
-    lastError,
-    isSuccess,
+    formSubmissionState: { isSubmitting, lastError, isSuccess },
     resetState,
     createSubmitHandler
   } = useFormControls<T>();
@@ -67,7 +65,10 @@ export function enhancedUseForm<T extends FieldValues>({
         successMessage,
         errorMessage,
         resetAfterSubmit,
-        validateForm: validateBeforeSubmit ? () => methods.trigger() : undefined
+        // Fixed: Update the type to return a Promise<boolean> instead of boolean
+        validateForm: validateBeforeSubmit ? async () => {
+          return await methods.trigger();
+        } : undefined
       }
     ),
     [

@@ -8,9 +8,11 @@ import { FormSubmissionOptions } from './form/types';
  * Return type for the useFormControls hook
  */
 export interface UseFormControlsReturn<T> {
-  isSubmitting: boolean;
-  lastError: string | null;
-  isSuccess: boolean;
+  formSubmissionState: {
+    isSubmitting: boolean;
+    lastError: string | null;
+    isSuccess: boolean;
+  };
   resetState: () => void;
   createSubmitHandler: (
     onSubmit: (data: T) => Promise<void> | void,
@@ -58,7 +60,11 @@ export function useFormControls<T>(): UseFormControlsReturn<T> {
 
         // Validate form if validation function is provided
         if (validateForm) {
-          const isValid = await validateForm(data);
+          // Fixed: Pass data to validateForm if it expects an argument
+          const isValid = typeof validateForm === 'function' ? 
+            await validateForm(data) : 
+            await validateForm();
+            
           if (!isValid) return;
         }
 
@@ -108,9 +114,11 @@ export function useFormControls<T>(): UseFormControlsReturn<T> {
   );
 
   return {
-    isSubmitting,
-    lastError,
-    isSuccess,
+    formSubmissionState: {
+      isSubmitting,
+      lastError,
+      isSuccess
+    },
     resetState,
     createSubmitHandler,
   };

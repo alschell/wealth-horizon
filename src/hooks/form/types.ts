@@ -55,12 +55,12 @@ export interface FormHelpers<T> {
  * Form submission options
  */
 export interface FormSubmissionOptions<T> {
-  onSuccess?: (data: T) => void;
+  onSuccess?: () => void;
   onError?: (error: unknown) => void;
   successMessage?: string;
   errorMessage?: string;
   resetAfterSubmit?: boolean;
-  validateForm?: (data: T) => boolean;
+  validateForm?: ((data: T) => boolean | Promise<boolean>) | (() => boolean | Promise<boolean>);
   resetForm?: () => void;
 }
 

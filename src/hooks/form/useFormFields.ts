@@ -42,12 +42,14 @@ export function useFormFields<T extends Record<string, any>>(
     }
     
     // Run field-specific validator if exists
-    const fieldKey = field as string;
-    const validator = validators[field as keyof T];
-    if (validator && typeof validator === 'function') {
-      const validationResult = validator(value);
-      if (validationResult) {
-        setErrors(prev => ({ ...prev, [field]: validationResult }));
+    const fieldKey = field as keyof T;
+    if (fieldKey in validators) {
+      const validator = validators[fieldKey];
+      if (validator && typeof validator === 'function') {
+        const validationResult = validator(value);
+        if (validationResult) {
+          setErrors(prev => ({ ...prev, [field]: validationResult }));
+        }
       }
     }
   }, [errors, validators]);
@@ -70,11 +72,14 @@ export function useFormFields<T extends Record<string, any>>(
     setTouched(prev => ({ ...prev, [field]: true }));
     
     // Validate field on blur
-    const validator = validators[field as keyof T];
-    if (validator && typeof validator === 'function') {
-      const validationResult = validator(values[field]);
-      if (validationResult) {
-        setErrors(prev => ({ ...prev, [field]: validationResult }));
+    const fieldKey = field as keyof T;
+    if (fieldKey in validators) {
+      const validator = validators[fieldKey];
+      if (validator && typeof validator === 'function') {
+        const validationResult = validator(values[field]);
+        if (validationResult) {
+          setErrors(prev => ({ ...prev, [field]: validationResult }));
+        }
       }
     }
   }, [validators, values]);
@@ -91,12 +96,14 @@ export function useFormFields<T extends Record<string, any>>(
     
     Object.keys(validators).forEach((fieldName) => {
       const field = fieldName as keyof T;
-      const validator = validators[field as keyof T];
-      
-      if (validator && typeof validator === 'function' && field in values) {
-        const validationResult = validator(values[field]);
-        if (validationResult) {
-          validationErrors[field as string] = validationResult;
+      if (field in validators) {
+        const validator = validators[field];
+        
+        if (validator && typeof validator === 'function' && field in values) {
+          const validationResult = validator(values[field]);
+          if (validationResult) {
+            validationErrors[field as string] = validationResult;
+          }
         }
       }
     });

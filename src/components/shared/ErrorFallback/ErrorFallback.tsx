@@ -14,7 +14,8 @@ const ErrorFallback: React.FC<ErrorFallbackProps> = ({
   title = "Something went wrong",
   message,
   description,
-  showReset = true,
+  showReset,
+  showResetButton = showReset ?? true,
   resetText = "Try again",
   showDetails = true,
   errorInfo
@@ -39,7 +40,7 @@ const ErrorFallback: React.FC<ErrorFallbackProps> = ({
             </div>
           )}
           
-          {showReset && resetErrorBoundary && (
+          {(showResetButton || showReset) && resetErrorBoundary && (
             <Button 
               variant="outline" 
               onClick={resetErrorBoundary} 

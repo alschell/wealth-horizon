@@ -23,6 +23,9 @@ export interface ErrorFallbackProps {
   /** Whether to show the reset button */
   showResetButton?: boolean;
   
+  /** Alias for showResetButton (for backward compatibility) */
+  showReset?: boolean;
+  
   /** Text for the reset button */
   resetText?: string;
   

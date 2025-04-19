@@ -1,4 +1,6 @@
 
+import { ErrorInfo } from 'react';
+
 /**
  * Standard error response format
  */
@@ -34,7 +36,7 @@ export interface ErrorHandlerOptions {
   /** Custom fallback message to use if error doesn't have one */
   fallbackMessage?: string;
   /** Optional callback to execute when error occurs */
-  onError?: (error: unknown) => void;
+  onError?: (error: unknown, errorInfo?: ErrorInfo) => void;
   /** Component name where error occurred (for logging) */
   componentName?: string;
   /** Toast notification title */
@@ -60,4 +62,3 @@ export interface BaseErrorOptions {
   /** Whether to log errors to console */
   logToConsole?: boolean;
 }
-

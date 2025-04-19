@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { useErrorBoundary } from '../useErrorBoundary';
@@ -41,7 +40,6 @@ const TestComponent = ({
 };
 
 describe('useErrorBoundary', () => {
-  // Mock console.error to prevent test output cluttering
   let consoleErrorSpy: jest.SpyInstance;
   
   beforeAll(() => {
@@ -54,7 +52,6 @@ describe('useErrorBoundary', () => {
 
   it('should render fallback UI when error occurs', () => {
     render(<TestComponent />);
-    
     expect(screen.getByText(/Test error message/i)).toBeInTheDocument();
   });
   

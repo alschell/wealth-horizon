@@ -1,4 +1,3 @@
-
 import React, { useState, useCallback } from 'react';
 import { ErrorBoundary } from '@/components/error-boundary';
 import ErrorFallback from '@/components/shared/ErrorFallback/ErrorFallback';
@@ -15,8 +14,6 @@ interface ErrorBoundaryConfig extends ErrorHandlerOptions {
   message?: string;
   /** Whether to show a notification to the user */
   notifyUser?: boolean;
-  /** Custom fallback UI to show when error occurs */
-  fallback?: React.ReactNode;
 }
 
 /**

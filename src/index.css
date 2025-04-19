@@ -70,7 +70,6 @@
 @layer base {
   * {
     @apply border-border;
-    text-align: left !important;
   }
 
   body {
@@ -79,7 +78,6 @@
     margin: 0;
     padding: 0;
     display: block;
-    text-align: left !important;
   }
 
   html {
@@ -89,18 +87,19 @@
   #root {
     height: 100%;
     display: block;
-    text-align: left !important;
   }
 
   h1, h2, h3, h4, h5, h6 {
     @apply font-display tracking-tight text-black;
-    text-align: left !important;
   }
   
   label > span.text-red-500, 
   span.text-red-500 {
     @apply text-indigo-600;
   }
+  
+  /* Remove the !important text-align: left rule */
+  /* This was preventing text-center from working */
 }
 
 @layer utilities {

@@ -43,7 +43,8 @@ export function useFormFields<T extends Record<string, any>>(
     
     // Run field-specific validator if exists
     const fieldKey = field as keyof T;
-    if (fieldKey in validators) {
+    // Check if the field exists in validators using JavaScript's in operator
+    if (Object.prototype.hasOwnProperty.call(validators, fieldKey)) {
       const validator = validators[fieldKey];
       if (validator && typeof validator === 'function') {
         const validationResult = validator(value);
@@ -73,7 +74,8 @@ export function useFormFields<T extends Record<string, any>>(
     
     // Validate field on blur
     const fieldKey = field as keyof T;
-    if (fieldKey in validators) {
+    // Check if the field exists in validators using JavaScript's in operator
+    if (Object.prototype.hasOwnProperty.call(validators, fieldKey)) {
       const validator = validators[fieldKey];
       if (validator && typeof validator === 'function') {
         const validationResult = validator(values[field]);
@@ -96,7 +98,8 @@ export function useFormFields<T extends Record<string, any>>(
     
     Object.keys(validators).forEach((fieldName) => {
       const field = fieldName as keyof T;
-      if (field in validators) {
+      // Check if the field exists in validators using JavaScript's in operator
+      if (Object.prototype.hasOwnProperty.call(validators, field)) {
         const validator = validators[field];
         
         if (validator && typeof validator === 'function' && field in values) {

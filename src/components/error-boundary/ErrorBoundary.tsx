@@ -18,7 +18,11 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
       componentName: this.props.componentName,
       context: { componentStack: errorInfo.componentStack },
       onError: this.props.onError ? 
-        () => this.props.onError?.(error, errorInfo) : 
+        () => {
+          if (this.props.onError) {
+            this.props.onError(error);
+          }
+        } : 
         undefined
     });
     
@@ -36,7 +40,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
     if (this.state.hasError) {
       return this.props.fallback || (
         <ErrorFallback 
-          error={this.state.error}
+          error={this.state.error || new Error('Unknown error')}
           resetErrorBoundary={this.resetErrorBoundary}
           title={`Error in ${this.props.componentName || 'component'}`}
           errorInfo={this.state.errorInfo}

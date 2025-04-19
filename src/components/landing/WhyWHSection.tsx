@@ -1,4 +1,3 @@
-
 import React from "react";
 import { FadeIn, ScaleIn } from "@/components/ui/animation";
 import { Binary, WalletCards, Box, Bot } from "lucide-react";
@@ -34,6 +33,7 @@ const WhyWHSection: React.FC = () => {
         <FadeIn>
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold">
+              <TranslatedText>Why </TranslatedText>
               <span className="text-indigo-600">Wealth</span>
               <span className="text-gray-900">Horizon</span>
             </h2>

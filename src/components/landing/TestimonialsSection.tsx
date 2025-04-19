@@ -41,7 +41,7 @@ const TestimonialsSection: React.FC = () => {
           {testimonials.map((testimonial, index) => (
             <FadeIn key={index} delay={index * 0.1}>
               <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-200 h-full flex flex-col">
-                <div className="mb-6">
+                <div className="mb-6 flex justify-center">
                   {[1, 2, 3, 4, 5].map((star) => (
                     <span key={star} className="text-yellow-400">★</span>
                   ))}

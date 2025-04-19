@@ -1,42 +1,41 @@
 import React from "react";
 import { FadeIn, ScaleIn, StaggerContainer, StaggerItem } from "@/components/ui/animation";
-import { LineChart, Shield, BarChart3, FileText, Users, Lock, LucideIcon } from "lucide-react";
+import { LineChart, Shield, BarChart3, FileText, Users, Lock } from "lucide-react";
 import DashboardAnimation from "@/components/animations/DashboardAnimation";
 import TranslatedText from "@/components/ui/translated-text";
 
-// Define the features with the correct icon type and sort them alphabetically
 const features = [
   {
-    title: "Compliance Management",
-    description: "Stay ahead of regulatory requirements with automated compliance monitoring.",
-    icon: Shield
-  },
-  {
-    title: "Comprehensive Dashboard",
-    description: "Get a holistic view of your wealth across all your banks, brokers and custodians.",
+    title: "Identify opportunities",
+    description: "Leverage advanced portfolio tools and benchmarks for in-depth insights. Effortlessly assess your financial health and make strategic decisions aligned with your financial objectives.",
     icon: LineChart
   },
   {
-    title: "Real-time Analytics",
-    description: "Monitor your investments with real-time updates and customizable dashboards.",
+    title: "Optimize your liquidity",
+    description: "Enhance your liquidity management with advanced tools designed for effective cash flow monitoring. Strategically allocate term deposits to optimize returns while ensuring you maintain the liquidity necessary for immediate operational needs.",
     icon: BarChart3
   },
   {
-    title: "Risk Management",
-    description: "Identify and mitigate risks with our sophisticated analysis tools.",
-    icon: BarChart3
-  },
-  {
-    title: "Secure Collaboration",
-    description: "Invite team members and stakeholders to the platform.",
-    icon: Users
-  },
-  {
-    title: "Advanced Reporting",
-    description: "Create custom reports with detailed insights and easy-to-understand visualizations.",
+    title: "Access market data and news",
+    description: "Stay informed with up-to-the-minute market data and news. Access critical, real-time information to make informed investment decisions quickly and confidently.",
     icon: FileText
+  },
+  {
+    title: "Manage your financial data",
+    description: "Take control and ownership of your data. Manage user access with granular, role-based permissions to ensure security. Share your data securely, temporarily or permanently, internally or with third parties as needed.",
+    icon: Shield
+  },
+  {
+    title: "Create customized reports",
+    description: "Seamlessly create comprehensive financial reports and statements that meet the specific needs of your organization. Track performance trends, assess your financial standing and facilitate clear communication with stakeholders using visually engaging summaries.",
+    icon: FileText
+  },
+  {
+    title: "Monitor risks and stay compliant",
+    description: "Seamlessly monitor and manage financial risks while staying compliant with regulatory standards. Identify potential risks, track compliance requirements, and receive clear, actionable insights tailored to your needs.",
+    icon: Shield
   }
-].sort((a, b) => a.title.localeCompare(b.title));
+];
 
 interface FeaturesSectionProps {
   id?: string;

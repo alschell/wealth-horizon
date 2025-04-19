@@ -1,6 +1,7 @@
+
 import React from "react";
 import { FadeIn, ScaleIn, StaggerContainer, StaggerItem } from "@/components/ui/animation";
-import { LineChart, Shield, BarChart3, FileText, Users, Lock, LucideIcon } from "lucide-react";
+import { LineChart, Shield, BarChart3, FileText, Users, Lock } from "lucide-react";
 import DashboardAnimation from "@/components/animations/DashboardAnimation";
 import TranslatedText from "@/components/ui/translated-text";
 

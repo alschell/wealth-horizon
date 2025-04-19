@@ -1,6 +1,6 @@
 
 import React from "react";
-import { BarChart3, Shield, Layers, Clock } from "lucide-react";
+import { Layers, BarChart3, Shield, Clock } from "lucide-react";
 import { FadeIn, StaggerContainer, StaggerItem, ScaleIn } from "@/components/ui/animation";
 import DashboardAnimation from "@/components/animations/DashboardAnimation";
 import TranslatedText from "@/components/ui/translated-text";

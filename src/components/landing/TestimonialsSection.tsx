@@ -25,7 +25,7 @@ const TestimonialsSection: React.FC = () => {
   return (
     <section className="py-24 bg-white" id="testimonials">
       <div className="max-w-7xl mx-auto px-6">
-        <div className="mb-16 text-center"> {/* Added text-center class */}
+        <div className="mb-16 text-center">
           <FadeIn>
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 text-center">
               <TranslatedText>Trusted by Leading Institutions</TranslatedText>

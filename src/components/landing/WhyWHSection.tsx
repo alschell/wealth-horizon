@@ -1,33 +1,32 @@
-
 import React from "react";
 import { FadeIn, ScaleIn } from "@/components/ui/animation";
 import { CheckCircle, Target, TrendingUp, UserPlus } from "lucide-react";
 import TranslatedText from "@/components/ui/translated-text";
 
-const WhyWHSection: React.FC = () => {
-  const reasons = [
-    {
-      title: "Specialized for Family Offices",
-      description: "Purpose-built platform addressing the unique needs of family offices and high-net-worth individuals",
-      icon: <Target size={28} />
-    },
-    {
-      title: "Holistic Wealth View",
-      description: "Comprehensive visibility across all assets, accounts, and jurisdictions in one unified platform",
-      icon: <TrendingUp size={28} />
-    },
-    {
-      title: "Institutional-Grade Technology",
-      description: "Enterprise-level security, compliance, and analytics tools previously only available to large institutions",
-      icon: <CheckCircle size={28} />
-    },
-    {
-      title: "Collaborative Platform",
-      description: "Seamlessly connect with advisors, family members, and financial professionals in a secure environment",
-      icon: <UserPlus size={28} />
-    }
-  ];
+const reasons = [
+  {
+    title: "Specialized for Family Offices",
+    description: "Purpose-built platform addressing the unique needs of family offices and high-net-worth individuals",
+    icon: <Target size={28} />
+  },
+  {
+    title: "Holistic Wealth View",
+    description: "Comprehensive visibility across all assets, accounts, and jurisdictions in one unified platform",
+    icon: <TrendingUp size={28} />
+  },
+  {
+    title: "Institutional-Grade Technology",
+    description: "Enterprise-level security, compliance, and analytics tools previously only available to large institutions",
+    icon: <CheckCircle size={28} />
+  },
+  {
+    title: "Collaborative Platform",
+    description: "Seamlessly connect with advisors, family members, and financial professionals in a secure environment",
+    icon: <UserPlus size={28} />
+  }
+];
 
+const WhyWHSection: React.FC = () => {
   return (
     <section className="py-24 bg-white" id="why-wh">
       <div className="max-w-7xl mx-auto px-6">

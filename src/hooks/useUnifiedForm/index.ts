@@ -36,6 +36,15 @@ export function useUnifiedForm<T extends Record<string, any>>(props: UseUnifiedF
     resetFormState
   } = useFormState<T>(initialValues);
 
+  // Create a type-safe error clearing function 
+  const clearFieldError = useCallback((field: keyof T) => {
+    setErrors((prevErrors) => {
+      const newErrors = { ...prevErrors };
+      delete newErrors[field as string];
+      return newErrors;
+    });
+  }, [setErrors]);
+
   // Initialize form handlers
   const {
     handleChange,
@@ -44,15 +53,7 @@ export function useUnifiedForm<T extends Record<string, any>>(props: UseUnifiedF
     setFieldValues
   } = useFormHandlers<T>({
     setValues,
-    clearError: (field) => {
-      // Fix the type error by using separate variable and proper typing
-      const clearFieldError = (prevErrors: Record<string, string>) => {
-        const newErrors = { ...prevErrors };
-        delete newErrors[field as string];
-        return newErrors as Partial<Record<keyof T, string>>;
-      };
-      setErrors(clearFieldError);
-    },
+    clearError: clearFieldError,
     setTouched
   });
 
@@ -60,7 +61,7 @@ export function useUnifiedForm<T extends Record<string, any>>(props: UseUnifiedF
   const {
     validateForm: validateFormFields,
     setFieldError,
-    clearFieldError
+    clearFieldError: clearValidationFieldError
   } = useFormValidation<T>({
     validate,
     requiredFields,
@@ -139,7 +140,7 @@ export function useUnifiedForm<T extends Record<string, any>>(props: UseUnifiedF
     setFieldValue,
     setFieldValues,
     setFieldError,
-    clearFieldError,
+    clearFieldError: clearValidationFieldError,
     validateForm,
     handleSubmit,
     resetForm,

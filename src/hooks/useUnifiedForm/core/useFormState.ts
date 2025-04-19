@@ -28,11 +28,20 @@ export function useFormState<T extends Record<string, any>>(initialValues: T) {
   };
 
   // Set form errors
-  const setErrors = (errors: Partial<Record<keyof T, string>>) => {
-    setFormState(prev => ({
-      ...prev,
-      errors: { ...prev.errors, ...errors }
-    }));
+  // This function accepts either an object of errors or a function to update errors
+  const setErrors = (
+    errors: Partial<Record<keyof T, string>> | ((prevErrors: Record<string, string>) => Record<string, string>)
+  ) => {
+    setFormState(prev => {
+      const newErrors = typeof errors === 'function' 
+        ? errors(prev.errors) 
+        : { ...prev.errors, ...errors };
+      
+      return {
+        ...prev,
+        errors: newErrors
+      };
+    });
   };
 
   // Mark fields as touched

@@ -1,14 +1,15 @@
 
 import React from 'react';
-import { useErrorBoundary } from './useErrorBoundary';
-import ErrorFallback from '@/components/common/ErrorFallback';
+import { ErrorBoundary } from '@/components/error-boundary';
+import ErrorFallback from '@/components/shared/ErrorFallback';
 import { logError } from './errorUtils';
 
-interface WithErrorHandlingOptions {
-  componentName?: string;
-  fallbackMessage?: string;
-  showReset?: boolean;
+interface ErrorBoundaryConfig {
+  fallback?: React.ReactNode;
   onError?: (error: Error, errorInfo: React.ErrorInfo) => void;
+  showReset?: boolean;
+  message?: string;
+  componentName?: string;
   logError?: boolean;
   notifyUser?: boolean;
 }
@@ -17,20 +18,20 @@ interface WithErrorHandlingOptions {
  * Higher-order component to wrap a component with an error boundary
  */
 export function withErrorHandling<P extends object>(
-  Component: React.ComponentType<P>,
-  options: WithErrorHandlingOptions = {}
-) {
+  Component: React.ComponentType<P>, 
+  options: ErrorBoundaryConfig = {}
+): React.FC<P> {
   const {
-    componentName = Component.displayName || Component.name || 'Component',
-    fallbackMessage = "Something went wrong",
-    showReset = true,
+    fallback,
     onError,
+    showReset = true,
+    message = "Something went wrong",
+    componentName = Component.displayName || Component.name || 'Component',
     logError: shouldLogError = true,
     notifyUser = true
   } = options;
 
-  function WithErrorHandling(props: P) {
-    // Custom error handler that logs errors and calls the provided onError
+  const WithErrorHandlingWrapper: React.FC<P> = (props) => {
     const handleError = (error: Error, errorInfo: React.ErrorInfo) => {
       if (shouldLogError) {
         logError(error, componentName);
@@ -42,24 +43,36 @@ export function withErrorHandling<P extends object>(
       }
     };
 
-    // Use the error boundary hook
-    const { ErrorBoundaryWrapper } = useErrorBoundary({
-      componentName,
-      message: fallbackMessage,
-      showReset,
-      onError: handleError,
-      logError: shouldLogError,
-      notifyUser,
-      fallback: <ErrorFallback message={fallbackMessage} showReset={showReset} />
-    });
-
     return (
-      <ErrorBoundaryWrapper>
+      <ErrorBoundary
+        fallback={
+          fallback || (
+            <ErrorFallback 
+              error={new Error(message)} 
+              resetErrorBoundary={() => {}}
+              title="Error Occurred" 
+              description={message}
+              showResetButton={showReset}
+            />
+          )
+        }
+        onError={handleError}
+        componentName={componentName}
+      >
         <Component {...props} />
-      </ErrorBoundaryWrapper>
+      </ErrorBoundary>
     );
-  }
+  };
 
-  WithErrorHandling.displayName = `WithErrorHandling(${componentName})`;
-  return WithErrorHandling;
+  WithErrorHandlingWrapper.displayName = `WithErrorHandling(${componentName})`;
+  return WithErrorHandlingWrapper;
 }
+
+export const withCustomErrorFallback = <P extends object>(
+  Component: React.ComponentType<P>,
+  FallbackComponent: React.ComponentType<{ error?: Error }>
+): React.FC<P> => {
+  return withErrorHandling(Component, {
+    fallback: (props: { error?: Error }) => <FallbackComponent error={props.error} />
+  });
+};

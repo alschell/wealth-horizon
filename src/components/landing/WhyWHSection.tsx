@@ -1,3 +1,4 @@
+
 import React from "react";
 import { FadeIn, ScaleIn } from "@/components/ui/animation";
 import { CheckCircle, Target, TrendingUp, UserPlus } from "lucide-react";
@@ -48,11 +49,11 @@ const WhyWHSection: React.FC = () => {
   ];
 
   return (
-    <section className="py-24 bg-white text-left" id="why-wh">
+    <section className="py-24 bg-white w-full" id="why-wh">
       <div className="max-w-7xl mx-auto px-6">
         <FadeIn>
           <div className="text-left mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 text-left">
               <TranslatedText>Why </TranslatedText>
               <span className="text-indigo-600">Wealth</span>
               <span className="text-gray-900">Horizon</span>
@@ -69,9 +70,14 @@ const WhyWHSection: React.FC = () => {
           {reasons.map((reason, index) => (
             <ScaleIn key={index} delay={0.1 * index}>
               <div className="p-6 border border-gray-100 rounded-xl shadow-sm hover:shadow-md transition-shadow bg-white text-left">
-                <h3 className="text-xl font-semibold mb-2 text-gray-900 text-left">
-                  <TranslatedText>{reason.title}</TranslatedText>
-                </h3>
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="text-indigo-600">
+                    {reason.icon}
+                  </div>
+                  <h3 className="text-xl font-semibold text-gray-900 text-left">
+                    <TranslatedText>{reason.title}</TranslatedText>
+                  </h3>
+                </div>
                 <p className="text-gray-600 text-left">
                   <TranslatedText>{reason.description}</TranslatedText>
                 </p>

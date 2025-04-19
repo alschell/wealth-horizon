@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Separator } from "@/components/ui/separator";
 import { Link, useNavigate } from "react-router-dom";
@@ -13,27 +12,26 @@ const FooterSection: React.FC = () => {
     if (element) {
       element.scrollIntoView({ behavior: "smooth" });
     } else {
-      // If not found on current page, navigate to home with hash
       navigate(`/#${id}`);
     }
   };
 
   return (
-    <footer className="bg-gray-900 text-gray-400 py-16" id="about">
+    <footer className="bg-gray-900 text-gray-400 py-16 w-full" id="about">
       <div className="max-w-7xl mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
-          <div>
+          <div className="text-left">
             <h3 className="text-white font-bold text-xl mb-4">
               <span className="text-indigo-400">Wealth</span>
               <span className="text-white">Horizon</span>
             </h3>
-            <p className="mb-4">
+            <p className="mb-4 text-left">
               <TranslatedText>Holistic wealth management for family offices and institutions.</TranslatedText>
             </p>
             <SocialLinks />
           </div>
           
-          <div>
+          <div className="text-left">
             <h4 className="text-white font-semibold mb-4">
               <TranslatedText>Solutions</TranslatedText>
             </h4>
@@ -56,7 +54,7 @@ const FooterSection: React.FC = () => {
             </ul>
           </div>
           
-          <div>
+          <div className="text-left">
             <h4 className="text-white font-semibold mb-4">
               <TranslatedText>Company</TranslatedText>
             </h4>
@@ -79,7 +77,7 @@ const FooterSection: React.FC = () => {
             </ul>
           </div>
           
-          <div>
+          <div className="text-left">
             <h4 className="text-white font-semibold mb-4">
               <TranslatedText>Resources</TranslatedText>
             </h4>
@@ -105,13 +103,10 @@ const FooterSection: React.FC = () => {
         
         <Separator className="my-8 bg-gray-800" />
         
-        <div className="flex flex-col md:flex-row justify-between items-center">
-          <p>
+        <div className="flex flex-col md:flex-row justify-between items-center text-left">
+          <p className="text-left">
             <TranslatedText>© 2025 WealthHorizon. All rights reserved.</TranslatedText>
           </p>
-          <div className="mt-4 md:mt-0">
-            {/* All footer links completely removed per user request */}
-          </div>
         </div>
       </div>
     </footer>

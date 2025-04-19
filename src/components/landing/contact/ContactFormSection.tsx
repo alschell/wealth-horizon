@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { ContactForm } from './ContactForm';
+import ContactForm from './ContactForm';
 import TranslatedText from '@/components/ui/translated-text';
 
 export const ContactFormSection: React.FC = () => {
@@ -20,3 +20,5 @@ export const ContactFormSection: React.FC = () => {
     </section>
   );
 };
+
+export default ContactFormSection;

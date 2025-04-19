@@ -1,3 +1,3 @@
 
-import { ContactFormSection } from './contact';
+import ContactFormSection from './contact/ContactFormSection';
 export default ContactFormSection;

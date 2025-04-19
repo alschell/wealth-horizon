@@ -64,7 +64,7 @@ export function useFormControls<T>(): UseFormControlsReturn<T> {
           const validateFn = validateForm as Function;
           const isValid = validateFn.length > 0 
             ? await validateForm(data) 
-            : await validateForm();
+            : await validateForm(data); // Always pass data even if not used
             
           if (!isValid) return;
         }

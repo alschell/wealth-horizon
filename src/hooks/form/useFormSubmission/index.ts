@@ -43,7 +43,7 @@ export function useFormSubmission<T>() {
           // Check if validateForm expects arguments based on its length property
           const isValid = validateForm.length > 0 
             ? await validateForm(data) 
-            : await validateForm();
+            : await validateForm(data); // Always pass data even to functions that might not use it
             
           if (!isValid) {
             return false;

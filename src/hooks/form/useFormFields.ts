@@ -1,6 +1,11 @@
+
 import { useState, useCallback } from 'react';
 import type { Validator } from './validators/validatorUtils';
-import { validateField, validateFields as validateMultipleFields, createErrorClearer } from '@/utils/form/validation/formValidationUtils';
+import { 
+  validateField, 
+  validateFields, 
+  createErrorClearer 
+} from '@/utils/form/validation/formValidationUtils';
 
 export interface UseFormFieldsOptions<T> {
   initialValues: T;
@@ -111,12 +116,17 @@ export function useFormFields<T extends Record<string, any>>(
     }
     
     if (field in validators && validators[field]) {
-      const error = validateField(field, values[field], validators[field]!);
-      if (error) {
-        setErrors(prev => ({
-          ...prev,
-          [field as string]: error
-        }));
+      try {
+        const error = validateField(field, values[field], validators[field]!);
+        if (error) {
+          setErrors(prev => ({
+            ...prev,
+            [field as string]: error
+          }));
+          return false;
+        }
+      } catch (error) {
+        console.error(`Validation error for field ${String(field)}:`, error);
         return false;
       }
     }
@@ -148,7 +158,7 @@ export function useFormFields<T extends Record<string, any>>(
     handleBlur,
     setFieldValue,
     setFieldValues,
-    validateFields: validateAllFields,
+    validateFields,
     resetForm
   };
 }

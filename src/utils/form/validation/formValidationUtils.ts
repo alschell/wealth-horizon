@@ -45,10 +45,14 @@ export const createErrorClearer = <T>(
 export const validateField = <T>(
   field: keyof T,
   value: any,
-  validator?: Validator
+  validator: Validator
 ): string | null => {
-  if (!validator) return null;
-  return validator(value);
+  try {
+    return validator(value);
+  } catch (error) {
+    console.error(`Validation error for field ${String(field)}:`, error);
+    return `Validation failed for ${String(field)}`;
+  }
 };
 
 /**
@@ -77,4 +81,3 @@ export const validateFields = <T extends Record<string, any>>(
   
   return errors;
 };
-
